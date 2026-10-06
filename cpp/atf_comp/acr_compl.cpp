@@ -1,18 +1,17 @@
-// Copyright (C) 2026 AlgoRND
+// Copyright (C) 2026 AlgoX2 Corp
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Target: atf_comp (exe) -- Component test runner: spawn processes and diff the log against a reference
 // Exceptions: yes
@@ -647,10 +646,14 @@ void atf_comp::comptest_acr_compl_CheckBatchCmd() {
 // command validated clean. The command line decides what runs; the inherited
 // variable does not.
 void atf_comp::comptest_acr_compl_CheckBatchCompLine() {
-    atf_comp::FProc &proc = atf_comp::ProcStart("env COMP_LINE='acr ' COMP_POINT=4 COMP_TYPE=9 $bindir/acr_compl -check_batch");
+    atf_comp::SetEnv(algo_lib::dev_envvar_COMP_LINE, "acr ");
+    atf_comp::SetEnv(algo_lib::dev_envvar_COMP_POINT, "4");
+    atf_comp::SetEnv(algo_lib::dev_envvar_COMP_TYPE, "9");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/acr_compl -check_batch");
     atf_comp::ProcWrite(proc, "acr_compl.checkreq  id:1  line:'acr ssimfile:%'");
     atf_comp::ProcWrite(proc, "acr_compl.checkreq  id:2  line:'acr -nosuch_flag'");
     atf_comp::ProcWriteEof(proc);
+    atf_comp::ProcWait(proc, 1);
 }
 
 // batch-mode validation asked to read the schema or the data from stdin as

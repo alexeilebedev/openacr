@@ -1,18 +1,18 @@
-// Copyright (C) 2023-2026 AlgoRND
+// Copyright (C) 2025-2026 AlgoX2 Corp
+// Copyright (C) 2023-2024 AlgoRND
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Target: lib_ams (lib) -- Library for AMS middleware, supporting file format & messaging
 // Exceptions: NO
@@ -37,13 +37,19 @@ namespace lib_ams {
         int index;
         shm_c_shmember_curs() { shm=NULL; index=0; }
     };
+    struct shm_c_channel_curs {
+        typedef ams::Shmchannel ChildType;
+        lib_ams::FShm* shm;
+        int index;
+        shm_c_channel_curs() { shm=NULL; index=0; }
+    };
 }
 
 // The metric subsystem's prototypes live in include/lib_ams_metric.h, so this
 // section names the sources it takes prototypes from rather than taking all of
 // them.  A source added to lib_ams and left out of this list gets no
 // declaration, and its definition then fails -Werror=missing-declarations.
-namespace lib_ams { // update-hdr srcfile:"(cpp/lib_ams/(board|bridge|dump|fdin|lib|outmsg|shm|signal)\.cpp|include/lib_ams\.inl\.h)"
+namespace lib_ams { // update-hdr srcfile:"(cpp/lib_ams/(board|bridge|channel|dump|fdin|lib|outmsg|shm|signal)\.cpp|include/lib_ams\.inl\.h)"
     // Dear human:
     //     Text from here to the closing curly brace was produced by scanning
     //     source files. Editing this text is futile.
@@ -54,116 +60,186 @@ namespace lib_ams { // update-hdr srcfile:"(cpp/lib_ams/(board|bridge|dump|fdin|
     // cpp/lib_ams/board.cpp
     //
 
-    // TRUE when SHM is a message board rather than a lane ring.
-    bool BoardQ(lib_ams::FShm &shm);
-
-    // The board serving lane SHM's writer, or NULL when that process keeps none.
-    // A process has exactly one board, so the lookup is by the writer's proc id and
-    // the answer is cached on the lane -- a lane opened before the board existed
-    // finds it on a later call.
+    // The board of lane SHM's writer, or NULL when that process keeps none.
+    // A process keeps one board, so the lookup is by the writer's proc id, and the
+    // answer is cached on the lane so a lane opened before the board existed finds
+    // it on a later call.
+    //
+    // A reader learns of a board by the first reference that reaches it, so on a
+    // lane this process reads and does not write the board is opened here when it
+    // is not mapped yet.  The open fails while the writer has not created its board,
+    // which costs one shm_open per reference until it has; a writer sends no
+    // reference before its board exists, so in practice the first one succeeds.
     lib_ams::FShm *BoardOf(lib_ams::FShm &shm);
 
-    // Stock board BOARD's slot bookkeeping: every slot free and none referenced.
-    // The slot count follows from the segment, so a reader that maps a board sized
-    // by someone else agrees with its creator without being told.
-    void BoardInit(lib_ams::FShm &board);
+    // The chunk of BOARD whose bytes include address PTR, or NULL when PTR lies
+    // outside the board's body.
+    lib_ams::FChunk *ChunkOf(lib_ams::FShm &board, const void *ptr);
 
-    // Create this process's message board with NSLOT slots of board_slot_size bytes
-    // and open it for writing.  NULL if the segment cannot be made.
+    // Give back one hold ChunkHold took on CHUNK.  A chunk nobody holds or
+    // references any longer goes back to the board's free list.
+    void ChunkRelease(lib_ams::FChunk &chunk);
+
+    // Describe BOARD's mapped body as chunks of its chunk size, every one free, and
+    // make it a board this process fills.  The count follows from the segment, so
+    // a board that came from the process pool at the default size, or one the
+    // topology sized, is described as it is rather than as it was asked for.  A
+    // process may fill several boards, and the chunks of each join the process's
+    // chunk pool after those of the boards described before it; a board already
+    // described is left as it is.
+    void BoardInitChunks(lib_ams::FShm &board);
+
+    // Create this process's message board, a segment whose body holds at least BODY
+    // bytes as chunks of CHUNK_SIZE bytes, and open it for writing.  NULL if the
+    // segment cannot be made or the tmpfs cannot hold it.
     //
-    // Choose NSLOT so the board is at least the sum of its readers' pin allowances
-    // (board_max_pin each): that is what makes a placement unable to fail, and with
-    // fan-out it is generous, since a slot reaching several readers is charged to
-    // each allowance but occupies the board once.
-    lib_ams::FShm *BoardCreate(u32 nslot);
+    // A chunk is the largest message the board carries and the unit a reader's
+    // lag is charged in: a lane references at most board_max_chunkref chunks, so a
+    // reader that stops holds that many chunks and the rest of the board keeps
+    // turning over.  Size the body for the burst every reader together may be
+    // behind by, plus the chunks the stopped readers you are willing to carry hold.
+    //
+    // The segment is created as any board segment is (ShmCreate): its pages are
+    // committed and locked when it is made, so the tmpfs answers here, where the
+    // caller can fall back, and never with a fault under a store minutes into the
+    // run.  A process in a topology does not call this: its board is a segment the
+    // topology declares and the supervisor creates, which it opens with the rest.
+    lib_ams::FShm *BoardCreate(u64 body, u32 chunk_size);
+
+    // Bytes a board segment takes to hold a body of BODY bytes as chunks of
+    // CHUNK_SIZE: the header page and whole chunks, at least one.
+    u64 BoardSize(u64 body, u32 chunk_size);
+
+    // Create a message board of this process as a private mapping of this process
+    // alone -- BODY bytes as chunks of CHUNK_SIZE, anonymous memory, no file under
+    // /dev/shm -- and open it for writing.  INDEX is the board's index among this
+    // process's boards: index 0 is the one readers open (BoardOpen), so a private
+    // board kept beside a shared one takes another index.  NULL when the memory
+    // cannot be mapped.
+    //
+    // This is the board for memory no reader needs to open: the process keeps the
+    // chunk arena, the allocation and the eviction it was written against, and
+    // gives up only what a segment would buy it -- no other process can open the
+    // board, so a reference sent into it would resolve to nothing.  The board says
+    // so on `privateq`, and a writer tests that before sending a reference.
+    lib_ams::FShm *BoardCreatePrivate(u64 body, u32 chunk_size, u32 index = 0);
 
     // Open process WRITER's message board for reading, so references arriving on
-    // that writer's lanes can be resolved.  A reader holds the board before the
-    // first reference arrives.
+    // that writer's lanes resolve; open it before the first reference arrives.
+    // NULL when the segment is missing.
     //
     // Holding it costs a mapping and nothing else: the board takes no member slot,
-    // joins no poll list, and is never written by the reader.  There is nothing for
-    // a board reader to say -- it advances no position, and the position that
-    // matters is the one it already keeps on the lane the reference arrived on.
+    // joins no poll list, and is never written by the reader.  The position that
+    // matters is the one the reader already keeps on the lane the reference arrived
+    // on, and the writer reads it there.
     lib_ams::FShm *BoardOpen(ams::ProcId writer);
 
-    // The queue recording what reader MEMBERIDX of lane SHM still holds, created on
-    // first use.  NULL when the writer keeps no board, or when the queue cannot be
-    // allocated.
+    // Offset of lane SHM's slowest reader: the least consume offset over its
+    // members, and the ring start when it has none.  A message at or below this
+    // offset has been read by everyone the lane delivers to.
+    u64 SlowestReaderOffset(lib_ams::FShm &shm);
+
+    // Release what lane SHM's readers have finished with: every Chunkref whose
+    // offset the slowest reader has reached gives its count back to its chunk and
+    // leaves the table.  Cheap enough to call before every send, and BoardSend
+    // calls it itself when it needs a row the table has no room for.
+    void BoardReap(lib_ams::FShm &shm);
+
+    // Release every reference lane SHM holds on any chunk, and forget them.  Call
+    // when the lane closes: its readers' offsets stop moving, so nothing else would
+    // give those chunks back.
+    void ChunkrefReleaseAll(lib_ams::FShm &shm);
+
+    // Forget BOARD's lanes and every lane's references into it, and the chunks of
+    // every board this process fills.  Call when the board closes; the chunks name
+    // bytes of a mapping that is going away.  The chunk pool is one pool across the
+    // process's boards, so a process that fills several closes them together, as it
+    // does when it exits.
+    void BoardReset(lib_ams::FShm &board);
+
+    // Reap every lane that references a chunk of BOARD, so each chunk whose last
+    // reference its reader has passed returns to the free list.  A board's owner
+    // that judges its chunks by how many are free calls this first: a lane is
+    // otherwise reaped only when something is sent on it or the free list runs dry,
+    // and a chunk a quiet lane's reader passed long ago still reads as held.
+    void BoardReapAll(lib_ams::FShm &board);
+
+    // Take a free chunk of BOARD to fill, off the free list and emptied, or NULL
+    // when none is free -- after reaping every lane that references the board, since
+    // a reader may have moved past the last reference into some chunk.  The caller
+    // holds the chunk by filling it; when it has moved on, ChunkRelease with no
+    // references outstanding is what frees it.  A module that fills several chunks
+    // at once -- one per class of message -- takes them here and reserves with
+    // ChunkAlloc; BoardAlloc is the one-chunk form over the two.
+    lib_ams::FChunk *ChunkTake(lib_ams::FShm &board);
+
+    // Reserve LEN bytes at the end of CHUNK and return where to write them, or NULL
+    // when the chunk has no room for them.  Nothing is published by the reservation.
+    // A reservation is exactly LEN bytes, so messages lie in a chunk back to back the
+    // way they lie in a datagram, and a datagram read into a chunk is a run of
+    // messages the board can reference without moving a byte.
+    void *ChunkAlloc(lib_ams::FChunk &chunk, int len);
+
+    // Reserve LEN bytes of message space in BOARD and return where to write them,
+    // or NULL when no chunk can take them.  The space is the next run of the chunk
+    // being filled; a message that does not fit there retires that chunk and starts
+    // a free one (ChunkTake).  A message longer than a chunk is refused outright.
     //
-    // The queue length is the pin allowance divided by the slot size, rounded down
-    // to a power of two so the position can be masked.  That is also what makes the
-    // allowance exact rather than approximate: the reader may pin precisely as many
-    // slots as the queue has entries, so there is one limit to test instead of two
-    // that disagree at the edges.  An allowance below a single slot would let no
-    // message through at all and stall the lane silently, so it is reported and
-    // raised to one slot.
-    lib_ams::FBoardq *BoardqGetOrCreate(lib_ams::FShm &shm, u32 memberidx);
+    // Nothing is published by the reservation.  The caller formats the message in
+    // place and then sends it with BoardSend, or gives the space back with BoardTrim.
+    void *BoardAlloc(lib_ams::FShm &board, int len);
 
-    // Release the slots reader ROFF of BOARDQ has consumed: every entry at the head
-    // whose ring position the reader has passed.  Entries are appended in ring
-    // order, so the walk stops at the first one still outstanding.
-    void BoardqSweep(lib_ams::FBoardq &boardq, u64 roff);
+    // Shorten the most recent reservation of BOARD, at PTR, to LEN bytes: ChunkTrim
+    // on the chunk being filled, when PTR lies in it.
+    void BoardTrim(lib_ams::FShm &board, void *ptr, int len);
 
-    // Bring every reader queue of lane SHM up to date, creating a queue for a reader
-    // that has none yet.  Run before the lane is asked to take a message, so the
-    // room test sees what readers have actually consumed rather than what they held
-    // when the last message went out.
-    void BoardSweep(lib_ams::FShm &shm);
+    // TRUE when lane SHM can take a reference to a message in CHUNK as things
+    // stand: it holds a Chunkref row for CHUNK or has room for one, and the ring
+    // has room for the reference with nothing queued ahead of it.
+    bool BoardRoomQ(lib_ams::FShm &shm, lib_ams::FChunk &chunk);
 
-    // TRUE when every reader of lane SHM can take one more board reference.  Reports
-    // on the queues as they stand; run BoardSweep first for a current answer.
+    // Make room on lane SHM for a reference to a message in CHUNK, and say whether
+    // there is any: BoardRoomQ as things stand, and after one reap when there is
+    // not.  The reap runs only when it is needed, so a run of messages out of one
+    // chunk pays for none.  Ask this of every lane a message goes to before sending
+    // it to any of them: a reader that missed one message of a numbered stream has
+    // a gap it cannot ask to have filled.
+    bool BoardMakeRoom(lib_ams::FShm &shm, lib_ams::FChunk &chunk);
+
+    // Begin sending MSG, a message in a chunk of this process's board, to lane SHM
+    // by a reference message of REFLEN bytes: the ring slot the caller formats the
+    // reference into, or NULL when the send cannot happen now -- MSG is not in the
+    // board, the board is a private mapping no reader can open, the lane references
+    // board_max_chunkref chunks already and reaping frees none of them
+    // (n_board_nochunkref), or the ring has no room.  The caller writes
+    // its reference into the slot and finishes with BoardEndSend; the pair exists so
+    // a module may carry a reference inside a message of its own, with the fields
+    // its reader needs beside the coordinates.
+    void *BoardBeginSend(lib_ams::FShm &shm, ams::MsgHeader &msg, int reflen);
+
+    // Publish the reference that BoardBeginSend reserved PTR for on lane SHM,
+    // REFLEN bytes long, and count it against CHUNK, the chunk the referenced
+    // message lies in.
     //
-    // Every reader must have a queue, not merely one of them.  A slot's reference
-    // count is how many queues received the reference, so a reader without a queue
-    // is a reader the count does not know about -- and it still sees the reference
-    // in the ring and still resolves it, so the slot would be freed and handed to
-    // the next message while that reader was reading it.  A queue that could not be
-    // allocated therefore stops board traffic on the lane rather than admitting a
-    // message whose lifetime nothing tracks.
-    bool BoardRoomQ(lib_ams::FShm &shm);
+    // The chunk is charged after the reference is published and before anything
+    // else runs, so no reader sees a reference to a chunk the writer thinks free.
+    // A reader is done with the payload when its lane offset passes the reference,
+    // which is what the row's `woffset` records.
+    void BoardEndSend(lib_ams::FShm &shm, lib_ams::FChunk &chunk, void *ptr, int reflen);
 
-    // Add lane SHM to the set the next BoardPostSet reaches.  The set is scratch,
-    // rebuilt for every message and emptied by the post.
-    void BoardPostLane(lib_ams::FShm &shm);
+    // Send MSG, a message formatted into a chunk of this process's board, to lane
+    // SHM: write an ams::BoardrefMsg naming it into the ring and count it against
+    // its chunk.  TRUE when the reference was published.  FALSE when MSG is not in
+    // the board, when the lane references board_max_chunkref chunks already and
+    // reaping frees none of them, or when the ring has no room; the message stays in
+    // the board and the caller retries or gives its space back with BoardTrim.
+    bool BoardSend(lib_ams::FShm &shm, ams::MsgHeader &msg);
 
-    // Write MSG once to the board and post a reference to it in every lane collected
-    // with BoardPostLane, so a message reaching readers on N separate lanes is
-    // copied once rather than N times.  The set is emptied whether or not the post
-    // succeeds.
-    //
-    // FALSE when the set is empty, when MSG is larger than a slot, when any reader
-    // has spent its pin allowance, or when any ring is full; the caller treats every
-    // one of those exactly as it treats a full ring.  All-or-nothing is the point of
-    // asking every lane first: a partial post is a gap in somebody's stream.
-    //
-    // The ring position recorded for a reference is the position one past it, which
-    // is where that reader's own offset lands once it has consumed the reference and
-    // is done with the payload.  Entries are recorded before the reference is
-    // published, so the slot is never visible to a reader while unaccounted for, and
-    // the slot's reference count is the total across every lane -- which is what
-    // lets one copy serve them all and still be freed at exactly the right moment.
-    bool BoardPostSet(ams::MsgHeader &msg);
-
-    // Write MSG to the board serving lane SHM and post a reference to it in SHM's
-    // ring, so every reader of the lane receives the message at the cost of one copy.
-    // The one-lane case of BoardPostSet, which is where the work is described.
-    bool BoardPost(lib_ams::FShm &shm, ams::MsgHeader &msg);
-
-    // The payload BOARDREF names, or NULL when the reference does not describe a
-    // message this process can see.
-    //
-    // The bounds test and the length cross-check are not ceremony: one board slot
-    // serves every recipient of the message, so a reference that has gone stale --
-    // through a sender accounting error, or a slot reused before a reader was done
-    // with it -- would hand the same wrong bytes to every reader at once.  A
-    // reference that fails either test is refused rather than dispatched.
-    ams::MsgHeader *BoardResolve(lib_ams::FShm &shm, ams::BoardrefMsg &boardref);
-
-    // Release every slot reader MEMBERIDX of lane SHM holds, and forget its queue.
-    // Call when the reader is gone: its ring position stops advancing at the moment
-    // it dies, so nothing else would ever release what it was holding.
-    void BoardRelease(lib_ams::FShm &shm, u32 memberidx);
+    // The LENGTH bytes at board OFFSET on lane SHM's writer's board, or NULL when
+    // they do not lie inside the board's body.  A module that carries several
+    // messages under one reference walks them from here; a single message is
+    // BoardResolve, which also checks the header at the offset.
+    u8 *BoardSpan(lib_ams::FShm &shm, u64 offset, u32 length);
 
     // -------------------------------------------------------------------
     // cpp/lib_ams/bridge.cpp
@@ -194,42 +270,153 @@ namespace lib_ams { // update-hdr srcfile:"(cpp/lib_ams/(board|bridge|dump|fdin|
     // ignore:ptr_byref
     bool CreateBridgeShms(ams::ProcId child_proc_id, int grpidx, ams::ProcId reader_proc_id, lib_ams::FShm *&shm_in, lib_ams::FShm *&shm_out, i64 size = 0, i32 maxmsg = 0);
 
-    // Format the value of a `-proc:` argument that initializes a bridged
-    // child with CHILD_PROC_ID at GRPIDX.  Format:
-    // <child_proc_id>,<prefix>,<in_grp>,<out_grp>[,<nickname>]
-    // where the child's perspective is encoded:
-    // in_grp  = parent's BridgeOutGrp (parent writes, child reads),
-    // out_grp = parent's BridgeInGrp (child writes, parent reads).
-    // NICKNAME is the child's human-facing name (the userproc name); the
-    // child prefixes its published metrics with it in place of the proc id.
+    // Format the value of a `-proc:` argument that initializes a bridged child with
+    // CHILD_PROC_ID at GRPIDX, and return it.  The child's rings are named from its
+    // own side: it reads `in`, the parent's BridgeOutGrp, and writes `out`, the
+    // parent's BridgeInGrp.  NICKNAME, the child's human-facing name (the userproc
+    // name), prefixes its published metrics in place of the proc id.
     tempstr ChildProcStr(ams::ProcId child_proc_id, int grpidx, algo::strptr nickname = algo::strptr());
+
+    // -------------------------------------------------------------------
+    // cpp/lib_ams/channel.cpp
+    //
+
+    // Return slot I of the channel table in the control page HDR, or NULL past the
+    // table's end.  A tool that maps a segment without opening it reads the table
+    // through this.  A slot whose key is 0 is free.
+    ams::Shmchannel *HdrChannelFind(ams::Shmhdr &hdr, int i);
+
+    // Return slot I of the channel table of SHM, or NULL past the table's end or when
+    // the segment is not mapped.
+    ams::Shmchannel *channel_Find(lib_ams::FShm &shm, int i);
+
+    // Return this process's handle on the channel of ring SHM keyed KEY, or NULL when
+    // KEY names a channel the ring has no slot for.  Key 0 is the base channel, the
+    // ring as a whole, which needs no slot.  A keyed channel the ring holds no slot
+    // for yet is opened here, and the writer and its reader may each open it first,
+    // in either order.  A new channel has written nothing, read nothing, and has no
+    // room until its reader sets a window or grants some.  The handle lives as long
+    // as the ring stays open in this process: ShmClose deletes it with the mapping.
+    lib_ams::FChannel *ChannelOpen(lib_ams::FShm &shm, u64 key);
+
+    // Park the writer on CHANNEL waiting for budget for EXTRA more bytes, as
+    // ParkWriter parks it on a ring, and return true when the ring's budget and the
+    // channel's room both have it after all.
+    bool ParkWriter(lib_ams::FChannel &channel, u32 extra = 0);
+
+    // True when a message of EXTRA more bytes may be written on CHANNEL now: the ring
+    // has budget for it, and a keyed channel has room for it under its limit.
+    bool HasBudgetQ(lib_ams::FChannel &channel, u32 extra = 0);
+
+    // Begin writing a message of LENGTH bytes on CHANNEL, non-blocking: the write
+    // pointer, or NULL when the channel's limit or the ring refuses the message now.
+    // A channel whose limit refuses it parks the writer in signaled mode, so the
+    // reader's next raise wakes the process, as a ring's reader wakes a writer that
+    // ran out of ring budget.  The retry is the caller's, as it is on a ring.
+    void *BeginWrite(lib_ams::FChannel &channel, i32 length);
+
+    // Count NBYTE bytes on CHANNEL as written, as its writer, with no message of
+    // the channel's own.  A writer charges what a message commits the channel's flow
+    // to when the message itself travels on another channel or carries several
+    // flows: a publish that obliges an acknowledgment on a second partition, or a
+    // datagram packing records of several.  Its reader counts the same bytes with
+    // ChannelRead, so the two counts agree.  The base channel counts nothing here.
+    void ChannelCharge(lib_ams::FChannel &channel, u64 nbyte);
+
+    // Finish the message of LEN bytes begun at PTR on CHANNEL: publish it to the ring
+    // and count it on the channel.
+    void EndWrite(lib_ams::FChannel &channel, void *ptr, i32 len);
+
+    // Count NBYTE bytes this process read on CHANNEL, as the channel's reader.  On a
+    // channel with a window the limit follows the count in passing, as a ring's
+    // write limit follows its readers' offsets: it becomes the count plus the window.
+    // A process that is not the channel's reader counts nothing.
+    void ChannelRead(lib_ams::FChannel &channel, u64 nbyte);
+
+    // Count NBYTE bytes this process read on the channel of ring SHM keyed KEY, as
+    // the channel's reader, for a message that names the channel it was charged to.
+    // KEY 0 is the ring itself, which counts nothing here.  A reader counts by the
+    // key the message carries, so it counts every charged message, including one
+    // whose request it no longer holds.
+    void ChannelReadKey(lib_ams::FShm &shm, u64 key, u64 nbyte);
+
+    // Make CHANNEL's limit follow its read count by WINDOW bytes, as its reader,
+    // raise the limit to that at once, and return true when the window was set.  A
+    // reader whose room is its own read position sets a window once and then only
+    // reads; WINDOW 0 leaves the limit to grants.
+    //
+    // A window no larger than the ring's largest message would refuse that message
+    // forever: with everything read, the room is exactly the window, and a writer
+    // asking for more than that waits for a read that has nothing left to read.  So
+    // such a window is refused, as is one from a process that is not the channel's
+    // reader, and the channel keeps the window it had.
+    bool ChannelSetWindow(lib_ams::FChannel &channel, u64 window);
+
+    // Raise CHANNEL's limit to WLIM by hand, as its reader, and return true when
+    // it rose: for a reader whose room is set by something other than what it has
+    // read, such as records it holds until others release them.
+    bool ChannelGrant(lib_ams::FChannel &channel, u64 wlim);
+
+    // Step the channel cursor CURS to the next slot.
+    void shm_c_channel_curs_Next(shm_c_channel_curs &curs);
+
+    // Start the channel cursor CURS at the first slot of the table of ring PARENT.
+    void shm_c_channel_curs_Reset(shm_c_channel_curs &curs, lib_ams::FShm &parent);
+
+    // True while CURS stands on a claimed slot: the claimed slots are a prefix of the
+    // table, so the walk ends at the first free slot or at the table's end.
+    bool shm_c_channel_curs_ValidQ(shm_c_channel_curs &curs);
+
+    // Return the slot CURS stands on.
+    ams::Shmchannel& shm_c_channel_curs_Access(shm_c_channel_curs &curs);
 
     // -------------------------------------------------------------------
     // cpp/lib_ams/dump.cpp
     //
 
-    // Print table of shms in lib_ams, using a more readable layout
-    void DumpShmTableVisual(algo_lib::Regx &regx);
+    // Add the group table's columns to TBL: the group, its type, and one column per
+    // process of this node, which holds that process's membership of the group.
+    void GrpTableCols(algo_lib::FTxttbl &tbl);
 
-    // Print message MSG to string OUT according to format FMT
-    // if FMT.STRIP > 0, strip this many outer "layers" -- a message this tree
-    // knows no wrapper for has none to strip and renders in full, except for a
-    // log message, which drops to its one-line form.
-    // if FMT.FORMAT is bin, the message is printed as pure binary; otherwise, convert to text
-    // if FMT.PRETTY, every next layer / payload is printed on a new line with indent
-    // for readability.
-    // FMT.PAYLOAD_LIM limits maximum printed payload length, allowing to fit one message per
-    // screen even if payload is 10MB
-    // Finally, if FMT.SHOWLEN is true, message length is included in output.
-    void PrintMsg(lib_ams::MsgFmt &fmt, ams::MsgHeader &msg, cstring &out);
+    // Add one row per mapped ring matching REGX to TBL, of type ring: for each
+    // process of the node, R when it reads the ring -- green while its heartbeat
+    // is fresh, red once it is stale -- with the bytes it lags the writer by when
+    // that is more than a few, and W when it writes the ring.
+    void GrpTableRings(algo_lib::FTxttbl &tbl, algo_lib::Regx &regx);
+
+    // Add one row to TBL per shm channel of each mapped ring matching REGX: the
+    // ring, the channel's key and reader, the bytes written and read on it, its
+    // limit and the window it follows the read count by, the room the writer has
+    // left, and the bytes written and not yet read.
+    void ChannelTable(algo_lib::FTxttbl &tbl, algo_lib::Regx &regx);
+
+    // Print the shm channels of this node's rings matching REGX as a table, when
+    // there are any.  Both group-table dumps end with it.
+    void PrintChannelTable(algo_lib::Regx &regx);
+
+    // Print the group table of this node's rings matching REGX, for a process
+    // that knows no fabric group; lib_x2::DumpGrpTableVisual adds those.  The shm
+    // channels of those rings follow in a table of their own, when there are any.
+    void DumpGrpTableVisual(algo_lib::Regx &regx);
+
+    // Print message MSG to string OUT according to format FMT.
+    // FMT.STRIP outer layers are stripped.  An envelope, whose msgtype says
+    // strip:Always, yields what it nests in every format.  A message whose msgtype
+    // says strip:Decode yields what it nests or the bytes it carries only under
+    // FMT.PRETTY; ssim and bin output print
+    // it whole, so a reader of the tuple sees the message.  With FMT.FORMAT bin, the
+    // message left after stripping is printed whole as binary; otherwise it prints
+    // as text.  With
+    // FMT.PRETTY, each nested message and byte payload prints on a line of its own,
+    // indented, cut to the payload limit.  With FMT.SHOWLEN, the message length is
+    // included.  amc generates the printer from the schema, so a new message prints
+    // this way with no code here.
+    void PrintMsg(algo::MsgFmt &fmt, ams::MsgHeader &msg, cstring &out);
 
     // This function should be called if the ams logcat is enabled
     // It prints the given MSG to ams logcat using pretty format.
-    // The shm heartbeat is skipped unless verbose is on -- it arrives once a
-    // second per member and says nothing a reader of the trace is looking for.
+    // Heartbeats (msgtype heartbeat:Y) are skipped unless verbose 2 is on
     void TraceMsg(algo_lib::FLogcat *logcat, lib_ams::FShm &shm, ams::MsgHeader *payload);
-
-    // Convert message MSG to a single-line string carrying every field.
     tempstr ToString(ams::MsgHeader &msg);
 
     // Convert message MSG to string in a way suitable for debugging
@@ -247,7 +434,7 @@ namespace lib_ams { // update-hdr srcfile:"(cpp/lib_ams/(board|bridge|dump|fdin|
     // If there is nowhere to post the message because no target shm is found, the counter
     // trace.n_fdin_drop_notgt is incremented and a message is printed in verbose mode.
     //     (user-implemented function, prototype is in amc-generated header)
-    // void cd_fdin_read_Step(); // fstep:lib_ams.FDb.cd_fdin_read
+    // void cd_fdin_read_Step(); // dmmeta.fstep:lib_ams.FDb.cd_fdin_read
 
     // Stop reading stdin and drop the stdio-mode loopback shm. Once both are
     // gone, MainLoop has no input source from the stdio path — if the app has
@@ -255,7 +442,7 @@ namespace lib_ams { // update-hdr srcfile:"(cpp/lib_ams/(board|bridge|dump|fdin|
     // alive past stdin EOF (e.g. ams_bridge waiting on shm_in echoes) need not
     // do anything special: their other shms keep the loop running until eof or
     // peer death drops them too.
-    // void cd_fdin_eof_Step(); // fstep:lib_ams.FDb.cd_fdin_eof
+    // void cd_fdin_eof_Step(); // dmmeta.fstep:lib_ams.FDb.cd_fdin_eof
 
     // Begin reading ams control messages from stdin.
     //
@@ -270,26 +457,27 @@ namespace lib_ams { // update-hdr srcfile:"(cpp/lib_ams/(board|bridge|dump|fdin|
     // cpp/lib_ams/lib.cpp
     //
 
-    // Initialize library.  PROC_STR carries everything in one string:
-    // <proc_id>                                stdio peer (loopback + stdin
-    // reader if MSG_CB is set);
-    // no shm namespace owned
-    // <proc_id>,<prefix>                       server: PREFIX is the
-    // filename prefix for shm
-    // files we create
-    // <proc_id>,<prefix>,<in_grp>,<out_grp>    bridged child: open the
-    // named existing shm pair
-    // (PREFIX is informational —
-    // it identifies the server
-    // that owns the namespace)
-    // <proc_id>,<prefix>,<in_grp>,<out_grp>,<nickname>
-    // bridged child with a
-    // human-facing name; the name
-    // prefixes published metrics
-    // in place of the proc id
-    // Comma is the separator; PROC_ID, GRPIDs, PREFIX, and NICKNAME must not
-    // contain commas.  Stale unlocked /dev/shm/*.ams files are cleaned on
-    // first call when PREFIX is set.
+    // Initialize the library as the process SPEC describes, with MSG_CB receiving
+    // every message read, and return whether it could.  SPEC's id is a proc key,
+    // `[<cluster>.]<proctype>-<node>-<proc>`, and its last part is the proc id.
+    // Which fields SPEC sets decides the role:
+    // id alone                a stdio peer: messages parsed from stdin reach
+    // MSG_CB through a loopback ring, and the process
+    // owns no shm namespace
+    // id and prefix           a server: PREFIX names the shm files it creates,
+    // and stale unlocked ones are cleaned on first call
+    // id, prefix, in and out  a bridged child: open the existing ring pair,
+    // reading IN and writing OUT; PREFIX identifies the
+    // server that owns the namespace
+    // NICK, when set, prefixes published metrics in place of the proc id.  The
+    // connection keys, gw and shadow, are the client library's and are not read
+    // here.
+    bool InitProcspec(ams::Procspec &spec, lib_ams::MsgCb msg_cb = NULL);
+
+    // Initialize the library from PROC_STR, the value of a -proc argument, with
+    // MSG_CB receiving every message read, and return whether it could.  PROC_STR
+    // is read as an ams.Procspec (InitProcspec says what each field does); a string
+    // that does not parse is reported and refused.
     bool Init(algo::strptr proc_str, lib_ams::MsgCb msg_cb = NULL);
     void Uninit();
 
@@ -300,9 +488,11 @@ namespace lib_ams { // update-hdr srcfile:"(cpp/lib_ams/(board|bridge|dump|fdin|
     // Notify lib_ams that process PID has exited with STATUS.
     // Clear the pid in any FProc record matching PID and return that record (if any).
     // For each shm in the database:
-    // - If PID was the writer, clear writer_pid. If we are reading from this shm,
-    // also set the eof flag on its shmhdr so cd_poll_read_Step can permanently
-    // remove it from the poll loop once any remaining messages are drained.
+    // - If PID was the writer, clear writer_pid and wake the ring's parked
+    // readers, whose wakeup the writer may have died owing. If we are reading
+    // from this shm, also set the eof flag on its shmhdr so cd_poll_read_Step
+    // can permanently remove it from the poll loop once any remaining messages
+    // are drained.
     // - If PID was a reader, clear that shmember's pid so the writer's budget
     // is no longer constrained by it.
     //
@@ -333,25 +523,48 @@ namespace lib_ams { // update-hdr srcfile:"(cpp/lib_ams/(board|bridge|dump|fdin|
     // cpp/lib_ams/outmsg.cpp
     //
 
+    // Move SHM's queued messages into the ring, oldest first, stopping at the
+    // first one the ring has no room for.  Stopping rather than skipping is what
+    // preserves the order the caller wrote them in.  BeginWrite calls this before
+    // any reservation, so a direct writer never overtakes the queue; the
+    // reservation here is therefore the ring's own, ReserveWrite.
+    void OutmsgFlush(lib_ams::FShm &shm);
+
     // Write what the queued rings will take, and keep the rest for the next pass.
     // A ring that empties leaves the list; one that is still blocked goes to the
     // back of it, so no ring can starve another.  The list length is sampled at
     // entry, so a ring rotated to the back is not visited twice in one pass.
     //     (user-implemented function, prototype is in amc-generated header)
-    // void zd_outshm_Step(); // fstep:lib_ams.FDb.zd_outshm
+    // void zd_outshm_Step(); // dmmeta.fstep:lib_ams.FDb.zd_outshm
 
-    // Reserve LEN bytes for a message on SHM and return where to build it, taking
-    // the ring itself when it has room and a queued record when it does not.  The
-    // answer is never NULL for a length the ring could ever carry, which is what
-    // lets a caller format without testing.  EndWriteQueue must follow, and the
-    // two communicate through _db.c_cur_outmsg, so a format call may not begin
-    // another before it ends.
+    // Reserve LENGTH bytes for a message on SHM and return where to build it,
+    // taking the ring itself when it has room and a record when it does not.  The
+    // answer is never NULL, which is what lets a caller format without testing.
+    // EndWriteQueue must follow, and the two communicate through
+    // _db.c_cur_outmsg, so a format call may not begin another before it ends.
+    //
+    // A message longer than the ring's largest is always built in a record,
+    // because the ring can never take it: queued, it would stand at the head of
+    // the ring's queue forever, and every message written after it would wait
+    // behind it.  EndWriteQueue sends such a message by the board instead.
     void *BeginWriteQueue(lib_ams::FShm &shm, int length);
 
-    // Finish the message BeginWriteQueue started: publish it to the ring when it
-    // was built there, and otherwise put it at the back of the ring's queue and
-    // arm the step that will write it.
-    void EndWriteQueue(lib_ams::FShm &shm, void *ptr, int len);
+    // Finish the message BeginWriteQueue started at PTR, LEN bytes long: publish
+    // it to SHM when it was built there, send it by the board when it is longer
+    // than the ring's largest message, and otherwise put it at the back of the
+    // ring's queue and arm the step that will write it.  Return false when the
+    // message is oversize and the board cannot take it now, in which case it is
+    // dropped and counted in n_outmsg_oversize_drop.
+    bool EndWriteQueue(lib_ams::FShm &shm, void *ptr, int len);
+
+    // Write MSG to SHM, queued: into the ring when it has room and nothing waits
+    // ahead of it, otherwise onto the ring's queue, which zd_outshm writes as
+    // budget appears.  The message WriteMsg would drop is the one this keeps, so
+    // this is the write for a message with no retry of its own behind it -- a
+    // command, its answer -- where a drop is a requester waiting out its whole
+    // deadline for output that was thrown away.  Return false when MSG is
+    // oversize and the board cannot take it now, which EndWriteQueue counts.
+    bool WriteMsgQueue(lib_ams::FShm &shm, ams::MsgHeader &msg);
 
     // -------------------------------------------------------------------
     // cpp/lib_ams/shm.cpp
@@ -361,6 +574,11 @@ namespace lib_ams { // update-hdr srcfile:"(cpp/lib_ams/(board|bridge|dump|fdin|
     // failure (treated as "no limit" by callers comparing against a need),
     // so chroots or platforms without /dev/shm don't hard-fail callers.
     i64 GetShmAvail();
+
+    // Size in bytes of the tmpfs backing /dev/shm, and 0 when statvfs cannot
+    // answer, so a reserve derived from it is nothing where the filesystem is
+    // unknown.
+    i64 GetShmTotal();
 
     // Bytes the segment belonging to GRP_ID already occupies on the tmpfs, and zero
     // when no such segment exists yet.
@@ -382,6 +600,10 @@ namespace lib_ams { // update-hdr srcfile:"(cpp/lib_ams/(board|bridge|dump|fdin|
     // free space, and st_blocks is what leaves that claim in the caller's need.
     i64 ShmExistingSize(ams::GrpId grp_id);
 
+    // TRUE when the segment of group GRP_ID exists on this node's tmpfs, whoever
+    // made it and whether or not this process has opened it.
+    bool ShmExistsQ(ams::GrpId grp_id);
+
     // Scan /dev/shm for orphaned ams segments and unlink them.  A segment is an
     // orphan when no process holds its write lock and it is no longer being created
     // (see OrphanSegmentQ) -- i.e. its writer crashed or was kill -9'd without
@@ -393,11 +615,13 @@ namespace lib_ams { // update-hdr srcfile:"(cpp/lib_ams/(board|bridge|dump|fdin|
     // return TRUE if shared memory region is attached to shm SHM.
     bool ShmFdOpenQ(lib_ams::FShm &shm);
 
-    // Segment size that gives a ring a writable body of at least BODY bytes while
-    // carrying messages of up to MAXMSG.  A segment is a 4096-byte control header,
-    // a power-of-two body that a message offset wraps inside, and one message of
-    // linear overflow past the body, so a message near the top of the body writes
-    // straight into the overflow and never straddles the end.
+    // Return the segment size that gives a ring a writable body of at least BODY
+    // bytes while carrying messages of up to MAXMSG.  A segment is a control header
+    // of whole pages, a power-of-two body that a message offset wraps inside, and
+    // one message of linear overflow past the body, so a message near the top of
+    // the body writes straight into the overflow and never straddles the end.  The
+    // size counts one header page; ShmCreate adds the pages a ring's declared shm
+    // channels need past the first (ShmControlSize).
     //
     // The body is floored at four messages, and that floor is the whole reason
     // this arithmetic lives in one function.  A writer holds two messages back
@@ -439,7 +663,7 @@ namespace lib_ams { // update-hdr srcfile:"(cpp/lib_ams/(board|bridge|dump|fdin|
     // because doing so would overwrite data not yet consumed by one of the read members.)
     // A board has no write budget to update.  It is not a ring, so it has no
     // writelimit and no member offsets to derive one from; its space is tracked by
-    // the slot free list instead.
+    // chunk, in the writer's own memory.
     bool UpdateBudget(lib_ams::FShm &shm);
 
     // True when SHM can be written: it is open for writing and its control header
@@ -459,25 +683,43 @@ namespace lib_ams { // update-hdr srcfile:"(cpp/lib_ams/(board|bridge|dump|fdin|
     // woff<writelimit test is not length-specific; there is nothing to wait for
     // per-length (WriteMsg/BeginWrite reject any oversize write outright).  When
     // BLOCK is false, sample the budget once (re-running UpdateBudget) and return
-    // whether there is room.  When BLOCK is true and there is none, poll all
-    // control shms (zd_ctlin list) for heartbeats indefinitely until a reader
-    // drains the ring and only then return -- so a blocking write never drops.
+    // whether there is room.  When BLOCK is true and there is none, re-sample this
+    // ring's own budget in a tight loop until a reader drains it, so a blocking
+    // write never drops.  Before it spins it sends the wakeups the pass owes its
+    // peers (FlushWake), since the reader it waits on may be asleep on one of them.
+    // The loop rides no list and reads no other ring, and nothing else in this
+    // process runs while it spins.
     // A closed ring returns FALSE at once, in blocking mode too: no reader can
     // ever drain it, so waiting would be waiting forever.
     // Return TRUE if writing can proceed.  Public so a caller can wait for room
     // ahead of a zero-copy *_FmtShm.
     bool WaitBudget(lib_ams::FShm &shm, bool block);
 
-    // Begin writing message of length LENGTH, non-blocking -- the hot path for
-    // WriteMsg and amc's pnew (acr pnew) zero-copy *_FmtShm.  The budget check is
-    // inlined here (rather than calling WaitBudget) so the common case is a
-    // straight-line sample with no out-of-line call: if a message already fits,
-    // return a pointer to the write region.  On a miss, re-sample once via
-    // UpdateBudget; in signaled mode then park as a waiting writer (ParkWriter) so
-    // a draining reader wakes us.  Still no room -> bump nnobudget and return NULL.
-    // A too-big message, and a ring that is not writable, return NULL without
-    // touching the budget counters -- the counters live in the ring's own header,
-    // which a closed ring no longer has.
+    // Reserve LENGTH bytes at SHM's write offset and return where to build the
+    // message, or NULL when the ring refuses the length or has no room for it now.
+    // This is the ring's own admission, and the hot path of every write: the budget
+    // check is inlined so a message that fits costs one straight-line sample.  On a
+    // miss the budget is re-sampled once through UpdateBudget, and in signaled mode
+    // the writer then parks (ParkWriter) so a draining reader wakes it.  Still no
+    // room bumps nnobudget.  A too-big message, and a ring that is not writable,
+    // return NULL without touching the counters, which live in the ring's own
+    // header and are gone once the ring is closed.  BeginWrite is what a writer
+    // calls; it puts the ring's queued messages ahead of the reservation.
+    void *ReserveWrite(lib_ams::FShm &shm, int length);
+
+    // Begin writing a message of LENGTH bytes to SHM, non-blocking: the write
+    // pointer, or NULL when the ring cannot take the message now.
+    //
+    // A ring may hold messages an earlier writer queued because the ring was full
+    // at the time (BeginWriteQueue).  The txn keeps a committer's ring full of
+    // records for as long as the committer reads slower than they arrive, and a
+    // command relayed onto that ring waits in its queue.  Were the record delivery
+    // allowed to reserve each slot the committer frees, the ring would stay full
+    // and the command would wait out the whole run -- the requester times out on
+    // an answer that was never lost, only never sent.  So the queue is written
+    // first, and while any of it remains the reservation is refused: every writer
+    // of a ring yields to what was queued on it before, and a queued message is
+    // never overtaken.
     void *BeginWrite(lib_ams::FShm &shm, int length);
 
     // Begin writing message of length LENGTH, blocking until the ring has room.
@@ -487,25 +729,28 @@ namespace lib_ams { // update-hdr srcfile:"(cpp/lib_ams/(board|bridge|dump|fdin|
 
     // Finish writing the message of length LEN and publish it: sfence so the
     // payload is visible before the woff store, then re-arm the reader's poll
-    // entry.  In signaled mode, wake any reader parked on the ring (WakeReader).
+    // entry.  In signaled mode, owe any reader parked on the ring a wakeup
+    // (WakeReader), which the end of the pass sends.
     //
     // c_reader is this process's own slot in the ring's reader table, so a ring
     // with one is a ring this process both writes and reads -- a loopback.  The
     // publish is then its own wakeup and goes through the local wake path: a
     // loopback ring that had parked would otherwise sit on the park list with its
-    // sleeping flag raised while it is being polled, and only the next idle
-    // recovery pass would put the two lists back in agreement.
+    // sleeping flag raised while it is being polled, and nothing would put the two
+    // lists back in agreement, since a same-process writer sends itself no signal.
+    // UnparkReader here also sets next_loop, so the ring is polled before the loop
+    // sleeps.
     void EndWrite(lib_ams::FShm &shm, void *ptr, int len);
 
     // Write message MSG to SHM, non-blocking.  Return TRUE on success; FALSE
     // when the ring has no budget (the message is dropped -- the caller decides
     // whether to retry, unread, or discard).
     //
-    // A message the ring cannot hold goes to the writer's message board instead,
-    // and the ring carries a reference to it.  The board path answers the same way
-    // the ring does -- FALSE when it cannot take the message -- so a caller sees one
-    // contract whichever way the message travels, and a writer with no board keeps
-    // rejecting an oversize message as before.
+    // A message the ring cannot hold is copied into the writer's message board
+    // instead, and the ring carries a reference to it.  The board path answers the
+    // same way the ring does -- FALSE when it cannot take the message, and the
+    // board space is given back -- so a caller sees one contract whichever way the
+    // message travels, and a writer with no board rejects an oversize message.
     bool WriteMsg(lib_ams::FShm &shm, ams::MsgHeader &msg);
 
     // Write message MSG to SHM, blocking until the ring has room.  WaitBudget
@@ -515,10 +760,11 @@ namespace lib_ams { // update-hdr srcfile:"(cpp/lib_ams/(board|bridge|dump|fdin|
     // correctness, not config, picks this variant.
     bool WriteMsgBlock(lib_ams::FShm &shm, ams::MsgHeader &msg);
     //     (user-implemented function, prototype is in amc-generated header)
-    // void shm_file_Cleanup(lib_ams::FShm &shm); // ffunc:lib_ams.FShm.shm_file.Cleanup
+    // void shm_file_Cleanup(lib_ams::FShm &shm); // dmmeta.ffunc:lib_ams.FShm.shm_file.Cleanup
 
     // Close shm: unmap the region, drop the fd, and unlink the file if this
-    // process created it.  Clear the sleeping flag if a reader was sleeping.
+    // process created it.  Send the wakeups the pass owes first, and clear the
+    // sleeping flag if a reader was sleeping.
     // The record itself stays in the shm table so the next incarnation under the
     // same grp reuses it.
     void ShmClose(lib_ams::FShm &shm);
@@ -548,18 +794,24 @@ namespace lib_ams { // update-hdr srcfile:"(cpp/lib_ams/(board|bridge|dump|fdin|
 
     // If the shm is open for reading, check to see if a message
     // is available. If it is available, return pointer to message.
+    //
+    // The writer copies a message in, fences, and then stores woff (EndWrite), so
+    // a woff this reader sees announces bytes already written.  The reader's half
+    // is the mirror: load woff, fence, and only then read the header and body it
+    // announces.  With the fence ahead of the load instead, nothing orders the
+    // payload read after the woff read, and on a weakly ordered core (aarch64,
+    // where lfence is dmb ishld) a reader could see the advanced woff and still
+    // read the bytes the slot held before.  A reloaded woff equal to the cached one
+    // announces nothing new, and the fence taken when it was cached already orders
+    // every read below it, so an idle ring skips the fence.
     ams::MsgHeader *PeekMsg(lib_ams::FShm &shm);
-
-    // Called by the client
-    // to avoid reading current message
-    void StopReading(lib_ams::FShm &shm);
 
     // Check all shms (that are not already readable) for readability and
     // transfer readable shms to the read heap with correct sort key.
     // In signaled mode, idle shms are removed from the poll loop; the reader
     // sets sleeping=1 on the shmember so that the writer can wake it via kill().
     //     (user-implemented function, prototype is in amc-generated header)
-    // void cd_poll_read_Step(); // fstep:lib_ams.FDb.cd_poll_read
+    // void cd_poll_read_Step(); // dmmeta.fstep:lib_ams.FDb.cd_poll_read
     ams::Shmember *shmember_Find(lib_ams::FShm &shm, int i);
     void shm_c_shmember_curs_Next(shm_c_shmember_curs &curs);
     void shm_c_shmember_curs_Reset(shm_c_shmember_curs &curs, lib_ams::FShm &parent);
@@ -581,26 +833,69 @@ namespace lib_ams { // update-hdr srcfile:"(cpp/lib_ams/(board|bridge|dump|fdin|
     // step of that, not the first.
     void Terminate();
 
-    // Install the graceful stop for SIGTERM and SIGINT, so a signal asking this
-    // process to stop means what an ams.TerminateMsg asking it to stop means.
+    // Install a handler for SIG that writes to a pipe, so the disposition runs from
+    // the main loop instead of inside the handler.
     //
-    // The platform already sends that signal expecting to be understood.  A node's
-    // shutdown SIGTERMs a userproc group leader as "the polite stop", and the
-    // `userproc -del` verb sends the same signal; without a handler both are
-    // answered by the default disposition -- immediate death, no drain, no departure
-    // record.  A process that dies that way while holding a worker pool's ring, or
-    // midway through a store write, leaves its owner waiting on a barrier nobody
-    // will ever report.  Installing the handler in Init makes the polite stop
-    // actually polite for every process that speaks ams, which is every process
-    // here; a process whose stop means something else says so by overriding the
-    // handler after Init (ams_bridge, whose pty child dies by SIGHUP to its
-    // session).
+    // A handler runs at an arbitrary instruction of the interrupted code, so it may
+    // perform only what stays correct there.  A disposition that allocates, or that
+    // moves a structure the main loop also moves, does not qualify: interrupting the
+    // loop inside one leaves a container reporting a member it has lost, or an
+    // allocator deadlocked against its own lock.  Both fail silently.  Denser
+    // signals make the collision likelier, since each arrives while the loop is
+    // still handling the previous one.
+    //
+    // The handler therefore writes one byte and returns.  The pipe's read end is an
+    // ordinary iohook, so the disposition runs between two of the loop's actions.
+    //
+    // No signal is blocked.  A blocked signal's mask survives exec, so a parent that
+    // blocked SIGCHLD would hand every child the same mask and break the child's own
+    // waits.
+    //
+    // The first routed signal opens the pipe, and one iohook reads it for all of
+    // them.  Routing is idempotent, and a process that routes nothing keeps the
+    // dispositions it already had.
+    //
+    // Routing is requested rather than given to every process.  A registered iohook
+    // is work the main loop can be woken by, so `giveup_time_Step` holds next_loop
+    // at the clock while any iohook exists.  A process that ends by running out of
+    // inputs to poll would never end again, so only a process whose exit is its own
+    // decision may route.
+    void RouteSignal(int sig);
+
+    // Install this process's answer to SIGTERM and SIGINT, which its proctype
+    // decides.  Call it once the proc id is known, since the proctype comes from
+    // there.
+    //
+    // A process that owns its own stop gets the graceful handler, so the signal
+    // means what an ams.TerminateMsg means.  A node's drain sends SIGTERM to a
+    // userproc group leader as the polite stop, and without a handler the default
+    // disposition kills it mid-write, leaving its owner waiting on a barrier nobody
+    // will report.  A process whose disposition is too large to run inside a handler
+    // asks for RouteSignal instead.
+    //
+    // A module of a node ignores both.  Ctrl-C signals the whole foreground process
+    // group, so every module would exit while its supervisor is still on the first
+    // step of the node's stop.  A module's stop is its node's, asked for by an
+    // ams.TerminateMsg in stoprank order, so it waits to be asked -- and stoprank
+    // names exactly that set, since a client, a supervisor or a one-shot tool
+    // carries zero.
     void SetupTerminateSignal();
 
     // Move SHM's parked reader back into the poll loop: clear the sleeping flag its
     // writer reads, take it off the park list, and re-arm it for polling.  Every
     // wake goes through here, so the two lists stay a partition of the open
     // readers.
+    //
+    // Keeping the loop awake is part of the same act.  A ring on the poll list is
+    // polled only on a pass the loop runs, and giveup_time sleeps unless a step sets
+    // next_loop to now; the cd_poll_read step sets it while it runs, but only while
+    // its list is already non-empty.  The loopback publish in EndWrite hands a ring
+    // back mid-pass, after that gate has been read, so nothing else would keep the
+    // loop off epoll_wait and a ring with data waiting would sleep unpolled until an
+    // unrelated event.  Setting next_loop here holds the invariant "a pollable ring
+    // keeps the loop awake" for that path.  A ring handed back by SignalReadStep
+    // instead came from epoll returning, where giveup_time has already set next_loop,
+    // so the store is a no-op there and harmless.
     void UnparkReader(lib_ams::FShm &shm);
 
     // Wake every parked reader.  A SIGRTMIN names no stream -- the signal says only
@@ -615,45 +910,56 @@ namespace lib_ams { // update-hdr srcfile:"(cpp/lib_ams/(board|bridge|dump|fdin|
 
     // Enter or leave signaled mode.  Entering blocks SIGRTMIN and arms an
     // always-armed signalfd registered with the iohook, so a peer's SIGRTMIN wakes
-    // the epoll_wait.  Leaving removes the hook, closes the signalfd, and moves
+    // the epoll_wait.  ENABLE picks which.  Leaving first sends the wakeups this
+    // pass owes its peers, then removes the hook, closes the signalfd, and moves
     // every parked reader back into the poll loop; the SIGRTMIN block stays in
     // place for the rest of the process lifetime.
     void SetSignaledMode(bool enable);
 
-    // After publishing data to SHM, wake any reader parked on it.  Full barrier
-    // between the woff store (the caller's EndWrite) and the sleeping load: the
-    // reader sets sleeping and then re-reads woff under its own mfence, so a
-    // store-load fence on both sides is required -- without it each can miss the
-    // other and the wakeup is lost.
+    // Owe the readers of SHM a wakeup for a message just published on it.  The ring
+    // goes on the pass's wake list, whose step signals the parked readers before the
+    // loop waits.  A pass that writes a thousand messages to one ring then walks its
+    // member slots once, where waking at each write would walk them a thousand times
+    // and send a signal for each.
     void WakeReader(lib_ams::FShm &shm);
 
-    // After draining SHM, wake a writer parked on its budget -- but only once the
-    // ring is at least half-drained, so the writer refills about half the ring per
-    // wake instead of one message per wake.  Full barrier first: the reader's
-    // offset store must be globally visible before this re-read, else the writer's
-    // own re-check and this one can both miss.
+    // Owe the writer of SHM a wakeup for the room this reader freed on it, which the
+    // pass's wake step sends if the writer is parked when the pass ends.
     void WakeWriter(lib_ams::FShm &shm);
 
     // Park the reader on SHM: set its sleeping flag, then under a full barrier
     // re-check for a message that raced in after the empty peek -- the writer's
-    // EndWrite may already have read sleeping==0 and skipped the SIGRTMIN.  Return
+    // zd_wake_Step may already have read sleeping==0 and skipped the SIGRTMIN.  Return
     // true if parked (no data); false if a message is present, in which case the
     // flag is cleared and the caller keeps polling.
     bool ParkReader(lib_ams::FShm &shm);
 
-    // Park the writer on SHM waiting for budget: set its writer_sleeping flag, then
-    // under a full barrier re-sample the budget -- a reader may free it between the
-    // store and the load.  Return true if budget appeared (the caller writes), in
-    // which case the flag is cleared; false if parked (a reader's WakeWriter signals
-    // it).
-    bool ParkWriter(lib_ams::FShm &shm);
+    // Park the writer on SHM waiting for budget for EXTRA more bytes: set its
+    // writer_sleeping flag, then under a full barrier re-sample the budget -- a
+    // reader may free it between the store and the load.  SLOT is the channel the
+    // write goes on, NULL for the base channel, and its room under its limit is
+    // re-checked the same way.  Return true if budget appeared (the caller writes),
+    // in which case the flag is cleared; false if parked (a reader's zd_wake_Step
+    // signals it), or if the ring is not writable, which parks nothing.  EXTRA is
+    // the room test the caller asked HasBudgetQ with, so the re-check agrees with
+    // the test that refused.
+    bool ParkWriter(lib_ams::FShm &shm, u32 extra = 0, ams::Shmchannel *slot = NULL);
 
-    // About to sleep (the poll loop has drained empty): under a full barrier re-scan
-    // every parked reader and re-arm any whose shm now has data.  Catches a writer
-    // that published and read sleeping==0 before the reader's park landed -- the
-    // lost wakeup the per-shm ParkReader re-check cannot recover for a shm parked in
-    // an earlier pass.
-    void RecoverWakeup();
+    // Wake the peers every ring on the wake list is owed: the parked readers of a
+    // ring this pass wrote, and the parked writer of a ring this pass freed room on.
+    // The step runs at the end of the pass, just before the loop waits, and signals
+    // each pid once, however many rings it was owed a wakeup on.  A writer's flag is
+    // cleared before its signal, so one wake is sent per park; a reader clears its
+    // own flag when the signal unparks it.
+    //
+    // One barrier covers the whole list.  A reader parks by storing its sleeping
+    // flag and then, under its own barrier, re-reading woff; the writer that stored
+    // woff now loads the flag.  A parked writer stores its flag and re-samples the
+    // reader's offset the same way.  Without a barrier between this process's
+    // store and its load of the flag, the load may be served first, and the peer
+    // sleeps on data or room nobody tells it about.
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void zd_wake_Step(); // dmmeta.fstep:lib_ams.FDb.zd_wake
 
     // -------------------------------------------------------------------
     // include/lib_ams.inl.h
@@ -677,12 +983,116 @@ namespace lib_ams { // update-hdr srcfile:"(cpp/lib_ams/(board|bridge|dump|fdin|
     // built on it never drops, it backpressures the writer.
     inline algo::Alloc GetAllocBlock(lib_ams::FShm &shm);
 
+    // An allocator that formats a message straight into BOARD's chunk being
+    // filled, so a *_FmtAlloc built on it costs no copy: the begin hook is
+    // BoardAlloc and returns NULL when no chunk can take the message, and the end
+    // hook trims the reservation to the length the format used.  Nothing is sent
+    // by the format; the caller sends the message with BoardSend, or gives the
+    // space back with BoardTrim.
+    inline algo::Alloc BoardGetAlloc(lib_ams::FShm &board);
+
     // Like GetAlloc, but a message the ring has no room for is queued on the ring
     // and written by lib_ams's own step as budget appears -- so a *_FmtAlloc built
     // on it neither drops nor blocks, and the caller has nothing to test.  This is
     // what a message with no other retry behind it is written through; see
     // cpp/lib_ams/outmsg.cpp.
     inline algo::Alloc GetAllocQueue(lib_ams::FShm &shm);
+
+    // TRUE when SHM is a message board rather than a lane ring.
+    inline bool BoardQ(lib_ams::FShm &shm);
+
+    // Send every wakeup the pass owes now, without waiting for the end of the pass.
+    // A caller that is about to wait outside the loop calls it first: WaitBudget
+    // before it spins on a peer that may be asleep, ShmClose before the ring's
+    // mapping goes, and leaving signaled mode before the lists stop being drained.
+    inline void FlushWake();
+
+    // TRUE when this process, a reader of SHM, has at most half the ring left unread.
+    inline bool HalfDrainedQ(lib_ams::FShm &shm);
+
+    // Address of CHUNK's first byte in this process's mapping of its board.
+    inline u8 *ChunkAddr(lib_ams::FChunk &chunk);
+
+    // Count one hold on CHUNK that no reader releases: a module keeping records
+    // that index into the chunk takes one, and the chunk is not reused until
+    // ChunkRelease gives it back.
+    inline void ChunkHold(lib_ams::FChunk &chunk);
+
+    // The free room at the end of CHUNK: where the next reservation would start, and
+    // the bytes left to it.  Nothing is reserved by asking; a caller that reads data
+    // into the room reserves what landed with ChunkAlloc, and nothing else may
+    // reserve in the chunk in between.
+    inline algo::memptr ChunkRoom(lib_ams::FChunk &chunk);
+
+    // Shorten the most recent reservation in CHUNK, at PTR, to LEN bytes, so the
+    // next reservation starts right after it; a LEN of zero gives the space back
+    // entirely.  Only the last reservation in a chunk can move, and only while no
+    // reference to it has been sent.
+    inline void ChunkTrim(lib_ams::FChunk &chunk, void *ptr, int len);
+
+    // Board offset of MSG, a message in CHUNK: the coordinate a reference carries,
+    // which a reader resolves against its own mapping of the board.
+    inline u64 BoardOffset(lib_ams::FChunk &chunk, ams::MsgHeader &msg);
+
+    // The message of LENGTH bytes at board OFFSET on lane SHM's writer's board, or
+    // NULL when the coordinates do not describe a message this process can see.
+    //
+    // The bounds test and the length cross-check are not ceremony: one chunk serves
+    // every recipient of the message, so a reference that has gone stale -- through
+    // a sender accounting error, or a chunk reused before a reader was done with it
+    // -- would hand the same wrong bytes to every reader at once.  A reference that
+    // fails either test is refused rather than dispatched.
+    inline ams::MsgHeader *BoardResolve(lib_ams::FShm &shm, u64 offset, u32 length);
+
+    // The payload BOARDREF names on lane SHM's writer's board, or NULL when it does
+    // not describe a message this process can see; the coordinate form is above.
+    inline ams::MsgHeader *BoardResolve(lib_ams::FShm &shm, ams::BoardrefMsg &boardref);
+
+    // True when SPEC names a ring pair, both IN and OUT: the process is a child
+    // bridged to a server's namespace, and speaks to it over shared memory.
+    inline bool BridgedQ(ams::Procspec &spec);
+
+    // TRUE when the channel of slot SLOT has room for EXTRA more bytes: its count is
+    // below its limit by more than EXTRA.  As on a ring, the last message may take
+    // the count past the limit, and the one after it is refused.  A NULL SLOT is the
+    // base channel, whose room is the ring's alone.
+    inline bool SlotRoomQ(ams::Shmchannel *slot, u32 extra);
+
+    // TRUE when CHANNEL's reader has claimed it and set a window, so a writer may
+    // count a flow on it.  A reader that never opens the channel leaves it with no
+    // room for the life of the ring, and a writer that tests this first keeps such a
+    // reader's flow on the ring itself.
+    inline bool ChannelClaimedQ(lib_ams::FChannel &channel);
+
+    // Return the bytes the writer may still write on channel slot CHANNEL: the limit
+    // its reader set less what the writer has written, and 0 at or past the limit.
+    inline u64 ChannelRoom(ams::Shmchannel &channel);
+
+    // Return the bytes the writer may still write on CHANNEL under its limit: the
+    // slot's room on a keyed channel, and the ring's budget on the base channel.
+    inline u64 ChannelRoom(lib_ams::FChannel &channel);
+
+    // Return the number of member slots in a ring's control header, one per reader
+    // the ring may carry.  A board has none.
+    inline u32 RingShmemberN();
+
+    // Return the offset of a ring's channel table in its control header: past the
+    // header and the member slots.  A segment an older build laid out with other
+    // sizes of these records is refused by its magic, and the asserts tie the sizes
+    // the magic stands for to the build.
+    inline u32 RingChannelStart();
+
+    // Return the bytes of a ring's control header when its creator declares NCHANNEL
+    // shm channels: the header, the member slots and the channel table, rounded up
+    // to whole pages.  One page is the least, and it holds 62 channels, so a ring
+    // declaring no more than that keeps a one-page header.
+    inline u32 ShmControlSize(u32 nchannel);
+
+    // Return an allocator that formats a message straight onto CHANNEL: its begin
+    // is the channel's BeginWrite and its end the channel's EndWrite, so a generated
+    // Msg_FmtAlloc writes on a channel as Msg_FmtShm writes on a ring, and the
+    // message counts on the channel.
+    inline algo::Alloc GetAlloc(lib_ams::FChannel &channel);
 }
 
 #include "include/lib_ams.inl.h"

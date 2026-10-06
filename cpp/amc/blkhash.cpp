@@ -1,18 +1,17 @@
-// Copyright (C) 2026 AlgoRND
+// Copyright (C) 2026 AlgoX2 Corp
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
 // Exceptions: yes
@@ -27,17 +26,27 @@
 // intrusive fields to the row.  Blocks are fixed-size and come from the
 // basepool, so a block freed when its last slot clears is recycled for the
 // next block of the same index with no fragmentation.
+// The buckets grow by linear hashing, one bucket per new block.  Say an index
+// holds a million blocks and the next insert needs one more.  A bucket array
+// that doubles would re-chain all million blocks inside that one insert, which
+// is a stall at a fixed point in the index's growth, however rarely it comes.
+// Linear hashing instead splits the next bucket in turn into itself and one new
+// bucket at the end, so an insert moves at most one chain.  The buckets sit in
+// fixed segments of 512 under a directory, so adding a bucket never copies the
+// others; the directory holds one pointer per segment and doubles, which
+// copies a 512th of what a doubling bucket array would.
 
 #include "include/amc.h"
 
 // -----------------------------------------------------------------------------
 
-// Return the member access path from a key value to the integer linear
-// component named by blkhash.linfld, e.g. ".seq.value" for a (stream,seq) key.
+// Return the member access path from a key value to the integer named by
+// LINFLD, e.g. ".seq.value" for a (stream,seq) key whose LINFLD is its seq.
 // Descends single-field wrapper ctypes (algo.SeqType) until a builtin is hit.
-static tempstr LinSuffix(amc::FBlkhash &blkhash) {
+// Blkhash and Trie both reach their dense integer this way.
+tempstr amc::LinfldSuffix(amc::FField &linfld) {
     tempstr ret;
-    amc::FField *fld = blkhash.p_linfld;
+    amc::FField *fld = &linfld;
     ret << "." << name_Get(*fld);
     amc::FCtype *ctype = fld->p_arg;
     while (ctype->c_bltin == NULL && c_datafld_N(*ctype) == 1) {
@@ -50,10 +59,10 @@ static tempstr LinSuffix(amc::FBlkhash &blkhash) {
 
 // -----------------------------------------------------------------------------
 
-// Return the builtin ctype at the end of the linfld wrapper chain,
-// or NULL if the chain does not terminate in a builtin.
-static amc::FCtype *LinTerminal(amc::FBlkhash &blkhash) {
-    amc::FCtype *ctype = blkhash.p_linfld->p_arg;
+// Return the builtin ctype at the end of the wrapper chain that starts at
+// LINFLD, or NULL if the chain does not terminate in a builtin.
+amc::FCtype *amc::LinfldTerminal(amc::FField &linfld) {
+    amc::FCtype *ctype = linfld.p_arg;
     while (ctype->c_bltin == NULL && c_datafld_N(*ctype) == 1) {
         ctype = c_datafld_Find(*ctype, 0)->p_arg;
     }
@@ -93,7 +102,7 @@ static void Blkhash_Check(amc::FField &field) {
     amc::FBlkhash &blkhash = *field.c_blkhash;
     amc::FField &linfld = *blkhash.p_linfld;
     amc::FCtype *keytype = blkhash.p_hashfld->p_arg;
-    amc::FCtype *terminal = LinTerminal(blkhash);
+    amc::FCtype *terminal = LinfldTerminal(*blkhash.p_linfld);
     if (linfld.p_ctype != keytype) {
         prerr("amc.blkhash_linfld"
               <<Keyval("blkhash",field.field)
@@ -145,14 +154,18 @@ void amc::tclass_Blkhash() {
     Set(R, "$Hashfldarg" , Argtype(*hashfld));
     Set(R, "$Hashfldtype", tempstr() << ns_Get(*hashfld->p_arg) << "::" << name_Get(*hashfld->p_arg));
     Set(R, "$gethashfld" , FieldvalExpr(field.p_arg, *hashfld,"row"));
-    Set(R, "$linsuffix"  , LinSuffix(blkhash));
+    Set(R, "$linsuffix"  , LinfldSuffix(*blkhash.p_linfld));
     Set(R, "$linbits"    , tempstr() << i32(blkhash.linbits));
     Set(R, "$slotn"      , tempstr() << (1<<i32(blkhash.linbits)));
     Set(R, "$slotmask"   , tempstr() << ((1<<i32(blkhash.linbits))-1));
-    Set(R, "$Blk"        , "$Parname_$name_Blk");
+    Set(R, "$Blk"        , "$ns::$Parname_$name_Blk");
+    Set(R, "$segbits"    , "9");
+    Set(R, "$segn"       , "512");
+    Set(R, "$segmask"    , "511");
 
-    InsVar(R, field.p_ctype     , "$Blk**", "$name_buckets_elems", "", "pointer to bucket array (chains of blocks)");
-    InsVar(R, field.p_ctype     , "i32", "$name_buckets_n", "", "number of buckets (power of 2)");
+    InsVar(R, field.p_ctype     , "$Blk***", "$name_dir_elems", "", "directory of bucket segments, 512 buckets each");
+    InsVar(R, field.p_ctype     , "i32", "$name_dir_max", "", "capacity of the directory, in segments");
+    InsVar(R, field.p_ctype     , "i32", "$name_buckets_n", "", "number of buckets; grows by one per split");
     InsVar(R, field.p_ctype     , "i32", "$name_nblk", "", "number of resident blocks");
     InsVar(R, field.p_ctype     , "i32", "$name_n", "", "number of elements in the index");
 
@@ -171,6 +184,94 @@ void amc::tclass_Blkhash() {
 
 // -----------------------------------------------------------------------------
 
+// Generate Head, which returns the address of bucket INDEX's chain head.  The
+// bucket sits in segment INDEX/512 of the directory.
+void amc::tfunc_Blkhash_Head() {
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+
+    amc::FFunc& func = amc::CreateCurFunc();
+    func.priv = true;
+    Ins(&R, func.ret  , "$Blk**", false);
+    Ins(&R, func.proto, "$name_Head($Parent, u32 index)", false);
+    Ins(&R, func.body, "return &$parname.$name_dir_elems[index >> $segbits][index & $segmask];");
+}
+
+// -----------------------------------------------------------------------------
+
+// Generate Index, which returns the bucket a block of hash HASHVAL lives in.
+// With n buckets and low the largest power of two not above n, buckets below
+// n-low have been split already and are addressed by one more hash bit.
+void amc::tfunc_Blkhash_Index() {
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+
+    amc::FFunc& func = amc::CreateCurFunc();
+    func.priv = true;
+    Ins(&R, func.ret  , "u32", false);
+    Ins(&R, func.proto, "$name_Index($Parent, u32 hashval)", false);
+    Ins(&R, func.body, "u32 n = u32($parname.$name_buckets_n);");
+    Ins(&R, func.body, "u32 low = 1u << algo::u32_BitScanReverse(n);");
+    Ins(&R, func.body, "u32 ret = hashval & (low - 1);");
+    Ins(&R, func.body, "if (ret < n - low) {");
+    Ins(&R, func.body, "    ret = hashval & (2 * low - 1);");
+    Ins(&R, func.body, "}");
+    Ins(&R, func.body, "return ret;");
+}
+
+// -----------------------------------------------------------------------------
+
+// Generate Split, which adds bucket n and moves into it the blocks of bucket
+// n-low whose next hash bit is set.  A new segment is allocated when bucket n
+// starts one, and the directory doubles when it has no room for that segment.
+void amc::tfunc_Blkhash_Split() {
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+
+    amc::FFunc& func = amc::CreateCurFunc();
+    func.priv = true;
+    Ins(&R, func.ret  , "void", false);
+    Ins(&R, func.proto, "$name_Split($Parent)", false);
+    Ins(&R, func.body, "u32 n = u32($parname.$name_buckets_n);");
+    Ins(&R, func.body, "u32 low = 1u << algo::u32_BitScanReverse(n);");
+    Ins(&R, func.body, "u32 seg = n >> $segbits;");
+    Ins(&R, func.body, "if ((n & $segmask) == 0 && i32(seg) >= $parname.$name_dir_max) {");
+    Ins(&R, func.body, "    i32 dir_max = $parname.$name_dir_max * 2;");
+    Ins(&R, func.body, "    $Blk ***dir = ($Blk***)$basepool_AllocMem(sizeof($Blk**) * dir_max);");
+    Ins(&R, func.body, "    if (UNLIKELY(!dir)) {");
+    Ins(&R, func.body, "        FatalErrorExit(\"$ns.out_of_memory  field:$field\");");
+    Ins(&R, func.body, "    }");
+    Ins(&R, func.body, "    memcpy(dir, $parname.$name_dir_elems, sizeof($Blk**) * $parname.$name_dir_max);");
+    Ins(&R, func.body, "    $basepool_FreeMem($parname.$name_dir_elems, sizeof($Blk**) * $parname.$name_dir_max);");
+    Ins(&R, func.body, "    $parname.$name_dir_elems = dir;");
+    Ins(&R, func.body, "    $parname.$name_dir_max = dir_max;");
+    Ins(&R, func.body, "}");
+    Ins(&R, func.body, "if ((n & $segmask) == 0) {");
+    Ins(&R, func.body, "    $Blk **segment = ($Blk**)$basepool_AllocMem(sizeof($Blk*) * $segn);");
+    Ins(&R, func.body, "    if (UNLIKELY(!segment)) {");
+    Ins(&R, func.body, "        FatalErrorExit(\"$ns.out_of_memory  field:$field\");");
+    Ins(&R, func.body, "    }");
+    Ins(&R, func.body, "    memset(segment, 0, sizeof($Blk*) * $segn);");
+    Ins(&R, func.body, "    $parname.$name_dir_elems[seg] = segment;");
+    Ins(&R, func.body, "}");
+    Ins(&R, func.body, "$parname.$name_buckets_n = i32(n + 1);");
+    Ins(&R, func.body, "$Blk **prev = $name_Head($pararg, n - low);");
+    Ins(&R, func.body, "$Blk **dest = $name_Head($pararg, n);");
+    Ins(&R, func.body, "while ($Blk *blk = *prev) {");
+    Ins(&R, func.body, "    if ((blk->hashval & (2 * low - 1)) == n) {");
+    Ins(&R, func.body, "        *prev = blk->next;");
+    Ins(&R, func.body, "        blk->next = *dest;");
+    Ins(&R, func.body, "        *dest = blk;");
+    Ins(&R, func.body, "    } else {");
+    Ins(&R, func.body, "        prev = &blk->next;");
+    Ins(&R, func.body, "    }");
+    Ins(&R, func.body, "}");
+    Ins(&R, func.body, "// the next split reads the next bucket's blocks, long cold; start the load now");
+    Ins(&R, func.body, "u32 next = n + 1 - (1u << algo::u32_BitScanReverse(n + 1));");
+    Ins(&R, func.body, "if ($Blk *ahead = *$name_Head($pararg, next)) {");
+    Ins(&R, func.body, "    __builtin_prefetch(ahead);");
+    Ins(&R, func.body, "}");
+}
+
+// -----------------------------------------------------------------------------
+
 void amc::tfunc_Blkhash_Find() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
 
@@ -179,8 +280,7 @@ void amc::tfunc_Blkhash_Find() {
     Ins(&R, find.proto, "$name_Find($Parent, $Hashfldarg key)", false);
     Ins(&R, find.body, "$Hashfldtype mkey = key;");
     Ins(&R, find.body, "mkey$linsuffix &= ~u64($slotmask);");
-    Ins(&R, find.body, "u32 index = $Hashfldtype_Hash(0, mkey) & ($parname.$name_buckets_n - 1);");
-    Ins(&R, find.body, "$Blk *blk = $parname.$name_buckets_elems[index];");
+    Ins(&R, find.body, "$Blk *blk = *$name_Head($pararg, $name_Index($pararg, $Hashfldtype_Hash(0, mkey)));");
     Ins(&R, find.body, "while (blk && !(blk->key == mkey)) {");
     Ins(&R, find.body, "    blk = blk->next;");
     Ins(&R, find.body, "}");
@@ -214,6 +314,20 @@ void amc::tfunc_Blkhash_N() {
 
 // -----------------------------------------------------------------------------
 
+// Generate BlkBytes, which returns the bytes one resident block holds: its
+// header and its slot array.  Times nblk, it is what the index holds in blocks,
+// which a caller with a memory budget charges.
+void amc::tfunc_Blkhash_BlkBytes() {
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+
+    amc::FFunc& func = amc::CreateCurFunc();
+    Ins(&R, func.ret  , "u64", false);
+    Ins(&R, func.proto, "$name_BlkBytes()", false);
+    Ins(&R, func.body, "return u64(sizeof($Blk)) + u64(sizeof($Cpptype*)) * $slotn;");
+}
+
+// -----------------------------------------------------------------------------
+
 void amc::tfunc_Blkhash_EmptyQ() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
 
@@ -238,34 +352,13 @@ void amc::tfunc_Blkhash_InsertMaybe() {
     Ins(&R, ins.body, "u32 slot = u32(u64(mkey$linsuffix) & $slotmask);");
     Ins(&R, ins.body, "mkey$linsuffix &= ~u64($slotmask);");
     Ins(&R, ins.body, "u32 hashval = $Hashfldtype_Hash(0, mkey);");
-    Ins(&R, ins.body, "u32 index = hashval & ($parname.$name_buckets_n - 1);");
-    Ins(&R, ins.body, "$Blk *blk = $parname.$name_buckets_elems[index];");
+    Ins(&R, ins.body, "$Blk *blk = *$name_Head($pararg, $name_Index($pararg, hashval));");
     Ins(&R, ins.body, "while (blk && !(blk->key == mkey)) {");
     Ins(&R, ins.body, "    blk = blk->next;");
     Ins(&R, ins.body, "}");
     Ins(&R, ins.body, "if (!blk) {");
     Ins(&R, ins.body, "    if ($parname.$name_nblk + 1 > $parname.$name_buckets_n) {");
-    Ins(&R, ins.body, "        // grow bucket array, re-chain blocks by stored hashval");
-    Ins(&R, ins.body, "        i32 new_nbuckets = $parname.$name_buckets_n * 2;");
-    Ins(&R, ins.body, "        $Blk **new_buckets = ($Blk**)$basepool_AllocMem(sizeof($Blk*) * new_nbuckets);");
-    Ins(&R, ins.body, "        if (UNLIKELY(!new_buckets)) {");
-    Ins(&R, ins.body, "            FatalErrorExit(\"$ns.out_of_memory  field:$field\");");
-    Ins(&R, ins.body, "        }");
-    Ins(&R, ins.body, "        memset(new_buckets, 0, sizeof($Blk*) * new_nbuckets);");
-    Ins(&R, ins.body, "        for (i32 i = 0; i < $parname.$name_buckets_n; i++) {");
-    Ins(&R, ins.body, "            $Blk *elem = $parname.$name_buckets_elems[i];");
-    Ins(&R, ins.body, "            while (elem) {");
-    Ins(&R, ins.body, "                $Blk *next = elem->next;");
-    Ins(&R, ins.body, "                u32 bidx   = elem->hashval & (new_nbuckets - 1);");
-    Ins(&R, ins.body, "                elem->next = new_buckets[bidx];");
-    Ins(&R, ins.body, "                new_buckets[bidx] = elem;");
-    Ins(&R, ins.body, "                elem = next;");
-    Ins(&R, ins.body, "            }");
-    Ins(&R, ins.body, "        }");
-    Ins(&R, ins.body, "        $basepool_FreeMem($parname.$name_buckets_elems, sizeof($Blk*) * $parname.$name_buckets_n);");
-    Ins(&R, ins.body, "        $parname.$name_buckets_elems = new_buckets;");
-    Ins(&R, ins.body, "        $parname.$name_buckets_n = new_nbuckets;");
-    Ins(&R, ins.body, "        index = hashval & ($parname.$name_buckets_n - 1);");
+    Ins(&R, ins.body, "        $name_Split($pararg);");
     Ins(&R, ins.body, "    }");
     Ins(&R, ins.body, "    $Cpptype **elems = ($Cpptype**)$basepool_AllocMem(sizeof($Cpptype*) * $slotn);");
     Ins(&R, ins.body, "    void *blkmem = $basepool_AllocMem(sizeof($Blk));");
@@ -278,8 +371,9 @@ void amc::tfunc_Blkhash_InsertMaybe() {
     Ins(&R, ins.body, "    blk->hashval = hashval;");
     Ins(&R, ins.body, "    blk->n = 0;");
     Ins(&R, ins.body, "    blk->elem = elems;");
-    Ins(&R, ins.body, "    blk->next = $parname.$name_buckets_elems[index];");
-    Ins(&R, ins.body, "    $parname.$name_buckets_elems[index] = blk;");
+    Ins(&R, ins.body, "    $Blk **head = $name_Head($pararg, $name_Index($pararg, hashval));");
+    Ins(&R, ins.body, "    blk->next = *head;");
+    Ins(&R, ins.body, "    *head = blk;");
     Ins(&R, ins.body, "    $parname.$name_nblk++;");
     Ins(&R, ins.body, "}");
     Ins(&R, ins.body, "if (blk->elem[slot] == &row) {");
@@ -309,8 +403,7 @@ void amc::tfunc_Blkhash_Remove() {
     Ins(&R, rem.body, "$Hashfldtype mkey = $gethashfld;");
     Ins(&R, rem.body, "u32 slot = u32(u64(mkey$linsuffix) & $slotmask);");
     Ins(&R, rem.body, "mkey$linsuffix &= ~u64($slotmask);");
-    Ins(&R, rem.body, "u32 index = $Hashfldtype_Hash(0, mkey) & ($parname.$name_buckets_n - 1);");
-    Ins(&R, rem.body, "$Blk **prev = &$parname.$name_buckets_elems[index];");
+    Ins(&R, rem.body, "$Blk **prev = $name_Head($pararg, $name_Index($pararg, $Hashfldtype_Hash(0, mkey)));");
     Ins(&R, rem.body, "while ($Blk *blk = *prev) {");
     Ins(&R, rem.body, "    if (blk->key == mkey) {");
     Ins(&R, rem.body, "        if (blk->elem[slot] == &row) { // ignore requests to remove a row that's not in the index");
@@ -347,8 +440,7 @@ void amc::tfunc_Blkhash_FindRemove() {
         Ins(&R, findrem.body, "$Hashfldtype mkey = key;");
         Ins(&R, findrem.body, "u32 slot = u32(u64(mkey$linsuffix) & $slotmask);");
         Ins(&R, findrem.body, "mkey$linsuffix &= ~u64($slotmask);");
-        Ins(&R, findrem.body, "u32 index = $Hashfldtype_Hash(0, mkey) & ($parname.$name_buckets_n - 1);");
-        Ins(&R, findrem.body, "$Blk **prev = &$parname.$name_buckets_elems[index];");
+        Ins(&R, findrem.body, "$Blk **prev = $name_Head($pararg, $name_Index($pararg, $Hashfldtype_Hash(0, mkey)));");
         Ins(&R, findrem.body, "$Cpptype *ret = NULL;");
         Ins(&R, findrem.body, "while ($Blk *blk = *prev) {");
         Ins(&R, findrem.body, "    if (blk->key == mkey) {");
@@ -382,7 +474,7 @@ void amc::tfunc_Blkhash_Cascdel() {
     if (field.c_cascdel) {
         amc::FFunc& cascdel = amc::CreateCurFunc();// already exists!
         Ins(&R, cascdel.body, "for (i32 i = 0; i < $parname.$name_buckets_n; i++) {");
-        Ins(&R, cascdel.body, "    $Blk *blk = $parname.$name_buckets_elems[i];");
+        Ins(&R, cascdel.body, "    $Blk *blk = *$name_Head($pararg, u32(i));");
         Ins(&R, cascdel.body, "    while (blk) {");
         Ins(&R, cascdel.body, "        $Blk *next = blk->next;");
         Ins(&R, cascdel.body, "        // deleting the last element frees blk; count first, read nothing after");
@@ -412,11 +504,16 @@ void amc::tfunc_Blkhash_Init() {
     Ins(&R, init.body, "$parname.$name_n             \t= 0; // ($field)");
     Ins(&R, init.body, "$parname.$name_nblk          \t= 0; // ($field)");
     Ins(&R, init.body, "$parname.$name_buckets_n     \t= 4; // ($field)");
-    Ins(&R, init.body, "$parname.$name_buckets_elems \t= ($Blk**)$basepool_AllocMem(sizeof($Blk*)*$parname.$name_buckets_n); // initial buckets ($field)");
-    Ins(&R, init.body, "if (!$parname.$name_buckets_elems) {");
+    Ins(&R, init.body, "$parname.$name_dir_max       \t= 1; // ($field)");
+    Ins(&R, init.body, "$parname.$name_dir_elems     \t= ($Blk***)$basepool_AllocMem(sizeof($Blk**)); // directory of one segment ($field)");
+    Ins(&R, init.body, "if (!$parname.$name_dir_elems) {");
     Ins(&R, init.body, "    FatalErrorExit(\"out of memory\"); // ($field)");
     Ins(&R, init.body, "}");
-    Ins(&R, init.body, "memset($parname.$name_buckets_elems, 0, sizeof($Blk*)*$parname.$name_buckets_n); // ($field)");
+    Ins(&R, init.body, "$parname.$name_dir_elems[0]  \t= ($Blk**)$basepool_AllocMem(sizeof($Blk*)*$segn); // first segment ($field)");
+    Ins(&R, init.body, "if (!$parname.$name_dir_elems[0]) {");
+    Ins(&R, init.body, "    FatalErrorExit(\"out of memory\"); // ($field)");
+    Ins(&R, init.body, "}");
+    Ins(&R, init.body, "memset($parname.$name_dir_elems[0], 0, sizeof($Blk*)*$segn); // ($field)");
 }
 
 // -----------------------------------------------------------------------------
@@ -429,9 +526,9 @@ void amc::tfunc_Blkhash_Uninit() {
     if (GlobalQ(*field.p_ctype)) {
         Ins(&R, uninit.body, "// skip destruction of $name in global scope");
     } else {
-        Ins(&R, uninit.body, "// free all blocks, then the bucket array ($field)");
+        Ins(&R, uninit.body, "// free all blocks, then the segments and the directory ($field)");
         Ins(&R, uninit.body, "for (i32 i = 0; i < $parname.$name_buckets_n; i++) {");
-        Ins(&R, uninit.body, "    $Blk *blk = $parname.$name_buckets_elems[i];");
+        Ins(&R, uninit.body, "    $Blk *blk = *$name_Head($pararg, u32(i));");
         Ins(&R, uninit.body, "    while (blk) {");
         Ins(&R, uninit.body, "        $Blk *next = blk->next;");
         Ins(&R, uninit.body, "        $basepool_FreeMem(blk->elem, sizeof($Cpptype*) * $slotn);");
@@ -440,7 +537,10 @@ void amc::tfunc_Blkhash_Uninit() {
         Ins(&R, uninit.body, "        blk = next;");
         Ins(&R, uninit.body, "    }");
         Ins(&R, uninit.body, "}");
-        Ins(&R, uninit.body, "$basepool_FreeMem($parname.$name_buckets_elems, sizeof($Blk*)*$parname.$name_buckets_n); // ($field)");
+        Ins(&R, uninit.body, "for (i32 i = 0; i < ($parname.$name_buckets_n + $segmask) >> $segbits; i++) {");
+        Ins(&R, uninit.body, "    $basepool_FreeMem($parname.$name_dir_elems[i], sizeof($Blk*)*$segn);");
+        Ins(&R, uninit.body, "}");
+        Ins(&R, uninit.body, "$basepool_FreeMem($parname.$name_dir_elems, sizeof($Blk**)*$parname.$name_dir_max); // ($field)");
     }
 }
 
@@ -476,7 +576,7 @@ void amc::tfunc_Blkhash_curs() {
         Ins(&R, curs_next.body, "        if (curs.bucket >= curs.parent->$name_buckets_n) {");
         Ins(&R, curs_next.body, "            done = true; // end of index: blk stays NULL");
         Ins(&R, curs_next.body, "        } else {");
-        Ins(&R, curs_next.body, "            curs.blk = curs.parent->$name_buckets_elems[curs.bucket];");
+        Ins(&R, curs_next.body, "            curs.blk = curs.parent->$name_dir_elems[curs.bucket >> $segbits][curs.bucket & $segmask];");
         Ins(&R, curs_next.body, "            curs.slot = 0;");
         Ins(&R, curs_next.body, "        }");
         Ins(&R, curs_next.body, "    } else if (curs.slot >= $slotn) {");
@@ -497,7 +597,7 @@ void amc::tfunc_Blkhash_curs() {
         Ins(&R, reset.proto, "$Parname_$name_curs_Reset($Parname_$name_curs &curs, $Partype &parent)", false);
         Ins(&R, reset.body, "curs.parent = &parent;");
         Ins(&R, reset.body, "curs.bucket = 0;");
-        Ins(&R, reset.body, "curs.blk = parent.$name_buckets_elems[0]; // index never has zero buckets");
+        Ins(&R, reset.body, "curs.blk = parent.$name_dir_elems[0][0]; // index never has zero buckets");
         Ins(&R, reset.body, "curs.slot = -1;");
         Ins(&R, reset.body, "$Parname_$name_curs_Next(curs); // advance to first resident slot");
     }

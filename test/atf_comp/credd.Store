@@ -1,0 +1,128 @@
+# setenv HOME:$HOMEDIR
+# setenv CREDD_PASSWORD:pw1
+# start credd cmd:"$bindir/credd -add:gl -kind:gitlab -server:https://gitlab.example.com -account:me -perm:api,read_api -expires:2026-12-31 -src:@$tempdir/tok"
+# eof credd
+credd -> credd.newstore  dir:temp/atf_comp/credd.Store/home/.ssh/credd  comment:"no master password yet; choose one"
+credd -> credd.master  dir:temp/atf_comp/credd.Store/home/.ssh/credd  comment:"master password set"
+credd -> credd.add  cred:gl  kind:gitlab  linkto:""  perm:api,read_api
+# exit credd code:0
+# start credd-2 cmd:"$bindir/credd -list"
+# eof credd-2
+credd-2 -> cred  kind    server                      comment
+credd-2 -> gl    gitlab  https://gitlab.example.com
+# exit credd-2 code:0
+# start credd-3 cmd:"$bindir/credd -list -format:ssim"
+# eof credd-3
+credd-3 -> creddb.cred  cred:gl  kind:gitlab  linkto:""  server:https://gitlab.example.com  account:me  pubkey:***  created:***  expires:2026-12-31  secret:***  comment:""
+credd-3 ->   creddb.credperm  credperm:gl/api  comment:""
+credd-3 ->   creddb.credperm  credperm:gl/read_api  comment:""
+# exit credd-3 code:0
+# start bash cmd:"bash -c $'$bindir/credd -list -format:json | grep -o \\'\"[a-z_]*\":\\' | sort | uniq -c | sed \\'s/^ *//\\''"
+# eof bash
+bash -> 1 "account":
+bash -> 1 "comment":
+bash -> 1 "created":
+bash -> 1 "cred":
+bash -> 1 "expires":
+bash -> 1 "kind":
+bash -> 1 "linkto":
+bash -> 1 "pubkey":
+bash -> 1 "secret":
+bash -> 1 "server":
+# exit bash code:0
+# start credd-4 cmd:"$bindir/credd -add:gh -kind:github -perm:repo,bogus -src:@$tempdir/tok"
+# eof credd-4
+credd-4 -> credd.error  credd.badperm  kind:github  perm:bogus  comment:"not a permission of this kind; credd -list shows the vocabulary"
+# exit credd-4 code:1
+# start credd-5 cmd:"$bindir/credd -add:gl -kind:gitlab -src:@$tempdir/tok"
+# eof credd-5
+credd-5 -> credd.error  credd.exists  name:gl  comment:"a credential of this name is in the store; -remove it first"
+# exit credd-5 code:1
+# start bash-2 cmd:"bash -c $'CREDD_PASSWORD=pw1 $bindir/credd -add:nokind -src:@$tempdir/tok 2>&1 | grep -o \"credd.badkind  kind:[^ ]*\"; exit ${PIPESTATUS[0]}'"
+# eof bash-2
+bash-2 -> credd.badkind  kind:""
+# exit bash-2 code:1
+# start credd-6 cmd:"$bindir/credd -add:cmdline -kind:github -src:glpat-cmdline"
+# eof credd-6
+credd-6 -> credd.error  credd.badsrc  src:glpat-cmdline  comment:"-src is - for the terminal or @file; a secret is never passed on the command line"
+# exit credd-6 code:1
+# start credd-7 cmd:"$bindir/credd -show:gl"
+# eof credd-7
+credd-7 -> lib_cred.noanswer  sock:temp/atf_comp/credd.Store/home/.ssh/credd/credd.sock  errno:"No such file or directory"  comment:"no credd answers; start one with credd -start"
+# exit credd-7 code:1
+# start credd-8 cmd:"$bindir/credd -check -window:30000"
+# eof credd-8
+credd-8 -> credd.expiring  cred:gl  kind:gitlab  expires:2026-12-31  days:***
+# exit credd-8 code:0
+# start credd-9 cmd:"$bindir/credd -check -window:1"
+# eof credd-9
+# exit credd-9 code:0
+# start credd-10 cmd:'$bindir/credd -add:aws -kind:aws -account:keeper -comment:"three values as one tuple" -src:@$tempdir/tok'
+# eof credd-10
+credd-10 -> credd.add  cred:aws  kind:aws  linkto:""  perm:""
+# exit credd-10 code:0
+# start credd-11 cmd:"$bindir/credd -remove:gl"
+# eof credd-11
+credd-11 -> credd.remove  name:gl
+# exit credd-11 code:0
+# start credd-12 cmd:"$bindir/credd -remove:gl"
+# eof credd-12
+credd-12 -> credd.error  credd.notfound  name:gl
+# exit credd-12 code:1
+# start credd-13 cmd:"$bindir/credd -list"
+# eof credd-13
+credd-13 -> cred  kind  server  comment
+credd-13 -> aws   aws           three values as one tuple
+# exit credd-13 code:0
+# unsetenv CREDD_PASSWORD
+# start credd-14 cmd:"$bindir/credd -passwd"
+credd-14 <- pw1
+credd-14 <- pw2
+credd-14 <- pw2
+# eof credd-14
+credd-14 -> credd.passwd  comment:"master password changed"
+# exit credd-14 code:0
+# setenv CREDD_PASSWORD:pw1
+# start credd-15 cmd:"$bindir/credd -add:late -kind:github -src:@$tempdir/tok"
+# eof credd-15
+credd-15 -> credd.error  credd.badpassword  dir:temp/atf_comp/credd.Store/home/.ssh/credd  comment:"the master password does not match this store"
+# exit credd-15 code:1
+# setenv CREDD_PASSWORD:pw2
+# start credd-16 cmd:"$bindir/credd -add:late -kind:github -src:@$tempdir/tok"
+# eof credd-16
+credd-16 -> credd.add  cred:late  kind:github  linkto:""  perm:""
+# exit credd-16 code:0
+# start credd-17 cmd:"$bindir/credd -dump"
+# eof credd-17
+credd-17 -> creddb.master  master:default  salt:***  verifier:***  comment:""
+credd-17 -> creddb.cred  cred:aws  kind:aws  linkto:""  server:""  account:keeper  pubkey:***  created:***  expires:""  secret:***  comment:"three values as one tuple"
+credd-17 -> creddb.cred  cred:late  kind:github  linkto:""  server:""  account:""  pubkey:***  created:***  expires:""  secret:***  comment:""
+# exit credd-17 code:0
+# start bash-3 cmd:"bash -c $'$bindir/credd -dump -format:json | grep -o \\'\"[a-z_]*\":\\' | sort | uniq -c | sed \\'s/^ *//\\''"
+# eof bash-3
+bash-3 -> 2 "account":
+bash-3 -> 3 "comment":
+bash-3 -> 2 "created":
+bash-3 -> 3 "cred":
+bash-3 -> 1 "credperm":
+bash-3 -> 2 "expires":
+bash-3 -> 2 "kind":
+bash-3 -> 2 "linkto":
+bash-3 -> 2 "master":
+bash-3 -> 2 "pubkey":
+bash-3 -> 1 "salt":
+bash-3 -> 2 "secret":
+bash-3 -> 2 "server":
+bash-3 -> 1 "verifier":
+# exit bash-3 code:0
+# start credd-18 cmd:"$bindir/credd -dump -format:text"
+# eof credd-18
+credd-18 -> credd.error  credd.badformat  format:text  comment:"-dump prints ssim or json"
+# exit credd-18 code:1
+# start bash-4 cmd:"bash -c $'LC_ALL=C ls $STORE/creddb && cat $STORE/creddb/credperm.ssim'"
+# eof bash-4
+bash-4 -> cred.ssim
+bash-4 -> credperm.ssim
+bash-4 -> master.ssim
+# exit bash-4 code:0
+# clearenv

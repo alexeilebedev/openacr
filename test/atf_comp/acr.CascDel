@@ -1,5 +1,5 @@
 # start acr cmd:"$bindir/acr -in:- ns:ns1 -del"
-acr <- dmmeta.ns  ns:ns1        nstype:exe      license:GPL   comment:""
+acr <- dmmeta.ns  ns:ns1        nstype:exe      license:GPL   comment:''
 acr <- dmmeta.ctype  ctype:ns1.c comment:"Will be deleted as well"
 acr <- dmmeta.field  field:ns1.c.d arg:i32 reftype:Val comment:"Will be deleted as well"
 # eof acr

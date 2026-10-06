@@ -1,0 +1,45 @@
+# start amc cmd:"$bindir/amc -in_dir:- -out_dir:$tempdir -report:N < <(cat test/amc/bootstrap.ssim -)"
+amc <- dmmeta.csize  ctype:u32  size:4  alignment:4  comment:''
+amc <- dmmeta.pack  ctype:u32  comment:''
+amc <- amcdb.bltin  ctype:u32  likeu64:Y  bigendok:Y  issigned:N  comment:''
+amc <- amcdb.bltin  ctype:u64  likeu64:Y  bigendok:Y  issigned:N  comment:''
+amc <- dmmeta.field  field:algo_lib.FDb.malloc  arg:u8  reftype:Malloc  dflt:''  comment:''
+amc <- dmmeta.ctype  ctype:algo_lib.Msg  comment:''
+amc <- dmmeta.ctypelang  ctypelang:algo_lib.Msg/go  comment:''
+amc <- dmmeta.ctypelang  ctypelang:algo_lib.Msg/py  comment:''
+amc <- dmmeta.ctypelang  ctypelang:algo_lib.Msg/rs  comment:''
+amc <- dmmeta.pack  ctype:algo_lib.Msg  comment:''
+amc <- dmmeta.field  field:algo_lib.Msg.magic  arg:u32  reftype:Val  dflt:''  comment:''
+amc <- dmmeta.field  field:algo_lib.Msg.p  arg:algo_lib.Msg  reftype:Ptr  dflt:''  comment:''
+amc <- dmmeta.ctype  ctype:algo_lib.Hdr  comment:''
+amc <- dmmeta.pack  ctype:algo_lib.Hdr  comment:''
+amc <- dmmeta.field  field:algo_lib.Hdr.type  arg:u32  reftype:Val  dflt:''  comment:''
+amc <- dmmeta.field  field:algo_lib.Hdr.word  arg:u32  reftype:Val  dflt:''  comment:''
+amc <- dmmeta.field  field:algo_lib.Hdr.len  arg:u32  reftype:Bitfld  dflt:''  comment:''
+amc <- dmmeta.bitfld  field:algo_lib.Hdr.len  offset:0  width:24  srcfield:algo_lib.Hdr.word  comment:''
+amc <- dmmeta.typefld  field:algo_lib.Hdr.type  comment:''
+amc <- dmmeta.lenfld  field:algo_lib.Hdr.len  extra:0  scale:1
+amc <- dmmeta.ctype  ctype:algo_lib.Lenmsg  comment:''
+amc <- dmmeta.ctypelang  ctypelang:algo_lib.Lenmsg/rs  comment:''
+amc <- dmmeta.pack  ctype:algo_lib.Lenmsg  comment:''
+amc <- dmmeta.field  field:algo_lib.Lenmsg.base  arg:algo_lib.Hdr  reftype:Base  dflt:''  comment:''
+amc <- dmmeta.field  field:algo_lib.Lenmsg.data  arg:u8  reftype:Varlen  dflt:''  comment:''
+amc <- dmmeta.msgtype  ctype:algo_lib.Lenmsg  type:5
+amc <- dmmeta.ctype  ctype:algo_lib.Pair  comment:''
+amc <- dmmeta.pack  ctype:algo_lib.Pair  comment:''
+amc <- dmmeta.field  field:algo_lib.Pair.a  arg:u32  reftype:Val  dflt:''  comment:''
+amc <- dmmeta.field  field:algo_lib.Pair.b  arg:u32  reftype:Val  dflt:''  comment:''
+amc <- dmmeta.ctype  ctype:algo_lib.Wrap  comment:''
+amc <- dmmeta.pack  ctype:algo_lib.Wrap  comment:''
+amc <- dmmeta.field  field:algo_lib.Wrap.value  arg:u64  reftype:Val  dflt:''  comment:''
+amc <- dmmeta.ctype  ctype:algo_lib.Dflt  comment:''
+amc <- dmmeta.ctypelang  ctypelang:algo_lib.Dflt/go  comment:''
+amc <- dmmeta.pack  ctype:algo_lib.Dflt  comment:''
+amc <- dmmeta.field  field:algo_lib.Dflt.pair  arg:algo_lib.Pair  reftype:Val  dflt:7  comment:''
+amc <- dmmeta.field  field:algo_lib.Dflt.wrap  arg:algo_lib.Wrap  reftype:Val  dflt:-1  comment:''
+# eof amc
+amc -> amc.proj_wire  field:algo_lib.Msg.p  reftype:Ptr  arg:algo_lib.Msg  comment:"field of a projected ctype has no wire form"
+amc -> amc.proj_lenfld  field:algo_lib.Lenmsg.len  reftype:Bitfld  comment:"the length field of a projected message must be a Val with a slot of its own"
+amc -> amc.proj_dflt  field:algo_lib.Dflt.pair  dflt:7  comment:"a nested member's own default needs a ctype that wraps one scalar"
+amc -> amc.no_output  comment:"no files were modified"
+# exit amc code:3

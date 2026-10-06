@@ -1,20 +1,20 @@
-// Copyright (C) 2023-2024,2026 AlgoRND
+// Copyright (C) 2026 AlgoX2 Corp
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2021 Astra
 // Copyright (C) 2018-2019 NYSE | Intercontinental Exchange
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: atf_amc (exe) -- Unit tests for amc (see amctest table)
@@ -722,6 +722,35 @@ void atf_amc::amctest_Varlen2v() {
         "\014\000\000\000\013\000\000\000\014\000\000\000"
         "\020\000\000\000\015\000\000\000\016\000\000\000\017\000\000\000";
     vrfyeq_(ToStrPtr(ary_Getary(buf)), Bytes(str2));
+}
+
+// A message with several varlen fields carries the end offset of each but the
+// last, and every accessor of a later field is a subtraction of one end from
+// another or from the length.  The ends come off the wire, so the cast refuses
+// a message whose ends do not fit inside it: one past the varlen area, or one
+// behind the end before it.  A well-formed message casts as before.
+void atf_amc::amctest_CastDownVarlenEnd() {
+    algo::ByteAry buf;
+    const char *str = "atf_amc.Varlen2vMsg"
+        "  v1:'atf_amc.VarlenK  i:1'"
+        "  v2:'atf_amc.VarlenK  i:2  i:3'"
+        "  v3:'atf_amc.VarlenK  i:4'";
+    atf_amc::MsgHeaderMsgs_ReadStrptr(str,buf);
+    Varlen2vMsg *msg = (Varlen2vMsg*)buf.ary_elems;
+    atf_amc::MsgHeader &hdr = Castbase(*msg);
+    vrfyeq_((u64)Varlen2vMsg_Castdown(hdr), (u64)msg);
+    // an end past the message
+    atf_amc::MsgLength v1_end = msg->v1_end;
+    msg->v1_end.value = msg->length.value;
+    vrfyeq_((u64)Varlen2vMsg_Castdown(hdr), (u64)0);
+    msg->v1_end = v1_end;
+    vrfyeq_((u64)Varlen2vMsg_Castdown(hdr), (u64)msg);
+    // an end behind the one before it
+    atf_amc::MsgLength v2_end = msg->v2_end;
+    msg->v2_end.value = msg->v1_end.value - 1;
+    vrfyeq_((u64)Varlen2vMsg_Castdown(hdr), (u64)0);
+    msg->v2_end = v2_end;
+    vrfyeq_((u64)Varlen2vMsg_Castdown(hdr), (u64)msg);
 }
 
 // Fixture: VarlenWMsg's header counts total bytes (MsgHeader.length, scale:1),

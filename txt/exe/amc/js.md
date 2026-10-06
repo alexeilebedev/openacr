@@ -1,26 +1,19 @@
 ## amc Feature: JavaScript / TypeScript emission
 <a href="#amc-feature-javascript-typescript-emission"></a>
 
-amc isn't C++-only.  Any namespace tagged with `dmmeta.nsjs`
-gets a parallel TypeScript (or plain JavaScript) module
-`ts/gen/<ns>_gen.ts`, with the same ctypes, fconsts,
-enum unions, JSON interfaces, and serde helpers as the C++
-side.  This is what lets the **X2 web UI** consume amc-defined
-protocols without hand-maintaining a separate schema — the
-TypeScript types are *the same types* the C++ engine knows
-about.
+amc isn't C++-only.  A ctype projected into TypeScript, by a
+`dmmeta.nslang` row for its namespace or a `dmmeta.ctypelang` row
+for the ctype (see [foreign-language projection](/txt/exe/amc/lang.md)),
+gets a declaration in the module `ts/gen/<ns>_gen.ts`, with the
+same members, constants and wire form as the C++ side.  This is
+what lets a web UI consume amc-defined protocols without
+hand-maintaining a separate schema: the TypeScript types are *the
+same types* the C++ engine knows about.
 
 ```ssim
-dmmeta.nsjs  ns:ams  typescript:Y  ifaceonly:N  comment:""
+dmmeta.nslang  nslang:fm/ts  comment:""
+dmmeta.ctypelang  ctypelang:ams.I64Price8/ts  comment:""
 ```
-
-amc generates, per ns:
-
-- A TypeScript module `ts/gen/<ns>_gen.ts` containing one
-  declaration per ctype, plus encode / decode functions, an
-  enum union for each fconst-bearing field, and metadata
-  tables describing all fields for runtime introspection.
-- (Optional) Plain JavaScript fallback if `typescript:N`.
 
 The result is a fully-typed wire protocol on both sides of
 the C++ ↔ browser boundary.
@@ -32,7 +25,6 @@ the C++ ↔ browser boundary.
 &nbsp;&nbsp;&bull;&nbsp;  [Built-in type mapping](#built-in-type-mapping)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Encode / decode](#encode-decode)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Which fields have a wire form](#which-fields-have-a-wire-form)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [API endpoint metadata](#api-endpoint-metadata)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Example](#example)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Pitfalls](#pitfalls)<br/>
 
@@ -41,52 +33,41 @@ the C++ ↔ browser boundary.
 
 | Record         | Role |
 |----------------|------|
-| `dmmeta.nsjs  ns:<ns>  typescript:Y/N  ifaceonly:Y/N` | Turns on the JS backend for the namespace.  `ifaceonly:Y` emits the interfaces alone and no functions, so a namespace that wants codecs sets `ifaceonly:N`. |
-| `dmmeta.jstype  ctype:<T>` | Mark this ctype as exportable to JS (most are by default; this opts out of skipping). |
+| `dmmeta.nslang  nslang:<ns>/ts`, `dmmeta.ctypelang  ctypelang:<ctype>/ts` | Project a namespace, or one ctype, into TypeScript.  See [foreign-language projection](/txt/exe/amc/lang.md). |
 | `dmmeta.cjsbltin  ctype:<T>  jsbltin:<B>` | Map a C++ built-in to a JS primitive: `u32 → number`, `Smallstr → string`, etc. |
-| `dmmeta.jsbltin  jsbltin:<name>  cons:<ctor>  dflt:<expr>` | The catalog of JS primitives (TypeScript: `number`, `string`, `boolean`, `bigint`, `Uint8Array`, `Array`, `Map`, `object`, `undefined`). |
+| `dmmeta.jsbltin  jsbltin:<name>  cons:<ctor>  dflt:<expr>` | The table of JS primitives (TypeScript: `number`, `string`, `boolean`, `bigint`, `Uint8Array`, `Array`, `Map`, `object`, `undefined`). |
 | `dmmeta.cjson  ctype:<T>  jsbltin:<custom>` | Customize the JSON representation of a ctype (e.g., emit a string instead of a struct). |
 
 ### What gets emitted
 <a href="#what-gets-emitted"></a>
 
-For each ctype in a `nsjs:Y` namespace, amc emits in
-`ts/gen/<ns>_gen.ts`:
+A packed ctype is a wire form, so it gets a class, a codec, a
+printer and the interface of its JSON shape.  Any other projected
+ctype gets the interface alone, named after the ctype, which is
+the shape of a JSON reply or a table row.  In `ts/gen/fm_gen.ts`:
 
 ```typescript
-// interface for the struct:
-export interface MsgHeader {
-    type: number;
-    length: number;
-}
+// a packed ctype: class, codec, printer, JSON shape
+export class Severity { ... }
+export function Severity_Encode(view: DataView, offset: number, parent: Severity) { ... }
+export function Severity_Decode(view: DataView, offset: number): Severity { ... }
+export function Severity_Print(parent: Severity): string { ... }
+export interface SeverityJson { ... }
 
-// enum union for any fconst-bearing field:
-export type MsgHeaderType =
-    | 'Heartbeat'    // 1
-    | 'Login'        // 2
-    | 'Logout'       // 3
-    ;
+// a field with fconsts: an enum, a string enum when the field is text
+export enum Severity_value_Enum { ... }
 
-// JSON interface (when cfmt:Json is set on the ctype):
-export interface MsgHeaderJson {
-    type: number;
-    length: number;
-}
-
-// encode / decode pair for wire formats:
-export function MsgHeader_Encode(view: DataView, offset: number, parent: MsgHeader): number;
-export function MsgHeader_Decode(view: DataView, offset: number): MsgHeader;
-
-// field metadata (auto-generated runtime introspection):
-export const MsgHeader_FieldMeta: FieldMeta[] = [
-    { name: 'type',   type: 'number', size: 1 },
-    { name: 'length', type: 'number', size: 1 },
-];
+// the namespace's messages: their types, and a decode-and-print by type
+export enum fm_Msgtype { ... }
+export function fm_MsgPrint(type: number, view: DataView, offset: number): {name: string, text: string} | null { ... }
 ```
 
-For each namespace with REST endpoints, amc also emits
-`ApiEndpoints` tables describing the URL → ctype mapping a
-single-page app uses for typed `fetch` calls.
+An unpacked ctype, such as `fm.Objinst`, is `export interface
+Objinst { ... }`.  A member typed by another projected ctype names
+that ctype's JSON shape and imports it from its module.  A namespace
+of ssim tables also gets descriptors of each table, named after the
+namespace as `<Ns>Ssimfile`, and a namespace holding a projected
+dispatch gets its signature.
 
 ### Built-in type mapping
 <a href="#built-in-type-mapping"></a>
@@ -196,9 +177,9 @@ field is placed identically in both or refused in both;
 what amc must not do is admit a field one direction can
 express and the other cannot.
 
-So each field of a packed jstype ctype is classified once,
+So each field of a packed TypeScript ctype is classified once,
 and a field that falls outside the table below is a schema
-error, reported as `amc.jstype_wire` naming the field.  Every
+error, reported as `amc.ts_wire` naming the field.  Every
 offending field is named in one run, and a run that names any
 of them writes no output at all, so a refused schema yields
 no codec rather than a silently wrong one.
@@ -254,31 +235,7 @@ the decoder learns where that tail ends from the frame's
 length word, which lives in the ctype's length field.  A ctype
 that declares a tail and no length field leaves the decoder
 with no length to read, so it is refused as
-`amc.jstype_lenfld` naming the ctype.
-
-### API endpoint metadata
-<a href="#api-endpoint-metadata"></a>
-
-A namespace that declares REST API endpoints
-(`dmmeta.apiendpoint` records pointing at request/response
-ctype pairs) gets an `ApiEndpoints` table:
-
-```typescript
-export const ApiEndpoints: {[key: string]: ApiEndpointSpec} = {
-    'GET /api/v1/users': {
-        request:  null,
-        response: 'UserList',
-    },
-    'POST /api/v1/users': {
-        request:  'UserCreateReq',
-        response: 'User',
-    },
-};
-```
-
-The X2 UI's fetch wrapper consumes this table for typed,
-self-documenting REST calls — no hand-typing of URL strings
-in the frontend.
+`amc.ts_lenfld` naming the ctype.
 
 ### Pitfalls
 <a href="#pitfalls"></a>
@@ -292,8 +249,9 @@ in the frontend.
   `<Type>_Decode`.
 - **Browsers don't have `Uint8Array.equals`.**  Comparison
   is opt-in via `algo`-style helpers if needed.
-- **Namespace must opt in.**  No nsjs row, no JS output.
-  This is intentional — most amc namespaces are
+- **Nothing is projected by default.**  A ctype with no
+  `nslang` or `ctypelang` row reaching it has no TypeScript
+  output.  This is intentional — most amc namespaces are
   server-internal and don't ship to the browser.
 - **Cross-namespace imports** between generated TypeScript
   modules use relative paths.  Don't try to merge two ns's
@@ -308,22 +266,19 @@ in the frontend.
 - [Strings — JSON cfmt](/txt/exe/amc/string.md) — the cfmt that drives JSON output
 - [Dispatches](/txt/exe/amc/dispatch.md) — JS side of dispatch (Case enum, message types)
 - [Protocols](/txt/exe/amc/proto.md) — shared with C++ side
-- Source: `cpp/amc/js.cpp`
-- Spec tables: `acr 'dmmeta.nsjs:%'`, `acr 'dmmeta.cjsbltin:%'`, `acr 'dmmeta.cjson:%'`, `acr 'jsbltin:%'`
+- Source: `cpp/amc/lang_ts.cpp`
+- Spec tables: `acr 'dmmeta.nslang:%'`, `acr 'dmmeta.ctypelang:%'`, `acr 'dmmeta.cjsbltin:%'`, `acr 'dmmeta.cjson:%'`, `acr 'jsbltin:%'`
 
 ### Example
 <a href="#example"></a>
 
-The namespace opts in first, and the row that produces
-functions rather than interfaces alone is the one carrying
-`ifaceonly:N`:
+The ctype is projected into TypeScript first:
 
 ```ssim
-dmmeta.nsjs  ns:ams  typescript:Y  ifaceonly:N
+dmmeta.ctypelang  ctypelang:ams.LogMsg/ts
 ```
 
-A ctype in that namespace gets a codec once it also carries a
-`dmmeta.pack` row:
+It gets a codec once it also carries a `dmmeta.pack` row:
 
 ```ssim
 dmmeta.pack  ctype:ams.LogMsg
@@ -363,6 +318,6 @@ null to test for.  It takes a view and an offset rather than a
 one buffer and walks it by advancing the offset by each frame's
 byte count.
 
-The `LogMsg` declaration, the codec, the enum unions and the
-field metadata all come from the same ssim that produces the
+The `LogMsg` class, its codec and its enums all come from
+the same ssim that produces the
 C++ side.  Adding a field to the ctype updates both at once.

@@ -1,5 +1,12 @@
 ## atf_cov - Line coverage
+<a href="#atf_cov"></a>
 
+`atf_cov` measures which source lines a test run executed.  It runs a binary
+built with GCC's coverage instrumentation, turns the profile data the binary
+leaves behind into per-line hit counts with `gcov`, and reports coverage per
+file, per target and in total.  It can also compare each target's coverage with
+the floor recorded in `dev.tgtcov`, which is how a test suite keeps coverage
+from dropping.
 
 ### Syntax
 <a href="#syntax"></a>
@@ -23,6 +30,7 @@ Usage: atf_cov [options]
     -incremental                                            Keep *.gcda files from previous run
     -verbose      flag                                      Verbosity level (0..255); alias -v; cumulative
     -debug        flag                                      Debug level (0..255); alias -d; cumulative
+    -trace        string  ""                                Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps
     -help                                                   Print help and exit; alias -h
     -version                                                Print version and exit
     -signature                                              Show signatures and exit; alias -sig
@@ -31,209 +39,107 @@ Usage: atf_cov [options]
 ### Description
 <a href="#description"></a>
 
-Atf_cov is a coverage measurement tool, which is aimed at measuring test coverage for source code lines.
-It runs instrumented executable, gathers and processes coverage data, and produces coverage reports.
-Atf_cov provides a utility for GNU Gcov-based code coverage measurement.
+A run of `atf_cov` goes through up to four stages, and each option turns one of
+them on.  `-runcmd` runs the instrumented command, `-gcov` turns its profile
+data into line counts, `-ssim` saves those counts, and `-report` writes the
+reports.  Every stage reads and writes the coverage directory given by
+`-covdir`.  Run it from the top of the checkout, since the profile files name
+their sources relative to it.
 
-### Test coverage
-<a href="#test-coverage"></a>
+#### What a line's coverage means
+<a href="#what-a-line-s-coverage-means"></a>
 
-ISO/IEC/IEEE 29119-2 defines **test coverage** as degree expressed as a percentage,
-to which specified *coverage items* have been exercised by a test case or test cases.
+A line is executable when the compiler emitted code for it.  Comments, blank
+lines, declarations, templates nobody instantiated and inline functions nobody
+called are non-executable.  A line that holds several branches, such as a
+one-line `if` or a `&&` chain, is partially executed when only some of them ran.
+It still counts as executed.
 
-**Test coverage item** is an attribute or combination of attributes that is derived
-from one or more test conditions by using a test design technique
-that enables the measurement of thoroughness of test execution.
+A file's coverage is its executed lines divided by its executable lines.  A
+target's coverage adds up the files `dev.targsrc` lists for it, and the total
+adds up every target.  A source file that belongs to no target is never counted,
+and neither is one matching `-exclude`, which by default drops third-party and
+generated code.
 
-ISO/IEC/IEEE 29119-4 defines **test coverage measures** as based on different degrees
-of coverage achievable by test design techniques.
-Test coverage levels can range from 0% to 100%.
+#### Building and running an instrumented binary
+<a href="#building-and-running-an-instrumented-binary"></a>
 
-When calculating coverage for any test design technique,
-the following formula shall be used:
+`abt -cfg:coverage` builds with g++'s coverage flags, and the result lands under
+`build/coverage/`.  Such a binary counts the lines it runs.  When it exits, it
+writes one `.gcda` file per object file into the directory named by the
+`GCC_PROFILE_DIR` environment variable.
 
-```bash
-         N
-    C = --- * 100%
-         T
+`-runcmd` sets `GCC_PROFILE_DIR` to the coverage directory and runs the command
+through bash.  Before it runs, it deletes every output of an earlier run from
+that directory, so each run starts clean.  `-incremental` keeps the earlier
+profile data, and the new run adds its counts to it.  To
+measure several test cases separately, give each one its own `-covdir` and merge
+them afterwards.
+
+#### Turning profile data into line counts
+<a href="#turning-profile-data-into-line-counts"></a>
+
+`-gcov` pairs each `.gcda` file with the `.gcno` program graph that the compiler
+wrote beside the object, and runs `gcov` over them.  It moves the `.gcov` files
+into the coverage directory and loads their hit counts into memory.  A line that
+several runs executed adds up their counts.
+
+`-ssim` writes the in-memory counts into one `.cov.ssim` file per source, with
+each `/` of the path spelled `#`.  A row is a `dev.covline`:
+
+```ssim
+inline-command: acr dmmeta.field:dev.Covline.%
+dmmeta.field  field:dev.Covline.covline  arg:algo.cstring  reftype:Val   dflt:""     comment:"Key: file:line"
+dmmeta.field  field:dev.Covline.src      arg:dev.Gitfile   reftype:Pkey  dflt:""     comment:"Source file"
+dmmeta.field  field:dev.Covline.line     arg:u32           reftype:Val   dflt:""     comment:"Source line"
+dmmeta.field  field:dev.Covline.flag     arg:char          reftype:Val   dflt:"'N'"  comment:Flag
+dmmeta.field  field:dev.Covline.hit      arg:u32           reftype:Val   dflt:""     comment:"Number of hits"
+dmmeta.field  field:dev.Covline.text     arg:algo.cstring  reftype:Val   dflt:""     comment:"Line text"
+report.acr  n_select:6  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0  n_badline:0
 ```
 
-where:
-- *C* - coverage achieved by specific test design technique;
-- *N* - number of test coverage items covered by executed test cases;
-- *T* - total number of test coverage items identified by test design technique.
+The flag says what kind of line it is:
 
-In each coverage calculation, a number of coverage items may be infeasible.
-A test coverage item shall be defined to be infeasible if it can be shown
-to not to be executable or impossible to be covered by a test case.
-The coverage calculation shall be defined as either counting or discounting
-infeasible items.
-
-For theory in deep, refer to ISO/IEC/IEEE 29119-4.
-
-### Code coverage
-<a href="#code-coverage"></a>
-
-**Code coverage** is a structure-based test design technique,
-which defines test coverage items as a number of source code constructs:
-- executable statements;
-- branches;
-- decision outcomes;
-- branch conditions (Boolean values within decisions + total decision outcomes);
-- branch condition combination (unique combinations of Boolean values of conditions within decisions).
-
-Code coverage addresses test design from the point of of source code quality.
-
-Code coverage measurement helps to:
-- ensure that tested program parts are actually exercised;
-- detect untested program parts;
-- detect dead code.
-
-## Line coverage
-<a href="#line-coverage"></a>
-
-Line coverage defines coverage item as executable line of source code.
-Depending on coding style used, executable line of code  more or less
-closely relates to executable statement.
-For better results, one-statement-per-line style should be preferred.
-
-Line coverage measurement may be performed on automated manner
-by instrumentation of source code by the compiler.
-
-After running of instrumented code under the test,
-hit counters for all source lines are available.
-
-Not all source lines are executable, e.g. comment lines, blank lines,
-declarations, POD type definitions etc.
-Never instantiated templates and never called inline functions may also be marked as non-executable.
-
-Exercised lines may be marked as 'partially exercised' if one line contains several branches,
-examples are one-line conditionals, like `&&`- or `||`-chains `if`, ternary and other constructs.
-Partially executed lines are counted as executed.
-
-Lines within automatically generated files, system and third-party libraries,
-although may be hit or not are typically treated as infeasible, and thus discounted.
-
-### One-liner
-<a href="#one-liner"></a>
-
-One liner to perform whole processing at once:
-
-```bash
-abt % -cfg coverage && \
-atf_cov -covdir temp/covdata -runcmd build/coverage/acr -gcov -ssim -report
+```ssim
+inline-command: acr dmmeta.fconst:dev.Covline.%
+dmmeta.fconst  fconst:dev.Covline.flag/N  value:"'N'"  comment:Non-executable
+dmmeta.fconst  fconst:dev.Covline.flag/E  value:"'E'"  comment:Executable
+dmmeta.fconst  fconst:dev.Covline.flag/P  value:"'P'"  comment:"Executable, partially executed"
+report.acr  n_select:3  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0  n_badline:0
 ```
 
-Here first subcommand builds instrumented executable,
-second subcommand runs it and processes coverage results.
+A later run with neither `-gcov` nor `-mergepath` loads these files back from
+the coverage directory.  That lets you produce reports again without rerunning
+the command or `gcov`.
 
-`-runcmd build/coverage/acr` tells to run instrumented executable **build/coverage/acr**.
+#### Merging several runs
+<a href="#merging-several-runs"></a>
 
-`-gcov` tells to invoke Gcov to get GNU GCC coverage data in Gcov format.
+`-mergepath` names a colon-separated list of coverage directories and adds up
+the counts from all of them.  Without `-gcov` it reads each directory's
+`.cov.ssim` files.  With `-gcov` it runs `gcov` in each directory over the raw
+`.gcda` files.  The outputs go to `-covdir`.
 
-`-ssim` tells to save aggregate coverage data in ssim format.
+Each directory reports what it gave, on stderr:
 
-`-report` asks to produce reports.
-
-### Changing directory to store coverage data
-<a href="#changing-directory-to-store-coverage-data"></a>
-
-By default, all temporary and output files are stored on **temp/covdata** directory.
-
-Each run of new command rewrites all the results from previous run.
-
-Use `-covdir` to change this directory.
-
-When running multiple testcases, each testcase must be run on own directory,
-and then it is possible to merge all the results.
-
-**WARNING:** Coverage directory has temporary nature, thus it is not recommended
-to use any non-empty directory such as project root, or home directory for that purpose.
-Atf_cov may produce huge amount of files with extremely long names.
-It may not be so easy to clean up these files manually.
-Removing whole directory with all the files inside is much easier.
-
-### Running instrumented executable
-<a href="#running-instrumented-executable"></a>
-
-Use `-runcmd` option to specify which command to run, with command line arguments if needed.
-
-Instrumented executable for the command must be compiled and linked
-with options appropriate to the compiler to produce GNU GCC coverage database files (.gcda)
-written on  directory specified on environment variable `GCC_PROFILE_DIR`.
-
-GCC options are:
-```bash
--ftest-coverage -fprofile-arcs -fprofile-dir=%q{GCC_PROFILE_DIR} -coverage
+```ssim
+atf_cov.merge  covdir:temp/cov/atf_comp_cov.d  n_gcda:812  n_gcov:1104  n_fail:0  success:Y  comment:""
 ```
 
-Prior to running command, atf_cov sets `GCC_PROFILE_DIR` to the value given in `-covdir` option,
-and searches coverage database files (.gcda) files there.
+`n_gcda` counts the profile files found and `n_gcov` the `gcov` outputs they
+produced.  `n_fail` counts `gcov` commands that failed, and an
+`atf_cov.gcov_fail` line above names the file `gcov` refused.  A directory
+holding profile data that yields no coverage reports `success:N` and fails the
+run.
 
-The motivation of such solution is in avoiding of overwriting coverage database
-during parallel test run.
+#### Reports
+<a href="#reports"></a>
 
-### Redirecting log to a file
-<a href="#redirecting-log-to-a-file"></a>
+`-report` writes `report.ssim`, `report.txt` and `cobertura.xml` into the
+coverage directory, along with `summary.txt` and `uncovfunc.ssim`.  The reports
+list the total, then each target, then each file of that target.  A target row
+is a `dev.covtarget`, and the total uses the target name `TOTAL`:
 
-Use `-logfile` to redirect atf_cov program log to a file.
-This is useful when wrapping `-runcmd` in the pipeline, in order to not garble command output.
-
-Example:
-
-Original pipeline:
-```text
-producer | command | consumer
-```
-
-Wrong wrapping:
-```text
-producer | atf_cov -runcmd command | consumer
-```
-
-Right wrapping:
-```text
-producer | atf_cov -runcmd command -logfile atf_cov.log | consumer
-```
-
-### Running Gcov
-<a href="#running-gcov"></a>
-
-Use `-gcov` to run Gcov.
-
-Gcov requires program graph files (.gcno)
-with the same name as corresponding coverage database file (.gcda)
-placed in the same directory.
-Atf_cov prepares them as symbolic links to files generated by GCC, then runs Gcov.
-
-Gcov produces text coverage files (.gcov) on the current directory.
-
-Atf_cov moves relevant .gcov files into directory specified by `-covdata`,
-parses these files into in-memory database, merging line hit counts if needed.
-
-Source files, those are not a part of any target (`dev.targsrc` table)
-are automatically treated as infeasible, this behavior can not be changed.
-
-For more info on GNU Gcov, refer to (https://gcc.gnu.org/onlinedocs/gcc/Gcov.html).
-
-### Treating source files as infeasible
-<a href="#treating-source-files-as-infeasible"></a>
-
-In order to filter-out source files as infeasible,
-use `-exclude` option, which accepts SQL regular expression
-for file path within git repository.
-By default, it is initialized with pattern `(extern|include/gen|cpp/gen)/%`,
-which excludes external and AMC-generated files.
-
-### Generating coverage reports
-<a href="#generating-coverage-reports"></a>
-
-Use `-report` to generate coverage reports in txt, ssim, and cobertura XML formats.
-
-Reports contains summary figures for files, targets, total.
-Total figures are broken down by targets, which in turn are broken down by files.
-
-Total- and target-based data format is defined as `dev.covtarget` table:
 ```ssim
 inline-command: acr dmmeta.field:dev.Covtarget.%
 dmmeta.field  field:dev.Covtarget.covtarget  arg:dev.Target    reftype:Pkey  dflt:""  comment:Target
@@ -245,9 +151,8 @@ dmmeta.field  field:dev.Covtarget.hit        arg:u32           reftype:Val   dfl
 dmmeta.field  field:dev.Covtarget.cov        arg:algo.U32Dec2  reftype:Val   dflt:""  comment:"Line coverage"
 report.acr  n_select:7  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0  n_badline:0
 ```
-For total figures hard-coded keyword 'TOTAL' is used as target name.
 
-File-based data format is defined as `dev.covfile` table:
+A file row is a `dev.covfile`, with the same columns keyed by source file:
 
 ```ssim
 inline-command: acr dmmeta.field:dev.Covfile.%
@@ -261,173 +166,184 @@ dmmeta.field  field:dev.Covfile.cov      arg:algo.U32Dec2  reftype:Val   dflt:""
 report.acr  n_select:7  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0  n_badline:0
 ```
 
-Txt format is human-friendly tabulated version of ssim data.
+`report.txt` is the same data as a table.  `cobertura.xml` follows the
+[Cobertura DTD](http://cobertura.sourceforge.net/xml/coverage-04.dtd), which
+GitLab CI reads to mark covered lines in a merge request.  `uncovfunc.ssim`
+lists every function whose executable lines all went unhit, as `dev.uncovfunc`
+rows.  `atf_cov` gets the function extents from `src_func`.
 
-Cobertura XML format is utilized by GitLab CI,
-refer to DTD http://cobertura.sourceforge.net/xml/coverage-04.dtd
-
-### Writing out in-memory coverage database to files
-<a href="#writing-out-in-memory-coverage-database-to-files"></a>
-
-For manual analysis, sometimes necessary to see aggregated by-line hit counts.
-To write out aggregated in-memory database to `-covdata` directory, use '-ssim' option.
-This option is not enabled by default.
-For each source file, atf_cov writes .ssim coverage file.
-By Gcov convention, path separator character '/' in original source file name
-is replaced by '#' in order to avoid creating deep directory structure.
-
-Ssim file format is described as 'dev.covline' table:
+The summary goes to stdout, or to the `-logfile` file when there is one, unless
+you pass `-summary:N`.  It shows each target's
+executable lines, hit lines and coverage, then the change against the target's
+floor in `dev.tgtcov`.  Under the table sits a line that says how far the run
+reached:
 
 ```ssim
-inline-command: acr dmmeta.field:dev.Covline.%
-dmmeta.field  field:dev.Covline.covline  arg:algo.cstring  reftype:Val   dflt:""     comment:"Key: file:line"
-dmmeta.field  field:dev.Covline.src      arg:dev.Gitfile   reftype:Pkey  dflt:""     comment:"Source file"
-dmmeta.field  field:dev.Covline.line     arg:u32           reftype:Val   dflt:""     comment:"Source line"
-dmmeta.field  field:dev.Covline.flag     arg:char          reftype:Val   dflt:"'N'"  comment:Flag
-dmmeta.field  field:dev.Covline.hit      arg:u32           reftype:Val   dflt:""     comment:"Number of hits"
-dmmeta.field  field:dev.Covline.text     arg:algo.cstring  reftype:Val   dflt:""     comment:"Line text"
-report.acr  n_select:6  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0  n_badline:0
+report.atf_cov  n_covdir:6  n_covdir_empty:0  n_covtarget:77  n_tgtcov:145  n_unmeasured:0  exe:89643  hit:69420
 ```
 
-Key of this table is colon-separated pair (source file, source line).
+`n_covdir` counts the directories merged, and `n_covdir_empty` those whose
+profile data yielded nothing.  `n_covtarget` counts the targets measured, and
+`n_tgtcov` the targets that carry a floor.  `n_unmeasured` counts targets with a
+floor above zero that produced no data.
 
-Line is flagged as follows:
+#### Checking and capturing floors
+<a href="#checking-and-capturing-floors"></a>
+
+`-check` compares every measured target with its `dev.tgtcov` floor.  It fails
+with `atf_cov.coverage_lowered` when coverage falls more than five points under
+the floor.  It judges the run as a whole first.  When a directory came back
+empty or a target with a floor produced no data, it fails once, and it compares
+no target:
+
 ```ssim
-inline-command: acr dmmeta.fconst:dev.Covline.%
-dmmeta.fconst  fconst:dev.Covline.flag/N  value:"'N'"  comment:Non-executable
-dmmeta.fconst  fconst:dev.Covline.flag/E  value:"'E'"  comment:Executable
-dmmeta.fconst  fconst:dev.Covline.flag/P  value:"'P'"  comment:"Executable, partially executed"
-report.acr  n_select:3  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0  n_badline:0
+atf_cov.coverage_lost  n_covdir_empty:1  n_covtarget:18  n_unmeasured:56  success:N  target:"abt_md acr acr_compl amc ..."  comment:"run lost coverage data; no target is judged against its floor"
 ```
 
-### Merging data from multiple runs
-<a href="#merging-data-from-multiple-runs"></a>
+The targets named there are the ones the missing data would have measured.  Run
+the job again.  The [coverage_lost
+recipe](/txt/rule/openacr.md#the-coverage-cijob-fails-with-atf_cov-coverage_lost)
+says how to find which directory lost its data.
 
-In order to merge data from multiple runs, use '-mergepath' option,
-argument is colon-separated list of directories where coverage data being merged reside.
-This option loads and aggregates coverage database from all these directories.
+`-capture` writes each measured coverage into `dev.tgtcov` as the target's new
+floor.  It also rewrites `dev.uncovfunc` with this run's list of unhit
+functions.  A run that lost data is refused with `atf_cov.capture_refused`, and
+the floors stay as they were.
 
-Coverage data being loaded may be represented either as bare .gcda files (unprocessed),
-or as ssim coverage database (already processed by `-gcov` and written out with `-ssim`)
-
-To merge **ssim** coverage data from *dir1* and *dir2*, and generate reports on *dir3*:
-```bash
-atf_cov -mergepath dir1:dir2 -covdir dir3 -report
-```
-
-To merge **gcda** coverage data from *dir1* and *dir2*, and generate reports on *dir3*:
-```bash
-atf_cov -mergepath dir1:dir2 -covdir dir3 -report -gcov
-```
-
-Unlike former command, latter one runs Gcov on each `-mergepath` directory.
-
-### Loading ssim coverage data from prevous run
-<a href="#loading-ssim-coverage-data-from-prevous-run"></a>
-
-Unless `-gcov` or `-mergepath` is specified, atf_cov automatically loads saved ssim coverage
-data from `-covdir` directory. In such a way, needed reports could be generated later
-from ssim files written with `-ssim` option, without rerunning command and gcov..
-
-### Checking and capturing coverage
-<a href="#checking-and-capturing-coverage"></a>
-
-To save target figures in order to be checked against later, run:
+### Examples
+<a href="#examples"></a>
 
 ```bash
-atf_cov -capture
+abt acr -cfg:coverage                                                   # build an instrumented acr
+atf_cov -runcmd "build/coverage/acr dmmeta.ns:amc" -gcov -ssim -report  # measure one command and report
+atf_cov -report                                                         # report again from the saved .cov.ssim files
+atf_cov -covdir temp/cov1 -runcmd "build/coverage/acr -check" -gcov -ssim   # measure a second case in its own directory
+atf_cov -mergepath temp/covdata:temp/cov1 -covdir temp/merged -report   # merge two saved runs
+atf_cov -mergepath temp/covdata:temp/cov1 -covdir temp/merged -gcov -report  # merge from raw .gcda files
+atf_ci -cijob:coverage                                                  # run the whole suite and check every floor
+atf_ci -cijob:coverage -capture                                         # run the whole suite and record new floors
 ```
 
-To check figures against saved, run:
+To wrap a command that sits in a pipeline, send the log to a file so the
+command's own output stays clean:
 
 ```bash
-atf_cov -check
+producer | atf_cov -runcmd command -logfile atf_cov.log | consumer
 ```
 
-If measured coverage falls lower than saved one, error message is displayed, and check fails.
+### Caveats
+<a href="#caveats"></a>
 
-### Code a kill test reaches scores zero
-<a href="#code-a-kill-test-reaches-scores-zero"></a>
-
-`lib_x2cli` holds its floor at 45.71 and `samp_meng` at 51.93, well under
-their neighbours, and neither is neglected: the code under the floor is the
-checkpoint sequence, and the tests that exercise it kill the process.
-
-An instrumented executable accumulates its counters in memory and writes the
-`.gcda` file as it exits.  `SIGKILL` gives it no exit to write from, so
-everything the run executed is lost — not attributed to the wrong line,
-simply absent.  The checkpoint sequence exists for the case where a client
-dies without warning, so the only test that can drive it is one that kills
-the client, and that test contributes nothing to the measurement by
-construction.
-
-Two consequences are worth knowing before reading such a figure.  A floor
-this far below its neighbours is a statement about how the code is reached,
-not about whether it is tested, and the `dev.tgtcov` row's comment says which
-of the two it is — read it before treating the gap as work.  And covering
-that code by raising the figure is not available: a test that lets the
-process exit cleanly is a different test, exercising the ordinary shutdown
-path rather than the recovery the floor is low for.
-
-### Viewing coverage summary
-<a href="#viewing-coverage-summary"></a>
-
-Short summary is automatcally displayed on the tool output, to suppress it use `-summary:N`.
-This summary report is generated in file with `-report`.
-
-### Output files
-<a href="#output-files"></a>
-
-Atf_cov generates output files on `-covdata` directory;
-- \*.gcda - coverage database files written by GCC-instrumented executable;
-- \*.gcno - symbolic links GCC-generated program graph files;
-- \*.gcov - coverage data in Gcov format;
-- \*.ssim - aggregated line coverage in-memory database written by atf_cov
-- report.ssim - coverage report in ssim format
-- report.txt - coverage report in txt format
-- summary.txt - summary figures in txt format
-- cobertura.xml - coverage report in cobertura xml format
+- A process that is killed writes no coverage data.  Its counters live in memory
+  until it exits, so a `SIGKILL` loses every line it ran.  Code that only a
+  kill test reaches scores zero, and the target's floor sits well below its
+  neighbors.  The `dev.tgtcov` row's comment says when that is the reason.
+- `-check` and `-capture` only make sense on a run of the whole suite.  A run
+  that measures one command leaves most targets with floors unmeasured, so
+  `-check` reports `atf_cov.coverage_lost`.
+- Use an empty directory for `-covdir`.  `atf_cov` deletes its earlier outputs
+  there and writes thousands of files with long names, so a directory such as
+  the checkout root or your home directory becomes hard to clean.
+- A floor comes down only when someone edits `data/dev/tgtcov.ssim` by hand.  A
+  target whose last test was deleted keeps its floor and produces no data, so
+  every `-check` fails until that row is lowered.
 
 ### Options
 <a href="#options"></a>
 #### -in -- Input directory or filename, - for stdin
 <a href="#-in"></a>
 
+The dataset `atf_cov` reads its tables from: `dev.gitfile`, `dev.target`,
+`dev.targsrc` and `dev.tgtcov`.  Leave it at `data` unless you are measuring
+against another checkout's tables.
+
 #### -covdir -- Output directory to save coverage data
 <a href="#-covdir"></a>
+
+The directory every stage reads and writes.  `-runcmd` points the binary's
+profile output here, `-ssim` and `-report` write here, and a run with neither
+`-gcov` nor `-mergepath` loads its counts from here.  `atf_cov` creates it when
+it is missing.
 
 #### -logfile -- Log file
 <a href="#-logfile"></a>
 
+Send the progress log and `gcov`'s output to this file.  Errors and verdicts,
+such as `atf_cov.merge` and `atf_cov.coverage_lost`, still go to stderr.  Use it
+when `-runcmd` sits in a pipeline, so the log does not mix with the command's
+output.
+
 #### -runcmd -- command to run
 <a href="#-runcmd"></a>
+
+Run this bash command with `GCC_PROFILE_DIR` set to `-covdir`.  Quote it when it
+has arguments.  It first deletes the profile data and every derived output an
+earlier run left in `-covdir`, and `-incremental` spares the profile data.
 
 #### -exclude -- Exclude gitfiles (external, generated)
 <a href="#-exclude"></a>
 
+An SQL regex over source paths.  `-gcov` skips a matching source when it loads
+line counts, so the file counts toward no target.  The default drops `extern/`
+and the code `amc` generates.
+
 #### -mergepath -- colon-separated dir list to load .cov.ssim files from
 <a href="#-mergepath"></a>
+
+Add up the coverage from each listed directory.  Without `-gcov` it reads their
+`.cov.ssim` files, and with `-gcov` it runs `gcov` in each one.  Outputs go to
+`-covdir`, which should be a separate directory.
 
 #### -gcov -- run gcov
 <a href="#-gcov"></a>
 
+Run `gcov` over the profile data in `-covdir`, or in each `-mergepath`
+directory, and load the line counts it produces.  It first clears the `.gcno`,
+`.gcov`, `.cov.ssim` and report files a previous run left there.
+
 #### -ssim -- write out ssim files
 <a href="#-ssim"></a>
+
+Write the loaded line counts into `-covdir` as one `.cov.ssim` file per source.
+A later run can merge or report from these files without the profile data.
 
 #### -report -- write out all reports
 <a href="#-report"></a>
 
+Write `report.ssim`, `report.txt`, `cobertura.xml`, `summary.txt` and
+`uncovfunc.ssim` into `-covdir`.  It runs `src_func` to find function extents
+for the unhit-function list.
+
 #### -capture -- Write coverage information into tgtcov table
 <a href="#-capture"></a>
+
+Record each measured target's coverage as its floor in `dev.tgtcov`, and replace
+`dev.uncovfunc` with this run's unhit functions.  It writes both ssimfiles
+through `acr`.  It refuses a run that lost data.  Use it through `atf_ci
+-cijob:coverage -capture`, which runs the whole suite first.
 
 #### -xmlpretty -- Generate pretty-formatted XML
 <a href="#-xmlpretty"></a>
 
+Indent `cobertura.xml` so a person can read it.  It applies with `-report`.
+
 #### -summary -- Show summary figures
 <a href="#-summary"></a>
+
+Print the per-target summary and the `report.atf_cov` line to stdout, or to the
+`-logfile` file when there is one.  It is on by default, and `-summary:N` turns it off.  `-report` writes the same
+table to `summary.txt` either way.
 
 #### -check -- Check coverage information against tgtcov table
 <a href="#-check"></a>
 
+Fail when a target's coverage falls more than five points under its
+`dev.tgtcov` floor.  A run that lost data fails once with
+`atf_cov.coverage_lost`, and no target is compared.
+
 #### -incremental -- Keep *.gcda files from previous run
 <a href="#-incremental"></a>
+
+Keep the profile data already in `-covdir` when `-runcmd` starts.  The
+instrumented binary then adds its counts to the existing files, so several
+commands accumulate into one measurement.

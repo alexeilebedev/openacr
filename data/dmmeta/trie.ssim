@@ -1,0 +1,3 @@
+dmmeta.trie  field:atf_amc.TrieNarrow.trie  linfld:algo.SeqType.value  nbit:2  comment:""
+dmmeta.trie  field:atf_amc.TrieStr.trie  linfld:algo.SeqType.value  nbit:4  comment:""
+dmmeta.trie  field:atf_amc.TrieU64.trie  linfld:algo.SeqType.value  nbit:8  comment:""

@@ -1,18 +1,18 @@
-// Copyright (C) 2024,2026 AlgoRND
+// Copyright (C) 2026 AlgoX2 Corp
+// Copyright (C) 2024 AlgoRND
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Target: apm (exe) -- Algo Package Manager
 // Exceptions: yes
@@ -31,12 +31,14 @@ void apm::Main_Install() {
     vrfy(_db.cmdline.package.expr != "", "apm: please specify package name to install");
     dev::Package out;
     out.package=_db.cmdline.package.expr;
-    out.origin=_db.cmdline.origin;
-    // specify empty baseref. this means current directory with whatever local changes
-    // becomes the base
-    out.baseref="";
     apm::FPackage *ret=package_InsertMaybe(out);
-    vrfy(ret,"failed to create packate record");
+    vrfy(ret,"failed to create package record");
+    // An empty baseref means the current directory, with whatever local changes,
+    // is the base of the merge.  The update writes this row to the tree.
+    dev::Pkgupstream pkgupstream;
+    pkgupstream.pkgupstream=dev::Pkgupstream_Concat_package_dest(out.package, _db.cmdline.dest != "" ? algo::strptr(_db.cmdline.dest) : algo::strptr("origin"));
+    pkgupstream.origin=_db.cmdline.origin;
+    vrfy(pkgupstream_InsertMaybe(pkgupstream),"failed to create pkgupstream record");
     zd_sel_package_Insert(*ret);
     apm::Main_Update();
 }

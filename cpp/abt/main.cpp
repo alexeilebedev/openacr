@@ -1,21 +1,21 @@
-// Copyright (C) 2023-2024,2026 AlgoRND
+// Copyright (C) 2026 AlgoX2 Corp
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2023 Astra
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 // Copyright (C) 2008-2013 AlgoEngineering LLC
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: abt (exe) -- Algo Build Tool - build & link C++ targets
@@ -182,23 +182,37 @@ static void Main_Clean() {
 
 // -----------------------------------------------------------------------------
 
-static void Main_List() {
+// Mark the selected targets and their sources that -list prints.  Under -ood
+// a row is marked when it is out of date in the build directory whose
+// out-of-date flags were computed last, so calling this once per selected
+// directory marks each row that any of them builds.
+static void MarkList() {
     ind_beg(abt::_db_zs_sel_target_curs, target,abt::_db) {
-        bool list_targ = true;
-        if (abt::_db.cmdline.ood) { // filter by out-of-date
-            list_targ &= target.ood;
+        if (!abt::_db.cmdline.ood || target.ood) {
+            target.wantprint=true;
         }
-        if (list_targ) {
+        ind_beg(abt::target_c_srcfile_curs, src,target) if (Regx_Match(abt::_db.cmdline.srcfile, src.srcfile)) {
+            if (!abt::_db.cmdline.ood || src.ood) {
+                src.wantprint=true;
+            }
+        }ind_end;
+    }ind_end;
+}
+
+// -----------------------------------------------------------------------------
+
+// Print the targets and sources MarkList marked, each once.
+static void PrintList() {
+    ind_beg(abt::_db_zs_sel_target_curs, target,abt::_db) {
+        if (target.wantprint) {
             dev::Target out;
             target_CopyOut(target,out);
             prlog(out);
         }
-        ind_beg(abt::target_c_srcfile_curs, src,target) if (Regx_Match(abt::_db.cmdline.srcfile, src.srcfile)) {
-            if (!abt::_db.cmdline.ood || src.ood) {
-                dev::Srcfile out;
-                srcfile_CopyOut(src,out);
-                prlog(out);
-            }
+        ind_beg(abt::target_c_srcfile_curs, src,target) if (src.wantprint) {
+            dev::Srcfile out;
+            srcfile_CopyOut(src,out);
+            prlog(out);
         }ind_end;
     }ind_end;
 }
@@ -215,9 +229,10 @@ static void ListIncl(abt::FSrcfile &srcfile) {
     }
 }
 
-// List includes relevant to selected targets
-static void Main_ListIncl() {
-    ind_beg(abt::_db_zs_sel_target_curs,target,abt::_db) {// list includes for all sources of selected targets
+// Mark the includes reachable from the sources of the selected targets.  Under
+// -ood only out-of-date sources count, as MarkList does for its rows.
+static void MarkListIncl() {
+    ind_beg(abt::_db_zs_sel_target_curs,target,abt::_db) {
         ind_beg(abt::target_c_targsrc_curs,targsrc,target) if (SourceQ(targsrc) && Regx_Match(abt::_db.cmdline.srcfile,src_Get(targsrc))) {
             if (abt::FSrcfile *srcfile=abt::ind_srcfile_Find(src_Get(targsrc))) {
                 if (!abt::_db.cmdline.ood || srcfile->ood) {
@@ -226,7 +241,12 @@ static void Main_ListIncl() {
             }
         }ind_end;
     }ind_end;
-    // print selected includes
+}
+
+// -----------------------------------------------------------------------------
+
+// Print the includes MarkListIncl marked, each once.
+static void PrintListIncl() {
     ind_beg(abt::_db_include_curs,include,abt::_db) if (include.wantprint && Regx_Match(abt::_db.cmdline.srcfile,srcfile_Get(include))) {
         dev::Include out;
         abt::include_CopyOut(include,out);
@@ -463,7 +483,7 @@ static void CreateTmpdir() {
     if (abt::_db.cmdline.printcmd) {
         prlog("mkdir -p temp " << algo_lib::_db.tempdir);
     }
-    setenv("TMPDIR",Zeroterm(algo_lib::_db.tempdir),1);
+    setenv(algo_lib::dev_envvar_TMPDIR,Zeroterm(algo_lib::_db.tempdir),1);
 }
 
 // -----------------------------------------------------------------------------
@@ -635,6 +655,14 @@ void abt::Main() {
         Regx_ReadSql(tool_opt.regx_opt,Pathcomp(tool_opt.tool_opt,"/LL"),true);
         Regx_ReadSql(tool_opt.regx_target,target_Get(tool_opt),true);
     }ind_end;
+    // A tool option may name the directory the compiler runs in, which is the
+    // root of this checkout.  The coverage configuration is the one that needs
+    // it: gcc names each profile file after the absolute path of its object
+    // file, so a checkout elsewhere produces a different set of names for the
+    // same tree, and -fprofile-prefix-path strips the part that varies.
+    ind_beg(_db_builddir_curs,builddir,_db) {
+        Set(builddir.R,"$curdir",algo::GetCurDir());
+    }ind_end;
     Main_SelectTarget();
 
     ind_beg(abt::_db_zs_sel_target_curs, target,abt::_db) {
@@ -665,13 +693,31 @@ void abt::Main() {
 
     abt::ComputeTimestamps();
 
-    // list (print to stdout)
+    // Whether a file is out of date depends on the build directory holding its
+    // object, so each selected directory computes that first, and then does the
+    // work that reads it: marking the rows the listings print, which -ood
+    // filters, and creating the commands that a build runs and a dry run prints.
+    // A listing then prints each marked row once, however many directories are
+    // selected.
+    bool create_cmds = algo_lib::_db.exit_code==0 && abt::_db.cmdline.jcdb=="";
+    abt::FSyscmd *start=NULL,*end=NULL;
+    ind_beg(_db_builddir_curs,builddir,_db) if (builddir.select) {
+        abt::ComputeOod(builddir);
+        if (abt::_db.cmdline.list) {
+            MarkList();
+        }
+        if (abt::_db.cmdline.listincl) {
+            MarkListIncl();
+        }
+        if (create_cmds) {
+            Main_CreateCmds(builddir,start,end);
+        }
+    }ind_end;
     if (abt::_db.cmdline.list) {
-        Main_List();
+        PrintList();
     }
-
     if (abt::_db.cmdline.listincl) {
-        Main_ListIncl();
+        PrintListIncl();
     }
 
     if (algo_lib::_db.exit_code==0) {
@@ -680,11 +726,6 @@ void abt::Main() {
         } else if (abt::_db.cmdline.dry_run) {
             Main_Dry();
         } else {
-            abt::FSyscmd *start=NULL,*end=NULL;
-            ind_beg(_db_builddir_curs,builddir,_db) if (builddir.select) {
-                abt::ComputeOod(builddir);
-                Main_CreateCmds(builddir,start,end);
-            }ind_end;
             abt::Main_Build();
         }
     }

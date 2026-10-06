@@ -65,7 +65,7 @@ The papers live in their own repository, `algornd/paper`, rather than in this tr
 #### Examples of **ssim** tuples
 <a href="#examples-of-ssim-tuples"></a>
 ```ssim
-dmmeta.ns  ns:lib_amcdb    nstype:lib       license:GPL   comment:"Library used by amc"
+dmmeta.ns  ns:lib_amcdb    nstype:lib       license:Apache  comment:"Library used by amc"
 
 dev.target  target:lib_amcdb
 
@@ -103,7 +103,7 @@ ssim tuple
 
 ```bash
 ...
-dmmeta.ns  ns:lib_amcdb    nstype:lib       license:GPL   comment:"Library used by amc"
+dmmeta.ns  ns:lib_amcdb    nstype:lib       license:Apache  comment:"Library used by amc"
 ...
 ```
 
@@ -115,7 +115,7 @@ MariaDB [dmmeta]> select * from ns where ns like "lib_amcdb%";
 +-----------+--------+---------+---------------------+
 | ns        | nstype | license | comment             |
 +-----------+--------+---------+---------------------+
-| lib_amcdb | lib    | GPL     | Library used by amc |
+| lib_amcdb | lib    | Apache  | Library used by amc |
 +-----------+--------+---------+---------------------+
 1 row in set (0.001 sec)
 
@@ -297,7 +297,7 @@ is shown with all its cross-referenced relations
 # dmmeta.Printfmt  Print format
 # bool             1-byte bool, c++ type.
 # dmmeta.Cpptype   Specify whether a ctype can be passed by value, and other c++ options
-# dmmeta.Ctypelen  Size of Ctype
+# gendb.Ctypelen  Size of Ctype
 # dmmeta.Field     Specify field of a struct
 # dmmeta.Reftype   Field type constructor (e.g. reference type)
 # dmmeta.Fcast     Generate implicit conversion from field to c++ expression
@@ -309,14 +309,14 @@ is shown with all its cross-referenced relations
 # e.g. dev.license  license:""  comment:""
 # e.g. dmmeta.cfmt  cfmt:""  printfmt:""  read:""  print:""  sep:""  genop:""  comment:""
 # e.g. dmmeta.cpptype  ctype:""  ctor:""
-# e.g. dmmeta.ctypelen  ctype:""  len:""  alignment:""  padbytes:""
+# e.g. gendb.ctypelen  ctype:""  len:""  alignment:""  padbytes:""
 # e.g. dmmeta.field  field:""  arg:""  reftype:""  dflt:""  comment:""
 # e.g. dmmeta.fcast  field:""  expr:""  comment:""
 # e.g. dmmeta.fconst  fconst:""  value:""  comment:""
 
-dev.license  license:GPL  comment:""
+dev.license  license:Apache  comment:"Apache License 2.0"
 dmmeta.nstype  nstype:exe  comment:Executable
-  dmmeta.ns  ns:acr  nstype:exe  license:GPL  comment:"Algo Cross-Reference - ssimfile database & update tool"
+  dmmeta.ns  ns:acr  nstype:exe  license:Apache  comment:"Algo Cross-Reference - ssimfile database & update tool"
     dmmeta.ctype  ctype:acr.Queryop  comment:"Operation to perform"
       dmmeta.cpptype  ctype:acr.Queryop  ctor:Y
       dmmeta.field  field:acr.Queryop.value  acr.rowid:0       arg:u8  reftype:Val  dflt:""  comment:""
@@ -330,7 +330,7 @@ dmmeta.nstype  nstype:exe  comment:Executable
         dmmeta.fconst  fconst:acr.Queryop.value/rename_typetag       acr.rowid:6       value:6  comment:"Rewrite type tag in renamed ssimfile"
 
       dmmeta.cfmt  cfmt:acr.Queryop.String  printfmt:Raw  read:N  print:Y  sep:""  genop:Y  comment:""
-      dmmeta.ctypelen  ctype:acr.Queryop  len:1  alignment:1  padbytes:0
+      gendb.ctypelen  ctype:acr.Queryop  len:1  alignment:1  padbytes:0
 
 dmmeta.field  field:acr.FQuery.queryop  acr.rowid:0       arg:acr.Queryop  reftype:Val  dflt:""  comment:"Type of operation to perform"
 
@@ -342,7 +342,7 @@ dmmeta.field  field:acr.FQuery.queryop  acr.rowid:0       arg:acr.Queryop  refty
 # dmmeta.Ns.nstype           dmmeta.Nstype     Pkey     Namespace type
 # dmmeta.Ns.license          dev.License       Pkey     Associated license
 # dmmeta.Cpptype.ctor        bool              Val      if true, generate non-default constructor from all fields
-# dmmeta.Ctypelen.ctype      dmmeta.Ctype      Pkey     Identifies the Ctype
+# gendb.Ctypelen.ctype      dmmeta.Ctype      Pkey     Identifies the Ctype
 # dmmeta.Field.field         algo.Smallstr100  Val      Primary key, as ctype.name
 # dmmeta.Field.ctype         dmmeta.Ctype      Pkey     Parent structure
 # dmmeta.Field.ns            dmmeta.Ns         Pkey     Parent namespace

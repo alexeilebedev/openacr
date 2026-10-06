@@ -1,18 +1,17 @@
-// Copyright (C) 2026 AlgoRND
+// Copyright (C) 2026 AlgoX2 Corp
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Target: atf_comp (exe) -- Component test runner: spawn processes and diff the log against a reference
 // Exceptions: yes
@@ -32,8 +31,8 @@ void atf_comp::comptest_acr_BadInsert() {
 // file:line, fails the run, and blocks the -write, so the file still holds
 // every line it held -- including the one that did not load.
 void atf_comp::comptest_acr_BadLine() {
-    atf_comp::ProcStart("bash -c 'printf \"dmmeta.dispsig  dispsig:a.X  signature:1\\ndmmeta.dispsig  dispsig:b.Y  signature:\\042unterminated\\ndmmeta.dispsig  dispsig:c.Z  signature:3\\n\" > $tempdir/t.ssim"
-                        "; echo dmmeta.dispsig  dispsig:d.W  signature:4 | $bindir/acr -insert -write -in:$tempdir/t.ssim %"
+    atf_comp::ProcStart("bash -c 'printf \"gendb.dispsig  dispsig:a.X  signature:1\\ngendb.dispsig  dispsig:b.Y  signature:\\042unterminated\\ngendb.dispsig  dispsig:c.Z  signature:3\\n\" > $tempdir/t.ssim"
+                        "; echo gendb.dispsig  dispsig:d.W  signature:4 | $bindir/acr -insert -write -in:$tempdir/t.ssim %"
                         "; echo acr_exit:$?; cat $tempdir/t.ssim'");
 }
 
@@ -67,7 +66,7 @@ void atf_comp::comptest_acr_BadReftype() {
 
 void atf_comp::comptest_acr_CascDel() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/acr -in:- ns:ns1 -del");
-    atf_comp::ProcWrite(proc, "dmmeta.ns  ns:ns1        nstype:exe      license:GPL   comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ns  ns:ns1        nstype:exe      license:GPL   comment:''");
     atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:ns1.c comment:\"Will be deleted as well\"");
     atf_comp::ProcWrite(proc, "dmmeta.field  field:ns1.c.d arg:i32 reftype:Val comment:\"Will be deleted as well\"");
 }
@@ -91,11 +90,11 @@ void atf_comp::comptest_acr_DelField() {
 
 void atf_comp::comptest_acr_DelRecord() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/acr -in:- target:samp -del");
-    atf_comp::ProcWrite(proc, "dmmeta.ns  ns:samp  nstype:exe  license:GPL  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ns  ns:samp  nstype:exe  license:GPL  comment:''");
     atf_comp::ProcWrite(proc, "dev.target  target:samp  license:GPL  compat:%-%g%.%-%");
-    atf_comp::ProcWrite(proc, "dev.targdep  targdep:samp.algo_lib  comment:\"\"");
-    atf_comp::ProcWrite(proc, "dev.targsrc  targsrc:samp/cpp/samp/1.cpp          comment:\"\"");
-    atf_comp::ProcWrite(proc, "dev.targsrc  targsrc:samp/cpp/samp/2.cpp      comment:\"\"");
+    atf_comp::ProcWrite(proc, "dev.targdep  targdep:samp.algo_lib  comment:''");
+    atf_comp::ProcWrite(proc, "dev.targsrc  targsrc:samp/cpp/samp/1.cpp          comment:''");
+    atf_comp::ProcWrite(proc, "dev.targsrc  targsrc:samp/cpp/samp/2.cpp      comment:''");
 }
 
 void atf_comp::comptest_acr_DeleteReinsert() {
@@ -133,8 +132,8 @@ void atf_comp::comptest_acr_DeleteReinsert() {
 // CAP_DAC_OVERRIDE (a root container) the search succeeds and the golden
 // mismatches.
 void atf_comp::comptest_acr_DsetDirReadDeny() {
-    atf_comp::ProcStart("bash -c 'cd $tempdir && mkdir -p d/dmmeta"
-                        " && printf \"dmmeta.dispsig  dispsig:xx.aa  signature:1\\n\" > d/dmmeta/dispsig.ssim"
+    atf_comp::ProcStart("bash -c 'cd $tempdir && mkdir -p d/gendb"
+                        " && printf \"gendb.dispsig  dispsig:xx.aa  signature:1\\n\" > d/gendb/dispsig.ssim"
                         " && ln -s d dlink && ln -s nowhere dangling"
                         " && $$OLDPWD/$bindir/acr -in:dlink -schema:$$OLDPWD/data dispsig:% -print:N && echo symlinked_dir_ok"
                         " && trap \"chmod 755 d\" EXIT && trap \"exit 1\" TERM"
@@ -184,9 +183,9 @@ void atf_comp::comptest_acr_DsetDirReadDeny() {
 // CAP_DAC_OVERRIDE (a root container) the read succeeds and the golden
 // mismatches.
 void atf_comp::comptest_acr_DsetFileReadDeny() {
-    atf_comp::ProcStart("bash -c 'cd $tempdir && mkdir -p d/dmmeta d/dev temp"
-                        " && printf \"dmmeta.dispsig  dispsig:xx.aa  signature:1\\n\" > d/dmmeta/dispsig.ssim"
-                        " && cp d/dmmeta/dispsig.ssim orig"
+    atf_comp::ProcStart("bash -c 'cd $tempdir && mkdir -p d/dmmeta d/gendb d/dev temp"
+                        " && printf \"gendb.dispsig  dispsig:xx.aa  signature:1\\n\" > d/gendb/dispsig.ssim"
+                        " && cp d/gendb/dispsig.ssim orig"
                         " && printf \"\" > d/dmmeta/ctype.ssim"
                         " && $$OLDPWD/$bindir/acr -in:d -schema:$$OLDPWD/data ctype:% -print:N && echo empty_ssimfile_ok"
                         " && $$OLDPWD/$bindir/acr -in:d -schema:$$OLDPWD/data ssimfile:% -print:N && echo absent_ssimfile_ok"
@@ -194,17 +193,17 @@ void atf_comp::comptest_acr_DsetFileReadDeny() {
                         " test $$? = 1 && test -f added_src && echo git_script_failed;"
                         " grep git_script giterr;"
                         " cp d/dev/gitfile.ssim gitorig;"
-                        " chmod 000 d/dmmeta/dispsig.ssim d/dev/gitfile.ssim;"
+                        " chmod 000 d/gendb/dispsig.ssim d/dev/gitfile.ssim;"
                         " $$OLDPWD/$bindir/acr -in:d -schema:$$OLDPWD/data dispsig:% -print:N;"
                         " test $$? = 1 && echo query_failed;"
-                        " printf \"dmmeta.dispsig  dispsig:xx.bb  signature:2\\n\" | $$OLDPWD/$bindir/acr -in:d -schema:$$OLDPWD/data -insert -write -print:N;"
+                        " printf \"gendb.dispsig  dispsig:xx.bb  signature:2\\n\" | $$OLDPWD/$bindir/acr -in:d -schema:$$OLDPWD/data -insert -write -print:N;"
                         " test $$? = 1 && echo write_failed;"
                         " EDITOR=\"touch editor_ran\" $$OLDPWD/$bindir/acr -in:d -schema:$$OLDPWD/data dispsig:% -e -write -print:N;"
                         " test $$? = 1 && test ! -f editor_ran && echo editor_not_launched;"
                         " printf \"dev.gitfile  gitfile:denied_src\\n\" | $$OLDPWD/$bindir/acr -in:d -schema:$$OLDPWD/data -insert -write -g -print:N;"
                         " test $$? = 1 && test ! -f denied_src && echo git_script_not_run;"
-                        " chmod 644 d/dmmeta/dispsig.ssim d/dev/gitfile.ssim;"
-                        " cmp d/dmmeta/dispsig.ssim orig && echo ssimfile_unchanged;"
+                        " chmod 644 d/gendb/dispsig.ssim d/dev/gitfile.ssim;"
+                        " cmp d/gendb/dispsig.ssim orig && echo ssimfile_unchanged;"
                         " cmp d/dev/gitfile.ssim gitorig && echo gitfile_unchanged'");
 }
 
@@ -214,10 +213,10 @@ void atf_comp::comptest_acr_DsetFileReadDeny() {
 // the number of files modified. The editor is a cp command that replaces the
 // edit buffer with the two pre-edited records.
 void atf_comp::comptest_acr_EditFileModCount() {
-    atf_comp::ProcStart("bash -c 'cd $tempdir && mkdir temp d d/dmmeta"
-                        " && printf \"dmmeta.dispsig  dispsig:xx.aa  signature:1\\n\" > d/dmmeta/dispsig.ssim"
+    atf_comp::ProcStart("bash -c 'cd $tempdir && mkdir temp d d/dmmeta d/gendb"
+                        " && printf \"gendb.dispsig  dispsig:xx.aa  signature:1\\n\" > d/gendb/dispsig.ssim"
                         " && printf \"dmmeta.ctype  ctype:xx.Bb  comment:hello\\n\" > d/dmmeta/ctype.ssim"
-                        " && printf \"dmmeta.dispsig  dispsig:xx.aa  signature:2\\ndmmeta.ctype  ctype:xx.Bb  comment:world\\n\" > edited.ssim"
+                        " && printf \"gendb.dispsig  dispsig:xx.aa  signature:2\\ndmmeta.ctype  ctype:xx.Bb  comment:world\\n\" > edited.ssim"
                         " && EDITOR=\"cp edited.ssim\" $$OLDPWD/$bindir/acr -in:d -schema:$$OLDPWD/data %:xx% -e -print:N'");
 }
 
@@ -235,11 +234,11 @@ void atf_comp::comptest_acr_EditFileReadFail() {
 // acr -e whose write-back fails: the run exits nonzero with n_file_mod:0,
 // so a dropped write is distinguishable from a modifying edit -- only
 // failure exits nonzero. The editor inserts a record whose ssimfile write
-// is blocked by a file occupying the dmmeta directory path (the same
+// is blocked by a file occupying the gendb directory path (the same
 // arrangement as the test/acr/writefail fixture).
 void atf_comp::comptest_acr_EditFileWriteFail() {
-    atf_comp::ProcStart("bash -c 'cd $tempdir && mkdir temp d && touch d/dmmeta"
-                        " && printf \"dmmeta.dispsig  dispsig:xx.yy  signature:9\\n\" > edited.ssim"
+    atf_comp::ProcStart("bash -c 'cd $tempdir && mkdir temp d && touch d/gendb"
+                        " && printf \"gendb.dispsig  dispsig:xx.yy  signature:9\\n\" > edited.ssim"
                         " && EDITOR=\"cp edited.ssim\" $$OLDPWD/$bindir/acr -in:d -schema:$$OLDPWD/data dispsig:% -e -print:N'");
 }
 
@@ -261,11 +260,11 @@ void atf_comp::comptest_acr_FieldsComma() {
 // report's n_file_mod must count each modified file -- it is the one
 // carrier of that count (amc's table write accumulates it into its own
 // files-modified count). The tempdir serves as an empty dataset; acr
-// creates the dmmeta/ directory under it on write.
+// creates the gendb/ and dmmeta/ directories under it on write.
 void atf_comp::comptest_acr_FileModCount() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/acr -in:$tempdir -insert -write -print:N");
-    atf_comp::ProcWrite(proc, "dmmeta.dispsig  dispsig:xx.yy  signature:9");
-    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:xx.Yy  comment:\"\"");
+    atf_comp::ProcWrite(proc, "gendb.dispsig  dispsig:xx.yy  signature:9");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:xx.Yy  comment:''");
 }
 
 // acr with an -in path that names neither an existing file nor a dataset
@@ -297,7 +296,7 @@ void atf_comp::comptest_acr_FileReadDeny() {
 // the path instead of exiting 0 with the record silently unwritten --
 // callers such as amc's table write trust acr's exit status to mean the
 // records are on disk. The dataset directory exists (the load is clean);
-// the write fails because the checked-in fixture holds a file named dmmeta,
+// the write fails because the checked-in fixture holds a file named gendb,
 // and another named dev, where each ssimfile's parent directory would go.
 // The exit code counts diagnosed failures, so two refused writes exit 2.
 // A refused write must also stand -g down. The inserted dev.gitfile row is
@@ -308,12 +307,24 @@ void atf_comp::comptest_acr_FileReadDeny() {
 // So the script is printed, and the printed script is what the golden pins.
 void atf_comp::comptest_acr_FileWriteFail() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/acr -in:test/acr/writefail -insert -write -g -print:N");
-    atf_comp::ProcWrite(proc, "dmmeta.dispsig  dispsig:xx.yy  signature:9");
+    atf_comp::ProcWrite(proc, "gendb.dispsig  dispsig:xx.yy  signature:9");
     atf_comp::ProcWrite(proc, "dev.gitfile  gitfile:test/acr/writefail/newsrc");
 }
 
 void atf_comp::comptest_acr_GitTrigger1() {
     atf_comp::ProcStart("$bindir/acr gitfile:cpp/acr/git.cpp -del -g");
+}
+
+// acr -g on a dev.gitfile rename whose destination directory does not exist.
+// An ssimfile renamed into a new namespace is the case: its rows move to
+// data/<newns>/, and no file has been there yet. The git script creates the
+// directory before git mv, so the file lands and the run exits 0.
+void atf_comp::comptest_acr_GitRenameNewDir() {
+    atf_comp::ProcStart("bash -c 'cd $tempdir && git init -q . && mkdir -p d/dev a"
+                        " && echo hello > a/x.txt && git add a/x.txt"
+                        " && printf \"dev.gitfile  gitfile:a/x.txt\\n\" > d/dev/gitfile.ssim"
+                        " && $$OLDPWD/$bindir/acr -in:d -schema:$$OLDPWD/data gitfile:a/x.txt -rename:b/c/x.txt -write -g -print:N;"
+                        " echo acr_exit:$$?; cat b/c/x.txt; cat d/dev/gitfile.ssim'");
 }
 
 void atf_comp::comptest_acr_Insert() {
@@ -337,6 +348,33 @@ void atf_comp::comptest_acr_Meta1() {
     atf_comp::ProcStart("$bindir/acr anonfld -meta -report:N");
 }
 
+// A dataset queried through -in carries no dmmeta rows of its own, so -meta
+// over it answers from the directory -schema names: the table's ctype and
+// fields print exactly as they do against the tree, whether the query named
+// the table or bound every table with %.  The % leg prints two counts of the
+// lines naming a ctype: dev.License, the matched row's ctype, on its dmmeta.ctype
+// and gendb.ctypelen rows (2), and dmmeta.Ctype, one of the tables the dataset
+// leaves empty, on those two and its dmmeta.cpptype row (3), since a % that
+// binds every table also selects the ctype of every empty one, which is acr's
+// rule for an empty match.
+// A query naming one table gets that table's ctype alone, since the tables
+// -meta binds to answer with are not ones the query left empty.  The
+// last leg runs -meta with -write against a copy of the schema: the schema rows
+// are read for answering only, so the write touches no file, the dataset keeps
+// its one file, and the copy of the schema stays identical to the original.
+// The counts lose their padding, which BSD wc adds and GNU wc does not.
+void atf_comp::comptest_acr_MetaDset() {
+    atf_comp::ProcStart("bash -c 'cd $tempdir && mkdir -p d/dev"
+                        " && printf \"dev.license  license:MIT  proprietary:N  copyleft:N  comment:\\\"\\\"\\n\" > d/dev/license.ssim"
+                        " && $$OLDPWD/$bindir/acr -in:d -schema:$$OLDPWD/data license:% -report:N"
+                        " && $$OLDPWD/$bindir/acr -in:d -schema:$$OLDPWD/data license:% -meta -report:N"
+                        " && $$OLDPWD/$bindir/acr -in:d -schema:$$OLDPWD/data % -meta -report:N > all.txt"
+                        " && grep -c \"ctype:dev.License \" all.txt && grep -c \"ctype:dmmeta.Ctype \" all.txt"
+                        " && mkdir s && cp -r $$OLDPWD/data/dmmeta s/dmmeta"
+                        " && $$OLDPWD/$bindir/acr -in:d -schema:s license:% -meta -write -print:N | grep -o \"n_file_mod:[0-9]*\""
+                        " && find d -type f | wc -l | tr -d \" \" && diff -rq $$OLDPWD/data/dmmeta s/dmmeta | wc -l | tr -d \" \"'");
+}
+
 void atf_comp::comptest_acr_Meta2() {
     atf_comp::ProcStart("$bindir/acr ftuple -meta");
 }
@@ -355,26 +393,26 @@ void atf_comp::comptest_acr_QueryCtype() {
 
 void atf_comp::comptest_acr_RenameCollision() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/acr -in:- ns:ns1 -rename ns2");
-    atf_comp::ProcWrite(proc, "dmmeta.ns  ns:ns1        nstype:exe      license:GPL   comment:\"\"");
-    atf_comp::ProcWrite(proc, "dmmeta.ns  ns:ns2      nstype:ssimdb    license:GPL  comment:\"\"");
-    atf_comp::ProcWrite(proc, "dmmeta.ns  ns:ns3         nstype:protocol    license:GPL   comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ns  ns:ns1        nstype:exe      license:GPL   comment:''");
+    atf_comp::ProcWrite(proc, "dmmeta.ns  ns:ns2      nstype:ssimdb    license:GPL  comment:''");
+    atf_comp::ProcWrite(proc, "dmmeta.ns  ns:ns3         nstype:protocol    license:GPL   comment:''");
 }
 
 void atf_comp::comptest_acr_RenameField() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/acr -in:- field:dmmeta.Ns.nstype -rename dmmeta.Ns.blah");
-    atf_comp::ProcWrite(proc, "dmmeta.field  field:dmmeta.Ns.nstype  arg:dmmeta.Nstype  reftype:Pkey  dflt:\"\"  comment:\"Namespace type\"");
-    atf_comp::ProcWrite(proc, "dmmeta.ns  ns:ns1        nstype:exe      license:GPL   comment:\"\"");
-    atf_comp::ProcWrite(proc, "dmmeta.ns  ns:ns2      nstype:ssimdb    license:GPL  comment:\"\"");
-    atf_comp::ProcWrite(proc, "dmmeta.ns  ns:ns3         nstype:protocol    license:GPL   comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:dmmeta.Ns.nstype  arg:dmmeta.Nstype  reftype:Pkey  dflt:''  comment:\"Namespace type\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ns  ns:ns1        nstype:exe      license:GPL   comment:''");
+    atf_comp::ProcWrite(proc, "dmmeta.ns  ns:ns2      nstype:ssimdb    license:GPL  comment:''");
+    atf_comp::ProcWrite(proc, "dmmeta.ns  ns:ns3         nstype:protocol    license:GPL   comment:''");
 }
 
 void atf_comp::comptest_acr_RenameRecord() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/acr -in:- target:samp -rename:xyz");
-    atf_comp::ProcWrite(proc, "dmmeta.ns  ns:samp  nstype:exe  license:GPL  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ns  ns:samp  nstype:exe  license:GPL  comment:''");
     atf_comp::ProcWrite(proc, "dev.target  target:samp  compat:%-%g%.%-%");
-    atf_comp::ProcWrite(proc, "dev.targdep  targdep:samp.algo_lib  comment:\"\"");
-    atf_comp::ProcWrite(proc, "dev.targsrc  targsrc:samp/cpp/samp/1.cpp          comment:\"\"");
-    atf_comp::ProcWrite(proc, "dev.targsrc  targsrc:samp/cpp/samp/2.cpp      comment:\"\"");
+    atf_comp::ProcWrite(proc, "dev.targdep  targdep:samp.algo_lib  comment:''");
+    atf_comp::ProcWrite(proc, "dev.targsrc  targsrc:samp/cpp/samp/1.cpp          comment:''");
+    atf_comp::ProcWrite(proc, "dev.targsrc  targsrc:samp/cpp/samp/2.cpp      comment:''");
 }
 
 void atf_comp::comptest_acr_Replace() {
@@ -401,17 +439,17 @@ void atf_comp::comptest_acr_SelectStdin() {
 
 void atf_comp::comptest_acr_SelectTree() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/acr -in:- ctype:command.acr -t");
-    atf_comp::ProcWrite(proc, "dev.license  license:GPL  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dev.license  license:GPL  comment:''");
     atf_comp::ProcWrite(proc, "dmmeta.nstype  nstype:protocol  comment:\"Protocol (not a target)\"");
     atf_comp::ProcWrite(proc, "dmmeta.ns  ns:command  nstype:protocol  license:GPL  comment:\"Command line descriptions\"");
-    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:command.acr  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:command.acr  comment:''");
     atf_comp::ProcWrite(proc, "dmmeta.field  field:command.acr.query  arg:algo.cstring  reftype:Val  dflt:'\"\"'  comment:\"Regx to match record\"");
-    atf_comp::ProcWrite(proc, "dmmeta.anonfld  field:command.acr.query  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.anonfld  field:command.acr.query  comment:''");
     atf_comp::ProcWrite(proc, "dmmeta.field  field:command.acr.schema    arg:algo.cstring  reftype:Val  dflt:'\"data\"'  comment:\"Directory for initializing acr meta-data\"");
-    atf_comp::ProcWrite(proc, "dmmeta.floadtuples  field:command.acr.schema    comment:\"\"");
-    atf_comp::ProcWrite(proc, "dmmeta.ctypelen  ctype:command.acr  len:192  alignment:8  padbytes:21");
-    atf_comp::ProcWrite(proc, "dmmeta.field  field:acr.FDb.cmdline  arg:command.acr  reftype:Val  dflt:\"\"  comment:\"command line\"");
-    atf_comp::ProcWrite(proc, "dmmeta.ccmdline  ctype:command.acr  read:Y  basecmdline:algo_lib.FDb.cmdline  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.floadtuples  field:command.acr.schema    comment:''");
+    atf_comp::ProcWrite(proc, "gendb.ctypelen  ctype:command.acr  len:192  alignment:8  padbytes:21");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:acr.FDb.cmdline  arg:command.acr  reftype:Val  dflt:''  comment:\"command line\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ccmdline  ctype:command.acr  read:Y  basecmdline:algo_lib.FDb.cmdline  comment:''");
 }
 
 void atf_comp::comptest_acr_TooManyArgs() {
@@ -445,7 +483,7 @@ void atf_comp::comptest_acr_UpdateGood() {
 
 void atf_comp::comptest_acr_Where() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/acr -in:- ns -where:nstype:protocol");
-    atf_comp::ProcWrite(proc, "dmmeta.ns  ns:ns1        nstype:exe      license:GPL   comment:\"\"");
-    atf_comp::ProcWrite(proc, "dmmeta.ns  ns:ns2      nstype:ssimdb    license:GPL  comment:\"\"");
-    atf_comp::ProcWrite(proc, "dmmeta.ns  ns:ns3         nstype:protocol    license:GPL   comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ns  ns:ns1        nstype:exe      license:GPL   comment:''");
+    atf_comp::ProcWrite(proc, "dmmeta.ns  ns:ns2      nstype:ssimdb    license:GPL  comment:''");
+    atf_comp::ProcWrite(proc, "dmmeta.ns  ns:ns3         nstype:protocol    license:GPL   comment:''");
 }

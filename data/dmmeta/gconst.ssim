@@ -7,6 +7,7 @@ dmmeta.gconst  field:ams.Grptype.value  namefld:amsdb.Grptype.grptype  idfld:ams
 dmmeta.gconst  field:ams.Proctype.value  namefld:amsdb.Proctype.proctype  idfld:amsdb.Proctype.id  wantenum:Y
 dmmeta.gconst  field:ams.Trafficclass.value  namefld:amsdb.Trafficclass.trafficclass  idfld:amsdb.Trafficclass.id  wantenum:Y
 dmmeta.gconst  field:atfdb.Msgdir.msgdir  namefld:atfdb.Msgdir.msgdir  idfld:""  wantenum:N
+dmmeta.gconst  field:creddb.Kind.kind  namefld:creddb.Kind.kind  idfld:""  wantenum:Y
 dmmeta.gconst  field:dev.Arch.arch  namefld:dev.Arch.arch  idfld:""  wantenum:N
 dmmeta.gconst  field:dev.Builddir.builddir  namefld:dev.Builddir.builddir  idfld:""  wantenum:N
 dmmeta.gconst  field:dev.Cfg.cfg  namefld:dev.Cfg.cfg  idfld:""  wantenum:N
@@ -21,6 +22,7 @@ dmmeta.gconst  field:dmmeta.Fastop.fastop  namefld:dmmeta.Fastop.fastop  idfld:"
 dmmeta.gconst  field:dmmeta.Fbufdir.fbufdir  namefld:dmmeta.Fbufdir.fbufdir  idfld:""  wantenum:N
 dmmeta.gconst  field:dmmeta.Fbuftype.fbuftype  namefld:dmmeta.Fbuftype.fbuftype  idfld:""  wantenum:N
 dmmeta.gconst  field:dmmeta.Hashtype.hashtype  namefld:dmmeta.Hashtype.hashtype  idfld:""  wantenum:N
+dmmeta.gconst  field:dmmeta.Msgstrip.msgstrip  namefld:dmmeta.Msgstrip.msgstrip  idfld:""  wantenum:N
 dmmeta.gconst  field:dmmeta.Ns.ns  namefld:dmmeta.Ns.ns  idfld:""  wantenum:N
 dmmeta.gconst  field:dmmeta.Nstype.nstype  namefld:dmmeta.Nstype.nstype  idfld:""  wantenum:N
 dmmeta.gconst  field:dmmeta.Printfmt.printfmt  namefld:dmmeta.Printfmt.printfmt  idfld:""  wantenum:N

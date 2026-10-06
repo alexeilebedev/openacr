@@ -1,20 +1,20 @@
-// Copyright (C) 2023-2026 AlgoRND
+// Copyright (C) 2025-2026 AlgoX2 Corp
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2021 Astra
 // Copyright (C) 2017-2019 NYSE | Intercontinental Exchange
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
@@ -196,14 +196,17 @@ static bool GenPrintField(algo_lib::Replscope &R, amc::FField &field,  amc::FFun
 //   the field is only printed if the correponding bit is set in the presence mask
 // - For fields that are of type "bool" and part of a bitfield, the field is only printed if its value is "true".
 // - Opt fields are only printed if present.
-static void GenPrintTuple(algo_lib::Replscope &R, amc::FCtype &ctype, amc::FCfmt &cfmt, amc::FFunc &print) {
+// - With FIXEDONLY, Varlen and Opt fields are left out, which prints a message's
+//   fixed part alone.
+static void GenPrintTuple(algo_lib::Replscope &R, amc::FCtype &ctype, amc::FCfmt &cfmt, amc::FFunc &print, bool fixedonly) {
     Set(R, "$attrstr", "temp");
     Set(R, "$rel", ctype.c_ssimfile ? algo::strptr(ctype.c_ssimfile->ssimfile) : algo::strptr(ctype.ctype));
     Ins(&R, print.body, "algo::tempstr temp;");
     Ins(&R, print.body, "str << \"$rel\";");
     amc::FPmaskfld *filter = GetPrintFilter(ctype);
     ind_beg(amc::ctype_c_field_curs, field,ctype) {
-        if (GoodForPrintingQ(field,cfmt)) {
+        bool varlen = field.reftype == dmmeta_Reftype_reftype_Varlen || field.reftype == dmmeta_Reftype_reftype_Opt;
+        if (GoodForPrintingQ(field,cfmt) && !(fixedonly && varlen)) {
             amc::FPmaskfldMember *filter_member = filter ? FindMember(field,filter) : NULL;
             Set(R, "$name", name_Get(field));
             bool bitfldbool = field.c_bitfld && field.arg=="bool" && field.c_bitfld->p_srcfield->c_anonfld;
@@ -376,7 +379,8 @@ static void GenPrintArgv(algo_lib::Replscope &R, amc::FCtype &parent, amc::FCfmt
 // GenPrintArgv. args[0] is the command path; each field becomes one token
 // (-name:value, Argv) or two (--name value, ArgvGnu). Selects the same fields
 // and skips the same defaulted values as GenPrintArgv -- both walk
-// GenArgvField.
+// GenArgvField. The base options this process runs with follow the fields, as
+// they do on the proc wrapper's argv (GenArgvInherit).
 static void GenToArgv(algo_lib::Replscope &R, amc::FCtype &parent, amc::FCfmt &cfmt, amc::FFunc &func) {
     bool gnu = strfmt_Get(cfmt) == dmmeta_Strfmt_strfmt_ArgvGnu;
     Ins(&R, func.body, "algo::tempstr temp;");
@@ -388,6 +392,7 @@ static void GenToArgv(algo_lib::Replscope &R, amc::FCtype &parent, amc::FCfmt &c
         Ins(&R, func.body, "ary_Alloc(args) << \"bin/$Name\"; // command path");
     }
     GenArgvField(R, parent, cfmt, func, true);
+    amc::GenArgvInherit(R, parent, func);
 }
 
 // -----------------------------------------------------------------------------
@@ -556,6 +561,36 @@ static void GenPrintJson(algo_lib::Replscope &R, amc::FCtype &ctype, amc::FCfmt 
 
 // -----------------------------------------------------------------------------
 
+// Append to PRINT's body the code that prints the fixed fields of message
+// CTYPE as an ssim tuple: the type tag, then each field that is not Varlen or
+// Opt.  The code reads the message from a variable named row and appends to a
+// string named str, so the caller declares both.  Return false, appending
+// nothing, if CTYPE has no tuple print format.
+bool amc::GenPrintFixedTuple(amc::FCtype &ctype, amc::FFunc &print) {
+    amc::FCfmt *tuple = NULL;
+    ind_beg(amc::ctype_zs_cfmt_curs, cfmt, ctype) {
+        bool good = cfmt.print && strfmt_Get(cfmt) == dmmeta_Strfmt_strfmt_String
+            && (cfmt.printfmt == dmmeta_Printfmt_printfmt_Tuple || cfmt.printfmt == dmmeta_Printfmt_printfmt_Auto);
+        if (good && !tuple) {
+            tuple = &cfmt;
+        }
+    }ind_end;
+    if (tuple) {
+        algo_lib::Replscope R;
+        amc::FField *pool=FirstInst(ctype);
+        Set(R, "$parname", "row");
+        Set(R, "$pararg", "row");
+        Set(R, "$Parname", (pool ? strptr(name_Get(*pool)) : strptr(name_Get(ctype))));
+        Set(R, "$Name", name_Get(ctype));
+        Set(R, "$Cpptype", ctype.cpp_type);
+        Set(R, "$Ctype", ctype.ctype);
+        GenPrintTuple(R, ctype, *tuple, print, true);
+    }
+    return tuple != NULL;
+}
+
+// -----------------------------------------------------------------------------
+
 // Create print function for ctype PARENT based on CFMT.
 // The pair (strfmt, printfmt) selects the body. The Extern printfmt hands the
 // body to the user for every strfmt; otherwise String takes a printfmt of
@@ -605,7 +640,7 @@ void amc::GenPrint(amc::FCtype &parent, amc::FCfmt &cfmt) {
         print.extrn = true;
     } else if (strfmt == dmmeta_Strfmt_strfmt_String) {
         if (cfmt.printfmt == dmmeta_Printfmt_printfmt_Tuple || cfmt.printfmt == dmmeta_Printfmt_printfmt_Auto) {
-            GenPrintTuple(R, parent, cfmt, print);
+            GenPrintTuple(R, parent, cfmt, print, false);
         } else if (cfmt.printfmt == dmmeta_Printfmt_printfmt_Bitset) {
             GenPrintBitset(R, parent, cfmt, print);
         } else if (cfmt.printfmt == dmmeta_Printfmt_printfmt_Sep || cfmt.printfmt == dmmeta_Printfmt_printfmt_Raw) {

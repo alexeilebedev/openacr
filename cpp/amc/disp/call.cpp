@@ -1,20 +1,20 @@
-// Copyright (C) 2023-2026 AlgoRND
+// Copyright (C) 2025-2026 AlgoX2 Corp
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2021 Astra
 // Copyright (C) 2018-2019 NYSE | Intercontinental Exchange
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
@@ -88,7 +88,16 @@ static void Call_Raw(algo_lib::Replscope &R, amc::FDispatch &dispatch) {
         Set(R, "$Msgname", StripNs("",ctype_Get(dispmsg)));
         Set(R, "$Ctype", amc::NsToCpp(ctype_Get(dispmsg)));
         Set(R, "$Compare", strict ? "==" : "<=");
-        Ins(&R, func.body    , "case $Msgtype: if (sizeof($Ctype) $Compare len) {");
+        // a varlen end offset off the wire is checked before the handler can
+        // read a field through it, as the length is checked before the
+        // handler reads a fixed field
+        tempstr bound = amc::VarlenBoundExpr(*dispmsg.p_ctype, Subst(R,"(($Ctype&)*msg)"), "len");
+        if (bound == "true") {
+            Ins(&R, func.body, "case $Msgtype: if (sizeof($Ctype) $Compare len) {");
+        } else {
+            Set(R, "$bound", bound);
+            Ins(&R, func.body, "case $Msgtype: if (sizeof($Ctype) $Compare len && ($bound)) {");
+        }
         if (dispatch.c_disptrace) {
             Ins(&R, func.body, "    ++$ns::_db.trace.dispatch_$Disp_$Msgname;");
         }
@@ -104,7 +113,7 @@ static void Call_Raw(algo_lib::Replscope &R, amc::FDispatch &dispatch) {
         Ins(&R, func.body    , "} break;");
     }ind_end;
     Ins(&R, func.body        , "default:");
-    if (dispatch.c_disptrace) {
+    if (dispatch.c_disptrace && dispatch.unkcount) {
         Ins(&R, func.body    , "    ++$ns::_db.trace.dispatch_$Disp_Unkmsg;");
     }
     if (dispatch.unk) {

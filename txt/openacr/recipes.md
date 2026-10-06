@@ -122,7 +122,7 @@ Reference: [amc](/txt/exe/amc/README.md),
 |Trace code generation|`amc -trace:<regx>`|
 |Run code generator in sandbox and examine difference|`wt amc -reset -diff -- amc`|
 |Refresh prototypes after adding or changing a function|`update-hdr`|
-|Create the functions the userfunc table declares|`src_func -createmissing`|
+|Create the user functions amc declared and nobody wrote|`src_func -createmissing`|
 |Open functions matching pattern in editor|`src_func % <function> -e`|
 |Open functions whose comment matches pattern in editor|`src_func -matchcomment <regx> -e`|
 |List a namespace's generated API with source locations|`src_func <ns>.%<pat>% -gen -targsrc:"%/gen/%" -showloc`|
@@ -175,6 +175,7 @@ Reference: [abt_md](/txt/exe/abt_md/README.md).
 |---|---|
 |Regenerate one markdown file|`abt_md <mdfile regx>`|
 |Regenerate without running the inline commands|`abt_md -evalcmd:N`|
+|Regenerate the tutorials' output blocks too (slow)|`abt_md -tut`|
 |Refresh the docs of one namespace|`abt_md -ns:<ns regx>`|
 |Check documentation for errors|`abt_md -check`|
 |Check documentation for errors and open bad locations in editor|`errlist abt_md -check`|
@@ -191,5 +192,5 @@ Reference: [apm](/txt/exe/apm/README.md).
 |List the records a package carries|`apm -package:<pkg> -l -showrec`|
 |List the files a package carries|`apm -package:<pkg> -l -showfile`|
 |Diff a package against its installed version|`apm -package:<pkg> -diff`|
-|Regenerate a package manifest|`apm -package:<pkg> -generate`|
+|Print a package's records, with a checksum above each hand-written file|`apm -package:<pkg> -generate`|
 |Push a package to its origin|`apm '<pkg regx>' -push -origin <dir>`|

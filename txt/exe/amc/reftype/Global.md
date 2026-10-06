@@ -97,9 +97,8 @@ Source: `cpp/amc/global.cpp`.
 
 | Tfunc                  | Generated function                       | Effect |
 |------------------------|------------------------------------------|--------|
-| `Global.Step`          | `void <ns>::Step()`                      | Calls each `fstep`'s `_Call` in declaration order. |
-| `Global.Steps`         | `void <ns>::Steps()`                     | Calls `Step()` on every parent ns's dependency, then this ns. |
-| `Global.MainLoop`      | `void <ns>::MainLoop()`                  | Repeatedly calls `Step` until `algo_lib::_db.next_loop` says quiesce.  Drains epoll between cycles. |
+| `Global.Steps`         | `void <ns>::Steps()`                     | Executable only: calls each `fstep`'s `_Call` of this ns and of every ns it links, band by band (`amcdb.stepband`) and within a band in dependency order, with an alias step in place of the library step it overrides. |
+| `Global.MainLoop`      | `void <ns>::MainLoop()`                  | Repeatedly calls `Steps` until `algo_lib::_db.next_loop` says quiesce.  Drains epoll between cycles. |
 
 #### Ssim I/O
 <a href="#ssim-i-o"></a>

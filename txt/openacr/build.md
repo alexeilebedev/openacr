@@ -77,7 +77,7 @@ cat ... | atf_comp -i                    # create a comptest interactively
 
 # CI jobs
 atf_ci -cijob:comp                       # compilation
-atf_ci -cijob:memcheck                   # valgrind memcheck
+atf_ci -cijob:'memcheck%'                # valgrind memcheck, all three shards
 atf_ci -cijob:coverage                   # coverage; with -capture, updates
                                          # data/dev/tgtcov.ssim
 bin/normalize                            # main CI gate

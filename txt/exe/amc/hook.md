@@ -22,6 +22,13 @@ There are two distinct *usage patterns* for hooks:
    markdown sections in `abt_md`, and many "table-driven
    dispatch" patterns work.
 
+An instance hook installed by another module is the last resort.
+The code that fires it cannot say what runs, so an invariant that
+depends on the reaction cannot be checked where the event happens.
+When a library only needs to tell an executable that something
+happened, put the row on a list and let the executable step it --
+see [a step on another namespace's list](/txt/exe/amc/runtime.md#a-step-on-another-namespace-s-list).
+
 The reftype-level mechanics (storage, tfuncs, `_Set0/1/2/Call`)
 are documented at [Hook reftype](/txt/exe/amc/reftype/Hook.md);
 this page covers the patterns.

@@ -1,9 +1,18 @@
-// Copyright (C) 2023-2024,2026 AlgoRND
+// Copyright (C) 2024,2026 AlgoX2 Corp
+// Copyright (C) 2023-2024 AlgoRND
 //
-// License: ARND
-// This source code constitutes confidential information and trade secrets
-// of AlgoRND. Unauthorized copying, distribution or sharing of this file,
-// via any medium, is strictly prohibited.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Target: lib_ws (lib) -- WebSocket library
 // Exceptions: yes
@@ -48,19 +57,19 @@ namespace lib_ws { // update-hdr
     //
     ws::FrameHeader *FrameHeader_FmtByteAry(algo::ByteAry &buf, bool fin, bool rsv1, bool rsv2, bool rsv3,  ws::Opcode opcode, bool mask, u32 masking_key, strptr payload);
     //     (user-implemented function, prototype is in amc-generated header)
-    // void FrameLen_Frame16(i32 &len, ws::Frame16 &frame, u32 msg_len); // dispatch_msg:lib_ws.FrameLen/ws.Frame16
-    // void FrameLen_FrameMasked16(i32 &len, ws::FrameMasked16 &frame, u32 msg_len); // dispatch_msg:lib_ws.FrameLen/ws.FrameMasked16
-    // void FrameLen_Frame64(i32 &len, ws::Frame64 &frame, u32 msg_len); // dispatch_msg:lib_ws.FrameLen/ws.Frame64
-    // void FrameLen_FrameMasked64(i32 &len, ws::FrameMasked64 &frame, u32 msg_len); // dispatch_msg:lib_ws.FrameLen/ws.FrameMasked64
-    // int FrameLen_Unkmsg(i32 &len, ws::FrameHeader &hdr, u32 msg_len); // dispatch:lib_ws.FrameLen
+    // void FrameLen_Frame16(i32 &len, ws::Frame16 &frame, u32 msg_len); // dmmeta.dispatch_msg:lib_ws.FrameLen/ws.Frame16
+    // void FrameLen_FrameMasked16(i32 &len, ws::FrameMasked16 &frame, u32 msg_len); // dmmeta.dispatch_msg:lib_ws.FrameLen/ws.FrameMasked16
+    // void FrameLen_Frame64(i32 &len, ws::Frame64 &frame, u32 msg_len); // dmmeta.dispatch_msg:lib_ws.FrameLen/ws.Frame64
+    // void FrameLen_FrameMasked64(i32 &len, ws::FrameMasked64 &frame, u32 msg_len); // dmmeta.dispatch_msg:lib_ws.FrameLen/ws.FrameMasked64
+    // int FrameLen_Unkmsg(i32 &len, ws::FrameHeader &hdr, u32 msg_len); // dmmeta.dispatch:lib_ws.FrameLen
     i32 GetMsgLen(algo::memptr buf);
     void ToggleMasking(strptr payload, u32 masking_key);
     //     (user-implemented function, prototype is in amc-generated header)
-    // void FrameIdx_Frame16(lib_ws::FrameIdx &idx, ws::Frame16 &frame, u32); // dispatch_msg:lib_ws.FrameIdx/ws.Frame16
-    // void FrameIdx_FrameMasked16(lib_ws::FrameIdx &idx, ws::FrameMasked16 &frame, u32); // dispatch_msg:lib_ws.FrameIdx/ws.FrameMasked16
-    // void FrameIdx_Frame64(lib_ws::FrameIdx &idx, ws::Frame64 &frame, u32); // dispatch_msg:lib_ws.FrameIdx/ws.Frame64
-    // void FrameIdx_FrameMasked64(lib_ws::FrameIdx &idx, ws::FrameMasked64 &frame, u32); // dispatch_msg:lib_ws.FrameIdx/ws.FrameMasked64
-    // int FrameIdx_Unkmsg(lib_ws::FrameIdx &idx, ws::FrameHeader &hdr, u32); // dispatch:lib_ws.FrameIdx
+    // void FrameIdx_Frame16(lib_ws::FrameIdx &idx, ws::Frame16 &frame, u32); // dmmeta.dispatch_msg:lib_ws.FrameIdx/ws.Frame16
+    // void FrameIdx_FrameMasked16(lib_ws::FrameIdx &idx, ws::FrameMasked16 &frame, u32); // dmmeta.dispatch_msg:lib_ws.FrameIdx/ws.FrameMasked16
+    // void FrameIdx_Frame64(lib_ws::FrameIdx &idx, ws::Frame64 &frame, u32); // dmmeta.dispatch_msg:lib_ws.FrameIdx/ws.Frame64
+    // void FrameIdx_FrameMasked64(lib_ws::FrameIdx &idx, ws::FrameMasked64 &frame, u32); // dmmeta.dispatch_msg:lib_ws.FrameIdx/ws.FrameMasked64
+    // int FrameIdx_Unkmsg(lib_ws::FrameIdx &idx, ws::FrameHeader &hdr, u32); // dmmeta.dispatch:lib_ws.FrameIdx
     void ToggleMasking(ws::FrameHeader &frame, bool reset_key);
     strptr payload_Getary(ws::FrameHeader &frame);
 

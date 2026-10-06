@@ -1,20 +1,20 @@
-// Copyright (C) 2023-2024,2026 AlgoRND
+// Copyright (C) 2026 AlgoX2 Corp
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2023 Astra
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: atf_unit (exe) -- Unit tests (see unittest table)
@@ -24,6 +24,8 @@
 
 #include "include/atf_unit.h"
 #include <algorithm>
+#include <fcntl.h>
+#include <sys/mman.h>
 #ifndef WIN32
 #include <unistd.h>
 #endif
@@ -2500,7 +2502,14 @@ void atf_unit::unittest_algo_lib_SysEval() {
     CheckSysEval("printf %s longstring","",1,false);// will fail because of output limit
     CheckSysEval("cat /dev/zero","",100000,false);// will fail because of output limit
     CheckSysEval("false","",100000,false);// will fail
+    CheckSysEval("echo blah; false","blah\n",100000,true);// fail_ok + nonzero exit returns captured output
     CheckSysEval("echo blah","blah\n",5,true);// check newline
+    int status = -1;
+    vrfy(SysEval("exit 7",FailokQ(true),100000,false,&status)=="" && status==7*256
+         ,"syseval_status: silent nonzero exit must be reported via out_status");
+    vrfy(SysEval("printf ok",FailokQ(true),100000,false,&status)=="ok" && status==0
+         ,"syseval_status: successful run must report status 0");
+
 }
 
 // --------------------------------------------------------------------------------
@@ -2823,6 +2832,20 @@ void atf_unit::unittest_algo_lib_Mmap() {
     vrfy_(mmapfile.text == "123456 text");
 }
 // --------------------------------------------------------------------------------
+
+// MountpointQ answers the same for a directory spelled with and without a
+// trailing separator: /dev is a mount point everywhere this runs, and a
+// directory under temp/ is not.
+void atf_unit::unittest_algo_lib_MountpointQ() {
+    algo::CreateDirRecurse("temp/mountpointq");
+    vrfy_(algo::MountpointQ("/dev"));
+    vrfy_(algo::MountpointQ("/dev/"));
+    vrfy_(!algo::MountpointQ("temp/mountpointq"));
+    vrfy_(!algo::MountpointQ("temp/mountpointq/"));
+    vrfy_(!algo::MountpointQ("temp/mountpointq-absent"));
+}
+
+// -----------------------------------------------------------------------------
 
 void atf_unit::unittest_algo_lib_FileQ() {
     strptr fname("temp/linktest");
@@ -3410,6 +3433,15 @@ void atf_unit::unittest_algo_lib_ExecPipe() {
 // that was silently ignored cannot pass for one that was honored.  The
 // process runs on the restored calibration afterwards, so the original is put
 // back before the test returns.
+//
+// The flags line is scanned by ConstantTscQ, and the scan is what a stated
+// rate outranks: it judges the kernel's figure and is not consulted on the
+// branch that takes a stated one.  Its three answers are checked against
+// written-out cpuinfo text, because the host running the test has whatever
+// flags it has, and the case that matters -- a counter the CPU declares
+// variable -- is the one no ordinary host presents.  A cpuinfo carrying no
+// flags line is the third answer, and it passes: that is every non-Linux
+// host, where nothing has been said against the counter.
 void atf_unit::unittest_algo_lib_RequireKernelCpuHz() {
     i32 freq_khz = 0;
     tempstr value(algo::FileToString("/sys/devices/system/cpu/cpu0/tsc_freq_khz", algo::FileFlags()));
@@ -3422,16 +3454,133 @@ void atf_unit::unittest_algo_lib_RequireKernelCpuHz() {
           <<Keyval("kernel_hz",u64(double(freq_khz)*1e3))
           <<Keyval("db_hz",u64(algo_lib::_db.hz)));
     if (exported) {
-        algo_lib::RequireKernelCpuHz("/nonexistent/tscfreq_khz", "ATF_UNIT_TSCFREQKHZ");
+        algo_lib::RequireKernelCpuHz("/nonexistent/tscfreq_khz", algo_lib::dev_envvar_ATF_UNIT_TSCFREQKHZ);
         vrfy_(algo_lib::_db.hz == double(freq_khz)*1e3);
     }
-    setenv("ATF_UNIT_TSCFREQKHZ","2500000",1);
-    algo_lib::RequireKernelCpuHz("/nonexistent/tscfreq_khz", "ATF_UNIT_TSCFREQKHZ");
+    setenv(algo_lib::dev_envvar_ATF_UNIT_TSCFREQKHZ,"2500000",1);
+    algo_lib::RequireKernelCpuHz("/nonexistent/tscfreq_khz", algo_lib::dev_envvar_ATF_UNIT_TSCFREQKHZ);
     if (exported) {
         vrfy_(algo_lib::_db.hz == double(freq_khz)*1e3);
     } else {
         vrfy_(algo_lib::_db.hz == 2500000.0*1e3);
     }
-    unsetenv("ATF_UNIT_TSCFREQKHZ");
+    unsetenv(algo_lib::dev_envvar_ATF_UNIT_TSCFREQKHZ);
     algo_lib::ApplyCpuHz(orig_hz);
+    vrfy_(algo_lib::ConstantTscQ("flags\t\t: fpu vme de pse tsc msr constant_tsc rep_good\n"));
+    vrfy_(!algo_lib::ConstantTscQ("flags\t\t: fpu vme de pse tsc msr rep_good nopl\n"));
+    vrfy_(algo_lib::ConstantTscQ(""));
+}
+
+// --------------------------------------------------------------------------------
+
+// A segment mapped from /dev/shm counts toward the process's shm figure by its
+// whole extent, touched or not, and leaves the figure when it is unmapped.  A
+// pid with no maps file is a refused read, told from a process that maps
+// nothing: the read answers false and the figure stays zero.
+void atf_unit::unittest_algo_lib_ProcShmBytes() {
+#ifdef __linux__
+    tempstr name;
+    name << "/atf_unit-" << getpid() << ".shm";
+    int fd = shm_open(Zeroterm(name), O_CREAT | O_RDWR, 0600);
+    vrfy(fd >= 0, tempstr() << "shm_open failed" << Keyval("name", name));
+    u64 size = u64(8) << 20;
+    vrfy(ftruncate(fd, off_t(size)) == 0, "ftruncate failed");
+    u64 before = 0;
+    vrfy(algo_lib::ProcShmBytes(getpid(), before), "own maps unreadable");
+    void *ptr = mmap(NULL, size_t(size), PROT_READ, MAP_SHARED, fd, 0);
+    vrfy(ptr != MAP_FAILED, "mmap failed");
+    u64 mapped = 0;
+    vrfy(algo_lib::ProcShmBytes(getpid(), mapped), "own maps unreadable");
+    munmap(ptr, size_t(size));
+    u64 after = 0;
+    vrfy(algo_lib::ProcShmBytes(getpid(), after), "own maps unreadable");
+    close(fd);
+    shm_unlink(Zeroterm(name));
+    vrfyeq_(mapped - before, size);
+    vrfyeq_(after, before);
+    // pid 0 has no maps file: a refusal, not a process mapping nothing
+    u64 none = 7;
+    vrfy(!algo_lib::ProcShmBytes(0, none), "a missing maps file read as readable");
+    vrfyeq_(none, u64(0));
+#endif
+}
+
+// The software CRC32Step computes CRC-32C, the function the CRC32 instruction
+// computes.  A build with no such instruction uses the software form, and every
+// hash index and store address is a CRC32Step value, so the two must agree for
+// the builds to read each other's data.  The standard check value pins the
+// polynomial on every build: CRC-32C of "123456789", begun at all ones and
+// inverted at the end, is 0xe3069283.  Beside it, every length from 0 to 64
+// bytes at three starting values must give the same answer from CRC32Step as
+// from CRC32StepSw; on an SSE4.2 build that compares against the instruction.
+void atf_unit::unittest_algo_lib_Crc32cSw() {
+    strptr check("123456789");
+    vrfyeq_(~algo::CRC32StepSw(0xffffffff, (const u8*)check.elems, check.n_elems), u32(0xe3069283));
+    vrfyeq_(~algo::CRC32Step(0xffffffff, (const u8*)check.elems, check.n_elems), u32(0xe3069283));
+    u8 buf[64];
+    rep_(i, 64) {
+        buf[i] = u8(i * 37 + 11);
+    }
+    u32 seed[] = {0, 0xffffffff, 0x12345678};
+    rep_(k, 3) {
+        rep_(len, 65) {
+            vrfyeq_(algo::CRC32StepSw(seed[k], buf, len), algo::CRC32Step(seed[k], buf, len));
+        }
+    }
+}
+
+// A retry body runs with the verbose log category off, and every way out of
+// the body turns it back on.  The test checks three of them, starting with
+// verbose on.  A body that accepts leaves verbose on.  A nested loop inside a
+// body finds verbose already off and leaves it off for the outer body.  A body
+// that throws skips retry_curs_Next and leaves the loop by unwinding, so the
+// cursor's destructor has to restore verbose, or the rest of the run would
+// lose its verbose log.
+void atf_unit::unittest_algo_lib_RetryMute() {
+    bool saved = algo_lib_logcat_verbose.enabled;
+    algo_lib_logcat_verbose.enabled = true;
+    bool in_body = true;
+    bool in_nest = true;
+    ind_beg(algo::retry_curs, retry, 1.0) {
+        in_body = algo_lib_logcat_verbose.enabled;
+        ind_beg(algo::retry_curs, nest, 1.0) {
+            nest.accept = true;
+        }ind_end;
+        in_nest = algo_lib_logcat_verbose.enabled;
+        retry.accept = true;
+    }ind_end;
+    vrfy(!in_body, "the body ran with verbose on");
+    vrfy(!in_nest, "a nested loop turned verbose on inside the outer body");
+    vrfy(algo_lib_logcat_verbose.enabled, "an accepting body left verbose off");
+    bool thrown = false;
+    try {
+        ind_beg(algo::retry_curs, retry, 1.0) {
+            retry.comment << "body throws";
+            vrfy(false, retry.comment);
+        }ind_end;
+    } catch (algo_lib::ErrorX &) {
+        thrown = true;
+    }
+    vrfy(thrown, "the body did not throw");
+    vrfy(algo_lib_logcat_verbose.enabled, "a throwing body left verbose off");
+    algo_lib_logcat_verbose.enabled = saved;
+}
+
+// A run of progress dots stays open on the log line until something else is
+// logged, and that line ends the run before it is written.  The test writes
+// two runs of dots, logs a line, and checks that the log knows the dot line
+// was open after the dots and closed after the line.  It then waits in a
+// retry loop whose body logs a line on every attempt, which under -verbose
+// prints each of those lines on a line of its own between the runs of dots.
+void atf_unit::unittest_algo_lib_PrlogDot() {
+    algo::PrlogDot(2);
+    algo::PrlogDot(1);
+    vrfy(algo_lib::_db.dotline, "dots left the line closed");
+    prlog("after the dots");
+    vrfy(!algo_lib::_db.dotline, "a logged line left the dot line open");
+    ind_beg(algo::retry_curs, retry, 2.5, true) {
+        prlog("body line" << Keyval("niter", retry.niter));
+        retry.comment << "waiting";
+    }ind_end;
+    vrfy(!algo_lib::_db.dotline, "the verdict line left the dot line open");
 }

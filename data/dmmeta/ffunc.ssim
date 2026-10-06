@@ -16,6 +16,8 @@ dmmeta.ffunc  ffunc:atf_amc.FDb.c_typem.OnUnref  extrn:Y  comment:"count callbac
 dmmeta.ffunc  ffunc:atf_amc.FDb.c_typem.OnXref  extrn:Y  comment:"count callback firings on the row (n_xref)"
 dmmeta.ffunc  ffunc:atf_amc.FDb.ind_linear.FindRemove  extrn:N  comment:""
 dmmeta.ffunc  ffunc:atf_amc.FDb.ind_thash_elem.FindRemove  extrn:N  comment:""
+dmmeta.ffunc  ffunc:atf_amc.FHeadGroup.bh_heap_elem.OnUnref  extrn:Y  comment:"count callback firings on the row (n_unref)"
+dmmeta.ffunc  ffunc:atf_amc.FHeadGroup.bh_heap_elem.OnXref  extrn:Y  comment:"count callback firings on the row (n_xref)"
 dmmeta.ffunc  ffunc:atf_amc.Msgbuf.in_custom.ScanMsg  extrn:Y  comment:"custom message scanner"
 dmmeta.ffunc  ffunc:lib_ams.FShm.shm_file.Cleanup  extrn:Y  comment:""
 dmmeta.ffunc  ffunc:lib_iconv.Icd.icd.Cleanup  extrn:Y  comment:""

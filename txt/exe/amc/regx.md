@@ -25,7 +25,7 @@ dmmeta.field   field:command.abt.target  arg:dev.Target  reftype:RegxSql  dflt:"
 ### Regex flavors
 <a href="#regex-flavors"></a>
 
-Four regxtypes are catalogued in `amcdb.regxtype`:
+Four regxtypes are listed in `amcdb.regxtype`:
 
 | `regxtype` | Wildcards / specials                                  | Use case                                      |
 |------------|-------------------------------------------------------|------------------------------------------------|
@@ -133,7 +133,7 @@ search inputs.
 - [Charsets](/txt/exe/amc/charset.md) — for character-class predicates (faster than regex for single-char tests)
 - Source: `cpp/amc/regx.cpp`
 - Spec table: `acr 'dmmeta.fregx:%'`
-- Regxtype catalog: `acr 'regxtype:%'`
+- Regxtype table: `acr 'regxtype:%'`
 
 ### Example
 <a href="#example"></a>

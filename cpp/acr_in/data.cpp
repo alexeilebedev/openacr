@@ -1,18 +1,18 @@
-// Copyright (C) 2023-2024,2026 AlgoRND
+// Copyright (C) 2026 AlgoX2 Corp
+// Copyright (C) 2023-2024 AlgoRND
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Target: acr_in (exe) -- ACR Input - compute set of ssimfiles or tuples used by a specific target
 // Exceptions: yes
@@ -106,6 +106,15 @@ static void VisitParents(acr_in::FTuple &tuple, Tuple &in_tuple, acr_in::FSsimfi
     }ind_end;
 }
 
+// Load the row LINE of SSIMFILE into the tuple table.  DAG asks for each row to
+// be linked to its parents, which only a closure walk needs.
+//
+// A key two layers both carry stops the run, and the refusal names the table and
+// the key.  ind_tuple is a unique hash, so the second row cannot be admitted, and
+// which of the two is right is not acr_in's to decide -- a later layer overriding
+// an earlier one is a property of the layer set rather than of the reader.  What
+// the caller can do about it is decided from the key, so the key is what the
+// refusal carries.
 static void LoadTuple(acr_in::FSsimfile &ssimfile, strptr line, bool dag) {
     Tuple in_tuple;
     vrfy(Tuple_ReadStrptrMaybe(in_tuple, line), algo_lib::_db.errtext);
@@ -114,11 +123,34 @@ static void LoadTuple(acr_in::FSsimfile &ssimfile, strptr line, bool dag) {
         tuple.key           = tempstr()<<in_tuple.head.value<<":"<<attrs_qFind(in_tuple,0).value;
         tuple.str              = line;
         tuple.p_ctype = ssimfile.p_ctype;
-        vrfy(tuple_XrefMaybe(tuple), algo_lib::_db.errtext);
+        if (!tuple_XrefMaybe(tuple)) {
+            prerr("acr_in.duplicate_key"
+                  <<Keyval("ssimfile",ssimfile.ssimfile)
+                  <<Keyval("key",tuple.key)
+                  <<Keyval("comment","two -data_dir layers carry this key, and which one wins is undecided")
+                  <<Keyval("hint","drop the row from one layer, or name one -data_dir"));
+            vrfy(false, algo_lib::_db.errtext);
+        }
         if (dag) {
             VisitParents(tuple,in_tuple,ssimfile);
         }
     }
+}
+
+// -----------------------------------------------------------------------------
+
+// Load into the tuple table whatever rows of SSIMFILE the directory DATA_DIR holds.
+// A layer carries only some of the tables, so the file is normally absent and that
+// reads as no rows.  DAG asks the tuple loader to link each row to its parents, which
+// only a closure walks.
+static void LoadLayer(acr_in::FSsimfile &ssimfile, algo::strptr data_dir, bool dag) {
+    tempstr fname;
+    fname << SsimFname(data_dir, ssimfile.ssimfile);
+    algo_lib::MmapFile fmap;
+    algo_lib::MmapFile_Load(fmap, fname);
+    ind_beg(algo::Line_curs, line, fmap.text) {
+        LoadTuple(ssimfile,line,dag);
+    }ind_end;
 }
 
 // -----------------------------------------------------------------------------
@@ -151,12 +183,8 @@ void acr_in::Main_Data() {
     // load all ssimfiles and build database of tuples
     // Build parent/child relationships between data
     ind_beg(acr_in::_db_zd_ssimfile_curs, ssimfile, acr_in::_db) {
-        tempstr fname;
-        fname << SsimFname(acr_in::_db.cmdline.data_dir, ssimfile.ssimfile);
-        algo_lib::MmapFile fmap;
-        algo_lib::MmapFile_Load(fmap, fname);
-        ind_beg(algo::Line_curs, line, fmap.text) {        // Insert tuples
-            LoadTuple(ssimfile,line,dag);
+        ind_beg(command::acr_in_data_dir_curs, data_dir, acr_in::_db.cmdline) {
+            LoadLayer(ssimfile,data_dir,dag);
         }ind_end;
     }ind_end;
 

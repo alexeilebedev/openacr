@@ -1,18 +1,18 @@
-// Copyright (C) 2024,2026 AlgoRND
+// Copyright (C) 2026 AlgoX2 Corp
+// Copyright (C) 2024 AlgoRND
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Target: abt_md (exe) -- Tool to generate markdown documentation
 // Exceptions: yes
@@ -102,13 +102,21 @@ void abt_md::mdsection_Options(abt_md::FFileSection &section) {
 // -----------------------------------------------------------------------------
 
 // Update title of document
+// - For a page whose subject set a title, use that title
 // - For namespace, pull namespace name and comment from ns table
 // - For script, use script name and comment from scriptfile table
 // For all other cases, leave title as-is
 // Section contents are user-defined
+//
+// A title the subject set comes first, ahead of the ctype the page also names.  A
+// command's page documents the command a person types, so it is titled with the
+// command; the ctype that parses the command's options is a fact about the
+// implementation and not what the reader came for.
 void abt_md::mdsection_Title(abt_md::FFileSection &section) {
     abt_md::FReadmefile *readmefile =_db.c_readmefile;
-    if (readmefile->p_scriptfile) {
+    if (ch_N(readmefile->title)) {
+        section.title = tempstr()<< "## "<<readmefile->title;
+    } else if (readmefile->p_scriptfile) {
         section.title = tempstr()<< "## "<<readmefile->p_scriptfile->gitfile<<" - "<<readmefile->p_scriptfile->comment;
     } else if (readmefile->p_ssimfile) {
         section.title = tempstr()<< "## "<<readmefile->p_ssimfile->ssimfile<<" - "<<readmefile->p_ssimfile->p_ctype->comment;
@@ -126,13 +134,15 @@ void abt_md::mdsection_Title(abt_md::FFileSection &section) {
 
 // -----------------------------------------------------------------------------
 
-// Append every C string literal found on `text` to ns->help.
+// Append every C string literal found on TEXT to HELP.
 // Skips leading whitespace, then walks each "..." literal with
 // algo::cstring_ReadCmdarg (which decodes C escapes via UnescapeC).
 // Stops at the first non-quote token (the trailing `;` on the last
 // line of a block, or end of line).
-static void AccumHelpString(abt_md::FNs *ns, algo::strptr text) {
-    if (ns) {
+// HELP is NULL for a declaration naming something this tree does not have, and
+// the literals are then dropped.
+static void AccumHelpString(algo::cstring *help, algo::strptr text) {
+    if (help) {
         algo::StringIter iter(text);
         bool more = true;
         while (more) {
@@ -140,7 +150,7 @@ static void AccumHelpString(abt_md::FNs *ns, algo::strptr text) {
             if (iter.Peek() == '"') {
                 algo::cstring part;
                 if (algo::cstring_ReadCmdarg(part, iter, true)) {
-                    ns->help << part;
+                    *help << part;
                 } else {
                     more = false;
                 }
@@ -151,25 +161,19 @@ static void AccumHelpString(abt_md::FNs *ns, algo::strptr text) {
     }
 }
 
-// One-shot scan of cpp/gen/command_gen.cpp.  amc emits every exe's
-// help text as `const char *command::<ns>_help = "…" "…" …;`,
-// possibly spanning multiple lines.  Walk line-by-line: on the
-// header line capture the ns and consume the rest-of-line; on each
-// continuation line accumulate the literals; release cur_ns when
-// the line ends with `;`.  After this every executable FNs has
-// `.help` populated and mdsection_Syntax becomes a hash lookup.
-// Return the namespace whose help string the line LINE declares, and the empty string when
-// it declares none.
+// Return the name whose help string the line LINE declares, and the empty string when
+// it declares none.  QUALIFIER is the namespace the declaration is qualified by.
 //
-// The declaration reads `const char *command::<ns>_help = "..."`, so the name is what sits
-// between the qualifier and the suffix.  It cannot be taken as the text before the last
+// The declaration reads `const char *<qualifier>::<name>_help = "..."`, so the name is what
+// sits between the qualifier and the suffix.  It cannot be taken as the text before the last
 // underscore: a tool's help opens by naming the tool, so `atf_unit_help = "atf_unit: ...`
 // has its last underscore inside the string and the name came back as
 // `atf_unit_help = "atf`.  Every tool whose name carries an underscore was therefore read
 // as a namespace that does not exist, and forty-one of the tool READMEs had no Syntax
 // section because of it.
-static tempstr Helpns(algo::strptr line) {
-    algo::strptr open("command::");
+static tempstr Helpname(algo::strptr line, algo::strptr qualifier) {
+    tempstr open;
+    open << qualifier << "::";
     algo::strptr shut("_help = ");
     int at = FindStr(line, open);
     int end = FindStr(line, shut);
@@ -181,34 +185,59 @@ static tempstr Helpns(algo::strptr line) {
     return ret;
 }
 
-static void LoadHelpStrings() {
-    abt_md::FNs *cur_ns = NULL;
-    ind_beg(algo::FileLine_curs, line, "cpp/gen/command_gen.cpp") {
-        if (!cur_ns && StartsWithQ(line, "const char *command::") && FindStr(line, "_help = ") != -1) {
-            cur_ns = abt_md::ind_ns_Find(Helpns(line));
-            AccumHelpString(cur_ns, Pathcomp(line, "=LR"));
-        } else if (cur_ns) {
-            AccumHelpString(cur_ns, line);
-            if (EndsWithQ(line, ";")) {
-                cur_ns = NULL;
+// One-shot scan of the generated file PATH, copying every help string it declares
+// into the help table under <QUALIFIER>.<name>.  amc emits one declaration per entity, as
+// `const char *<qualifier>::<name>_help = "…" "…" …;`, and the literals may span
+// several lines: the declaration line names the entity and carries the first of
+// them, each continuation line carries more, and the line ending in `;` closes the
+// declaration.
+// A tree that does not build PATH has none of these entities either, so a missing
+// file leaves the table without them and reports nothing.
+static void LoadHelpFile(algo::strptr path, algo::strptr qualifier) {
+    tempstr open;
+    open << "const char *" << qualifier << "::";
+    algo::cstring *help = NULL;
+    if (algo::FileQ(path)) {
+        ind_beg(algo::FileLine_curs, line, path) {
+            if (!help && StartsWithQ(line, open) && FindStr(line, "_help = ") != -1) {
+                help = &abt_md::ind_help_GetOrCreate(tempstr() << qualifier << "." << Helpname(line, qualifier)).text;
+                AccumHelpString(help, Pathcomp(line, "=LR"));
+            } else if (help) {
+                AccumHelpString(help, line);
+                if (EndsWithQ(line, ";")) {
+                    help = NULL;
+                }
             }
-        }
-    }ind_end;
+        }ind_end;
+    }
 }
 
-// Update syntax section from FNs.help (pre-populated by
-// LoadHelpStrings on the first call).  No fork; no built binary
-// required.  evalcmd:N now only gates inline `cmd:…` blocks
-// elsewhere — the Syntax section is always refreshed because its
-// source is the generated file, not the binary.
-void abt_md::mdsection_Syntax(abt_md::FFileSection &section) {
-    if (!_db.help_loaded) {
-        LoadHelpStrings();
-        _db.help_loaded = true;
+// Return the help text amc generated for entity NAME, declared in C++ namespace
+// QUALIFIER (command, for a tool), and empty when there is none.  The first ask
+// for a qualifier reads cpp/gen/<QUALIFIER>_gen.cpp, where amc declares every
+// help string of that qualifier, so the file is read once.
+algo::strptr abt_md::GetHelp(algo::strptr qualifier, algo::strptr name) {
+    if (!abt_md::ind_helpfile_Find(qualifier)) {
+        abt_md::ind_helpfile_GetOrCreate(qualifier);
+        LoadHelpFile(tempstr() << "cpp/gen/" << qualifier << "_gen.cpp", qualifier);
     }
-    if (_db.c_readmefile->p_ns && _db.c_readmefile->p_ns->nstype == dmmeta_Nstype_nstype_exe) {
+    abt_md::FHelp *help = abt_md::ind_help_Find(tempstr() << qualifier << "." << name);
+    return help ? algo::strptr(help->text) : algo::strptr();
+}
+
+// -----------------------------------------------------------------------------
+
+// Update the syntax section from the help text of the page's subject.  A tool
+// README's subject is its namespace, whose help is in cpp/gen/command_gen.cpp,
+// and a page whose subject set its own help text uses that.  The text is in
+// both cases exactly what the user sees on -h, and its source is the generated
+// file rather than the binary, so the section is refreshed whatever -evalcmd says.
+void abt_md::mdsection_Syntax(abt_md::FFileSection &section) {
+    abt_md::FReadmefile &readmefile = *_db.c_readmefile;
+    bool exe = readmefile.p_ns && readmefile.p_ns->nstype == dmmeta_Nstype_nstype_exe;
+    if (ch_N(readmefile.help) || exe) {
+        algo::strptr help = ch_N(readmefile.help) ? algo::strptr(readmefile.help) : GetHelp("command", readmefile.p_ns->ns);
         section.text = "";
-        algo::strptr help = _db.c_readmefile->p_ns->help;
         if (Trimmed(help) != "") {
             section.text << Preformatted(help, "usage");
         }
@@ -225,6 +254,10 @@ void abt_md::mdsection_Limitations(abt_md::FFileSection &) {
 }
 
 void abt_md::mdsection_Example(abt_md::FFileSection &) {
+}
+
+// Caveats are written by hand; the row exists so they sort after the examples.
+void abt_md::mdsection_Caveats(abt_md::FFileSection &) {
 }
 
 // Update copyright section

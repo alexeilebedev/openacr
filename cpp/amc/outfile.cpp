@@ -1,19 +1,19 @@
-// Copyright (C) 2023-2026 AlgoRND
+// Copyright (C) 2025-2026 AlgoX2 Corp
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2018-2019 NYSE | Intercontinental Exchange
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
@@ -25,15 +25,36 @@
 
 // -----------------------------------------------------------------------------
 
-// Insert comment
-static void InsertComment(cstring &out, strptr text) {
+// Insert TEXT into OUT as a comment, each line opened by MARK and a space, and a
+// line of its own where TEXT has a blank one.
+static void InsertComment(cstring &out, strptr text, strptr mark) {
     ind_beg(Line_curs,line,text) {
-        out<<"//";
+        out<<mark;
         if (ch_N(line)) {
             out<<" "<<line;
         }
         out<<eol;
     }ind_end;
+}
+
+// -----------------------------------------------------------------------------
+
+// Number of newline characters in TEXT: the number of lines in a text that ends
+// with one.
+int amc::CountLines(strptr text) {
+    int n = 0;
+    const char *p = text.elems;
+    const char *end = text.elems + text.n_elems;
+    while (p < end) {
+        const char *nl = (const char*)memchr(p, '\n', end - p);
+        if (nl) {
+            n++;
+            p = nl + 1;
+        } else {
+            p = end;
+        }
+    }
+    return n;
 }
 
 // -----------------------------------------------------------------------------
@@ -64,17 +85,19 @@ void amc::gen_ns_write() {
         int nbefore=algo_lib::_db.stringtofile_nwrite;
         ind_beg(amc::ns_c_outfile_curs, outfile,ns) {
             amc::_db.report.n_cppfile++;
-            // save to preassigned filename, or out dir if overridden.
-            // a write that fails (missing directory, permission) fails the
-            // run: exiting 0 with the generated code silently missing would
-            // leave a stale tree that looks up to date
+            // save to preassigned filename, or out dir if overridden.  The
+            // file's directory is created first, since a tree that has never
+            // been generated (a fresh clone of a published package) holds no
+            // gen directory for a language the package projects into.  A write
+            // that still fails (permission, a file where the directory goes)
+            // fails the run: exiting 0 with the generated code silently missing
+            // would leave a stale tree that looks up to date
             tempstr fname(DirFileJoin(amc::_db.cmdline.out_dir, outfile.outfile));
+            (void)algo::CreateDirRecurse(GetDirName(fname), false);
             if (!algo::SaveFile(outfile.text, fname, "amc.outfile_write", "output file could not be written")) {
                 algo_lib::_db.exit_code++;
             }
-            frep_(i,ch_N(outfile.text)) {
-                amc::_db.report.n_cppline += ch_qFind(outfile.text, i) == '\n';
-            }
+            amc::_db.report.n_cppline += amc::CountLines(outfile.text);
         }ind_end;
         amc::_db.report.n_filemod += algo_lib::_db.stringtofile_nwrite - nbefore;
         c_outfile_Cascdel(ns);
@@ -102,8 +125,20 @@ amc::FOutfile &amc::outfile_Create(strptr filename) {
             << _db.copyright
             << eol
             << license;
-        InsertComment(outfile.text,comment);
-        outfile.text << eol << eol;
+        // a language says what opens a comment in its files, and how far its
+        // formatter leaves the header from the first declaration; a file of a
+        // language with no row here is C++, which takes the defaults
+        algo::strptr linecomment("//");
+        int nblank = 2;
+        amc::FLang *lang = amc::ind_lang_Find(algo::Pathcomp(filename,".RR"));
+        if (lang) {
+            linecomment = lang->linecomment;
+            nblank = lang->nblank;
+        }
+        InsertComment(outfile.text,comment,linecomment);
+        for (int i = 0; i < nblank; i++) {
+            outfile.text << eol;
+        }
     }
     return outfile;
 }

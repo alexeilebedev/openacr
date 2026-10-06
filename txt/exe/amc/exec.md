@@ -22,7 +22,7 @@ struct amc_proc { // command.amc_proc: Subprocess: Algo Model Compiler: generate
     algo::Fildes    from_stderr;   // read end of stderr pipe when fstderr=="|"; closed by _Wait
     pid_t           pid;           //   0  pid of running child process
     i32             timeout;       //   0  optional timeout for child process
-    u32             memlimitmb;    //   0  optional child memory ceiling MB (10^6): RLIMIT_AS before exec; 0 = leave inherited
+    u32             memlimitmb;    //   0  optional child memory ceiling MB (10^6): RLIMIT_DATA before exec; 0 = leave inherited
     i32             status;        //   0  last exit status of child process
     bool            pgroup;        //   false  run child in its own process group; _Kill targets the group
     // func:command.amc_proc..Ctor

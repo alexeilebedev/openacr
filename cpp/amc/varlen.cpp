@@ -1,20 +1,20 @@
-// Copyright (C) 2023-2026 AlgoRND
+// Copyright (C) 2025-2026 AlgoX2 Corp
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 // Copyright (C) 2008-2012 AlgoEngineering LLC
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
@@ -92,6 +92,43 @@ tempstr amc::VarlenEndAssign(strptr parname, amc::FField &field, strptr value) {
 tempstr amc::VarlenEndIncr(strptr parname, amc::FField &field, strptr incr) {
     tempstr value = tempstr() << VarlenEndExpr(parname,field) << " + " << incr;
     return amc::VarlenEndAssign(parname, field, value);
+}
+
+// C++ expression, true when every varlen end offset a message of CTYPE carries
+// lies inside the message: each end is at or past the one before it, and none
+// is past the varlen area, which is LENEXPR bytes less the fixed portion.  The
+// message is reached through PARNAME.  "true" for a ctype whose varlen fields
+// need no end offsets, so a caller can conjoin the result unconditionally.
+//
+// The ends come off the wire, and every accessor of a later varlen field
+// subtracts one from another or from the length, in unsigned arithmetic.  A
+// message from a client built against another layout puts payload bytes where
+// the ends now sit, the subtraction wraps to a length of gigabytes, and the
+// first read of the field walks off the buffer.  So the ends are validated at
+// the cast and at the dispatch, before any accessor reads them, the way the
+// length itself is.
+tempstr amc::VarlenBoundExpr(amc::FCtype &ctype, strptr parname, strptr lenexpr) {
+    tempstr ret;
+    tempstr prev;
+    ind_beg(amc::ctype_zd_varlenfld_curs, field, ctype) {
+        if (ctype_zd_varlenfld_Next(field)) {
+            tempstr end = VarlenEndExpr(parname, field);
+            if (ch_N(ret) > 0) {
+                ret << " && ";
+            }
+            // the first end is unsigned and so never below zero; a compiler
+            // would say as much of a comparison spelled out
+            if (ch_N(prev) > 0) {
+                ret << "i64(" << end << ") >= i64(" << prev << ") && ";
+            }
+            ret << "i64(" << end << ") <= i64(" << lenexpr << ") - ssizeof(" << ctype.cpp_type << ")";
+            prev = end;
+        }
+    }ind_end;
+    if (ch_N(ret) == 0) {
+        ret << "true";
+    }
+    return ret;
 }
 
 // Set up the varlen field: declare its end-offset variable when a later

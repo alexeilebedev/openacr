@@ -26,12 +26,11 @@ Process types are registered in table `amsdb.proctype`. The standard types are:
 
 ```ssim
 inline-command: acr proctype | ssimfilt ^ -t
-PROCTYPE      ID  NS            OVERHEADMB  HUGEMB  HBTIMEOUT  COMMENT
-              0                 0           0       30         No process
-ams_sendtest  5   ams_sendtest  0           4295    30         Ams testing
-ext           22                0           4295    30         External client connection
-samp_meng     23  samp_meng     0           4295    30         Matching engine
-user          21                0           4295    30         User process launched via userproc
+PROCTYPE      ID  NS            OVERHEADMB  HUGEMB  HBTIMEOUT  STOPRANK  COMMENT
+              0                 0           0       30         0         No process
+ams_sendtest  5   ams_sendtest  0           4295    30         0         Ams testing
+ext           22                0           4295    30         0         External client connection
+user          21                0           4295    30         0         User process launched via userproc
 
 ```
 
@@ -40,26 +39,18 @@ a multicast group type. The standard types are:
 
 ```ssim
 inline-command: acr grptype -report:N
-amsdb.grptype  grptype:board    id:24  comment:"Message board: large payloads referenced from lane rings"
-amsdb.grptype  grptype:log      id:9   comment:"Log messages"
-amsdb.grptype  grptype:netall   id:4   comment:"Net process to all processes on node"
-amsdb.grptype  grptype:nethb    id:22  comment:"Net process to one process (unicast heartbeats)"
-amsdb.grptype  grptype:netpr    id:3   comment:"Net process to any process (unicast)"
-amsdb.grptype  grptype:out      id:2   comment:"Log messages, alarms"
-amsdb.grptype  grptype:prmon    id:18  comment:"Process to monitor"
-amsdb.grptype  grptype:prnet    id:5   comment:"Process to net"
-amsdb.grptype  grptype:prsup    id:12  comment:"Process to supervisor"
-amsdb.grptype  grptype:prtxn    id:10  comment:"Process to txn"
-amsdb.grptype  grptype:pruser   id:21  comment:"Parent process to user process"
-amsdb.grptype  grptype:supall   id:11  comment:"Supervisor to all"
-amsdb.grptype  grptype:txncmt   id:13  comment:"Net to commit gapfill fallback"
-amsdb.grptype  grptype:txnpr    id:23  comment:"Txn to process (per-partition send credit grants)"
-amsdb.grptype  grptype:userpr   id:20  comment:"User process to parent process"
-amsdb.grptype  grptype:xbcast   id:16  comment:"(x-node) Any to all"
-amsdb.grptype  grptype:xinctl   id:8   comment:"(x-node) Directed control: command and response envelopes"
-amsdb.grptype  grptype:xindata  id:6   comment:"(x-node) Directed data delivery to one node"
-amsdb.grptype  grptype:xingf    id:7   comment:"(x-node) Gapfill asks directed at a serving node, and its re-serves"
-amsdb.grptype  grptype:xpart    id:1   comment:"(x-node) Partition messages"
+amsdb.grptype  grptype:board   id:24  comment:"Message board: large payloads referenced from lane rings"
+amsdb.grptype  grptype:log     id:9   comment:"Log messages"
+amsdb.grptype  grptype:out     id:2   comment:"Log messages, alarms"
+amsdb.grptype  grptype:prmon   id:18  comment:"Process to monitor"
+amsdb.grptype  grptype:prsup   id:12  comment:"Process to supervisor"
+amsdb.grptype  grptype:prtxn   id:5   comment:"Process to txn"
+amsdb.grptype  grptype:pruser  id:21  comment:"Parent process to user process"
+amsdb.grptype  grptype:supall  id:11  comment:"Supervisor to all"
+amsdb.grptype  grptype:txnall  id:4   comment:"Txn to all processes on node"
+amsdb.grptype  grptype:txnpr   id:3   comment:"Txn to one process (unicast)"
+amsdb.grptype  grptype:userpr  id:20  comment:"User process to parent process"
+amsdb.grptype  grptype:xpctl   id:26  comment:"(x-node) Partition control: one partition's claims, ballots and eof traffic"
 ```
 
 Together, shm id is formatted like this: `proctype-nodeidx-procidx.grptype-grpidx`.
@@ -77,8 +68,9 @@ disk IO to the io shm if it's configured.
 ## In-memory shm format; Flow control
 <a href="#in-memory-shm-format-flow-control"></a>
 
-A shm is a memory-mapped ring buffer. The file has a 4 KB control header (`ams.Shmhdr`)
-followed by a data region whose usable size is rounded down to a power of two.
+A shm is a memory-mapped ring buffer. The file has a control header of one or more 4 KB
+pages (`ams.Shmhdr`, the member table and the channel table), followed by a data
+region whose usable size is rounded down to a power of two.
 Messages are written contiguously at `offset & offset_mask` within the data region.
 
 ### Shmhdr
@@ -93,6 +85,7 @@ The shared header contains:
 
 The first `max_shmember` entries of `ams.Shmember` follow the header.
 Each shmember tracks `offset` (absolute read offset), `pid`, and heartbeat info.
+The `max_channel` shm channels (`ams.Shmchannel`) follow the member table.
 
 ### Writing
 <a href="#writing"></a>

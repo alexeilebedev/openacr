@@ -39,7 +39,15 @@ On Linux/glibc:
   After mapping huge pages, call `mlock` to detect kernel
   shortfall — if `mlock` fails the allocation is unmapped and
   Sbrk falls back to regular pages (and disables huge pages for
-  the rest of the process).  Increments `algo_lib::_db.trace.n_mmap`
+  the rest of the process).  The regular-page block is mapped
+  unpopulated, advised `MADV_HUGEPAGE`, then populated with
+  `MADV_POPULATE_WRITE`, so a host whose THP mode is `madvise`
+  backs it with transparent huge pages: 256 MB maps in about
+  10 ms, all of it on huge pages, where a block populated at map
+  time takes about 35 ms on 4K pages.  A populate that fails
+  unmaps the block and the call returns NULL.  A kernel without
+  the advice (before 5.14) populates it by writing one byte per
+  page instead.  Increments `algo_lib::_db.trace.n_mmap`
   once per block mapped, by whichever of the two routes mapped it.
 - **Allocation `size < 2 MiB`**: call `sbrk(size)`.  Increments
   `algo_lib::_db.trace.n_sbrk`.

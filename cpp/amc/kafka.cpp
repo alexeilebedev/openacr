@@ -1,18 +1,17 @@
-// Copyright (C) 2025-2026 AlgoRND
+// Copyright (C) 2025-2026 AlgoX2 Corp
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
 // Exceptions: yes
@@ -34,6 +33,17 @@ static strptr FirstVer(strptr range) {
 
 static strptr LastVer(strptr range) {
     return Pathcomp(range,"-LR");
+}
+
+// True when FIELD's type reaches the codec's struct branch: any type the codec
+// does not encode as a Kafka scalar, a string, bytes, a record batch, a uuid or
+// the acl-operations word.  The two lists here are the codec's branches below.
+static bool KafkaStructArgQ(amc::FField &field) {
+    strptr arg = field.arg;
+    bool scalar = arg == "bool" || arg == "i8" || arg == "i16" || arg == "i32" || arg == "i64"
+        || arg == "u8" || arg == "u16" || arg == "u32" || arg == "u64" || arg == "double";
+    bool blob = arg == "algo.cstring" || arg == "algo.ByteAry" || arg == "kafka.RecordBatch" || arg == "algo.Uuid" || arg == "kafka.AclOperations";
+    return !scalar && !blob;
 }
 
 // Generate the kafka wire codec for a ctype with a ckafka record:
@@ -181,6 +191,11 @@ void amc::KafkaCodec(int dir) {
                     fldnulchk << "false";
                     fldprschk << "true";
                 }
+                // A nullable struct rides behind one byte on the wire, -1 when absent and 1
+                // when present, and the field's presence bit is what that byte mirrors, so
+                // a nullable struct field without a presence bit cannot be encoded.
+                bool nullstruct = ch_N(nfirst) && field.reftype != dmmeta_Reftype_reftype_Tary && KafkaStructArgQ(field);
+                vrfy(!nullstruct || prsset, tempstr() << "amc.kafka_nullable_struct  field:" << field.field << "  comment:'a nullable struct field needs a presence bit'");
                 Set(R,"$fldnulchk",fldnulchk);
                 Set(R,"$fldprschk",fldprschk);
                 if (count < n_hdr_fld || header) {
@@ -229,6 +244,13 @@ void amc::KafkaCodec(int dir) {
                         Ins(&R,func.body,"algo::EncodeUuid(buf,$fldval);");
                     } else if (field.arg == "kafka.AclOperations") {
                         Ins(&R,func.body,"lib_kafka::EncodeI32(buf,$fldval.value);");
+                    } else if (nullstruct) {
+                        Ins(&R,func.body,"if ($fldnulchk) {");
+                        Ins(&R,func.body,"    algo::EncodeI8(buf,$fldprschk ? i8(1) : i8(-1));");
+                        Ins(&R,func.body,"}");
+                        Ins(&R,func.body,"if (!($fldnulchk) || $fldprschk) {");
+                        Ins(&R,func.body,"    $Argtype_KafkaEncode(buf,$fldval,version);");
+                        Ins(&R,func.body,"}");
                     } else {
                         Ins(&R,func.body,"$Argtype_KafkaEncode(buf,$fldval,version);");
                     }
@@ -281,6 +303,17 @@ void amc::KafkaCodec(int dir) {
                         Ins(&R,func.body,"ok = ok && algo::DecodeUuid(buf,$fldval);");
                     } else if (field.arg == "kafka.AclOperations") {
                         Ins(&R,func.body,"ok = ok && lib_kafka::DecodeI32(buf,$fldval.value);");
+                    } else if (nullstruct) {
+                        Ins(&R,func.body,"if ($fldnulchk) {");
+                        Ins(&R,func.body,"    i8 $fldname_mark(0);");
+                        Ins(&R,func.body,"    ok = ok && algo::DecodeI8(buf,$fldname_mark);");
+                        Ins(&R,func.body,"    present = $fldname_mark >= 0;");
+                        Ins(&R,func.body,"} else {");
+                        Ins(&R,func.body,"    present = true;");
+                        Ins(&R,func.body,"}");
+                        Ins(&R,func.body,"if (present) {");
+                        Ins(&R,func.body,"    ok = ok && $Argtype_KafkaDecode(buf,$fldval,version);");
+                        Ins(&R,func.body,"}");
                     } else {
                         Ins(&R,func.body,"ok = ok && $Argtype_KafkaDecode(buf,$fldval,version);");
                     }

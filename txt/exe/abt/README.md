@@ -1,5 +1,9 @@
 ## abt - Algo Build Tool - build & link C++ targets
-
+<a href="#abt"></a>
+abt compiles and links the C++ targets of the tree.  Give it a regex of target
+names, and it builds those targets and everything they depend on, running
+several compiles in parallel and recompiling only what is out of date.  The
+ssim tables say what a target is made of, so abt needs no makefile.
 
 ### Syntax
 <a href="#syntax"></a>
@@ -35,6 +39,7 @@ Usage: abt [[-target:]<regx>] [options]
     -shortlink                  Try to shorten sort link if possible
     -verbose    flag            Verbosity level (0..255); alias -v; cumulative
     -debug      flag            Debug level (0..255); alias -d; cumulative
+    -trace      string  ""      Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps
     -help                       Print help and exit; alias -h
     -version                    Print version and exit
     -signature                  Show signatures and exit; alias -sig
@@ -42,102 +47,137 @@ Usage: abt [[-target:]<regx>] [options]
 
 ### Description
 <a href="#description"></a>
-Abt is a build tool. The argument to abt is a target name regex.
-Target means 'build target'.
 
-The ssimfiles `abt` reads describe which targets can be built,
-what are the sources files that comprise the targets, and the various options to use.
+abt reads its inputs from the `dev` namespace of the ssim database under `-in`.
+`dev.target` names each target, `dev.targsrc` lists its source files, and
+`dev.targdep` lists the targets it depends on.  `dev.tool_opt` holds the
+compiler and linker flags, and `dev.builddir`, `dev.cfg`, `dev.compiler`,
+`dev.uname` and `dev.arch` list the supported configurations.  To see every row
+behind one target, run `acr target:<name> -t`.
 
-Abt outputs are organized under the `build/` directory.
-`abt` supports multiple compilers and architectures.
+#### Selecting targets
+<a href="#selecting-targets"></a>
 
-When building, `abt` builds a dependency dag based on #includes; 
-Invokes build commands, several jobs running at a time.
+The first argument is a regex over `dev.target`.  It matches whole names, with
+`%` as the wildcard, so `abt 'acr%'` selects acr and every tool whose name
+starts with it.  abt adds every target the
+matching ones depend on, recursively, so `abt acr` also builds `algo_lib` and
+the other libraries acr links.  A regex that matches nothing is an
+`abt.nomatch` error.
 
-Builds happen in parallel by default. The default is picked
-based on the number of processors in the system. It can be overriden by specifying `-maxjobs`.
+With a target and no action flag, abt builds.  With no target at all, it prints
+the list of every target it knows.
 
-### Bootstrapping
+#### How abt decides what to rebuild
+<a href="#how-abt-decides-what-to-rebuild"></a>
+
+abt scans each source file for `#include` lines and follows them through the
+headers, so a source file is as new as the newest file it includes.  A source
+file newer than its object gets recompiled.  A target whose object files, or
+whose dependencies, are newer than its output gets relinked.  abt runs the
+compiles and links as a dependency graph, so a target links as soon as its own
+objects and its libraries are done.
+
+When a compiler cache is enabled, abt runs each compile through it.  By default
+abt uses [gcache](/txt/exe/gcache/README.md) when `.gcache` exists in the
+current directory, and ccache when `.ccache` does.
+
+#### The build directory
+<a href="#the-build-directory"></a>
+
+A configuration is the four-part key `<uname>-<compiler>.<cfg>-<arch>`, such as
+`Linux-g++.release-x86_64`.  Each configuration has one flat directory under
+`build/`, and the link `build/<cfg>` names the one in use for that cfg, so
+`build/release` points at `Linux-g++.release-x86_64` on a Linux machine.  abt
+reads that link to fill in any of `-uname`, `-compiler` and `-arch` left off the
+command line.
+
+An object file is named after its source path with each `/` turned into `.`,
+so `cpp/abt/main.cpp` compiles to `build/release/cpp.abt.main.o`.  A library
+carries its arch, as in `build/release/algo_lib-x86_64.a`.  An executable
+carries its bare name, and `bin/<target>` links to it, usually as
+`../build/release/<target>`.
+
+#### Bootstrapping
 <a href="#bootstrapping"></a>
-Initially, no executables exist. OpenACR uses a `bootstrap` file, which is a pre-computed
-script residing in `bin/bootstrap`, to build `abt`, after which `abt` itself is used to build the rest.
-There is one bootstrap file for each supported configuration. When the bootstrap file runs, it also
-sets up soft links `build/$cfg` (e.g. `build/release`, `build/debug`).
-Bootstrapping can be done by hand, or with the `ai` script. The `ai` script examines the current
-system to find a supported coniguration. Bootstrap files are prepared with `abt -printcmd`.
 
-### Target Definition
-<a href="#target-definition"></a>
+A fresh checkout has no abt to build abt with.  The directory `bin/bootstrap`
+holds one shell script per supported configuration, and each script compiles
+abt, gcache and a few other tools directly.  It also creates the `build/<cfg>`
+links.  The [ai](/txt/script/ai.md) script picks the script that fits the
+machine, runs it, and then builds the rest with abt.  The scripts are made with
+`abt -printcmd`.
 
-Build-related information for target X can be obtained with `acr target:X -t`.
-This includes the [target](/txt/ssimdb/dev/README.md), its [source files](/txt/ssimdb/dev/README.md),
-and [dependencies](/txt/ssimdb/dev/README.md)
-
-### Build Directory
-<a href="#build-directory"></a>
-All object, libraries and executables are deposited into the directory
-`build/$uname-$compiler.$cfg-$arch`, for instance `build/Linux-g++.release-x86_64`.
-There are no subdirectories, all files are placed directly in the build directory.
-For source files, the object file is calculated by replacing `/` with `.` in the path,
-for instance `cpp/abt/main.cpp` becomes `build/Linux-g++.release-x86_64/cpp.abt.main.o`.
-
-For each executable, there is a soft link `bin/$target` usually pointing to `../build/release/$target`.
-
-### Build Identity
+#### Build identity
 <a href="#build-identity"></a>
 
-Suppose a deployed program misbehaves and the only thing at hand is the
-directory it runs from.  The question a reader asks first is which build created it, and no
-answer is recoverable after the fact: the source tree may have moved on, and the
-binaries may have been replaced.  The fact has to be written down while it is
-still known.
-
-Only the act of building knows it.  A source file cannot state the commit it will
-be compiled at, and it cannot state when that will happen.  So `abt` writes both
-at the start of every run, as `build/gitinfo.h` and `build/gitinfo.ssim`, and
-`algo_lib` compiles the first of the two in.  Every executable then reports it
-under `-version`, as a `dev.gitinfo` tuple:
+abt stamps the build identity into `build/gitinfo.h` and `build/gitinfo.ssim`,
+as a `dev.gitinfo` tuple naming the commit the tree is at.  `algo_lib` compiles the
+header in, so every executable reports the tuple under `-version`:
 
 ```ssim
-dev.gitinfo  gitinfo:2026-07-27.3867b78e3.abt  package:""  gitref:3867b78e3b54b0860a10a74672c381bd6e1c7a36  builddate:2026-07-27T11:09:49  comment:""
+dev.gitinfo  gitinfo:2026-09-25.a2d5b7d53.abt  package:""  gitref:a2d5b7d5378b4e4152109a99271173143a464125  commitdate:2026-09-26T06:03:34  builddate:2026-09-26T12:59:47  comment:""
 ```
 
-`gitref` names the commit and `builddate` the moment of the build; they are
-independent, because a binary can be built at any time from any commit.
-`gitinfo` is the short label the two make together, and `package` carries the
-`-package` tag when one was given.  A tree compiled without `abt` — the
-bootstrap, or a compiler run by hand — has no such file, and its binaries report
-`comment:unversioned` instead.  So does a tree with no git history, such as a
-release unpacked from an archive.
+`gitref` is the commit and `commitdate` is when it was made.  `builddate` is the
+moment of the first build at that commit, and `package` is the `-package` tag.
+abt rewrites the pair of files only when the commit or the tag changes, so
+repeated builds at one commit recompile nothing on its account.  A binary built
+without abt, or from a tree with no git history, reports `comment:unversioned`.
 
-The stamp is rewritten only when the commit or the `-package` tag changes.
-Repeated builds at one commit therefore leave it alone, and nothing goes out of
-date on its account; the first build after a commit recompiles the single source
-file that carries it.
+### Examples
+<a href="#examples"></a>
 
-A program that creates persistent state can read its own stamp and write the two
-facts into that state's first record, where they stay readable for as long as the
-state does.
+```bash
+abt acr                                  # build acr and every library it links
+abt -install acr                         # build acr and point bin/acr at it
+abt -cfg:debug -install acr              # build a debug acr and point bin/acr at it
+abt -cfg:coverage 'acr|amc'              # build two targets under coverage
+abt -list abt                            # list the targets and source files abt would build
+abt -listincl abt -srcfile:cpp/abt/main.cpp            # list what one file includes
+abt acr -srcfile:cpp/acr/main.cpp        # compile one file, without linking
+abt -preproc acr -srcfile:cpp/acr/main.cpp             # write the preprocessed .i for one file
+abt bash2html -disas Main                # disassemble every function matching Main
+abt -force -cache:none acr               # recompile acr from scratch, bypassing the cache
+abt -printcmd bash2html > build.sh       # write the build as a shell script, running nothing
+abt -jcdb:compile_commands.json '%'      # write a compilation database for clangd or cppcheck
+abt -clean acr                           # delete the outputs of acr and its libraries
+```
 
-### Debugging the build
-<a href="#debugging-the-build"></a>
+### Caveats
+<a href="#caveats"></a>
 
-Just like with other programs, the verbosity level `-v` can be used to trace the execution.
-When run with `-v`, abt will show the commands that execute. Otherwise, only the commands that
-either fail or produce output are echoed to the screen. By default, they are hidden to keep output
-clean.
+- abt echoes a command only when it fails or prints something.  Add `-v` to see
+  every command it runs, and `-v -v` to see gcache's own output too.
+- `-force` with gcache enabled still serves most compiles from the cache.  Use
+  `-cache:none` for a real recompile, or `-cache:gcache-force` to recompile and
+  refresh the cache entries.
+- `-clean` deletes the outputs of every selected target, and the selection
+  includes the dependencies, so `abt -clean acr` removes the `algo_lib` library
+  too.
 
 ### Options
 <a href="#options"></a>
 #### -target -- Regx of target name
 <a href="#-target"></a>
 
+Select the targets to act on, as a regex over `dev.target`.  abt adds each
+selected target's dependencies to the selection.  With no target, abt prints the
+list of all targets and exits.
+
 #### -in -- Root of input ssim dir
 <a href="#-in"></a>
+
+Read the ssim tables from this directory.  The default is `data`, the tree's
+own database.
 
 #### -cfg -- Set config
 <a href="#-cfg"></a>
 
+Select the configuration to build, as a regex.  The default is `release`.  A
+regex matching several configurations builds each of them in turn, so `abt
+-cfg:% acr` builds acr in every configuration.  Each configuration selected
+needs its `build/<cfg>` link, or abt stops with `abt.builddir`.
 Possible values are
 ```ssim
 inline-command: acr cfg -report:N | ssimfilt -t
@@ -154,8 +194,9 @@ release   r       optimized, without symbols
 #### -compiler -- Set compiler.
 <a href="#-compiler"></a>
 
-Specify compiler to use.
-The default is obtained by reading the soft link `build/$cfg`.
+Select the compiler.  The default is the one named by the link `build/<cfg>`.
+The combination with `-uname`, `-cfg` and `-arch` must be a row of
+`dev.builddir`, or abt stops with `abt.builddir`.
 Possible values are
 ```ssim
 inline-command: acr compiler -report:N | ssimfilt -t
@@ -168,14 +209,11 @@ g++-9     ranlib  ar       g++-9     .a              .gch    .o
 
 ```
 
-This option value can be a regex. Specifying `abt -cfg:% %` will build all targets
-in all configurations.
-
 #### -uname -- Set uname (default: guess)
 <a href="#-uname"></a>
 
-Specify target uname
-The default is obtained by reading the soft link `build/$cfg`.
+Select the operating system to build for.  The default is the one named by the
+link `build/<cfg>`.
 Possible values are
 ```ssim
 inline-command: acr uname -report:N | ssimfilt -t
@@ -191,8 +229,8 @@ SunOS    Tested on solaris 5.11
 #### -arch -- Set architecture (default: guess)
 <a href="#-arch"></a>
 
-Specify architecture.
-The default is obtained by reading the soft link `build/$cfg`.
+Select the architecture to build for.  The default is the one named by the link
+`build/<cfg>`.
 Possible values are
 ```ssim
 inline-command: acr arch -report:N | ssimfilt -t
@@ -210,30 +248,37 @@ x86_64  64-bit mode on linux
 #### -ood -- List out-of-date source files
 <a href="#-ood"></a>
 
-List out-of-date files
+List what a build would recompile, without building: each out-of-date target,
+followed by its out-of-date source files.  The `abt.config` line carries the
+counts, as `ood_src` for source files and `ood_target` for targets.
 
-    $ touch include/sample.h
-    $ abt -ood sample -build:N
-    dev.target  target:sample
-    dev.srcfile  srcfile:cpp/sample/sample.cpp
-    abt.config  config:Linux-clang++.release-x86_64  cache:none  out_dir:build/Linux-clang++.release-x86_64
-    abt.outofdate  pch:0  src:1  lib:0  exe:1
-    report.abt  n_target:4  time:00:00:00.031850008  n_warn:0  n_err:0  n_install:0
+```
+$ abt -ood -force bash2html
+abt.config  builddir:Linux-g++.release-x86_64  ood_src:40  ood_target:2  cache:gcache
+dev.target  target:bash2html
+dev.srcfile  srcfile:cpp/bash2html.cpp
+dev.srcfile  srcfile:cpp/gen/bash2html_gen.cpp
+dev.target  target:algo_lib
+...
+```
 
 #### -list -- List target files
 <a href="#-list"></a>
 
-List files belonging to selected targets
+Print a `dev.target` line for each selected target, followed by a `dev.srcfile`
+line for each of its source files.  `-srcfile` narrows the source files shown.
+`-list` alone does not build.
 
 #### -listincl -- List includes
 <a href="#-listincl"></a>
 
-List include files belonging to selected targets.
-With `-srcfile`, narrow down the list to just the specified files.
-Example:
+Print a `dev.include` line for each include of the selected targets' source
+files, following the includes through the headers.  `-srcfile` narrows the list
+to the includes of the matching files.  `-listincl` alone does not build.
 
 ```ssim
 inline-command: abt -listincl abt -srcfile cpp/abt/%
+abt.config  builddir:***  ood_src:***  ood_target:***  cache:***
 dev.include  include:cpp/abt/build.cpp:include/abt.h  sys:N  comment:""
 dev.include  include:cpp/abt/disas.cpp:include/abt.h  sys:N  comment:""
 dev.include  include:cpp/abt/gitinfo.cpp:include/algo.h  sys:N  comment:""
@@ -244,110 +289,145 @@ dev.include  include:cpp/abt/ood.cpp:include/abt.h  sys:N  comment:""
 dev.include  include:cpp/abt/opt.cpp:include/abt.h  sys:N  comment:""
 dev.include  include:cpp/abt/scan.cpp:include/algo.h  sys:N  comment:""
 dev.include  include:cpp/abt/scan.cpp:include/abt.h  sys:N  comment:""
-abt.config  builddir:***  ood_src:***  ood_target:***  cache:***
 report.abt  n_target:***  time:***  hitrate:***  pch_hitrate:***  n_warn:0  n_err:0  n_install:***
 ```
 
 #### -build -- If set, build specified target (all necessary steps)
 <a href="#-build"></a>
 
-This is the default unless other options are specified.
-
-For libraries, the `arch` suffix is applied, so the target `algo_lib` produces the library
-`build/Linux-g++.release-x86_64/algo_lib-x86_64.a`.
+Compile the out-of-date source files and link the out-of-date targets.  abt
+builds by default when a target is given with none of `-list`, `-listincl`,
+`-ood`, `-clean` and `-preproc`.  Pass `-build` next to one of those to do both.
 
 #### -preproc -- Preprocess file, produce .i file
 <a href="#-preproc"></a>
 
+Run the preprocessor on each selected source file and write the result next to
+its object, with the `.i` extension.  Combine it with `-srcfile` to look at one
+file.  `-preproc` alone does not build.
+
 #### -srcfile -- Build/disassemble/preprocess specific file
 <a href="#-srcfile"></a>
 
-For `-preproc`, `-build`, `-disas`, `-clean`, `-list`, and `-listincl` commands, abt supports narrowing down each
-target to a specific set of source files. When this option is specified, the linking step
-will be suppressed. It can be used to compile a single file, or disassemble a function from
-a single file.
+Narrow the source files of each selected target to those matching this regex.
+It applies to `-build`, `-preproc`, `-disas`, `-clean`, `-list` and
+`-listincl`.  A build narrowed this way compiles the matching files and skips
+the link, which is how to compile a single file.
 
 #### -clean -- Delete all output files
 <a href="#-clean"></a>
 
-This command deletes all object files and target output files matching input filter.
+Delete the object files and the output file of every selected target, in every
+selected configuration.  A coverage build also loses its `.gcda` and `.gcno`
+files.  `-clean` alone does not build, and `-clean -build` rebuilds from
+scratch.
 
 #### -dry_run -- Print actions, do not perform
 <a href="#-dry_run"></a>
 
+Print the commands the build would run, as `dev.syscmd` records and the
+`dev.syscmddep` records that order them, and run none of them.  `-printcmd`
+prints the same commands as a shell script.
+
 #### -maxjobs -- Maximum number of child build processes. 0=pick good default
 <a href="#-maxjobs"></a>
+
+Run at most this many compiles and links at once.  The default of 0 picks half
+the processors on the machine, and never fewer than 4.  `-printcmd` sets it to
+1.
 
 #### -printcmd -- Print commands. Do not execute
 <a href="#-printcmd"></a>
 
+Print the whole build as a shell script, running nothing.  The script opens
+with `set -e` and `set -x` and lists every command in order.  `-printcmd`
+implies `-force` and `-maxjobs:1`, leaves out the compiler cache, and does not
+need the compiler to be installed, which is how the bootstrap scripts are made.
+
 #### -force -- Assume all files are out-of-date
 <a href="#-force"></a>
+
+Treat every source file and every target as out of date, so everything
+selected is compiled and linked again.  With gcache enabled, the compiles are
+still served from the cache, and `-cache:gcache-force` makes them real.
 
 #### -install -- Update soft-link under bin/
 <a href="#-install"></a>
 
-By default, the resulting files are left in the build directory.
-There are already soft links from `bin`/ to `../build/release`. If we want to re-point the default
-binary to a different version, the `-install` option will rewrite the soft link to point 
-to the new executable. For instance, we may want to install a debug version of target `sample` with
-`abt -install sample -cfg debug`. This will rewrite the soft link `bin/sample` to be
-`../build/Linux-clang++.debug-x86_64/sample`.
+Build the selected executables, then point `bin/<target>` at each one.  A plain
+build leaves `bin/` alone.  `abt -install -cfg:debug acr` makes `bin/acr` a
+link to `../build/debug/acr`, and `abt -install acr` points it back at the
+release build.
 
 #### -coverity -- Run abt in coverity mode
 <a href="#-coverity"></a>
 
+abt accepts this flag and ignores it.
+
 #### -package -- Package tag
 <a href="#-package"></a>
+
+Stamp this tag into the build identity, as the `package` attribute of
+`dev.gitinfo`.  Every executable built afterwards reports it under `-version`.
+Changing the tag rewrites the stamp, and the next build recompiles the one
+source file that carries it.
 
 #### -maxerr -- Max failing commands before rest of pipeline is forced to fail
 <a href="#-maxerr"></a>
 
+Stop starting new commands once this many have failed.  The commands left are
+marked failed without running, so a broken build ends quickly.  The default is
+100.
+
 #### -disas -- Regex of function to disassemble
 <a href="#-disas"></a>
 
-The parameter is a regular expression that's matched against function names in the 
-compiler's assembler output.
+Show the disassembly of every function whose demangled name contains a match
+for this regex.
+abt builds the selected targets first, then runs `objdump` over their object
+files.  Use `-srcfile` to search fewer files, and a `-cfg` regex matching
+several configurations to compare their code.
 
-```bash
-    $ abt sample -disas Main | head -15
-    abt.config  config:Linux-clang++.release-x86_64  cache:none  out_dir:build/Linux-clang++.release-x86_64
-    abt.outofdate  pch:0  src:0  lib:0  exe:0
-    0000000000000000 <sample::Main()>:
-       0:	53                   	push   %rbx
-       1:	be 00 00 00 00       	mov    $0x0,%esi
-       6:	48 83 ec 10          	sub    $0x10,%rsp
-       a:	8b 1d 00 00 00 00    	mov    0x0(%rip),%ebx        # 10 <sample::Main()+0x10>
-      10:	48 89 e7             	mov    %rsp,%rdi
-      13:	48 c7 04 24 00 00 00 	movq   $0x0,(%rsp)
-      1a:	00 
-      1b:	c7 44 24 08 0d 00 00 	movl   $0xd,0x8(%rsp)
-      22:	00 
-      23:	e8 00 00 00 00       	callq  28 <sample::Main()+0x28>
-      28:	89 da                	mov    %ebx,%edx
-      2a:	b9 01 00 00 00       	mov    $0x1,%ecx
 ```
-
-With `-cfg` selecting more than one configuration, you can quickly compare disassembled output
-for more than one configuration.
+$ abt bash2html -disas Main -srcfile:cpp/bash2html.cpp
+abt.config  builddir:Linux-g++.release-x86_64  ood_src:0  ood_target:0  cache:gcache
+# abt.disas  srcfile:cpp/bash2html.cpp  objfile:build/release/cpp.bash2html.o
+0000000000000000 <bash2html::Main()>:
+       0:	f3 0f 1e fa          	endbr64
+       4:	41 56                	push   %r14
+       6:	41 55                	push   %r13
+...
+```
 
 #### -report -- Print final report
 <a href="#-report"></a>
 
+Print the `abt.config` line for each configuration and the `report.abt` line at
+the end.  The report counts targets, warnings, errors and installed binaries,
+and gives the gcache hit rate.  `-report:N` leaves both lines out.
+
 #### -jcdb -- Create JSON compilation database in specified file
 <a href="#-jcdb"></a>
 
-This output file is used with `cppcheck`. The parameter is the filename.
+Write a JSON compilation database for the selected targets to this file, and
+build nothing.  Tools such as clangd and cppcheck read the file to learn how
+each source file compiles.  The commands in it carry no compiler cache prefix.
 
 #### -cache -- Cache mode
 <a href="#-cache"></a>
 
-Specify which compiler cache to use. Default is "auto", which looks for
-a directory entry `.ccache` or `.gcache`. If one is found, corresponding
-cache is used. See [gcache][/txt/exe/gcache/README.md] for more information.
+Choose the compiler cache.  `auto`, the default, uses
+[gcache](/txt/exe/gcache/README.md) when `.gcache` exists and `bin/gcache` is
+built, and ccache when `.ccache` exists.  `gcache` and `ccache` ask for one
+cache and print an `abt.notice` when it is not set up.  `gcache-force` is
+`gcache` with each compile done afresh and its cache entry replaced, and `none`
+compiles directly.
 
 #### -shortlink -- Try to shorten sort link if possible
 <a href="#-shortlink"></a>
 
-This option is used with `-printcmd` to make sure the installed binaries point to `../build/release`
-instead of `../build/Linux-g++.release-x86_64`.
+Write the build into the full configuration directory, such as
+`build/Linux-g++.release-x86_64`, and point `-install` links there.  Without
+the flag, abt writes through the link `build/<cfg>`, so `bin/acr` points at
+`../build/release/acr`.  The build goes through that link whatever `-compiler`,
+`-uname` and `-arch` say, so pass `-shortlink` when you override one of them.

@@ -57,7 +57,7 @@ A citest is one row in `atfdb.citest` plus one C++ function:
 atfdb.citest  citest:gitfile     cijob:normalize  sandbox:N  comment:"Update gitfile tables by scanning filesystem"
 atfdb.citest  citest:atf_unit    cijob:comp       sandbox:N  comment:"Run unit tests"
 atfdb.citest  citest:atf_comp    cijob:comp       sandbox:N  comment:"Run component tests"
-atfdb.citest  citest:apm         cijob:comp       sandbox:Y  comment:"Test APM"
+atfdb.citest  citest:apm_check     cijob:normalize  sandbox:N  comment:""
 ```
 
 amc generates a prototype for each citest as
@@ -81,8 +81,9 @@ Others are full implementations:
 
 - `citest_gitfile` walks the filesystem and reconciles
   `dev.gitfile` with what's actually checked into git.
-- `citest_src_lim` runs the "source code police" — line length,
-  brace style, copyright presence, etc.
+- `citest_src_lim` runs the "source code police" — the line patterns
+  `dev.badline` forbids, and a source file that is unregistered or
+  executable.
 - `citest_normalize_acr_my` round-trips every ssim table
   through a temporary MariaDB instance.
 

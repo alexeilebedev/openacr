@@ -1,3 +1,4 @@
+dmmeta.fcond  fcond:atf_amc.FCondtest.heaped/true  ins:atf_amc.FDb.bh_condtest_heaped  via:""  rem:Y  comment:"mirror on a Bheap with a head: in the heap iff heaped"
 dmmeta.fcond  fcond:atf_amc.FCondtest.out_buf/space  ins:atf_amc.FDb.cd_condtest_space  via:""  rem:N  comment:"queue: the congested out buffer drained"
 dmmeta.fcond  fcond:atf_amc.FCondtest.ready/true  ins:atf_amc.FDb.cd_condtest_ready  via:""  rem:N  comment:"queue: armed on rising edge only"
 dmmeta.fcond  fcond:atf_amc.FCondtest.state/done  ins:atf_amc.FDb.zd_condpar_done  via:atf_amc.FCondtest.p_parent  rem:Y  comment:"via mirror: parent listed while child done"

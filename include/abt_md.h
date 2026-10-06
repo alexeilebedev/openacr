@@ -1,18 +1,18 @@
-// Copyright (C) 2023-2024,2026 AlgoRND
+// Copyright (C) 2026 AlgoX2 Corp
+// Copyright (C) 2023-2024 AlgoRND
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Target: abt_md (exe) -- Tool to generate markdown documentation
 // Exceptions: yes
@@ -286,7 +286,7 @@ namespace abt_md { // update-hdr
     // A key is written `<ssimfile>:<pkey>`, and `acr -sel` reads tuples, so the
     // key has to be turned into `<ssimfile>  <attr>:<pkey>`. The attribute is the
     // name of the ctype's first field, which is not always the ssimfile's own last
-    // component: `x2db.gwproto` is keyed by `netproto`, so composing the attribute
+    // component: `dev.readmefile` is keyed by `gitfile`, so composing the attribute
     // from the ssimfile name sends a tuple with no primary key and acr answers
     // with nothing -- which reads as "no record has this key" and reports a
     // correct reference as broken.
@@ -310,35 +310,51 @@ namespace abt_md { // update-hdr
     // sections, evaluate inline commands, save), then check links and flush
     // the batched acr_compl validations; failed readme writes fail the run.
     //     (user-implemented function, prototype is in amc-generated header)
-    // void Main(); // main:abt_md
+    // void Main(); // dmmeta.main:abt_md
 
     // -------------------------------------------------------------------
     // cpp/abt_md/mdsection.cpp -- Markdown section handlers - toc, inline command, links
     //
     void DescribeCtype(abt_md::FCtype *ctype, cstring &out);
     //     (user-implemented function, prototype is in amc-generated header)
-    // void mdsection_Options(abt_md::FFileSection &section); // gstatic/dev.mdsection:Options
+    // void mdsection_Options(abt_md::FFileSection &section); // dev.mdsection:Options
 
     // Update title of document
+    // - For a page whose subject set a title, use that title
     // - For namespace, pull namespace name and comment from ns table
     // - For script, use script name and comment from scriptfile table
     // For all other cases, leave title as-is
     // Section contents are user-defined
-    // void mdsection_Title(abt_md::FFileSection &section); // gstatic/dev.mdsection:Title
+    //
+    // A title the subject set comes first, ahead of the ctype the page also names.  A
+    // command's page documents the command a person types, so it is titled with the
+    // command; the ctype that parses the command's options is a fact about the
+    // implementation and not what the reader came for.
+    // void mdsection_Title(abt_md::FFileSection &section); // dev.mdsection:Title
 
-    // Update syntax section from FNs.help (pre-populated by
-    // LoadHelpStrings on the first call).  No fork; no built binary
-    // required.  evalcmd:N now only gates inline `cmd:…` blocks
-    // elsewhere — the Syntax section is always refreshed because its
-    // source is the generated file, not the binary.
-    // void mdsection_Syntax(abt_md::FFileSection &section); // gstatic/dev.mdsection:Syntax
+    // Return the help text amc generated for entity NAME, declared in C++ namespace
+    // QUALIFIER (command, for a tool), and empty when there is none.  The first ask
+    // for a qualifier reads cpp/gen/<QUALIFIER>_gen.cpp, where amc declares every
+    // help string of that qualifier, so the file is read once.
+    algo::strptr GetHelp(algo::strptr qualifier, algo::strptr name);
+
+    // Update the syntax section from the help text of the page's subject.  A tool
+    // README's subject is its namespace, whose help is in cpp/gen/command_gen.cpp,
+    // and a page whose subject set its own help text uses that.  The text is in
+    // both cases exactly what the user sees on -h, and its source is the generated
+    // file rather than the binary, so the section is refreshed whatever -evalcmd says.
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void mdsection_Syntax(abt_md::FFileSection &section); // dev.mdsection:Syntax
 
     // A Description is prose somebody wrote, and nothing here generates one.
-    // void mdsection_Description(abt_md::FFileSection &); // gstatic/dev.mdsection:Description
-    // void mdsection_Content(abt_md::FFileSection &); // gstatic/dev.mdsection:Content
-    // void mdsection_Limitations(abt_md::FFileSection &); // gstatic/dev.mdsection:Limitations
-    // void mdsection_Example(abt_md::FFileSection &); // gstatic/dev.mdsection:Example
+    // void mdsection_Description(abt_md::FFileSection &); // dev.mdsection:Description
+    // void mdsection_Content(abt_md::FFileSection &); // dev.mdsection:Content
+    // void mdsection_Limitations(abt_md::FFileSection &); // dev.mdsection:Limitations
+    // void mdsection_Example(abt_md::FFileSection &); // dev.mdsection:Example
+
+    // Caveats are written by hand; the row exists so they sort after the examples.
+    // void mdsection_Caveats(abt_md::FFileSection &); // dev.mdsection:Caveats
 
     // Update copyright section
-    // void mdsection_Copyright(abt_md::FFileSection &); // gstatic/dev.mdsection:Copyright
+    // void mdsection_Copyright(abt_md::FFileSection &); // dev.mdsection:Copyright
 }

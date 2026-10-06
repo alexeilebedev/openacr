@@ -1,0 +1,35 @@
+# stage install
+# start gcache cmd:"cd $tempdir && $$OLDPWD/$bindir/gcache -install -dir:cache"
+gcache -> setting up gcache...
+gcache -> done
+# eof gcache
+# exit gcache code:0
+# stage build
+# start gcache-2 cmd:"cd $tempdir && $$OLDPWD/$bindir/gcache -report -- $$OLDPWD/test/gcache/cc -c p.cpp -o p.o"
+gcache-2 -> report.gcache  starttime:***  elapsed_sec:***  preproc_size:***  hit:N  cached_file:***  copy_file_range:***  pch_hit:N  pch_file:***  source:p.cpp  pch_source:h.h
+# eof gcache-2
+# exit gcache-2 code:0
+# check build_gch:present
+# check build_o:present
+# stage reuse
+# start gcache-3 cmd:"cd $tempdir && $$OLDPWD/$bindir/gcache -report -- $$OLDPWD/test/gcache/cc -c q.cpp -o q.o"
+gcache-3 -> report.gcache  starttime:***  elapsed_sec:***  preproc_size:***  hit:N  cached_file:***  copy_file_range:***  pch_hit:Y  pch_file:***  source:q.cpp  pch_source:h.h
+# eof gcache-3
+# exit gcache-3 code:0
+# check reuse_gch:present
+# check reuse_o:present
+# stage hit
+# start gcache-4 cmd:"cd $tempdir && $$OLDPWD/$bindir/gcache -report -- $$OLDPWD/test/gcache/cc -c p.cpp -o p.o"
+gcache-4 -> report.gcache  starttime:***  elapsed_sec:***  preproc_size:***  hit:Y  cached_file:***  copy_file_range:***  pch_hit:N  pch_file:***  source:p.cpp  pch_source:""
+# eof gcache-4
+# exit gcache-4 code:0
+# check hit_gch:none
+# check hit_o:present
+# stage force
+# start gcache-5 cmd:"cd $tempdir && $$OLDPWD/$bindir/gcache -force -report -- $$OLDPWD/test/gcache/cc -c p.cpp -o p.o"
+gcache-5 -> report.gcache  starttime:***  elapsed_sec:***  preproc_size:***  hit:N  cached_file:***  copy_file_range:***  pch_hit:N  pch_file:***  source:p.cpp  pch_source:h.h
+# eof gcache-5
+# exit gcache-5 code:0
+# check force_gch:present
+# check force_o:present
+# check force_entry:same

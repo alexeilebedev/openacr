@@ -1,20 +1,20 @@
-// Copyright (C) 2023-2026 AlgoRND
+// Copyright (C) 2025-2026 AlgoX2 Corp
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2023 Astra
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: algo_lib (lib) -- Support library for all executables
@@ -1503,56 +1503,62 @@ bool algo::AlignedEqual(strptr a, strptr b) {
 
 // -----------------------------------------------------------------------------
 
-// insert TEXT into OUT, indenting as necessary;
-// Initial indentation is INDENT, it's adjusted as necessary as { and } are found
-// in the TEXT.
-// Each indent is 4 spaces.
-// Trailing //-sytle comments are stripped
-// /* */-style comments are not supported
-// Lines beginning with # (#ifdef, etc) are printed at column zero.
+// Append TEXT to OUT one line at a time, re-indented.
+// The first line is indented INDENT levels of four spaces.  A line whose code
+// ends with '{', or with '{' followed only by '}' characters, indents the lines
+// after it one level deeper; a line whose code starts with '}' and holds no
+// other '}' outdents itself and the lines after it.
+// A // comment ends the brace scan of its line and is copied to OUT as it is;
+// /* */ comments are not understood.  Trailing whitespace is dropped, and a line
+// beginning with # (a preprocessor directive) is printed at column zero.
 void algo::InsertIndent(algo::cstring &out, strptr text, int indent) {
-    ind_beg(Line_curs,line,text) {
-        line = TrimmedRight(line);
-        int next_indent = indent;
-        int lcurly=-1;// offset
-        int rcurly=-1;// offset
-        int lstart=-1;
-        for (int i=0; i<line.n_elems; i++) {
-            char c = line.elems[i];
-            if (algo_lib::WhiteCharQ(c)) {
-                // whitespace
+    const char *p = text.elems;
+    const char *end = text.elems + text.n_elems;
+    while (p < end) {
+        const char *nl = (const char*)memchr(p, '\n', end - p);
+        const char *tend = nl ? nl : end;
+        while (tend > p && algo_lib::WhiteCharQ(tend[-1])) {
+            tend--;
+        }
+        // the code of the line runs from its first non-blank character to the
+        // first // comment; a '}' opening the line outdents it unless another
+        // '}' follows, and a '{' closing the code indents the lines after it
+        const char *lstart = p;
+        while (lstart < tend && algo_lib::WhiteCharQ(*lstart)) {
+            lstart++;
+        }
+        const char *cend = tend;
+        const char *q = (const char*)memchr(lstart, '/', tend - lstart);
+        while (q && cend == tend) {
+            if (q + 1 < tend && q[1] == '/') {
+                cend = q;
             } else {
-                if (lstart == -1) {// save start of line
-                    lstart=i;
-                }
-                if (c == '{') {// opening curly in last position
-                    lcurly = i;
-                } else if (c== '}') {
-                    rcurly = lstart == i ? i:-1;// closing curly in first position
-                } else if (c=='/' && i<line.n_elems-1 && line[i+1]=='/') {
-                    break;
-                } else {
-                    lcurly=-1;// reset lcurly on any non-ws char
-                }
+                q = (const char*)memchr(q + 1, '/', tend - q - 1);
             }
         }
-        if (rcurly != -1) {
+        const char *last = cend;
+        while (last > lstart && (algo_lib::WhiteCharQ(last[-1]) || last[-1] == '}')) {
+            last--;
+        }
+        bool lcurly = last > lstart && last[-1] == '{';
+        bool rcurly = lstart < cend && *lstart == '}' && memchr(lstart + 1, '}', cend - lstart - 1) == NULL;
+        int next_indent = indent;
+        if (rcurly) {
             indent--;
             next_indent--;
         }
-        if (lcurly != -1) {
+        if (lcurly) {
             next_indent++;
         }
-        if (lstart != -1) {
-            // line is un-indented if it starts with #
-            if (!(line.n_elems>0 && line.elems[0]=='#')) {
-                char_PrintNTimes(' ', out, indent*4);
-            }
-            out << RestFrom(line,lstart);
-        }
-        out << eol;
-        indent = i32_Max(next_indent,0);
-    }ind_end;
+        int nspace = lstart < tend && *p != '#' ? i32_Max(indent, 0) * 4 : 0;
+        int nchar = int(tend - lstart);
+        algo::aryptr<char> dst = ch_AllocN(out, nspace + nchar + 1);
+        memset(dst.elems, ' ', nspace);
+        memcpy(dst.elems + nspace, lstart, nchar);
+        dst.elems[nspace + nchar] = '\n';
+        indent = i32_Max(next_indent, 0);
+        p = nl ? nl + 1 : end;
+    }
 }
 
 // -----------------------------------------------------------------------------

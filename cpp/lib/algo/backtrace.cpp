@@ -1,21 +1,21 @@
-// Copyright (C) 2023-2026 AlgoRND
+// Copyright (C) 2025-2026 AlgoX2 Corp
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2023 Astra
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 // Copyright (C) 2008-2013 AlgoEngineering LLC
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: algo_lib (lib) -- Support library for all executables
@@ -108,7 +108,12 @@ static void BacktraceSymbols_Print(algo::aryptr<void*> addrlist, algo::cstring &
 
     // load static symbol table
     do {
-        // open file
+        // The link is opened rather than the path GetExePath resolves it to,
+        // because the link is a handle on the running inode and the path is only
+        // a name.  Installing over a running binary leaves that name pointing at
+        // nothing -- readlink even answers "<path> (deleted)" -- so opening it
+        // fails and the backtrace loses every symbol, while the link still reads
+        // the ELF this process is running.
         break_if_not_(-1 != (fd = open("/proc/self/exe",O_RDONLY)));
 
         // load ELF header
@@ -444,9 +449,11 @@ static void Signal(int signal, siginfo_t *_si, void *context) {
         out << " "<<Keyval("local",IpString(uc))<<eol;
         out << algo::gitinfo_Get()<<eol;
         ShowStackTrace(GetIp(uc),out);
-        PrintTraces();
+        // Emit the stack before the trace counters, as a fail-stop does:
+        // PrintTraces composes into this same buffer and empties it.
         FatalEmit(algo::strptr(out.ch_elems, out.ch_n));
         FatalEmit("\n");
+        PrintTraces();
     }
     // Pass on the signal (so that a core file is produced).
     struct sigaction sa;

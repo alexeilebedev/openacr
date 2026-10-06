@@ -115,7 +115,7 @@ that:
 4. Returns a typed pointer.
 
 The **buftype** decides where the allocation lives.  The
-catalogue in `cpp/amc/pnew.cpp`:
+table in `cpp/amc/pnew.cpp`:
 
 | `buftype`  | Generated arg                                | Where the bytes go |
 |------------|----------------------------------------------|---------------------|

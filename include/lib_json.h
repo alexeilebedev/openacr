@@ -1,20 +1,20 @@
-// Copyright (C) 2023-2024,2026 AlgoRND
+// Copyright (C) 2024,2026 AlgoX2 Corp
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2021 Astra
 // Copyright (C) 2014-2019 NYSE | Intercontinental Exchange
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: lib_json (lib) -- Full json support library
@@ -89,9 +89,9 @@ namespace lib_json { // update-hdr
 
     // AMC cleanup function - automatically delete parsed JSON tree
     //     (user-implemented function, prototype is in amc-generated header)
-    // void root_node_Cleanup(lib_json::FParser& parent); // ffunc:lib_json.FParser.root_node.Cleanup
+    // void root_node_Cleanup(lib_json::FParser& parent); // dmmeta.ffunc:lib_json.FParser.root_node.Cleanup
 
-    // encode json string
+    // Write STR to OUT as a JSON string, quotes included.
     // "The representation of strings is similar to conventions used in the C
     // family of programming languages.  A string begins and ends with
     // quotation marks.  All Unicode characters may be placed within the
@@ -99,6 +99,11 @@ namespace lib_json { // update-hdr
     // quotation mark, reverse solidus, and the control characters (U+0000
     // through U+001F)."
     // -- this says that solidus need not be escaped when printing -- only when parsing!
+    // JSON text is Unicode, so a byte of STR that begins no valid UTF-8 sequence
+    // cannot be carried at all.  Copying it through would make OUT a string no
+    // JSON parser accepts, and one binary value would spoil a whole response.
+    // Each such byte is written as U+FFFD, the replacement character, and a valid
+    // UTF-8 sequence is copied as it is.
     void JsonSerializeString(algo::strptr str, algo::cstring &out);
 
     // Serialize to string
@@ -132,6 +137,15 @@ namespace lib_json { // update-hdr
     // PARENT    node to start from
     // PATH      dot-separated list of field keys
     lib_json::FNode* node_GetArray(lib_json::FNode* parent, strptr path);
+
+    // The values of the array node at PATH, joined with commas; empty when
+    // there is no array there.  A list of labels or tags travels this way:
+    // gitlab answers an array, and every filter and every record field holds
+    // the comma list.
+    //
+    // PARENT    node to start from
+    // PATH      dot-separated list of field keys
+    tempstr csv_Get(lib_json::FNode* parent, strptr path);
 
     // Get node value as u32
     // If the path is not found, or the value is malformatted, DFLT is returned.

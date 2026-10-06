@@ -1,18 +1,17 @@
-// Copyright (C) 2026 AlgoRND
+// Copyright (C) 2026 AlgoX2 Corp
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Target: doc (exe) -- Render a markdown document to the terminal
 // Exceptions: yes
@@ -157,8 +156,8 @@ tempstr doc::ExpandQuery(algo::strptr query) {
 // rows land in -- `atf_comp.FDb.comptest` -- and that field says both which program the
 // function belongs to and what the functions of the table are called: the name of the
 // field, an underscore, and the row's own key with its dots replaced.  So the comptest
-// `doc.Fold` is `atf_comp.comptest_doc_Fold` and the x2test `s3queuebound` is
-// `atf_x2.x2test_s3queuebound`.
+// `doc.Fold` is `atf_comp.comptest_doc_Fold` and the citest `apm_check` is
+// `atf_ci.citest_apm_check`.
 //
 // A dmmeta.dispatch_msg record is the other case, and its function is named after both
 // halves of the key rather than read off a gstatic -- the record says which dispatch calls
@@ -171,8 +170,8 @@ tempstr doc::ExpandQuery(algo::strptr query) {
 // KEY is not one of those records.
 //
 // A dispatch_msg is a dispatch and a message with a slash between them, and amc names the
-// function that dispatch calls after both: `x2txn.Shm/x2.MemberHbMsg` is handled by
-// `x2txn::Shm_MemberHbMsg`.  The message's own namespace does not enter the name, since
+// function that dispatch calls after both: `<prog>.<Dispatch>/<ns>.<Msg>` is handled
+// by `<prog>::<Dispatch>_<Msg>`.  The message's own namespace does not enter the name, since
 // the dispatch is what says which program the handler belongs to.
 static tempstr Dispatchfunc(algo::strptr key) {
     algo::strptr dispatch = Pathcomp(key, "/LL");
@@ -286,7 +285,7 @@ int doc::WordEnd(algo::strptr line, int pos) {
 //
 // Where a word of the vocabulary and a table answer to the same name, the word wins, as it
 // does in a location a reader types.  `msg` is both -- doc's page about the protocols and
-// the short name of `dmmeta.msg` -- and a span expanded to the table led to the row rather
+// the short name of `gendb.msg` -- and a span expanded to the table led to the row rather
 // than to the page the same text opens at the command line.
 tempstr doc::Codeloc(algo::strptr text) {
     bool spaced = algo::FindChar(text, ' ') >= 0 || ch_N(text) == 0;
@@ -1116,8 +1115,53 @@ void doc::RenderFlat(algo::strptr query) {
 // The cap is one size for every caller.  The largest answer any page asks for is a
 // namespace's generated code, and a caller-by-caller guess at a smaller one buys nothing
 // but a page silently cut off.
+//
+// An answer already fetched is handed over and dropped.  A reader opens one page at a time
+// and nothing is ever waiting for them; a site runs thousands, knows which command lines
+// are coming, and fetches them ahead in parallel -- and holding each answer only until the
+// page that asked for it is drawn is what keeps a run of ten thousand pages from holding
+// ten thousand answers.
 tempstr doc::ToolOut(algo::strptr cmd) {
-    return algo::SysEval(tempstr() << cmd << " 2>&1", algo::FailokQ(true), 64 * 1024 * 1024);
+    doc::FToolout *toolout = doc::ind_toolout_Find(cmd);
+    verblog("doc.toolout" << Keyval("hit", toolout != NULL) << Keyval("cmd", cmd));
+    tempstr ret;
+    if (toolout) {
+        ret << toolout->out;
+        doc::ind_toolout_Remove(*toolout);
+        doc::zd_toolout_Remove(*toolout);
+        ch_RemoveAll(toolout->out);
+    } else {
+        ret << algo::SysEval(tempstr() << cmd << " 2>&1", algo::FailokQ(true), 64 * 1024 * 1024);
+    }
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
+// Hold OUT as the answer to CMD, for the page that is about to ask.
+//
+// A site runs the same command lines its pages would have run, only earlier and several at
+// a time, so the answers arrive before they are wanted.  Nothing else changes: the page
+// asks ToolOut for a command line exactly as it always did, and whether the answer was
+// waiting is invisible to it.
+//
+// A stash that missed costs one wasted subprocess and nothing else, which is what makes the
+// whole arrangement safe to be approximate about: guessing that a page will ask for
+// something it does not is a fork spent, never a page drawn wrong.
+void doc::ToolStash(algo::strptr cmd, algo::strptr out) {
+    if (!doc::ind_toolout_Find(cmd)) {
+        doc::FToolout &toolout = doc::toolout_Alloc();
+        toolout.cmd = cmd;
+        toolout.out = out;
+        (void)doc::toolout_XrefMaybe(toolout);
+    }
+}
+
+// -----------------------------------------------------------------------------
+
+// Return true when the answer to CMD is already held.
+bool doc::ToolstashQ(algo::strptr cmd) {
+    return doc::ind_toolout_Find(cmd) != NULL;
 }
 
 // Return the command line that selects QUERY and nothing around it.

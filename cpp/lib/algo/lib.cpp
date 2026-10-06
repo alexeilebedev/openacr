@@ -1,21 +1,21 @@
-// Copyright (C) 2023-2026 AlgoRND
+// Copyright (C) 2024-2026 AlgoX2 Corp
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2023 Astra
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 // Copyright (C) 2008-2013 AlgoEngineering LLC
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: algo_lib (lib) -- Support library for all executables
@@ -28,6 +28,7 @@
 #if !defined(WIN32)
 #include <arpa/inet.h>// inet_pton
 #include <sys/mman.h>// mmap,mlockall
+#include <termios.h>// ReadMasked
 #endif
 
 #if defined(__linux__)
@@ -40,10 +41,16 @@
 // -----------------------------------------------------------------------------
 
 // Execute unix command and return output.
-tempstr algo::SysEval(strptr cmd, FailokQ fail_ok, int max_output, bool echo DFLTVAL(false)) {
+// If OUT_STATUS is non-NULL, it receives the child's raw wait status
+// (0 for an empty command), letting fail_ok callers distinguish a
+// silent nonzero exit from a successful empty-output run.
+tempstr algo::SysEval(strptr cmd, FailokQ fail_ok, int max_output, bool echo DFLTVAL(false), int *out_status DFLTVAL(NULL)) {
     tempstr result;
     bool ok = true;
     int start_code=0;
+    if (out_status) {
+        *out_status = 0;
+    }
     // empty command succeeds immediately
     if (cmd != "") {
         if (echo) {
@@ -81,6 +88,9 @@ tempstr algo::SysEval(strptr cmd, FailokQ fail_ok, int max_output, bool echo DFL
         }
         // wait for subprocess to finish
         algo_lib::ProcWait(proc);
+        if (out_status) {
+            *out_status = proc.status;
+        }
         if (ok) {
             errno_vrfy(proc.status==0 || fail_ok
                        ,tempstr("algo_lib.cmd_status_error")
@@ -451,6 +461,28 @@ void algo::SetupTeardownSignal(void (*handler)(int)) {
     }
 }
 
+// Set algo_lib::_db.hup: a supervisor asks this process to leave at its next
+// quiet point.
+static void HangupHandler(int) {
+    algo_lib::_db.hup = true;
+}
+
+// Install the SIGHUP handler that sets algo_lib::_db.hup and nothing else.  A
+// daemon a supervisor runs reads the flag between the units of work it must not
+// be interrupted in -- a pass that pauses a runner and then stops its VM, a set
+// of rounds with children -- and exits 0 there; the supervisor then starts the
+// build it has waiting.  SA_RESTART keeps the daemon's own reads and waits from
+// failing with EINTR, and a sleep between passes still returns at once.
+void algo::SetupHangupSignal() {
+    struct sigaction sigact;
+    sigact.sa_handler = HangupHandler;
+    sigemptyset(&sigact.sa_mask);
+    sigact.sa_flags = SA_RESTART;
+    (void)sigaction(SIGHUP, &sigact, 0);
+}
+
+// Fire the due time hook at the top of the work-band heap: reschedule it DELAY
+// clocks out if it is recurrent, take it off the heap otherwise, then call it.
 void algo_lib::bh_timehook_Step() {
     algo_lib::FTimehook *timehook = algo_lib::bh_timehook_First();
     if (timehook->recurrent) {
@@ -458,6 +490,20 @@ void algo_lib::bh_timehook_Step() {
         algo_lib::bh_timehook_ReheapFirst();
     } else {
         algo_lib::bh_timehook_RemoveFirst();
+    }
+    hook_Call(*timehook,*timehook);
+}
+
+// Fire the due time hook at the top of the idle-band heap, the same way
+// bh_timehook_Step fires one from the work-band heap.  Steps() calls this after
+// the output band, so an idle hook never delays the flush of a pass's work.
+void algo_lib::bh_timehook_idle_Step() {
+    algo_lib::FTimehook *timehook = algo_lib::bh_timehook_idle_First();
+    if (timehook->recurrent) {
+        timehook->time.value = algo_lib::_db.clock + timehook->delay;
+        algo_lib::bh_timehook_idle_ReheapFirst();
+    } else {
+        algo_lib::bh_timehook_idle_RemoveFirst();
     }
     hook_Call(*timehook,*timehook);
 }
@@ -731,7 +777,7 @@ bool algo_lib::IpmaskValidQ(const strptr ipmask) {
 // #AL# is this more correct than checking that effective uid is 0?
 bool algo_lib::RootQ() {
     //return geteuid()==0;
-    return getenv("USER")==strptr("root");
+    return getenv(algo_lib::dev_envvar_USER)==strptr("root");
 }
 
 // -----------------------------------------------------------------------------
@@ -740,8 +786,8 @@ bool algo_lib::RootQ() {
 // If the command is being executed under sudo, return name
 // of original user.
 tempstr algo_lib::EffectiveUser() {
-    tempstr user(getenv("USER"));
-    tempstr susr(getenv("SUDO_USER"));
+    tempstr user(getenv(algo_lib::dev_envvar_USER));
+    tempstr susr(getenv(algo_lib::dev_envvar_SUDO_USER));
     if (RootQ() && ch_N(susr)) {
         user = susr;
     }
@@ -790,6 +836,63 @@ int algo_lib::KillRecurse(int pid, int sig, bool kill_topmost) {
     (void)pid;
     (void)sig;
     (void)kill_topmost;
+#endif
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
+// Read the hex digits of STR into RESULT, the way /proc/<pid>/maps writes an
+// address, and return TRUE when STR was one or more hex digits and nothing else.
+static bool ReadHexU64(algo::strptr str, u64 &result) {
+    bool ok = str.n_elems > 0;
+    result = 0;
+    for (int i = 0; i < str.n_elems && ok; i++) {
+        u8 digit = 0;
+        ok = algo::ParseHex1(str.elems[i], digit) != 0;
+        result = result * 16 + digit;
+    }
+    return ok;
+}
+
+// Bytes of PID's address space that map files under /dev/shm: the shared
+// memory segments the process has attached, summed over the mappings that
+// /proc/<pid>/maps lists, into BYTES.  TRUE when the maps file was read;
+// FALSE, with BYTES zero, when it could not be -- a pid that is gone, or one
+// whose capabilities the reader's do not cover, since the kernel refuses maps
+// to a reader without cap_sys_ptrace over a target that exec'd with file
+// capabilities -- and always on a platform without /proc.  A refused read is
+// told from an empty one because a caller that charged the whole address space
+// to a process mapping nothing would raise a memory alarm with the wrong
+// cause.
+//
+// A maps line reads `start-end perms offset dev inode path`, with the two
+// addresses in hex and the path absent for an anonymous mapping.  A segment
+// is a file lib_ams created under /dev/shm, so its mappings are the lines
+// whose path carries that prefix, and each contributes its whole extent
+// whether or not the process has touched its pages.
+bool algo_lib::ProcShmBytes(int pid, u64 &bytes) {
+    bool ret = false;
+    bytes = 0;
+#ifdef __linux__
+    tempstr fname;
+    fname << "/proc/" << pid << "/maps";
+    algo::cstring text = algo::FileToString(fname, algo::FileFlags());
+    ret = ch_N(text) > 0;
+    ind_beg(algo::Line_curs, line, text) {
+        algo::strptr path = Trimmed(Pathcomp(line, " LR LR LR LR LR"));
+        if (StartsWithQ(path, "/dev/shm/")) {
+            u64 lo = 0;
+            u64 hi = 0;
+            bool ok = ReadHexU64(Pathcomp(line, " LL-LL"), lo);
+            ok = ok && ReadHexU64(Pathcomp(line, " LL-LR"), hi);
+            if (ok && hi > lo) {
+                bytes += hi - lo;
+            }
+        }
+    }ind_end;
+#else
+    (void)pid;
 #endif
     return ret;
 }
@@ -871,7 +974,7 @@ void algo_lib::EndStep() {
 }
 
 // Name the file a fail-stop writes its report to, from the directory the
-// process's supervisor put in X2FATALDIR, one file per pid.
+// process's supervisor put in ALGOFATALDIR, one file per pid.
 //
 // The report is otherwise written only to stderr, and stderr belongs to
 // whoever spawned the process: a supervised process shares its supervisor's,
@@ -884,10 +987,10 @@ void algo_lib::EndStep() {
 // because the writer that uses it runs after an allocation has already failed
 // and cannot afford to build a string.  Nothing else assigns the field, so the
 // terminator placed here stands for the life of the process.  An unset
-// X2FATALDIR leaves the field empty and the report goes to stderr alone, which
+// ALGOFATALDIR leaves the field empty and the report goes to stderr alone, which
 // is what an interactively run tool wants.
 static void FatalRecordInit() {
-    algo::strptr dir = algo::strptr(getenv("X2FATALDIR"));
+    algo::strptr dir = algo::strptr(getenv(algo_lib::dev_envvar_ALGOFATALDIR));
     if (ch_N(dir) > 0) {
         algo_lib::_db.fatalerr_file << dir << "/" << getpid() << ".fatal";
         algo::Zeroterm(algo_lib::_db.fatalerr_file);
@@ -922,4 +1025,79 @@ void algo_lib::Userinit() {
     algo_lib::_db.n_temp = algo_lib::temp_strings_N();
     algo_lib::bh_timehook_Reserve(32);
     algo_lib::InitCpuHz();
+}
+
+// -----------------------------------------------------------------------------
+// Ask the terminal PROMPT and read one line of answer into OUT, echoing the
+// characters as they are typed only when ECHO is set.  True once Enter has been
+// pressed; false, with OUT empty, when stdin is not a terminal or cannot be set up.
+//
+// The answer is read from the descriptor a byte at a time rather than through stdio,
+// because a stdio read on a terminal fills its buffer with everything already typed,
+// and the next question would then find its answer gone.  Two properties of stdin
+// are changed for the duration and put back afterwards.  Echo follows ECHO, so a
+// secret is not printed as it is typed; the mode is applied without flushing
+// pending input, so two values pasted together survive into the second question.
+// And the descriptor is made blocking,
+// because a program that reads stdin through an event loop leaves it non-blocking:
+// a plain read on it returns EAGAIN at once, which is indistinguishable from the
+// user entering nothing, so asking without clearing the flag reads an empty answer
+// every time.
+static bool ReadTermLine(algo::strptr prompt, algo::cstring &out, bool echo) {
+    bool ok = false;
+    out = "";
+#if !defined(WIN32)
+    ok = isatty(0) == 1;
+    if (ok) {
+        struct termios saved;
+        struct termios quiet;
+        int flags = fcntl(0, F_GETFL, 0);
+        ok = flags != -1 && tcgetattr(0, &saved) == 0;
+        if (ok) {
+            quiet = saved;
+            if (!echo) {
+                quiet.c_lflag = quiet.c_lflag & ~tcflag_t(ECHO);
+            }
+            ok = tcsetattr(0, TCSANOW, &quiet) == 0
+                && fcntl(0, F_SETFL, flags & ~O_NONBLOCK) != -1;
+        }
+        if (ok) {
+            prlog_(prompt);
+            char ch = 0;
+            bool more = true;
+            while (more) {
+                ssize_t n = read(0, &ch, 1);
+                if (n != 1 || ch == '\n') {
+                    more = false;
+                } else {
+                    out << ch;
+                }
+            }
+            fcntl(0, F_SETFL, flags);
+            tcsetattr(0, TCSANOW, &saved);
+            if (!echo) {
+                prlog("");// the newline the user's Enter did not echo
+            }
+        }
+    }
+#endif
+    return ok;
+}
+
+// -----------------------------------------------------------------------------
+// Ask the terminal PROMPT for a secret: the answer lands in OUT and is not shown
+// as it is typed.  False, with OUT empty, when stdin is not a terminal -- a run
+// under a pipe cannot be asked a secret, so the caller should stop and say so
+// rather than read one from a stream.
+bool algo_lib::ReadMasked(algo::strptr prompt, algo::cstring &out) {
+    return ReadTermLine(prompt, out, false);
+}
+
+// -----------------------------------------------------------------------------
+// Ask the terminal PROMPT for a plain answer, echoed as it is typed, into OUT.
+// False, with OUT empty, when stdin is not a terminal.  This is the question to
+// pair with ReadMasked: both read the descriptor directly, so a plain answer never
+// swallows the secret typed after it.
+bool algo_lib::ReadPlain(algo::strptr prompt, algo::cstring &out) {
+    return ReadTermLine(prompt, out, true);
 }

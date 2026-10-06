@@ -1,21 +1,21 @@
-// Copyright (C) 2023-2026 AlgoRND
+// Copyright (C) 2024-2026 AlgoX2 Corp
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2023 Astra
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 // Copyright (C) 2008-2012 AlgoEngineering LLC
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
@@ -234,15 +234,11 @@ void amc::gen_check_prefix() {
     ind_beg(amc::_db_field_curs, field, amc::_db) {
         amc::FReftype &reftype = *field.p_reftype;
         if (!MatchPrefix(Pathcomp(name_Get(field),"_LL"),reftype)) {
-            if (field.p_ctype->p_ns->c_nsjs) {
-                // js can omit prefix
-            } else {
-                prerr("amc.bad_prefix"
-                      <<Keyval("field",field.field)
-                      <<Keyval("reftype",reftype.reftype)
-                      <<Keyval("comment","See dmmeta.fprefix table for allowable combinations"));
-                algo_lib::_db.exit_code++;
-            }
+            prerr("amc.bad_prefix"
+                  <<Keyval("field",field.field)
+                  <<Keyval("reftype",reftype.reftype)
+                  <<Keyval("comment","See dmmeta.fprefix table for allowable combinations"));
+            algo_lib::_db.exit_code++;
         }
     }ind_end;
 }
@@ -520,6 +516,7 @@ void amc::gen_check_reftype() {
         CheckReftype(field, dmmeta_Reftype_reftype_Smallstr, field.c_smallstr, dmmeta_Ssimfile_ssimfile_dmmeta_smallstr, err);
         CheckReftype(field, dmmeta_Reftype_reftype_Llist, field.c_llist, dmmeta_Ssimfile_ssimfile_dmmeta_llist, err);
         CheckReftype(field, dmmeta_Reftype_reftype_Bitfld, field.c_bitfld, dmmeta_Ssimfile_ssimfile_dmmeta_bitfld, err);
+        CheckReftype(field, dmmeta_Reftype_reftype_Trie, field.c_trie, dmmeta_Ssimfile_ssimfile_dmmeta_trie, err);
         if (ch_N(err)) {
             prerr("amc.missing_record"
                   <<Keyval("field",field.field)
@@ -582,6 +579,8 @@ static bool NeedFirstchangedQ(amc::FField &field) {
     ret &= field.reftype != dmmeta_Reftype_reftype_Thash;
     ret &= field.reftype != dmmeta_Reftype_reftype_Blkhash;
     ret &= field.reftype != dmmeta_Reftype_reftype_Ptrary;
+    // an alias step has no index of its own to change
+    ret &= field.reftype != dmmeta_Reftype_reftype_Alias;
     ret &= !ValQ(field);
     return ret;
 }
@@ -882,9 +881,10 @@ void amc::gen_xref2() {
 
 // -----------------------------------------------------------------------------
 
+// Select every namespace that generates C++ or is projected into a language.
 void amc::gen_select_ns() {
     ind_beg(amc::_db_ns_curs, ns,amc::_db) {
-        ns.select = ns.c_nscpp || ns.c_nsjs;
+        ns.select = ns.c_nscpp || amc::ProjNsAnyQ(ns);
     }ind_end;
 }
 
@@ -1011,7 +1011,9 @@ void amc::gen_gconst() {
                         // enum while still consuming a numbering index, so an edit of
                         // the value table could renumber neighboring constants with a
                         // clean exit
-                        if (amc::fconst_InsertMaybe(fconst)) {
+                        amc::FFconst *ffconst = amc::fconst_InsertMaybe(fconst);
+                        if (ffconst) {
+                            ffconst->rec = amc::GetTupleRec(tuple);
                             nrec++;
                         } else {
                             prerr("amc.gconst_dup"
@@ -1068,6 +1070,9 @@ void amc::gen_prep_fconst() {
             temp << fconst.fconst;
         }
         amc::strptr_PrintCppIdent(temp, fconst.cpp_name, true);
+        if (ch_N(fconst.rec)) {
+            amc::InsCppsym(fconst.cpp_name, fconst.rec);
+        }
 
         algo::StringIter s(fconst.value.value);
         // try to parse LE_STRd("c..")
@@ -1808,58 +1813,55 @@ void amc::gen_sortssimfile() {
 void amc::gen_create_userfunc() {
     ind_beg(amc::_db_func_curs, func, _db) {
         if (func.extrn) {
-            amc::FUserfunc &userfunc = userfunc_Alloc();
-            userfunc.userfunc = func.func;
-            userfunc.acrkey   = func.acrkey;
-            userfunc.cppname  = tempstr()<<ns_Get(func)<<"."<<Pathcomp(func.proto,"(LL");
+            amc::InsCppsym(amc::GetCppname(func), amc::GetFuncAcrkey(func), true);
         }
     }ind_end;
 }
 
-// Write the derived tables (ctypelen, dispsig, tracefld, tracerec,
-// userfunc) back to the output dataset through an acr subprocess, so
+// Write the derived tables (ctypelen, cppsym, dispsig, tracefld, tracerec)
+// back to the output dataset through an acr subprocess, so
 // they match the code generated by this run.
 void amc::gen_table_write() {
     cstring str;
     ind_beg(_db_ctypelen_curs,ctypelen,_db) {
-        dmmeta::Ctypelen out;
+        gendb::Ctypelen out;
         ctypelen_CopyOut(ctypelen,out);
         str << out << eol;
     }ind_end;
     ind_beg(_db_dispsig_curs,dispsig,_db) {
-        dmmeta::Dispsig out;
+        gendb::Dispsig out;
         dispsig_CopyOut(dispsig,out);
         str << out << eol;
     }ind_end;
     ind_beg(_db_payloadhdr_curs,payloadhdr,_db) {
-        dmmeta::Payloadhdr out;
+        gendb::Payloadhdr out;
         payloadhdr_CopyOut(payloadhdr,out);
         str << out << eol;
     }ind_end;
     ind_beg(_db_msg_curs,msg,_db) {
-        dmmeta::Msg out;
+        gendb::Msg out;
         msg_CopyOut(msg,out);
         str << out << eol;
     }ind_end;
     ind_beg(_db_msgfield_curs,msgfield,_db) {
-        dmmeta::Msgfield out;
+        gendb::Msgfield out;
         msgfield_CopyOut(msgfield,out);
         str << out << eol;
     }ind_end;
     int rowid = 0;
     ind_beg(_db_tracefld_curs,tracefld,_db) {
-        dmmeta::Tracefld out;
+        gendb::Tracefld out;
         tracefld_CopyOut(tracefld,out);
         str << out << "  acr.rowid:" << (++rowid) << eol;
     }ind_end;
     ind_beg(_db_tracerec_curs,tracerec,_db) {
-        dmmeta::Tracerec out;
+        gendb::Tracerec out;
         tracerec_CopyOut(tracerec,out);
         str << out << eol;
     }ind_end;
-    ind_beg(amc::_db_userfunc_curs,userfunc,_db) {
-        dmmeta::Userfunc out;
-        userfunc_CopyOut(userfunc,out);
+    ind_beg(_db_cppsym_curs,cppsym,_db) {
+        gendb::Cppsym out;
+        cppsym_CopyOut(cppsym,out);
         str << out << eol;
     }ind_end;
 
@@ -1893,7 +1895,7 @@ void amc::gen_table_write() {
                 }
             }ind_end;
             // The acr subprocess rewrites the derived tables (ctypelen, dispsig,
-            // tracefld, tracerec, userfunc) to match the code generated by this
+            // tracefld, tracerec, cppsym) to match the code generated by this
             // run. A failure would leave them stale (a stale dispsig produces
             // cross-process signature mismatches), so a nonzero status fails
             // the run.
@@ -1901,7 +1903,7 @@ void amc::gen_table_write() {
             if (acr.status != 0) {
                 prerr("amc.table_write"
                       <<Keyval("status",algo::DescribeWaitStatus(acr.status))
-                      <<Keyval("comment","acr failed; the ctypelen/dispsig/tracefld/tracerec/userfunc tables were not updated"));
+                      <<Keyval("comment","acr failed; the gendb tables were not updated"));
                 algo_lib::_db.exit_code++;
             }
         }

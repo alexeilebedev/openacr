@@ -7,6 +7,7 @@ dev.target  target:acr_dm
 dev.target  target:acr_ed
 dev.target  target:acr_in
 dev.target  target:acr_my
+dev.target  target:ainst
 dev.target  target:algo_lib
 dev.target  target:amc
 dev.target  target:amc_gc
@@ -24,13 +25,14 @@ dev.target  target:atf_fuzz
 dev.target  target:atf_nrun
 dev.target  target:atf_unit
 dev.target  target:bash2html
+dev.target  target:credd
 dev.target  target:doc
 dev.target  target:gcache
 dev.target  target:http
 dev.target  target:jkv
-dev.target  target:kafka
 dev.target  target:lib_amcdb
 dev.target  target:lib_ams
+dev.target  target:lib_cred
 dev.target  target:lib_ctype
 dev.target  target:lib_curl
 dev.target  target:lib_exec
@@ -45,11 +47,11 @@ dev.target  target:lib_rl
 dev.target  target:lib_sql
 dev.target  target:lib_sqlite
 dev.target  target:lib_ws
+dev.target  target:llmtool
 dev.target  target:mdbg
 dev.target  target:mysql2ssim
 dev.target  target:orgfile
 dev.target  target:samp_make
-dev.target  target:samp_meng
 dev.target  target:samp_regx
 dev.target  target:src_func
 dev.target  target:src_hdr

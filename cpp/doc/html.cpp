@@ -1,18 +1,17 @@
-// Copyright (C) 2026 AlgoRND
+// Copyright (C) 2026 AlgoX2 Corp
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Target: doc (exe) -- Render a markdown document to the terminal
 // Exceptions: yes
@@ -106,8 +105,9 @@ tempstr doc::UrlPath() {
 // the command line in place of either, so a link carrying one would answer a question
 // nobody asked about the thing they clicked.
 static tempstr UrlFlag(algo::strptr loc) {
-    bool section = doc::SectionQ(loc);
-    bool data = ch_N(doc::Datassimfile(loc)) > 0;
+    bool site = ch_N(doc::_db.cmdline.site) > 0;
+    bool section = !site && doc::SectionQ(loc);
+    bool data = !site && ch_N(doc::Datassimfile(loc)) > 0;
     tempstr ret;
     algo::ListSep ls("&");
     if (section && doc::_db.vis) {
@@ -126,6 +126,96 @@ static tempstr UrlFlag(algo::strptr loc) {
     return out;
 }
 
+// Return LEAF with the characters a URL path cannot carry written as percent escapes, and
+// the empty string when LEAF is not being written into a site's link.
+//
+// A location is the URL, and a whole table's location carries a `%`: `atfdb.comptest:%` is
+// every comptest.  In a path that character opens an escape, so a host reading the link
+// rejects the request before it looks for a file -- which left every one of the tree's six
+// hundred table pages unreachable through the links that named it.  The escape therefore
+// belongs where the URL is built, and the file on disk keeps the name its location gave it.
+//
+// A slash separates the path and a colon is legal inside a segment, so neither is touched.
+static tempstr SiteUri(algo::strptr leaf) {
+    tempstr ret;
+    frep_(i, ch_N(leaf)) {
+        char ch = leaf.elems[i];
+        bool alnum = (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || (ch >= '0' && ch <= '9');
+        bool safe = alnum || ch == '/' || ch == ':' || ch == '.' || ch == '-' || ch == '_' || ch == '~';
+        if (safe) {
+            ret << ch;
+        } else {
+            ret << "%";
+            u64_PrintHex(ch & 0xff, ret, 2, false, true);
+        }
+    }
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
+// Return the file name the URL path PATH names, which is that path with its escapes read
+// back.  The inverse of SiteUri, and the reason the check that every link resolves is a
+// check and not a restatement of how the links were built.
+//
+// ParseHex2 reads its two characters little-endian, so the first of them is the low byte.
+// Packed the other way round the escapes still decode, to the wrong character every time --
+// `%25` reads as `R` rather than `%`, and every table page is reported as a link naming no
+// file.
+static tempstr SiteUnuri(algo::strptr path) {
+    tempstr ret;
+    int i = 0;
+    while (i < ch_N(path)) {
+        u8 code = 0;
+        bool esc = path.elems[i] == '%' && i + 2 < ch_N(path)
+            && algo::ParseHex2(u32(u8(path.elems[i + 1])) | u32(u8(path.elems[i + 2])) << 8, 2, code);
+        if (esc) {
+            ret << char(code);
+        } else {
+            ret << path.elems[i];
+        }
+        i += esc ? 3 : 1;
+    }
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
+// Return the path component of the URL of location LOC, which is the location itself with
+// a markdown document spelled .html.
+//
+// A live server resolves a key per request, so a location naming no file of the tree needs
+// no extension.  A static host answers a request with a file instead, so
+// `comptest:acr.BadInsert` carries no extension a host will serve as HTML and
+// `cpp/doc/html.cpp` would be served as the source it names.
+//
+// A site therefore spells one more substitution than a server does: the leaf gains .html
+// unless it already ends in it, and a directory becomes index.html.
+//
+// Href and the site writer both reach the file name through here, which is what makes a
+// link resolve to a file that was written rather than to one somebody remembered.
+static tempstr UrlLeaf(algo::strptr loc) {
+    bool site = ch_N(doc::_db.cmdline.site) > 0;
+    bool markdown = EndsWithQ(loc, ".md");
+    tempstr stem;
+    if (markdown) {
+        stem << algo::StripExt(loc);
+    } else {
+        stem << loc;
+    }
+    tempstr ret;
+    ret << stem;
+    if (site && doc::DirQ(stem)) {
+        ret << "index";
+    }
+    if (site || markdown) {
+        ret << ".html";
+    }
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
 // Return the URL of location LOC under the tab TAB names, which is the empty string for
 // the records themselves.
 //
@@ -133,11 +223,18 @@ static tempstr UrlFlag(algo::strptr loc) {
 // from the flags in force -- the strip names the tab it leads to, and this joins that
 // name to the sticky flags the location already carries.
 tempstr doc::Tabhref(algo::strptr loc, algo::strptr tab) {
+    bool site = ch_N(doc::_db.cmdline.site) > 0;
     tempstr flag(UrlFlag(loc));
+    tempstr leaf(UrlLeaf(loc));
     tempstr ret;
-    ret << UrlBase() << "/" << (EndsWithQ(loc, ".md") ? algo::strptr(algo::ReplaceExt(loc, ".html")) : loc);
+    ret << UrlBase() << "/";
+    if (site) {
+        ret << SiteUri(leaf);
+    } else {
+        ret << leaf;
+    }
     ret << flag;
-    if (ch_N(tab) > 0) {
+    if (!site && ch_N(tab) > 0) {
         ret << (ch_N(flag) > 0 ? "&" : "?") << tab;
     }
     return ret;
@@ -145,10 +242,7 @@ tempstr doc::Tabhref(algo::strptr loc, algo::strptr tab) {
 
 // Return the URL of location LOC.
 //
-// A markdown document is spelled .html, which is what a browser expects of a page
-// and what makes the home button README.html.  Every other location goes through
-// unchanged: a path to a source file is already what it is, and a query, a view of
-// a query and help carry no character a URL path cannot.
+// UrlLeaf spells the path, so what is added here is the flags in force and the fragment.
 //
 // A fragment stays last, after the flags.  It names a heading inside the page rather
 // than part of what is being asked for, which is also why the server never sees one --
@@ -157,10 +251,15 @@ tempstr doc::Href(algo::strptr loc) {
     algo::strptr path = Pathcomp(loc, "#LL");
     algo::strptr frag = Pathcomp(loc, "#LR");
     bool named = frag != loc && ch_N(frag) > 0;
-    bool markdown = EndsWithQ(path, ".md");
+    bool site = ch_N(doc::_db.cmdline.site) > 0;
+    tempstr leaf(UrlLeaf(path));
     tempstr ret;
     ret << UrlBase() << "/";
-    ret << (markdown ? algo::strptr(algo::ReplaceExt(path, ".html")) : path);
+    if (site) {
+        ret << SiteUri(leaf);
+    } else {
+        ret << leaf;
+    }
     ret << UrlFlag(path);
     if (named) {
         ret << "#" << frag;
@@ -222,10 +321,31 @@ void doc::HtmlEsc(algo::cstring &out, algo::strptr text) {
 // Return the URL of location LOC, or nothing when LOC names nothing this tool can
 // open.  An attribute that refers to no record gets nothing, and its text then
 // reaches the page unlinked.
+//
+// A site holds a closed set of pages, so a link out of it would be a link to nothing.
+// This is the one place a location becomes a link, which makes it the place the walk
+// hears about a location and the place a location the site will not hold stops being a
+// link and becomes the words it was written as.
+//
+// A server resolves a location when the request for it arrives: `txt/lib/lib_lst/` is
+// answered with that directory's README, since a README says what the directory is about
+// and ends with the listing of it.  A static host answers with a file and resolves
+// nothing, so a site written from the location as spelled held a page for the directory --
+// a listing of one row, naming the README -- and a reader clicked twice to reach what the
+// server gave them at once.  So a site resolves the location here, where it links it, and
+// both the link and the page the walk admits name what the server would have shown.  On
+// every kind of location the site links other than a directory the resolver is the
+// identity, so this changes only where a directory leads.
 static tempstr LocHref(algo::strptr loc) {
+    bool site = ch_N(doc::_db.cmdline.site) > 0;
+    tempstr target(site ? doc::ResolveLoc(loc) : tempstr(loc));
+    bool cite = !site || doc::SiteciteQ(target);
     tempstr ret;
-    if (ch_N(loc) > 0) {
-        ret << doc::Href(loc);
+    if (ch_N(target) > 0 && site) {
+        doc::SiteRef(target);
+    }
+    if (ch_N(target) > 0 && cite) {
+        ret << doc::Href(target);
     }
     return ret;
 }
@@ -722,13 +842,19 @@ void doc::PutFile(algo::cstring &out, algo::strptr path) {
 //
 // It comes after the sections rather than before them, because both of these lead the
 // reader somewhere else and the sections are still the page they are on.
+//
+// A site draws no match list, because nobody typed a key to reach a page that was written
+// to a file.  The index is the case that shows why: it is written from the empty key, which
+// matches every document, so the section became five hundred raw paths in table order --
+// sitting directly under the listing of `txt/` that answers the question, and burying it.
 static void PutFoot(algo::cstring &out, algo::strptr path) {
     tempstr foot(doc::InternalsText(path));
     if (ch_N(foot) > 0) {
         doc::ParseText(foot);
         PutBlock(out, path);
     }
-    if (doc::c_match_N() > 1 && path == algo::strptr(doc::c_match_qFind(0).gitfile)) {
+    bool site = ch_N(doc::_db.cmdline.site) > 0;
+    if (!site && doc::c_match_N() > 1 && path == algo::strptr(doc::c_match_qFind(0).gitfile)) {
         int i = 0;
         out << "<h3>see also</h3>\n<ul>\n";
         ind_beg(doc::_db_c_match_curs, readmefile, doc::_db) {
@@ -790,16 +916,23 @@ static void PutTabitem(algo::cstring &out, algo::strptr loc, algo::strptr tab, a
 // them; for one function its source or the command line that found it.  They are drawn as
 // tabs and not as boxes because they are alternatives, and none of them travels along a link
 // -- a reader who clicks an attribute wants that attribute's records, not its schema.
+//
+// A site publishes one view of each page and has no answer for the others, the same way it
+// has none for a fold: a tab is a question put to a server, and asking it costs a run of
+// acr per page per tab.  So the strip is not drawn there, and the alternatives stay what
+// the tool itself is for.
 static void PutTab(algo::cstring &out, algo::strptr loc) {
-    out << "<nav class=\"tabs\">\n";
-    if (doc::FuncsrcQ(loc)) {
-        PutTabitem(out, loc, "", "Code");
-    } else {
-        PutTabitem(out, loc, "", "Records");
-        PutTabitem(out, loc, "meta", "Meta");
+    if (ch_N(doc::_db.cmdline.site) == 0) {
+        out << "<nav class=\"tabs\">\n";
+        if (doc::FuncsrcQ(loc)) {
+            PutTabitem(out, loc, "", "Code");
+        } else {
+            PutTabitem(out, loc, "", "Records");
+            PutTabitem(out, loc, "meta", "Meta");
+        }
+        PutTabitem(out, loc, "cmd", "Query");
+        out << "</nav>\n";
     }
-    PutTabitem(out, loc, "cmd", "Query");
-    out << "</nav>\n";
 }
 
 // Append one attribute of a record to OUT: the text TEXT, coloured by what it is and
@@ -1197,14 +1330,25 @@ static void PutVis(algo::cstring &out, algo::strptr loc) {
 // The link carries the section's own anchor, because opening a section is a fresh request
 // for the page and a browser lands such a request at the top -- with the thing the reader
 // just asked to see below a screenful of records.
+//
+// A site has no request to make, so what it draws is a heading and not a fold: no triangle,
+// since a triangle that refuses the hand is worse than one never offered, and no link,
+// since there is nowhere for it to go.  A site draws this only for a section it is also
+// filling, so the heading never names an empty one.
 static void PutFold(algo::cstring &out, algo::strptr loc, algo::strptr name, algo::strptr slug, algo::strptr opt, bool on) {
-    tempstr href(Foldhref(loc, opt));
-    href << "#" << slug;
-    out << "<h3 id=\"" << slug << "\" class=\"fold\"><a href=\"";
-    doc::HtmlEsc(out, href);
-    out << "\"><span class=\"tri\">" << (on ? "&#9662;" : "&#9656;") << "</span> ";
-    doc::HtmlEsc(out, name);
-    out << "</a></h3>\n";
+    if (ch_N(doc::_db.cmdline.site) > 0) {
+        out << "<h3 id=\"" << slug << "\">";
+        doc::HtmlEsc(out, name);
+        out << "</h3>\n";
+    } else {
+        tempstr href(Foldhref(loc, opt));
+        href << "#" << slug;
+        out << "<h3 id=\"" << slug << "\" class=\"fold\"><a href=\"";
+        doc::HtmlEsc(out, href);
+        out << "\"><span class=\"tri\">" << (on ? "&#9662;" : "&#9656;") << "</span> ";
+        doc::HtmlEsc(out, name);
+        out << "</a></h3>\n";
+    }
 }
 
 // Append the two sections every page of records carries to OUT: the access paths of the
@@ -1214,16 +1358,28 @@ static void PutFold(algo::cstring &out, algo::strptr loc, algo::strptr name, alg
 // are written here, once, after every body that selects records.  Both are closed until
 // asked for: a reader arriving at a record wants the record, and amc_vis and src_func are
 // the two questions on this page that cost real time to answer.
+//
+// A site draws the access paths on every page of records, and the functions on a namespace's.
+// It does not draw the generated code.  It cannot offer a section a reader opens,
+// so each one is a decision made when the site is written, and the two answer differently:
+// the drawing of which record reaches which is a page's worth of picture that says what the
+// ctype is for, while the generated code is thousands of lines that belong to whoever is
+// reading the source and has it open.  Cost agrees with that reading -- amc_vis is 27ms
+// against a page's 209ms, where src_func is a scan of every target.
 static void PutSection(algo::cstring &out, algo::strptr loc) {
     tempstr query(doc::SectionQuery(loc));
     tempstr table(doc::Datassimfile(loc));
+    bool site = ch_N(doc::_db.cmdline.site) > 0;
     if (doc::SectionQ(loc)) {
-        PutFold(out, loc, "Access Paths", "access-paths", "-vis", doc::_db.vis);
-        if (doc::_db.vis) {
+        PutFold(out, loc, "Access Paths", "access-paths", "-vis", doc::_db.vis || site);
+        if (doc::_db.vis || site) {
             PutVis(out, loc);
         }
-        PutFold(out, loc, ch_N(doc::Sectionns(loc)) > 0 ? "Functions" : "Code", "code", "-code", doc::_db.code);
-        if (doc::_db.code) {
+        bool funcs = ch_N(doc::Sectionns(loc)) > 0;
+        if (!site || funcs) {
+            PutFold(out, loc, funcs ? "Functions" : "Code", "code", "-code", doc::_db.code || (site && funcs));
+        }
+        if (doc::_db.code || (site && funcs)) {
             doc::SubjectRead(doc::AcrFlat(query));
             ind_beg(doc::_db_subject_curs, subject, doc::_db) {
                 PutCodeOne(out, subject.subject);
@@ -1231,7 +1387,7 @@ static void PutSection(algo::cstring &out, algo::strptr loc) {
             PutFuncset(out, query);
         }
     }
-    if (ch_N(table) > 0) {
+    if (!site && ch_N(table) > 0) {
         PutFold(out, loc, "Data", "data", "-data", doc::_db.data);
         if (doc::_db.data) {
             PutRecbox(out, doc::AcrCmdline(tempstr() << table << ":%"));
@@ -1382,26 +1538,90 @@ static tempstr HtmlNav(algo::strptr loc) {
     return ret;
 }
 
-// Return the two things the page's footer says: the moment of the commit this binary was
-// built from, and that commit's ref.
+// Return the three things the page's footer says: the day of the commit this binary was
+// built from, that commit's id, and the year for the copyright line.
 //
-// The build stamps both into the binary, so the page says what the process running it was
-// built from rather than what the checkout beside it holds -- which is the honest answer,
-// and the reason nothing here runs git.  A tree unpacked without .git reports itself
-// unversioned, and then the footer is empty.
+// The build stamps all of it into the binary, so a page says what the process running it
+// was built from rather than what the checkout beside it holds -- which is the honest
+// answer, and the reason nothing here runs git.  A tree unpacked without .git reports
+// itself unversioned, and then the footer carries no date and no id.
 //
-// The documentation claims no copyright, the tree being under the GPL, so the footer names
-// nobody: the license travels with the source and says what a reader may do with it.
-static void ReadFoot(tempstr &commit, tempstr &gitref) {
+// The id is the one `dev.gitinfo` is keyed by, minus the target that built it:
+// `2026-09-05.f105aceda` says the day and the commit in one word, which is what somebody
+// reporting a page wrong needs to quote and what `git show` takes as it stands.  The forty
+// characters of the full ref say the same thing and nobody reads them.
+static void ReadFoot(tempstr &commit, tempstr &gitref, tempstr &year) {
+    const char *month[12] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                             "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
     dev::Gitinfo gitinfo;
     (void)dev::Gitinfo_ReadStrptrMaybe(gitinfo, algo::gitinfo_Get());
+    tempstr iso;
     if (gitinfo.commitdate.value != 0) {
-        algo::UnTime_Print(gitinfo.commitdate, commit);
+        algo::UnTime_Print(gitinfo.commitdate, iso);
     }
-    gitref << gitinfo.gitref;
+    if (ch_N(iso) >= 10) {
+        int at = (iso.ch_elems[5] - '0') * 10 + (iso.ch_elems[6] - '0') - 1;
+        if (at >= 0 && at < 12) {
+            commit << month[at] << " " << algo::strptr(iso.ch_elems + 8, 2) << ", " << algo::strptr(iso.ch_elems, 4);
+            year << algo::strptr(iso.ch_elems, 4);
+        }
+    }
+    gitref << Pathcomp(gitinfo.gitinfo, ".RL");
 }
 
+// Return the stylesheet element of a page: the sheet itself, or a link to it.
+//
+// A page a server draws carries its style inline, so a reader who saves one keeps a page
+// that still looks like itself with nothing beside it.  Across a site that is the wrong
+// trade: the sheet is most of every page, it is the same bytes each time, and the pages
+// sit in a directory the browser can fetch it from once.
+//
+// So a site links two sheets and a server inlines one.  doc.css carries the whole of the
+// structure and reads its colours from variables at the root; site.css redefines those
+// variables, which is why the second sheet is small and neither is a copy of the other.
+static tempstr Htmlstyle() {
+    bool site = ch_N(doc::_db.cmdline.site) > 0;
+    tempstr ret;
+    if (site) {
+        ret << "<link rel=\"stylesheet\" href=\"" << UrlBase() << "/doc.css\"/>\n";
+        ret << "<link rel=\"stylesheet\" href=\"" << UrlBase() << "/site.css\"/>";
+    } else {
+        ret << "<style>\n";
+        ret << algo::FileToString("www/doc/doc.css", algo::FileFlags());
+        ret << "</style>";
+    }
+    return ret;
+}
+
+// Return the script element of a page: the script itself, or a link to it.
+//
+// The script is the same bytes on every page and a quarter of what a page weighs, so a
+// site links one file beside the pages and a browser fetches it once.  A page a server
+// draws carries the script inline, for the reason it carries its stylesheet inline: a
+// reader who saves one keeps a page whose box still works with nothing beside it.
+//
+// The element sits at the foot of the page either way, so the script runs with the
+// document already parsed and looks for no event before it reads the box.
+static tempstr Htmlscript() {
+    bool site = ch_N(doc::_db.cmdline.site) > 0;
+    tempstr ret;
+    if (site) {
+        ret << "<script src=\"" << UrlBase() << "/doc.js\"></script>";
+    } else {
+        ret << "<script>\n";
+        ret << algo::FileToString("www/doc/doc.js", algo::FileFlags());
+        ret << "</script>";
+    }
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
 // Return the static template filled in with TITLE, TEXT, CRUMB, NAV and BODY.
+//
+// A site marks the search form, because the script behind the form has to know which
+// product it is on: a server answers the query the form submits, and a static host does
+// not, so on a site the script spells the file the typed location names and goes there.
 //
 // Every replacement is made in one pass over the template, so nothing that goes
 // into the page is scanned for placeholders afterwards.  That is not tidiness: the
@@ -1409,16 +1629,18 @@ static void ReadFoot(tempstr &commit, tempstr &gitref) {
 // this very tool, and a second pass would substitute the stylesheet into the
 // listing of the template that names it.
 static tempstr HtmlFill(algo::strptr title, algo::strptr text, algo::strptr crumb, algo::strptr nav, algo::strptr body) {
-    vrfy(algo::FileQ("www/doc/page.html") && algo::FileQ("www/doc/doc.css"),
-         "doc.notemplate  comment:'www/doc/page.html and www/doc/doc.css are read from the"
-         " top of the checkout; run this from there'");
+    vrfy(algo::FileQ("www/doc/page.html") && algo::FileQ("www/doc/doc.css") && algo::FileQ("www/doc/site.css") && algo::FileQ("www/doc/doc.js"),
+         "doc.notemplate  comment:'www/doc/page.html, www/doc/doc.css, www/doc/site.css and www/doc/doc.js are read"
+         " from the top of the checkout; run this from there'");
     tempstr home(doc::Href("txt/README.md"));
     tempstr help(doc::Href("txt/exe/doc/README.md"));
     tempstr action(doc::UrlRoot());
     tempstr commit;
     tempstr gitref;
-    ReadFoot(commit, gitref);
-    tempstr css(algo::FileToString("www/doc/doc.css", algo::FileFlags()));
+    tempstr year;
+    ReadFoot(commit, gitref, year);
+    tempstr style(Htmlstyle());
+    tempstr script(Htmlscript());
     tempstr templ(algo::FileToString("www/doc/page.html", algo::FileFlags()));
     tempstr ret;
     int i = 0;
@@ -1430,14 +1652,26 @@ static tempstr HtmlFill(algo::strptr title, algo::strptr text, algo::strptr crum
         ret << algo::strptr(templ.ch_elems + i, at - i);
         if (name == "title") {
             doc::HtmlEsc(ret, title);
-        } else if (name == "css") {
-            ret << css;
+        } else if (name == "style") {
+            ret << style;
+        } else if (name == "script") {
+            ret << script;
         } else if (name == "home") {
             doc::HtmlEsc(ret, home);
         } else if (name == "help") {
             doc::HtmlEsc(ret, help);
+        } else if (name == "helpbtn") {
+            if (ch_N(doc::_db.cmdline.site) == 0) {
+                ret << "<a class=\"help\" href=\"";
+                doc::HtmlEsc(ret, help);
+                ret << "\">help</a>";
+            }
         } else if (name == "action") {
             doc::HtmlEsc(ret, action);
+        } else if (name == "site") {
+            if (ch_N(doc::_db.cmdline.site) > 0) {
+                ret << " data-site=\"\"";
+            }
         } else if (name == "query") {
             doc::HtmlEsc(ret, text);
         } else if (name == "shown") {
@@ -1450,6 +1684,8 @@ static tempstr HtmlFill(algo::strptr title, algo::strptr text, algo::strptr crum
             doc::HtmlEsc(ret, commit);
         } else if (name == "gitref") {
             doc::HtmlEsc(ret, gitref);
+        } else if (name == "year") {
+            doc::HtmlEsc(ret, year);
         } else if (close >= 0) {
             ret << algo::strptr(templ.ch_elems + at, close + 2);
         }
@@ -1493,4 +1729,443 @@ tempstr doc::HtmlFind(algo::strptr key) {
     doc::HtmlEsc(shown, key);
     PutMatch(body, key);
     return HtmlFill(key, key, shown, HtmlNav("find"), body);
+}
+
+// -----------------------------------------------------------------------------
+
+// -----------------------------------------------------------------------------
+
+// Return the full name of the table HEAD names, which is HEAD itself when it is already
+// one.  acr takes a table's short name as readily as its full one, and a document cites
+// whichever it pleases.
+static tempstr ExpandTableName(algo::strptr head) {
+    doc::FSsimfile *ssimfile = algo::FindChar(head, '.') < 0 ? doc::ind_ssimfile_ctype_Find(head) : NULL;
+    tempstr ret;
+    ret << (ssimfile ? algo::strptr(ssimfile->ssimfile) : head);
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
+// Return true when a site holds a page for location LOC.
+//
+// Three kinds of location are documentation, and a site is what they reach: a document of
+// the tree, a directory of documents, and a page doc writes about a named thing -- a
+// namespace, a ctype, a function, a message.  Each of those is drawn from a table, so each
+// is a finite set and a walk across them ends.
+//
+// A source file is the one a site leaves out, and it is left out on its size.  Sixteen
+// hundred of them are three hundred megabytes -- a listing runs to 186KB, since it is a
+// whole file with a span around every token -- against a hundred and fifty for the
+// documentation entire.  A link into a source therefore reads as the path it names, and a
+// reader who wants the file has doc, which opens it in a keystroke and needs no site.
+//
+// A site publishes the tables and not the rows.  `dmmeta.field:%` is a page about a table,
+// which is documentation and is one of six hundred; `dmmeta.field:doc.FSitepage.loc` is one
+// row of it, and admitting those means a page per record -- thirty-four thousand of them,
+// eight hundred megabytes, and ten minutes of twenty cores, for the rows of a database the
+// reader can ask about directly.  The queries a reader asks are not enumerable, which is
+// the argument this tool is built on; enumerating the records is the same mistake wearing a
+// bound.
+//
+// Prose is the case this has to refuse.  A document explaining a command line writes
+// `accesspath:<regx>` or `gclidb.mrjob:<mr>/<regex>`, and a document naming an option
+// writes `code:` with nothing after it -- each of which reads as a location and names
+// none.  A server answers such a key with the page that says so and the reader moves on;
+// a site would write that page out and publish it.  So the spelling has to hold up: a
+// key carries no angle bracket, a colon is followed by something, and the word before a
+// colon is either one doc answers for or a table that exists.
+static bool SiteAdmitQ(algo::strptr loc) {
+    algo::strptr head = Pathcomp(loc, ":LL");
+    algo::strptr arg = doc::RestFrom(loc, ch_N(head) + 1);
+    bool spelled = ch_N(loc) > 0 && algo::FindChar(loc, '<') < 0 && algo::FindChar(loc, '>') < 0;
+    bool colon = ch_N(head) < ch_N(loc) && ch_N(arg) > 0;
+    bool word = colon && ch_N(doc::ViewWord(loc)) > 0;
+    bool table = algo::FindChar(arg, '%') >= 0;
+    bool query = colon && table && doc::ind_ssimfile_Find(ExpandTableName(head)) != NULL;
+    bool dir = doc::DirQ(loc);
+    bool file = EndsWithQ(loc, ".md") && doc::ind_gitfile_Find(loc) != NULL;
+    return spelled && (word || query || dir || file);
+}
+
+// -----------------------------------------------------------------------------
+
+// Return true when the site writes LOC and admits nothing LOC links to.
+//
+// A page of records is acr's answer to a query, and its links are the attributes that came
+// back -- which name more records, whose pages name more again.  Followed, that reaches
+// every record a document can reach, which is the database rendered against itself and is
+// the one thing this tool exists in order not to do.
+//
+// So a page of records is a leaf.  A site carries the ones the documentation points at and
+// stops, and a reader who wants to walk the database onward from one has doc, which
+// answers any query and needs no site to have been written.
+//
+// A word of the vocabulary is not a leaf even though it carries a colon: `ns:acr` and
+// `ctype:dmmeta.Ctype` are pages about one named thing, and the things are a table.
+static bool SiteLeafQ(algo::strptr loc) {
+    return doc::QueryQ(loc) && ch_N(doc::ViewWord(loc)) == 0;
+}
+
+
+// -----------------------------------------------------------------------------
+
+// Admit location LOC into the site being written.
+//
+// Every link on every page reaches this, so what a site holds is what its pages actually
+// cite rather than a list kept beside them and drifting from them.  A location already
+// admitted is left alone, which is what makes the walk terminate: each page is read once,
+// and the set only grows.
+//
+// A leaf's citations are refused here rather than at the leaf, because this is the one
+// place that knows which page the link was written on -- which is the same reason the link
+// itself is refused here.
+void doc::SiteRef(algo::strptr loc) {
+    if (doc::SiteciteQ(loc)) {
+        doc::SiteSeed(loc);
+    }
+}
+
+// -----------------------------------------------------------------------------
+
+// Put location LOC into the site whether the closure rule would have admitted it or not.
+//
+// What a site reaches is decided by SiteAdmitQ, and what it starts from is decided by
+// whoever ran the command: `doc dmmeta.ctype:doc.FSitepage -site:<dir>` asks for that page,
+// and answering with an empty directory because a site does not publish rows would be
+// refusing the request rather than honoring it.  So a seed is taken as given and the rule
+// governs only what the seed leads to.
+void doc::SiteSeed(algo::strptr loc) {
+    if (ch_N(loc) > 0 && !doc::ind_sitepage_Find(loc)) {
+        doc::FSitepage &sitepage = doc::sitepage_Alloc();
+        sitepage.loc = loc;
+        sitepage.leaf = SiteLeafQ(loc);
+        (void)doc::sitepage_XrefMaybe(sitepage);
+    }
+}
+
+// -----------------------------------------------------------------------------
+
+// Return true when a page of the site may link to location LOC.
+//
+// The site is written as the walk goes, so a page written early cites locations the walk
+// has not reached yet.  Asking whether the set holds one would therefore refuse a link to
+// a page that is about to exist, which is why the test is the predicate and not the set:
+// a location the site admits will be written before the run ends, whenever the walk gets
+// to it, and a location it does not admit never will be.
+//
+// The page the link is written on decides too.  A page of records admits nothing, so every
+// location it names goes unwritten and none of them may be a link.
+//
+// Which page that is comes from a field the writer sets rather than from the location being
+// drawn, because a page can draw another location inside itself: a comptest's page ends
+// with the source of the function that drives it, and while that section is being written
+// the location in hand is the function's.  Read from there, a leaf would stop being one
+// halfway down its own page.
+bool doc::SiteciteQ(algo::strptr loc) {
+    return !doc::_db.siteleaf && SiteAdmitQ(loc);
+}
+
+// -----------------------------------------------------------------------------
+
+
+// -----------------------------------------------------------------------------
+
+// Return the file name a URL written by this run names, relative to the site root, or
+// nothing when the URL leads outside the site.
+//
+// Every link a page carries opens with the server prefix, so the prefix comes off first and
+// what is left is a path from the root.  A web address, a mail address and a bare fragment
+// lead somewhere else by construction.  The flags and the fragment are not part of the file
+// name, so they come off too.
+static tempstr SiteUrlfile(algo::strptr href) {
+    tempstr base(UrlBase());
+    bool inside = ch_N(href) >= ch_N(base) && algo::strptr(href.elems, ch_N(base)) == algo::strptr(base);
+    algo::strptr rest = inside ? doc::RestFrom(href, ch_N(base)) : algo::strptr();
+    algo::strptr path = Pathcomp(Pathcomp(rest, "#LL"), "?LL");
+    tempstr ret;
+    if (ch_N(path) > 1 && path.elems[0] == '/') {
+        ret << SiteUnuri(doc::RestFrom(path, 1));
+    }
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
+// Read every page of the site under DIR back and report the links that name no file of it.
+//
+// The walk admits a location and the link test allows one under the same predicate, so a
+// link out of the site cannot be written -- which is an argument about two functions
+// agreeing, and this is the check that they do.  It costs a read of each page and no run of
+// acr, so it is cheap enough to leave on.
+//
+// Two links are named on every page and belong to the full site rather than to a seeded
+// one: the index the home button leads to, and this tool's manual behind the help button.
+// A site written from one document reports both, which is what a reader asking for one
+// document's closure should expect to see.
+//
+// A page the walk admitted and no file exists for is the other thing this catches, and it
+// is the one that has to fail the run.  The pages are drawn by other processes, and a
+// process that dies writes no page and names no location -- so the walk carries on, the
+// site comes out smaller than it should, and nothing about it says so.  A publish is not
+// worth making from a site that is quietly missing pages.
+static void SiteVerify(algo::strptr dir) {
+    ind_beg(doc::_db_sitepage_curs, sitepage, doc::_db) {
+        tempstr path;
+        path << dir << "/" << UrlLeaf(sitepage.loc);
+        if (!algo::FileQ(path)) {
+            prerr("doc.sitemiss" << Keyval("loc", sitepage.loc) << Keyval("file", path)
+                  << Keyval("comment", "the process drawing this page did not write it"));
+            algo_lib::_db.exit_code = 1;
+        }
+        tempstr text(algo::FileToString(path, algo::FileFlags()));
+        int i = 0;
+        while (i < ch_N(text)) {
+            int at = algo::FindStr(doc::RestFrom(text, i), "href=\"");
+            int open = at < 0 ? ch_N(text) : i + at + 6;
+            int shut = at < 0 ? -1 : algo::FindChar(doc::RestFrom(text, open), '"');
+            algo::strptr href = shut < 0 ? algo::strptr() : algo::strptr(text.ch_elems + open, shut);
+            tempstr file(SiteUrlfile(href));
+            bool named = ch_N(file) > 0 && !algo::FileQ(tempstr() << dir << "/" << file);
+            if (named && !doc::ind_loose_Find(file)) {
+                doc::FLoose &loose = doc::loose_Alloc();
+                loose.file = file;
+                (void)doc::loose_XrefMaybe(loose);
+            }
+            i = shut < 0 ? ch_N(text) : open + shut;
+        }
+    }ind_end;
+    ind_beg(doc::_db_loose_curs, loose, doc::_db) {
+        prlog("doc.siteloose" << Keyval("file", loose.file));
+    }ind_end;
+}
+
+// -----------------------------------------------------------------------------
+
+// Return the chunk of the round dealt to process AT, growing the set of them as needed.
+static doc::FSitechunk &SiteChunk(int at) {
+    while (doc::sitechunk_N() <= at) {
+        doc::FSitechunk &fresh = doc::sitechunk_Alloc();
+        (void)fresh;
+    }
+    return *doc::sitechunk_Find(at);
+}
+
+// -----------------------------------------------------------------------------
+
+// Draw every location named in the file LIST, and print the locations they link.
+//
+// A site is thousands of pages and each of them runs acr, src_func or amc_vis -- a
+// subprocess that starts, reads what it needs and exits, while the process that asked sits
+// waiting and nineteen cores sit idle.  A reader opens one page at a time and sees that as
+// the pause before the page appears, which is the cost the design was weighed against; a
+// run of ten thousand pages is a different question with the same answer, and the answer is
+// to draw several at once.
+//
+// Drawing a page in a child rather than guessing which tools it will run is what makes this
+// exact.  A page's tools are its own business -- a ctype's page runs acr for the records and
+// src_func for the functions, and neither is derivable from the location without repeating
+// the page generator here.  So the child is doc, drawing the page the ordinary way, and what
+// it owes the parent is the one thing the parent cannot see: which locations the pages named.
+//
+// A child is given many locations rather than one because starting doc means reading the
+// tables it resolves keys against, and a run of thousands of pages should pay for that once
+// per process rather than once per page.
+void doc::WriteSitelist(algo::strptr dir, algo::strptr list) {
+    ind_beg(algo::FileLine_curs, loc, list) {
+        tempstr path;
+        path << dir << "/" << UrlLeaf(loc);
+        doc::_db.siteleaf = SiteLeafQ(loc);
+        algo::CreateDirRecurse(algo::GetDirName(path));
+        algo::SaveFile(doc::HtmlPage(loc), path, "doc.sitepage", "could not write a page of the site");
+    }ind_end;
+    ind_beg(doc::_db_sitepage_curs, sitepage, doc::_db) {
+        report::Siteref siteref;
+        siteref.loc = sitepage.loc;
+        prlog(siteref);
+    }ind_end;
+}
+
+// -----------------------------------------------------------------------------
+
+// Draw the next NJOB pages of the walk, each in its own process, and admit what they linked.
+//
+// The children are told one location apiece and write their own files, so the parent spends
+// its time on the walk rather than on the pages.  What comes back on each child's stream is
+// the locations that child named, which is how the walk goes on: the parent admits them and
+// the set closes exactly as it would have with one process doing everything.
+//
+// A child that fails leaves its page unwritten and names no location, so the walk carries on
+// and the missing page shows up as a link the site does not hold -- which SiteVerify reports
+// rather than hiding.
+//
+// A round is dealt round-robin across the processes rather than split into consecutive
+// blocks.  Page costs differ by a factor of ten -- a comptest's record answers in a moment,
+// a ctype in the middle of the schema takes a run of acr and a run of src_func -- and the
+// walk reaches pages of a kind in runs, so consecutive blocks would hand one process every
+// expensive page of the round while the rest finished early and waited.
+static void SiteBatch(algo::strptr dir, int njob) {
+    tempstr fetch;
+    fetch << dir << ".fetch";
+    algo::CreateDirRecurse(fetch);
+    int nchunk = 0;
+    int n = 0;
+    while (n < njob * 64 && !doc::zd_sitetodo_EmptyQ()) {
+        doc::FSitepage &sitepage = *doc::zd_sitetodo_RemoveFirst();
+        doc::FSitechunk &sitechunk = SiteChunk(n % njob);
+        sitechunk.loc << sitepage.loc << "\n";
+        nchunk = i32_Max(nchunk, n % njob + 1);
+        n += 1;
+    }
+    tempstr run;
+    frep_(i, nchunk) {
+        tempstr listfile;
+        listfile << fetch << "/list." << i;
+        algo::SaveFile(SiteChunk(i).loc, listfile, "doc.sitebatch", "could not write a chunk of the round");
+        command::doc child;
+        child.in = doc::_db.cmdline.in;
+        child.site = doc::_db.cmdline.site;
+        child.server = doc::_db.cmdline.server;
+        child.sitelist = listfile;
+        child.pager = false;
+        run << command::doc_ToCmdline(child) << " > " << fetch << "/out." << i << " 2>&1 &\n";
+    }
+    if (nchunk > 0) {
+        run << "wait\n";
+        tempstr cmdline;
+        cmdline << "bash -c " << algo::strptr_ToBash(run);
+        (void)algo::SysCmd(cmdline, algo::FailokQ(true), algo::DryrunQ(false));
+        frep_(i, nchunk) {
+            tempstr slot;
+            slot << fetch << "/out." << i;
+            ind_beg(algo::FileLine_curs, line, slot) {
+                report::Siteref siteref;
+                if (report::Siteref_ReadStrptrMaybe(siteref, line)) {
+                    doc::SiteRef(siteref.loc);
+                }
+            }ind_end;
+            ch_RemoveAll(SiteChunk(i).loc);
+        }
+    }
+}
+
+// -----------------------------------------------------------------------------
+
+// Write the site rooted at DIR, seeded from SEED, or from every document of the tree when
+// SEED is empty, along with the two stylesheets its pages link.
+//
+// A static host answers a request with a file and resolves no keys, so a site has to be a
+// closed set -- every link on every page naming a file that is also here.  Which set that
+// is cannot be listed in advance, because it is whatever the documents cite; but it can be
+// found, by reading a page and admitting the locations it links, until nothing new turns
+// up.
+//
+// A page is read once and written as it is read.  Nothing has to wait for the walk to
+// finish, because whether a page may link to a location is a property of that location
+// rather than of how far the walk has got -- SiteciteQ is the test, and a location it
+// admits is written before the run ends however late the walk reaches it.
+//
+// It is a walk and not a recursion, so a citation chain of any length costs a list entry
+// rather than a stack frame.
+//
+// Seeding from one document is what a reader wants when they are looking at what a page
+// pulls in, and it is the only affordable way to test the walk: the whole documentation is
+// thousands of pages, most of which fork acr, and one document is a handful.
+//
+// The page a server answers a missing location with is written as 404.html at the root,
+// which is the file a static host serves for a path it has no file for.  A reader who
+// types a key the site holds no page for -- a tool's bare name, which only a server can
+// resolve -- then lands on this tool's own page with the box still in front of them
+// rather than on the host's error.
+void doc::WriteSite(algo::strptr dir, algo::strptr seed) {
+    algo::CreateDirRecurse(dir);
+    algo::SaveFile(algo::FileToString("www/doc/doc.css", algo::FileFlags()), tempstr() << dir << "/doc.css",
+                   "doc.sitecss", "could not write the stylesheet");
+    algo::SaveFile(algo::FileToString("www/doc/site.css", algo::FileFlags()), tempstr() << dir << "/site.css",
+                   "doc.sitecss", "could not write the stylesheet");
+    algo::SaveFile(algo::FileToString("www/doc/doc.js", algo::FileFlags()), tempstr() << dir << "/doc.js",
+                   "doc.sitejs", "could not write the script");
+    algo::strptr root = ch_N(seed) > 0 ? seed : algo::strptr("txt/README.md");
+    doc::SiteSeed(root);
+    if (ch_N(seed) == 0) {
+        ind_beg(doc::_db_readmefile_curs, readmefile, doc::_db) {
+            doc::SiteRef(readmefile.gitfile);
+        }ind_end;
+    }
+    int njob = doc::_db.cmdline.maxjobs;
+    if (njob <= 0) {
+        njob = i32_Max(4, int(sysconf(_SC_NPROCESSORS_ONLN)));
+    }
+    while (!doc::zd_sitetodo_EmptyQ()) {
+        SiteBatch(dir, njob);
+    }
+    tempstr rootfile;
+    rootfile << dir << "/" << UrlLeaf(root);
+    algo::SaveFile(algo::FileToString(rootfile, algo::FileFlags()), tempstr() << dir << "/index.html",
+                   "doc.sitepage", "could not write the site index");
+    algo::SaveFile(doc::HtmlMiss(""), tempstr() << dir << "/404.html",
+                   "doc.sitepage", "could not write the site's missing page");
+    prlog("doc.site" << Keyval("dir", dir) << Keyval("root", root) << Keyval("n_page", doc::sitepage_N()));
+    SiteVerify(dir);
+}
+
+// -----------------------------------------------------------------------------
+
+// Append S to OUT as the body of a double-quoted TypeScript string.
+static void TsEsc(algo::cstring &out, algo::strptr s) {
+    frep_(i, elems_N(s)) {
+        char ch = s.elems[i];
+        if (ch == '\n') {
+            out << "\\n";
+        } else if (ch == '\r') {
+            // a file written on another platform carries these before its line
+            // feeds, and they would reach the reader as stray glyphs
+        } else {
+            if (ch == '"' || ch == '\\') {
+                out << '\\';
+            }
+            out << ch;
+        }
+    }
+}
+
+// -----------------------------------------------------------------------------
+
+// Write every published document, rendered, as the TypeScript module at PATH.
+//
+// The interface shows the same documents this tool does, and rendering them twice
+// is what made them differ: markdown parsed a second time by a second parser gave
+// the reader a plainer page than the one doc draws, missing the frame, the line
+// numbers and the stripes.  So the rendering happens once, here, and what the
+// interface imports is the result.  What it supplies is the colour: the markup
+// carries doc's class names and the stylesheet on that side answers them, which is
+// how one document reads as part of two products.
+//
+// Which documents go is dev.readmefile.publish, so the module carries a chosen set
+// rather than a copy of the tree -- the schema references and the rule files are
+// documents too, and an operator has no use for them.
+void doc::WriteCatalog(algo::strptr path) {
+    algo::cstring out;
+    out << "// Generated by doc -catalog from the published documents. Do not edit.\n";
+    out << "\n";
+    out << "export interface DocPage {\n";
+    out << "  readonly path: string;\n";
+    out << "  readonly title: string;\n";
+    out << "  readonly body: string;\n";
+    out << "}\n";
+    out << "\n";
+    out << "export const DocPages: { readonly [path: string]: DocPage } = {\n";
+    ind_beg(doc::_db_readmefile_curs, readmefile, doc::_db) {
+        if (readmefile.publish) {
+            algo::cstring body;
+            doc::HtmlBody(body, readmefile.gitfile);
+            out << "  \"" << readmefile.gitfile << "\": { path: \"" << readmefile.gitfile << "\", title: \"";
+            TsEsc(out, readmefile.comment);
+            out << "\", body: \"";
+            TsEsc(out, body);
+            out << "\" },\n";
+        }
+    }ind_end;
+    out << "};\n";
+    algo::SaveFile(out, path, "doc.catalog", "could not write the document catalog");
 }

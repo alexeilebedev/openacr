@@ -1,0 +1,7 @@
+dev.target  target:xx
+dev.gitfile  gitfile:src/y.cpp
+dev.targsrc  targsrc:xx/src/y.cpp  comment:""
+gendb.cppsym  cppsym:xx.ShortName/atfdb.amctest:ShortName  extrn:Y
+gendb.cppsym  cppsym:xx.NearTwinKeyThatAgreesUpToTheFiftiethCharacterThenAlpha/atfdb.amctest:NearTwinAlpha  extrn:Y
+gendb.cppsym  cppsym:xx.NearTwinKeyThatAgreesUpToTheFiftiethCharacterThenBravo/atfdb.amctest:NearTwinBravo  extrn:Y
+gendb.cppsym  cppsym:xx.CppsymKeyExactlyAtTheLimitPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadPadP/atfdb.amctest:AtLimit  extrn:Y

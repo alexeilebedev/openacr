@@ -1,18 +1,17 @@
-// Copyright (C) 2026 AlgoRND
+// Copyright (C) 2026 AlgoX2 Corp
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Target: atf_unit (exe) -- Unit tests (see unittest table)
 // Exceptions: yes
@@ -23,8 +22,8 @@
 // payload_len  in  [0..125]    -> 7-bit length in byte1
 // payload_len  in  [126..65535] -> byte1=126(unmasked)/254(masked), u16 BE
 // payload_len  >=  65536       -> byte1=127(unmasked)/255(masked), u64 BE
-// The existing component test (x2.NatsWs) only covers the small path,
-// so a regression in the u16/u64 dispatch would go undetected.
+// A component test over a real websocket covers only the small path, so a
+// regression in the u16/u64 dispatch would go undetected.
 
 #include "include/algo.h"
 #include "include/atf_unit.h"
@@ -189,7 +188,7 @@ void atf_unit::unittest_lib_ws_Frame64() {
 }
 
 // Confirm rsv1/rsv2/rsv3 setters land in byte0 at the documented bit positions
-// (RFC 6455 §5.2: RSV1=bit6, RSV2=bit5, RSV3=bit4). The x2gw parser uses these
+// (RFC 6455 §5.2: RSV1=bit6, RSV2=bit5, RSV3=bit4). A frame parser uses these
 // getters to reject extensions we don't support; this keeps the encoding stable.
 void atf_unit::unittest_lib_ws_RsvBits() {
     const bool flags[3][3] = {

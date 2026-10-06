@@ -1,0 +1,5 @@
+amcdb.stepband  stepband:idle  rank:3  comment:"Background; Inline steps run 1 pass in 8, or in a pass that has time to give up"
+amcdb.stepband  stepband:input  rank:0  comment:"Reads from outside the process: fds, shm rings, the fabric"
+amcdb.stepband  stepband:output  rank:2  comment:"Moves buffered bytes out of the process: conn and fabric outflow, shm ring writes"
+amcdb.stepband  stepband:work  rank:1  comment:"Everything that is neither input nor output; the default"
+amcdb.stepband  stepband:yield  rank:4  comment:"The loop's wait for input and time; runs every pass, last"

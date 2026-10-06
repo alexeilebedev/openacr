@@ -92,9 +92,7 @@ the gstatic mechanism.
 
 - **NULL hook is silently skipped.**  `_Call` checks the
   pointer (except for the static-inlary case).  If you forgot
-  to `Set*` it, nothing happens — no error, no log.  Set
-  `dmmeta.fcb` for a `Cleanup` callback if you need
-  detection.
+  to `Set*` it, nothing happens — no error, no log.
 - **The context pointer is `void*`-castable.**  The typed
   `Set1` / `Set2` overloads are templates that store the
   context address as `u64` and recover it inside `_Call`.

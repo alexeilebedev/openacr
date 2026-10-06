@@ -27,6 +27,7 @@ atf_cmdline ->     -dregx      regx    "%"     Predefined regx
 atf_cmdline ->     -dpkey      string  ""      Predefined pkey
 atf_cmdline ->     -verbose    flag            Verbosity level (0..255); alias -v; cumulative
 atf_cmdline ->     -debug      flag            Debug level (0..255); alias -d; cumulative
+atf_cmdline ->     -trace      string  ""      Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps
 atf_cmdline ->     -help                       Print help and exit; alias -h
 atf_cmdline ->     -version                    Print version and exit
 atf_cmdline ->     -signature                  Show signatures and exit; alias -sig

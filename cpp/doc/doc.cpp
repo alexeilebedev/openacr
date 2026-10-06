@@ -1,18 +1,17 @@
-// Copyright (C) 2026 AlgoRND
+// Copyright (C) 2026 AlgoX2 Corp
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Target: doc (exe) -- Render a markdown document to the terminal
 // Exceptions: yes
@@ -75,13 +74,17 @@ bool doc::ResolveKey(algo::strptr key) {
         MatchFile(algo::tempstr() << "txt/protocol/" << ns << "/" << name << ".md");
     }
     MatchFile(algo::tempstr() << "txt/rule/" << key << ".md");
-    {
-        MatchFile(algo::tempstr() << "txt/openacr/" << key << ".md");
-        MatchFile(algo::tempstr() << "txt/x2/" << key << ".md");
-        MatchFile(algo::tempstr() << "txt/script/" << key << ".md");
-        MatchFile(algo::tempstr() << "txt/" << key << ".md");
-        MatchFile(algo::tempstr() << "txt/" << key << "/README.md");
-    }
+    // a topic directory's page, txt/<dir>/<key>.md, whichever directories the
+    // tree's documents live in
+    ind_beg(doc::_db_readmefile_curs, readmefile, doc::_db) {
+        algo::strptr rest = Pathcomp(readmefile.gitfile, "/LR");
+        bool topic = Pathcomp(readmefile.gitfile, "/LL") == "txt" && Pathcomp(rest, "/LR") == tempstr() << key << ".md";
+        if (topic) {
+            doc::c_match_InsertMaybe(readmefile);
+        }
+    }ind_end;
+    MatchFile(algo::tempstr() << "txt/" << key << ".md");
+    MatchFile(algo::tempstr() << "txt/" << key << "/README.md");
     bool exact = doc::c_match_N() > 0;
     if (!exact) {
         algo_lib::Regx regx;
@@ -236,7 +239,7 @@ static bool TreedirQ(algo::strptr key) {
 //
 // A key of three dots is an amc key naming one function, and it opens that function's
 // source.  amc keys a ctype by a namespace and a name and a field by a ctype and a name,
-// so the count of dots is what tells the three apart, and `x2ui.FCtype.c_cstr.Remove`
+// so the count of dots is what tells the three apart, and `amc.FCtype.c_field.Remove`
 // needs no word in front of it to say which it is.
 //
 // A word whose argument is a pattern is the query over that word's own table.  `ns:acr`
@@ -510,7 +513,8 @@ void doc::Main() {
     bool exact = ch_N(path) > 0 && !(doc::_db.cmdline.list && doc::c_match_N() > 0);
     bool html = doc::_db.cmdline.html;
     bool serving = ch_N(doc::_db.cmdline.bind) > 0;
-    bool grid = !html && !serving;
+    bool siting = ch_N(doc::_db.cmdline.site) > 0;
+    bool grid = !html && !serving && !siting;
     bool listing = doc::_db.cmdline.list;
     if (exact && (grid || doc::_db.cmdline.links || doc::_db.cmdline.follow > 0)) {
         doc::RenderPage(path);
@@ -534,6 +538,20 @@ void doc::Main() {
         ListMatch(key);
     } else if (doc::_db.cmdline.links) {
         ListLink();
+    } else if (ch_N(doc::_db.cmdline.catalog) > 0) {
+        doc::WriteCatalog(doc::_db.cmdline.catalog);
+    } else if (siting && ch_N(doc::_db.cmdline.sitelist) > 0) {
+        doc::WriteSitelist(doc::_db.cmdline.site, doc::_db.cmdline.sitelist);
+    } else if (siting) {
+        tempstr seed;
+        if (ch_N(doc::_db.cmdline.key) > 0) {
+            seed << path;
+        }
+        doc::WriteSite(doc::_db.cmdline.site, seed);
+    } else if (html && exact && doc::_db.cmdline.body) {
+        cstring body;
+        doc::HtmlBody(body, path);
+        EmitOutput(body);
     } else if (html && exact) {
         EmitOutput(doc::HtmlPage(path));
     } else if (html) {

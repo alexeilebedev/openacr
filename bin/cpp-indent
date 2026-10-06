@@ -1,26 +1,29 @@
 #!/usr/bin/env bash
-# Copyright (C) 2023-2026 AlgoRND
+# Copyright (C) 2025-2026 AlgoX2 Corp
+# Copyright (C) 2023-2024 AlgoRND
 # Copyright (C) 2013-2016 NYSE | Intercontinental Exchange
 #
-# License: GPL
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
+# License: Apache
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
 #
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
+#     http://www.apache.org/licenses/LICENSE-2.0
 #
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 #
 # Contacting ICE: <https://www.theice.com/contact>
 # Apply indentation policy to specified source files.
 # Usage:
 # emacs-indent cpp/algo/*.cpp
+# The emacs program goes in a file of this process's own, so several runs can
+# indent at once.
 
+script=temp/cpp-indent.$$
 (
     for X in $*; do
         echo "(print \"Processing $X\")"
@@ -37,7 +40,7 @@
         echo ""
     done
     echo "(save-buffers-kill-terminal t)"
-) > temp/cpp-indent
+) > "$script"
 
 # The indenter is an emacs, and an emacs given no bound is one that outlives
 # every way this script can end: when the calling process tree died, the wrapper
@@ -56,9 +59,10 @@ kill_emacs() {
     if [ -n "$emacs_pid" ]; then
         kill -TERM "$emacs_pid" 2>/dev/null || true
     fi
+    rm -f "$script"
 }
 trap kill_emacs EXIT HUP INT TERM
-timeout -k 5 "$indent_timeout" emacs -nw --batch --load temp/cpp-indent &
+timeout -k 5 "$indent_timeout" emacs -nw --batch --load "$script" &
 emacs_pid=$!
 wait "$emacs_pid"
 status=$?

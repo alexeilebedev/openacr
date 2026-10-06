@@ -1,0 +1,197 @@
+/*
+  The stylesheet a site links after doc.css, and the whole of what makes a published
+  page look like the documentation site rather than like the console.
+
+  doc.css carries the structure and reads every colour from a variable at the root, so
+  what is left for this file is the palette and a few rules about where things sit.  That
+  is why it is short, and why neither sheet is a copy of the other: a change to how a
+  record or a listing is laid out is made once, in doc.css, and lands in both.  The pane
+  keeps the place doc.css gives it, to the left of the page.
+
+  The base ramp is named for its step on a surface scale rather than for its darkness,
+  which is what lets one set of names carry both themes.  Step 950 is the page a reader
+  looks at, the steps below it are the surfaces raised above it, and the low numbers are
+  the text -- so the light theme runs the ramp the other way and every rule in doc.css
+  that names a step lands somewhere sensible without being touched.
+
+  Dark is what the page carries unless a reader asks for light, and the system's own
+  preference is not consulted.  doc draws a dark page on every device it has, and a site
+  that opened light would be the one place the two products disagreed about what this
+  documentation looks like.
+*/
+
+:root {
+  --base-black: #0d0e10;
+  --base-950: #131416;
+  --base-900: #1a1c1e;
+  --base-850: #202225;
+  --base-800: #2b2e33;
+  --base-700: #3d4147;
+  --base-600: #5b6067;
+  --base-500: #868b92;
+  --base-300: #b4b9bf;
+  --base-200: #dfe2e6;
+  --base-100: #f2f4f7;
+
+  --brand: #3f8ae0;
+  --head: var(--base-100);
+  --warn: #ff7b72;
+  --stripe: rgb(242 244 247 / 0.03);
+
+  --c-red: #ff7b72;
+  --c-green: #7ee787;
+  --c-yellow: #e3b341;
+  --c-blue: #79c0ff;
+  --c-magenta: #d2a8ff;
+  --c-cyan: #56d4dd;
+  --c-paleblue: #a5d6ff;
+  --c-skyblue: #79c0ff;
+  --c-amber: #ffd7af;
+  --c-palegreen: #7ee787;
+}
+
+:root[data-theme="light"] {
+  --base-black: #ffffff;
+  --base-950: #ffffff;
+  --base-900: #f8f9fb;
+  --base-850: #eff1f4;
+  --base-800: #dfe2e7;
+  --base-700: #c6cad1;
+  --base-600: #9aa0a6;
+  --base-500: #6b7076;
+  --base-300: #4a4f55;
+  --base-200: #22262b;
+  --base-100: #14181d;
+
+  --brand: #2962ff;
+  --head: var(--base-100);
+  --warn: #c0392b;
+  --stripe: rgb(20 24 29 / 0.035);
+
+  --c-red: #b3261e;
+  --c-green: #1f7a3d;
+  --c-yellow: #8a6100;
+  --c-blue: #1a5fb4;
+  --c-magenta: #8f3f9e;
+  --c-cyan: #0e6f7a;
+  --c-paleblue: #2c5f9e;
+  --c-skyblue: #0b6a95;
+  --c-amber: #8a5a00;
+  --c-palegreen: #1f7a4d;
+}
+
+/*
+  doc.css spells four colours as literals rather than as variables: the tint an
+  underline carries, the red a missing thing is named in, the ten the terminal paints a
+  listing with, and the stripe that rules a box every other line.  Each of them is a
+  colour picked against one background, so each is restated here against both.
+*/
+a {
+  text-decoration-color: color-mix(in srgb, var(--brand) 35%, transparent);
+}
+
+.find .shown a {
+  text-decoration-color: color-mix(in srgb, var(--brand) 50%, transparent);
+}
+
+.miss {
+  color: var(--warn);
+}
+
+.c-red       { color: var(--c-red); }
+.c-green     { color: var(--c-green); }
+.c-yellow    { color: var(--c-yellow); }
+.c-blue      { color: var(--c-blue); }
+.c-magenta   { color: var(--c-magenta); }
+.c-cyan      { color: var(--c-cyan); }
+.c-paleblue  { color: var(--c-paleblue); }
+.c-skyblue   { color: var(--c-skyblue); }
+.c-amber     { color: var(--c-amber); }
+.c-palegreen { color: var(--c-palegreen); }
+
+.box pre {
+  background-image: repeating-linear-gradient(transparent 0 1.5rem,
+                                              var(--stripe) 1.5rem 3rem);
+}
+
+/*
+  The button in the header says which of the three states is in force, and it says it
+  with the glyph rather than with a word, because the header is a line of names and a
+  fourth name reads as a fourth place to go.
+*/
+.theme {
+  display: inline-block;
+  border: 1px solid var(--line);
+  border-radius: 0.25rem;
+  background: var(--raise);
+  color: var(--dim);
+  font-size: 0.875rem;
+  line-height: 1;
+  padding: 0.3rem 0.45rem;
+  cursor: pointer;
+}
+
+.theme:hover {
+  color: var(--fg);
+  border-color: var(--base-700);
+}
+
+/*
+  The footer reads as prose, and the commit id is the one line of it a reader copies, so
+  that line stays monospace.
+*/
+.foot {
+  font-family: var(--sans);
+  padding-top: 2rem;
+}
+
+.foot .ref {
+  font-family: var(--mono);
+}
+
+/*
+  A list bullet is a bullet.  doc draws `+` at the terminal, where nothing is clickable and
+  the character reads as a mark; in a browser it reads as a control that opens the item, and
+  a page of nested lists becomes a page of things that refuse the hand.  So the site draws
+  the marks a reader already knows a list by, and nests them the way a browser does.
+*/
+.page ul > li::before {
+  content: '\2022';
+}
+
+.page ul ul > li::before {
+  content: '\25E6';
+}
+
+.page ul ul ul > li::before {
+  content: '\2013';
+}
+
+/*
+  The rule between sections is drawn the same way and reads the same way, so it loses its
+  plus signs too.
+*/
+.page hr::before {
+  content: '\2022 \2022 \2022';
+}
+
+/*
+  The footer belongs at the bottom of the window on a page too short to fill it, which is
+  most of the record pages.  A column the height of the viewport puts it there, and the
+  frame takes whatever is left over.
+*/
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.frame {
+  flex: 1 0 auto;
+  width: 100%;
+}
+
+.foot {
+  flex: 0 0 auto;
+  width: 100%;
+}

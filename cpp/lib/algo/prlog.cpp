@@ -1,20 +1,20 @@
-// Copyright (C) 2023-2026 AlgoRND
+// Copyright (C) 2025-2026 AlgoX2 Corp
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2023 Astra
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: algo_lib (lib) -- Support library for all executables
@@ -35,6 +35,11 @@
 void algo::Prlog(algo_lib::FLogcat *logcat, algo::SchedTime tstamp, strptr str) {
     try {
         algo::Fildes fildes(logcat->stdout ? 1:2);
+        if (LogcatFilterQ(*logcat,str) && algo_lib::_db.dotline) {
+            // a line logged after a run of progress dots starts on a line of its own
+            algo_lib::_db.dotline = false;
+            WriteFile(algo::Fildes(1), (u8*)"\n", 1);
+        }
         if (!LogcatFilterQ(*logcat,str)) {
             // filtered out
         }  else if (algo_lib::_db.show_tstamp || (logcat && !logcat->builtin)) {
@@ -79,20 +84,31 @@ void algo::Prlog(algo_lib::FLogcat *logcat, algo::SchedTime tstamp, strptr str) 
 
 // -----------------------------------------------------------------------------
 
-// Enable or disable logcat tracing based on traace expression WHAT
+// Enable or disable logcat tracing based on trace expression WHAT
 // WHAT is a comma-separated list of logcat regexes, e.g. a,b,c
 // Each component can be a key-value pair, e.g. a:<filter>,b,c
 // <filter> is an optional regex; Regex can be prefixed with ! to indicate a negative match.
 // Timestamps can be controlled with 'timestamps'
 // Verbose can be controlled with 'verbose'
 // Debug can be controlled with 'debug'
+// The component payload_lim:N is not a category: it sets algo_lib::_db.payload_lim,
+// the number of payload bytes a trace line prints before summarizing the rest.
+// Every executable applies its -trace option through this function from the
+// generated ReadArgv, and forwards the expression to the commands it starts.
+// Return number of components that matched something.
 int algo_lib::ApplyTrace(algo::strptr what, bool enable DFLTVAL(true)) {
     int nmatch=0;
     for (; what != ""; what=Pathcomp(what, ",LR")) {
         algo::strptr expr=Pathcomp(what,",LL");
         algo::strptr name=Pathcomp(expr,":LL");
         algo::strptr filter=Pathcomp(expr,":LR");
-        nmatch += algo_lib::ApplyTrace(name,filter,enable);
+        if (name == "payload_lim") {
+            vrfy(i32_ReadStrptrMaybe(algo_lib::_db.payload_lim, filter)
+                 , tempstr() << "algo_lib.bad_payload_lim" << Keyval("value", filter));
+            nmatch++;
+        } else {
+            nmatch += algo_lib::ApplyTrace(name,filter,enable);
+        }
     }
     return nmatch;
 }
@@ -203,4 +219,18 @@ bool algo_lib::LogcatFilterQ(algo_lib::FLogcat &logcat, algo::strptr str) {
         logcat.totmsg++;// count total messages printed
     }
     return ret;
+}
+
+// -----------------------------------------------------------------------------
+
+// Write N progress dots to the stdout log and leave the line open.  Dots that
+// follow continue the same line.  Any other line logged through the default
+// Prlog ends the run of dots first, so a line that a waiting loop's body logs,
+// or the error text of a body that throws, starts on a line of its own.
+void algo::PrlogDot(int n) {
+    tempstr dot;
+    algo::char_PrintNTimes('.', dot, n);
+    algo_lib::_db.dotline = false;
+    prlog_(dot);
+    algo_lib::_db.dotline = true;
 }

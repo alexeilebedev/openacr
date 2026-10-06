@@ -1,19 +1,19 @@
-// Copyright (C) 2023-2024,2026 AlgoRND
+// Copyright (C) 2026 AlgoX2 Corp
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2021 Astra
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Target: atf_unit (exe) -- Unit tests (see unittest table)
 // Exceptions: yes
@@ -317,6 +317,29 @@ void atf_unit::unittest_algo_lib_RegxShortCircuit() {
     ShortCircuitMatch("abcd.*.*", "abcdef", 1000000, "x", true , 100000);
     ShortCircuitMatch(".*"      , "abcde" , 1000000, "x", true , 100000);
     ShortCircuitMatch(""        , "abcde" , 1000000, "x", false, 100000);// must quickly NOT match this
+}
+
+// --------------------------------------------------------------------------------
+
+// A dot consumes exactly one character, and end of input is not a character.
+// The sql pattern acr_% reads as acr..*, where the dot stands just before a
+// trailing .*; a subject of exactly "acr" leaves nothing for the dot to consume,
+// so the pattern must not match it.
+void atf_unit::unittest_algo_lib_RegxDotEof() {
+    vrfyeq_(RegxMatch("a..*", "a"), false);
+    vrfyeq_(RegxMatch("a..*", "ab"), true);
+    vrfyeq_(RegxMatch("a..*", "abcd"), true);
+    vrfyeq_(RegxMatch("..*", ""), false);
+    vrfyeq_(RegxMatch("..*", "x"), true);
+    vrfyeq_(RegxMatch("...*", "x"), false);
+    vrfyeq_(RegxMatch("...*", "xy"), true);
+    vrfyeq_(RegxMatch(".*..*", ""), false);
+    vrfyeq_(RegxMatch(".*..*", "x"), true);
+    vrfyeq_(RegxMatch("(a|.).*", ""), false);
+    vrfyeq_(RegxMatch("(a|.).*", "b"), true);
+    vrfyeq_(RegxMatch("acr_%", "acr", algo_lib_RegxStyle_sql), false);
+    vrfyeq_(RegxMatch("acr_%", "acrx", algo_lib_RegxStyle_sql), true);
+    vrfyeq_(RegxMatch("acr_%", "acr_ed", algo_lib_RegxStyle_sql), true);
 }
 
 // --------------------------------------------------------------------------------

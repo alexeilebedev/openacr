@@ -1,18 +1,18 @@
-// Copyright (C) 2023-2024,2026 AlgoRND
+// Copyright (C) 2026 AlgoX2 Corp
+// Copyright (C) 2023-2024 AlgoRND
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Target: gcache (exe) -- Compiler cache
 // Exceptions: yes
@@ -34,7 +34,20 @@ namespace gcache { // update-hdr
     // cpp/gcache/gcache.cpp
     //
 
-    // get fill path of cache dir if exists
+    // Set the cache directory up as the command line asks, and resolve _db.dir to
+    // the directory the .gcache link names, or to nothing when there is no cache.
+    // -install creates the directory named by -dir, writes its marker, makes it
+    // group writable with the group inherited below, and implies -enable; -enable
+    // links .gcache to the directory; -disable removes the link.
+    // The user asked for each of these, and a failure in any of them leaves the
+    // cache disabled, or unwritable for the group that shares it, and shows up
+    // later only as build wall clock nobody attributes to gcache.  So every step
+    // has its status read, a failure is reported once as a gcache.error and reaches
+    // the exit code, and `done` is printed only once every step of the install
+    // has succeeded.  A request that cannot be honored leaves the link as it was:
+    // -enable replaces the link only once the directory it names exists, so a
+    // mistyped -dir does not disable a working cache on its way to the error.
+    // gcache.InstallFail pins the marker, link and removal failures.
     void ManageCacheDir();
 
     // recursively remove older files
@@ -96,12 +109,13 @@ namespace gcache { // update-hdr
     // However, it is possible to put the directive in multiple files.
     // As result, the latest file  having no any meaningful source line before is taken.
     //
-    // Returns false when the precompiled header's own compile failed: the caller
-    // must not go on to the compile that would include it, and the failure is
-    // already counted in the run's exit code.
-    bool Pch();
+    // Rewrite _db.preproc_file so that the compile which follows reads the
+    // precompiled header instead of the text it was built from.  A header that
+    // does not build leaves the file as it was: it is an optimization, and the
+    // compile proceeds without it.
+    void Pch();
 
     // main routine
     //     (user-implemented function, prototype is in amc-generated header)
-    // void Main(); // main:gcache
+    // void Main(); // dmmeta.main:gcache
 }

@@ -38,8 +38,7 @@ Nine reftypes constrain what a field of that reftype may be named.  The
 the first underscore — with a reftype, and `amc` checks every field
 against it.  A field whose reftype has any `require:Y` pairing must use
 one of that reftype's registered prefixes; a field that does not is reported
-as `amc.bad_prefix` and fails the run.  (A namespace with a `dmmeta.nsjs` row is exempt, since
-the TypeScript projection has no prefix convention.)
+as `amc.bad_prefix` and fails the run.
 
 The prefix is also how `acr_ed` infers a reftype from a field name you
 type.  At most one reftype per prefix may be marked `dflt:Y` — that is the
@@ -96,8 +95,9 @@ dmmeta.fcurs  fcurs:acr.FDb.zd_all_selrec/delcurs  comment:""
 |Cursor|Reftype|Default|What it walks|
 |---|---|---|---|
 |`curs`|[Atree](/txt/exe/amc/reftype/Atree.md)|Y|In-order traversal of the tree|
-|`curs`|[Bheap](/txt/exe/amc/reftype/Bheap.md)|Y|Pops the heap in sorted order — destructive|
-|`unordcurs`|[Bheap](/txt/exe/amc/reftype/Bheap.md)|N|The underlying array, arbitrary order, non-destructive|
+|`curs`|[Bheap](/txt/exe/amc/reftype/Bheap.md)|Y|The heap in sorted order, through a helper heap; the heap is unchanged|
+|`unordcurs`|[Bheap](/txt/exe/amc/reftype/Bheap.md)|N|The underlying array, arbitrary order|
+|`fillcurs`|[Bheap](/txt/exe/amc/reftype/Bheap.md)|N|With a head: sorted order, promoting heap rows into the run; nothing else may walk the heap meanwhile|
 |`curs`|[Blkhash](/txt/exe/amc/reftype/Blkhash.md)|N|Each bucket's blocks, each block's occupied slots|
 |`curs`|[Inlary](/txt/exe/amc/reftype/Inlary.md)|Y|The inline elements in order|
 |`curs`|[Lary](/txt/exe/amc/reftype/Lary.md)|Y|Every level, in insertion order|
@@ -107,6 +107,7 @@ dmmeta.fcurs  fcurs:acr.FDb.zd_all_selrec/delcurs  comment:""
 |`oncecurs`|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|N|Drains the array: `Reset` captures the elements and empties it|
 |`curs`|[Tary](/txt/exe/amc/reftype/Tary.md)|Y|The array in order|
 |`curs`|[Thash](/txt/exe/amc/reftype/Thash.md)|N|Each bucket head-to-tail; no key order|
+|`curs`|[Trie](/txt/exe/amc/reftype/Trie.md)|N|The held values in key order|
 |`curs`|[Varlen](/txt/exe/amc/reftype/Varlen.md)|Y|The trailing array|
 |`bitcurs`|[Bitsets](/txt/exe/amc/bitset.md)|N|The indexes of the set bits|
 
@@ -155,6 +156,7 @@ Fields whose storage lives inside the parent struct.
 |---|---|
 |[Inlary](/txt/exe/amc/reftype/Inlary.md)|Fixed-bounded inline array (`min`..`max` elements in the parent)|
 |[Tary](/txt/exe/amc/reftype/Tary.md)|Dynamic resizable array; one heap block, doubling growth, pointers invalidated on grow|
+|[Trie](/txt/exe/amc/reftype/Trie.md)|Values keyed by a dense integer in fixed 2^nbit-way nodes; grows a node at a time and never copies|
 |[Varlen](/txt/exe/amc/reftype/Varlen.md)|Variable-length array of fixed records appended to a parent — last field only|
 |[Opt](/txt/exe/amc/reftype/Opt.md)|Optional trailing struct occupying the rest of the allocated space|
 
@@ -170,7 +172,7 @@ relational model.
 |[Thash](/txt/exe/amc/reftype/Thash.md)|Hash index over Ptrary; linear or quadratic probing|
 |[Blkhash](/txt/exe/amc/reftype/Blkhash.md)|Block hash index for keys with a dense integer component|
 |[Atree](/txt/exe/amc/reftype/Atree.md)|AVL tree — ordered index with range queries|
-|[Bheap](/txt/exe/amc/reftype/Bheap.md)|Binary heap over Ptrary — min/max priority queue with O(log N) `Remove`|
+|[Bheap](/txt/exe/amc/reftype/Bheap.md)|Binary heap over Ptrary — min/max priority queue with O(log N) `Remove`, optionally with a sorted head|
 |[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|Array of pointers; supports `unique` and `heaplike` membership tracking|
 |[Llist](/txt/exe/amc/reftype/Llist.md)|Doubly-linked list; circular, zero-terminated, or with-tail variants|
 |[ZSListMT](/txt/exe/amc/reftype/ZSListMT.md)|Lock-free single-producer/multi-consumer zero-terminated queue|

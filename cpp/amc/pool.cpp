@@ -1,20 +1,20 @@
-// Copyright (C) 2023-2026 AlgoRND
+// Copyright (C) 2025-2026 AlgoX2 Corp
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 // Copyright (C) 2008-2012 AlgoEngineering LLC
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
@@ -458,8 +458,18 @@ void amc::tfunc_Pool_UpdateMaybe() {
                 } else if (FldfuncQ(field)) {// cppfunc, substr, alias
                 } else if (ComputedFieldQ(field)) {// lenfld, typefld
                     Ins(&R, update.body, "    // $cppname: computed, not updating");
+                } else if (field.c_fregx) {
+                    Set(R, "$Regxtype", field.c_fregx->regxtype);
+                    Ins(&R, update.body, "    (void)Regx_Read$Regxtype(row->$cppname, value.$cppname.expr, true);");
                 } else if (ValQ(field)) {
                     Ins(&R, update.body, "    row->$cppname = value.$cppname;");
+                } else {
+                    prerr("amc.update"
+                          <<Keyval("ctype",ctype.ctype)
+                          <<Keyval("field",field.field)
+                          <<Keyval("reftype",field.reftype)
+                          <<Keyval("comment","Don't know how to update field of this reftype (not implemented)"));
+                    algo_lib::_db.exit_code=1;
                 }
             }
         }ind_end;
@@ -476,9 +486,10 @@ void amc::tfunc_Pool_UpdateMaybe() {
                 || (access.reftype == dmmeta_Reftype_reftype_Bheap)
                 || (access.reftype == dmmeta_Reftype_reftype_Atree);
             if (removable && GlobalQ(*access.p_ctype)) {
+                // a hash refuses a duplicate key and says so, while a tree
+                // and a heap take any row, so only the hashes have a Maybe
                 bool wur = access.reftype == dmmeta_Reftype_reftype_Thash
-                    || access.reftype == dmmeta_Reftype_reftype_Blkhash
-                    || access.reftype == dmmeta_Reftype_reftype_Atree;
+                    || access.reftype == dmmeta_Reftype_reftype_Blkhash;
                 if (wur) {
                     Ins(&R, update.body, "    (void)$accessname_InsertMaybe(*row);");
                 } else {
@@ -555,7 +566,7 @@ void amc::tfunc_Pool_Delete() {
 // (LenfldStoreExpr, the inverse of the reader formula): when the numerator is
 // not a multiple of scale, the stored length truncates and the reader
 // reconstructs less than was written.
-// Consider a packed jstype ctype with a 6-byte fixed portion, a varlen tail,
+// Consider a packed TypeScript ctype with a 6-byte fixed portion, a varlen tail,
 // and an unsigned 32-bit length field at scale 4. Its TypeScript encoder never
 // stores 6: it stores a runtime total that counts the tail, having already
 // guarded that total against the scale. Asking whether 6 divides by 4 rejects
@@ -577,7 +588,7 @@ void amc::tfunc_Pool_Delete() {
 // reason -- and it carries the divisibility arm. STORETOTAL adds the
 // TypeScript Encode of a ctype with a tail, and carries the range and
 // low-end arms.
-// A TypeScript store site is a Val-reftype lenfld of a packed jstype ctype in
+// A TypeScript store site is a Val-reftype lenfld of a packed TypeScript ctype in
 // a typescript namespace: the TS fixed walk skips bitfields and writes the
 // source word raw from the parent, so a Bitfld lenfld carried only by the TS
 // Encode has no store site.

@@ -1,0 +1,14 @@
+[Unit]
+Description=BuildKit daemon
+After=network.target containerd.service
+Wants=containerd.service
+PartOf=containerd.service
+
+[Service]
+ExecStart=/usr/local/bin/buildkitd --addr unix:///run/buildkit/buildkitd.sock
+Restart=always
+RestartSec=2
+LimitNOFILE=1048576
+
+[Install]
+WantedBy=multi-user.target

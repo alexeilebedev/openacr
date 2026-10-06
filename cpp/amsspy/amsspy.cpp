@@ -1,18 +1,17 @@
-// Copyright (C) 2026 AlgoRND
+// Copyright (C) 2026 AlgoX2 Corp
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Target: amsspy (exe) -- List ams sessions and monitor traffic on host
 // Exceptions: yes
@@ -171,6 +170,9 @@ static void Clean() {
 // UpdateBudget does -- min reader offset + ring - 2*max_msg - woff), nnobudget,
 // and one indented line per reader with its pid, offset, lag, and sleeping bit.
 // The slowest reader (smallest offset below woff) is the one pinning the ring.
+// Then one line per shm channel: its key and reader, the bytes written and
+// read on it, the limit its reader set and the window it follows the read count
+// by, and the writer's room under it.
 static void DumpSegments() {
     ind_beg(amsspy::_db_shm_curs, fshm, amsspy::_db) {
         if (Regx_Match(amsspy::_db.cmdline.session, fshm.p_session->session)) {
@@ -195,15 +197,15 @@ static void DumpSegments() {
                 for (u32 i = 0; i < hdr->n_shmember; i++) {
                     u64_UpdateMin(min_roff, member[i].offset);
                 }
-                // A message board is an array of slots rather than a ring, so it
+                // A message board is an arena of chunks rather than a ring, so it
                 // has no write budget: the ring arithmetic below would read its
                 // zero offset mask and report an underflowed u64.  What it has
-                // instead is a slot count and a slot size, and how many of those
-                // slots are in use is not visible from here -- the free list is
-                // the writer's own, and nothing about it is published to the
-                // segment.
+                // instead is a chunk count and a chunk size, and how many of those
+                // chunks are in use is not visible from here -- the writer keeps
+                // that in its own memory, and nothing about it is published to
+                // the segment.
                 bool board = hdr->grp_id.grptype == ams_Grptype_board;
-                u64 nslot = board ? (u64(hdr->tot_size) - hdr->datastart) / u64(hdr->max_msg_size) : 0;
+                u64 nchunk = board ? (hdr->tot_size - hdr->datastart) / u64(hdr->max_msg_size) : 0;
                 u64 writelimit = min_roff + u64(hdr->offset_mask)+1 - u64(hdr->max_msg_size)*2;
                 tempstr budget;
                 if (board) {
@@ -215,8 +217,8 @@ static void DumpSegments() {
                       <<Keyval("shm", fshm.shm)
                       <<Keyval("woff", woff)
                       <<Keyval("budget", budget)
-                      <<Keyval("nslot", nslot)
-                      <<Keyval("slot_size", board ? hdr->max_msg_size : 0)
+                      <<Keyval("nchunk", nchunk)
+                      <<Keyval("chunk_size", board ? hdr->max_msg_size : 0)
                       <<Keyval("nnobudget", hdr->nnobudget)
                       <<Keyval("nblock", hdr->nblock)
                       <<Keyval("writer_pid", hdr->writer_pid)
@@ -229,6 +231,23 @@ static void DumpSegments() {
                           <<Keyval("offset", member[i].offset)
                           <<Keyval("lag", algo::u64_SubClip(woff, member[i].offset))
                           <<Keyval("sleeping", member[i].sleeping));
+                }
+                // One line per shm channel: the claimed slots are a prefix of
+                // the table, so the walk ends at the first free slot.
+                int ichannel = 0;
+                ams::Shmchannel *channel = lib_ams::HdrChannelFind(*hdr, ichannel);
+                while (channel && channel->key != 0) {
+                    prlog("    channel"
+                          <<Keyval("key", channel->key)
+                          <<Keyval("reader", channel->reader)
+                          <<Keyval("nwrite", channel->nwrite)
+                          <<Keyval("nread", channel->nread)
+                          <<Keyval("wlim", channel->wlim)
+                          <<Keyval("window", channel->window)
+                          <<Keyval("room", lib_ams::ChannelRoom(*channel))
+                          <<Keyval("unread", algo::u64_SubClip(channel->nwrite, channel->nread)));
+                    ichannel++;
+                    channel = lib_ams::HdrChannelFind(*hdr, ichannel);
                 }
                 munmap(mem, st.st_size);
             }

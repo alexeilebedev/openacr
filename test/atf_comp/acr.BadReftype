@@ -4,7 +4,7 @@ acr <- dmmeta.field field:command.acr_ed.blah arg:bool
 acr -> stdin:1: Invalid value reftype:
 acr -> dmmeta.field  field:command.acr_ed.blah  arg:bool
 acr -> Type               dmmeta.Reftype
-acr -> Valid values       Alias, Atree, Base, Bheap, Bitfld, Blkhash, Blkpool, Charset, Count, Cppstack, Ctype, Delptr, Exec, Fbuf, Global, Hook, Inlary, Lary, Llist, Lpool, Malloc, Opt, Pkey, Ptr, Ptrary, Regx, RegxSql, Sbrk, Smallstr, Tary, Thash, Tpool, Upptr, Val, Varlen, ZSListMT
+acr -> Valid values       Alias, Atree, Base, Bheap, Bitfld, Blkhash, Blkpool, Charset, Count, Cppstack, Ctype, Delptr, Exec, Fbuf, Global, Hook, Inlary, Lary, Llist, Lpool, Malloc, Opt, Pkey, Ptr, Ptrary, Regx, RegxSql, Sbrk, Smallstr, Tary, Thash, Tpool, Trie, Upptr, Val, Varlen, ZSListMT
 acr -> acr.badrefs  ctype:dmmeta.Field  nbad:1
 acr -> report.acr_check  records:1  n_err:3
 acr -> acr.insert  dmmeta.field  field:command.acr_ed.blah  arg:bool  reftype:Val  dflt:""  comment:""

@@ -1,20 +1,20 @@
-// Copyright (C) 2023-2026 AlgoRND
+// Copyright (C) 2024-2026 AlgoX2 Corp
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2023 Astra
 // Copyright (C) 2017-2019 NYSE | Intercontinental Exchange
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: atf_ci (exe) -- Normalization tests (see citest table)
@@ -36,21 +36,15 @@ namespace atf_ci { // update-hdr
     //     To convert this section to a hand-written section, remove the word 'update-hdr' from namespace line.
 
     // -------------------------------------------------------------------
-    // cpp/atf_ci/apm.cpp
-    //
-    void CitestApm();
-    void CitestApmReinstall();
-
-    // -------------------------------------------------------------------
     // cpp/atf_ci/comp.cpp
     //
     //     (user-implemented function, prototype is in amc-generated header)
-    // void citest_atf_amc(); // gstatic/atfdb.citest:atf_amc
+    // void citest_atf_amc(); // atfdb.citest:atf_amc
 
     // Indent any .json files under ts/.
-    // void citest_check_json(); // gstatic/atfdb.citest:check_json
-    // void citest_atf_unit(); // gstatic/atfdb.citest:atf_unit
-    // void citest_atf_comp(); // gstatic/atfdb.citest:atf_comp
+    // void citest_check_json(); // atfdb.citest:check_json
+    // void citest_atf_unit(); // atfdb.citest:atf_unit
+    // void citest_atf_comp(); // atfdb.citest:atf_comp
 
     // Move a numbered stream through every shape an ams lane can take, and then
     // through the same shapes past a reader too slow to keep up with it.
@@ -76,19 +70,28 @@ namespace atf_ci { // update-hdr
     // never be refused at all.  Both end on the message count rather than on the
     // tool's time limit, which is the property a slow reader threatens: the lane
     // slows to the reader's rate, and it does not stop.
-    // void citest_ams_sendtest(); // gstatic/atfdb.citest:ams_sendtest
+    //
+    // Then a shm channel per reader on the lane shapes.  A channel is a flow
+    // inside the lane whose limit follows its own reader's read count, so the writer
+    // is paced by each reader and not by lane space alone.
+    //
+    // The last pass is a correctness test of the writer's wake.  Every pass before
+    // it sends from a recurring timer, which keeps the writer's loop awake, so a
+    // wake that went missing would cost nothing and go unseen.  In park mode the
+    // writer sleeps whenever it is refused, and a missing wake stops the run.
+    // void citest_ams_sendtest(); // atfdb.citest:ams_sendtest
 
     // Runs in sandbox
-    // void citest_acr_ed_ssimfile(); // gstatic/atfdb.citest:acr_ed_ssimfile
+    // void citest_acr_ed_ssimfile(); // atfdb.citest:acr_ed_ssimfile
 
     // Runs in sandbox
-    // void citest_acr_ed_ssimdb(); // gstatic/atfdb.citest:acr_ed_ssimdb
+    // void citest_acr_ed_ssimdb(); // atfdb.citest:acr_ed_ssimdb
 
     // Runs in sandbox
-    // void citest_acr_ed_unittest(); // gstatic/atfdb.citest:acr_ed_unittest
+    // void citest_acr_ed_unittest(); // atfdb.citest:acr_ed_unittest
 
     // Runs in sandbox
-    // void citest_acr_ed_target(); // gstatic/atfdb.citest:acr_ed_target
+    // void citest_acr_ed_target(); // atfdb.citest:acr_ed_target
 
     // Runs in sandbox
     //
@@ -97,14 +100,19 @@ namespace atf_ci { // update-hdr
     // page is right the moment the row exists.  The check that used to stand here asked
     // whether abt_md had written a markdown file per table and named it in a directory
     // README, which is the arrangement this replaced.
-    // void citest_doc_after_ssimfile_is_added(); // gstatic/atfdb.citest:doc_after_ssimfile_is_added
-    // void citest_apm(); // gstatic/atfdb.citest:apm
-    // void citest_apm_reinstall(); // gstatic/atfdb.citest:apm_reinstall
+    // void citest_doc_after_ssimfile_is_added(); // atfdb.citest:doc_after_ssimfile_is_added
 
     // Check that each citest function lives in the file matching its cijob.
     // Expected: citest:xyz with cijob:zzz → function citest_xyz in cpp/atf_ci/zzz.cpp
     // TODO: make this table-driven, with table describing all function contraints
-    // void citest_check_citest(); // gstatic/atfdb.citest:check_citest
+    // void citest_check_citest(); // atfdb.citest:check_citest
+
+    // Evaluate the tutorials' inline commands, which the readme citest of the
+    // normalize job leaves alone: they rebuild a sample program with acr_ed -write
+    // and take most of a whole-tree abt_md pass.  The run takes no selection, so
+    // abt_md alone says which readmes are tutorials.  A tutorial whose output moved
+    // leaves the file modified, and the job fails on it.
+    // void citest_readme_tut(); // atfdb.citest:readme_tut
 
     // -------------------------------------------------------------------
     // cpp/atf_ci/coverage.cpp
@@ -117,23 +125,23 @@ namespace atf_ci { // update-hdr
     // binaries through -bindir:build/coverage instead.  cov_prep runs no
     // instrumented binary, so it needs no covdir of its own.
     //     (user-implemented function, prototype is in amc-generated header)
-    // void citest_cov_prep(); // gstatic/atfdb.citest:cov_prep
+    // void citest_cov_prep(); // atfdb.citest:cov_prep
 
     // Run the C++ unit-test suite against the coverage build so unit-tested
     // library functions are credited.  atf_unit spawns no children, so naming
     // the instrumented binary directly is enough; GCC_PROFILE_DIR routes its
     // gcda.  perf_secs:0 skips the timing benchmarks.
-    // void citest_atf_unit_cov(); // gstatic/atfdb.citest:atf_unit_cov
+    // void citest_atf_unit_cov(); // atfdb.citest:atf_unit_cov
 
     // Run every comptest against the coverage build: cfg:coverage makes
     // atf_comp's $bindir = build/coverage, and the gcda land in the covdir
     // RunCiTest exported via GCC_PROFILE_DIR.
-    // void citest_atf_comp_cov(); // gstatic/atfdb.citest:atf_comp_cov
+    // void citest_atf_comp_cov(); // atfdb.citest:atf_comp_cov
 
     // Last coverage citest: gcov + merge every per-citest covdir, write the
     // reports, and check against dev.tgtcov (or, with -capture, rebaseline
     // dev.tgtcov + dev.uncovfunc).
-    // void citest_cov_finalize(); // gstatic/atfdb.citest:cov_finalize
+    // void citest_cov_finalize(); // atfdb.citest:cov_finalize
 
     // -------------------------------------------------------------------
     // cpp/atf_ci/main.cpp
@@ -173,7 +181,7 @@ namespace atf_ci { // update-hdr
     // leaves its credential behind on the runner.  Both modes take the lockfile, so
     // a scrub cannot land while a run that installed a credential is still using it.
     //     (user-implemented function, prototype is in amc-generated header)
-    // void Main(); // main:atf_ci
+    // void Main(); // dmmeta.main:atf_ci
 
     // -------------------------------------------------------------------
     // cpp/atf_ci/memcheck.cpp
@@ -193,94 +201,154 @@ namespace atf_ci { // update-hdr
     //
     // No -install, so bin/ keeps pointing at the release build; the run reaches the
     // annotated binaries through atf_comp's -cfg:memcheck instead.
-    //     (user-implemented function, prototype is in amc-generated header)
-    // void citest_mem_prep(); // gstatic/atfdb.citest:mem_prep
+    // Each memcheck shard's first citest calls this, so every shard builds its own
+    // annotated tree; the build cache makes that a few seconds on a warm runner.
+    void BuildMemcheck();
 
-    // Run every comptest under valgrind memcheck against the annotated build that
-    // mem_prep produced.
-    // void citest_atf_comp_mem(); // gstatic/atfdb.citest:atf_comp_mem
+    // Run one shard of the comptests under valgrind memcheck against the annotated
+    // build that BuildMemcheck produced.  CIJOB names the shard: atf_comp runs the
+    // comptests whose memcheck field carries it.
+    //
+    // One job running every comptest under valgrind took 47 minutes on a CI runner
+    // while every other job of the pipeline finished inside 20, so the suite is cut
+    // by target into three jobs of about 15 minutes each, and each comptest's
+    // memcheck attribute names the shard that runs it.
+    void RunMemcheckShard(strptr cijob);
+
+    // -------------------------------------------------------------------
+    // cpp/atf_ci/memcheckA.cpp
+    //
+
+    // First citest of the memcheckA job: build every target with the memcheck cfg.
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void citest_mem_prepA(); // atfdb.citest:mem_prepA
+
+    // Run the comptests tagged memcheck:memcheckA under valgrind (see
+    // RunMemcheckShard for how the suite is cut).
+    // void citest_atf_comp_memA(); // atfdb.citest:atf_comp_memA
+
+    // -------------------------------------------------------------------
+    // cpp/atf_ci/memcheckB.cpp
+    //
+
+    // First citest of the memcheckB job: build every target with the memcheck cfg.
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void citest_mem_prepB(); // atfdb.citest:mem_prepB
+
+    // Run the comptests tagged memcheck:memcheckB under valgrind (see
+    // RunMemcheckShard for how the suite is cut).
+    // void citest_atf_comp_memB(); // atfdb.citest:atf_comp_memB
+
+    // -------------------------------------------------------------------
+    // cpp/atf_ci/memcheckC.cpp
+    //
+
+    // First citest of the memcheckC job: build every target with the memcheck cfg.
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void citest_mem_prepC(); // atfdb.citest:mem_prepC
+
+    // Run the comptests tagged memcheck:memcheckC under valgrind (see
+    // RunMemcheckShard for how the suite is cut).
+    // void citest_atf_comp_memC(); // atfdb.citest:atf_comp_memC
 
     // -------------------------------------------------------------------
     // cpp/atf_ci/normalize.cpp
     //
     //     (user-implemented function, prototype is in amc-generated header)
-    // void citest_checkclean(); // gstatic/atfdb.citest:checkclean
+    // void citest_checkclean(); // atfdb.citest:checkclean
 
     // Delete files that haven't been accessed in the last couple days
-    // void citest_cleantemp(); // gstatic/atfdb.citest:cleantemp
-    // void citest_gitfile(); // gstatic/atfdb.citest:gitfile
-    // void citest_scanreadme(); // gstatic/atfdb.citest:scanreadme
-    // void citest_quickreadme(); // gstatic/atfdb.citest:quickreadme
-    // void citest_ssimfile(); // gstatic/atfdb.citest:ssimfile
-    // void citest_normalize_acr(); // gstatic/atfdb.citest:normalize_acr
+    // void citest_cleantemp(); // atfdb.citest:cleantemp
+
+    // Regenerate dev.gitfile from the git index, then check each tracked file against the
+    // filesystem and against the dev.gitpath patterns.
+    //
+    // The patterns state where each kind of file lives: cpp/%.cpp, include/%.h, bin/%.  A
+    // script committed as cpp/ctxledger/run.sh matches none of them, so it is reported and
+    // the citest fails.  A pattern may match no file at all: the openacr package carries
+    // every pattern into a tree that holds only part of this one.
+    // void citest_gitfile(); // atfdb.citest:gitfile
+    // void citest_scanreadme(); // atfdb.citest:scanreadme
+    // void citest_quickreadme(); // atfdb.citest:quickreadme
+    // void citest_ssimfile(); // atfdb.citest:ssimfile
+    // void citest_normalize_acr(); // atfdb.citest:normalize_acr
 
     // source code police
-    // void citest_src_lim(); // gstatic/atfdb.citest:src_lim
+    // void citest_src_lim(); // atfdb.citest:src_lim
 
     // run amc
-    // void citest_amc(); // gstatic/atfdb.citest:amc
+    // void citest_amc(); // atfdb.citest:amc
 
     // Create a bootstrap file for each build dir
-    // void citest_bootstrap(); // gstatic/atfdb.citest:bootstrap
-    // void citest_shebang(); // gstatic/atfdb.citest:shebang
-    // void citest_encoding(); // gstatic/atfdb.citest:encoding
+    // void citest_bootstrap(); // atfdb.citest:bootstrap
+    // void citest_shebang(); // atfdb.citest:shebang
+    // void citest_encoding(); // atfdb.citest:encoding
 
     // update file headers
-    // void citest_file_header(); // gstatic/atfdb.citest:file_header
-    // void citest_non_copyrighted(); // gstatic/atfdb.citest:non_copyrighted
-    // void citest_iffy_src(); // gstatic/atfdb.citest:iffy_src
-    // void citest_stray_gen(); // gstatic/atfdb.citest:stray_gen
-    // void citest_tempcode(); // gstatic/atfdb.citest:tempcode
-    // void citest_lineendings(); // gstatic/atfdb.citest:lineendings
-    // void citest_update_script(); // gstatic/atfdb.citest:update_script
+    // void citest_file_header(); // atfdb.citest:file_header
+
+    // Fail when a script or a hand-written source carries no copyright notice.
+    // The check does not add a year: a holder's year stands for a change the
+    // holder made, and a run of normalize changes nothing.
+    // void citest_non_copyrighted(); // atfdb.citest:non_copyrighted
+    // void citest_iffy_src(); // atfdb.citest:iffy_src
+    // void citest_stray_gen(); // atfdb.citest:stray_gen
+    // void citest_tempcode(); // atfdb.citest:tempcode
+    // void citest_lineendings(); // atfdb.citest:lineendings
+    // void citest_update_script(); // atfdb.citest:update_script
 
     // indent all script files modified in the last commit
-    // void citest_indent_script(); // gstatic/atfdb.citest:indent_script
+    // void citest_indent_script(); // atfdb.citest:indent_script
 
     // Run static code analyzer
     // Check Linux only
-    // void citest_cppcheck(); // gstatic/atfdb.citest:cppcheck
+    // void citest_cppcheck(); // atfdb.citest:cppcheck
 
     // indent any source files modified in the last commit
     // indentation under CYGWIN is broken -- and we don't have a cross-platform
     // solution. so only try it on Linux
-    // void citest_indent_srcfile(); // gstatic/atfdb.citest:indent_srcfile
-    // void citest_readme(); // gstatic/atfdb.citest:readme
-    // void citest_normalize_amc_vis(); // gstatic/atfdb.citest:normalize_amc_vis
-    // void citest_normalize_acr_my(); // gstatic/atfdb.citest:normalize_acr_my
-    // void citest_apm_check(); // gstatic/atfdb.citest:apm_check
+    // void citest_indent_srcfile(); // atfdb.citest:indent_srcfile
 
-    // Check that no package which forbids a word carries one.
-    //
-    // A package published downstream is read by people who have never seen the tree
-    // it was published from, so a name belonging to that tree -- a namespace, a
-    // tool, a host path -- is at best noise and at worst a dangling reference to
-    // something they cannot look up.  Which words a package forbids is the
-    // package's own statement, in dev.package.nomention, because the upstream tree
-    // is the only one that knows what it is called; a downstream repository cannot
-    // be asked to know about the trees that publish into it, and there may be
-    // several.
-    //
-    // The package's evaluation is what gets checked, records and files alike, since
-    // that is exactly what a push carries.  A row that must name a forbidden word
-    // to do its job -- an exclusion naming the very namespace it excludes -- is
-    // kept out of the package for that reason, so its absence here is the check
-    // working rather than a hole in it.  The package's own dev.package row is the
-    // one exception the check has to make for itself: it carries the list of
-    // forbidden words, so it names every one of them by construction.
-    // void citest_apm_nodownstream(); // gstatic/atfdb.citest:apm_nodownstream
-    // void citest_apm_gen(); // gstatic/atfdb.citest:apm_gen
+    // Give the current copyright holder this year on every hand-written source and
+    // script the last commit changed.
+    // A holder's year in a notice stands for a change the holder made to the file.
+    // Adding the year to every file once a year claims changes nobody made, so the
+    // year goes on at the moment of the change, to the files the commit touched.  A
+    // change that only reindents the file or rewrites its license header adds
+    // nothing of the holder's, so it adds no year either.
+    // void citest_copyright_srcfile(); // atfdb.citest:copyright_srcfile
+    // void citest_readme(); // atfdb.citest:readme
+    // void citest_normalize_amc_vis(); // atfdb.citest:normalize_amc_vis
+    // void citest_normalize_acr_my(); // atfdb.citest:normalize_acr_my
 
-    // Refuse an install script that cannot say what it installs.
-    // Each bin/install-% script is inlined verbatim into the generated image build
-    // scripts, where it runs as root, so whoever answers for the endpoint it reads
-    // from chooses what lands in the image.  Four defects make that unanswerable,
-    // and none of them is ever needed: piping a fetch into a shell, turning the
-    // certificate check off, naming latest in a url, and cloning a repository
-    // without moving it to a named revision.
-    // A clone is carried until a checkout or a reset moves it, so a file that
+    // Run apm -check over every package, so a key that matches nothing, a record
+    // that references what its package does not carry, proprietary content in an
+    // open-source package, a file split between two packages, a sync pair that
+    // disagrees, or a word a package must not carry fails the normalize job.
+    // void citest_apm_check(); // atfdb.citest:apm_check
+
+    // Check that each installation function is alone in the file named after its row.
+    // A reader who knows the installation knows which file to open, and an
+    // installation whose steps are spread over two files has no such file.  The
+    // pairing is not something the compiler can hold: amc binds a row to a function
+    // by name wherever that function is written.
+    // void citest_check_ainst(); // atfdb.citest:check_ainst
+
+    // Refuse a generated install script that cannot say what it installs.
+    // ainst -script is inlined into the image builds, where it runs as root, so
+    // whoever answers for the endpoint it reads from chooses what lands in the
+    // image.  Four defects make that unanswerable, and none of them is ever needed:
+    // piping a fetch into a shell, turning the certificate check off, naming latest
+    // in a url, and cloning a repository without moving it to a named revision.
+    // A clone is carried until a checkout or a reset moves it, so a script that
     // clones twice has to move each one, and a clone moved on its own line is
-    // already satisfied.  A comment line is skipped whatever it is indented by,
+    // already satisfied.  A clone is carried no further than the installation it
+    // stands in: the next one's stage function is where an unmoved clone is
+    // reported, since nothing after that boundary can be the checkout it wanted.  A comment line is skipped whatever it is indented by,
     // because bash ignores it wherever the generator puts it.
-    // void citest_install_script(); // gstatic/atfdb.citest:install_script
+    // The whole of what ainst can emit is read here, which is why this reads one
+    // program rather than a directory: an installation reaches the network through
+    // the generated fetch step and nowhere else, so the four checks have exactly
+    // one text to cover.
+    // void citest_install_script(); // atfdb.citest:install_script
 }

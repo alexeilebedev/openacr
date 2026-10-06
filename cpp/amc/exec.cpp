@@ -1,21 +1,21 @@
-// Copyright (C) 2023-2026 AlgoRND
+// Copyright (C) 2024-2026 AlgoX2 Corp
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2023 Astra
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 // Copyright (C) 2008-2012 AlgoEngineering LLC
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
@@ -155,13 +155,14 @@ void amc::tfunc_Exec_Start() {
     Ins(&R, start.body, "            alarm($_timeout);");
     Ins(&R, start.body, "        }");
     Ins(&R, start.body, "        if ($_memlimitmb > 0) {");
-    Ins(&R, start.body, "            // memory ceiling: soft and hard, so a child that drops");
-    Ins(&R, start.body, "            // privileges cannot raise it; the child sees allocation");
-    Ins(&R, start.body, "            // failure at the limit instead of inviting the OOM killer");
+    Ins(&R, start.body, "            // memory ceiling on the child's private writable memory, so");
+    Ins(&R, start.body, "            // the shared segments it maps are not charged to it; soft and");
+    Ins(&R, start.body, "            // hard, so a child that drops privileges cannot raise it, and");
+    Ins(&R, start.body, "            // the child sees allocation failure at the limit");
     Ins(&R, start.body, "            struct rlimit rlim;");
     Ins(&R, start.body, "            rlim.rlim_cur = rlim_t($_memlimitmb) * 1000000;");
     Ins(&R, start.body, "            rlim.rlim_max = rlim.rlim_cur;");
-    Ins(&R, start.body, "            (void)setrlimit(RLIMIT_AS, &rlim);");
+    Ins(&R, start.body, "            (void)setrlimit(RLIMIT_DATA, &rlim);");
     Ins(&R, start.body, "        }");
     // todo: do something smart with ApplyRedirect failures other than cause exec failure?
     Ins(&R, start.body, "        if (retval==0) retval=algo_lib::ApplyRedirect($_fstdin , 0, in_pipe[0]);");
@@ -256,6 +257,23 @@ void amc::tfunc_Exec_ToCmdline() {
     Ins(&R, tocmdline.body, "return retval;");
 }
 
+// Append to FUNC's body code that passes this process's -verbose, -debug and
+// -trace to the child whose argv it builds, when CMDTYPE is a command with a
+// ccmdline, so a trace given to a tool also reaches the processes it starts.
+void amc::GenArgvInherit(algo_lib::Replscope &R, amc::FCtype &cmdtype, amc::FFunc &func) {
+    if (cmdtype.c_ccmdline) {
+        Ins(&R, func.body,"for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {");
+        Ins(&R, func.body,"    ary_Alloc(args) << \"-verbose\";");
+        Ins(&R, func.body,"}");
+        Ins(&R, func.body,"for (int i=1; i < algo_lib::_db.cmdline.debug; ++i) {");
+        Ins(&R, func.body,"    ary_Alloc(args) << \"-debug\";");
+        Ins(&R, func.body,"}");
+        Ins(&R, func.body,"if (algo_lib::_db.cmdline.trace != \"\") {");
+        Ins(&R, func.body,"    ary_Alloc(args) << \"-trace:\" << algo_lib::_db.cmdline.trace;");
+        Ins(&R, func.body,"}");
+    }
+}
+
 void amc::tfunc_Exec_ToArgv() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FCtype &cmdtype = *amc::_db.genctx.p_field->p_arg;
@@ -324,15 +342,7 @@ void amc::tfunc_Exec_ToArgv() {
         }
     }ind_end;
 
-    if (amc_command) {
-        // add verbose, debug flags -- one fewer than current process
-        Ins(&R, func.body,"for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {");
-        Ins(&R, func.body,"    ary_Alloc(args) << \"-verbose\";");
-        Ins(&R, func.body,"}");
-        Ins(&R, func.body,"for (int i=1; i < algo_lib::_db.cmdline.debug; ++i) {");
-        Ins(&R, func.body,"    ary_Alloc(args) << \"-debug\";");
-        Ins(&R, func.body,"}");
-    }
+    amc::GenArgvInherit(R, cmdtype, func);
 }
 
 void amc::tfunc_Exec_Execv() {
@@ -423,7 +433,7 @@ void amc::NewFieldExec() {
                                             , "u32"
                                             , dmmeta_Reftype_reftype_Val
                                             , algo::CppExpr("0")
-                                            , algo::Comment("optional child memory ceiling MB (10^6): RLIMIT_AS before exec; 0 = leave inherited")));
+                                            , algo::Comment("optional child memory ceiling MB (10^6): RLIMIT_DATA before exec; 0 = leave inherited")));
 
         Field_AddChild(field, dmmeta::Field(SubfieldName(field, "status")
                                             , "i32"

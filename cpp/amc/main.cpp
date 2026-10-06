@@ -1,21 +1,21 @@
-// Copyright (C) 2023-2026 AlgoRND
+// Copyright (C) 2024-2026 AlgoX2 Corp
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2021 Astra
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 // Copyright (C) 2008-2013 AlgoEngineering LLC
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
@@ -1664,7 +1664,6 @@ void amc::Main_Gen() {
 
 void amc::Main() {
     _db.genctx.R.strict=2;
-    algo_lib::ApplyTrace(_db.cmdline.trace.expr);
     // open in editor before loading data
     if (amc::_db.cmdline.e) {
         Main_Edit();
@@ -1672,6 +1671,10 @@ void amc::Main() {
     // resolve the root for side-loaded table data once (one stat per run)
     amc::_db.dataroot_dflt = !DirectoryQ(amc::_db.cmdline.in_dir);
     amc::_db.dataroot = amc::_db.dataroot_dflt ? strptr("data") : strptr(amc::_db.cmdline.in_dir);
+    // every row amc reads is typed into the source tree, so a misspelled
+    // attribute is a defect the row's file and line have to name; a skipped
+    // one would generate with the field at its default and report nothing
+    algo_lib::_db.strict_attr = true;
     vrfy(amc::LoadTuplesMaybe(amc::_db.cmdline.in_dir,true), algo_lib::_db.errtext);
     // Look up default allocator
     amc::_db.c_malloc = amc::ind_field_Find("algo_lib.FDb.malloc");

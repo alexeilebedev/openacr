@@ -595,9 +595,9 @@ Seemingly circular definitions occur all the time in acr.
 
 ```ssim
 inline-command: acr ctype:dev.D -t
-dev.license  license:GPL  comment:""
+dev.license  license:Apache  proprietary:N  copyleft:N  comment:"Apache License 2.0"
 dmmeta.nstype  nstype:ssimdb  comment:"Ssim database (not a target)"
-  dmmeta.ns  ns:dev  nstype:ssimdb  license:GPL  comment:"Tables supporting compilation of programs"
+  dmmeta.ns  ns:dev  nstype:ssimdb  license:Apache  comment:"Tables supporting compilation of programs"
     dmmeta.ctype  ctype:dev.D  comment:""
       dmmeta.field  field:dev.D.d  arg:algo.Smallstr50  reftype:Val   dflt:""  comment:""
       dmmeta.field  field:dev.D.b  arg:dev.B            reftype:Pkey  dflt:""  comment:""
@@ -608,7 +608,7 @@ dmmeta.nstype  nstype:ssimdb  comment:"Ssim database (not a target)"
 
       dmmeta.field  field:dev.D.comment  arg:algo.Comment  reftype:Val  dflt:""  comment:""
       dmmeta.cfmt  cfmt:dev.D.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
-      dmmeta.ctypelen  ctype:dev.D  len:204  alignment:1  padbytes:0  plaindata:Y
+      gendb.ctypelen  ctype:dev.D  len:204  alignment:1  padbytes:0  plaindata:Y
 
 dmmeta.ssimfile  ssimfile:dev.d  ctype:dev.D
   dmmeta.ssimsort  ssimfile:dev.d  sortfld:dev.D.d  comment:""
@@ -771,14 +771,14 @@ The colors are sorted by name. Let's look at the ctype:
 
 ```ssim
 inline-command: acr ctype:dev.C -t
-dev.license  license:GPL  comment:""
+dev.license  license:Apache  proprietary:N  copyleft:N  comment:"Apache License 2.0"
 dmmeta.nstype  nstype:ssimdb  comment:"Ssim database (not a target)"
-  dmmeta.ns  ns:dev  nstype:ssimdb  license:GPL  comment:"Tables supporting compilation of programs"
+  dmmeta.ns  ns:dev  nstype:ssimdb  license:Apache  comment:"Tables supporting compilation of programs"
     dmmeta.ctype  ctype:dev.C  comment:""
       dmmeta.field  field:dev.C.c        arg:algo.Smallstr50  reftype:Val  dflt:""  comment:""
       dmmeta.field  field:dev.C.comment  arg:algo.Comment     reftype:Val  dflt:""  comment:""
       dmmeta.cfmt  cfmt:dev.C.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
-      dmmeta.ctypelen  ctype:dev.C  len:204  alignment:1  padbytes:0  plaindata:Y
+      gendb.ctypelen  ctype:dev.C  len:204  alignment:1  padbytes:0  plaindata:Y
 
 dmmeta.field  field:dev.D.c  arg:dev.C  reftype:Pkey  dflt:""  comment:""
   dmmeta.substr  field:dev.D.c  expr:.RR  srcfield:dev.D.d
@@ -899,7 +899,7 @@ dmmeta.ctype  ctype:dev.C  comment:""
   dmmeta.field  field:dev.C.c        arg:algo.Smallstr50  reftype:Val  dflt:""  comment:""
   dmmeta.field  field:dev.C.comment  arg:algo.Comment     reftype:Val  dflt:""  comment:""
   dmmeta.cfmt  cfmt:dev.C.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
-  dmmeta.ctypelen  ctype:dev.C  len:204  alignment:1  padbytes:0  plaindata:Y
+  gendb.ctypelen  ctype:dev.C  len:204  alignment:1  padbytes:0  plaindata:Y
 report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***  n_badline:0
 ```
 

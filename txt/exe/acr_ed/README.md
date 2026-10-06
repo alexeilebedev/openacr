@@ -1,5 +1,10 @@
 ## acr_ed - Script generator for common dev tasks
-
+<a href="#acr_ed"></a>
+`acr_ed` is the schema editor.  It creates, renames and deletes targets, ctypes,
+fields, ssimfiles, cross-references and source files.  Each edit comes out as a
+shell script of `acr` commands followed by `amc`, and `-write` runs that script.
+Use it for any change to the schema, and use [acr](/txt/exe/acr/README.md) directly
+for queries and for edits to data.
 
 ### Syntax
 <a href="#syntax"></a>
@@ -49,13 +54,14 @@ Usage: acr_ed [options]
     -showcpp                         (With -sandbox), show resulting diff
     -msgtype       string  ""        (with -ctype) use this msgtype as type
     -anonfld                         Create anonfld
-    -license       string  "GPL"     License for new source/script file
+    -license       string  "Apache"  License for new source/script file
     -fstep         string  ""        Add fstep record on existing field (use with -create)
     -steptype      string  "Inline"  Steptype for -create -fstep
     -fcurs         string  ""        Add fcurs record (-create); pkey is <field>/<curstype-name>
     -dispatch_msg  string  ""        Add dispatch_msg record (-create); pkey is <dispatch>/<msgtype>
     -verbose       flag              Verbosity level (0..255); alias -v; cumulative
     -debug         flag              Debug level (0..255); alias -d; cumulative
+    -trace         string  ""        Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps
     -help                            Print help and exit; alias -h
     -version                         Print version and exit
     -signature                       Show signatures and exit; alias -sig
@@ -64,20 +70,28 @@ Usage: acr_ed [options]
 ### Description
 <a href="#description"></a>
 
-`acr_ed` is a standalone script generator for common schema tasks such as
-creating, deleting, and renaming targets, ctypes, ssimfiles, xrefs, and
-source files.  When invoked, `acr_ed` prints an executable script to
-stdout.  With `-write`, it executes that script immediately (equivalent to
-piping it through `bash`).
+Run `acr_ed` without `-write` and it prints the script it would run.  Add `-write`
+and it runs the same script.  So the way to see what an edit does is to run it once
+without `-write` and read the output.
 
-The generated scripts call `acr` with `-insert`, `-del` or `-rename` and
-`-write` to modify the ssimfiles, then run `amc` to regenerate C++ from
-the new schema.  `acr` itself has no dependency on `acr_ed` — `acr_ed` is
-a convenience wrapper around the same `acr` + `amc` calls you could do by
-hand.  Use `acr_ed` when modifying the schema; use `acr` directly for data
-queries, bulk edits, and anything that doesn't require a schema change.
+The script starts with one `acr -replace -check -write -t`, which is fed the new
+records on a heredoc.  The commands the action needs next follow it: `git add` or
+`git mv` for files, a `sed` over sources, a rewrite of an ssimfile.  The script ends
+with `bin/amc`, which regenerates the C++ under `cpp/gen/` and `include/gen/`.  The
+three source-file actions change no schema and skip `amc`.
 
-The following is the full list of actions acr_ed supports
+When the action creates a field, a finput, an fstep or an fcurs, the heredoc also
+carries a drawing of the result from [amc_vis](/txt/exe/amc_vis/README.md), as `#` comment lines.  Read it to
+check the structure before you write the edit.
+
+`acr_ed` reads the database under `-in`, which is `data` by default.  It writes
+through `acr`, so every ssimfile it touches stays sorted, and it takes the lock
+`lock/acr_ed` while `-write` runs.
+
+Each invocation performs one action.  `-create`, `-del` or `-rename` picks the verb,
+and the entity option that carries a value picks the action.  The table lists them
+all:
+
 ```ssim
 inline-command: acr edaction -report:N | ssimfilt -t -field:edaction -field:comment
 EDACTION            COMMENT
@@ -85,7 +99,7 @@ Create_Citest       -create -citest <citest>
 Create_Ctype        -create -ctype <ctype> [-subset <ctype> [-subset2 <ctype2> -separator <char>]] [-reftype <reftype>] [-indexed]
 Create_DispatchMsg  -create -dispatch_msg <dispatch>/<msgtype>
 Create_Fcurs        -create -fcurs <field>/<curstype>
-Create_Field        -create -field <field> -arg <ctype> -reftype <reftype> [-xref [-via <via>]] [-anonfld] [-fbigend] ...
+Create_Field        -create -field <field> -arg <ctype> -reftype <reftype> [-xref [-via <via>]] [-anonfld] [-bigend] ...
 Create_Finput       -create -finput -target <target> -ssimfile <ssimfile>
 Create_Fstep        -create -fstep <field> [-steptype:<type>]
 Create_Srcfile      -create -srcfile <filename.(h|md|cpp)>
@@ -95,7 +109,7 @@ Create_Unittest     -create -unittest <unittest>
 Delete_Ctype        -del -ctype <ctype>
 Delete_Field        -del -field <field>
 Delete_Srcfile      -del -srcfile <srcfile>
-Delete_Ssimfile     -del -ssimfile <ssimfile
+Delete_Ssimfile     -del -ssimfile <ssimfile>
 Delete_Target       -del -target <target>
 Rename_Ctype        -ctype <ctype> -rename <newname>
 Rename_Field        -field <field> -rename <newname>
@@ -105,261 +119,99 @@ Rename_Target       -target <target> -rename <newtarget>
 
 ```
 
-### Quick reference
-<a href="#quick-reference"></a>
+#### Creating a target
+<a href="#creating-a-target"></a>
+
+`-create -target <name>` adds a namespace and everything needed to build it.  The
+records are the `dmmeta.ns` row, its `dev.target`, `dev.targsrc` and `dev.targdep`
+rows, the `FDb` global, and for an executable a command line with an `-in` option.
+For an executable or a library the script writes a starter header and source file,
+runs `amc` and builds the target with `abt -install`.  An executable also gets its
+link `bin/<name>` to the release build.  Every kind gets a README under `txt/`, its
+copyright headers from `src_hdr` and its documentation from `abt_md`.
+
+`-nstype` picks the kind of namespace, and a name that starts with `lib_` is always
+a library.  An `ssimdb` namespace gets a `data/<name>/` directory and a `dmmeta.nsdb`
+row, and its generated code goes into `lib_prot`.  For an executable or a
+library, run `acr_compl -install` afterwards, as the script reminds you, so shell
+completion learns the new name.
+
+#### Creating a ctype
+<a href="#creating-a-ctype"></a>
+
+`-create -ctype <ns>.<Name>` adds a `dmmeta.ctype` row.  `-subset` gives it a first
+field of that type, which is its primary key.  The key is named after the ctype in
+lower case, `FThing` giving `thing`.  In an `ssimdb` namespace a key whose type is
+another table takes that table's key name and becomes a `Pkey`, and any other key is
+a `Val`.  A subset of a message header that has a type field becomes a `Base` field instead,
+and the new ctype also gets the header's `dmmeta.pack`, a `dmmeta.msgtype` and its
+string formats.
+
+In an `ssimdb` namespace, or with `-indexed`, a ctype with no `-subset` gets an
+`algo.Smallstr50` key.  `-subset` together with `-subset2` and `-separator` makes a
+key that joins two other keys, and adds a substring field for each half.
+
+`-reftype` with a pool reftype, such as `Lary` or `Tpool`, adds a pool of the new
+ctype to the namespace's `FDb`.  `-indexed` adds a global hash index on the key.
+
+#### Creating an ssimfile
+<a href="#creating-an-ssimfile"></a>
+
+`-create -ssimfile <ns>.<name>` creates a ctype as above and makes it a table.  The
+ctype is named in CamelCase after the ssimfile, `dev.widget` becoming `dev.Widget`.
+The records added are the `dmmeta.ssimfile` row, a `dmmeta.ssimsort` on the primary
+key, a `comment` field and a string format.  The script creates and stages the empty
+`data/<ns>/<name>.ssim`.  The namespace must already be an ssim database, which means
+it has a `dmmeta.nsdb` row.
+
+#### Loading an ssimfile into a program
+<a href="#loading-an-ssimfile-into-a-program"></a>
+
+`-create -finput -target <target> -ssimfile <ssimfile>` makes the program load a
+table at startup.  It adds an in-memory ctype `<target>.F<Name>`, whose `Base` field
+copies every field of the table's ctype.  It also adds a pool of those records to the
+program's `FDb` and a `dmmeta.finput` row.  The pool is a `Lary` unless `-reftype`
+names another one, and `-indexed` adds a hash index on the table's primary key:
 
 ```bash
-# New build target
-acr_ed -create -target <target> -write
+$ acr_ed -create -finput -target acr_compl -ssimfile dev.license -indexed
+acr_ed.create_finput  target:acr_compl  ssimfile:dev.license
+set -e
+bin/acr  -query:'' -replace:Y -check:Y -selerr:N -write:Y -t:Y << EOF
+dmmeta.ctype  ctype:acr_compl.FLicense  comment:""
+dmmeta.field  field:acr_compl.FLicense.base  arg:dev.License  reftype:Base  dflt:""  comment:""
+dmmeta.field  field:acr_compl.FDb.license  arg:acr_compl.FLicense  reftype:Lary  dflt:""  comment:""
+dmmeta.finput  field:acr_compl.FDb.license  update:N  strict:Y  comment:""
 
-# New ssimfile input for a target
-acr_ed -create -finput -target <target> -ssimfile <ns>.<name> -write
-acr_ed -create -finput -target <target> -ssimfile <ns>.<name> -indexed -write
+dmmeta.field  field:acr_compl.FDb.ind_license  arg:acr_compl.FLicense  reftype:Thash  dflt:""  comment:""
+dmmeta.thash  field:acr_compl.FDb.ind_license  hashfld:dev.License.license  unique:Y  comment:""
+dmmeta.xref  field:acr_compl.FDb.ind_license  inscond:true  via:""
+#  Proposed change
+# / acr_compl.FDb
+# |Lary license-------->/ acr_compl.FLicense
+# |Thash ind_license--->|
+# -                     |
+#                       -
+EOF
 
-# Add a command-line option (accessible in C++ as _db.cmdline.<name>)
-acr_ed -create -field command.<proc>.<name> -arg <ctype> -dflt '""' -comment "..." -write
-
-# Add a plain field to a ctype
-acr_ed -create -field <ns>.FCtype.<name> -arg <ctype> -write
-
-# New ctype with a pool
-acr_ed -create -ctype <ns>.FName -reftype Lary -write
-acr_ed -create -ctype <ns>.FName -reftype Tpool -indexed -write
-
-# Hash-index cross-reference
-acr_ed -create -field <ns>.FParent.ind_child -arg <ns>.FChild \
-       -reftype Thash -hashfld <ns>.FChild.key \
-       -xref -via <ns>.FChild.p_parent -write
-
-# Wire-protocol message (subset of a header ctype)
-acr_ed -create -ctype ams.MyMsg -subset ams.MsgHeader -write
-
-# Markdown source files
-acr_ed -create -srcfile txt/.../xyz.md -write
-acr_ed -del    -srcfile txt/.../xyz.md -write
-
-# Rename
-acr_ed -ctype    <ns>.Old      -rename <ns>.New      -write
-acr_ed -field    <ns>.Ct.old   -rename <ns>.Ct.new   -write
-acr_ed -ssimfile <ns>.old      -rename <ns>.new      -write
-acr_ed -target   <old>         -rename <new>         -write
-
-# Delete
-acr_ed -del -field    <ns>.FCtype.<name> -write
-acr_ed -del -ctype    <ns>.FName         -write
-acr_ed -del -ssimfile <ns>.<name>        -write
-acr_ed -del -target   <target>           -write
+bin/amc
 ```
 
-Notes:
-- `-reftype` is auto-inferred from the field-name prefix: `ind_` → Thash,
-  `cd_` → Llist, `p_` → Upptr, `c_` → Ptrary.  See `acr fprefix`.
-- String defaults require inner quotes: `'""'` for empty, `'"value"'` for
-  a non-empty default.
-- `-xref` creates both the field row and its `dmmeta.xref` record.
-- Never hand-edit `cpp/gen/` or `include/gen/` — always go through
-  `acr_ed` / `amc`.
+With `-gstatic` in place of `-finput`, `amc` compiles the table's rows into the
+program, which inserts them at startup without reading the ssimfile.  `-foutput`
+also declares the pool an output, so `amc` generates the code to save it back.
 
-Inspect the schema with acr:
-```bash
-acr field:<ctype>.%              # all fields of a ctype
-acr field:command.<proc>.%       # command-line fields for a process
-acr fprefix                      # field-name prefix → reftype mapping
-```
+#### Creating a field
+<a href="#creating-a-field"></a>
 
-### Options
-<a href="#options"></a>
-#### -in -- Input directory or filename, - for stdin
-<a href="#-in"></a>
+`-create -field <ns>.<Ctype>.<name>` adds a `dmmeta.field` row, with its type in
+`-arg`.  The new field goes at the end of its ctype, or just before the ctype's
+`comment` field when that field is last.  `-before` places it anywhere else.  The
+same command can also mark the field as a substring, an alias, a computed `cppfunc`,
+a big-endian integer or a cascading delete, and each option says how.
 
-#### -create -- Create new entity (-finput, -target, -ctype, -field)
-<a href="#-create"></a>
-
-#### -del -- Delete mode
-<a href="#-del"></a>
-
-The `-del` option can be used with `-ctype`, `-field`, `-srcfile`, `-ssimfile`, `-target`.
-
-Deleting a field removes the values as well as the schema row.  `acr` ignores a
-data attribute that names no field of the current ctype, so the values would
-otherwise sit in the ssimfile with nothing to object to them, and `acr_ed`
-follows the delete with a rewrite of every ssimfile whose rows carried them:
-
-    $ acr_ed -del -field dmmeta.Ns.license
-    set -e
-    bin/acr  -query:'' -replace:Y -check:Y -selerr:N -write:Y -t:Y << EOF
-    EOF
-
-    bin/acr  -query:field:dmmeta.Ns.license -del:Y -write:Y
-    bin/acr  -query:dmmeta.ns:% -write:Y -print:N
-    bin/amc
-
-A field on an in-memory ctype has no ssimfile behind it, so the script for one
-of those carries the delete alone.
-
-Deleting a ctype that has an ssimfile is redirected to the ssimfile delete,
-which removes the ctype, its fields and the data file together.
-
-#### -rename -- Rename to something else
-<a href="#-rename"></a>
-
-The `-rename` option can be used with `-ctype`, `-field`, `-srcfile`, `-ssimfile`, `-target`.
-When renaming a ssimfile, the corresponding ctype is also renamed to the CamelCase version of
-the ssimfile name. In addition, in all programs that use the ssimfile as an finput,
-the corresponding in-memory type and its pool are renamed.
-
-Renaming a **field** takes either a bare new name or the full pkey, and the two
-are the same edit: `acr_ed -field <ns>.<Ct>.old -rename new` and
-`acr_ed -field <ns>.<Ct>.old -rename <ns>.<Ct>.new` both rename within the ctype,
-because a rename does not move a field between ctypes.  `acr` renames the column
-in the ssimfile at the same time, so no further step is needed on the data.  Two
-spellings are refused rather than guessed at.  A `:` in the new name is the query
-form (`-rename field:<ns>.<Ct>.new`), which `acr` would read as naming the ctype
-`field:<ns>.<Ct>`.  And a new name carrying a different ctype is refused when
-either ctype has an ssimfile, since the old table's rows would keep a column no
-field claims; move a field between ssim-backed tables with a delete and a create.
-
-When renaming a target, all of its source files are moved to the new location `cpp/<target>/`.
-All component tests are renamed, along with the readme. `acr_ed` uses `sed` speculatively
-to partially rename namespace-qualified references inside source files.
-When renaming a target, `acr_ed` renames to corresponding `dmmeta.ns` entry as well.
-
-#### -finput -- Create in-memory table based on ssimfile
-<a href="#-finput"></a>
-
-To add a table to the list of inputs of a program (as specified by the `finput` table)
-use `acr_ed -create -finput -target:<ns> -ssimfile:<ssimfile>`.
-This creates a new ctype in the target process, which copies all the fields from the ssimfile.
-It also creates a pool for the ctype in the in-memory database (FDb).
-
-Example:
-
-    $ acr_ed -create -finput -target sample -ssimfile dev.gitfile
-    acr_ed.create_finput  target:sample  ssimfile:dev.gitfile
-    bin/acr  '' -insert:Y -check:Y -write:Y -t:Y -rowid:Y << EOF
-    dmmeta.ctype  ctype:sample.FGitfile  comment:""
-    dmmeta.field  field:sample.FGitfile.base  arg:dev.Gitfile  reftype:Base  dflt:""  comment:""
-    dmmeta.field  field:sample.FDb.gitfile  arg:sample.FGitfile  reftype:Lary  dflt:""  comment:""
-    dmmeta.finput  field:sample.FDb.gitfile  extrn:N  update:N  strict:Y  comment:""
-    #  Proposed change
-    #
-    #
-    #     / sample.FDb
-    #     |
-    #     |Lary gitfile-->/ sample.FGitfile
-    #     -               |
-    #                     |
-    #                     -
-    EOF
-    ...
-    
-* With `-indexed` option, a hash index is thrown in
-* With `-reftype` option, the allocator for the new type can be specified.
-
-#### -foutput -- Declare field as an output
-<a href="#-foutput"></a>
-
-#### -srcfile -- Create/Rename/Delete a source file
-<a href="#-srcfile"></a>
-
-Syntax:
-
-    acr_ed -create -srcfile:<filename> [-target:<target>]
-
-This option is used to create a .cpp, .h, or .md (readme) file.
-When creating a source file, `acr_ed` automatically determines which target
-this file will belong to based on the the other files in the same directory.
-If there is ambiguity, specify `-target ...` argument
-Headers are considered source files.
-
-    $ acr_ed -create -srcfile cpp/...path.cpp
-    ...
-    $ acr_ed -create -srcfile include/path.h
-
-With `-e` option, the resulting file is opened for editing.
-
-To rename a source file, use
-
-    acr_ed -srcfile:<filename> -rename:<newfilename> [-target:<target>]
-
-#### -gstatic -- Like -finput, but data is loaded at compile time
-<a href="#-gstatic"></a>
-
-#### -indexed -- (with -finput) Add hash index
-<a href="#-indexed"></a>
-
-#### -target -- Create/Rename/Delete target
-<a href="#-target"></a>
-
-#### -nstype -- (with -create -target): exe,lib,etc.
-<a href="#-nstype"></a>
-
-#### -ctype -- Create/Rename/Delete ctype
-<a href="#-ctype"></a>
-
-To create a new record type in a program, use `-create -ctype:<ctype> -reftype:<reftype>`.
-This adds a pool of a given type (typically `Tpool` or `Lary`).
-To throw in a hash index, specify `-indexed`.
-Example:
-
-    $ acr_ed -create -ctype sample.FTable -subset u32 -reftype Tpool -indexed
-    bin/acr  '' -insert:Y -check:Y -write:Y -t:Y -rowid:Y << EOF
-    dmmeta.ctype  ctype:sample.FTable  comment:""
-    dmmeta.field  field:sample.FTable.table  arg:u32  reftype:Val  dflt:""  comment:""
-    dmmeta.field  field:sample.FDb.table  arg:sample.FTable  reftype:Tpool  dflt:""  comment:""
-    dmmeta.field  field:sample.FDb.ind_table  arg:sample.FTable  reftype:Thash  dflt:""  comment:""
-    dmmeta.thash  field:sample.FDb.ind_table  hashfld:sample.FTable.table  unique:Y  comment:""
-    dmmeta.xref  field:sample.FDb.ind_table  inscond:true  via:""
-    EOF
-
-This is equivalent to executing the following commands in order:
-```bash
-acr_ed -create -ctype sample.FTable -write
-acr_ed -create -field sample.FTable.table -arg i32 -write
-acr_ed -create -field sample.FDb.table -arg sample.FTable -reftype Tpool -write
-acr_ed -create -field sample.FDb.ind_table -arg sample.FTable -hashfld sample.FTable.table -xref -inscond:true -write
-```
-
-#### -ssimfile --   Ssimfile for new ctype
-<a href="#-ssimfile"></a>
-
-#### -subset --   Primary key is a subset of this ctype
-<a href="#-subset"></a>
-
-#### -subset2 --   Primary key is also a subset of this ctype
-<a href="#-subset2"></a>
-
-#### -separator --     Key separator
-<a href="#-separator"></a>
-
-#### -field -- Create field
-<a href="#-field"></a>
-
-Syntax:
-```bash
-acr_ed -create -field:<field> -arg:<ctype>
-```
-
-Sub-options for field creation:
-- -arg <ctype>
-- -comment <comment>
-- -dflt <c++ expression>
-- -reftype <reftype>
-- -before <field>
-- -xref
-- -via <field[/field]>
-- -inscond <c++ expr>
-- -fstep
-- -substr:<pathcomp> -srcfield:<field>
-- -anon
-- -cascdel
-- -bigend
-- -hashfld <field> -- use with ind_ fields
-- -sortfld <field> -- use with bh_ or tr_ fields
-- -cppfunc <c++ expr> -- field is a computed field with specified c++ expression yielding the value
-
-When creating a field, the Reftype can be guessed automatically based on the field name.
-The following mappings are defined:
+The field name's prefix implies its reftype, and the table of prefixes is
+`dmmeta.fprefix`:
 
 ```ssim
 inline-command: acr fprefix -report:N | ssimfilt -t
@@ -386,116 +238,48 @@ zsl.Llist    Y        Y     Zero-terminated singly linked LIFO list
 
 ```
 
-Command-line flags are regular fields. The command line for process `X` is `command.X`.
-Thus, to add a new command-line option for X, use
-```bash
-acr_ed -create -field:command.X.fname -arg:<ctype>
-```
+A field with no prefix is a `Pkey` when both its ctype and its arg are tables, and a
+`Val` otherwise.  The name can imply the arg too: `<ns>.FCtype.p_ns` finds the pool
+`<ns>.FDb.ns` and takes its type.  Name `-arg`, `-reftype` or `-via` to override any
+of these guesses.
 
-* Specify `-anonfld` to create a nameless (positional) argument.
-* Use `-reftype Tary` to create a flag that can be specified multiple times (an array).
-* Use `-alias -srcfield:<field>` to create an option that is synonymous with another option.
+A field that needs a record of its own gets it in the same script.  A `Thash` gets a
+`dmmeta.thash` and a `Bheap` or `Atree` a `dmmeta.sortfld`, each keyed on the arg's
+primary key unless `-hashfld` or `-sortfld` names another field.  An `Llist` gets a
+`dmmeta.llist`, a `Ptrary` a `dmmeta.ptrary` and a `Tary` a `dmmeta.tary`.
 
-To create an option that will select a key from an existing table `<ns.Table>`, use
+#### Adding a command-line option
+<a href="#adding-a-command-line-option"></a>
 
-```bash
-acr_ed -create -field:command.X.t -arg:ns.Table -reftype:Pkey
-```
+A command-line option is a field of the ctype `command.<target>`, so it is created
+like any other field.  The program reads it as `_db.cmdline.<name>`, and its comment
+becomes the help text.  An option with an empty `-dflt` is required, except that a
+`bool` option never is.  A `Tary` option can be given several times, `-anonfld`
+makes an option positional, and `-alias -srcfield` makes one a synonym of another.
 
-After creating this field, tab-completion in the shell will automatically pick up
-the change (since it reads the field table) and offer completions based on the table.
-You can also use `reftype:RegxSql`.
+An option whose arg is a table and whose reftype is `Pkey` or `RegxSql` takes a key
+of that table.  Shell completion reads the field table, so it offers the table's keys
+for the new option without further work.
 
-A command-line option is considered required if the `dflt` expression of the field is empty.
-Fields of type `bool` are never considered required.
+#### Creating a cross-reference
+<a href="#creating-a-cross-reference"></a>
 
-`acr_ed` can create both global and partitioned indexes. Global indexes are placed in the FDb (global struct).
-Partitioned indexes are placed in any ctype. Indexes are fields.
-Here is an example:
-```bash
-acr_ed -create -field:ns.FTable.ind_xyz -arg:ns.FXyz -hashfld:ns.FXyz.field
-```
+A cross-reference is a field of one in-memory record that indexes or points at
+others: a hash, a list, a heap, a tree or a pointer array.  `amc` keeps it current as
+records are created and deleted, and a `dmmeta.xref` row declares it.  A `Thash`,
+`Llist`, `Bheap`, `Atree` or `Blkhash` field always has one, `-via` implies one, and
+`-xref` asks for one on any other field.
 
-Often, you can simply specify the field name to create, and `acr_ed` automatically determines
-which type it will refer to, based on the name.
+An index in record A over records B needs a way to find the A given a B.  `FDb` is
+always reachable, so a global index needs nothing more.  An index held by any other
+ctype needs a path, and `acr_ed` searches for it among the fields of B and the global
+hashes.  When it finds one path it uses it and prints it as `acr_ed.via_match1`.
+When it finds none, or several, it stops and lists the candidates, and you choose one
+with `-via`.
 
-`acr_ed` can also create an automatic x-reference by analyzing all the access paths between
-the two tables. The rule is as follows:
-You can create an index in table A of records of type B if there exists a function that can locate B given A.
-Since the global database (`FDb`) is always accessible, you can always create a global index.
-To create a partitioned index, `acr_ed` will perform a search over fields of B and over global hashes
-to see if any of the keys can be used to find an instance of A. If no paths exist, it's an error.
-If no paths, or more than one path exists, one must be specified via the `-via` argument.
-`-via` can be a pointer field in B, or
-an expression in the form `hash_field/key`. Examples below will illustrate the difference.
-
-#### -arg --   Field type (e.g. u32, etc), (with -ctype) add the base field
-<a href="#-arg"></a>
-
-#### -dflt --   Field default value
-<a href="#-dflt"></a>
-
-#### -anon --   Anonymous field (use with command lines)
-<a href="#-anon"></a>
-
-#### -bigend --   Big-endian field
-<a href="#-bigend"></a>
-
-#### -cascdel --   Field is cascdel
-<a href="#-cascdel"></a>
-
-#### -before --   Place field before this one
-<a href="#-before"></a>
-
-#### -substr --   New field is a substring
-<a href="#-substr"></a>
-
-To create a field named `x` that is extracted as a substring from another field `y`,
-use `-substr:<pathcomp> -srcfield:<field>:
-
-    $ acr_ed -create -field ns.Name.x -substr .LL -srcfield ns.Name.y
-
-#### -alias -- Create alias field (requires -srcfield)
-<a href="#-alias"></a>
-
-#### -srcfield --   Source field for bitfld/substr
-<a href="#-srcfield"></a>
-
-#### -inscond --   Insert condition (for xref)
-<a href="#-inscond"></a>
-
-Create conditional x-reference. The arguent to the option is a c++ expression.
-The x-reference becomes conditional on the expression.
-For example:
-
-    $ acr_ed -create -field sample.FDb.ind_table -inscond false
-
-With this xref, new records added to `table` are not automatically inserted into the
-`ind_table` hash. That step has to be done manually later with `ind_table_Insert(...);`.
-
-#### -reftype --   Reftype (e.g. Val, Thash, Llist, etc)
-<a href="#-reftype"></a>
-
-- Hash tables
-
-    $ acr_ed -create -field sample.FDb.ind_table
-    $ acr_ed -create -field sample.FDb.ind_table -hashfld <fieldname>
-
-- Binary Heaps
-
-    $ acr_ed -create -field sample.FDb.bh_table
-    $ acr_ed -create -field sample.FDb.bh_table -sortfld <fieldname>
-
-- Linked lists
-
-The structure of the linked list is described by the field prefix.
-amc supports 32 types of linked lists: singly and doubly linked, circular or zero-terminated,
-with default tail and head insertion, with and without a count, and with or without a tail pointer.
-
-    $ acr_ed -create -field sample.FDb.cd_table
-    $ acr_ed -create -field sample.FDb.cd_table
-
-The full list of linked list types can be gleaned from this table:
+`-via` is either a pointer field of B, or a `<hash>/<key>` pair.  The hash is a
+global index of A, and the key is the ssimfile field of B that holds A's key.  The
+list types a prefix can name are these:
 
 ```ssim
 inline-command: acr listtype | ssimfilt ^ -t
@@ -511,171 +295,552 @@ zsl       N         N         N        Zero-terminated singly-linked lifo (stack
 
 ```
 
-The arguments `havetail` and `havecount` are specified directly in the `llist` record which is required for a linked list.
+The `dmmeta.llist` row that `acr_ed` adds for a list also sets `havetail` and
+`havecount`, and you can edit both afterwards.
 
-- AVL Trees
+#### A worked example of a cross-reference
+<a href="#a-worked-example-of-a-cross-reference"></a>
 
-    $ acr_ed -create -field sample.FDb.tr_table
-    $ acr_ed -create -field sample.FDb.tr_table -sortfld <fieldname>
+This example builds a program `samp_xref` that loads `dmmeta.ns` and `dmmeta.ctype`,
+and links each ctype to its namespace.  A ctype's key starts with the key of its
+namespace, so the namespace is the parent.
 
-- Pointer arrays
+```bash
+acr_ed -create -target samp_xref -write
+acr_ed -create -finput -target samp_xref -ssimfile dmmeta.ns -indexed -write
+acr_ed -create -finput -target samp_xref -ssimfile dmmeta.ctype -write
+```
 
-    $ acr_ed -create -field sample.FDb.c_table
-    $ acr_ed -create -field sample.FDb.c_table
+An `Upptr` from each ctype up to its namespace needs only its name.  `acr_ed` finds
+the pool `samp_xref.FDb.ns`, and the path through the hash `ind_ns` and the field
+`dmmeta.Ctype.ns`:
 
-- Upptr (reference)
+```bash
+$ acr_ed -create -field samp_xref.FCtype.p_ns
+acr_ed.via_match1  child:dmmeta.Ctype.ns  comment:"This child field is a possible via key candidate"
+...
+dmmeta.field  field:samp_xref.FCtype.p_ns  arg:samp_xref.FNs  reftype:Upptr  dflt:""  comment:""
+dmmeta.xref  field:samp_xref.FCtype.p_ns  inscond:true  via:samp_xref.FDb.ind_ns/dmmeta.Ctype.ns
+```
 
-Pointer to a record that must previously exist. All indexing reftypes except Upptr are cross-reference types,
-i.e. they are used in response to creation of some other record. Upptr is the result of a lookup of some key,
-and so it is used in response to creation of the record containing the field.
+The same path serves an index in the other direction.  `c_ctype` gives each namespace
+a pointer array of its ctypes, and `zd_ctype` would give it a list:
 
-To illustrate the difference between an Upptr (reference) and a Ptr (any other pointer),
-Let's start by creating a new executable with an in-memory database, called `samp_xref`. We'll
-input two tables, `ns` and `ctype`. These are related because `ctype` key contains a reference to `ns`.
+```bash
+$ acr_ed -create -field samp_xref.FNs.c_ctype
+...
+dmmeta.field  field:samp_xref.FNs.c_ctype  arg:samp_xref.FCtype  reftype:Ptrary  dflt:""  comment:""
+dmmeta.xref  field:samp_xref.FNs.c_ctype  inscond:true  via:samp_xref.FDb.ind_ns/dmmeta.Ctype.ns
+dmmeta.ptrary  field:samp_xref.FNs.c_ctype  unique:Y  heaplike:N
+```
 
-    $ acr_ed -create -target samp_xref -write
-    $ acr_ed -create -finput -ssimfile dmmeta.ns -target samp_xref -indexed -write
-    $ acr_ed -create -finput -ssimfile dmmeta.ctype -target samp_xref -write
-
-Let's check the structure of the in-memory database:
+With both fields written, `amc_vis` draws the two records and the links between them:
 
 ```text
-    $ amc_vis samp_xref.%                                     
-                                     
-     / samp_xref.FDb                 
-     |                               
-     |Lary ctype-->/ samp_xref.FCtype
-     |             -                 
-     |                               
-     |                               
-     |Lary ns------->/ samp_xref.FNs 
-     |Thash ind_ns-->|               
-     -               |               
-                     |               
-                     -               
+$ amc_vis '(samp_xref.FNs|samp_xref.FCtype)'
+                                / samp_xref.FCtype
+              / samp_xref.FNs   |
+              |<----------------|Upptr p_ns
+              |Ptrary c_ctype-->|
+              -                 |
+                                -
 ```
-                                                                                       
-We can now create a pointer from `ctype` to `ns` directly. This is called an `Upptr` because
-`ns` logically is above ctype (it must exist when the ctype record is created).
 
-    $ acr_ed -create -field samp_xref.FCtype.p_ns
+#### Creating a source file
+<a href="#creating-a-source-file"></a>
 
-This is equivalent to writing:
+`-create -srcfile <path>` creates a `.cpp`, `.h`, README or script file with a
+starter body, and registers it in `dev.gitfile`.  A `.cpp` or `.h` also gets a
+`dev.targsrc` row, and its target is the one that owns the most files in the same
+directory, unless `-target` names another.  A `.md` under `txt/` gets a
+`dev.readmefile` row, and a file under `bin/` gets a `dev.scriptfile` row and a
+README of its own.  The script then updates the copyright headers with `src_hdr`.
+An existing file keeps its contents, and only the records are added.
 
-    $ acr_ed -create -field samp_xref.FCtype.p_ns -via samp_xref.FDb.ind_ns/dmmeta.Ctype.ns
-    
-In this case, the `-via` parameter is omitted to `acr_ed` because the path is unique and can be guessed.
-We can also create a Ptr reference from `ns` down to `ctype:
+`-srcfile <path> -rename <newpath>` moves the file with `git mv` and renames its
+records.  The file also moves to the target that owns the new directory, or to
+`-target`.  `-del -srcfile <path>` deletes the file and its records.
 
-    $ acr_ed -create -field samp_xref.FNs.c_ctype
+#### Creating tests
+<a href="#creating-tests"></a>
 
-The resulting structure is as follows:
-                                                     
-```text
-    / samp_xref.FDb                                  
-    |                                                
-    |Lary ctype------------------->/ samp_xref.FCtype
-    |                              |                 
-    |Lary ns------->/ samp_xref.FNs|                 
-    |Thash ind_ns-->|              |                 
-    -               |              |                 
-                    |              |                 
-                    |Ptr c_ctype-->|                 
-                    |<-------------|Upptr p_ns       
-                    |              -                 
-                    |                                
-                    -                                
+`-create -unittest <ns>.<name>` adds an `atfdb.unittest` row and appends an empty
+test function to `cpp/atf_unit/<ns>.cpp`.  `-create -citest <name>` adds an
+`atfdb.citest` row to the `normalize` job, and after `amc` you write the function
+`atf_ci::citest_<name>` it declares.
 
+#### Adding steps, cursors and dispatch messages
+<a href="#adding-steps-cursors-and-dispatch-messages"></a>
+
+Three actions add one record to an existing field or dispatch.  `-create -fstep
+<field>` adds a `dmmeta.fstep` row, so the program's main loop calls a step
+function whenever that field is non-empty.  `-create -fcurs <field>/<name>` adds a custom cursor
+over the field.  `-create -dispatch_msg <dispatch>/<msgtype>` routes one more message
+ctype to a dispatch.
+
+#### Renaming
+<a href="#renaming"></a>
+
+`-rename <new>` with `-ctype`, `-field`, `-ssimfile`, `-srcfile` or `-target` renames
+that entity.  `acr` renames every record that refers to it, so the schema stays
+consistent.  Hand-written C++ keeps the old names, except where a target rename
+edits it.
+
+A field rename also renames the column in the table's ssimfile.  The new name can be
+bare, or the full `<ns>.<Ctype>.<name>`, and both mean the same edit.
+
+An ssimfile rename moves the file with `git mv`.  When the key field and the ctype
+are named after the ssimfile, it renames them too.  So does each program's
+in-memory copy of the table, `<target>.F<Name>`, and its pool.
+
+A target rename renames the namespace and every record keyed by it.  It moves the
+target's sources into `cpp/<new>/` and `include/`, and renames the `bin/` link.  It
+also rewrites `#include` lines and `<old>::` qualifiers in those sources with `sed`.
+Anything else that spells the old name, such as another target's code, is yours to
+fix.
+
+#### Deleting
+<a href="#deleting"></a>
+
+`-del` with `-field`, `-ctype`, `-ssimfile`, `-srcfile` or `-target` deletes that
+entity and every record that refers to it.  Deleting a field also rewrites each
+ssimfile whose rows carried it, so the values go with the schema row:
+
+```bash
+$ acr_ed -del -field dev.Gitfile.comment
+set -e
+bin/acr  -query:'' -replace:Y -check:Y -selerr:N -write:Y -t:Y << EOF
+EOF
+
+bin/acr  -query:field:dev.Gitfile.comment -del:Y -write:Y
+bin/acr  -query:dev.gitfile:% -write:Y -print:N
+bin/amc
 ```
+
+Deleting a ctype that has an ssimfile deletes the ssimfile, and the file goes with
+`git rm`.  Deleting a target removes its namespace, its records and its files, then
+updates the headers and the documentation.
+
+#### Seeing the generated code
+<a href="#seeing-the-generated-code"></a>
+
+The printed script shows the records, and `-sandbox` shows what they generate.
+`acr_ed` resets the `acr_ed` sandbox from the current tree, runs the whole script
+there with `-write`, and prints the diff.  Inside the sandbox it also rebuilds and
+runs `amc` from source, so the diff covers a change to `amc` itself.  The checkout
+you work in is left alone.  See [wt](/txt/exe/wt/README.md) for sandboxes.
+
+### Examples
+<a href="#examples"></a>
+
+```bash
+# See what an edit would do, without doing it
+acr_ed -create -field dmmeta.Ns.flag -arg bool
+
+# Create an executable, a library and an ssim database namespace
+acr_ed -create -target samp_tool -write
+acr_ed -create -target lib_samp -write
+acr_ed -create -target sampdb -nstype ssimdb -write
+
+# Create a table whose key refers to dev.target
+acr_ed -create -ssimfile dev.widget -subset dev.Target -comment "A widget" -write
+
+# Create a table whose key joins a namespace and a license, as <ns>/<license>
+acr_ed -create -ssimfile dev.nslicense -subset dmmeta.Ns -subset2 dev.License -separator / -write
+
+# Make a program load dev.gitfile, with a hash index on its key
+acr_ed -create -finput -target samp_tool -ssimfile dev.gitfile -indexed -write
+
+# Create an in-memory record type with a pool and a global hash
+acr_ed -create -ctype samp_tool.FThing -reftype Tpool -indexed -write
+
+# Add a field, and one placed before an existing field
+acr_ed -create -field dev.Widget.size -arg u32 -dflt 0 -comment "Size in bytes" -write
+acr_ed -create -field dev.Widget.owner -arg algo.Smallstr50 -before dev.Widget.size -write
+
+# Add a string option and a flag to a program's command line
+acr_ed -create -field command.samp_tool.name -arg algo.cstring -dflt '""' -comment "Name to use" -write
+acr_ed -create -field command.samp_tool.dry -arg bool -comment "Print, do not act" -write
+
+# Add an option whose value is a key of dmmeta.ns, completed by the shell
+acr_ed -create -field command.samp_tool.ns -arg dmmeta.Ns -reftype Pkey -dflt '""' -write
+
+# Add a heap of the loaded files, ordered by extension
+acr_ed -create -field samp_tool.FDb.bh_gitfile -arg samp_tool.FGitfile -sortfld dev.Gitfile.ext -write
+
+# Add a list of ctypes to each namespace, naming the path explicitly
+acr_ed -create -field samp_xref.FNs.zd_ctype -arg samp_xref.FCtype -via samp_xref.FDb.ind_ns/dmmeta.Ctype.ns -write
+
+# Create a source file, a README and a unit test
+acr_ed -create -srcfile cpp/samp_tool/parse.cpp -write
+acr_ed -create -srcfile txt/exe/samp_tool/internals.md -comment "Internals of samp_tool" -write
+acr_ed -create -unittest algo_lib.Widget -e -write
+
+# Rename a field, a ctype, an ssimfile, a source file and a target
+acr_ed -field dev.Widget.size -rename nbyte -write
+acr_ed -ctype samp_tool.FThing -rename samp_tool.FItem -write
+acr_ed -ssimfile dev.widget -rename dev.gadget -write
+acr_ed -srcfile cpp/samp_tool/parse.cpp -rename cpp/samp_tool/read.cpp -write
+acr_ed -target samp_tool -rename samp_util -write
+
+# Delete a field and its values, an ssimfile, a source file and a target
+acr_ed -del -field dev.Widget.owner -write
+acr_ed -del -ssimfile dev.widget -write
+acr_ed -del -srcfile cpp/samp_tool/read.cpp -write
+acr_ed -del -target samp_tool -write
+
+# See the generated code a schema change produces, in the sandbox
+acr_ed -create -field dmmeta.Ns.flag -arg bool -sandbox
+```
+
+Inspect the schema with `acr` before and after an edit:
+
+```bash
+acr field:dev.Gitfile.%              # the fields of a ctype
+acr field:command.acr_ed.%           # the command-line options of a program
+acr fprefix                          # which reftype each field-name prefix implies
+```
+
+### Caveats
+<a href="#caveats"></a>
+
+- One invocation runs one action.  A command line that selects two, such as
+  `-create -ctype X -field Y`, prints `More than one action selected` and the table of
+  actions, and does nothing.
+- The script stops at its first failing command, and nothing rolls back.  A failure
+  midway leaves the tree as the commands before it left it, so check `git status`.
+- A string default needs its C++ quotes inside the shell quotes: `-dflt '""'` for an
+  empty string, `-dflt '"value"'` for another.
+- A rename changes the schema and the generated code, and leaves hand-written C++
+  alone.  The next build reports each old name that code still uses, as a missing
+  member or type.
+- A field rename refuses a new name with a `:` in it (`acr_ed.rename_prefix`), which
+  is the query spelling `field:<ns>.<Ctype>.<name>`.  It also refuses to move a field
+  to another ctype when either ctype has an ssimfile (`acr_ed.rename_ctype`).  Move
+  such a field with `-del` and `-create`.
+- `-create -finput` for a table the target already loads fails in the drawing step,
+  with `amc_vis.duplicate_key`.
+- After you create, rename or delete a target, run `acr_compl -install` so shell
+  completion knows the change.
+- Never edit `cpp/gen/` or `include/gen/` by hand.  `amc` rewrites them from the
+  schema, which is what `acr_ed` edits.
+
+### Options
+<a href="#options"></a>
+#### -in -- Input directory or filename, - for stdin
+<a href="#-in"></a>
+
+The ssim database `acr_ed` reads to plan the edit, `data` by default.  The script
+itself always runs against the files in the current directory.
+
+#### -create -- Create new entity (-finput, -target, -ctype, -field)
+<a href="#-create"></a>
+
+Selects the create verb.  The entity option with a value picks what is created:
+`-target`, `-ctype`, `-ssimfile`, `-finput`, `-field`, `-srcfile`, `-unittest`,
+`-citest`, `-fstep`, `-fcurs` or `-dispatch_msg`.
+
+#### -del -- Delete mode
+<a href="#-del"></a>
+
+Selects the delete verb, with `-field`, `-ctype`, `-ssimfile`, `-srcfile` or
+`-target`.  `-del -ctype` on a ctype that has an ssimfile deletes the ssimfile, see
+[Deleting](#deleting).
+
+#### -rename -- Rename to something else
+<a href="#-rename"></a>
+
+Renames the entity named by `-field`, `-ctype`, `-ssimfile`, `-srcfile` or `-target`
+to this value.  For a field the value may be a bare name.  See
+[Renaming](#renaming) for what each rename carries along.
+
+#### -finput -- Create in-memory table based on ssimfile
+<a href="#-finput"></a>
+
+With `-create`, `-target` and `-ssimfile`, makes the target load the ssimfile at
+startup, see [Loading an ssimfile into a program](#loading-an-ssimfile-into-a-program).
+Combine it with `-indexed` for a hash index, and with `-reftype` for a pool other
+than `Lary`.
+
+#### -foutput -- Declare field as an output
+<a href="#-foutput"></a>
+
+With `-create -finput`, also adds a `dmmeta.foutput` row on the new pool.  `amc` then
+generates the code the program uses to save the table back to its ssimfile.
+
+#### -srcfile -- Create/Rename/Delete a source file
+<a href="#-srcfile"></a>
+
+Names the source file to create, rename or delete.  The kind of file follows from
+its path: `.cpp` and `.h` are sources of a target, a `.md` under `txt/` is a README,
+and a file under `bin/` is a script.  The directory must exist.
+
+#### -gstatic -- Like -finput, but data is loaded at compile time
+<a href="#-gstatic"></a>
+
+Use it in place of `-finput`.  `amc` compiles the table's rows into the program,
+which inserts them at startup.  The new ctype also gets a `step` hook, which `amc`
+binds for each row to a function named after that row's key.
+
+#### -indexed -- (with -finput) Add hash index
+<a href="#-indexed"></a>
+
+Adds a global hash `<ns>.FDb.ind_<name>`.  With `-create -finput` or `-create -ctype`
+it hashes the new records on their key, and with `-create -field` on the new field.
+With `-create -ctype` it also gives a ctype with no `-subset` an `algo.Smallstr50`
+key.
+
+#### -target -- Create/Rename/Delete target
+<a href="#-target"></a>
+
+Names the target to create, rename or delete.  With `-finput` it names the program
+that loads the table.  With `-srcfile` it names the owning target, when the guess from
+the directory is wrong.
+
+#### -nstype -- (with -create -target): exe,lib,etc.
+<a href="#-nstype"></a>
+
+The kind of namespace a new target is, a key of `dmmeta.nstype`: `exe`, `lib`,
+`protocol` or `ssimdb`.  A target whose name starts with `lib_` is a `lib` whatever
+this says.
+
+#### -ctype -- Create/Rename/Delete ctype
+<a href="#-ctype"></a>
+
+Names the ctype to create, rename or delete, as `<ns>.<Name>`.  With `-create`, see
+[Creating a ctype](#creating-a-ctype) for the fields and pool it may add.
+
+#### -ssimfile --   Ssimfile for new ctype
+<a href="#-ssimfile"></a>
+
+Names the ssimfile to create, rename or delete, as `<ns>.<name>`.  With `-finput` or
+`-gstatic` it names the table the target loads.
+
+#### -subset --   Primary key is a subset of this ctype
+<a href="#-subset"></a>
+
+With `-create -ctype` or `-create -ssimfile`, the type of the new ctype's key field.
+With `-create -field` and no `-arg`, it stands for `-arg` and makes the field a
+`Pkey` when the type is a table.
+
+#### -subset2 --   Primary key is also a subset of this ctype
+<a href="#-subset2"></a>
+
+With `-subset`, makes the key a join of two keys, `<subset><separator><subset2>`.
+The key becomes an `algo.Smallstr50`, and a substring field for each half is added
+beside it.
+
+#### -separator --     Key separator
+<a href="#-separator"></a>
+
+The character that joins the two halves of a `-subset2` key, `.` by default.  Pick
+one that neither half's key can contain, such as `/`.
+
+#### -field -- Create field
+<a href="#-field"></a>
+
+Names the field to create, rename or delete, as `<ns>.<Ctype>.<name>`.  With
+`-create`, see [Creating a field](#creating-a-field) for how the name implies the
+reftype and the arg.
+
+#### -arg --   Field type (e.g. u32, etc), (with -ctype) add the base field
+<a href="#-arg"></a>
+
+The type of a new field, a key of `dmmeta.ctype`.  It can be left out when the field
+name implies it or `-subset` stands for it.  `-create -ctype` ignores it, so use
+`-subset` to give a new ctype its key.
+
+#### -dflt --   Field default value
+<a href="#-dflt"></a>
+
+A C++ expression for the new field's default.  A string needs its C++ quotes, as in
+`-dflt '""'`.  On a command-line option, an empty default makes the option required.
+
+#### -anon --   Anonymous field (use with command lines)
+<a href="#-anon"></a>
+
+Makes a new command-line option positional, by adding a `dmmeta.anonfld` row.  It is
+the same as `-anonfld`.
+
+#### -bigend --   Big-endian field
+<a href="#-bigend"></a>
+
+Stores a new `Val` field in big-endian byte order, with a `dmmeta.fbigend` row.  Use
+it for a field of a wire message.  Any other reftype is refused.
+
+#### -cascdel --   Field is cascdel
+<a href="#-cascdel"></a>
+
+Adds a `dmmeta.cascdel` row, so deleting a record in memory also deletes the records
+this field refers to.
+
+#### -before --   Place field before this one
+<a href="#-before"></a>
+
+Places a new field just before the named field of the same ctype.  It sets the new
+row's `acr.rowid`, and field order is the member order of the generated struct.
+
+#### -substr --   New field is a substring
+<a href="#-substr"></a>
+
+Makes a new field a substring of another field, computed by the given path
+expression.  The source is `-srcfield`, or the ctype's first field when that is
+omitted.  `-arg` is still required:
+
+```bash
+acr_ed -create -field dmmeta.Ns.name -arg algo.Smallstr50 -substr .RR -srcfield dmmeta.Ns.ns
+```
+
+#### -alias -- Create alias field (requires -srcfield)
+<a href="#-alias"></a>
+
+Makes a new field a synonym of `-srcfield`, with a `dmmeta.falias` row.  On a command
+line this gives an option a second name.
+
+#### -srcfield --   Source field for bitfld/substr
+<a href="#-srcfield"></a>
+
+The field that `-substr` extracts from or that `-alias` renames.  For `-alias` it must
+already exist.
+
+#### -inscond --   Insert condition (for xref)
+<a href="#-inscond"></a>
+
+A C++ expression that decides whether a new record joins this cross-reference,
+`true` by default.  With `-inscond false` no record is added automatically, and the
+program inserts records itself, for instance with `ind_thing_InsertMaybe`.
+
+#### -reftype --   Reftype (e.g. Val, Thash, Llist, etc)
+<a href="#-reftype"></a>
+
+The reftype of a new field, which is otherwise implied by its name.  With `-create
+-ctype` it is the pool the new ctype gets in `FDb`, such as `Lary`, `Lpool` or
+`Tpool`, and a reftype that is not a pool, such as `Tary`, adds none.  With `-finput` it replaces the
+default `Lary` pool.
 
 #### -hashfld --     (-reftype:Thash) Hash field
 <a href="#-hashfld"></a>
 
-Specify a hash field when creating a hash. By default, the primary key of
-the record is used.
+The field a new `Thash` hashes on.  The default is the primary key of the indexed
+records.
 
 #### -sortfld --     (-reftype:Bheap) Sort field
 <a href="#-sortfld"></a>
 
-Specify a sort field for Atree or Bheap. By default, the primary key of the record is used.
+The field a new `Bheap` or `Atree` sorts on.  The default is the primary key of the
+indexed records.
 
 #### -unittest -- Create unit test, <ns>.<functionname>
 <a href="#-unittest"></a>
 
+With `-create`, adds a unit test named `<ns>.<name>` and appends its empty function
+to `cpp/atf_unit/<ns>.cpp`.  The namespace must exist.  Add `-e` to open the file and
+then build and run the test.
+
 #### -citest -- Create CI test
 <a href="#-citest"></a>
+
+With `-create`, adds an `atfdb.citest` row in the `normalize` job, using `-comment`
+as its description.  You then write the function `atf_ci::citest_<name>` that `amc`
+declares.
 
 #### -cppfunc -- Field is a cppfunc, pass c++ expression as argument
 <a href="#-cppfunc"></a>
 
+Makes a new field computed.  `amc` generates an accessor that returns the value of
+this C++ expression, and the record stores no value for it.
+
 #### -xref --     X-ref with field type
 <a href="#-xref"></a>
 
-Create a x-reference between two in-memory records.
-
-The syntax is
-
-    acr_ed -create -field <field> -xref -via <via>
-    
-There are two phases to the creation of each record in the in-memory databases created by amc.
-One is to allocate the record and fill out its fields using `rec_Alloc`, and the other is to call `rec_XrefMaybe`.
-Also see `-via` and `-inscond`.
+Adds a `dmmeta.xref` row for the new field, so `amc` maintains it as records are
+created and deleted.  It is implied by `-via` and by the reftypes that need it; see
+[Creating a cross-reference](#creating-a-cross-reference).
 
 #### -via --       X-ref argument (index, pointer, or index/key)
 <a href="#-via"></a>
 
-The `-via` argument is either a single pointer field belonging to the child record,
-or a `<hash>/<key>` pair. This is best illustrated by an example.
-This is best illustrated by an example. Let's say the target x loads ssimfiles y.a, y.b and y.c, where
-c is a cross product of a and b. Then, we may desire to x-reference (group-by) c records by a.
-This would be achieved as follows:
+The path from a record to its parent in a cross-reference.  It is a pointer field of
+the record, or `<hash>/<key>` with a global hash of the parent and the record's field
+holding the parent's key.  Give it when `acr_ed` finds no path or several:
 
-    acr_ed -create -field x.FA.zd_c -arg x.FC -via x.FDb.ind_a/y.C.a
-
-Here, x.FA is the ctype corresponding to an in-memory representation of a y.a record in target x.
-zd_c is a doubly linked, zero-terminated list of c. Arg is x.FC, which is the in-memory record
-corresponding to y.c. x.FDb.ind_a is a global hash of a. y.C.a is the field in ssimfile y.c containing
-a pkey reference to a.
+```bash
+acr_ed -create -field samp_xref.FNs.zd_ctype -arg samp_xref.FCtype -via samp_xref.FDb.ind_ns/dmmeta.Ctype.ns
+```
 
 #### -write -- Commit output to disk
 <a href="#-write"></a>
 
+Runs the script.  Without it the script is printed and nothing changes, and on a
+terminal the new names are highlighted.  `acr_ed` exits non-zero when a command in
+the script fails.
+
 #### -e --  (with -create -unittest) Edit new testcase
 <a href="#-e"></a>
+
+Opens the new file in `$EDITOR` at its end, after `-create -unittest` or `-create
+-srcfile`.  For a unit test it also builds `atf_unit` and runs the test.  Without
+`-e` those lines appear in the script as comments.
 
 #### -comment -- Comment for new entity
 <a href="#-comment"></a>
 
-Applies to `-field`, `-ctype`, or `-target`.
+The `comment` of the new record: a target, ctype, field, source file, README, CI
+test, step, cursor or dispatch message.  A target's comment is also its command
+line's help text.
 
 #### -sandbox -- Make changes in sandbox
 <a href="#-sandbox"></a>
 
-Make all changes in a sandbox, showing the diff between current and new versions.
+Runs the edit in the `acr_ed` sandbox and prints the diff it produced, see
+[Seeing the generated code](#seeing-the-generated-code).  The sandbox is reset from
+the current tree first, so each run starts clean.
 
 #### -showcpp -- (With -sandbox), show resulting diff
 <a href="#-showcpp"></a>
 
-Show a colorized diff between the current directory and the sandbox after executing
-transaction in sandbox.
+Has no effect.  `-sandbox` always prints the diff.
 
 #### -msgtype -- (with -ctype) use this msgtype as type
 <a href="#-msgtype"></a>
 
+The type code of a new message ctype, one created with `-subset` of a header that
+has a type field.  By default `acr_ed` takes one more than the largest code of the
+messages that share that header.
+
 #### -anonfld -- Create anonfld
 <a href="#-anonfld"></a>
+
+Makes a new command-line option positional, so it can be given without its name.  It
+is the same as `-anon`.
 
 #### -license -- License for new source/script file
 <a href="#-license"></a>
 
+The license of a new target's namespace, or of a new script under `bin/`, a key of
+`dev.license`.  The default is `Apache`.
+
 #### -fstep -- Add fstep record on existing field (use with -create)
 <a href="#-fstep"></a>
+
+With `-create`, adds a `dmmeta.fstep` row on an existing field.  `amc` then declares a
+step function for it, which the main loop calls while the field is non-empty, on the
+schedule set by `-steptype`.
 
 #### -steptype -- Steptype for -create -fstep
 <a href="#-steptype"></a>
 
+How a new step is scheduled, a key of `dmmeta.steptype`.  `Inline` calls it on every
+pass of the main loop; `InlineRecur` and `TimeHookRecur` call it at a fixed period.
+
 #### -fcurs -- Add fcurs record (-create); pkey is <field>/<curstype-name>
 <a href="#-fcurs"></a>
 
+With `-create`, adds a `dmmeta.fcurs` row, a custom cursor over an existing field, such
+as `samp_tool.FDb.ind_thing/curs`.  The field must exist.
+
 #### -dispatch_msg -- Add dispatch_msg record (-create); pkey is <dispatch>/<msgtype>
 <a href="#-dispatch_msg"></a>
+
+With `-create`, adds a `dmmeta.dispatch_msg` row, so the named dispatch handles one
+more message ctype.  The message ctype must exist.

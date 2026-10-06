@@ -1,0 +1,4 @@
+dmmeta.msgstrip  msgstrip:Always  comment:"An envelope: stripped in every format, ssim and bin included"
+dmmeta.msgstrip  msgstrip:Decode  comment:"Stripped when the output decodes: a layer yields what it nests, a leaf its bytes"
+dmmeta.msgstrip  msgstrip:Extern  comment:"Stripped when the output decodes, through a hand-written <Msg>_PrintStripped"
+dmmeta.msgstrip  msgstrip:N  comment:"Prints whole when stripped: its fixed fields are data"

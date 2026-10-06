@@ -1,20 +1,20 @@
-// Copyright (C) 2023-2026 AlgoRND
+// Copyright (C) 2025-2026 AlgoX2 Corp
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2021 Astra
 // Copyright (C) 2018-2019 NYSE | Intercontinental Exchange
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: algo_lib (lib) -- Support library for all executables
@@ -186,10 +186,28 @@ static void SleepClocks(u64 clocks) {
 
 // -----------------------------------------------------------------------------
 
+// Return the time to wait for i/o, in nanoseconds, for a wait of WAIT_CLOCKS
+// clocks, at most a minute.
+//
+// The wait is the time to the next scheduled step, and a process with no timer
+// has none before the loop's limit, which is effectively forever.  The product
+// with the clock rate then exceeds any integer, and converting it is undefined:
+// on Darwin arm64 it saturates to a timeout kevent refuses, so every wait
+// returns at once with no events, and an idle daemon spins without ever seeing
+// a connection.  The product is capped while it is still a double, and a
+// minute is long enough that the loop waking once a minute costs nothing.
+static u64 GetWaitNsec(u64 wait_clocks) {
+    double wait_ns = double(wait_clocks) * algo_lib::_db.clocks_to_ns;
+    double cap = 60.0 * algo::UNTIME_PER_SEC;
+    return u64(wait_ns < cap ? wait_ns : cap);
+}
+
+// -----------------------------------------------------------------------------
+
 #if defined(__MACH__) || __FreeBSD__>0
 static inline void IohookWaitClocks_Kqueue(u64 wait_clocks) {
     struct kevent events[20];
-    u64 wait_nano = wait_clocks * algo_lib::_db.clocks_to_ns;
+    u64 wait_nano = GetWaitNsec(wait_clocks);
     const i64 billion = 1000000000;
     struct timespec timeout;
     timeout.tv_sec = wait_nano / billion;
@@ -227,12 +245,12 @@ static inline void IohookWaitClocks_Epoll(u64 wait_clocks) {
         // to be updated to at least 1 msec to avoid taking up 100% cpu for any process
         // operating at >1KHz. for now assuming that epoll_pwait2 is always there.
         struct timespec twait;
-        u64 sleep_nsec = i64_Min(wait_clocks * algo_lib::_db.clocks_to_ns, 60*algo::UNTIME_PER_SEC);
+        u64 sleep_nsec = GetWaitNsec(wait_clocks);
         twait.tv_sec  = sleep_nsec / algo::UNTIME_PER_SEC;
         twait.tv_nsec = sleep_nsec % algo::UNTIME_PER_SEC;
         n = epoll_pwait2(algo_lib::_db.epoll_fd, events, _array_count(events), &twait, NULL);
     } else {
-        i32 wait_ms = i32(i64_Min(wait_clocks * algo_lib::_db.clocks_to_ms, 60000));
+        i32 wait_ms = i32(GetWaitNsec(wait_clocks) / 1000000);
         // WARNING: Any sleep under 1 msec will cause hot-spinning in the process.
         n = epoll_wait(algo_lib::_db.epoll_fd, events, _array_count(events), wait_ms);
     }

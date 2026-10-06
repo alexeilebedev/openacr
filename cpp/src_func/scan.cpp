@@ -1,20 +1,20 @@
-// Copyright (C) 2023-2024,2026 AlgoRND
+// Copyright (C) 2026 AlgoX2 Corp
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2021 Astra
 // Copyright (C) 2018-2019 NYSE | Intercontinental Exchange
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: src_func (exe) -- Access / edit functions
@@ -132,7 +132,7 @@ static src_func::FFunc *CreateFunc(src_func::FTargsrc &targsrc, strptr funcline,
         func=&src_func::func_Alloc();
         func->func=funcline;
         // one stripped view serves every extraction below: the sortkey, args,
-        // userfunc key, and name must all key the same function identically.
+        // C++ name lookup, and name must all key the same function identically.
         // func->func gains a " //<file>" suffix for statics, but the suffix
         // follows the "(", past everything the extractions read, so the view
         // bound from funcline stands in for func->func as well.
@@ -150,7 +150,7 @@ static src_func::FFunc *CreateFunc(src_func::FTargsrc &targsrc, strptr funcline,
         func->sortkey=Sortkey(targsrc,funcline,stripped,src_func::_db.cur_line);
         tempstr key(Pathcomp(stripped, "(LL RR*RR&RR"));
         Replace(key,"::",".");
-        func->p_userfunc = src_func::ind_userfunc_cppname_Find(key);
+        func->p_cppsym = src_func::ind_cppname_Find(key);
         func->p_targsrc = &targsrc;
         func->precomment = precomment;
         func->mystery = ch_N(func->precomment)<20 && !func->isstatic && !func->isinline;
@@ -170,8 +170,8 @@ static src_func::FFunc *CreateFunc(src_func::FTargsrc &targsrc, strptr funcline,
         if (!xrefok) {
             verblog(Location(*func,0)<<": src_func can't parse declaration: "<<func->func<<" (failed to xref)");
         }
-        if (func->p_userfunc) {
-            zd_func_Insert(*func->p_userfunc,*func);
+        if (func->p_cppsym) {
+            zd_func_Insert(*func->p_cppsym,*func);
         }
         src_func::_db.report.n_func++;
         src_func::_db.report.n_static += func->isstatic;

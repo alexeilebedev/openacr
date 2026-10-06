@@ -1,0 +1,85 @@
+# setenv HOME:$HOMEDIR
+# unsetenv CREDD_PASSWORD
+# start credd cmd:"$bindir/credd -nostore -daemon"
+# start credd-2 cmd:"$bindir/credd -nostore -status"
+# eof credd-2
+credd-2 -> lib_cred.Status  dir:temp/atf_comp/credd.Nostore/home/.ssh/credd  agent:temp/atf_comp/credd.Nostore/home/.ssh/ssh_auth_sock  n_cred:0  build:***
+# exit credd-2 code:0
+# start credd-3 cmd:"$bindir/credd -nostore -seed:ci -kind:sshkey -src:@$tempdir/seed"
+# eof credd-3
+credd-3 -> lib_cred.Done  req:lib_cred.SeedReq
+# exit credd-3 code:0
+# start bash cmd:"bash -c $'SSH_AUTH_SOCK=$AGENT ssh-add -L | cut -d\\' \\' -f1,3- | sort'"
+# eof bash
+bash -> ssh-ed25519 seeded
+# exit bash code:0
+# start credd-4 cmd:"$bindir/credd -nostore -seed:ci -kind:sshkey -src:@$tempdir/seed2"
+# eof credd-4
+credd-4 -> lib_cred.Done  req:lib_cred.SeedReq
+# exit credd-4 code:0
+# start bash-2 cmd:"bash -c $'SSH_AUTH_SOCK=$AGENT ssh-add -L | cut -d\\' \\' -f1,3- | sort'"
+# eof bash-2
+bash-2 -> ssh-ed25519 second
+# exit bash-2 code:0
+# start credd-5 cmd:"$bindir/credd -nostore -seed:bogus -kind:sshkey -src:@$tempdir/notakey"
+# eof credd-5
+credd-5 -> credd.refused  name:bogus  msg:"the agent did not take this credential: ssh-add refused the key, exiting 1"
+# exit credd-5 code:1
+# start bash-3 cmd:"bash -c $'SSH_AUTH_SOCK=$AGENT ssh-add -L | cut -d\\' \\' -f1,3- | sort'"
+# eof bash-3
+bash-3 -> ssh-ed25519 second
+# exit bash-3 code:0
+# start credd-6 cmd:"$bindir/credd -nostore -seed:ci -kind:gitlab -src:@$tempdir/tok"
+# eof credd-6
+credd-6 -> credd.refused  name:ci  msg:"that name is already held, under kind sshkey"
+# exit credd-6 code:1
+# start credd-7 cmd:"$bindir/credd -nostore -seed:empty -kind:sshkey -src:@/dev/null"
+# eof credd-7
+credd-7 -> credd.refused  name:empty  msg:"no secret was given"
+# exit credd-7 code:1
+# start bash-4 cmd:"bash -c $'$bindir/credd -nostore -seed:ci -kind:nosuch -src:@$tempdir/seed 2>&1 | grep -o \"credd.badkind  kind:[^ ]*\"; exit ${PIPESTATUS[0]}'"
+# eof bash-4
+bash-4 -> credd.badkind  kind:nosuch
+# exit bash-4 code:1
+# setenv CREDD_PASSWORD:pw
+# start credd-8 cmd:"$bindir/credd -nostore -add:gl -kind:gitlab -src:@$tempdir/tok"
+# eof credd-8
+credd-8 -> credd.error  credd.nostore  comment:"-nostore keeps no store to change; a credential reaches the daemon with -seed"
+# exit credd-8 code:1
+# start bash-5 cmd:"bash -c $'printf \\'OPENAI_ORG=org-atfcomp\\\\nOPENAI_TOKEN=sk-atfcomp\\\\n\\' | $bindir/credd -nostore -seed:frag -kind:openai -src:-'"
+# eof bash-5
+bash-5 -> lib_cred.Done  req:lib_cred.SeedReq
+# exit bash-5 code:0
+# unsetenv CREDD_PASSWORD
+# start credd-9 cmd:"$bindir/credd -nostore -show:frag"
+# eof credd-9
+credd-9 -> OPENAI_ORG=org-atfcomp
+credd-9 -> OPENAI_TOKEN=sk-atfcomp
+# exit credd-9 code:0
+# start credd-10 cmd:"$bindir/credd -nostore -status"
+# eof credd-10
+credd-10 -> lib_cred.Status  dir:temp/atf_comp/credd.Nostore/home/.ssh/credd  agent:temp/atf_comp/credd.Nostore/home/.ssh/ssh_auth_sock  n_cred:3  build:***
+# exit credd-10 code:0
+# start bash-6 cmd:"bash -c $'test -s $STORE/creddb/cred.ssim && echo secret written to disk || echo no secret on disk'"
+# eof bash-6
+bash-6 -> no secret on disk
+# exit bash-6 code:0
+# start credd-11 cmd:"$bindir/credd -nostore -stop"
+# eof credd-11
+credd-11 -> lib_cred.Done  req:lib_cred.StopReq
+# exit credd-11 code:0
+# eof credd
+credd -> credd.listen  sock:temp/atf_comp/credd.Nostore/home/.ssh/credd/credd.sock  agent:temp/atf_comp/credd.Nostore/home/.ssh/ssh_auth_sock  n_cred:0
+credd -> credd.seed  client:***  name:ci  kind:sshkey  n_cred:1
+credd -> credd.seed  client:***  name:ci  kind:sshkey  n_cred:1
+credd -> credd.addfail  cred:bogus  status:256  comment:"ssh-add refused the key, exiting 1"
+credd -> credd.addfail  cred:bogus  status:256  comment:"ssh-add refused the key, exiting 1"
+credd -> credd.seed  client:***  name:frag  kind:openai  n_cred:3
+credd -> credd.exit  sock:temp/atf_comp/credd.Nostore/home/.ssh/credd/credd.sock
+# exit credd code:0
+# start bash-7 cmd:"bash -c $'test -e $AGENT || echo agent socket gone; test -e $STORE/credd.sock || echo daemon socket gone'"
+# eof bash-7
+bash-7 -> agent socket gone
+bash-7 -> daemon socket gone
+# exit bash-7 code:0
+# clearenv

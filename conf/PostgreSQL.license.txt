@@ -1,0 +1,2 @@
+Licensed under the PostgreSQL License.
+See https://opensource.org/license/postgresql

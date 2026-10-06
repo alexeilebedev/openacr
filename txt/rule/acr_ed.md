@@ -135,6 +135,22 @@ the field becomes a `Ptr`.
 convenience and never a requirement, so any of it can be overridden by naming
 `-arg`, `-reftype` or `-via` explicitly.
 
+### A message is a subset of its header
+<a href="#a-message-is-a-subset-of-its-header"></a>
+
+Create a message ctype with `-subset` naming the header it extends, and the
+message type with `-msgtype`:
+
+```bash
+acr_ed -create -ctype ams.StampMsg -subset ams.MsgHeader -msgtype 3118 -write
+```
+
+The one invocation writes the ctype, its `base` field of the header's type, and
+the `pack`, `msgtype` and `cfmt` rows a message needs.  `-msgtype` without
+`-subset` writes a plain ctype, which is not a message: amc then lays it out
+with no header, and every row that makes it one has to be written by hand.
+Pick the type number from `acr dmmeta.msgtype`, where it must be unused.
+
 ### An xref needs a path from the parent to the record
 <a href="#an-xref-needs-a-path-from-the-parent-to-the-record"></a>
 
@@ -159,9 +175,6 @@ proposed records.  The drawing is appended to the record block as comment
 lines, so it arrives inside the heredoc alongside the rows it describes.  The
 reader then sees the structure the edit produces before agreeing to it, which
 is a different question from whether each record is well formed.
-
-The proposed records go through `acr %` rather than `cat` on the way to
-`amc_vis`, because `acr.rowid` attributes would break it.
 
 ### `-sandbox` answers "what would this do to the tree"
 <a href="#-sandbox-answers-what-would-this-do-to-the-tree-"></a>

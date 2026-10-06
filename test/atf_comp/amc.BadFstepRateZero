@@ -1,0 +1,43 @@
+# start amc cmd:"$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)"
+amc <- dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''
+amc <- dmmeta.csize  ctype:u32  size:4  alignment:4  comment:''
+amc <- dmmeta.pack  ctype:u32  comment:''
+amc <- dmmeta.csize  ctype:u128  size:16  alignment:16  comment:''
+amc <- dmmeta.listtype  listtype:zd  circular:N  haveprev:Y  instail:Y  comment:''
+amc <- amcdb.tcurs  tfunc:Llist.curs  dflt:Y  comment:''
+amc <- dmmeta.steptype  steptype:Inline  comment:''
+amc <- dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:''  comment:''
+amc <- dmmeta.ctype  ctype:algo_lib.FRow  comment:''
+amc <- dmmeta.field  field:algo_lib.FRow.rowid  arg:u64  reftype:Val  dflt:''  comment:''
+amc <- dmmeta.field  field:algo_lib.FDb.row  arg:algo_lib.FRow  reftype:Tpool  dflt:''  comment:''
+amc <- dmmeta.field  field:algo_lib.FDb.zd_ready  arg:algo_lib.FRow  reftype:Llist  dflt:''  comment:''
+amc <- dmmeta.llist  field:algo_lib.FDb.zd_ready  havetail:Y  havecount:N  comment:''
+amc <- dmmeta.xref  field:algo_lib.FDb.zd_ready  inscond:false  via:''
+amc <- dmmeta.nstype  nstype:exe  comment:''
+amc <- dmmeta.ns  ns:yyy  nstype:exe  license:GPL  comment:''
+amc <- dmmeta.nscpp  ns:yyy  comment:''
+amc <- dmmeta.nsx  ns:yyy  genthrow:Y  pool:algo_lib.FDb.malloc
+amc <- dmmeta.main  ns:yyy  ismodule:N
+amc <- dmmeta.ctype  ctype:yyy.FDb  comment:''
+amc <- dmmeta.field  field:yyy.FDb._db  arg:yyy.FDb  reftype:Global  dflt:''  comment:''
+amc <- dmmeta.ctype  ctype:yyy.FJob  comment:''
+amc <- dmmeta.field  field:yyy.FJob.id  arg:u64  reftype:Val  dflt:''  comment:''
+amc <- dmmeta.field  field:yyy.FDb.job  arg:yyy.FJob  reftype:Tpool  dflt:''  comment:''
+amc <- dmmeta.field  field:yyy.FDb.zd_in  arg:yyy.FJob  reftype:Llist  dflt:''  comment:''
+amc <- dmmeta.llist  field:yyy.FDb.zd_in  havetail:Y  havecount:N  comment:''
+amc <- dmmeta.xref  field:yyy.FDb.zd_in  inscond:false  via:''
+amc <- dmmeta.field  field:yyy.FDb.zd_out  arg:yyy.FJob  reftype:Llist  dflt:''  comment:''
+amc <- dmmeta.llist  field:yyy.FDb.zd_out  havetail:Y  havecount:N  comment:''
+amc <- dmmeta.xref  field:yyy.FDb.zd_out  inscond:false  via:''
+amc <- dmmeta.field  field:yyy.FDb.zd_bg  arg:yyy.FJob  reftype:Llist  dflt:''  comment:''
+amc <- dmmeta.llist  field:yyy.FDb.zd_bg  havetail:Y  havecount:N  comment:''
+amc <- dmmeta.xref  field:yyy.FDb.zd_bg  inscond:false  via:''
+amc <- dev.target  target:algo_lib
+amc <- dev.target  target:yyy
+amc <- dev.targdep  targdep:yyy.algo_lib  comment:''
+amc <- dmmeta.fstep  fstep:yyy.FDb.zd_bg  steptype:Inline  stepband:work  comment:''
+amc <- dmmeta.fsteprate  fstep:yyy.FDb.zd_bg  ncall:0  npass:2  comment:''
+# eof amc
+amc -> amc.fstep_rate_zero  fstep:yyy.FDb.zd_bg  comment:"an fsteprate names at least one call over at least one pass"
+amc -> amc.no_output  comment:"no files were modified"
+# exit amc code:1

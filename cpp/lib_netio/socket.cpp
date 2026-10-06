@@ -1,9 +1,18 @@
-// Copyright (C) 2024,2026 AlgoRND
+// Copyright (C) 2024,2026 AlgoX2 Corp
+// Copyright (C) 2024 AlgoRND
 //
-// License: ARND
-// This source code constitutes confidential information and trade secrets
-// of AlgoRND. Unauthorized copying, distribution or sharing of this file,
-// via any medium, is strictly prohibited.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Target: lib_netio (lib) -- Network I/O library
 // Exceptions: yes
@@ -20,27 +29,103 @@
 #include <linux/netlink.h>
 #include <linux/rtnetlink.h>
 #endif
+#include <poll.h>
+#include <sys/un.h>
 
 //------------------------------------------------------------------------------
 
-// Create TCP socket
+// Fill IPPORT from the socket address SA of ADDR_LEN bytes: the ip and port
+// when SA is an IPv4 address, zero otherwise.  A unix-domain socket has a
+// path for an address and no ip, and reading its bytes as an IPv4 address
+// would report a garbage peer, so the family decides.
+static void IpportFromSockaddr(sockaddr_storage &sa, ietf::Ipport &ipport) {
+    ipport = ietf::Ipport();
+    if (sa.ss_family == AF_INET) {
+        sockaddr_in &sin = *(sockaddr_in*)&sa;
+        ipport.ip.ipv4 = ntohl(sin.sin_addr.s_addr);
+        ipport.port = ntohs(sin.sin_port);
+    }
+}
+
+// Fill SA with the unix-domain address of socket file PATH, and return the
+// length to pass to bind or connect.  Zero when PATH does not fit the address,
+// with errno ENAMETOOLONG, so the caller reports it the way it reports a bind
+// that failed.
+static socklen_t SockaddrUn(sockaddr_un &sa, algo::strptr path) {
+    socklen_t ret = 0;
+    algo::ZeroBytes(sa);
+    if (path.n_elems < (int)sizeof(sa.sun_path)) {
+        sa.sun_family = AF_UNIX;
+        memcpy(sa.sun_path, path.elems, path.n_elems);
+        ret = socklen_t(offsetof(sockaddr_un, sun_path) + path.n_elems + 1);
+    } else {
+        errno = ENAMETOOLONG;
+    }
+    return ret;
+}
+
+//------------------------------------------------------------------------------
+
+// True when PATH fits a unix-domain socket address, so a bind or connect on it
+// can reach the kernel at all.  The address holds a fixed-size path with room
+// for a terminator, and a longer PATH is refused by SockaddrUn with
+// ENAMETOOLONG however many times it is tried.  A caller that retries a failed
+// bind asks this first, so it reports the path once and stops rather than
+// retrying a length that cannot change.
+bool lib_netio::SockPathFitsQ(algo::strptr path) {
+    sockaddr_un sa;
+    return path.n_elems < (int)sizeof(sa.sun_path);
+}
+
+//------------------------------------------------------------------------------
+
+// Return FD with close-on-exec set, so it does not survive an exec.  The flag
+// is set after the descriptor exists, which is portable: Darwin has neither
+// SOCK_CLOEXEC nor accept4.  A fork between the two calls would leak the
+// descriptor, and none can happen, since these programs are single-threaded.
+static algo::Fildes SetCloexec(algo::Fildes fd) {
+    if (fd.value >= 0) {
+        (void)fcntl(fd.value, F_SETFD, FD_CLOEXEC);
+    }
+    return fd;
+}
+
+//------------------------------------------------------------------------------
+
+// Create TCP socket, close-on-exec.
+// A descriptor that survives exec keeps what it holds for the whole life of
+// the exec'd program, and that program knows nothing about it: a listening
+// socket carried into an unrelated command keeps its port bound long after
+// the process that opened the port is gone, so the port reads as in use with
+// no owner that explains it.  A child that is meant to receive a socket gets
+// it as one of its standard streams, which the exec preserves by itself.
 algo::Fildes lib_netio::CreateTcpSocket() {
-    return algo::Fildes(socket(AF_INET, SOCK_STREAM, 0));
+    return SetCloexec(algo::Fildes(socket(AF_INET, SOCK_STREAM, 0)));
 }
 
 //------------------------------------------------------------------------------
 
-// Create UDP socket
+// Create UDP socket, close-on-exec (see CreateTcpSocket)
 algo::Fildes lib_netio::CreateUdpSocket() {
-    return algo::Fildes(socket(AF_INET, SOCK_DGRAM, 0));
+    return SetCloexec(algo::Fildes(socket(AF_INET, SOCK_DGRAM, 0)));
 }
 
 //------------------------------------------------------------------------------
 
-// Create Netlink socket
+// Create a unix-domain stream socket, close-on-exec (see CreateTcpSocket).
+// It is addressed by a path on the host (BindUnix, ConnectUnix) and carries
+// the same byte stream a TCP socket does.
+algo::Fildes lib_netio::CreateUnixSocket() {
+    return SetCloexec(algo::Fildes(socket(AF_UNIX, SOCK_STREAM, 0)));
+}
+
+//------------------------------------------------------------------------------
+
+// Create Netlink socket, close-on-exec (see CreateTcpSocket).
+// Netlink exists on Linux only; elsewhere the socket is invalid and errno is ENOTSUP.
 algo::Fildes lib_netio::CreateNetlinkSocket() {
 #ifdef __linux__
-    return algo::Fildes(socket(AF_NETLINK, SOCK_RAW, NETLINK_ROUTE));
+    return SetCloexec(algo::Fildes(socket(AF_NETLINK, SOCK_RAW, NETLINK_ROUTE)));
 #else
     errno = ENOTSUP;
     return algo::Fildes(-1);
@@ -69,6 +154,24 @@ bool lib_netio::Bind(algo::Fildes sock, strptr addr) {
         ret = Bind(sock, ipport);
     } else {
         errno = EINVAL;
+    }
+    return ret;
+}
+
+//------------------------------------------------------------------------------
+
+// Bind unix-domain socket SOCK to the socket file PATH, and return TRUE when
+// it is bound.  A socket file outlives the process that bound it, so the one a
+// predecessor left is removed first; the bind then creates the file anew.
+// Failure leaves errno set, ENAMETOOLONG when PATH does not fit a socket
+// address.
+bool lib_netio::BindUnix(algo::Fildes sock, strptr path) {
+    sockaddr_un sa;
+    socklen_t len = SockaddrUn(sa, path);
+    bool ret = false;
+    if (len > 0) {
+        (void)unlink(sa.sun_path);
+        ret = bind(sock.value, (sockaddr *)&sa, len) == 0;
     }
     return ret;
 }
@@ -151,16 +254,68 @@ int lib_netio::Connect(algo::Fildes sock, strptr addr) {
 
 //------------------------------------------------------------------------------
 
-// accept remote connection:
-// return connection socket and fills ipport with client address/port
+// Connect unix-domain socket SOCK to the socket file PATH, and return TRUE
+// when the connect completed.  On a non-blocking socket a connect to a
+// listening socket file completes at once; failure leaves errno set, ENOENT
+// when nothing has bound PATH.
+bool lib_netio::ConnectUnix(algo::Fildes sock, strptr path) {
+    sockaddr_un sa;
+    socklen_t len = SockaddrUn(sa, path);
+    bool ret = false;
+    if (len > 0) {
+        ret = connect(sock.value, (sockaddr *)&sa, len) == 0;
+    }
+    return ret;
+}
+
+//------------------------------------------------------------------------------
+
+// True when a TCP connection to IPPORT completes within MSEC milliseconds.
+//
+// Answering "is anything listening there" needs a deadline, because the two
+// negative answers look nothing alike on the wire.  A host whose network is up
+// but which has nothing bound to the port refuses the connection at once with
+// an RST.  A host that does not answer at all -- one whose network has not come
+// up yet, or one behind a firewall that drops rather than rejects -- leaves the
+// SYN unanswered, and the kernel then retries it for minutes.  A booting host
+// passes through both in turn: its SYN goes unanswered until the network is up,
+// and is then refused until the listener binds.  A blocking connect would park
+// the caller for the whole retry window on the unanswered case, so the connect
+// is issued non-blocking and the socket polled for writability until the
+// deadline, which reports either negative promptly and reports success only
+// once the handshake has completed.
+bool lib_netio::TcpUpQ(ietf::Ipport ipport, int msec) {
+    bool ret = false;
+    algo::Fildes sock = CreateTcpSocket();
+    if (algo::ValidQ(sock)) {
+        algo::SetBlockingMode(sock, false);
+        ret = Connect(sock, ipport);
+        if (!ret && errno == EINPROGRESS) {
+            struct pollfd pfd;
+            pfd.fd = sock.value;
+            pfd.events = POLLOUT;
+            pfd.revents = 0;
+            ret = poll(&pfd, 1, msec) == 1 && GetSocketError(sock) == 0;
+        }
+        (void)close(sock.value);
+    }
+    return ret;
+}
+
+//------------------------------------------------------------------------------
+
+// accept remote connection on LISTEN_SOCK:
+// return connection socket and fill IPPORT with client address/port, zero
+// for a client on a unix-domain socket, which has no ip.
+// The accepted socket is close-on-exec for the reason the listening socket is
+// (see CreateTcpSocket); accept does not inherit the flag, so it is set again.
 algo::Fildes lib_netio::Accept(algo::Fildes listen_sock, ietf::Ipport &ipport) {
     algo::Fildes sock;
-    sockaddr_in client_addr;
+    sockaddr_storage client_addr;
     socklen_t client_addr_len = sizeof client_addr;
     algo::ZeroBytes(client_addr);
-    sock.value = accept(listen_sock.value, (sockaddr *)&client_addr, &client_addr_len);
-    ipport.ip.ipv4 = ntohl(client_addr.sin_addr.s_addr);
-    ipport.port = ntohs(client_addr.sin_port);
+    sock = SetCloexec(algo::Fildes(accept(listen_sock.value, (sockaddr *)&client_addr, &client_addr_len)));
+    IpportFromSockaddr(client_addr, ipport);
     return sock;
 }
 
@@ -276,27 +431,27 @@ bool lib_netio::SetMulticastInterface(algo::Fildes sock, ietf::Ipv4 interface) {
 
 //------------------------------------------------------------------------------
 
-// Get local ip/port -- getsockname()
+// Get local ip/port of SOCK into IPPORT -- getsockname(); zero for a
+// unix-domain socket.  Returns TRUE when the call succeeded.
 bool lib_netio::GetIpportLocal(algo::Fildes sock, ietf::Ipport &ipport) {
-    sockaddr_in addr;
+    sockaddr_storage addr;
     algo::ZeroBytes(addr);
     socklen_t addr_len = sizeof addr;
     bool ok = getsockname(sock.value, (sockaddr *)&addr, &addr_len) == 0;
-    ipport.ip.ipv4 = ntohl(addr.sin_addr.s_addr);
-    ipport.port = ntohs(addr.sin_port);
+    IpportFromSockaddr(addr, ipport);
     return ok;
 }
 
 //------------------------------------------------------------------------------
 
-// Get remote ip/port -- getpeername()
+// Get remote ip/port of SOCK into IPPORT -- getpeername(); zero for a
+// unix-domain socket.  Returns TRUE when the call succeeded.
 bool lib_netio::GetIpportRemote(algo::Fildes sock, ietf::Ipport &ipport) {
-    sockaddr_in addr;
+    sockaddr_storage addr;
     algo::ZeroBytes(addr);
     socklen_t addr_len = sizeof addr;
     bool ok = getpeername(sock.value, (sockaddr *)&addr, &addr_len) == 0;
-    ipport.ip.ipv4 = ntohl(addr.sin_addr.s_addr);
-    ipport.port = ntohs(addr.sin_port);
+    IpportFromSockaddr(addr, ipport);
     return ok;
 }
 
@@ -375,6 +530,14 @@ bool lib_netio::GetIpv4(algo::Fildes sock, strptr name, ietf::Ipv4 &result) {
     return ok;
 }
 
+// get link MTU (bytes) of interface NAME; RESULT is 0 on failure
+bool lib_netio::GetMtu(algo::Fildes sock, strptr name, int &result) {
+    ifreq ifr;
+    bool ok = Ioctl(sock, name, SIOCGIFMTU, ifr);
+    result = ok ? ifr.ifr_mtu : 0;
+    return ok;
+}
+
 // find interface name for known ip
 tempstr lib_netio::FindInterfaceByIpv4(algo::Fildes sock, ietf::Ipv4 &ip) {
     tempstr name;
@@ -397,5 +560,77 @@ ietf::Ipport lib_netio::Resolve(algo::strptr addr) {
     tempstr port(Pathcomp(addr,":RR"));
     ietf::Ipport ret;
     ietf::Ipport_ReadStrptrMaybe(ret,tempstr()<<host<<":"<<port);
+    //prlog("resolve "<<addr<<" -> "<<ret);
     return ret;
+}
+
+//  Wrapper for sendto -- Ipport
+bool lib_netio::Sendto(algo::Fildes sock, u8 *buf, u32 len, ietf::Ipport ipport) {
+    sockaddr_in sa;
+    algo::ZeroBytes(sa);
+    sa.sin_family = AF_INET;
+    sa.sin_addr.s_addr = htonl(ipport.ip.ipv4);
+    sa.sin_port = htons(ipport.port);
+    // sendto returns the number of bytes queued on success (== len for a
+    // datagram), or -1 on error; it is never 0 for a non-empty payload.
+    return sendto(sock.value, buf, len, 0, (sockaddr *)&sa, sizeof sa) == (ssize_t)len;
+}
+
+//------------------------------------------------------------------------------
+
+// Send the same datagram BUF (LEN bytes) to N destinations DST using as few
+// syscalls as possible: sendmmsg() on Linux, one sendto() each elsewhere.  This
+// is the unicast replacement for a
+// multicast send: one logical broadcast becomes N datagrams but only
+// ceil(N/BATCH) syscalls instead of N.  Returns the number of datagrams the
+// kernel accepted (a short count means the send buffer filled; not retried).
+int lib_netio::SendtoMulti(algo::Fildes sock, u8 *buf, u32 len, ietf::Ipport *dst, int n) {
+    int sent = 0;
+#ifdef __linux__
+    enum { BATCH = 64 };
+    mmsghdr     msgs[BATCH];
+    iovec       iov[BATCH];
+    sockaddr_in sa[BATCH];
+    int off = 0;
+    bool stop = false;
+    while (off < n && !stop) {
+        int cnt = i32_Min((int)BATCH, n - off);
+        for (int i = 0; i < cnt; i++) {
+            algo::ZeroBytes(sa[i]);
+            sa[i].sin_family = AF_INET;
+            sa[i].sin_addr.s_addr = htonl(dst[off+i].ip.ipv4);
+            sa[i].sin_port = htons(dst[off+i].port);
+            iov[i].iov_base = buf;
+            iov[i].iov_len = len;
+            algo::ZeroBytes(msgs[i]);
+            msgs[i].msg_hdr.msg_name = &sa[i];
+            msgs[i].msg_hdr.msg_namelen = sizeof(sa[i]);
+            msgs[i].msg_hdr.msg_iov = &iov[i];
+            msgs[i].msg_hdr.msg_iovlen = 1;
+        }
+        int rc = sendmmsg(sock.value, msgs, cnt, 0);
+        if (rc < 0) {
+            stop = true;
+        } else {
+            sent += rc;
+            off += cnt;
+            if (rc < cnt) {
+                stop = true;
+            }
+        }
+    }
+#else
+    // sendmmsg is Linux's, so elsewhere each destination costs one sendto.
+    bool stop = false;
+    for (int i = 0; i < n && !stop; i++) {
+        sockaddr_in sa;
+        algo::ZeroBytes(sa);
+        sa.sin_family = AF_INET;
+        sa.sin_addr.s_addr = htonl(dst[i].ip.ipv4);
+        sa.sin_port = htons(dst[i].port);
+        stop = sendto(sock.value, buf, len, 0, (sockaddr *)&sa, sizeof sa) != (ssize_t)len;
+        sent += !stop;
+    }
+#endif
+    return sent;
 }

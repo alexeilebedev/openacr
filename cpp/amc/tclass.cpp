@@ -1,19 +1,19 @@
-// Copyright (C) 2023-2026 AlgoRND
+// Copyright (C) 2025-2026 AlgoX2 Corp
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2018-2019 NYSE | Intercontinental Exchange
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
@@ -89,7 +89,7 @@ void amc::GenTclass(amc::FTclass &tclass) {
         // field context (a ctype- or ns-level tclass) generates nothing.
         // (The Ptrary/Llist generators require the tcurs row itself when
         // they run -- see RequireTcurs.)
-        if (tfunc.c_tcurs || EndsWithQ(name_Get(tfunc),"curs")) {
+        if (tfunc.c_tcurs || EndsWithQ(tfunc.tfunc,"curs")) {
             amc::FField *field = amc::_db.genctx.p_field;
             bool dflt = tfunc.c_tcurs && tfunc.c_tcurs->dflt;
             if (!field) {
@@ -168,9 +168,11 @@ amc::FField *amc::GetBasepool(amc::FField &field) {
 // and the record marks that follow are the only ones left.
 //
 // Malloc and Sbrk are absent for opposite reasons.  Every block malloc returns
-// is one the checker already knows, and it drops such a block from the leak
-// search by itself once marked blocks appear inside it.  Sbrk hands out
-// mappings, which the checker never accounted for in the first place.
+// is a heap chunk the checker already holds and cannot be told to forget, so a
+// pool carving from malloc marks nothing inside it: a record at the block's first
+// byte would share the chunk's address, and freeing it would read as a
+// mismatched free.  Sbrk hands out mappings, which the checker never accounted
+// for in the first place, so a pool on sbrk marks its records freely.
 bool amc::MemcheckedPoolQ(amc::FField &field) {
     return field.reftype == dmmeta_Reftype_reftype_Lpool || field.reftype == dmmeta_Reftype_reftype_Tpool;
 }

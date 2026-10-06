@@ -1,18 +1,17 @@
-// Copyright (C) 2026 AlgoRND
+// Copyright (C) 2026 AlgoX2 Corp
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Target: lib_ams (lib) -- Library for AMS middleware, supporting file format & messaging
 // Exceptions: NO
@@ -42,8 +41,10 @@
 
 // Move SHM's queued messages into the ring, oldest first, stopping at the
 // first one the ring has no room for.  Stopping rather than skipping is what
-// preserves the order the caller wrote them in.
-static void OutmsgFlush(lib_ams::FShm &shm) {
+// preserves the order the caller wrote them in.  BeginWrite calls this before
+// any reservation, so a direct writer never overtakes the queue; the
+// reservation here is therefore the ring's own, ReserveWrite.
+void lib_ams::OutmsgFlush(lib_ams::FShm &shm) {
     bool room = true;
     while (room) {
         lib_ams::FOutmsg *outmsg = lib_ams::zd_outmsg_First(shm);
@@ -52,7 +53,7 @@ static void OutmsgFlush(lib_ams::FShm &shm) {
         } else {
             algo::aryptr<u8> bytes = ary_Getary(outmsg->data);
             int len = int(elems_N(bytes));
-            void *dst = lib_ams::BeginWrite(shm, len);
+            void *dst = lib_ams::ReserveWrite(shm, len);
             if (!dst) {
                 room = false;
             } else {
@@ -82,20 +83,21 @@ void lib_ams::zd_outshm_Step() {
     }
 }
 
-// Reserve LEN bytes for a message on SHM and return where to build it, taking
-// the ring itself when it has room and a queued record when it does not.  The
-// answer is never NULL for a length the ring could ever carry, which is what
-// lets a caller format without testing.  EndWriteQueue must follow, and the
-// two communicate through _db.c_cur_outmsg, so a format call may not begin
-// another before it ends.
+// Reserve LENGTH bytes for a message on SHM and return where to build it,
+// taking the ring itself when it has room and a record when it does not.  The
+// answer is never NULL, which is what lets a caller format without testing.
+// EndWriteQueue must follow, and the two communicate through
+// _db.c_cur_outmsg, so a format call may not begin another before it ends.
+//
+// A message longer than the ring's largest is always built in a record,
+// because the ring can never take it: queued, it would stand at the head of
+// the ring's queue forever, and every message written after it would wait
+// behind it.  EndWriteQueue sends such a message by the board instead.
 void *lib_ams::BeginWriteQueue(lib_ams::FShm &shm, int length) {
-    void *ret = NULL;
+    // BeginWrite refuses a ring that still holds a queue, so a message behind
+    // one goes through the queue too and never overtakes what is waiting
+    void *ret = length > shm.max_msg_size ? NULL : lib_ams::BeginWrite(shm, length);
     lib_ams::_db.c_cur_outmsg = NULL;
-    // a ring with a queue takes this message through the queue too, or this
-    // one would overtake the messages already waiting
-    if (lib_ams::zd_outmsg_N(shm) == 0) {
-        ret = lib_ams::BeginWrite(shm, length);
-    }
     if (!ret) {
         lib_ams::FOutmsg &outmsg = lib_ams::outmsg_Alloc();
         outmsg.p_shm = &shm;
@@ -105,16 +107,41 @@ void *lib_ams::BeginWriteQueue(lib_ams::FShm &shm, int length) {
     return ret;
 }
 
-// Finish the message BeginWriteQueue started: publish it to the ring when it
-// was built there, and otherwise put it at the back of the ring's queue and
-// arm the step that will write it.
-void lib_ams::EndWriteQueue(lib_ams::FShm &shm, void *ptr, int len) {
+// Finish the message BeginWriteQueue started at PTR, LEN bytes long: publish
+// it to SHM when it was built there, send it by the board when it is longer
+// than the ring's largest message, and otherwise put it at the back of the
+// ring's queue and arm the step that will write it.  Return false when the
+// message is oversize and the board cannot take it now, in which case it is
+// dropped and counted in n_outmsg_oversize_drop.
+bool lib_ams::EndWriteQueue(lib_ams::FShm &shm, void *ptr, int len) {
+    bool ret = true;
     lib_ams::FOutmsg *outmsg = lib_ams::_db.c_cur_outmsg;
-    if (outmsg) {
-        lib_ams::_db.c_cur_outmsg = NULL;
+    lib_ams::_db.c_cur_outmsg = NULL;
+    if (outmsg && len > shm.max_msg_size) {
+        ret = lib_ams::WriteMsg(shm, *(ams::MsgHeader*)outmsg->data.ary_elems);
+        if (!ret) {
+            lib_ams::_db.trace.n_outmsg_oversize_drop++;
+        }
+        lib_ams::outmsg_Delete(*outmsg);
+    } else if (outmsg) {
         lib_ams::zd_outmsg_Insert(shm, *outmsg);
         lib_ams::zd_outshm_Insert(shm);
     } else {
         lib_ams::EndWrite(shm, ptr, len);
     }
+    return ret;
+}
+
+// Write MSG to SHM, queued: into the ring when it has room and nothing waits
+// ahead of it, otherwise onto the ring's queue, which zd_outshm writes as
+// budget appears.  The message WriteMsg would drop is the one this keeps, so
+// this is the write for a message with no retry of its own behind it -- a
+// command, its answer -- where a drop is a requester waiting out its whole
+// deadline for output that was thrown away.  Return false when MSG is
+// oversize and the board cannot take it now, which EndWriteQueue counts.
+bool lib_ams::WriteMsgQueue(lib_ams::FShm &shm, ams::MsgHeader &msg) {
+    int len = msg.length;
+    void *ptr = lib_ams::BeginWriteQueue(shm, len);
+    memcpy(ptr, &msg, size_t(len));
+    return lib_ams::EndWriteQueue(shm, ptr, len);
 }

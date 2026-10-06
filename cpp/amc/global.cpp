@@ -1,21 +1,21 @@
-// Copyright (C) 2023-2026 AlgoRND
+// Copyright (C) 2024-2026 AlgoX2 Corp
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2023 Astra
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 // Copyright (C) 2008-2012 AlgoEngineering LLC
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
@@ -342,7 +342,7 @@ void amc::tfunc_Global_InitReflection() {
     tempstr text;// register own database
     Set(R, "$InsertStrptrMaybe", has_inputs ? "$ns::InsertStrptrMaybe" : "NULL");
     Set(R, "$RemoveStrptrMaybe", has_inputs ? "$ns::RemoveStrptrMaybe" : "NULL");
-    Set(R, "$Step", c_fstep_N(ns) ? "$ns::Step" : "NULL");
+    Set(R, "$Step", ExeQ(ns) && c_parentns_N(ns) > 0 ? "$ns::Steps" : "NULL");
     Set(R, "$MainLoop", ns.c_main ? "$ns::MainLoop" : "NULL");
     Ins(&R, initrefl.body,"algo_lib::FImdb &row = algo_lib::imdb_Alloc();");
     Ins(&R, initrefl.body,"row.imdb               = \"$ns\";");
@@ -539,14 +539,6 @@ void amc::tfunc_Global_WinMain() {
 
 // -----------------------------------------------------------------------------
 
-static int CountDirectSteps(amc::FNs &ns) {
-    int ret=0;
-    ind_beg(amc::ns_c_fstep_curs, fstep, ns) {
-        ret += DirectStepQ(fstep);
-    }ind_end;
-    return ret;
-}
-
 void amc::tfunc_Global_MainLoop() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FField &field = *amc::_db.genctx.p_field;
@@ -564,38 +556,90 @@ void amc::tfunc_Global_MainLoop() {
     }
 }
 
+// True if namespace OTHER is in the dependency closure of NS: NS itself, or a
+// namespace NS depends on through dev.targdep.  The closure is what one process
+// built from NS links, and so what shares its main loop.
+static bool InClosureQ(amc::FNs &ns, amc::FNs &other) {
+    return amc::c_parentns_FindIndex(ns, &other) != -1;
+}
+
+// Return the alias step in the closure of NS that steps LIST, a global list of
+// some namespace, or NULL when none does.  CheckClosureAliasStep has made sure
+// there is at most one.
+static amc::FFstep *FindAliasStep(amc::FNs &ns, amc::FField &list) {
+    amc::FFstep *ret = NULL;
+    ind_beg(amc::_db_falias_curs, falias, amc::_db) {
+        amc::FField *alias = amc::ind_field_Find(falias.field);
+        if (falias.p_srcfield == &list && alias && alias->c_fstep && InClosureQ(ns, *alias->p_ctype->p_ns)) {
+            ret = alias->c_fstep;
+        }
+    }ind_end;
+    return ret;
+}
+
+// Refuse two alias steps on one list within the closure of NS: they would run
+// in the same process and race for the list's rows.  Each defect is reported
+// as a generation error.
+static void CheckClosureAliasStep(amc::FNs &ns) {
+    ind_beg(amc::_db_falias_curs, falias, amc::_db) {
+        amc::FField *alias = amc::ind_field_Find(falias.field);
+        amc::FFstep *other = alias && alias->c_fstep && InClosureQ(ns, *alias->p_ctype->p_ns)
+            ? FindAliasStep(ns, *falias.p_srcfield) : NULL;
+        if (other && other != alias->c_fstep) {
+            prerr("amc.fstep_alias_rival"
+                  <<Keyval("ns",ns.ns)
+                  <<Keyval("fstep",alias->c_fstep->fstep)
+                  <<Keyval("rival",other->fstep)
+                  <<Keyval("comment","two alias steps on one list share this process and would race for its rows"));
+            algo_lib::_db.exit_code++;
+        }
+    }ind_end;
+}
+
+// Generate the Steps function of an executable NS: one call per direct step of
+// every namespace in its closure.  Steps run by band (amcdb.stepband: input,
+// work, output, idle, yield), and within a band in dependency order, the
+// executable's own first.  A library contributes its steps here and emits no step function of
+// its own, which is what lets a namespace override one of them.  An alias step
+// on a list whose own namespace steps it takes that step's place, in that
+// slot, and the library's step function is not called; the overriding step may
+// call it.  An alias step on a list with no step of its own is an ordinary
+// step of the namespace that declares it.
 void amc::tfunc_Global_Steps() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FField &field = *amc::_db.genctx.p_field;
     amc::FNs &ns = *field.p_ctype->p_ns;
-    if (c_parentns_N(ns) > 0) {
+    if (ExeQ(ns) && c_parentns_N(ns) > 0) {
+        CheckClosureAliasStep(ns);
         amc::FFunc& steps = amc::CreateCurFunc();
         Ins(&R, steps.ret    , "void",false);
         Ins(&R, steps.proto  , "Steps()",false);
-        // parent ns
-        for (int i = c_parentns_N(ns)-1; i>=0; i--) {
-            amc::FNs &parent = *c_parentns_Find(ns,i);
-            if (CountDirectSteps(parent) > 0) {
-                Set(R, "$parns", parent.ns);
-                Ins(&R, steps.body, "$parns::Step(); // dependent namespace specified via (dev.targdep)");
+        // bands in rank order; within a band, namespaces in dependency order
+        // and each namespace's steps in declaration order
+        for (int rank = 0; rank <= 255; rank++) {
+            for (int i = c_parentns_N(ns)-1; i>=0; i--) {
+                amc::FNs &parent = *c_parentns_Find(ns,i);
+                ind_beg(amc::ns_c_fstep_curs, fstep, parent) if (fstep.p_stepband->rank == rank) {
+                    amc::FField &stepfld = *fstep.p_field;
+                    bool isoverride = ListAliasQ(stepfld) && stepfld.c_falias->p_srcfield->c_fstep;
+                    amc::FFstep *alias = FindAliasStep(ns, stepfld);
+                    amc::FFstep &callee = alias ? *alias : fstep;
+                    if (DirectStepQ(fstep) && !isoverride) {
+                        Set(R, "$stepns", callee.p_field->p_ctype->p_ns->ns);
+                        Set(R, "$stepname", name_Get(*callee.p_field));
+                        // the slot's band governs, since an override runs in the slot
+                        // of the library step it replaces
+                        tempstr comment;
+                        comment << " // fstep:" << callee.fstep << "  stepband:" << fstep.stepband;
+                        if (alias) {
+                            comment << "  overrides:" << fstep.fstep;
+                        }
+                        Set(R, "$comment", comment);
+                        Ins(&R, steps.body, "$stepns::$stepname_Call();$comment");
+                    }
+                }ind_end;
             }
         }
-    }
-}
-
-
-void amc::tfunc_Global_Step() {
-    algo_lib::Replscope &R = amc::_db.genctx.R;
-    amc::FField &field = *amc::_db.genctx.p_field;
-    amc::FNs &ns = *field.p_ctype->p_ns;
-    if (ns.c_main || c_fstep_N(ns)>0) {// generate main step function from all of its constituents.
-        amc::FFunc& stepfunc = amc::CreateCurFunc(true);
-        Ins(&R, stepfunc.ret    , "void",false);
-        ind_beg(amc::ns_c_fstep_curs, fstep, ns) {
-            if (DirectStepQ(fstep)) {
-                Ins(&R, stepfunc.body, tempstr()<<name_Get(fstep)<<"_Call();");
-            }
-        }ind_end;
     }
 }
 
@@ -651,6 +695,21 @@ static void CheckBaseCmdline(amc::FCcmdline &cmdline, amc::FField &cmdfield) {
                   <<Keyval("comment","Base commandline cannot have anon fields"));
             algo_lib::_db.exit_code++;
         }
+    }ind_end;
+    // The generated ReadArgv resolves an option against the base command line
+    // first, so a command field sharing a base option's name is unreachable
+    // from argv: `gli -trace` would fill algo_lib.Cmdline.trace and gli's own
+    // field would never see the flag.  Refuse the shadow at generation time.
+    ind_beg(amc::ctype_c_field_curs,ownfield,*cmdline.p_ctype) {
+        ind_beg(amc::ctype_c_field_curs,basefield,*basecmdline->p_arg) {
+            if (basefield.reftype != dmmeta_Reftype_reftype_Base && name_Get(ownfield) == name_Get(basefield)) {
+                prerr("amc.baseclash"
+                      <<Keyval("field",ownfield.field)
+                      <<Keyval("basefield",basefield.field)
+                      <<Keyval("comment","Command field shadows a base command-line option; rename it"));
+                algo_lib::_db.exit_code++;
+            }
+        }ind_end;
     }ind_end;
 }
 
@@ -934,6 +993,55 @@ static void GenLoadTuples(algo_lib::Replscope &R, amc::FFunc &func, amc::FFloadt
 // -----------------------------------------------------------------------------
 
 // Namespace ReadArgv function to read command line
+// True if CTYPE is a command reached by name rather than by symbol: it reads an
+// argv, and it is nobody's command line.
+//
+// A tool's cmdline is bound to its program when the tree is built -- abt names
+// command::abt outright -- so nothing ever looks one up by a string.  A ctype
+// that reads an argv and is no program's cmdline can only be reached by the
+// name someone typed.
+static bool CmdByNameQ(amc::FCtype &ctype) {
+    return amc::HasArgvReadQ(ctype) && !ctype.c_ccmdline;
+}
+
+// Emit a by-name lookup over the namespace's commands: how many words the
+// option FIELD of the command named CMD takes.
+//
+// Each command has a $Name_NArgs, and nothing maps a name to one, so a caller
+// holding only a typed line cannot ask.  Written by hand the map would fall
+// behind the schema silently; emitted from the ctype list the functions come
+// from, it cannot.
+void amc::tfunc_Ns_CmdNArgs() {
+    amc::FNs &ns = *amc::_db.genctx.p_ns;
+    int ncmd = 0;
+    ind_beg(amc::ns_c_ctype_curs, ctype, ns) if (CmdByNameQ(ctype)) {
+        ncmd++;
+    }ind_end;
+    if (ncmd > 0) {
+        algo_lib::Replscope R;
+        Set(R, "$ns", ns.ns);
+        amc::FFunc &func = amc::CreateCurFunc();
+        Ins(&R, func.comment, "Number of command-line words the option FIELD of command CMD takes.");
+        Ins(&R, func.comment, "-1 if CMD is not a command of this namespace, or FIELD is not one of its options.");
+        Ins(&R, func.proto, "CmdNArgs()", false);
+        AddRetval(func, "i32", "retval", "-1");
+        AddProtoArg(func, "algo::strptr", "cmd");
+        AddProtoArg(func, Subst(R,"$ns::FieldId"), "field");
+        AddProtoArg(func, "algo::strptr&", "out_dflt");
+        AddProtoArg(func, "bool*", "out_anon");
+        bool first = true;
+        ind_beg(amc::ns_c_ctype_curs, ctype, ns) if (CmdByNameQ(ctype)) {
+            Set(R, "$Name", name_Get(ctype));
+            Ins(&R, func.body, first ? "if (cmd == \"$Name\") {" : "} else if (cmd == \"$Name\") {");
+            Ins(&R, func.body, "    retval = $Name_NArgs(field, out_dflt, out_anon);");
+            first = false;
+        }ind_end;
+        Ins(&R, func.body, "}");
+    }
+}
+
+// -----------------------------------------------------------------------------
+
 void amc::tfunc_Global_ReadArgv() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FField &field = *amc::_db.genctx.p_field; // atf_amc_cmd.FDb._db
@@ -993,6 +1101,7 @@ void amc::tfunc_Global_ReadArgv() {
             Ins(&R, func.body, "algo_lib_logcat_debug.enabled = algo_lib::_db.cmdline.debug;");
             Ins(&R, func.body, "algo_lib_logcat_verbose.enabled = algo_lib::_db.cmdline.verbose > 0;");
             Ins(&R, func.body, "algo_lib_logcat_verbose2.enabled = algo_lib::_db.cmdline.verbose > 1;");
+            Ins(&R, func.body, "algo_lib::ApplyTrace(algo_lib::_db.cmdline.trace);");
         }
 
         // missing-required diagnostics are emitted inside $cmdlinectypename_ReadArgv

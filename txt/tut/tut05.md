@@ -38,6 +38,7 @@ Usage: atf_nrun [[-ncmd:]<int>] [options]
     [ncmd]      int     6
     -verbose    flag            Verbosity level (0..255); alias -v; cumulative
     -debug      flag            Debug level (0..255); alias -d; cumulative
+    -trace      string  ""      Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps
     -help                       Print help and exit; alias -h
     -version                    Print version and exit
     -signature                  Show signatures and exit; alias -sig
@@ -102,8 +103,8 @@ void atf_nrun::Main() {
 Let's look at the defined steps.
 ```ssim
 inline-command: acr fstep:atf_nrun.% -tree -report:N
-dmmeta.fstep  fstep:atf_nrun.FDb.ind_running  steptype:InlineRecur  comment:""
-dmmeta.fstep  fstep:atf_nrun.FDb.zd_todo      steptype:InlineRecur  comment:""
+dmmeta.fstep  fstep:atf_nrun.FDb.ind_running  steptype:InlineRecur  stepband:work  comment:""
+dmmeta.fstep  fstep:atf_nrun.FDb.zd_todo      steptype:InlineRecur  stepband:work  comment:""
 ```
 
 The `InlineRecur` step type, which would be better named `InlineDelay`, is sampled once
@@ -191,10 +192,10 @@ For completeness, here are the ssim lines defining the `atf_nrun` process, minus
 some less useful ones:
 
 ```ssim
-inline-command: acr ns:atf_nrun -t -report:N | egrep -v '(dev.targsrc|dmmeta.ctypelen)'
-dev.license  license:GPL  comment:""
+inline-command: acr ns:atf_nrun -t -report:N | egrep -v '(dev.targsrc|gendb.ctypelen)'
+dev.license  license:Apache  proprietary:N  copyleft:N  comment:"Apache License 2.0"
 dmmeta.nstype  nstype:exe  comment:Executable
-  dmmeta.ns  ns:atf_nrun  nstype:exe  license:GPL  comment:"Run N subprocesses in parallel"
+  dmmeta.ns  ns:atf_nrun  nstype:exe  license:Apache  comment:"Run N subprocesses in parallel"
     dev.target  target:atf_nrun
       dev.targdep  targdep:atf_nrun.algo_lib  comment:""
       dev.tgtcov  target:atf_nrun  cov_min:0.00  comment:""
@@ -204,14 +205,14 @@ dmmeta.nstype  nstype:exe  comment:Executable
       dmmeta.field  field:atf_nrun.FDb.cmdline      arg:command.atf_nrun  reftype:Val     dflt:""  comment:""
       dmmeta.field  field:atf_nrun.FDb.fentry       arg:atf_nrun.FEntry   reftype:Lary    dflt:""  comment:"List of jobs"
       dmmeta.field  field:atf_nrun.FDb.ind_running  arg:atf_nrun.FEntry   reftype:Thash   dflt:""  comment:"Running job"
-        dmmeta.fstep  fstep:atf_nrun.FDb.ind_running  steptype:InlineRecur  comment:""
         dmmeta.thash  field:atf_nrun.FDb.ind_running  hashfld:atf_nrun.FEntry.pid  unique:Y  comment:""
         dmmeta.xref  field:atf_nrun.FDb.ind_running  inscond:false  via:""
+        dmmeta.fstep  fstep:atf_nrun.FDb.ind_running  steptype:InlineRecur  stepband:work  comment:""
 
       dmmeta.field  field:atf_nrun.FDb.zd_todo  arg:atf_nrun.FEntry  reftype:Llist  dflt:""  comment:"Remaining to dos"
         dmmeta.llist  field:atf_nrun.FDb.zd_todo  havetail:Y  havecount:Y  comment:""
-        dmmeta.fstep  fstep:atf_nrun.FDb.zd_todo  steptype:InlineRecur  comment:""
         dmmeta.xref  field:atf_nrun.FDb.zd_todo  inscond:false  via:""
+        dmmeta.fstep  fstep:atf_nrun.FDb.zd_todo  steptype:InlineRecur  stepband:work  comment:""
 
 
     dmmeta.ctype  ctype:atf_nrun.FEntry  comment:""
@@ -222,5 +223,5 @@ dmmeta.nstype  nstype:exe  comment:Executable
     dmmeta.main  ns:atf_nrun  ismodule:N
     dmmeta.nscpp  ns:atf_nrun  comment:""
     dmmeta.nsx  ns:atf_nrun  genthrow:Y  correct_getorcreate:Y  pool:algo_lib.FDb.malloc  sortxref:Y  pack:N  comment:""
-    dmmeta.tracerec  tracerec:atf_nrun.trace  comment:""
+    gendb.tracerec  tracerec:atf_nrun.trace  comment:""
 ```

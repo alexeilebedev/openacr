@@ -61,7 +61,8 @@ controlled by the flags:
 | `print`   | Generate `<name>_Print(...)` that prints any member message. |
 | `haslen`  | The wire bytes carry an explicit length (the dispatch's shared header must have a `lenfld`).  Adds `msg_len` to all signatures. |
 | `strict`  | Refuse to dispatch when `msg_len` is longer than `sizeof(message)`.  Useful for fixed-size wire protocols. |
-| `unk`     | Emit a `default:` case in the switch (do nothing, but reachable). |
+| `unk`     | Call the user-implemented `<name>_Unkmsg(msg)` from the `default:` case.  Without it the `default:` is reachable and does nothing. |
+| `unkcount` | Count a message no case takes in the `dispatch_<name>_Unkmsg` trace field (the default).  `N` leaves the field out, for a dispatch whose default handler hands the message to another dispatch that counts what nobody takes. |
 
 `dmmeta.dispatch_msg  dispatch_msg:<dispatch>/<ctype>` adds one
 ctype to the dispatch's switch.  Each member ctype must
@@ -298,7 +299,7 @@ and forces sender + receiver to agree.
 2. Mix in each ctype's `fconst`s (unordered combination).
 3. For each dispatch, mix the signatures of every member
    ctype (recursively) into a final dispatch signature.
-4. Emit a `dmmeta.dispsig  dispsig:<disp>  signature:<sha1>`
+4. Emit a `gendb.dispsig  dispsig:<disp>  signature:<sha1>`
    record per dispatch.
 
 **Runtime check** (`Global.InitReflection` in
@@ -356,7 +357,7 @@ dumps its full signature table so other processes can verify.
 - [Kafka](/txt/exe/amc/kafka.md) — dispatch-driven Kafka codecs
 - [Global / reflection](/txt/exe/amc/reftype/Global.md) — where `dispsigcheck` rows get registered
 - Source: `cpp/amc/disp/`, `cpp/amc/msgcurs.cpp`, `cpp/amc/tableid.cpp`, `cpp/amc/signature.cpp`
-- Spec tables: `acr 'dmmeta.dispatch:%'`, `acr 'dmmeta.dispatch_msg:%'`, `acr 'dmmeta.dispctx:%'`, `acr 'dmmeta.disptrace:%'`, `acr 'dmmeta.dispsig:%'`, `acr 'dmmeta.dispsigcheck:%'`
+- Spec tables: `acr 'dmmeta.dispatch:%'`, `acr 'dmmeta.dispatch_msg:%'`, `acr 'dmmeta.dispctx:%'`, `acr 'dmmeta.disptrace:%'`, `acr 'gendb.dispsig:%'`, `acr 'dmmeta.dispsigcheck:%'`
 
 ### Example
 <a href="#example"></a>

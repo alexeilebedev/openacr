@@ -37,8 +37,9 @@ State in the **parent** ctype (see `tclass_Blkhash` in
 
 | Field (parent)            | Type      | Meaning                                        |
 |---------------------------|-----------|------------------------------------------------|
-| `<name>_buckets_elems`    | `Blk**`   | bucket array — chains of blocks                |
-| `<name>_buckets_n`        | `i32`     | number of buckets (always a power of two)      |
+| `<name>_dir_elems`        | `Blk***`  | directory of bucket segments, 512 buckets each |
+| `<name>_dir_max`          | `i32`     | directory capacity, in segments                |
+| `<name>_buckets_n`        | `i32`     | number of buckets; one more per split          |
 | `<name>_nblk`             | `i32`     | number of resident blocks                      |
 | `<name>_n`                | `i32`     | number of indexed elements                     |
 
@@ -70,10 +71,20 @@ only in the block's slot pointer.
   of the same index.  A rolling key window (append at the tail,
   retire at the head) therefore reaches steady state with no
   allocation and no rehashing.
-- The bucket array doubles when `nblk` would exceed it, re-chaining
-  blocks by their stored `hashval` — it holds one pointer per
-  resident *block*, so it is a factor 2^linbits smaller than a
-  Thash's bucket array over the same population.
+- The buckets grow by linear hashing.  An insert that makes the
+  block count exceed the bucket count splits one bucket, the next in
+  turn, into itself and a new bucket at the end, moving the blocks
+  whose next `hashval` bit is set.  No insert moves more than one
+  chain, so the index has no growth stall: at 2M blocks the slowest
+  insert takes 0.3 ms, against 15 ms for a bucket array that doubles.
+  The buckets sit in fixed segments of 512 under a directory, so a
+  new bucket copies nothing; the directory doubles, and it holds a
+  512th as many pointers as the buckets.  The price is one more load
+  per lookup, about 5% on a rolling-window workload.
+- There is one bucket per resident *block*, so the buckets are a
+  factor 2^linbits fewer than a Thash's over the same population.
+  `BlkBytes()` times `nblk` is what the blocks hold, for a caller
+  that charges them to a memory budget.
 
 ### Ssim inputs
 <a href="#ssim-inputs"></a>

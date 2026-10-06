@@ -1,20 +1,20 @@
-// Copyright (C) 2023-2024,2026 AlgoRND
+// Copyright (C) 2026 AlgoX2 Corp
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2023 Astra
 // Copyright (C) 2018-2019 NYSE | Intercontinental Exchange
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: atf_unit (exe) -- Unit tests (see unittest table)
@@ -369,6 +369,28 @@ static void ParseUnTimeStr(const strptr& in, strptr result) {
 
 // -----------------------------------------------------------------------------
 
+// Check that IN, a string carrying no time, is refused: UnTime_ReadStrptrMaybe
+// answers false and leaves its output at the value it held before the call.
+// The empty string is not such a string: it is the unset value and reads as
+// the zero time, which unittest_algo_lib_ParseUnTime checks beside these.
+static void RefuseUnTimeStr(const strptr& in) {
+    algo::UnTime test(12345);
+    vrfy(!UnTime_ReadStrptrMaybe(test, in), tempstr()<<"accepted "<<in);
+    vrfyeq_(test.value, i64(12345));
+}
+
+// -----------------------------------------------------------------------------
+
+// Check that IN, a string carrying no duration, is refused: UnDiff_ReadStrptrMaybe
+// answers false and leaves its output at the value it held before the call.
+static void RefuseUnDiffStr(const strptr& in) {
+    algo::UnDiff test(12345);
+    vrfy(!UnDiff_ReadStrptrMaybe(test, in), tempstr()<<"accepted "<<in);
+    vrfyeq_(test.value, i64(12345));
+}
+
+// -----------------------------------------------------------------------------
+
 // Check that reading IN as UnDiff and printing it back results in RESULT
 static void TestParseUnDiff(const strptr& in, strptr result) {
     if (!elems_N(result)) {
@@ -410,6 +432,24 @@ void atf_unit::unittest_algo_lib_ParseUnTime() {
     ParseUnTimeStr("2013-11-21T12:13:14.000123000crap","2013-11-21T12:13:14.000123");
     ParseUnTimeStr("2013-11-21" ,"2013-11-21T00:00:00");
     ParseUnTimeStr("2013/11/21" ,"2013-11-21T00:00:00");
+    // An empty string is the unset value of an ssim attr, which acr writes
+    // as begin:"" for a time field no one set, and reads as the zero time.
+    {
+        algo::UnTime unset(12345);
+        vrfy(UnTime_ReadStrptrMaybe(unset, ""), algo_lib::_db.errtext);
+        vrfyeq_(unset.value, i64(0));
+        algo::UnDiff unsetdiff(12345);
+        vrfy(UnDiff_ReadStrptrMaybe(unsetdiff, ""), algo_lib::_db.errtext);
+        vrfyeq_(unsetdiff.value, i64(0));
+    }
+    // Any other string no format reads a field from carries no time, and the
+    // parser refuses it so a caller never dates anything by what is not there.
+    RefuseUnTimeStr("null");
+    RefuseUnTimeStr("-");
+    RefuseUnTimeStr(" ");
+    RefuseUnTimeStr("T");
+    RefuseUnTimeStr("Z");
+    RefuseUnTimeStr("crap");
     // Trailing 'Z' (ISO 8601 UTC marker) -- parsed via timegm() so the
     // host's TZ offset doesn't shift the value.  Under a fixed UTC-5 TZ
     // the non-Z parse goes through mktime() and lands 5h later.
@@ -422,11 +462,43 @@ void atf_unit::unittest_algo_lib_ParseUnTime() {
         vrfyeq_(tnoz.value - tz.value, i64(5*3600) * algo::UNTIME_PER_SEC);
         algo::SetTz("GMT");// restore for later cases
     }
+    // A numeric zone offset, +hh:mm or -hh:mm after the seconds, names the
+    // instant that is the local fields less the offset, so it reads to the
+    // same value as the Z form of that instant whatever the host TZ.  A
+    // string with no zone still reads as local time.
+    {
+        algo::SetTz("EST5");// fixed UTC-5, no DST
+        algo::UnTime z, zero, minus, plus, basic, hour, frac, fracz, local;
+        vrfy_(UnTime_ReadStrptrMaybe(z,     "2026-09-26T17:13:52Z"));
+        vrfy_(UnTime_ReadStrptrMaybe(zero,  "2026-09-26T17:13:52+00:00"));
+        vrfy_(UnTime_ReadStrptrMaybe(minus, "2026-09-26T13:13:52-04:00"));
+        vrfy_(UnTime_ReadStrptrMaybe(plus,  "2026-09-26T19:13:52+02:00"));
+        vrfy_(UnTime_ReadStrptrMaybe(basic, "2026-09-26T22:43:52+0530"));
+        vrfy_(UnTime_ReadStrptrMaybe(hour,  "2026-09-26T10:13:52-07"));
+        vrfy_(UnTime_ReadStrptrMaybe(frac,  "2026-09-26T13:13:52.544-04:00"));
+        vrfy_(UnTime_ReadStrptrMaybe(fracz, "2026-09-26T17:13:52.544Z"));
+        vrfy_(UnTime_ReadStrptrMaybe(local, "2026-09-26T17:13:52"));
+        vrfyeq_(zero.value, z.value);
+        vrfyeq_(minus.value, z.value);
+        vrfyeq_(plus.value, z.value);
+        vrfyeq_(basic.value, z.value);
+        vrfyeq_(hour.value, z.value);
+        vrfyeq_(frac.value, fracz.value);
+        vrfyeq_(local.value - z.value, i64(5*3600) * algo::UNTIME_PER_SEC);
+        // The instant one second before the epoch is the -1 timegm() also
+        // answers for a field set it cannot convert; it still lands in the row.
+        algo::UnTime pre;
+        vrfy_(UnTime_ReadStrptrMaybe(pre, "1969-12-31T23:59:59Z"));
+        vrfyeq_(pre.value, -algo::UNTIME_PER_SEC);
+        algo::SetTz("GMT");// restore for later cases
+    }
     TestParseUnDiff("12:13:14.567890123","12:13:14.567890123");
     TestParseUnDiff("13:14.567890123", "00:13:14.567890123");
     TestParseUnDiff("14.567890123",  "00:00:14.567890123");
     TestParseUnDiff("00.567890123", "00:00:00.567890123");
     TestParseUnDiff("00:00:00", "00:00:00");
+    RefuseUnDiffStr("null");
+    RefuseUnDiffStr("-");
     TestParseTime("May 11 1986 01:20:30"          , "%b %d %Y %H:%M:%S");
     TestParseTime("Jan 11 1986 01:20:30"          , "%b %d %Y %H:%M:%S");
     TestParseTime("Jan 11 1986 01:20:30.000000001", "%b %d %Y %H:%M:%S.%X", 9);

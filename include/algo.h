@@ -1,21 +1,21 @@
-// Copyright (C) 2023-2026 AlgoRND
+// Copyright (C) 2024-2026 AlgoX2 Corp
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2021 Astra
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 // Copyright (C) 2008-2012 AlgoEngineering LLC
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: algo_lib (lib) -- Support library for all executables
@@ -136,17 +136,26 @@ namespace algo {
     // simply ends, for conditions worth waiting for but legal to proceed
     // without.  Callers scale WAIT themselves
     // (e.g. multiply by a slow-build factor).  comment is cleared before each
-    // iteration -- the body just appends -- and logged after each iteration
-    // when algo_lib::_db.cmdline.verbose is set.  The cursor sleeps one poll
-    // interval between attempts.
+    // iteration -- the body just appends.  The cursor sleeps one poll interval
+    // between attempts.
+    // When algo_lib::_db.cmdline.verbose is set, the loop logs a line each time
+    // the comment differs from the one before, a dot for each second that
+    // passes with no change, and a verdict line when it ends.  The body runs with
+    // the verbose log category off, so a command it runs does not echo once per
+    // attempt; the comment is what the log carries for the body.
     struct retry_curs {
         typedef retry_curs ChildType;
         bool          accept;        // body sets true once the condition holds
         bool          failok;        // budget exhaustion ends the loop instead of raising
         algo::cstring comment;       // body's explanation (just append to it)
+        algo::cstring prev_comment;  // comment of the last logged line
         double        deadline_sec;  // total budget passed to Reset
         algo::UnTime  t0;            // loop start
         i32           niter;         // completed attempts
+        i32           nsec;          // whole seconds of the loop the log accounts for
+        bool          mute;          // this cursor turned verbose off for the body
+        inline retry_curs();
+        inline ~retry_curs();
     };
 
     // Word cursor (works with ind_beg/ind_end)
@@ -495,7 +504,13 @@ namespace algo { // update-hdr
 
     // IEEE 802.3/zlib CRC-32, table-driven; fixed regardless of build.
     u32 CRC32IEEE(u32 old, const u8 *data, size_t len);
-    u32 CRC32Step(u32 old, const u8 *data, size_t len);
+
+    // Continue the CRC-32C of OLD over LEN bytes at DATA and return the new value,
+    // computed from a table.  It returns what the CRC32 instruction returns for the
+    // same arguments, so a build with no such instruction hashes and addresses
+    // every key the way the other builds do.  CRC32Step forwards to it from
+    // algo.inl.h on such a build.
+    u32 CRC32StepSw(u32 old, const u8 *data, size_t len);
 
     // FNV-1a 64-bit over LEN bytes at X, continuing from OLD; pass the offset
     // basis 14695981039346656037 to start a new hash.
@@ -514,10 +529,10 @@ namespace algo { // update-hdr
 
     // Print Decimal
     //     (user-implemented function, prototype is in amc-generated header)
-    // void Decimal_Print(algo::Decimal parent, algo::cstring &str); // cfmt:algo.Decimal.String
+    // void Decimal_Print(algo::Decimal parent, algo::cstring &str); // dmmeta.cfmt:algo.Decimal.String
 
     // Read Decimal from string
-    // bool Decimal_ReadStrptrMaybe(algo::Decimal &parent, algo::strptr in_str); // cfmt:algo.Decimal.String
+    // bool Decimal_ReadStrptrMaybe(algo::Decimal &parent, algo::strptr in_str); // dmmeta.cfmt:algo.Decimal.String
 
     // Convert Decimal to double.  PARENT is printed and the text parsed back, so the
     // answer is whatever this tree's own parser makes of that decimal.
@@ -567,7 +582,28 @@ namespace algo { // update-hdr
     // so PATH's device id differs from its parent directory's.  A directory that
     // merely exists with nothing mounted on it (e.g. a drive that failed to mount or
     // is bound to a userspace driver) is NOT a mount point and reads as unmounted.
+    // PATH may end in a separator: /mnt/data-1/ names the same directory as
+    // /mnt/data-1, and its parent is /mnt/ either way.  Left on, the separator
+    // makes GetDirName return PATH itself, and every directory then compares equal
+    // to its own parent.
     bool MountpointQ(strptr path) __attribute__((nothrow));
+
+    // Read the filesystem PATH resolves on: fill TOTAL with its size in bytes, USED
+    // with the bytes it holds and AVAIL with the bytes an unprivileged writer may
+    // still take, and return the errno of the call, 0 when it answered.  TOTAL is
+    // left at zero for a filesystem reporting no blocks, which is a reading no
+    // caller can divide by and the one refusal this reports without an errno.
+    //
+    // Whether anything is mounted on PATH is a separate question, and MountpointQ
+    // asks it: this reads whichever filesystem the path resolves on, which for an
+    // unmounted mount point is the one underneath it.  A caller that must tell a
+    // failed disk from a full one therefore asks both.
+    //
+    // The call waits for the device, and on one that has begun to fail it waits for
+    // the device's own timeout -- tens of seconds.  So no caller whose pass is
+    // bounded may make it: a module asks its volume's waiter or a sensor process instead, and
+    // both of those are processes nothing judges for liveness.
+    int ReadVolSpace(strptr path, u64 &total, u64 &used, u64 &avail) __attribute__((nothrow));
 
     // Test if F refers to an existing regular file (i.e. not a special file or directory)
     bool FileQ(strptr fname) __attribute__((nothrow));
@@ -691,19 +727,19 @@ namespace algo { // update-hdr
 
     // User-defined cleanup trigger for dir_handle field of ctype:algo.DirEntry
     //     (user-implemented function, prototype is in amc-generated header)
-    // void dir_handle_Cleanup(algo::DirEntry &dir_entry); // ffunc:algo.DirEntry.dir_handle.Cleanup
+    // void dir_handle_Cleanup(algo::DirEntry &dir_entry); // dmmeta.ffunc:algo.DirEntry.dir_handle.Cleanup
 
     // Open file FILENAME with flags FLAGS, return resulting file descriptor
     // Possible flags:
     // write   -> open file for writing, create file if missing
     // if write is specified, and append is not, then file is truncated upon opening
     // append  -> open file in append mode (automatically sets 'write' flag)
-    // in append mode, seek to end of file after opening
+    // in append mode the file is opened O_APPEND, so every write lands at its end
+    // whatever the file offset, and the offset is moved to the end after opening
     // read    -> open flag in read-only mode
     // _throw  -> throw exception if an error occurs
-    // NOTE: this function doesn't set O_APPEND flag, because it doesn't work'
-    // on NFS mounted filesystems.
-    // Without O_APPEND, two processes cannot reliably append to the same file.
+    // NOTE: on NFS, O_APPEND is not atomic between clients, so two hosts appending to
+    // one file can overwrite each other.
     algo::Fildes OpenFile(const strptr& filename, algo::FileFlags flags);
 
     // Write BYTES to file FD;
@@ -856,7 +892,11 @@ namespace algo { // update-hdr
 
     // Read time from STR to ROW
     // Return success code.
-    // If funciton does not succeed, ROW is not modified
+    // If function does not succeed, ROW is not modified.
+    // An empty STR is the unset value, as it is for every scalar an ssim attr
+    // holds, and reads as the zero time; a caller asking whether STR carries a
+    // time at all tests its length first.  Any other string no format reads a
+    // field from is refused.
     // Several formats are supported:
     // %Y-%m-%dT%T
     // %Y-%m-%d %T
@@ -865,11 +905,19 @@ namespace algo { // update-hdr
     // %Y/%m/%d
     // Where %T is %H:%M:%S.%X
     // And %X is the nanosecond portion
+    // The time may end in an ISO 8601 zone designator, a Z or a numeric offset
+    // such as -04:00, and then the fields are read in that zone and converted
+    // to UTC, so every spelling of one instant reads to one value.  A time with
+    // no zone is read as local time.
     //     (user-implemented function, prototype is in amc-generated header)
-    // bool UnTime_ReadStrptrMaybe(algo::UnTime &row, algo::strptr str); // cfmt:algo.UnTime.String
-    // bool UnDiff_ReadStrptrMaybe(UnDiff &row, algo::strptr str); // cfmt:algo.UnDiff.String
-    // bool UnixTime_ReadStrptrMaybe(algo::UnixTime &row, algo::strptr str); // cfmt:algo.UnixTime.String
-    // bool cstring_ReadStrptrMaybe(algo::cstring &row, algo::strptr str); // cfmt:algo.cstring.String
+    // bool UnTime_ReadStrptrMaybe(algo::UnTime &row, algo::strptr str); // dmmeta.cfmt:algo.UnTime.String
+
+    // Read duration from STR to ROW and return success code.  An empty STR is the
+    // unset value and reads as a zero duration; any other string no field is read
+    // from is refused and ROW is not modified.
+    // bool UnDiff_ReadStrptrMaybe(UnDiff &row, algo::strptr str); // dmmeta.cfmt:algo.UnDiff.String
+    // bool UnixTime_ReadStrptrMaybe(algo::UnixTime &row, algo::strptr str); // dmmeta.cfmt:algo.UnixTime.String
+    // bool cstring_ReadStrptrMaybe(algo::cstring &row, algo::strptr str); // dmmeta.cfmt:algo.cstring.String
 
     // Parse a URL from string STR to OUT.
     // The format of a URL is
@@ -883,8 +931,8 @@ namespace algo { // update-hdr
     // file://c:/dir/dir2
     // c: will not be parsed as a username, but as part of the pathname.
     //
-    // bool URL_ReadStrptrMaybe(URL &out, algo::strptr str); // cfmt:algo.URL.String
-    // bool Ipmask_ReadStrptrMaybe(Ipmask &row, algo::strptr str); // cfmt:algo.Ipmask.String
+    // bool URL_ReadStrptrMaybe(URL &out, algo::strptr str); // dmmeta.cfmt:algo.URL.String
+    // bool Ipmask_ReadStrptrMaybe(Ipmask &row, algo::strptr str); // dmmeta.cfmt:algo.Ipmask.String
     void Ptr_Print(void *ptr, algo::cstring &out);
 
     // pads with zeros on the left so that at least 'atleast' characters are output.
@@ -983,7 +1031,7 @@ namespace algo { // update-hdr
     void char_PrintNTimes(char c, algo::cstring &out, int n);
     void strptr_PrintAligned(algo::strptr str, algo::cstring &out, int nplaces, algo::TextJust align, char c);
     //     (user-implemented function, prototype is in amc-generated header)
-    // void cstring_Print(algo::cstring &row, algo::cstring &str); // cfmt:algo.cstring.String
+    // void cstring_Print(algo::cstring &row, algo::cstring &str); // dmmeta.cfmt:algo.cstring.String
     void strptr_Print(const algo::strptr &row, algo::cstring &str);
 
     // Append a space unless the string already ends with a space
@@ -994,7 +1042,7 @@ namespace algo { // update-hdr
     // double_PrintPercent(0.334, str, 1) -> "33.4%"
     void double_PrintPercent(double value, algo::cstring &str, int prec);
     //     (user-implemented function, prototype is in amc-generated header)
-    // void i32_Range_Print(algo::i32_Range r, algo::cstring &o); // cfmt:algo.i32_Range.String
+    // void i32_Range_Print(algo::i32_Range r, algo::cstring &o); // dmmeta.cfmt:algo.i32_Range.String
 
     // Print ROW in the integer-range-list notation an operator writes: items
     // separated by commas, each either one value (7) or a span of values (4-7).
@@ -1008,7 +1056,7 @@ namespace algo { // update-hdr
     // holds them, and nothing here sorts or merges: where the list states a
     // preference -- the first entry that qualifies wins -- the order is the whole
     // meaning, so a list printed after being read comes back as it was written.
-    // void I32RangeAry_Print(algo::I32RangeAry &row, algo::cstring &str); // cfmt:algo.I32RangeAry.String
+    // void I32RangeAry_Print(algo::I32RangeAry &row, algo::cstring &str); // dmmeta.cfmt:algo.I32RangeAry.String
 
     // Read the integer-range-list notation into PARENT, replacing what it holds.
     // Return false on anything the notation does not admit, leaving PARENT empty
@@ -1025,7 +1073,7 @@ namespace algo { // update-hdr
     // states a placement.  A trailing comma is accepted for the same reason a
     // shell accepts one; an empty item between two commas is not, since it names
     // nothing.
-    // bool I32RangeAry_ReadStrptrMaybe(algo::I32RangeAry &parent, algo::strptr in_str); // cfmt:algo.I32RangeAry.String
+    // bool I32RangeAry_ReadStrptrMaybe(algo::I32RangeAry &parent, algo::strptr in_str); // dmmeta.cfmt:algo.I32RangeAry.String
     void double_PrintWithCommas(double value, algo::cstring &str, int prec);
 
     // ignore:bigret
@@ -1069,21 +1117,21 @@ namespace algo { // update-hdr
     // %%     Print % sign
     void TimeStruct_Print(const TimeStruct &time, algo::cstring &str, const algo::strptr &spec);
     //     (user-implemented function, prototype is in amc-generated header)
-    // void Tuple_Print(algo::Tuple &row_, algo::cstring &str); // cfmt:algo.Tuple.String
-    // void Bool_Print(algo::Bool row, algo::cstring &str); // cfmt:algo.Bool.String
-    // void UnDiff_Print(UnDiff row, algo::cstring &str); // cfmt:algo.UnDiff.String
-    // void UnixDiff_Print(UnixDiff row, algo::cstring &str); // cfmt:algo.UnixDiff.String
-    // void UnTime_Print(algo::UnTime row, algo::cstring &str); // cfmt:algo.UnTime.String
-    // void UnixTime_Print(algo::UnixTime row, algo::cstring &str); // cfmt:algo.UnixTime.String
+    // void Tuple_Print(algo::Tuple &row_, algo::cstring &str); // dmmeta.cfmt:algo.Tuple.String
+    // void Bool_Print(algo::Bool row, algo::cstring &str); // dmmeta.cfmt:algo.Bool.String
+    // void UnDiff_Print(UnDiff row, algo::cstring &str); // dmmeta.cfmt:algo.UnDiff.String
+    // void UnixDiff_Print(UnixDiff row, algo::cstring &str); // dmmeta.cfmt:algo.UnixDiff.String
+    // void UnTime_Print(algo::UnTime row, algo::cstring &str); // dmmeta.cfmt:algo.UnTime.String
+    // void UnixTime_Print(algo::UnixTime row, algo::cstring &str); // dmmeta.cfmt:algo.UnixTime.String
     void UnTime_PrintSpec(UnTime t, algo::cstring &out, const algo::strptr &spec);
     void UnixTime_PrintSpec(UnixTime t, algo::cstring &out, const algo::strptr &spec);
     void UnDiff_PrintSpec(UnDiff   t, algo::cstring &out, const algo::strptr &spec);
     void UnixDiff_PrintSpec(UnixDiff t, algo::cstring &out, const algo::strptr &spec);
     //     (user-implemented function, prototype is in amc-generated header)
-    // void Ipmask_Print(algo::Ipmask row, algo::cstring &str); // cfmt:algo.Ipmask.String
+    // void Ipmask_Print(algo::Ipmask row, algo::cstring &str); // dmmeta.cfmt:algo.Ipmask.String
 
     // Decode error using algo_lib table of decoders
-    // void Errcode_Print(algo::Errcode row, algo::cstring &str); // cfmt:algo.Errcode.String
+    // void Errcode_Print(algo::Errcode row, algo::cstring &str); // dmmeta.cfmt:algo.Errcode.String
 
     // Append STR to OUT, using comma-separated-values encoding
     // If QUOTE is 0, the need for quotes and the type of quote is determined automatically.
@@ -1094,7 +1142,7 @@ namespace algo { // update-hdr
     // Print CSV field, auto-determine quotes
     void strptr_PrintCsv(algo::strptr str, algo::cstring &out);
     //     (user-implemented function, prototype is in amc-generated header)
-    // void URL_Print(algo::URL &url, algo::cstring &str); // cfmt:algo.URL.String
+    // void URL_Print(algo::URL &url, algo::cstring &str); // dmmeta.cfmt:algo.URL.String
 
     // Append STR to OUT, and pad remainder with character FILL
     void strptr_PrintPadRight(algo::strptr str, algo::cstring &out, int nplaces, char fill);
@@ -1120,8 +1168,8 @@ namespace algo { // update-hdr
     void strptr_PrintSql(algo::strptr str, algo::cstring &out, char q);
     void strptr_PrintSql(algo::strptr str, algo::cstring &out);
     //     (user-implemented function, prototype is in amc-generated header)
-    // void Attr_Print(algo::Attr &attr, algo::cstring &str); // cfmt:algo.Attr.String
-    // bool Attr_ReadStrptrMaybe(algo::Attr &parent, algo::strptr in_str); // cfmt:algo.Attr.String
+    // void Attr_Print(algo::Attr &attr, algo::cstring &str); // dmmeta.cfmt:algo.Attr.String
+    // bool Attr_ReadStrptrMaybe(algo::Attr &parent, algo::strptr in_str); // dmmeta.cfmt:algo.Attr.String
 
     // Print a string suitable for parsing with Tuple
     // If the string doesn't need quotes, it is printed as-is.
@@ -1137,7 +1185,7 @@ namespace algo { // update-hdr
 
     // Read ROW from S, the reader the generated Tuple cfmt calls.
     //     (user-implemented function, prototype is in amc-generated header)
-    // bool Tuple_ReadStrptrMaybe(Tuple &row, algo::strptr s); // cfmt:algo.Tuple.String
+    // bool Tuple_ReadStrptrMaybe(Tuple &row, algo::strptr s); // dmmeta.cfmt:algo.Tuple.String
 
     // TUPLE         target tuple; its head and attrs are emptied before parsing.
     // STR           source string
@@ -1168,7 +1216,7 @@ namespace algo { // update-hdr
     // Every character in RHS is simply added to the bitset
     void Charset_ReadStrptrPlain(algo::Charset &lhs, strptr desc);
     //     (user-implemented function, prototype is in amc-generated header)
-    // bool Charset_ReadStrptrMaybe(algo::Charset &lhs, strptr rhs); // cfmt:algo.Charset.String
+    // bool Charset_ReadStrptrMaybe(algo::Charset &lhs, strptr rhs); // dmmeta.cfmt:algo.Charset.String
 
     // Print STR to OUT in a way that's acceptable as input for bash.
     void strptr_PrintBash(strptr str, algo::cstring &out);
@@ -1188,7 +1236,7 @@ namespace algo { // update-hdr
 
     // print binary octet string as hex
     //     (user-implemented function, prototype is in amc-generated header)
-    // void Signature_Print(algo::Signature &signature, algo::cstring &out); // cfmt:algo.Signature.String
+    // void Signature_Print(algo::Signature &signature, algo::cstring &out); // dmmeta.cfmt:algo.Signature.String
 
     // TRUE when SIGNATURE is the zero digest, which is what an absent signature
     // reads as: a message whose sender filled none in, or a binary carrying no such
@@ -1197,7 +1245,7 @@ namespace algo { // update-hdr
     // unstated one asks this first.
     bool NullSignatureQ(const algo::Signature &signature);
     //     (user-implemented function, prototype is in amc-generated header)
-    // bool Signature_ReadStrptrMaybe(algo::Signature &signature, algo::strptr str); // cfmt:algo.Signature.String
+    // bool Signature_ReadStrptrMaybe(algo::Signature &signature, algo::strptr str); // dmmeta.cfmt:algo.Signature.String
 
     // Return length of valid UTF-8 sequence starting at position POS in string S.
     // Returns 0 if the byte at POS is not a valid UTF-8 lead byte or if the
@@ -1288,18 +1336,18 @@ namespace algo { // update-hdr
     // characters. This regex will only match the specified string.
     void strptr_PrintRegxSql(algo::strptr value, algo::cstring &str);
     //     (user-implemented function, prototype is in amc-generated header)
-    // void WDiff_Print(algo::WDiff row, algo::cstring &str); // cfmt:algo.WDiff.String
-    // void WTime_Print(algo::WTime row, algo::cstring &str); // cfmt:algo.WTime.String
-    // bool WDiff_ReadStrptrMaybe(algo::WDiff &parent, algo::strptr in_str); // cfmt:algo.WDiff.String
-    // bool WTime_ReadStrptrMaybe(algo::WTime &parent, algo::strptr in_str); // cfmt:algo.WTime.String
+    // void WDiff_Print(algo::WDiff row, algo::cstring &str); // dmmeta.cfmt:algo.WDiff.String
+    // void WTime_Print(algo::WTime row, algo::cstring &str); // dmmeta.cfmt:algo.WTime.String
+    // bool WDiff_ReadStrptrMaybe(algo::WDiff &parent, algo::strptr in_str); // dmmeta.cfmt:algo.WDiff.String
+    // bool WTime_ReadStrptrMaybe(algo::WTime &parent, algo::strptr in_str); // dmmeta.cfmt:algo.WTime.String
     void u64_PrintBase32(u64 k, algo::cstring &str);
     //     (user-implemented function, prototype is in amc-generated header)
-    // void Uuid_Print(algo::Uuid &parent, algo::cstring &str); // cfmt:algo.Uuid.String
-    // bool Uuid_ReadStrptrMaybe(algo::Uuid &parent, strptr str); // cfmt:algo.Uuid.String
+    // void Uuid_Print(algo::Uuid &parent, algo::cstring &str); // dmmeta.cfmt:algo.Uuid.String
+    // bool Uuid_ReadStrptrMaybe(algo::Uuid &parent, strptr str); // dmmeta.cfmt:algo.Uuid.String
 
     // print bytes in hex e.g: 00 01 ff
-    // void memptr_Print(algo::memptr parent, algo::cstring &str); // cfmt:algo.memptr.String
-    // void ByteAry_Print(algo::ByteAry &parent, algo::cstring &str); // cfmt:algo.ByteAry.String
+    // void memptr_Print(algo::memptr parent, algo::cstring &str); // dmmeta.cfmt:algo.memptr.String
+    // void ByteAry_Print(algo::ByteAry &parent, algo::cstring &str); // dmmeta.cfmt:algo.ByteAry.String
 
     // Format a count with decimal SI suffix K/M/G/T (1K=1000, 1M=1e6, ...).
     // Two decimal places for the scaled value; bare integer below 1000.
@@ -1347,14 +1395,17 @@ namespace algo { // update-hdr
 
     // read bytes in hex e.g: 00 01 ff
     //     (user-implemented function, prototype is in amc-generated header)
-    // bool ByteAry_ReadStrptrMaybe(algo::ByteAry &parent, strptr str); // cfmt:algo.ByteAry.String
+    // bool ByteAry_ReadStrptrMaybe(algo::ByteAry &parent, strptr str); // dmmeta.cfmt:algo.ByteAry.String
 
     // -------------------------------------------------------------------
     // cpp/lib/algo/lib.cpp -- Main file
     //
 
     // Execute unix command and return output.
-    tempstr SysEval(strptr cmd, FailokQ fail_ok, int max_output, bool echo = false);
+    // If OUT_STATUS is non-NULL, it receives the child's raw wait status
+    // (0 for an empty command), letting fail_ok callers distinguish a
+    // silent nonzero exit from a successful empty-output run.
+    tempstr SysEval(strptr cmd, FailokQ fail_ok, int max_output, bool echo = false, int *out_status = NULL);
 
     // Execute unix command and return status code.
     // Execute command using system().
@@ -1427,6 +1478,14 @@ namespace algo { // update-hdr
     // release children or shared memory before exiting, rather than die on the
     // default disposition with nothing unwound.
     void SetupTeardownSignal(void (*handler)(int));
+
+    // Install the SIGHUP handler that sets algo_lib::_db.hup and nothing else.  A
+    // daemon a supervisor runs reads the flag between the units of work it must not
+    // be interrupted in -- a pass that pauses a runner and then stops its VM, a set
+    // of rounds with children -- and exits 0 there; the supervisor then starts the
+    // build it has waiting.  SA_RESTART keeps the daemon's own reads and waits from
+    // failing with EINTR, and a sleep between passes still returns at once.
+    void SetupHangupSignal();
     const tempstr GetHostname();
     const tempstr GetDomainname();
 
@@ -1498,30 +1557,57 @@ namespace algo { // update-hdr
     // otherwise some terminals push back and refuse the data.
     void Prlog(algo_lib::FLogcat *logcat, algo::SchedTime tstamp, strptr str);
 
+    // Write N progress dots to the stdout log and leave the line open.  Dots that
+    // follow continue the same line.  Any other line logged through the default
+    // Prlog ends the run of dots first, so a line that a waiting loop's body logs,
+    // or the error text of a body that throws, starts on a line of its own.
+    void PrlogDot(int n);
+
     // -------------------------------------------------------------------
     // cpp/lib/algo/retry.cpp -- retry_curs
     //
 
-    // Begin a retry loop with a WAIT-second budget.  Callers scale WAIT (e.g. by
-    // a slow-build factor); the cursor uses it as given.  FAILOK selects what
-    // budget exhaustion means: the default raises the last comment as the
-    // failure (the condition was mandatory); with FAILOK the loop simply ends,
-    // logging the last comment once -- for conditions worth waiting for but
-    // legal to proceed without.
+    // Turn the verbose log category back on, if CURS is the cursor that turned
+    // it off for the body.  A nested loop finds verbose already off and leaves the
+    // restore to the loop outside it.
+    void retry_curs_Unmute(algo::retry_curs &curs);
+
+    // Begin a retry loop with a WAIT_SEC budget, kept in CURS.  Callers scale
+    // WAIT_SEC (e.g. by a slow-build factor); the cursor uses it as given.  FAILOK
+    // selects what budget exhaustion means: the default raises the last comment as
+    // the failure (the condition was mandatory); with FAILOK the loop simply ends,
+    // logging the last comment once -- for conditions worth waiting for but legal
+    // to proceed without.
     void retry_curs_Reset(algo::retry_curs &curs, double wait_sec, bool failok = false);
 
-    // Continue while the body has not accepted and the budget is not spent.  At
-    // least one attempt always runs; once the budget is gone without acceptance,
-    // the last comment is raised as the failure -- or, under failok, logged once
-    // and the loop ends.  Clearing comment here, just before the next attempt,
-    // lets the body simply append.
+    // Return true while the body of CURS has not accepted and the budget is not
+    // spent.  At least one attempt always runs.  Clearing the comment here, just
+    // before the next attempt, lets the body simply append.
+    //
+    // The body runs with the verbose log category off.  A body that polls a
+    // command five times a second would otherwise echo the command line on every
+    // attempt, and fifty identical lines would bury the comment, which is the line
+    // that says what the body saw.  retry_curs_Next turns verbose back on.
+    //
+    // When the loop ends, a verbose run logs the verdict: accept, proceed (budget
+    // spent under failok) or giveup.  A failok loop logs its verdict and last
+    // comment even when not verbose, since proceeding without the condition is
+    // worth a line.  A loop without failok that spends its budget raises the last
+    // comment as the failure.
     bool retry_curs_ValidQ(algo::retry_curs &curs);
 
-    // Count the attempt, log the comment when verbose, and sleep one poll
+    // Turn verbose back on after the body of CURS, count the attempt, log its comment when verbose, and sleep one poll
     // interval before the next try (skipped once accepted).
+    //
+    // A loop that waits for a cluster to settle evaluates the same condition five
+    // times a second, and the answer rarely changes: a ten-second wait printing
+    // every attempt buries the two answers that matter under fifty copies of the
+    // first.  So the log carries a line only when the comment differs from the one
+    // before, with the time since the loop began, and a dot for each second that
+    // passes in between.  A wait that sees ten distinct answers prints ten lines.
     void retry_curs_Next(algo::retry_curs &curs);
 
-    // The cursor is itself the handle the body reads and writes.
+    // The cursor CURS is itself the handle the body reads and writes; return it.
     algo::retry_curs &retry_curs_Access(algo::retry_curs &curs);
 
     // -------------------------------------------------------------------
@@ -1793,13 +1879,14 @@ namespace algo { // update-hdr
     // Do not use this function --
     bool AlignedEqual(strptr a, strptr b);
 
-    // insert TEXT into OUT, indenting as necessary;
-    // Initial indentation is INDENT, it's adjusted as necessary as { and } are found
-    // in the TEXT.
-    // Each indent is 4 spaces.
-    // Trailing //-sytle comments are stripped
-    // /* */-style comments are not supported
-    // Lines beginning with # (#ifdef, etc) are printed at column zero.
+    // Append TEXT to OUT one line at a time, re-indented.
+    // The first line is indented INDENT levels of four spaces.  A line whose code
+    // ends with '{', or with '{' followed only by '}' characters, indents the lines
+    // after it one level deeper; a line whose code starts with '}' and holds no
+    // other '}' outdents itself and the lines after it.
+    // A // comment ends the brace scan of its line and is copied to OUT as it is;
+    // /* */ comments are not understood.  Trailing whitespace is dropped, and a line
+    // beginning with # (a preprocessor directive) is printed at column zero.
     void InsertIndent(algo::cstring &out, strptr text, int indent);
 
     // Convert unix path to windows path
@@ -1822,8 +1909,39 @@ namespace algo { // update-hdr
     void Sep_curs_Next(algo::Sep_curs &curs);
 
     // -------------------------------------------------------------------
+    // cpp/lib/algo/testrun.cpp -- Progress and separator lines a test runner prints
+    //
+
+    // Log the line a test runner prints before running test INDEX of N, where INDEX
+    // counts from 1, with the time passed since the run began at START.  atf_x2 and
+    // atf_comp both print it, so a reader sees how far either run has come.
+    void PrlogTestProgress(i32 index, i32 n, algo::UnTime start);
+
+    // Log the separator a test runner prints after each test: a rule, then a blank
+    // line.
+    void PrlogTestSeparator();
+
+    // -------------------------------------------------------------------
     // cpp/lib/algo/time.cpp -- UnTime / UnDiff functions
     //
+
+    // Read an ISO 8601 zone designator at ITER and return whether one stood
+    // there.  The designator is a Z, or a sign followed by hours and then
+    // minutes, with or without a colon between them, as in +02:00, -0400 or
+    // -07.  GMTOFF receives the zone's offset east of UTC in seconds, zero for
+    // a Z, and ITER advances past the designator.  With no designator at ITER
+    // the function returns false and leaves both ITER and GMTOFF as they were.
+    bool ReadZoneOffset(algo::StringIter &iter, i64 &gmtoff);
+
+    // Read the text at ITER according to the strftime-style format SPEC, fill the
+    // fields of OUT that SPEC names, and return whether the text matched SPEC.
+    // ITER advances past what was read.  A format that names a field matches only
+    // by reading one, where a field is a digit or a month or weekday name: every
+    // numeric field of SPEC reads as zero when no digit stands under it, so
+    // without this rule a format with no literal separators, such as %Y%m%d,
+    // matches an empty string, and an empty string is what an absent json field,
+    // an unset ssim attr and a blank column all reduce to.  A format of literals
+    // alone matches by its literals.
     bool TimeStruct_Read(TimeStruct &out, algo::StringIter &iter, const strptr& spec);
     TimeStruct ToTimeStruct(UnDiff   U);
     TimeStruct ToTimeStruct(UnixDiff U);
@@ -1935,7 +2053,7 @@ namespace algo { // update-hdr
     inline u32 cstring_Hash(u32 prev, const algo::strptr &val);
 
     // Use hardware CRC32C intrinsics on supported x86 and Apple Silicon builds.
-    // Otherwise, the function is defined in crc32.cpp and uses a software implementation.
+    // Otherwise, forward to CRC32StepSw in crc32.cpp, the same CRC-32C from a table.
     inline u32 CRC32Step(u32 old, const u8 *x, size_t len);
     inline int P1Mod(int a, int b);
     inline u32 u32_Count1s(u32 x);
@@ -2190,9 +2308,26 @@ namespace algo_lib { // update-hdr
     // cpp/lib/algo/cpu_hz.cpp -- Obtain cpu_hz from a source that states it, never by measuring
     //
 
+    // Whether CPUINFO declares the counter fixed-rate.  A counter whose rate
+    // follows the core's P-state is worthless to a process that schedules on it,
+    // and the flags line is where the CPU says which kind it has.  The claim is
+    // the CPU's own, though, and a guest often makes no claim at all: Linux sets
+    // X86_FEATURE_CONSTANT_TSC for an Intel part only at family 6 model 0x0e or
+    // later, so QEMU's default qemu64 model reports no constant_tsc however its
+    // counter behaves.  A cpuinfo with no flags line at all -- every non-Linux
+    // host -- says nothing against the counter and so passes.
+    bool ConstantTscQ(strptr cpuinfo);
+
     // Install HZ as the process's cycles<->seconds calibration: refuse an
     // implausible value, set the conversion constants, and re-anchor the
     // scheduler clock so elapsed time counts from the calibration point.
+    //
+    // The refusal states the range it applied, because the rate that lands here
+    // came from somewhere an operator can go and change -- a kernel export, a
+    // host file, an environment variable -- and the figure alone does not say
+    // which end of the range it missed.  An emulated guest is where this bites:
+    // Bochs presents a 40 MHz processor, four times the floor, and a slower one
+    // would put every process of a cluster out on a line that named no bound.
     void ApplyCpuHz(double hz);
     void InitCpuHz();
 
@@ -2221,8 +2356,7 @@ namespace algo_lib { // update-hdr
     // P-state file.
     //
     // Two further sources exist because some kernels cannot carry the export at
-    // all.  A WSL2 guest is the case in hand: its kernel calibrates the counter
-    // exactly, having been told the rate by the hypervisor, but ships no header
+    // all.  Such a kernel calibrates the counter exactly, but ships no header
     // package to build the tsc_freq_khz module against and no /lib/modules to
     // install it into, and it publishes the figure through no other interface --
     // not cpufreq, not CPUID, not the MSR device.  The rate on such a host is
@@ -2245,6 +2379,17 @@ namespace algo_lib { // update-hdr
     // Both are named by the caller, because which file and which variable a
     // deployment states its rate through is that deployment's convention and not
     // this library's.
+    //
+    // The counter also has to tick at a fixed rate, and two things vouch for
+    // that: the constant_tsc flag in /proc/cpuinfo, and a rate an operator states.
+    // A stated rate is the operator saying the counter ticks at that rate, which is
+    // the claim the flag carries, from a stronger source.  Either one is enough,
+    // whichever source the rate itself comes from.  A guest is where the two part
+    // company: QEMU's default CPU model advertises no constant_tsc whatever its
+    // counter does, and loading the export module there gives the kernel's figure
+    // without the flag.  So a process with no statement and no flag is refused,
+    // and the refusal names the statement as the remedy, which is the one that
+    // works on such a guest.
     //
     // Taking the rate from either is reported as a verbose line rather than as
     // plain output.  Every process of a cluster reads the rate, so on such a host
@@ -2304,7 +2449,7 @@ namespace algo_lib { // update-hdr
     // The mtime is refreshed on release, so a reader can judge how long ago
     // the record's holder let go of it.
     //     (user-implemented function, prototype is in amc-generated header)
-    // void fildes_Cleanup(algo_lib::FLockfile &lockfile); // ffunc:algo_lib.FTempfile.fildes.Cleanup
+    // void fildes_Cleanup(algo_lib::FLockfile &lockfile); // dmmeta.ffunc:algo_lib.FTempfile.fildes.Cleanup
 
     // If PATH is an existing path, leave it unchanged
     // On Windows, If PATH.EXE is an existing path, return that
@@ -2338,7 +2483,7 @@ namespace algo_lib { // update-hdr
     // cpp/lib/algo/fmt.cpp -- Print to string / Read from string
     //
     //     (user-implemented function, prototype is in amc-generated header)
-    // void ErrorX_Print(algo_lib::ErrorX &row, algo::cstring &str); // cfmt:algo_lib.ErrorX.String
+    // void ErrorX_Print(algo_lib::ErrorX &row, algo::cstring &str); // dmmeta.cfmt:algo_lib.ErrorX.String
 
     // -------------------------------------------------------------------
     // cpp/lib/algo/iohook.cpp
@@ -2363,7 +2508,7 @@ namespace algo_lib { // update-hdr
     // that occurs before it in the main loop.
     // Sleep will not extend beyond algo_lib::_db.limit
     //     (user-implemented function, prototype is in amc-generated header)
-    // void giveup_time_Step(); // fstep:algo_lib.FDb.giveup_time
+    // void giveup_time_Step(); // dmmeta.fstep:algo_lib.FDb.giveup_time
 
     // -------------------------------------------------------------------
     // cpp/lib/algo/lib.cpp -- Main file
@@ -2381,12 +2526,20 @@ namespace algo_lib { // update-hdr
     // Set exit time of main loop to current time.
     void ReqExitMainLoop();
     //     (user-implemented function, prototype is in amc-generated header)
-    // void fd_Cleanup(algo_lib::FFildes &fildes); // ffunc:algo_lib.FFildes.fd.Cleanup
-    // void fildes_Cleanup(algo_lib::FIohook &iohook); // ffunc:algo_lib.FTempfile.fildes.Cleanup
-    // void bh_timehook_Step(); // fstep:algo_lib.FDb.bh_timehook
+    // void fd_Cleanup(algo_lib::FFildes &fildes); // dmmeta.ffunc:algo_lib.FFildes.fd.Cleanup
+    // void fildes_Cleanup(algo_lib::FIohook &iohook); // dmmeta.ffunc:algo_lib.FTempfile.fildes.Cleanup
+
+    // Fire the due time hook at the top of the work-band heap: reschedule it DELAY
+    // clocks out if it is recurrent, take it off the heap otherwise, then call it.
+    // void bh_timehook_Step(); // dmmeta.fstep:algo_lib.FDb.bh_timehook
+
+    // Fire the due time hook at the top of the idle-band heap, the same way
+    // bh_timehook_Step fires one from the work-band heap.  Steps() calls this after
+    // the output band, so an idle hook never delays the flush of a pass's work.
+    // void bh_timehook_idle_Step(); // dmmeta.fstep:algo_lib.FDb.bh_timehook_idle
 
     // Check signature on incoming data
-    // bool dispsigcheck_InputMaybe(dmmeta::Dispsigcheck &dispsigcheck); // ffunc:algo_lib.FDb.dispsigcheck.InputMaybe
+    // bool dispsigcheck_InputMaybe(dmmeta::Dispsigcheck &dispsigcheck); // dmmeta.ffunc:algo_lib.FDb.dispsigcheck.InputMaybe
 
     // Signature of dispatch DISPSIG as this binary was compiled with -- the digest
     // itself, zero when the binary carries no such dispatch.  Every executable loads
@@ -2416,7 +2569,7 @@ namespace algo_lib { // update-hdr
     // Computed filename is saved to tempfile.filename
     void TempfileInitX(algo_lib::FTempfile &tempfile, strptr prefix);
     //     (user-implemented function, prototype is in amc-generated header)
-    // void fildes_Cleanup(algo_lib::FTempfile &tempfile); // ffunc:algo_lib.FTempfile.fildes.Cleanup
+    // void fildes_Cleanup(algo_lib::FTempfile &tempfile); // dmmeta.ffunc:algo_lib.FTempfile.fildes.Cleanup
 
     // Interpret redirect string, return resulting fd
     // If no redirect applies, return -1
@@ -2462,7 +2615,7 @@ namespace algo_lib { // update-hdr
 
     // if OWN_FD is cleared, clean up file descriptor before it is closed
     //     (user-implemented function, prototype is in amc-generated header)
-    // void file_Cleanup(algo_lib::InTextFile &file); // ffunc:algo_lib.InTextFile.file.Cleanup
+    // void file_Cleanup(algo_lib::InTextFile &file); // dmmeta.ffunc:algo_lib.InTextFile.file.Cleanup
 
     // Walk child process tree for parent process pid, in post-order traversal way,
     // and send signal sig to each process. Kill_topmost is an option whether
@@ -2471,6 +2624,24 @@ namespace algo_lib { // update-hdr
     // Does not throw exceptions, just prints error message if kill() fails.
     // Linux only.
     int KillRecurse(int pid, int sig, bool kill_topmost);
+
+    // Bytes of PID's address space that map files under /dev/shm: the shared
+    // memory segments the process has attached, summed over the mappings that
+    // /proc/<pid>/maps lists, into BYTES.  TRUE when the maps file was read;
+    // FALSE, with BYTES zero, when it could not be -- a pid that is gone, or one
+    // whose capabilities the reader's do not cover, since the kernel refuses maps
+    // to a reader without cap_sys_ptrace over a target that exec'd with file
+    // capabilities -- and always on a platform without /proc.  A refused read is
+    // told from an empty one because a caller that charged the whole address space
+    // to a process mapping nothing would raise a memory alarm with the wrong
+    // cause.
+    //
+    // A maps line reads `start-end perms offset dev inode path`, with the two
+    // addresses in hex and the path absent for an anonymous mapping.  A segment
+    // is a file lib_ams created under /dev/shm, so its mappings are the lines
+    // whose path carries that prefix, and each contributes its whole extent
+    // whether or not the process has touched its pages.
+    bool ProcShmBytes(int pid, u64 &bytes);
 
     // Return directory of the worktree named NAME (empty name -> empty result)
     tempstr WtDir(algo::strptr name);
@@ -2491,7 +2662,7 @@ namespace algo_lib { // update-hdr
 
     // Global initializer, called from algo_lib::FDb_Init
     //     (user-implemented function, prototype is in amc-generated header)
-    // void errns_Userinit(); // ffunc:algo_lib.FDb.errns.Userinit
+    // void errns_Userinit(); // dmmeta.ffunc:algo_lib.FDb.errns.Userinit
     void UpdateRate(algo::I64Rate &rate, i64 val);
 
     // For InlineOnce and TimeHookOnce steps, break
@@ -2500,7 +2671,19 @@ namespace algo_lib { // update-hdr
     // no further progress can be made by the step function.
     void EndStep();
     //     (user-implemented function, prototype is in amc-generated header)
-    // void Userinit(); // ffunc:algo_lib.FDb._db.Userinit
+    // void Userinit(); // dmmeta.ffunc:algo_lib.FDb._db.Userinit
+
+    // Ask the terminal PROMPT for a secret: the answer lands in OUT and is not shown
+    // as it is typed.  False, with OUT empty, when stdin is not a terminal -- a run
+    // under a pipe cannot be asked a secret, so the caller should stop and say so
+    // rather than read one from a stream.
+    bool ReadMasked(algo::strptr prompt, algo::cstring &out);
+
+    // Ask the terminal PROMPT for a plain answer, echoed as it is typed, into OUT.
+    // False, with OUT empty, when stdin is not a terminal.  This is the question to
+    // pair with ReadMasked: both read the descriptor directly, so a plain answer never
+    // swallows the secret typed after it.
+    bool ReadPlain(algo::strptr prompt, algo::cstring &out);
 
     // -------------------------------------------------------------------
     // cpp/lib/algo/line.cpp -- Line processing
@@ -2545,7 +2728,7 @@ namespace algo_lib { // update-hdr
 
     // User-defined cleanup function for MMAP.MEM
     //     (user-implemented function, prototype is in amc-generated header)
-    // void mem_Cleanup(algo_lib::Mmap &mmap); // ffunc:algo_lib.Mmap.mem.Cleanup
+    // void mem_Cleanup(algo_lib::Mmap &mmap); // dmmeta.ffunc:algo_lib.Mmap.mem.Cleanup
 
     // Attach mmapfile MMAPFILE to FD.
     // Return success code.
@@ -2563,16 +2746,60 @@ namespace algo_lib { // update-hdr
     bool MmapFile_Load(MmapFile &mmapfile, strptr fname);
 
     // -------------------------------------------------------------------
+    // cpp/lib/algo/msgfmt.cpp
+    //
+
+    // Return STR cut to about LIM characters, the middle replaced by its CRC32:
+    // abcabcabcabc [CRC:12345678] xyzxyzxyzxyz
+    // The characters are unquoted, so the caller passes the result through Keyval
+    // or strptr_ToSsim.  The result may run about 20 characters past LIM.
+    algo::tempstr LimitLengthCRC(algo::strptr str, int lim);
+
+    // Append to OUT the indentation of the message FMT is printing, two spaces per
+    // level of nesting.
+    void MsgFmt_Indent(algo::MsgFmt &fmt, algo::cstring &out);
+
+    // Append LENGTH, the length of the message being printed, to OUT when FMT asks
+    // for lengths.
+    void MsgFmt_Showlen(algo::MsgFmt &fmt, u32 length, algo::cstring &out);
+
+    // Return the printed form of DATA, the bytes of the field named NAME.
+    // With an h_convert hook installed on FMT, the hook receives the name and the
+    // bytes in convert_field and convert_val and leaves the printed form in
+    // convert_val, so a reader can decode a field whose bytes are a struct.  With
+    // none, the bytes print as they are.
+    algo::strptr MsgFmt_Convert(algo::MsgFmt &fmt, algo::strptr name, algo::strptr data);
+
+    // Append DATA, the bytes of a stripped layer's field named NAME, to OUT followed
+    // by a colon, as the prefix of what the layer nests.  A stripped keyed record
+    // thus reads key:value, the form a tuple reader parses back.
+    void MsgFmt_PrintPrefix(algo::MsgFmt &fmt, algo::strptr name, algo::strptr data, algo::cstring &out);
+
+    // Append DATA, a byte field named NAME, to OUT.
+    // A value that is short and fits on a line prints as an attribute of the
+    // message's line; a longer one prints on a line of its own below the message,
+    // quoted and cut to the payload limit.  So one message type prints either way,
+    // as its content dictates: a ten-byte record reads data:hello, and a kilobyte
+    // one takes a second line.  Stripped (FMT.STRIP > 0), the bytes print whole and
+    // unquoted, which is what a reader asking for the payload alone wants.
+    void MsgFmt_PrintBytes(algo::MsgFmt &fmt, algo::strptr name, algo::strptr data, algo::cstring &out);
+
+    // -------------------------------------------------------------------
     // cpp/lib/algo/prlog.cpp -- prlog macro
     //
 
-    // Enable or disable logcat tracing based on traace expression WHAT
+    // Enable or disable logcat tracing based on trace expression WHAT
     // WHAT is a comma-separated list of logcat regexes, e.g. a,b,c
     // Each component can be a key-value pair, e.g. a:<filter>,b,c
     // <filter> is an optional regex; Regex can be prefixed with ! to indicate a negative match.
     // Timestamps can be controlled with 'timestamps'
     // Verbose can be controlled with 'verbose'
     // Debug can be controlled with 'debug'
+    // The component payload_lim:N is not a category: it sets algo_lib::_db.payload_lim,
+    // the number of payload bytes a trace line prints before summarizing the rest.
+    // Every executable applies its -trace option through this function from the
+    // generated ReadArgv, and forwards the expression to the commands it starts.
+    // Return number of components that matched something.
     int ApplyTrace(algo::strptr what, bool enable = true);
 
     // Enable/disable log category NAME with filter FILTER.
@@ -2618,6 +2845,18 @@ namespace algo_lib { // update-hdr
     // ends. Drain from_stdout / from_stderr before calling to avoid a deadlock.
     void ProcWait(algo_lib::FProc &proc);
 
+    // Reap the subprocess if it has already exited, without waiting for it: TRUE
+    // when it is no longer running, and then its status is stored and its pid
+    // cleared, so ProcExitCode answers for it.  FALSE while it still runs.
+    //
+    // This is what a step calls, since a step may not block and ProcWait does.  A
+    // proc that was never started reads as not running, so a caller that wants a
+    // spawn failure told apart from an exit reads proc.status, which ProcStart sets
+    // to -1 when the fork or exec failed.  Pipes are the caller's to drain: this
+    // closes none, because a child that wrote more than a pipe holds has not exited
+    // and there would be nothing to reap.
+    bool ProcReapQ(algo_lib::FProc &proc);
+
     // Kill the subprocess with SIGKILL and reap it. No-op when not running.
     // A pgroup child is killed as a whole group (its descendants with it).
     void ProcKill(algo_lib::FProc &proc);
@@ -2635,7 +2874,7 @@ namespace algo_lib { // update-hdr
 
     // On destruction of an FProc, kill and reap the child for forward progress.
     //     (user-implemented function, prototype is in amc-generated header)
-    // void pid_Cleanup(algo_lib::FProc &proc); // ffunc:algo_lib.FProc.pid.Cleanup
+    // void pid_Cleanup(algo_lib::FProc &proc); // dmmeta.ffunc:algo_lib.FProc.pid.Cleanup
 
     // -------------------------------------------------------------------
     // cpp/lib/algo/regx.cpp -- Sql Regx implementation
@@ -2646,8 +2885,8 @@ namespace algo_lib { // update-hdr
     // we print back the original expression that was read in, but the information
     // about what function read it is lost.
     //     (user-implemented function, prototype is in amc-generated header)
-    // void Regx_Print(algo_lib::Regx &regx, algo::cstring &lhs); // cfmt:algo_lib.Regx.String
-    // void RegxState_Print(algo_lib::RegxState &state, algo::cstring &lhs); // cfmt:algo_lib.RegxState.String
+    // void Regx_Print(algo_lib::Regx &regx, algo::cstring &lhs); // dmmeta.cfmt:algo_lib.Regx.String
+    // void RegxState_Print(algo_lib::RegxState &state, algo::cstring &lhs); // dmmeta.cfmt:algo_lib.RegxState.String
 
     // Check if REGX matches TEXT, return result
     bool Regx_Match(algo_lib::Regx &regx, algo::strptr text);
@@ -2676,7 +2915,7 @@ namespace algo_lib { // update-hdr
     // Set REGX to match string INPUT literally
     void Regx_ReadLiteral(algo_lib::Regx &regx, algo::strptr input);
     //     (user-implemented function, prototype is in amc-generated header)
-    // bool Regx_ReadStrptrMaybe(algo_lib::Regx &regx, algo::strptr input); // cfmt:algo_lib.Regx.String
+    // bool Regx_ReadStrptrMaybe(algo_lib::Regx &regx, algo::strptr input); // dmmeta.cfmt:algo_lib.Regx.String
     algo::tempstr ToDbgString(algo_lib::Bitset &bitset);
     algo::tempstr ToDbgString(algo_lib::RegxState &state, int index);
     algo::tempstr ToDbgString(algo_lib::Regx &regx);
@@ -2690,7 +2929,7 @@ namespace algo_lib { // update-hdr
     // Print SCOPE as the variables it defines, since the trie holding them is a
     // representation rather than a thing a reader wants to see.
     //     (user-implemented function, prototype is in amc-generated header)
-    // void Replscope_Print(algo_lib::Replscope &row, algo::cstring &str); // cfmt:algo_lib.Replscope.String
+    // void Replscope_Print(algo_lib::Replscope &row, algo::cstring &str); // dmmeta.cfmt:algo_lib.Replscope.String
 
     // Set value of key KEY value VALUE
     // KEY        string to replace
@@ -2778,7 +3017,7 @@ namespace algo_lib { // update-hdr
     // Add a comma-separated list of columns to the table
     void AddCols(algo_lib::FTxttbl &txttbl, algo::strptr csv, algo_TextJustEnum justify = algo_TextJust_j_left);
     //     (user-implemented function, prototype is in amc-generated header)
-    // void FTxttbl_Print(algo_lib::FTxttbl &txttbl, algo::cstring &str); // cfmt:algo_lib.FTxttbl.String
+    // void FTxttbl_Print(algo_lib::FTxttbl &txttbl, algo::cstring &str); // dmmeta.cfmt:algo_lib.FTxttbl.String
 
     // Print table TXTTBL using markdown, appending to string STR.
     // First row of the table is assumed to be the header.

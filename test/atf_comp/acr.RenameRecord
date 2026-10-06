@@ -1,9 +1,9 @@
 # start acr cmd:"$bindir/acr -in:- target:samp -rename:xyz"
-acr <- dmmeta.ns  ns:samp  nstype:exe  license:GPL  comment:""
+acr <- dmmeta.ns  ns:samp  nstype:exe  license:GPL  comment:''
 acr <- dev.target  target:samp  compat:%-%g%.%-%
-acr <- dev.targdep  targdep:samp.algo_lib  comment:""
-acr <- dev.targsrc  targsrc:samp/cpp/samp/1.cpp          comment:""
-acr <- dev.targsrc  targsrc:samp/cpp/samp/2.cpp      comment:""
+acr <- dev.targdep  targdep:samp.algo_lib  comment:''
+acr <- dev.targsrc  targsrc:samp/cpp/samp/1.cpp          comment:''
+acr <- dev.targsrc  targsrc:samp/cpp/samp/2.cpp      comment:''
 # eof acr
 acr -> acr.delete  dev.target  target:samp
 acr -> acr.insert  dev.target  target:xyz

@@ -11,8 +11,8 @@ via an `algo_lib::FIohook` and a "ready" linked-list so that:
 - a step (or your own loop) drains the list, calls `GetMsg`,
   processes the message, calls `SkipMsg`, and loops.
 
-Fbuf is the basis of every network/Unix-socket protocol in
-X2.  It supports line, byte, and length-delimited message
+Fbuf is the basis of every network and Unix-socket protocol in the
+tree.  It supports line, byte, and length-delimited message
 framing, plus an extern hook for custom protocols.
 
 ```ssim

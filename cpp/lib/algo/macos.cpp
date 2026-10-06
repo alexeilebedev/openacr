@@ -1,18 +1,17 @@
-// Copyright (C) 2026 AlgoRND
+// Copyright (C) 2026 AlgoX2 Corp
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Target: algo_lib (lib) -- Support library for all executables
 // Exceptions: NO
@@ -65,6 +64,44 @@ int pipe2(int fd[2], int flags) {
             (void)close(fd[1]);
             errno = err;
         }
+    }
+    return ret;
+}
+
+
+// Take LEN bytes of backing store for FD from OFFSET, the way Linux's
+// posix_fallocate does: the file is extended to at least OFFSET+LEN and the
+// space is allocated, so a later store into it cannot fail for lack of room.
+// Returns 0, or the error number, as the Linux call does rather than through
+// errno.  Darwin allocates with F_PREALLOCATE, which takes contiguous space
+// first and falls back to whatever the volume has; the truncate after it gives
+// the file its length.
+//
+// A POSIX shared memory object is memory with no filesystem under it, so it has
+// no space to run out of.  F_PREALLOCATE refuses it with EBADF, and Darwin lets
+// its length be set only once, by the ftruncate that made it.  An object that
+// is already OFFSET+LEN long therefore has its space, and the call succeeds
+// without touching it.
+int posix_fallocate(int fd, off_t offset, off_t len) {
+    int ret = 0;
+    fstore_t store;
+    store.fst_flags = F_ALLOCATECONTIG;
+    store.fst_posmode = F_PEOFPOSMODE;
+    store.fst_offset = 0;
+    store.fst_length = offset + len;
+    store.fst_bytesalloc = 0;
+    if (fcntl(fd, F_PREALLOCATE, &store) == -1) {
+        store.fst_flags = F_ALLOCATEALL;
+        if (fcntl(fd, F_PREALLOCATE, &store) == -1) {
+            ret = errno;
+        }
+    }
+    struct stat st;
+    bool sized = ret == EBADF && fstat(fd, &st) == 0 && st.st_size >= offset + len;
+    if (sized) {
+        ret = 0;
+    } else if (ret == 0 && ftruncate(fd, offset + len) == -1) {
+        ret = errno;
     }
     return ret;
 }

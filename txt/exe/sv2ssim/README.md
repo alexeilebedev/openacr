@@ -1,5 +1,8 @@
 ## sv2ssim - sv2ssim - Separated Value file processor
-
+<a href="#sv2ssim"></a>
+sv2ssim reads a file of separated values, such as CSV or TSV, and converts it.  It can
+print the rows as ssim tuples, print them again with another separator, or guess an ssim
+schema from the values it sees.  Use it to bring a spreadsheet export or a log into ssim.
 
 ### Syntax
 <a href="#syntax"></a>
@@ -21,6 +24,7 @@ Usage: sv2ssim [-fname:]<string> [options]
     -prefer_signed                  Prefer signed types when given a choice
     -verbose        flag            Verbosity level (0..255); alias -v; cumulative
     -debug          flag            Debug level (0..255); alias -d; cumulative
+    -trace          string  ""      Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps
     -help                           Print help and exit; alias -h
     -version                        Print version and exit
     -signature                      Show signatures and exit; alias -sig
@@ -29,17 +33,22 @@ Usage: sv2ssim [-fname:]<string> [options]
 ### Description
 <a href="#description"></a>
 
-sv2ssim is a tool for extracting schema from tab-,comma-, and other delimiter-separated files (sv-files).
-The tool can process files with and without a header line (`-header`), extract schema by observing
-the column width and value range of values, and generate ssim schema on output.
+sv2ssim reads the file line by line and skips empty lines.  By default the first line is a
+header, and its tokens become the field names.  sv2ssim keeps only letters, digits and
+underscores of each name, puts `_` in front of a name that starts with a digit, and adds a
+number to a name seen before.  With a comma separator, a token in double quotes may hold
+commas and escaped quotes.
 
-The tool can read files or stdin (with "-" as filename argument).
-It can convert between sv-formats as well as convert sv-files to ssim tuples;
-It handles double-quote escape characters in CSV files.
+Three outputs can be combined in one run:
 
-The main configuration comes from the `svtype` table, which helps the tool map observed values to ssim types.
-When more than one svtype matches, it selects one with the lowest size (`maxwid`). If all else fails, `algo.cstring`
-is chosen as the type.
+- `-data` prints each row, as an ssim tuple tagged with `-ctype` or as separated values.
+- `-schema` prints a `dmmeta.ctype`, a `dmmeta.cfmt` and one `dmmeta.field` per column.
+  It picks each field's type from the widths and values seen in the whole file.
+- `-report`, on by default, prints a `sv2ssim.report` line with the line and field counts.
+
+The schema comes from the `dmmeta.svtype` table in `-in`.  A column matches an svtype when
+its values fit that type, and when several match, the one with the smallest `maxwid` wins.
+A column that matches none is `algo.cstring`.
 
 ```ssim
 inline-command: acr svtype -report:N
@@ -62,21 +71,17 @@ dmmeta.svtype  ctype:u32               maxwid:32          fixedwid1:0  fixedwid2
 dmmeta.svtype  ctype:u64               maxwid:64          fixedwid1:0  fixedwid2:0  comment:""
 ```
 
-### Test cases
-<a href="#test-cases"></a>
-
-```ssim
-inline-command: acr comptest:sv2ssim.%
-atfdb.comptest  comptest:sv2ssim.Convert1         timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:""
-atfdb.comptest  comptest:sv2ssim.Convert1Signed   timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:""
-atfdb.comptest  comptest:sv2ssim.Convert2         timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:""
-atfdb.comptest  comptest:sv2ssim.Convert2Tsv      timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:""
-atfdb.comptest  comptest:sv2ssim.UniqueFieldName  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:""
-report.acr  n_select:5  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0  n_badline:0
-```
-
 ### Examples
 <a href="#examples"></a>
+
+```bash
+sv2ssim data.csv -ctype:a.B -data -report:N              # CSV rows as a.B tuples
+sv2ssim data.tsv -separator:$'\t' -ctype:a.B -data       # read a tab-separated file
+sv2ssim data.csv -data -outseparator:'|' -report:N       # rewrite with | separators
+sv2ssim data.csv -ctype:a.B -ssimfile:a.b -schema        # guess a schema and its ssimfile
+# round-trip dmmeta.ns through CSV, keeping two fields
+acr ns:acr% | ssimfilt ^ -format:csv | sv2ssim - -ctype:dmmeta.Ns -data -field:'ns|comment'
+```
 
 ```bash
 inline-command: cat test/csv/2.csv; echo; sv2ssim test/csv/2.csv -ctype a.B -schema -data -prefer_signed
@@ -115,40 +120,86 @@ dmmeta.field  field:a.B._1959  arg:i32  reftype:Val  dflt:""  comment:_1959
 dmmeta.field  field:a.B._1960  arg:i32  reftype:Val  dflt:""  comment:_1960
 ```
 
+### Caveats
+<a href="#caveats"></a>
+
+- Check the types `-schema` picks before using them.  A text column wider than 25
+  characters, and a column of decimals, both come out as `u32`, so fix those fields by hand.
+- `-outseparator` prints the data rows alone, and the header line is not repeated.
+- With a separator other than a comma, double quotes are ordinary characters.
+- With a header, a row with more tokens than the header loses the extra ones, and
+  `n_wideline` in the report counts such rows.
+
 ### Options
 <a href="#options"></a>
 #### -in -- Input directory or filename, - for stdin
 <a href="#-in"></a>
 
+The directory sv2ssim loads `dmmeta.svtype` and the built-in types from, `data` by
+default.  The file to convert is `-fname`.
+
 #### -fname -- Input file, use - for stdin
 <a href="#-fname"></a>
+
+The file to read, usually given as the first positional argument.  Use `-` to read stdin.
 
 #### -separator -- Input field separator
 <a href="#-separator"></a>
 
+The character between fields, a comma by default.  Use `-separator:$'\t'` for a TSV file.
+With any separator other than a comma, double quotes lose their meaning.
+
 #### -outseparator -- Output separator. Default: ssim
 <a href="#-outseparator"></a>
+
+With `-data`, prints each row as separated values in place of an ssim tuple.  A comma
+writes CSV, quoting where needed.  Any other separator is removed from the values before
+they are joined.
 
 #### -header -- File has header line
 <a href="#-header"></a>
 
+On by default, so the first non-empty line names the fields.  With `-header:N` every line
+is data, and the fields are named `field0`, `field1` and so on.
+
 #### -ctype -- Type tag for output tuples
 <a href="#-ctype"></a>
+
+The typetag of the tuples `-data` prints, and the ctype `-schema` defines.  `-schema`
+requires it.
 
 #### -ssimfile -- (with -schema) Create ssimfile definition
 <a href="#-ssimfile"></a>
 
+With `-schema`, also prints a `dmmeta.ssimfile` record that ties this ssimfile name to
+`-ctype`.  Use it when the rows are meant to become a new ssimfile.
+
 #### -schema -- (output)Generate schema from input file
 <a href="#-schema"></a>
+
+Prints the ctype, its cfmt, and a field per column after reading the whole file.  Each
+field's `comment` holds the column name.
 
 #### -field -- (output) Print selected fields
 <a href="#-field"></a>
 
+A regx on field names, `%` by default.  Only the matching fields appear in the `-data`
+rows and the `-schema` fields.  It matches the cleaned-up names, such as `_1958`.
+
 #### -data -- (output) Convert input file to ssim tuples
 <a href="#-data"></a>
+
+Prints every row after the header.  The row is an ssim tuple tagged with `-ctype`, or a
+line of separated values when `-outseparator` is set.
 
 #### -report -- Print final report
 <a href="#-report"></a>
 
+On by default.  Prints one `sv2ssim.report` line after the data.  Pass `-report:N` when
+the output feeds another tool.
+
 #### -prefer_signed -- Prefer signed types when given a choice
 <a href="#-prefer_signed"></a>
+
+Types integer columns as signed, `i32` or `i64`, even when no value is negative.  Without
+it a column is signed only when it holds a negative value.

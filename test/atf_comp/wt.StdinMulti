@@ -1,4 +1,4 @@
-# start wt-scratch cmd:"test/wt-scratch $bindir/wt test.stdin.xyz -cow -q -del"
+# start wt-scratch cmd:"test/wt-scratch $bindir/wt test.stdin.xyz -cow -q -i -del"
 wt-scratch <- echo line1
 wt-scratch <- echo line2
 # eof wt-scratch

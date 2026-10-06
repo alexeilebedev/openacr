@@ -178,7 +178,7 @@ conditionally — gated by `listtype.haveprev`, `havetail`, etc.
 - [Bheap](/txt/exe/amc/reftype/Bheap.md) — when ordering matters
 - Source: `cpp/amc/llist.cpp`
 - Tfunc records: `acr 'tfunc:Llist.%'`
-- Listtype catalog: `acr listtype:%`
+- Listtype table: `acr listtype:%`
 
 ### Example
 <a href="#example"></a>

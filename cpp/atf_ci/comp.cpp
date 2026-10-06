@@ -1,18 +1,17 @@
-// Copyright (C) 2026 AlgoRND
+// Copyright (C) 2026 AlgoX2 Corp
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Target: atf_ci (exe) -- Normalization tests (see citest table)
 // Exceptions: yes
@@ -63,9 +62,10 @@ void atf_ci::citest_atf_comp() {
 // -----------------------------------------------------------------------------
 
 // Run ams_sendtest once in the shape AMS_SENDTEST describes, echo everything the
-// run prints, and check that it moved all of its data.  Answers how often the
-// writer was refused, so a caller can also say whether the shape was meant to
-// reach backpressure at all.
+// run prints, and check that it moved all of its data.  Returns the writer's
+// report row, whose refusal counts -- by the lane's room and by a write
+// channel's limit -- let a caller say whether the shape reached the backpressure
+// it was meant to.
 //
 // The knobs every shape shares are set here.  Three readers, so that a shared
 // lane and a lane per reader are genuinely different arrangements.  Board mode
@@ -83,7 +83,7 @@ void atf_ci::citest_atf_comp() {
 // truncated run visible: a lane that carried half the stream and a lane that
 // carried all of it differ in the rows, and not in the exit code of a process
 // that decided its own time was up.
-static u64 RunAmsSendtest(command::ams_sendtest_proc &ams_sendtest) {
+static report::ams_sendtest RunAmsSendtest(command::ams_sendtest_proc &ams_sendtest) {
     ams_sendtest.cmd.nchild = 3;
     ams_sendtest.cmd.nmsg = 2000;
     ams_sendtest.cmd.timeout = 60;
@@ -95,7 +95,7 @@ static u64 RunAmsSendtest(command::ams_sendtest_proc &ams_sendtest) {
     tempstr cmdline = ams_sendtest_ToCmdline(ams_sendtest);
     prlog("atf_ci.sendtest"<<Keyval("cmd",cmdline));
     ams_sendtest.fstdout = "|";
-    u64 n_write_wait = 0;
+    report::ams_sendtest writer;
     int n_writer = 0;
     int n_reader = 0;
     int n_fail = 0;
@@ -107,7 +107,7 @@ static u64 RunAmsSendtest(command::ams_sendtest_proc &ams_sendtest) {
             n_fail += !row.success;
             // the writer is the one process in the run that sent anything
             if (row.n_msg_send > 0) {
-                n_write_wait = row.n_write_wait;
+                writer = row;
                 n_writer += row.n_msg_send == row.n_msg;
             } else {
                 n_reader += row.n_msg_recv == row.n_msg;
@@ -124,7 +124,7 @@ static u64 RunAmsSendtest(command::ams_sendtest_proc &ams_sendtest) {
     vrfy(n_reader == ams_sendtest.cmd.nchild, tempstr()<<"atf_ci.sendtest_reader"<<Keyval("cmd",cmdline)
          <<Keyval("n_reader",n_reader)<<Keyval("nchild",ams_sendtest.cmd.nchild)
          <<Keyval("comment","every reader must report every message received"));
-    return n_write_wait;
+    return writer;
 }
 
 // Move a numbered stream through every shape an ams lane can take, and then
@@ -151,6 +151,15 @@ static u64 RunAmsSendtest(command::ams_sendtest_proc &ams_sendtest) {
 // never be refused at all.  Both end on the message count rather than on the
 // tool's time limit, which is the property a slow reader threatens: the lane
 // slows to the reader's rate, and it does not stop.
+//
+// Then a shm channel per reader on the lane shapes.  A channel is a flow
+// inside the lane whose limit follows its own reader's read count, so the writer
+// is paced by each reader and not by lane space alone.
+//
+// The last pass is a correctness test of the writer's wake.  Every pass before
+// it sends from a recurring timer, which keeps the writer's loop awake, so a
+// wake that went missing would cost nothing and go unseen.  In park mode the
+// writer sleeps whenever it is refused, and a missing wake stops the run.
 void atf_ci::citest_ams_sendtest() {
     // bit 0 is a lane per reader, bit 1 is the board, bit 2 is signaled wakeup
     for (int shape = 0; shape < 8; shape++) {
@@ -169,7 +178,22 @@ void atf_ci::citest_ams_sendtest() {
         ams_sendtest.cmd.signaled = (shape & 4) != 0;
         ams_sendtest.cmd.recvdelay_ns = 200000;
         ams_sendtest.cmd.bufsize = 32768;
-        u64 n_write_wait = RunAmsSendtest(ams_sendtest);
+        u64 n_write_wait = RunAmsSendtest(ams_sendtest).n_write_wait;
+        vrfy(n_write_wait > 0, tempstr()<<"atf_ci.sendtest_nobackpressure"
+             <<Keyval("cmd",ams_sendtest_ToCmdline(ams_sendtest))
+             <<Keyval("comment","a lane smaller than its stream must refuse a writer whose reader is behind"));
+    }
+    // Fan-out over a lane per reader with one reader that cannot keep up: the
+    // board must keep delivering to the readers that can, and the lane sizing
+    // must still refuse the writer when the slow one is behind.
+    {
+        command::ams_sendtest_proc ams_sendtest;
+        ams_sendtest.cmd.uc = true;
+        ams_sendtest.cmd.board = true;
+        ams_sendtest.cmd.slowreader = true;
+        ams_sendtest.cmd.recvdelay_ns = 200000;
+        ams_sendtest.cmd.bufsize = 32768;
+        u64 n_write_wait = RunAmsSendtest(ams_sendtest).n_write_wait;
         vrfy(n_write_wait > 0, tempstr()<<"atf_ci.sendtest_nobackpressure"
              <<Keyval("cmd",ams_sendtest_ToCmdline(ams_sendtest))
              <<Keyval("comment","a lane smaller than its stream must refuse a writer whose reader is behind"));
@@ -182,11 +206,77 @@ void atf_ci::citest_ams_sendtest() {
         ams_sendtest.cmd.signaled = true;
         ams_sendtest.cmd.recvdelay_ns = 200000;
         ams_sendtest.cmd.bufsize = 32768;
-        u64 n_write_wait = RunAmsSendtest(ams_sendtest);
+        u64 n_write_wait = RunAmsSendtest(ams_sendtest).n_write_wait;
         vrfy(n_write_wait == 0, tempstr()<<"atf_ci.sendtest_blocking_refused"
              <<Keyval("cmd",ams_sendtest_ToCmdline(ams_sendtest))
              <<Keyval("n_write_wait",n_write_wait)
              <<Keyval("comment","a blocking send waits for room instead of being refused"));
+    }
+    // The lane shapes again with a shm channel per reader: shared or one lane
+    // per reader, woken by polling or by signal.  Each reader sets its channel a
+    // window past what it has read, smaller than the lane, so the channels bind
+    // before the lane does: the writer must be refused on its limit and still
+    // deliver every message, and ams_sendtest checks that each channel ends with
+    // everything written read and nothing written past its limit.  A board
+    // message travels by the board's own path and writes on no channel.  The
+    // readers are slowed, since a reader that keeps pace with the writer never
+    // lets its window fill, and on a fast host the refusal would not happen.
+    for (int shape = 0; shape < 4; shape++) {
+        command::ams_sendtest_proc ams_sendtest;
+        ams_sendtest.cmd.uc = (shape & 1) != 0;
+        ams_sendtest.cmd.signaled = (shape & 2) != 0;
+        ams_sendtest.cmd.channel = true;
+        ams_sendtest.cmd.channel_window = 1024;
+        ams_sendtest.cmd.recvdelay_ns = 200000;
+        u64 n_limit_wait = RunAmsSendtest(ams_sendtest).n_limit_wait;
+        vrfy(n_limit_wait > 0, tempstr()<<"atf_ci.sendtest_nolimit"
+             <<Keyval("cmd",ams_sendtest_ToCmdline(ams_sendtest))
+             <<Keyval("comment","a channel window smaller than the lane must refuse the writer on its limit"));
+    }
+    // A window no larger than the ring's largest message would leave the writer
+    // refused forever once its reader has read everything, so the parent refuses
+    // the run before any process starts, naming the cause.  The test asks for the
+    // refusal by name: a run that started and ran out its time limit also exits
+    // non-zero, and so does a missing binary.
+    {
+        command::ams_sendtest_proc ams_sendtest;
+        ams_sendtest.cmd.channel = true;
+        ams_sendtest.cmd.channel_window = 300;
+        ams_sendtest.cmd.timeout = 10;
+        int status = 0;
+        tempstr out(SysEval(tempstr() << ams_sendtest_ToCmdline(ams_sendtest) << " 2>&1", FailokQ(true), 1024*64, false, &status));
+        vrfy(status != 0 && algo::FindStr(out, "ams_sendtest.badwindow") != -1, tempstr()<<"atf_ci.sendtest_badwindow_accepted"
+             <<Keyval("cmd",ams_sendtest_ToCmdline(ams_sendtest))
+             <<Keyval("status",status)
+             <<Keyval("comment","a channel window no larger than a message must be refused by name"));
+    }
+    // A writer that sleeps.  In park mode the parent sends from a step that holds
+    // its loop awake only while it makes progress; refused, it parks and sleeps,
+    // and only its readers' wake signals run it again.  Behind a slow reader the
+    // writer runs out of room many times, on the lane's space or on a channel's
+    // limit, so every lost wake would leave it asleep until the tool's time
+    // limit, and the run would fail.  The run must park, and must still deliver
+    // every message.  The wake is a real-time signal read through a signalfd,
+    // which only Linux has; elsewhere signaled mode keeps busy-polling and a
+    // parked writer has nothing to wake it, so the shapes run on Linux alone.
+#ifdef __linux__
+    int nshape = 4;
+#else
+    int nshape = 0;
+#endif
+    for (int shape = 0; shape < nshape; shape++) {
+        command::ams_sendtest_proc ams_sendtest;
+        ams_sendtest.cmd.uc = (shape & 1) != 0;
+        ams_sendtest.cmd.channel = (shape & 2) != 0;
+        ams_sendtest.cmd.signaled = true;
+        ams_sendtest.cmd.parkwrite = true;
+        ams_sendtest.cmd.recvdelay_ns = 200000;
+        ams_sendtest.cmd.bufsize = 32768;
+        ams_sendtest.cmd.channel_window = 1024;
+        u64 n_writer_park = RunAmsSendtest(ams_sendtest).n_writer_park;
+        vrfy(n_writer_park > 0, tempstr()<<"atf_ci.sendtest_nopark"
+             <<Keyval("cmd",ams_sendtest_ToCmdline(ams_sendtest))
+             <<Keyval("comment","a writer behind a slow reader must park, and a reader's wake must resume it"));
     }
 }
 
@@ -368,14 +458,6 @@ void atf_ci::citest_doc_after_ssimfile_is_added() {
     vrfy_(SysCmd("bin/doc txt/ssimdb/dev -pager:N -color:N -width:100 | grep 'dev.xyz'")==0);
 }
 
-void atf_ci::citest_apm() {
-    CitestApm();
-}
-
-void atf_ci::citest_apm_reinstall() {
-    CitestApmReinstall();
-}
-
 // Check that each citest function lives in the file matching its cijob.
 // Expected: citest:xyz with cijob:zzz → function citest_xyz in cpp/atf_ci/zzz.cpp
 // TODO: make this table-driven, with table describing all function contraints
@@ -405,10 +487,10 @@ void atf_ci::citest_check_citest() {
     //
     // A citest lives in the file named after the cijob that runs it, so a reader
     // who knows the job knows where to look.  Some citests drive tools that only
-    // this tree has -- x2img, atf_x2aws, lsttool -- and those are kept out of the
-    // openacr package, which names whole files rather than functions.  So each
-    // cijob may also have an _x2 file holding exactly that part, and the name
-    // still says which job runs it.
+    // a tree extending openacr has, and those are kept out of the openacr package,
+    // which names whole files rather than functions.  So each cijob may also have
+    // a file of the extender's holding exactly that part, named after the job with
+    // the extender's suffix, and the name still says which job runs it.
     int n_err = 0;
     ind_beg(atf_ci::_db_citest_curs, citest, atf_ci::_db) {
         tempstr expected = tempstr() << "cpp/atf_ci/" << citest.cijob << ".cpp";
@@ -422,4 +504,17 @@ void atf_ci::citest_check_citest() {
         }
     }ind_end;
     vrfy(n_err == 0, tempstr() << n_err << " citest function(s) in wrong file");
+}
+
+// -----------------------------------------------------------------------------
+
+// Evaluate the tutorials' inline commands, which the readme citest of the
+// normalize job leaves alone: they rebuild a sample program with acr_ed -write
+// and take most of a whole-tree abt_md pass.  The run takes no selection, so
+// abt_md alone says which readmes are tutorials.  A tutorial whose output moved
+// leaves the file modified, and the job fails on it.
+void atf_ci::citest_readme_tut() {
+    command::abt_md_proc abt_md;
+    abt_md.cmd.tut = true;
+    abt_md_ExecX(abt_md);
 }

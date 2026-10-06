@@ -1,0 +1,2 @@
+Licensed under a BSD license (BSD-2-Clause or BSD-3-Clause).
+See https://opensource.org/license/bsd-3-clause

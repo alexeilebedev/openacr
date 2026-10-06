@@ -59,6 +59,6 @@ interactive tool intended to ease readibility or terminal-based output.
 
 ### Sources
 <a href="#sources"></a>
-The source code license is GPL
+The source code license is Apache
 
 Source file: [bin/hilite](/bin/hilite)

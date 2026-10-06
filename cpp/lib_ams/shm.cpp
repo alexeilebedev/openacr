@@ -1,18 +1,18 @@
-// Copyright (C) 2023-2026 AlgoRND
+// Copyright (C) 2025-2026 AlgoX2 Corp
+// Copyright (C) 2023-2024 AlgoRND
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Target: lib_ams (lib) -- Library for AMS middleware, supporting file format & messaging
 // Exceptions: NO
@@ -22,36 +22,11 @@
 #include "include/lib_ams.h"
 #ifndef WIN32
 #include <sys/statvfs.h>
+#include <fcntl.h>// posix_fallocate
+#include <sys/mman.h>// mlock
 #ifdef __APPLE__
 #include <sys/posix_shm.h>
 #endif
-#endif
-
-// -----------------------------------------------------------------------------
-
-#ifndef WIN32
-// Derive the POSIX shared-memory object name for GRP_ID.  Darwin limits these
-// names to PSHMNAMLEN (currently 31) characters, while a descriptive AMS name
-// can be longer.  Keep the readable spelling when it fits and compact only an
-// overlong name, using two different CRC polynomials so the full cluster and
-// group identity still has a 64-bit fingerprint.
-static tempstr ShmFilename(ams::GrpId grp_id) {
-    tempstr ret;
-    ret << lib_ams::_db.file_prefix
-        << (lib_ams::_db.file_prefix == "" ? "" : "-")
-        << grp_id << ".ams";
-#ifdef __APPLE__
-    if (ch_N(ret) > PSHMNAMLEN) {
-        algo::memptr bytes = strptr_ToMemptr(ret);
-        u64 hash = u64(algo::CRC32Step(0, bytes.elems, bytes.n_elems)) << 32
-            | algo::CRC32IEEE(0, bytes.elems, bytes.n_elems);
-        ret = "ams-";
-        algo::u64_PrintHex(hash, ret, 16, false);
-        ret << ".ams";
-    }
-#endif
-    return ret;
-}
 #endif
 
 // -----------------------------------------------------------------------------
@@ -66,6 +41,43 @@ i64 lib_ams::GetShmAvail() {
     if (statvfs("/dev/shm", &vfs) == 0) {
         // f_bavail is counted in f_frsize (fragment) units, not f_bsize.
         ret = i64(vfs.f_bavail) * i64(vfs.f_frsize);
+    }
+#endif
+    return ret;
+}
+
+// Size in bytes of the tmpfs backing /dev/shm, and 0 when statvfs cannot
+// answer, so a reserve derived from it is nothing where the filesystem is
+// unknown.
+i64 lib_ams::GetShmTotal() {
+    i64 ret = 0;
+#ifndef WIN32
+    struct statvfs vfs;
+    if (statvfs("/dev/shm", &vfs) == 0) {
+        ret = i64(vfs.f_blocks) * i64(vfs.f_frsize);
+    }
+#endif
+    return ret;
+}
+
+// The name shm_open gives the segment of group GRP_ID: the file prefix that
+// separates one instance's segments from another's, the group id, and the
+// suffix.  shm_open resolves it under /dev/shm, so a caller that reaches the
+// file through the filesystem instead puts that directory in front of it.
+// Darwin limits these names to PSHMNAMLEN (31) characters, and a descriptive
+// name can be longer, so there an overlong name is compacted to a hash.  Two
+// different CRC polynomials keep a 64-bit fingerprint of the whole identity.
+static algo::tempstr ShmFileName(ams::GrpId grp_id) {
+    algo::tempstr ret;
+    ret << lib_ams::_db.file_prefix << (lib_ams::_db.file_prefix=="" ? "" : "-") << grp_id << ".ams";
+#ifdef __APPLE__
+    if (ch_N(ret) > PSHMNAMLEN) {
+        algo::memptr bytes = strptr_ToMemptr(ret);
+        u64 hash = u64(algo::CRC32Step(0, bytes.elems, bytes.n_elems)) << 32
+            | algo::CRC32IEEE(0, bytes.elems, bytes.n_elems);
+        ret = "ams-";
+        algo::u64_PrintHex(hash, ret, 16, false);
+        ret << ".ams";
     }
 #endif
     return ret;
@@ -92,12 +104,25 @@ i64 lib_ams::GetShmAvail() {
 i64 lib_ams::ShmExistingSize(ams::GrpId grp_id) {
     i64 ret = 0;
 #ifndef WIN32
-    // the name ShmOpen gives the segment, which is the one on disk
-    tempstr filename = tempstr() << "/dev/shm/" << ShmFilename(grp_id);
+    tempstr filename;
+    filename << "/dev/shm/" << ShmFileName(grp_id);
     struct stat st;
     if (stat(Zeroterm(filename), &st) == 0) {
         ret = i64(st.st_blocks) * 512;
     }
+#endif
+    return ret;
+}
+
+// TRUE when the segment of group GRP_ID exists on this node's tmpfs, whoever
+// made it and whether or not this process has opened it.
+bool lib_ams::ShmExistsQ(ams::GrpId grp_id) {
+    bool ret = false;
+#ifndef WIN32
+    tempstr filename;
+    filename << "/dev/shm/" << ShmFileName(grp_id);
+    struct stat st;
+    ret = stat(Zeroterm(filename), &st) == 0;
 #endif
     return ret;
 }
@@ -107,6 +132,90 @@ i64 lib_ams::ShmExistingSize(ams::GrpId grp_id) {
 // segment this host can attribute to a process, the answer rests on a proof that
 // some process is gone, never on the segment's age.
 //
+// Take every page of board segment SHM from the tmpfs now, and lock them in
+// memory; TRUE when the pages are committed.
+//
+// A tmpfs file is extended without taking pages and takes them as they are first
+// touched, so a board that fit the filesystem's free space when it was made can
+// still fault later: three nodes of a development topology on one host each
+// make a board sized to their own cache budget, each sees the whole filesystem
+// free, and the first store past what the filesystem holds dies of SIGBUS in a
+// memcpy, minutes into the run.  Committing the pages makes the filesystem
+// answer here, with ENOSPC, and the creator leaves the segment unmade
+// (lib_ams.board_too_big), which the txn answers with a board of its
+// own memory.  Locking keeps the committed pages from being paged out under a
+// reader holding a reference.  A lock the account's memlock limit refuses leaves
+// the board committed, since the fault the commitment prevents does not depend
+// on it, and is counted (n_board_unlocked) and logged at verbose level only: the
+// default limit is 8MB, every topology declares a board larger than that, and a
+// line on stderr at every start would report the host's default as a fault.  A segment with no file
+// behind it -- the process pool a test's segments come from -- is committed by
+// its allocation and needs nothing here.
+//
+// The board leaves a tenth of the tmpfs free.  A board is the largest segment
+// a node makes and the last it makes at startup, and segments are made after
+// it for as long as the node runs: a userproc's rings when an operator creates
+// one, a bridge's when a peer connects.  A board that fit exactly would leave
+// them nothing, and the first of them would then fail against a filesystem the
+// node reports full, over a board that could have been a little smaller.  So
+// the board is refused when committing it would leave less than the reserve,
+// with the same report as one the filesystem cannot hold at all.
+static bool BoardCommit(lib_ams::FShm &shm) {
+    bool ret = true;
+    if (ValidQ(shm.shm_file.fd)) {
+        i64 size = i64(shm.shm_region.n_elems);
+        i64 avail = lib_ams::GetShmAvail();
+        i64 reserve = lib_ams::GetShmTotal() / 10;
+        int err = avail - size < reserve ? ENOSPC : posix_fallocate(shm.shm_file.fd.value, 0, off_t(size));
+        ret = err == 0;
+        if (!ret) {
+            prerr("lib_ams.board_too_big"
+                  <<Keyval("grp",shm.grp_id)
+                  <<Keyval("size",size)
+                  <<Keyval("shm_avail",avail)
+                  <<Keyval("shm_reserve",reserve)
+                  <<Keyval("err",algo::FromErrno(err))
+                  <<Keyval("comment","/dev/shm cannot commit the board's pages and keep a tenth free; raise the tmpfs size or shrink the board"));
+        } else if (mlock(shm.shm_region.elems, size_t(shm.shm_region.n_elems)) != 0) {
+            lib_ams::_db.trace.n_board_unlocked++;
+            verblog("lib_ams.board_unlocked"
+                    <<Keyval("grp",shm.grp_id)
+                    <<Keyval("size",shm.shm_region.n_elems)
+                    <<Keyval("err",algo::FromErrno(errno))
+                    <<Keyval("comment","the board's pages are committed but not locked; raise the memlock limit (ulimit -l) to lock them"));
+        }
+    }
+    return ret;
+}
+
+// Populate this process's page tables over the whole of board SHM, so no
+// store or read into the board takes a page fault later.
+//
+// A board is committed when it is made, but committing fills the tmpfs, not the
+// page tables of the processes that map it.  Each of those processes then takes
+// a minor fault on its first touch of every 4K page.  A 6 GB board is 1.5M pages,
+// and a txn filling one took about 600K faults inside the pass that
+// reads the fabric, where it runs near its limit.  The pages already exist, so
+// populating them costs this process its page tables and nothing else, and it
+// moves the faults to startup.  A board with
+// no file behind it is committed by its allocation and needs nothing here.  A
+// kernel that refuses the advice leaves the board to fault on first touch, which
+// is counted (n_board_unpopulated) and logged at verbose level.
+static void BoardPopulate(lib_ams::FShm &shm) {
+    int rc = 0;
+    if (ValidQ(shm.shm_file.fd)) {
+        rc = madvise(shm.shm_region.elems, size_t(shm.shm_region.n_elems), MADV_POPULATE_WRITE);
+    }
+    if (rc != 0) {
+        lib_ams::_db.trace.n_board_unpopulated++;
+        verblog("lib_ams.board_unpopulated"
+                <<Keyval("grp",shm.grp_id)
+                <<Keyval("size",shm.shm_region.n_elems)
+                <<Keyval("err",algo::FromErrno(errno))
+                <<Keyval("comment","the kernel refused to populate the board's page tables; each page faults on first touch"));
+    }
+}
+
 // Consider what a sweep sees and how easily it reads a live ring as a dead one.
 // Any process starting up scans every segment in /dev/shm, not just its own
 // cluster's, and a free write lock looks like an abandoned ring.  But a ring is
@@ -195,11 +304,13 @@ bool lib_ams::ShmFdOpenQ(lib_ams::FShm &shm) {
 
 // -----------------------------------------------------------------------------
 
-// Segment size that gives a ring a writable body of at least BODY bytes while
-// carrying messages of up to MAXMSG.  A segment is a 4096-byte control header,
-// a power-of-two body that a message offset wraps inside, and one message of
-// linear overflow past the body, so a message near the top of the body writes
-// straight into the overflow and never straddles the end.
+// Return the segment size that gives a ring a writable body of at least BODY
+// bytes while carrying messages of up to MAXMSG.  A segment is a control header
+// of whole pages, a power-of-two body that a message offset wraps inside, and
+// one message of linear overflow past the body, so a message near the top of
+// the body writes straight into the overflow and never straddles the end.  The
+// size counts one header page; ShmCreate adds the pages a ring's declared shm
+// channels need past the first (ShmControlSize).
 //
 // The body is floored at four messages, and that floor is the whole reason
 // this arithmetic lives in one function.  A writer holds two messages back
@@ -281,10 +392,15 @@ bool lib_ams::ShmCreate(lib_ams::FShm &shm, ams::ShmFlags flags) {
     int mode = S_IRUSR | S_IWUSR;
     // POSIX says / character in argument to shm_open is implementation-defined
     // Practically, shm_open fails on Linux if / is used.
-    shm.filename = ShmFilename(shm.grp_id);
+    shm.filename = ShmFileName(shm.grp_id);
+    // A ring's channel count is declared on the record and nowhere else, so the
+    // creator adds the header pages past the first that the channels need to
+    // whatever size it was asked for, and the body keeps the size it was planned
+    // at.  A size and a count that must agree are then one input each.
+    i64 extra = lib_ams::BoardQ(shm) ? 0 : i64(ShmControlSize(shm.max_channel)) - 4096;
     if (_db.file_prefix == "") {
-        size = lib_ams::_db.shmem_size;
-        shm.shm_region = algo::memptr((u8*)algo_lib::lpool_AllocMem(lib_ams::_db.shmem_size),size);
+        size = lib_ams::_db.shmem_size + extra;
+        shm.shm_region = algo::memptr((u8*)algo_lib::lpool_AllocMem(size),size);
         shm.created=true;
         ok = shm.shm_region.elems != NULL;
     } else {
@@ -302,7 +418,7 @@ bool lib_ams::ShmCreate(lib_ams::FShm &shm, ams::ShmFlags flags) {
         // default, which is every segment the topology makes.
         if (ok && size == 0) {
             shm.created=true;
-            size = shm.size > 0 ? shm.size : lib_ams::_db.shmem_size;
+            size = (shm.size > 0 ? shm.size : lib_ams::_db.shmem_size) + extra;
             ok = ok && ftruncate(shm.shm_file.fd.value, size)==0;
         }
         // map the region
@@ -321,38 +437,43 @@ bool lib_ams::ShmCreate(lib_ams::FShm &shm, ams::ShmFlags flags) {
 #endif // win/linux
     ams::Shmhdr *shmhdr = (ams::Shmhdr*)shm.shm_region.elems;
     if (shmhdr) {
-        // A board is an array of fixed slots, not a ring, so it takes no offset
+        // A board is an arena of chunks, not a ring, so it takes no offset
         // mask and its woff stays at zero for the life of the segment.  What keeps
         // it out of the read path is that it is never put on cd_poll_read and
         // never takes a reader member: PeekMsg reads its reader's offset before it
         // tests anything, so a board is not a segment that reads as empty but one
-        // that is never asked.  Only its header is pre-touched: a board is sized
-        // for the sum of its readers' allowances, and pre-faulting that would
-        // commit at startup what the traffic may never use.
+        // that is never asked.  Its creator writes only the header here, and
+        // every process that maps it populates its page tables below.
         bool board = lib_ams::BoardQ(shm);
         shm.c_shmhdr = shmhdr;
         // A segment's largest message is the segment's own property, so the
         // creator declares it on the record and an opener reads back what the
-        // segment was built with.  Undeclared, a lane carries the largest
-        // message this process handles at all, and a board takes the slot size
-        // this process gives the boards it creates -- a board's slot size is
-        // its largest message, which is what lets one number serve both.
+        // segment was built with.  Undeclared, a segment carries the largest
+        // message this process handles at all; a board's creator declares its
+        // chunk size here, since a chunk is the largest message a board carries.
         if (shm.max_msg_size == 0) {
-            shm.max_msg_size = board ? lib_ams::_db.board_slot_size : lib_ams::_db.max_msg_size;
+            shm.max_msg_size = lib_ams::_db.max_msg_size;
         }
         shm.offset_mask = 0;
+        u32 control = board ? 4096 : ShmControlSize(shm.max_channel);
         if (!board) {
-            i64 span = i64(size) - 4096 - shm.max_msg_size;// what is left for the body
+            i64 span = i64(size) - control - shm.max_msg_size;// what is left for the body
             shm.offset_mask = span > 0 ? (1 << algo::FloorLog2(u32(span))) - 1 : 0;
         }
-        if (shm.created) {
+        if (shm.created && board && !BoardCommit(shm)) {
+            ok = false;
+        } else if (shm.created) {
             memset(shm.shm_region.elems,0,board ? 4096 : size);// touch all bytes
             new (shm.c_shmhdr) ams::Shmhdr; // defaults
             shmhdr->grp_id       = shm.grp_id;
             shmhdr->tot_size     = size;
             shmhdr->offset_mask  = shm.offset_mask;
-            shmhdr->max_shmember = board ? 0 : 16;
-            shmhdr->datastart    = 4096;
+            shmhdr->max_shmember = board ? 0 : lib_ams::RingShmemberN();
+            shmhdr->datastart    = control;
+            // The shm channels take the rest of the control pages after the
+            // member table, as many as the creator declared and never fewer
+            // than one page holds.  A board has no reader offsets and no channels.
+            shmhdr->max_channel  = board ? 0 : (control - RingChannelStart()) / u32(sizeof(ams::Shmchannel));
             shmhdr->max_msg_size = shm.max_msg_size;
             // The creator owns the segment's existence: it is the process that
             // unlinks the file, and while it lives no sweep may reclaim the
@@ -382,9 +503,17 @@ bool lib_ams::ShmCreate(lib_ams::FShm &shm, ams::ShmFlags flags) {
         // reader then parses bytes overwritten under it.  Refusing to attach
         // turns that into a startup failure naming the ring.
         //
+        // A board's chunk is its largest message, and the geometry a reader walks
+        // it by, so an opener learns it from the header as the creator declared it.
+        if (board) {
+            shm.chunk_size = u32(shm.max_msg_size);
+        }
+        if (ok && board) {
+            BoardPopulate(shm);
+        }
         // A board is exempt because it is not a ring.  Nothing wraps inside it:
-        // it is an array of fixed slots whose occupancy the writer tracks in a
-        // free list, so it has no body for a write limit to land behind and no
+        // it is an arena of chunks whose occupancy the writer tracks in its own
+        // memory, so it has no body for a write limit to land behind and no
         // offset for one reader to lap another at.  Measured against the ring
         // rule it would fail every time, its offset mask being zero.
         if (ok && !board && i64(shm.offset_mask) + 1 < i64(shm.max_msg_size) * 4) {
@@ -529,16 +658,11 @@ bool lib_ams::ShmOpen(lib_ams::FShm &shm, ams::ShmFlags flags) {
 // because doing so would overwrite data not yet consumed by one of the read members.)
 // A board has no write budget to update.  It is not a ring, so it has no
 // writelimit and no member offsets to derive one from; its space is tracked by
-// the slot free list instead.
+// chunk, in the writer's own memory.
 bool lib_ams::UpdateBudget(lib_ams::FShm &shm) {
     bool ret=false;
     if (write_Get(shm.flags) && !lib_ams::BoardQ(shm)) {
-        // with no readers attached, the slowest reader is conceptually at the ring start
-        u64 min_roff = shm.c_shmhdr->n_shmember ? (ULLONG_MAX/2) : 0;
-        ind_beg(shm_c_shmember_curs,shmember,shm) {
-            u64_UpdateMin(min_roff,shmember.offset);
-        }ind_end;
-        u64 new_offset = min_roff + (shm.offset_mask+1) - shm.max_msg_size*2;
+        u64 new_offset = lib_ams::SlowestReaderOffset(shm) + (shm.offset_mask+1) - shm.max_msg_size*2;
         ret = u64_Update(shm.writelimit, new_offset);
         shm.n_wlim_update += ret;
         if (ret) {
@@ -571,9 +695,12 @@ bool lib_ams::WritableQ(lib_ams::FShm &shm) {
 // woff<writelimit test is not length-specific; there is nothing to wait for
 // per-length (WriteMsg/BeginWrite reject any oversize write outright).  When
 // BLOCK is false, sample the budget once (re-running UpdateBudget) and return
-// whether there is room.  When BLOCK is true and there is none, poll all
-// control shms (zd_ctlin list) for heartbeats indefinitely until a reader
-// drains the ring and only then return -- so a blocking write never drops.
+// whether there is room.  When BLOCK is true and there is none, re-sample this
+// ring's own budget in a tight loop until a reader drains it, so a blocking
+// write never drops.  Before it spins it sends the wakeups the pass owes its
+// peers (FlushWake), since the reader it waits on may be asleep on one of them.
+// The loop rides no list and reads no other ring, and nothing else in this
+// process runs while it spins.
 // A closed ring returns FALSE at once, in blocking mode too: no reader can
 // ever drain it, so waiting would be waiting forever.
 // Return TRUE if writing can proceed.  Public so a caller can wait for room
@@ -587,6 +714,10 @@ bool lib_ams::WaitBudget(lib_ams::FShm &shm, bool block) {
             ret = shm.c_shmhdr->woff < shm.writelimit;
         }
         if (!ret && block) {
+            // The reader this spin waits on may be parked on a message this
+            // pass wrote, with its wakeup still owed; send it first, or the
+            // spin waits on a reader nobody woke.
+            FlushWake();
             shm.c_shmhdr->nblock++;
             u64 i=0;
             do {
@@ -604,17 +735,17 @@ bool lib_ams::WaitBudget(lib_ams::FShm &shm, bool block) {
     return ret;
 }
 
-// Begin writing message of length LENGTH, non-blocking -- the hot path for
-// WriteMsg and amc's pnew (acr pnew) zero-copy *_FmtShm.  The budget check is
-// inlined here (rather than calling WaitBudget) so the common case is a
-// straight-line sample with no out-of-line call: if a message already fits,
-// return a pointer to the write region.  On a miss, re-sample once via
-// UpdateBudget; in signaled mode then park as a waiting writer (ParkWriter) so
-// a draining reader wakes us.  Still no room -> bump nnobudget and return NULL.
-// A too-big message, and a ring that is not writable, return NULL without
-// touching the budget counters -- the counters live in the ring's own header,
-// which a closed ring no longer has.
-void *lib_ams::BeginWrite(lib_ams::FShm &shm, int length) {
+// Reserve LENGTH bytes at SHM's write offset and return where to build the
+// message, or NULL when the ring refuses the length or has no room for it now.
+// This is the ring's own admission, and the hot path of every write: the budget
+// check is inlined so a message that fits costs one straight-line sample.  On a
+// miss the budget is re-sampled once through UpdateBudget, and in signaled mode
+// the writer then parks (ParkWriter) so a draining reader wakes it.  Still no
+// room bumps nnobudget.  A too-big message, and a ring that is not writable,
+// return NULL without touching the counters, which live in the ring's own
+// header and are gone once the ring is closed.  BeginWrite is what a writer
+// calls; it puts the ring's queued messages ahead of the reservation.
+void *lib_ams::ReserveWrite(lib_ams::FShm &shm, int length) {
     void *ret = NULL;
     if (WritableQ(shm) && length <= shm.max_msg_size) {
         bool ok = shm.c_shmhdr->woff < shm.writelimit;
@@ -634,6 +765,30 @@ void *lib_ams::BeginWrite(lib_ams::FShm &shm, int length) {
     return ret;
 }
 
+// Begin writing a message of LENGTH bytes to SHM, non-blocking: the write
+// pointer, or NULL when the ring cannot take the message now.
+//
+// A ring may hold messages an earlier writer queued because the ring was full
+// at the time (BeginWriteQueue).  The txn keeps a committer's ring full of
+// records for as long as the committer reads slower than they arrive, and a
+// command relayed onto that ring waits in its queue.  Were the record delivery
+// allowed to reserve each slot the committer frees, the ring would stay full
+// and the command would wait out the whole run -- the requester times out on
+// an answer that was never lost, only never sent.  So the queue is written
+// first, and while any of it remains the reservation is refused: every writer
+// of a ring yields to what was queued on it before, and a queued message is
+// never overtaken.
+void *lib_ams::BeginWrite(lib_ams::FShm &shm, int length) {
+    void *ret = NULL;
+    if (lib_ams::zd_outmsg_N(shm) > 0) {
+        lib_ams::OutmsgFlush(shm);
+    }
+    if (lib_ams::zd_outmsg_N(shm) == 0) {
+        ret = lib_ams::ReserveWrite(shm, length);
+    }
+    return ret;
+}
+
 // Begin writing message of length LENGTH, blocking until the ring has room.
 // WaitBudget busy-waits for a max_msg_size slot; BeginWrite then returns the
 // write pointer (or NULL for a too-big message, which it rejects outright).
@@ -644,14 +799,17 @@ void *lib_ams::BeginWriteBlock(lib_ams::FShm &shm, int length) {
 
 // Finish writing the message of length LEN and publish it: sfence so the
 // payload is visible before the woff store, then re-arm the reader's poll
-// entry.  In signaled mode, wake any reader parked on the ring (WakeReader).
+// entry.  In signaled mode, owe any reader parked on the ring a wakeup
+// (WakeReader), which the end of the pass sends.
 //
 // c_reader is this process's own slot in the ring's reader table, so a ring
 // with one is a ring this process both writes and reads -- a loopback.  The
 // publish is then its own wakeup and goes through the local wake path: a
 // loopback ring that had parked would otherwise sit on the park list with its
-// sleeping flag raised while it is being polled, and only the next idle
-// recovery pass would put the two lists back in agreement.
+// sleeping flag raised while it is being polled, and nothing would put the two
+// lists back in agreement, since a same-process writer sends itself no signal.
+// UnparkReader here also sets next_loop, so the ring is polled before the loop
+// sleeps.
 void lib_ams::EndWrite(lib_ams::FShm &shm, void *ptr, int len) {
     u64 woff = AddOffset(shm.c_shmhdr->woff, len);
     sfence();
@@ -671,16 +829,24 @@ void lib_ams::EndWrite(lib_ams::FShm &shm, void *ptr, int len) {
 // when the ring has no budget (the message is dropped -- the caller decides
 // whether to retry, unread, or discard).
 //
-// A message the ring cannot hold goes to the writer's message board instead,
-// and the ring carries a reference to it.  The board path answers the same way
-// the ring does -- FALSE when it cannot take the message -- so a caller sees one
-// contract whichever way the message travels, and a writer with no board keeps
-// rejecting an oversize message as before.
+// A message the ring cannot hold is copied into the writer's message board
+// instead, and the ring carries a reference to it.  The board path answers the
+// same way the ring does -- FALSE when it cannot take the message, and the
+// board space is given back -- so a caller sees one contract whichever way the
+// message travels, and a writer with no board rejects an oversize message.
 bool lib_ams::WriteMsg(lib_ams::FShm &shm, ams::MsgHeader &msg) {
     bool ret = false;
     int len = msg.length;
-    if (len > shm.max_msg_size && lib_ams::BoardOf(shm)) {
-        ret = lib_ams::BoardPost(shm, msg);
+    lib_ams::FShm *board = len > shm.max_msg_size ? lib_ams::BoardOf(shm) : NULL;
+    if (len > shm.max_msg_size) {
+        void *dst = board ? lib_ams::BoardAlloc(*board, len) : NULL;
+        if (dst) {
+            memcpy(dst, &msg, size_t(len));
+            ret = lib_ams::BoardSend(shm, *(ams::MsgHeader*)dst);
+            if (!ret) {
+                lib_ams::BoardTrim(*board, dst, 0);
+            }
+        }
     } else if (void *ptr = lib_ams::BeginWrite(shm,len)) {
         memcpy(ptr, &msg, len);
         lib_ams::EndWrite(shm,ptr,len);
@@ -743,12 +909,30 @@ void lib_ams::shm_file_Cleanup(lib_ams::FShm &shm) {// fcleanup:lib_ams.FShm.shm
 // -----------------------------------------------------------------------------
 
 // Close shm: unmap the region, drop the fd, and unlink the file if this
-// process created it.  Clear the sleeping flag if a reader was sleeping.
+// process created it.  Send the wakeups the pass owes first, and clear the
+// sleeping flag if a reader was sleeping.
 // The record itself stays in the shm table so the next incarnation under the
 // same grp reuses it.
 void lib_ams::ShmClose(lib_ams::FShm &shm) {
+    // A wakeup owed on this ring is sent while the mapping still stands, since
+    // its peer learns of the last messages from nothing else.
+    FlushWake();
     if (shm.c_reader && shm.c_reader->sleeping) {
         shm.c_reader->sleeping = 0;
+    }
+    // A channel handle points into the control page being unmapped, so it goes
+    // with the mapping.
+    while (lib_ams::FChannel *channel = lib_ams::zd_channel_First(shm)) {
+        lib_ams::channel_Delete(*channel);
+    }
+    // A closing lane's readers stop moving, so the chunks its references hold
+    // are given back here; a closing board's chunks name bytes of the mapping
+    // that is going away, so they are forgotten along with every lane's
+    // references into them.
+    if (lib_ams::BoardQ(shm)) {
+        lib_ams::BoardReset(shm);
+    } else {
+        lib_ams::ChunkrefReleaseAll(shm);
     }
     shm_file_Cleanup(shm);
     algo::Refurbish(shm.shm_region);
@@ -860,15 +1044,28 @@ bool lib_ams::HasBudgetQ(lib_ams::FShm &shm, u32 extra DFLTVAL(0)) {
 
 // If the shm is open for reading, check to see if a message
 // is available. If it is available, return pointer to message.
+//
+// The writer copies a message in, fences, and then stores woff (EndWrite), so
+// a woff this reader sees announces bytes already written.  The reader's half
+// is the mirror: load woff, fence, and only then read the header and body it
+// announces.  With the fence ahead of the load instead, nothing orders the
+// payload read after the woff read, and on a weakly ordered core (aarch64,
+// where lfence is dmb ishld) a reader could see the advanced woff and still
+// read the bytes the slot held before.  A reloaded woff equal to the cached one
+// announces nothing new, and the fence taken when it was cached already orders
+// every read below it, so an idle ring skips the fence.
 ams::MsgHeader *lib_ams::PeekMsg(lib_ams::FShm &shm) {
     ams::MsgHeader *ret = NULL;
     u64 roff=shm.c_reader->offset;
     u64 woff=shm.cached_woff;
     // reload woff if needed
     if (roff + sizeof(ams::MsgHeader) >= woff) {
-        lfence();
-        woff = shm.c_shmhdr->woff;
-        shm.cached_woff = woff;
+        u64 hdr_woff = shm.c_shmhdr->woff;
+        if (hdr_woff != woff) {
+            lfence();
+            shm.cached_woff = hdr_woff;
+            woff = hdr_woff;
+        }
     }
     if (roff + sizeof(ams::MsgHeader) <= woff) {
         ams::MsgHeader *msg = MsgAtOffset(shm,roff);
@@ -878,15 +1075,6 @@ ams::MsgHeader *lib_ams::PeekMsg(lib_ams::FShm &shm) {
     }
     return ret;
 }
-
-// Called by the client
-// to avoid reading current message
-void lib_ams::StopReading(lib_ams::FShm &shm) {
-    UnreadMsg();
-    cd_poll_read_Remove(shm);
-}
-
-// -----------------------------------------------------------------------------
 
 // Check all shms (that are not already readable) for readability and
 // transfer readable shms to the read heap with correct sort key.
@@ -930,7 +1118,10 @@ void lib_ams::cd_poll_read_Step() {
                 }
             }
             if (shm.c_shmhdr) {
-                if (lib_ams::_db.signaled) {
+                // A writer woken for one message's room writes one message
+                // and parks again, so its wake waits until half the ring is
+                // free and the writer can refill half of it.
+                if (lib_ams::_db.signaled && HalfDrainedQ(shm)) {
                     WakeWriter(shm);
                 }
                 cd_poll_read_RotateFirst();
@@ -943,9 +1134,9 @@ void lib_ams::cd_poll_read_Step() {
             // an unsolicited message cannot show up
             cd_poll_read_RemoveFirst();
         } else if (lib_ams::_db.signaled) {
-            // Park this shm per-shm, here, not in the drained-list sweep below:
-            // a process whose poll list never empties never reaches
-            // cd_poll_read_N()==0, so the sweep alone can't recover the miss.
+            // Park this ring here, as its own empty poll finds it: ParkReader
+            // sets the sleeping flag and re-checks under a barrier, which is the
+            // whole defense against a wakeup lost between the peek and the store.
             if (ParkReader(shm)) {
                 cd_poll_read_RemoveFirst();
             } else {
@@ -956,14 +1147,8 @@ void lib_ams::cd_poll_read_Step() {
         }
         _db.c_cur_shm=NULL;
     }
-    // About to sleep (poll list drained): re-arm any reader that has data but
-    // parked before its writer's wakeup landed.
-    if (lib_ams::_db.signaled && cd_poll_read_N()==0) {
-        RecoverWakeup();
-    }
 }
 
-// -----------------------------------------------------------------------------
 
 ams::Shmember *lib_ams::shmember_Find(lib_ams::FShm &shm, int i) {
     ams::Shmember *ret=NULL;

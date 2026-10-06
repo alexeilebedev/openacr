@@ -1,0 +1,48 @@
+#!/bin/bash
+# A compiler driver that compiles nothing, for gcache's comptests.
+# gcache decides the format of a cache entry from the flags on the command
+# line, and a test of that decision through a real compiler can only use the
+# spellings that compiler accepts: --test-coverage and --profile-arcs are
+# gcc's own long forms, and clang refuses them.  This driver accepts every
+# flag, so the test reads gcache's classification of a spelling and nothing
+# about the compiler behind it.
+# Under -E the source named on the command line is copied to the -o output
+# with one level of #include expanded the way gcc marks it -- `# 1 "h.h" 1`
+# before the header's lines and `# N "src" 2` after them -- which is what
+# gcache reads as the preprocessed text and walks for a header to precompile.
+# Otherwise the output is written as an object of a few bytes, and a notes
+# file is written beside it whatever the flags say, so the notes come back
+# from a cache hit exactly when gcache filed the entry in the coverage format.
+# An output named .gch is a precompiled header: it is written and no notes
+# are, since a header compiles to no object.
+mode=compile
+out=""
+src=""
+while test $# -gt 0; do
+    case "$1" in
+        -E) mode=preprocess;;
+        -o) out="$2"; shift;;
+        *.cpp) src="$1";;
+    esac
+    shift
+done
+if test "$mode" = preprocess; then
+    awk -v src="$src" '
+        BEGIN { print "# 1 \"" src "\"" }
+        /^#include[ \t]+[<"][^>"]+[>"]/ {
+            inc = $0
+            sub(/^#include[ \t]+[<"]/, "", inc)
+            sub(/[>"].*$/, "", inc)
+            print "# 1 \"" inc "\" 1"
+            while ((getline line < inc) > 0) { print line }
+            close(inc)
+            print "# " NR+1 " \"" src "\" 2"
+            next
+        }
+        { print }' "$src" > "$out"
+else
+    case "$out" in
+        *.gch) echo pch > "$out";;
+        *) echo object > "$out"; echo notes > "${out%.*}.gcno";;
+    esac
+fi

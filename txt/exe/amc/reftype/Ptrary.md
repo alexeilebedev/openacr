@@ -45,6 +45,13 @@ State in the **element** ctype (only with `unique`/`heaplike`):
 Heaplike uses the index to support O(log N) Remove from the
 backing array — that's why Bheap demands `heaplike:Y`.
 
+NOTE: the element carries one `_in_ary` or `_idx` field per Ptrary
+declaration, not per parent row, so a `unique:Y` Ptrary holds an
+element under at most one parent.  Put an element in two parents'
+arrays and a remove from one parent clears the flag the other one
+reads.  For a many-to-many membership, declare a join ctype with an
+`Llist` under each parent, and cascdel both.
+
 Both variants are populated by amc's `gen_newfield_ptrary`
 phase as part of code generation.
 

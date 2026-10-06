@@ -1,21 +1,21 @@
-// Copyright (C) 2023-2024,2026 AlgoRND
+// Copyright (C) 2026 AlgoX2 Corp
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2021 Astra
 // Copyright (C) 2017-2019 NYSE | Intercontinental Exchange
 // Copyright (C) 2008-2013 AlgoEngineering LLC
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: acr (exe) -- Algo Cross-Reference - ssimfile database & update tool
@@ -49,41 +49,66 @@ void acr::ReportBadLine(acr::FFile &file, algo::strptr text, algo::strptr reason
 
 // -----------------------------------------------------------------------------
 
-// Load records for this ctype from the appropriate ssimfile.
+// Read the tuples of FILE, an ssimfile of one table, into that table.  The
+// caller says what the file is for through its flags; this only reads it.
+// A dataset holds only the ssimfiles it needs, so a path that resolves to
+// nothing loads as an empty table.  Any other read failure -- a permission
+// problem, an i/o error, a mapping that did not succeed -- fails the run
+// instead: the query would otherwise answer from a table missing every row of
+// that file, and a -write would rewrite the file from the rows that did load,
+// dropping the rest.  acr.DsetFileReadDeny pins both halves.
+static void LoadFileRecords(acr::FFile &file) {
+    file.autoloaded = true;
+    algo_lib::MmapFile in;
+    if (MmapFile_Load(in, file.file)) {
+        file.modtime = acr::FdModTime(in.fd.fd);
+        verblog("acr.load"<<Keyval("fname",file.file));
+        Tuple tuple;
+        ind_beg(Line_curs,line,in.text) {
+            file.lineno = ind_curs(line).i+1;
+            if (Tuple_ReadStrptrMaybe(tuple, line)) {
+                acr::ReadTuple(tuple, file, acr_ReadMode_acr_insert);
+            } else {
+                acr::ReportBadLine(file, line, "cannot parse line");
+            }
+        }ind_end;
+    } else if (errno==ENOENT || errno==ENOTDIR) {
+        // the path names no file, so the table stays empty
+    } else {
+        algo::PrerrFileFail("acr.file_read", file.file, "ssimfile could not be read");
+        acr::_db.load_failed = true;
+        algo_lib::_db.exit_code++;
+    }
+}
+
+// Load records for this ctype from its ssimfile under -in.
 // This does nothing if acr is operating in file mode.
-// A dataset holds only the ssimfiles it needs, so an ssimfile whose path
-// resolves to nothing loads as an empty table. Any other read failure -- a
-// permission problem, an i/o error, a mapping that did not succeed -- fails the
-// run instead: the query would otherwise answer from a table missing every row
-// of that file, and a -write would rewrite the file from the rows that did
-// load, dropping the rest. acr.DsetFileReadDeny pins both halves.
+// While -meta is selecting, a table -in left empty is read from -schema as
+// well, the directory the schema came from: the ctype and field rows -meta
+// answers with are schema, and a dataset queried through -in carries none of
+// its own.  A table -in does hold, as a second checkout's data/ does, is taken
+// as read, so nothing is inserted twice and the report counts only what the
+// query ignored.  The schema file is read once, whether the table was bound
+// under -in before -meta ran or is first touched by it, and it is read for
+// answering only: it carries no filename, so a -write never rewrites it, and
+// it is sticky, so its rows stay its own and a -write never copies them into
+// the -in file.  An edit that lands on one of its rows is refused at write
+// time (WriteFiles), since the row has no file to go to.
 void acr::LoadRecords(acr::FCtype &ctype) {
     if (acr::FSsimfile *ssimfile = ctype.c_ssimfile) {
-        acr::FFile *file = ctype.c_ssimfile->c_file;
+        acr::FFile *file = ssimfile->c_file;
         if (!file && !FileInputQ()) {
             file = &acr::ind_file_GetOrCreate(SsimFname(acr::_db.cmdline.in, ssimfile->ssimfile));
             ssimfile->c_file = file;
-            file->autoloaded = true;
             file->filename = file->file; // save filename
-            algo_lib::MmapFile in;
-            if (MmapFile_Load(in, file->file)) {
-                file->modtime = FdModTime(in.fd.fd);
-                verblog("acr.load"<<Keyval("fname",file->file));
-                Tuple tuple;
-                ind_beg(Line_curs,line,in.text) {
-                    ssimfile->c_file->lineno = ind_curs(line).i+1;
-                    if (Tuple_ReadStrptrMaybe(tuple, line)) {
-                        ReadTuple(tuple, *ssimfile->c_file, acr_ReadMode_acr_insert);
-                    } else {
-                        ReportBadLine(*ssimfile->c_file, line, "cannot parse line");
-                    }
-                }ind_end;
-            } else if (errno==ENOENT || errno==ENOTDIR) {
-                // the path names no file, so the table stays empty
-            } else {
-                algo::PrerrFileFail("acr.file_read", file->file, "ssimfile could not be read");
-                acr::_db.load_failed = true;
-                algo_lib::_db.exit_code++;
+            LoadFileRecords(*file);
+        }
+        if (_db.metaload && file && zd_frec_EmptyQ(*file)) {
+            tempstr schemafile = SsimFname(acr::_db.cmdline.schema, ssimfile->ssimfile);
+            if (!acr::ind_file_Find(schemafile)) {
+                acr::FFile &schema = acr::ind_file_GetOrCreate(schemafile);
+                schema.sticky = true;
+                LoadFileRecords(schema);
             }
         }
     }

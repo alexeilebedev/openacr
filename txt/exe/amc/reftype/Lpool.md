@@ -120,7 +120,7 @@ Delete, …).
   The `Pool.Delete` wrapper handles this for typed elements;
   raw memory needs manual bookkeeping.
 - **No return-to-OS.**  Memory grows monotonically.  This
-  matches X2's typical pattern (long-running processes,
+  matches the typical pattern of a long-running server (long-running processes,
   steady-state workloads) but is a poor fit for short-lived
   burst allocations.
 - **Counter only for typed args.**  When `arg:u8`, no `_n`
@@ -130,7 +130,7 @@ Delete, …).
 <a href="#see-also"></a>
 
 - [Reftypes index](/txt/exe/amc/reftype.md)
-- [Memory pools](/txt/exe/amc/pool.md) — allocator catalog
+- [Memory pools](/txt/exe/amc/pool.md) — allocator list
 - [Tpool](/txt/exe/amc/reftype/Tpool.md) — fixed-size freelist
 - [Blkpool](/txt/exe/amc/reftype/Blkpool.md) — FIFO refcounted pool
 - [Sbrk](/txt/exe/amc/reftype/Sbrk.md) — bottom-level allocator

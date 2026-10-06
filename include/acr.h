@@ -1,21 +1,21 @@
-// Copyright (C) 2023-2024,2026 AlgoRND
+// Copyright (C) 2026 AlgoX2 Corp
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2021 Astra
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 // Copyright (C) 2008-2013 AlgoEngineering LLC
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: acr (exe) -- Algo Cross-Reference - ssimfile database & update tool
@@ -107,7 +107,9 @@ namespace acr { // update-hdr
 
     // Emit the git commands that make the worktree match the selected dev.gitfile
     // rows: a deleted row's file is removed, a renamed row's file is moved, and a
-    // new row's file is created and staged. WRITE_OK says the ssimfile write-back
+    // new row's file is created and staged. A file moved or created gets its
+    // directory first: an ssimfile renamed into a new namespace lands under a
+    // data directory that does not exist yet. WRITE_OK says the ssimfile write-back
     // went through, and the script then runs; otherwise the script is printed.
     // A nonzero script status fails the run. acr_ed's rename arrives here as an acr
     // run that renames the source file's dev.gitfile row under -write and -g, and by
@@ -135,14 +137,19 @@ namespace acr { // update-hdr
     // never reach this path.
     void ReportBadLine(acr::FFile &file, algo::strptr text, algo::strptr reason);
 
-    // Load records for this ctype from the appropriate ssimfile.
+    // Load records for this ctype from its ssimfile under -in.
     // This does nothing if acr is operating in file mode.
-    // A dataset holds only the ssimfiles it needs, so an ssimfile whose path
-    // resolves to nothing loads as an empty table. Any other read failure -- a
-    // permission problem, an i/o error, a mapping that did not succeed -- fails the
-    // run instead: the query would otherwise answer from a table missing every row
-    // of that file, and a -write would rewrite the file from the rows that did
-    // load, dropping the rest. acr.DsetFileReadDeny pins both halves.
+    // While -meta is selecting, a table -in left empty is read from -schema as
+    // well, the directory the schema came from: the ctype and field rows -meta
+    // answers with are schema, and a dataset queried through -in carries none of
+    // its own.  A table -in does hold, as a second checkout's data/ does, is taken
+    // as read, so nothing is inserted twice and the report counts only what the
+    // query ignored.  The schema file is read once, whether the table was bound
+    // under -in before -meta ran or is first touched by it, and it is read for
+    // answering only: it carries no filename, so a -write never rewrites it, and
+    // it is sticky, so its rows stay its own and a -write never copies them into
+    // the -in file.  An edit that lands on one of its rows is refused at write
+    // time (WriteFiles), since the row has no file to go to.
     void LoadRecords(acr::FCtype &ctype);
 
     // Return default read mode as specified on the command line
@@ -167,7 +174,7 @@ namespace acr { // update-hdr
     void LookupField(acr::FRec &rec, strptr fieldname, acr::FCtype *&prev_ctype, acr::FField *&prev_field);
     void Main_CmdQuery();
     //     (user-implemented function, prototype is in amc-generated header)
-    // void Main(); // main:acr
+    // void Main(); // dmmeta.main:acr
 
     // -------------------------------------------------------------------
     // cpp/acr/print.cpp -- Code for output
@@ -239,7 +246,10 @@ namespace acr { // update-hdr
     // This produces a new query but doesn't run it
     void ScheduleSelectCtype(acr::FCtype &ctype_ctype, acr::FCtype &ctype);
 
-    // Select ctypes of selected records, deselect records themselves
+    // Select ctypes of selected records, deselect records themselves.
+    // The ctype and field rows selected here come from -schema, the directory
+    // the schema was read from, so a dataset queried through -in answers -meta
+    // from the schema it was checked against.
     void Main_SelectMeta();
     void Main_SelectUp();
 

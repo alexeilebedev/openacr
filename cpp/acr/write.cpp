@@ -1,21 +1,21 @@
-// Copyright (C) 2023-2024,2026 AlgoRND
+// Copyright (C) 2026 AlgoX2 Corp
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2021 Astra
 // Copyright (C) 2017-2019 NYSE | Intercontinental Exchange
 // Copyright (C) 2008-2013 AlgoEngineering LLC
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: acr (exe) -- Algo Cross-Reference - ssimfile database & update tool
@@ -119,6 +119,25 @@ void acr::WriteFiles() {
         ind_beg(acr::_db_file_curs, file, acr::_db) {
             if (ch_N(file.filename) != 0) {
                 WriteFile(write,file);
+            } else if (file.sticky) {
+                // A sticky file with no filename is the schema -meta read over
+                // a dataset: its rows stay its own and it is never rewritten,
+                // so an edit that landed on one of them would be reported
+                // applied and go nowhere.  The other filename-less files (the
+                // stdin pipe, the -e temp file) are not sticky, so their rows
+                // were re-homed to a dataset file at insert; what stays on them
+                // is a row of a ctype with no ssimfile, dropped as always.
+                int n_edit = 0;
+                ind_beg(acr::file_zd_frec_curs, rec, file) {
+                    n_edit += rec.mod || rec.del || rec.isnew;
+                }ind_end;
+                if (n_edit > 0) {
+                    prerr("acr.schema_readonly"
+                          <<Keyval("file",file.file)
+                          <<Keyval("n_edit",n_edit)
+                          <<Keyval("comment","rows read from -schema to answer -meta are not written; edit the schema with -in naming its directory"));
+                    algo_lib::_db.exit_code++;
+                }
             }
         }ind_end;
     }

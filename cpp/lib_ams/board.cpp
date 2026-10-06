@@ -1,127 +1,150 @@
-// Copyright (C) 2026 AlgoRND
+// Copyright (C) 2026 AlgoX2 Corp
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Target: lib_ams (lib) -- Library for AMS middleware, supporting file format & messaging
 // Exceptions: NO
 // Source: cpp/lib_ams/board.cpp
 //
-// A lane ring holds whole messages, so it must be sized for the largest message
-// it may carry; and because its writable span is its power-of-two body less
-// twice that size, a lane costs three to five times the largest message whether
-// or not one ever crosses it.  A process therefore keeps one message board: a
-// segment of fixed-size slots holding the payloads that do not fit a ring.  The
-// payload is written to a slot once and each recipient's ring carries an
-// ams::BoardrefMsg in the position the message would have occupied, so a message
-// reaching N readers is copied once instead of N times and no ring is sized for
-// it at all.
-// A slot returns to the free list when the last reader it was posted to has
-// consumed the reference.  The sender learns that by watching ring positions:
-// every reference is recorded, together with the ring position that releases it,
-// in a queue the sender alone owns and readers never see.  A reader writes only
-// its own ring position, exactly as it does for an ordinary lane, and maps the
-// board without ever polling it.
-// Sizing is what keeps one reader's slowness to itself.  A reader's queue holds
-// its pin allowance divided by the slot size, so a full queue and a spent
-// allowance are one condition; and a board at least as large as the sum of its
-// readers' allowances can always place a message, because every reader's pins
-// fit at once by construction.  A reader that stops consuming spends its own
-// allowance and delays nobody.
+// A lane ring holds whole messages, so a message that reaches N readers on N
+// lanes is copied N times, and every lane is sized for the largest message it may
+// carry.  The message board takes the copies out.  A writer keeps one board, a
+// segment under the `board` grptype whose body is an arena of fixed-size chunks.
+// It reserves message space in the current chunk with BoardAlloc, formats the
+// message there, and sends it to a lane with BoardSend, which writes a 64-byte
+// ams::BoardrefMsg naming the payload's board offset and length into the lane
+// ring.  The reader's poll step resolves the reference to the payload and hands
+// the payload to the lane's hook, so nothing above the transport can tell which
+// way a message traveled.  A reader maps the board with BoardOpen and writes
+// nothing into it: its lane offset is the one number the writer already reads.
+// The chunk is the unit of reuse, and the writer alone keeps the books, in its
+// own memory.  Each FChunk carries `nref`, the count of references sent into it
+// that no reader has yet passed, plus any holds a module takes with ChunkHold.
+// Per lane the writer keeps up to board_max_chunkref Chunkref rows, one per
+// chunk the lane's readers may still be reading: the chunk, how many references
+// into it went down the lane, and the lane offset past the last of them.  A send
+// to a chunk the lane already references adds to that row, so a run of messages
+// out of one chunk costs one row however long it is.  BoardReap reads the lane's
+// slowest reader offset and, for every row it has passed, subtracts the row's
+// count from the chunk and drops the row; a chunk that reaches zero and is not
+// the one being filled returns to the board's free list.  A send that needs a
+// row the lane has no room for reaps first and then refuses, so a lane
+// references at most board_max_chunkref chunks at once and a reader that stops
+// costs the board that many chunks, never its ability to reuse the rest.  That
+// is what a ring cannot offer: space here is reclaimed by chunk, in whatever
+// order the readers let go of it.
 
 #include "include/algo.h"
 #include "include/lib_ams.h"
+#include <sys/mman.h>
 
-// TRUE when SHM is a message board rather than a lane ring.
-bool lib_ams::BoardQ(lib_ams::FShm &shm) {
-    return shm.grp_id.grptype == ams_Grptype_board;
-}
-
-// Address of slot SLOT within board BOARD.
-static u8 *SlotAddr(lib_ams::FShm &board, u32 slot) {
-    return board.c_data + u64(slot) * u64(board.max_msg_size);
-}
-
-// Offset of slot SLOT from the start of board BOARD's segment -- the form an
-// ams::BoardrefMsg carries, so a reader reaches the payload from the mapping
-// alone, without knowing how slots are laid out.
-static u64 SlotOffset(lib_ams::FShm &board, u32 slot) {
-    return board.c_shmhdr->datastart + u64(slot) * u64(board.max_msg_size);
-}
-
-// Take a free slot of BOARD into SLOT.  FALSE when none is free, which the
-// sizing rule puts out of reach: a reader that has spent its allowance is
-// withheld from before a slot is asked for, and the board holds every
-// allowance at once.
-static bool SlotAllocMaybe(lib_ams::FShm &board, u32 &slot) {
-    bool ret = free_slot_N(board) > 0;
-    if (ret) {
-        slot = *free_slot_Last(board);
-        free_slot_RemoveLast(board);
-    }
-    return ret;
-}
-
-// Drop one reader's reference to slot SLOT of BOARD, freeing the slot once the
-// last reader has let go.
-static void SlotRelease(lib_ams::FShm &board, u32 slot) {
-    u32 *nref = slot_nref_Find(board, slot);
-    if (nref && *nref > 0) {
-        *nref -= 1;
-        if (*nref == 0) {
-            free_slot_Alloc(board) = slot;
-        }
-    }
-}
-
-// The board serving lane SHM's writer, or NULL when that process keeps none.
-// A process has exactly one board, so the lookup is by the writer's proc id and
-// the answer is cached on the lane -- a lane opened before the board existed
-// finds it on a later call.
+// The board of lane SHM's writer, or NULL when that process keeps none.
+// A process keeps one board, so the lookup is by the writer's proc id, and the
+// answer is cached on the lane so a lane opened before the board existed finds
+// it on a later call.
+//
+// A reader learns of a board by the first reference that reaches it, so on a
+// lane this process reads and does not write the board is opened here when it
+// is not mapped yet.  The open fails while the writer has not created its board,
+// which costs one shm_open per reference until it has; a writer sends no
+// reference before its board exists, so in practice the first one succeeds.
 lib_ams::FShm *lib_ams::BoardOf(lib_ams::FShm &shm) {
     if (!shm.p_board && !lib_ams::BoardQ(shm)) {
         shm.p_board = lib_ams::ind_shm_Find(ams::GrpId(shm.grp_id.proc_id, ams::Grptype(ams_Grptype_board), 0));
     }
+    bool mapped = shm.p_board && shm.p_board->c_shmhdr;
+    if (!mapped && read_Get(shm.flags) && !write_Get(shm.flags) && !lib_ams::BoardQ(shm)) {
+        shm.p_board = lib_ams::BoardOpen(shm.grp_id.proc_id);
+    }
     return shm.p_board;
 }
 
-// Stock board BOARD's slot bookkeeping: every slot free and none referenced.
-// The slot count follows from the segment, so a reader that maps a board sized
-// by someone else agrees with its creator without being told.
-void lib_ams::BoardInit(lib_ams::FShm &board) {
-    u32 nslot = (board.c_shmhdr->tot_size - board.c_shmhdr->datastart) / board.max_msg_size;
-    free_slot_RemoveAll(board);
-    slot_nref_RemoveAll(board);
-    for (u32 i = 0; i < nslot; i++) {
-        slot_nref_Alloc(board) = 0;
-        free_slot_Alloc(board) = nslot - 1 - i;
+// The chunk of BOARD whose bytes include address PTR, or NULL when PTR lies
+// outside the board's body.
+lib_ams::FChunk *lib_ams::ChunkOf(lib_ams::FShm &board, const void *ptr) {
+    lib_ams::FChunk *ret = NULL;
+    i64 off = (const u8*)ptr - board.shm_region.elems;
+    if (board.c_shmhdr && board.chunk_size > 0 && off >= i64(board.c_shmhdr->datastart)) {
+        ret = lib_ams::c_chunk_Find(board, u64(off - board.c_shmhdr->datastart) / board.chunk_size);
+    }
+    return ret;
+}
+
+// Put CHUNK on its board's free list once nothing references it and the board
+// is not filling it.  The one site that frees a chunk, reached from every path
+// that lowers `nref` and from the retirement of the chunk being filled.
+static void ChunkFreeMaybe(lib_ams::FChunk &chunk) {
+    if (chunk.nref == 0 && chunk.p_board->c_chunk_cur != &chunk) {
+        lib_ams::zd_chunk_free_Insert(*chunk.p_board, chunk);
     }
 }
 
-// Create this process's message board with NSLOT slots of board_slot_size bytes
-// and open it for writing.  NULL if the segment cannot be made.
+// Release N references to CHUNK.
+static void ChunkUnref(lib_ams::FChunk &chunk, u32 n) {
+    chunk.nref -= u32_Min(n, chunk.nref);
+    ChunkFreeMaybe(chunk);
+}
+
+// Give back one hold ChunkHold took on CHUNK.  A chunk nobody holds or
+// references any longer goes back to the board's free list.
+void lib_ams::ChunkRelease(lib_ams::FChunk &chunk) {
+    ChunkUnref(chunk, 1);
+}
+
+// Describe BOARD's mapped body as chunks of its chunk size, every one free, and
+// make it a board this process fills.  The count follows from the segment, so
+// a board that came from the process pool at the default size, or one the
+// topology sized, is described as it is rather than as it was asked for.  A
+// process may fill several boards, and the chunks of each join the process's
+// chunk pool after those of the boards described before it; a board already
+// described is left as it is.
+void lib_ams::BoardInitChunks(lib_ams::FShm &board) {
+    board.c_chunk_cur = NULL;
+    u64 nchunk = lib_ams::c_chunk_N(board) == 0 ? (u64(board.shm_region.n_elems) - board.c_shmhdr->datastart) / board.chunk_size : 0;
+    for (u64 i = 0; i < nchunk; i++) {
+        lib_ams::FChunk *chunk = lib_ams::chunk_AllocMaybe();
+        if (chunk) {
+            chunk->p_board = &board;
+            chunk->offset = board.c_shmhdr->datastart + i * board.chunk_size;
+            (void)lib_ams::chunk_XrefMaybe(*chunk);
+            lib_ams::zd_chunk_free_Insert(board, *chunk);
+        }
+    }
+}
+
+// Create this process's message board, a segment whose body holds at least BODY
+// bytes as chunks of CHUNK_SIZE bytes, and open it for writing.  NULL if the
+// segment cannot be made or the tmpfs cannot hold it.
 //
-// Choose NSLOT so the board is at least the sum of its readers' pin allowances
-// (board_max_pin each): that is what makes a placement unable to fail, and with
-// fan-out it is generous, since a slot reaching several readers is charged to
-// each allowance but occupies the board once.
-lib_ams::FShm *lib_ams::BoardCreate(u32 nslot) {
+// A chunk is the largest message the board carries and the unit a reader's
+// lag is charged in: a lane references at most board_max_chunkref chunks, so a
+// reader that stops holds that many chunks and the rest of the board keeps
+// turning over.  Size the body for the burst every reader together may be
+// behind by, plus the chunks the stopped readers you are willing to carry hold.
+//
+// The segment is created as any board segment is (ShmCreate): its pages are
+// committed and locked when it is made, so the tmpfs answers here, where the
+// caller can fall back, and never with a fault under a store minutes into the
+// run.  A process in a topology does not call this: its board is a segment the
+// topology declares and the supervisor creates, which it opens with the rest.
+lib_ams::FShm *lib_ams::BoardCreate(u64 body, u32 chunk_size) {
     lib_ams::FShm *ret = lib_ams::ind_shm_GetOrCreate(ams::GrpId(lib_ams::_db.proc_id, ams::Grptype(ams_Grptype_board), 0));
     if (ret) {
-        ret->size = i64(lib_ams::_db.board_slot_size) * nslot + 4096;
+        ret->max_msg_size = i32(chunk_size);
+        ret->size = i64(lib_ams::BoardSize(body, chunk_size));
         if (lib_ams::ShmOpen(*ret, ams_ShmFlags_write)) {
-            lib_ams::BoardInit(*ret);
+            lib_ams::BoardInitChunks(*ret);
         } else {
             ret = NULL;
         }
@@ -129,14 +152,62 @@ lib_ams::FShm *lib_ams::BoardCreate(u32 nslot) {
     return ret;
 }
 
+// Bytes a board segment takes to hold a body of BODY bytes as chunks of
+// CHUNK_SIZE: the header page and whole chunks, at least one.
+u64 lib_ams::BoardSize(u64 body, u32 chunk_size) {
+    u64 nchunk = u64_Max((body + chunk_size - 1) / chunk_size, 1);
+    return 4096 + nchunk * chunk_size;
+}
+
+// Create a message board of this process as a private mapping of this process
+// alone -- BODY bytes as chunks of CHUNK_SIZE, anonymous memory, no file under
+// /dev/shm -- and open it for writing.  INDEX is the board's index among this
+// process's boards: index 0 is the one readers open (BoardOpen), so a private
+// board kept beside a shared one takes another index.  NULL when the memory
+// cannot be mapped.
+//
+// This is the board for memory no reader needs to open: the process keeps the
+// chunk arena, the allocation and the eviction it was written against, and
+// gives up only what a segment would buy it -- no other process can open the
+// board, so a reference sent into it would resolve to nothing.  The board says
+// so on `privateq`, and a writer tests that before sending a reference.
+lib_ams::FShm *lib_ams::BoardCreatePrivate(u64 body, u32 chunk_size, u32 index DFLTVAL(0)) {
+    lib_ams::FShm *ret = lib_ams::ind_shm_GetOrCreate(ams::GrpId(lib_ams::_db.proc_id, ams::Grptype(ams_Grptype_board), u8(index)));
+    i64 size = i64(lib_ams::BoardSize(body, chunk_size));
+    void *mem = ret && !ret->c_shmhdr ? mmap(NULL, size_t(size), PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0) : MAP_FAILED;
+    if (mem == MAP_FAILED) {
+        ret = NULL;
+    } else {
+        ret->shm_region = algo::memptr((u8*)mem, size);
+        ret->created = true;
+        ret->privateq = true;
+        ret->chunk_size = chunk_size;
+        ret->max_msg_size = i32(chunk_size);
+        ret->size = size;
+        ret->offset_mask = 0;
+        ret->c_shmhdr = (ams::Shmhdr*)mem;
+        new (ret->c_shmhdr) ams::Shmhdr;// defaults
+        ret->c_shmhdr->grp_id = ret->grp_id;
+        ret->c_shmhdr->tot_size = u64(size);
+        ret->c_shmhdr->datastart = 4096;
+        ret->c_shmhdr->max_msg_size = ret->max_msg_size;
+        ret->c_shmhdr->creator_pid = getpid();
+        ret->c_shmhdr->writer_pid = getpid();
+        ret->c_data = ret->shm_region.elems + 4096;
+        write_Set(ret->flags, true);
+        lib_ams::BoardInitChunks(*ret);
+    }
+    return ret;
+}
+
 // Open process WRITER's message board for reading, so references arriving on
-// that writer's lanes can be resolved.  A reader holds the board before the
-// first reference arrives.
+// that writer's lanes resolve; open it before the first reference arrives.
+// NULL when the segment is missing.
 //
 // Holding it costs a mapping and nothing else: the board takes no member slot,
-// joins no poll list, and is never written by the reader.  There is nothing for
-// a board reader to say -- it advances no position, and the position that
-// matters is the one it already keeps on the lane the reference arrived on.
+// joins no poll list, and is never written by the reader.  The position that
+// matters is the one the reader already keeps on the lane the reference arrived
+// on, and the writer reads it there.
 lib_ams::FShm *lib_ams::BoardOpen(ams::ProcId writer) {
     lib_ams::FShm *ret = lib_ams::ind_shm_GetOrCreate(ams::GrpId(writer, ams::Grptype(ams_Grptype_board), 0));
     if (ret && !lib_ams::ShmOpen(*ret, ams_ShmFlags_read)) {
@@ -145,227 +216,261 @@ lib_ams::FShm *lib_ams::BoardOpen(ams::ProcId writer) {
     return ret;
 }
 
-// The queue recording what reader MEMBERIDX of lane SHM still holds, created on
-// first use.  NULL when the writer keeps no board, or when the queue cannot be
-// allocated.
-//
-// The queue length is the pin allowance divided by the slot size, rounded down
-// to a power of two so the position can be masked.  That is also what makes the
-// allowance exact rather than approximate: the reader may pin precisely as many
-// slots as the queue has entries, so there is one limit to test instead of two
-// that disagree at the edges.  An allowance below a single slot would let no
-// message through at all and stall the lane silently, so it is reported and
-// raised to one slot.
-lib_ams::FBoardq *lib_ams::BoardqGetOrCreate(lib_ams::FShm &shm, u32 memberidx) {
-    lib_ams::FBoardq *ret = NULL;
-    ind_beg(lib_ams::shm_c_boardq_curs, boardq, shm) {
-        if (boardq.memberidx == memberidx) {
-            ret = &boardq;
-        }
+// Offset of lane SHM's slowest reader: the least consume offset over its
+// members, and the ring start when it has none.  A message at or below this
+// offset has been read by everyone the lane delivers to.
+u64 lib_ams::SlowestReaderOffset(lib_ams::FShm &shm) {
+    u64 ret = shm.c_shmhdr->n_shmember ? (ULLONG_MAX/2) : 0;
+    ind_beg(lib_ams::shm_c_shmember_curs,shmember,shm) {
+        u64_UpdateMin(ret,shmember.offset);
     }ind_end;
-    lib_ams::FShm *board = ret ? NULL : lib_ams::BoardOf(shm);
-    if (board) {
-        u64 slot_size = u64(board->max_msg_size);
-        u64 nslot_pin = u64(lib_ams::_db.board_max_pin) / slot_size;
-        if (nslot_pin == 0) {
-            prerr("lib_ams.board_pin_low"
-                  <<Keyval("grp",shm.grp_id)
-                  <<Keyval("board_max_pin",lib_ams::_db.board_max_pin)
-                  <<Keyval("slot_size",slot_size)
-                  <<Keyval("comment","allowance below one slot admits no message; raised to one slot"));
-            nslot_pin = 1;
-        }
-        ret = lib_ams::boardq_AllocMaybe();
-        if (ret) {
-            ret->p_shm = &shm;
-            ret->memberidx = memberidx;
-            (void)(boardent_AllocN(*ret, i64(u64(1) << algo::u64_BitScanReverse(nslot_pin))).elems);
-            (void)lib_ams::boardq_XrefMaybe(*ret);
-        }
-    }
     return ret;
 }
 
-// Release the slots reader ROFF of BOARDQ has consumed: every entry at the head
-// whose ring position the reader has passed.  Entries are appended in ring
-// order, so the walk stops at the first one still outstanding.
-void lib_ams::BoardqSweep(lib_ams::FBoardq &boardq, u64 roff) {
-    lib_ams::FShm *board = lib_ams::BoardOf(*boardq.p_shm);
-    u64 mask = u64(boardent_N(boardq)) - 1;
-    bool more = board != NULL;
-    while (more) {
-        more = boardq.head < boardq.tail;
-        if (more) {
-            lib_ams::Boardent &boardent = *boardent_Find(boardq, boardq.head & mask);
-            more = boardent.ring_pos <= roff;
-            if (more) {
-                SlotRelease(*board, boardent.slot);
-                boardq.head++;
+// Release what lane SHM's readers have finished with: every Chunkref whose
+// offset the slowest reader has reached gives its count back to its chunk and
+// leaves the table.  Cheap enough to call before every send, and BoardSend
+// calls it itself when it needs a row the table has no room for.
+void lib_ams::BoardReap(lib_ams::FShm &shm) {
+    if (shm.c_shmhdr) {
+        u64 roff = lib_ams::SlowestReaderOffset(shm);
+        for (i64 i = lib_ams::chunkref_N(shm) - 1; i >= 0; i--) {
+            lib_ams::Chunkref &chunkref = *lib_ams::chunkref_Find(shm, u64(i));
+            if (chunkref.woffset <= roff) {
+                ChunkUnref(*chunkref.p_chunk, chunkref.nmsg);
+                lib_ams::chunkref_Remove(shm, u64(i));
             }
         }
     }
 }
 
-// Bring every reader queue of lane SHM up to date, creating a queue for a reader
-// that has none yet.  Run before the lane is asked to take a message, so the
-// room test sees what readers have actually consumed rather than what they held
-// when the last message went out.
-void lib_ams::BoardSweep(lib_ams::FShm &shm) {
-    ind_beg(lib_ams::shm_c_shmember_curs, shmember, shm) {
-        lib_ams::FBoardq *boardq = lib_ams::BoardqGetOrCreate(shm, ind_curs(shmember).index);
-        if (boardq) {
-            lib_ams::BoardqSweep(*boardq, shmember.offset);
-        }
+// Release every reference lane SHM holds on any chunk, and forget them.  Call
+// when the lane closes: its readers' offsets stop moving, so nothing else would
+// give those chunks back.
+void lib_ams::ChunkrefReleaseAll(lib_ams::FShm &shm) {
+    ind_beg(lib_ams::shm_chunkref_curs, chunkref, shm) {
+        ChunkUnref(*chunkref.p_chunk, chunkref.nmsg);
+    }ind_end;
+    lib_ams::chunkref_RemoveAll(shm);
+}
+
+// Forget BOARD's lanes and every lane's references into it, and the chunks of
+// every board this process fills.  Call when the board closes; the chunks name
+// bytes of a mapping that is going away.  The chunk pool is one pool across the
+// process's boards, so a process that fills several closes them together, as it
+// does when it exits.
+void lib_ams::BoardReset(lib_ams::FShm &board) {
+    ind_beg(lib_ams::shm_c_lane_curs, lane, board) {
+        lib_ams::chunkref_RemoveAll(lane);
+    }ind_end;
+    lib_ams::c_lane_RemoveAll(board);
+    board.c_chunk_cur = NULL;
+    lib_ams::chunk_RemoveAll();
+}
+
+// Reap every lane that references a chunk of BOARD, so each chunk whose last
+// reference its reader has passed returns to the free list.  A board's owner
+// that judges its chunks by how many are free calls this first: a lane is
+// otherwise reaped only when something is sent on it or the free list runs dry,
+// and a chunk a quiet lane's reader passed long ago still reads as held.
+void lib_ams::BoardReapAll(lib_ams::FShm &board) {
+    ind_beg(lib_ams::shm_c_lane_curs, lane, board) {
+        lib_ams::BoardReap(lane);
     }ind_end;
 }
 
-// TRUE when every reader of lane SHM can take one more board reference.  Reports
-// on the queues as they stand; run BoardSweep first for a current answer.
-//
-// Every reader must have a queue, not merely one of them.  A slot's reference
-// count is how many queues received the reference, so a reader without a queue
-// is a reader the count does not know about -- and it still sees the reference
-// in the ring and still resolves it, so the slot would be freed and handed to
-// the next message while that reader was reading it.  A queue that could not be
-// allocated therefore stops board traffic on the lane rather than admitting a
-// message whose lifetime nothing tracks.
-bool lib_ams::BoardRoomQ(lib_ams::FShm &shm) {
-    bool ret = lib_ams::c_boardq_N(shm) > 0 && shm.c_shmhdr && lib_ams::c_boardq_N(shm) == i64(shm.c_shmhdr->n_shmember);
-    ind_beg(lib_ams::shm_c_boardq_curs, boardq, shm) {
-        ret = ret && boardq.tail - boardq.head < u64(boardent_N(boardq));
-    }ind_end;
-    return ret;
+// Stop filling CHUNK, the chunk BOARD is allocating from.  A chunk nothing
+// referenced while it was being filled is free at once.
+static void ChunkRetire(lib_ams::FShm &board, lib_ams::FChunk &chunk) {
+    board.c_chunk_cur = NULL;
+    ChunkFreeMaybe(chunk);
 }
 
-// Record a reference at RING_POS to slot SLOT in the queue of every reader of
-// lane SHM, and return how many readers were given it -- which is the slot's
-// reference count, the number the sweeps count back down to zero.
-static u32 BoardPostEntry(lib_ams::FShm &shm, u64 ring_pos, u32 slot) {
-    u32 ret = 0;
-    ind_beg(lib_ams::shm_c_boardq_curs, boardq, shm) {
-        lib_ams::Boardent &boardent = *boardent_Find(boardq, boardq.tail & (u64(boardent_N(boardq)) - 1));
-        boardent.ring_pos = ring_pos;
-        boardent.slot = slot;
-        boardq.tail++;
-        ret++;
-    }ind_end;
-    return ret;
-}
-
-// Add lane SHM to the set the next BoardPostSet reaches.  The set is scratch,
-// rebuilt for every message and emptied by the post.
-void lib_ams::BoardPostLane(lib_ams::FShm &shm) {
-    lib_ams::c_postlane_Insert(shm);
-}
-
-// TRUE when every lane collected so far can take a reference: the reader
-// allowances are unspent and the ring has room for one.  Asked of all of them
-// before a slot is taken, because a message must reach every lane or none --
-// a lane that missed one leaves its reader a gap, and a reader consuming a
-// stream of references has no way to ask for what it did not get.
-static bool PostSetRoomQ() {
-    bool ret = lib_ams::c_postlane_N() > 0;
-    ind_beg(lib_ams::_db_c_postlane_curs, shm, lib_ams::_db) {
-        ret = ret && lib_ams::BoardRoomQ(shm) && lib_ams::HasBudgetQ(shm, ssizeof(ams::BoardrefMsg));
-    }ind_end;
-    return ret;
-}
-
-// Write MSG once to the board and post a reference to it in every lane collected
-// with BoardPostLane, so a message reaching readers on N separate lanes is
-// copied once rather than N times.  The set is emptied whether or not the post
-// succeeds.
-//
-// FALSE when the set is empty, when MSG is larger than a slot, when any reader
-// has spent its pin allowance, or when any ring is full; the caller treats every
-// one of those exactly as it treats a full ring.  All-or-nothing is the point of
-// asking every lane first: a partial post is a gap in somebody's stream.
-//
-// The ring position recorded for a reference is the position one past it, which
-// is where that reader's own offset lands once it has consumed the reference and
-// is done with the payload.  Entries are recorded before the reference is
-// published, so the slot is never visible to a reader while unaccounted for, and
-// the slot's reference count is the total across every lane -- which is what
-// lets one copy serve them all and still be freed at exactly the right moment.
-bool lib_ams::BoardPostSet(ams::MsgHeader &msg) {
-    bool ret = false;
-    lib_ams::FShm *first = lib_ams::c_postlane_N() > 0 ? lib_ams::c_postlane_Find(0) : NULL;
-    lib_ams::FShm *board = first ? lib_ams::BoardOf(*first) : NULL;
-    if (board && u64(msg.length) <= u64(board->max_msg_size)) {
-        ind_beg(lib_ams::_db_c_postlane_curs, shm, lib_ams::_db) {
-            lib_ams::BoardSweep(shm);
-        }ind_end;
-        u32 slot = 0;
-        if (PostSetRoomQ() && SlotAllocMaybe(*board, slot)) {
-            u32 nref = 0;
-            memcpy(SlotAddr(*board, slot), &msg, msg.length);
-            ind_beg(lib_ams::_db_c_postlane_curs, shm, lib_ams::_db) {
-                ams::BoardrefMsg boardref;
-                boardref.offset = SlotOffset(*board, slot);
-                boardref.payload_length = msg.length;
-                if (void *ptr = lib_ams::BeginWrite(shm, ssizeof(ams::BoardrefMsg))) {
-                    memcpy(ptr, &boardref, sizeof(boardref));
-                    u64 ring_pos = lib_ams::AddOffset(shm.c_shmhdr->woff, ssizeof(ams::BoardrefMsg));
-                    nref += BoardPostEntry(shm, ring_pos, slot);
-                    lib_ams::EndWrite(shm, ptr, ssizeof(ams::BoardrefMsg));
-                }
-            }ind_end;
-            *slot_nref_Find(*board, slot) = nref;
-            lib_ams::_db.trace.n_board_post++;
-            ret = nref > 0;
-        }
+// Take a free chunk of BOARD to fill, off the free list and emptied, or NULL
+// when none is free -- after reaping every lane that references the board, since
+// a reader may have moved past the last reference into some chunk.  The caller
+// holds the chunk by filling it; when it has moved on, ChunkRelease with no
+// references outstanding is what frees it.  A module that fills several chunks
+// at once -- one per class of message -- takes them here and reserves with
+// ChunkAlloc; BoardAlloc is the one-chunk form over the two.
+lib_ams::FChunk *lib_ams::ChunkTake(lib_ams::FShm &board) {
+    lib_ams::FChunk *ret = board.c_shmhdr ? lib_ams::zd_chunk_free_First(board) : NULL;
+    if (!ret && board.c_shmhdr) {
+        lib_ams::BoardReapAll(board);
+        ret = lib_ams::zd_chunk_free_First(board);
     }
-    lib_ams::c_postlane_RemoveAll();
+    if (ret) {
+        lib_ams::zd_chunk_free_Remove(board, *ret);
+        ret->used = 0;
+    } else {
+        lib_ams::_db.trace.n_board_nochunk++;
+    }
     return ret;
 }
 
-// Write MSG to the board serving lane SHM and post a reference to it in SHM's
-// ring, so every reader of the lane receives the message at the cost of one copy.
-// The one-lane case of BoardPostSet, which is where the work is described.
-bool lib_ams::BoardPost(lib_ams::FShm &shm, ams::MsgHeader &msg) {
-    lib_ams::c_postlane_RemoveAll();
-    lib_ams::BoardPostLane(shm);
-    return lib_ams::BoardPostSet(msg);
+// Reserve LEN bytes at the end of CHUNK and return where to write them, or NULL
+// when the chunk has no room for them.  Nothing is published by the reservation.
+// A reservation is exactly LEN bytes, so messages lie in a chunk back to back the
+// way they lie in a datagram, and a datagram read into a chunk is a run of
+// messages the board can reference without moving a byte.
+void *lib_ams::ChunkAlloc(lib_ams::FChunk &chunk, int len) {
+    void *ret = NULL;
+    if (chunk.used + u32(len) <= chunk.p_board->chunk_size) {
+        ret = lib_ams::ChunkAddr(chunk) + chunk.used;
+        chunk.used += u32(len);
+    }
+    return ret;
 }
 
-// The payload BOARDREF names, or NULL when the reference does not describe a
-// message this process can see.
+// Reserve LEN bytes of message space in BOARD and return where to write them,
+// or NULL when no chunk can take them.  The space is the next run of the chunk
+// being filled; a message that does not fit there retires that chunk and starts
+// a free one (ChunkTake).  A message longer than a chunk is refused outright.
 //
-// The bounds test and the length cross-check are not ceremony: one board slot
-// serves every recipient of the message, so a reference that has gone stale --
-// through a sender accounting error, or a slot reused before a reader was done
-// with it -- would hand the same wrong bytes to every reader at once.  A
-// reference that fails either test is refused rather than dispatched.
-ams::MsgHeader *lib_ams::BoardResolve(lib_ams::FShm &shm, ams::BoardrefMsg &boardref) {
-    ams::MsgHeader *ret = NULL;
+// Nothing is published by the reservation.  The caller formats the message in
+// place and then sends it with BoardSend, or gives the space back with BoardTrim.
+void *lib_ams::BoardAlloc(lib_ams::FShm &board, int len) {
+    void *ret = NULL;
+    lib_ams::FChunk *chunk = board.c_chunk_cur;
+    if (chunk && chunk->used + u32(len) > board.chunk_size) {
+        ChunkRetire(board, *chunk);
+        chunk = NULL;
+    }
+    if (!chunk && u32(len) <= board.chunk_size) {
+        chunk = lib_ams::ChunkTake(board);
+        board.c_chunk_cur = chunk;
+    }
+    if (chunk) {
+        ret = lib_ams::ChunkAlloc(*chunk, len);
+    }
+    return ret;
+}
+
+// Shorten the most recent reservation of BOARD, at PTR, to LEN bytes: ChunkTrim
+// on the chunk being filled, when PTR lies in it.
+void lib_ams::BoardTrim(lib_ams::FShm &board, void *ptr, int len) {
+    lib_ams::FChunk *chunk = board.c_chunk_cur;
+    if (chunk && chunk == lib_ams::ChunkOf(board, ptr)) {
+        lib_ams::ChunkTrim(*chunk, ptr, len);
+    }
+}
+
+// The Chunkref of lane SHM for CHUNK, or NULL when the lane holds none.  The
+// last row is tested first, because a writer sends runs of messages out of one
+// chunk and the row it wants is almost always the one it used last.
+static lib_ams::Chunkref *ChunkrefFind(lib_ams::FShm &shm, lib_ams::FChunk &chunk) {
+    lib_ams::Chunkref *ret = lib_ams::chunkref_Last(shm);
+    if (ret && ret->p_chunk != &chunk) {
+        ret = NULL;
+        ind_beg(lib_ams::shm_chunkref_curs, chunkref, shm) {
+            if (chunkref.p_chunk == &chunk) {
+                ret = &chunkref;
+            }
+        }ind_end;
+    }
+    return ret;
+}
+
+// TRUE when lane SHM can take a reference to a message in CHUNK as things
+// stand: it holds a Chunkref row for CHUNK or has room for one, and the ring
+// has room for the reference with nothing queued ahead of it.
+bool lib_ams::BoardRoomQ(lib_ams::FShm &shm, lib_ams::FChunk &chunk) {
+    bool ret = ChunkrefFind(shm, chunk) != NULL || lib_ams::chunkref_N(shm) < lib_ams::_db.board_max_chunkref;
+    return ret && lib_ams::zd_outmsg_N(shm) == 0 && lib_ams::HasBudgetQ(shm, ssizeof(ams::BoardrefMsg));
+}
+
+// Make room on lane SHM for a reference to a message in CHUNK, and say whether
+// there is any: BoardRoomQ as things stand, and after one reap when there is
+// not.  The reap runs only when it is needed, so a run of messages out of one
+// chunk pays for none.  Ask this of every lane a message goes to before sending
+// it to any of them: a reader that missed one message of a numbered stream has
+// a gap it cannot ask to have filled.
+bool lib_ams::BoardMakeRoom(lib_ams::FShm &shm, lib_ams::FChunk &chunk) {
+    bool ret = lib_ams::BoardRoomQ(shm, chunk);
+    if (!ret) {
+        lib_ams::BoardReap(shm);
+        ret = lib_ams::BoardRoomQ(shm, chunk);
+    }
+    return ret;
+}
+
+// Begin sending MSG, a message in a chunk of this process's board, to lane SHM
+// by a reference message of REFLEN bytes: the ring slot the caller formats the
+// reference into, or NULL when the send cannot happen now -- MSG is not in the
+// board, the board is a private mapping no reader can open, the lane references
+// board_max_chunkref chunks already and reaping frees none of them
+// (n_board_nochunkref), or the ring has no room.  The caller writes
+// its reference into the slot and finishes with BoardEndSend; the pair exists so
+// a module may carry a reference inside a message of its own, with the fields
+// its reader needs beside the coordinates.
+void *lib_ams::BoardBeginSend(lib_ams::FShm &shm, ams::MsgHeader &msg, int reflen) {
+    void *ret = NULL;
+    lib_ams::FShm *board = lib_ams::BoardOf(shm);
+    lib_ams::FChunk *chunk = board && !board->privateq ? lib_ams::ChunkOf(*board, &msg) : NULL;
+    bool room = chunk && lib_ams::BoardMakeRoom(shm, *chunk);
+    if (room) {
+        ret = lib_ams::BeginWrite(shm, reflen);
+    } else if (chunk) {
+        lib_ams::_db.trace.n_board_nochunkref++;
+    }
+    return ret;
+}
+
+// Publish the reference that BoardBeginSend reserved PTR for on lane SHM,
+// REFLEN bytes long, and count it against CHUNK, the chunk the referenced
+// message lies in.
+//
+// The chunk is charged after the reference is published and before anything
+// else runs, so no reader sees a reference to a chunk the writer thinks free.
+// A reader is done with the payload when its lane offset passes the reference,
+// which is what the row's `woffset` records.
+void lib_ams::BoardEndSend(lib_ams::FShm &shm, lib_ams::FChunk &chunk, void *ptr, int reflen) {
+    lib_ams::FShm &board = *chunk.p_board;
+    lib_ams::EndWrite(shm, ptr, reflen);
+    lib_ams::Chunkref *chunkref = ChunkrefFind(shm, chunk);
+    if (!chunkref) {
+        chunkref = &lib_ams::chunkref_Alloc(shm);
+        chunkref->p_chunk = &chunk;
+        // the lane joins the set the board reaps when it runs out of chunks
+        lib_ams::c_lane_InsertMaybe(board, shm);
+    }
+    chunkref->nmsg++;
+    chunkref->woffset = shm.c_shmhdr->woff;
+    chunk.nref++;
+    lib_ams::_db.trace.n_board_send++;
+}
+
+// Send MSG, a message formatted into a chunk of this process's board, to lane
+// SHM: write an ams::BoardrefMsg naming it into the ring and count it against
+// its chunk.  TRUE when the reference was published.  FALSE when MSG is not in
+// the board, when the lane references board_max_chunkref chunks already and
+// reaping frees none of them, or when the ring has no room; the message stays in
+// the board and the caller retries or gives its space back with BoardTrim.
+bool lib_ams::BoardSend(lib_ams::FShm &shm, ams::MsgHeader &msg) {
+    bool ret = false;
+    if (void *ptr = lib_ams::BoardBeginSend(shm, msg, ssizeof(ams::BoardrefMsg))) {
+        lib_ams::FChunk &chunk = *lib_ams::ChunkOf(*lib_ams::BoardOf(shm), &msg);
+        ams::BoardrefMsg boardref;
+        boardref.offset = lib_ams::BoardOffset(chunk, msg);
+        boardref.payload_length = msg.length;
+        memcpy(ptr, &boardref, sizeof(boardref));
+        lib_ams::BoardEndSend(shm, chunk, ptr, ssizeof(ams::BoardrefMsg));
+        ret = true;
+    }
+    return ret;
+}
+
+// The LENGTH bytes at board OFFSET on lane SHM's writer's board, or NULL when
+// they do not lie inside the board's body.  A module that carries several
+// messages under one reference walks them from here; a single message is
+// BoardResolve, which also checks the header at the offset.
+u8 *lib_ams::BoardSpan(lib_ams::FShm &shm, u64 offset, u32 length) {
+    u8 *ret = NULL;
     lib_ams::FShm *board = lib_ams::BoardOf(shm);
     if (board && board->c_shmhdr) {
-        u64 end = boardref.offset + u64(boardref.payload_length);
-        bool inbound = boardref.offset >= board->c_shmhdr->datastart && end <= u64(board->shm_region.n_elems);
-        ams::MsgHeader *msg = inbound ? (ams::MsgHeader*)(board->shm_region.elems + boardref.offset) : NULL;
-        if (msg && msg->length == boardref.payload_length) {
-            ret = msg;
-        }
+        u64 end = offset + u64(length);
+        bool inbound = offset >= board->c_shmhdr->datastart && end <= u64(board->shm_region.n_elems);
+        ret = inbound ? board->shm_region.elems + offset : NULL;
     }
     return ret;
-}
-
-// Release every slot reader MEMBERIDX of lane SHM holds, and forget its queue.
-// Call when the reader is gone: its ring position stops advancing at the moment
-// it dies, so nothing else would ever release what it was holding.
-void lib_ams::BoardRelease(lib_ams::FShm &shm, u32 memberidx) {
-    lib_ams::FShm *board = lib_ams::BoardOf(shm);
-    lib_ams::FBoardq *boardq = NULL;
-    ind_beg(lib_ams::shm_c_boardq_curs, cur, shm) {
-        if (cur.memberidx == memberidx) {
-            boardq = &cur;
-        }
-    }ind_end;
-    if (board && boardq) {
-        u64 mask = u64(boardent_N(*boardq)) - 1;
-        while (boardq->head < boardq->tail) {
-            SlotRelease(*board, boardent_Find(*boardq, boardq->head & mask)->slot);
-            boardq->head++;
-        }
-    }
 }

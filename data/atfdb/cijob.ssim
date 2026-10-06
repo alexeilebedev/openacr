@@ -1,4 +1,7 @@
 atfdb.cijob  cijob:comp  comment:"Component and unit tests"
 atfdb.cijob  cijob:coverage  comment:"compute coverage"
-atfdb.cijob  cijob:memcheck  comment:"Component tests in memcheck mode"
+atfdb.cijob  cijob:memcheckA  comment:"Component tests under valgrind, first shard (see comptest.memcheck)"
+atfdb.cijob  cijob:memcheckB  comment:"Component tests under valgrind, second shard (see comptest.memcheck)"
+atfdb.cijob  cijob:memcheckC  comment:"Component tests under valgrind, third shard (see comptest.memcheck)"
+atfdb.cijob  cijob:none  comment:"No CI job: a test tagged with it runs in no automated job"
 atfdb.cijob  cijob:normalize  comment:"Default job, fast normalization & unit tests"

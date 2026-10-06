@@ -1,21 +1,21 @@
-// Copyright (C) 2023-2026 AlgoRND
+// Copyright (C) 2025-2026 AlgoX2 Corp
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2021 Astra
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 // Copyright (C) 2008-2012 AlgoEngineering LLC
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: algo_lib (lib) -- Support library for all executables
@@ -121,26 +121,39 @@ static bool NextAcceptQ(algo_lib::Regx &regx, algo_lib::RegxState &state) {
     return false;
 }
 
-// Check if regx accepts all strings.
+// True when OP only forwards the match: it consumes nothing and its test always
+// succeeds, so a matcher walking through it learns nothing about the subject.
+static bool BranchQ(const algo_lib::RegxOp &op) {
+    return op.op == algo_lib_RegxOp_true && op.consume == 0;
+}
+
+// True when OP consumes one character, whichever character it is: a dot.
+static bool AnyCharQ(const algo_lib::RegxOp &op) {
+    return op.op == algo_lib_RegxOp_true && op.consume == 1;
+}
+
+// Mark every state of REGX from which each remaining suffix of the subject
+// matches, so a matcher that reaches one can stop, and set REGX's accepts_all
+// flag when the start state is one of them.
+// Only a state that consumes nothing can accept every suffix.  A state that
+// consumes a character accepts only suffixes at least one character long, and
+// end of input is not a character: promoting the dot of "a..*" would let the
+// expression match "a".  A branch state accepts every suffix when one of its
+// successors does, or when it reaches accept directly and loops through a dot
+// that returns to it, which is the branch of ".*".
 static void CalcAcceptsAllQ(algo_lib::Regx &regx) {
-    // for each state, calculate if reaching this state means reaching accept state.
-    // this is true IF:
-    // - state has a true arc to another state that has a true arc to accept, and back to this state. between the two states, 1 character is consumed
     if (state_N(regx)>0) {
         int nchange=0;
         do {
             nchange=0;
-            ind_beg(algo_lib::regx_state_curs,state,regx) if (!AcceptAllQ(state.op) && (state.op.op == algo_lib_RegxOp_true)) {
+            ind_beg(algo_lib::regx_state_curs,state,regx) if (BranchQ(state.op)) {
                 ind_beg(algo_lib::Bitset_ary_bitcurs,id,state.next) {
                     algo_lib::RegxState &other = state_qFind(regx, id);
-                    bool x2 = AcceptAllQ(other.op) ||
-                        ((other.op.op == algo_lib_RegxOp_true)
-                         && (state.op.consume + other.op.consume == 1)
-                         && NextAcceptQ(regx,other)
-                         && ary_GetBit(other.next, ind_curs(state).index));
-                    if (x2) {
+                    bool loop = AnyCharQ(other.op)
+                        && ary_GetBit(other.next, ind_curs(state).index)
+                        && NextAcceptQ(regx,state);
+                    if (AcceptAllQ(other.op) || loop) {
                         state.op=algo_lib::RegxOp(algo_lib_RegxOp_accept,1,1);
-                        other.op=algo_lib::RegxOp(algo_lib_RegxOp_accept,1,1);
                         nchange++;
                         break;
                     }
@@ -152,12 +165,6 @@ static void CalcAcceptsAllQ(algo_lib::Regx &regx) {
 }
 
 // -----------------------------------------------------------------------------
-
-// True when OP only forwards the match: it consumes nothing and its test always
-// succeeds, so a matcher walking through it learns nothing about the subject.
-static bool BranchQ(const algo_lib::RegxOp &op) {
-    return op.op == algo_lib_RegxOp_true && op.consume == 0;
-}
 
 // True when OP marks where a capture group opened or closed.  It forwards the
 // match like a branch does, and differs only in that a caller asking for the

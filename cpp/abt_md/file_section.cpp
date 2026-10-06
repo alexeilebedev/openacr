@@ -1,18 +1,18 @@
-// Copyright (C) 2024,2026 AlgoRND
+// Copyright (C) 2026 AlgoX2 Corp
+// Copyright (C) 2024 AlgoRND
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Target: abt_md (exe) -- Tool to generate markdown documentation
 // Exceptions: yes
@@ -499,8 +499,8 @@ static void QueueCommandLine(algo::strptr text, u32 lineno) {
 // template the reader fills in. Neither is looked up.
 //
 // A table's own short name is read as one further form, because that is how a
-// document names a table: `ssimfile:x2db.product` says which table, where the
-// qualified `dmmeta.ssimfile:x2db.product` says which row of the catalog and
+// document names a table: `ssimfile:dev.htmlentity` says which table, where the
+// qualified `dmmeta.ssimfile:dev.htmlentity` says which row of the catalog and
 // reads sideways in a sentence.
 //
 // The short name is admitted only where it cannot be anything else, and the
@@ -510,7 +510,7 @@ static void QueueCommandLine(algo::strptr text, u32 lineno) {
 // name stays refused, and each refusal is a span some document already writes:
 // `cascdel:Y` is an attribute inside a tuple, `cfmt:Argv` and `sandbox:Y` are
 // values rather than keys, `field:dmmeta.Field.zs_fcb` is a key a sentence
-// calls nonsense on purpose, `command::x2sup.trace` is C++, and
+// calls nonsense on purpose, `command::acr.trace` is C++, and
 // `func:doc.NavText` is a location doc answers rather than a row of
 // `dmmeta.func`. Requiring the namespace, as the qualified form does, tells
 // none of those apart -- what does is that none of their leaves is a catalog.
@@ -652,7 +652,7 @@ void abt_md::UpdateSection(abt_md::FFileSection &file_section) {
         // restore human-entered text after section has been re-generated
         RestoreHumanText(file_section);
     }
-    if (_db.cmdline.evalcmd) {
+    if (readmefile.evalcmd) {
         EvalInlineCommand(file_section);
     }
     RewriteAnchors(file_section);

@@ -1,21 +1,21 @@
-// Copyright (C) 2023-2026 AlgoRND
+// Copyright (C) 2024-2026 AlgoX2 Corp
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2023 Astra
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 // Copyright (C) 2008-2013 AlgoEngineering LLC
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
@@ -49,166 +49,249 @@ namespace amc { // update-hdr
     // -------------------------------------------------------------------
     // cpp/amc/alias.cpp -- Alias field type
     //
+
+    // True if FIELD is an alias of a field of another ctype: a global field
+    // naming another namespace's list so that a step can be declared on it.
+    // Such an alias has no value to get, set or read.
+    bool ListAliasQ(amc::FField &field);
     //     (user-implemented function, prototype is in amc-generated header)
-    // void tclass_Alias(); // gstatic/amcdb.tclass:Alias
-    // void tfunc_Alias_Get(); // gstatic/amcdb.tfunc:Alias.Get
-    // void tfunc_Alias_Set(); // gstatic/amcdb.tfunc:Alias.Set
-    // void tfunc_Alias_ReadStrptrMaybe(); // gstatic/amcdb.tfunc:Alias.ReadStrptrMaybe
+    // void tclass_Alias(); // amcdb.tclass:Alias
+    // void tfunc_Alias_Get(); // amcdb.tfunc:Alias.Get
+    // void tfunc_Alias_Set(); // amcdb.tfunc:Alias.Set
+    // void tfunc_Alias_ReadStrptrMaybe(); // amcdb.tfunc:Alias.ReadStrptrMaybe
 
     // -------------------------------------------------------------------
     // cpp/amc/avl.cpp -- AVL tree
     //
 
-    // Initialize the structs etc.
+    // Declare the tree's fields: on the parent the root, the element count and the cached
+    // first and last elements; on each element its parent, children and subtree height.
+    // An element outside the tree has its parent pointer at -1.
     //     (user-implemented function, prototype is in amc-generated header)
-    // void tclass_Atree(); // gstatic/amcdb.tclass:Atree
+    // void tclass_Atree(); // amcdb.tclass:Atree
 
-    // Predicate function, can take parent as argument in the case of complicated comparisons.
-    // void tfunc_Atree_ElemLt(); // gstatic/amcdb.tfunc:Atree.ElemLt
+    // Generate the sort predicate, which takes the parent for comparisons that need it.
+    // void tfunc_Atree_ElemLt(); // amcdb.tfunc:Atree.ElemLt
 
-    // Generate the Prev function for the element.
-    // Always symmetrical to Next through substitution of
-    // First -> Last and Left -> Right.
-    // void tfunc_Atree_Prev(); // gstatic/amcdb.tfunc:Atree.Prev
+    // Generate Prev, the mirror of Next.
+    // void tfunc_Atree_Prev(); // amcdb.tfunc:Atree.Prev
 
-    // Generate the Next function for the element
-    // void tfunc_Atree_Next(); // gstatic/amcdb.tfunc:Atree.Next
+    // Generate Next: the element after NODE in sort order, or NULL after the last.
+    // void tfunc_Atree_Next(); // amcdb.tfunc:Atree.Next
 
-    // Initialize Root and Number of elements
-    // void tfunc_Atree_Init(); // gstatic/amcdb.tfunc:Atree.Init
+    // Generate Init: an empty tree.
+    // void tfunc_Atree_Init(); // amcdb.tfunc:Atree.Init
 
-    // Returns true if the element is in tree.
-    // void tfunc_Atree_InTreeQ(); // gstatic/amcdb.tfunc:Atree.InTreeQ
+    // Generate InTreeQ: true when the element is in the tree.
+    // void tfunc_Atree_InTreeQ(); // amcdb.tfunc:Atree.InTreeQ
 
-    // Returns true if the tree is empty.
-    // Plant a tree if empty!
-    // void tfunc_Atree_EmptyQ(); // gstatic/amcdb.tfunc:Atree.EmptyQ
+    // Generate EmptyQ: true when the tree holds no element.
+    // void tfunc_Atree_EmptyQ(); // amcdb.tfunc:Atree.EmptyQ
 
-    // Given an element finds the smallest element in the subtree.
-    // void tfunc_Atree_FirstImpl(); // gstatic/amcdb.tfunc:Atree.FirstImpl
+    // Generate First: the smallest element, read from the parent.
+    // void tfunc_Atree_First(); // amcdb.tfunc:Atree.First
 
-    // Given an element finds the largest element in the subtree.
-    // void tfunc_Atree_LastImpl(); // gstatic/amcdb.tfunc:Atree.LastImpl
+    // Generate Last: the largest element, read from the parent.
+    // void tfunc_Atree_Last(); // amcdb.tfunc:Atree.Last
 
-    // Returns the smallest element
-    // void tfunc_Atree_First(); // gstatic/amcdb.tfunc:Atree.First
+    // Generate RotateLeft: the right child rises.
+    // void tfunc_Atree_RotateLeft(); // amcdb.tfunc:Atree.RotateLeft
 
-    // Returns the largest element.
-    // void tfunc_Atree_Last(); // gstatic/amcdb.tfunc:Atree.Last
+    // Generate RotateRight: the left child rises.
+    // void tfunc_Atree_RotateRight(); // amcdb.tfunc:Atree.RotateRight
 
-    // Finds the child that violates the balance. Left child if no disbalance.
-    // void tfunc_Atree_TallerChild(); // gstatic/amcdb.tfunc:Atree.TallerChild
+    // Generate Rebalance, which restores heights and balance from NODE up to the root after
+    // one element was linked or unlinked below NODE. A subtree whose height comes out the same
+    // as before leaves every ancestor as it was, so the walk stops there: an insert stops at
+    // most one rotation after it starts, and a remove continues only while heights shrink.
+    // void tfunc_Atree_Rebalance(); // amcdb.tfunc:Atree.Rebalance
 
-    // Disconnect the node from its up.
-    // void tfunc_Atree_Disconnect(); // gstatic/amcdb.tfunc:Atree.Disconnect
+    // Generate Insert: descend once to the leaf position, link the row there, note whether
+    // every step went left (a new first) or right (a new last), and rebalance from the parent.
+    // A row equal to existing elements goes after them.
+    // void tfunc_Atree_Insert(); // amcdb.tfunc:Atree.Insert
 
-    // Rotates the tree from the direction from->to
-    // Assumption is that from is the child of to.
-    // void tfunc_Atree_Turn(); // gstatic/amcdb.tfunc:Atree.Turn
+    // Generate the cascade delete of every element, when the field has cascdel.
+    // void tfunc_Atree_Cascdel(); // amcdb.tfunc:Atree.Cascdel
 
-    // 1. Find disbalanced child.
-    // 2. Find disbalanced grandchild.
-    // 3. turn the grandchild toward child to have a-b-c simple case.
-    // 4. Turn child onto node.
-    // 5. Make sure to NOT turn the grandchild into child if child is balanced(Many hours of debugging).
-    // void tfunc_Atree_Rebalance(); // gstatic/amcdb.tfunc:Atree.Rebalance
-    // void tfunc_Atree_UpdateDepth(); // gstatic/amcdb.tfunc:Atree.UpdateDepth
+    // Generate RemoveAll: unlink every element, deleting none.
+    // void tfunc_Atree_RemoveAll(); // amcdb.tfunc:Atree.RemoveAll
 
-    // Keep updating the depth and propagating up.
-    // If a node needs rebalancing we rebalance and go up
-    // Notice that after rebalance a node can go deeper down the tree.
-    // void tfunc_Atree_Propagate(); // gstatic/amcdb.tfunc:Atree.Propagate
+    // Generate RemoveFirst: remove the smallest element, if any.
+    // void tfunc_Atree_RemoveFirst(); // amcdb.tfunc:Atree.RemoveFirst
 
-    // Iterate down the tree starting from the up and place
-    // the element in the appropriate leaf.
-    // Note that balance might be broken after this operation.
-    // void tfunc_Atree_InsertImpl(); // gstatic/amcdb.tfunc:Atree.InsertImpl
+    // Generate Reinsert: move an element whose key changed to its new place.
+    // void tfunc_Atree_Reinsert(); // amcdb.tfunc:Atree.Reinsert
 
-    // 1.Insert element starting from the root.
-    // 2. Rebalance if necessary.
-    // 3. Assign new root.
-    // void tfunc_Atree_Insert(); // gstatic/amcdb.tfunc:Atree.Insert
+    // Generate Remove. A row with two children trades places with its successor, the
+    // leftmost element of its right subtree, which has no left child; any other row is
+    // replaced by its only child. Rebalancing starts at the lowest element whose children
+    // changed. The cached first and last move to the row's neighbors before it unlinks.
+    // void tfunc_Atree_Remove(); // amcdb.tfunc:Atree.Remove
 
-    // Leftbalance - Rightbalance
-    // void tfunc_Atree_Balance(); // gstatic/amcdb.tfunc:Atree.Balance
+    // Generate FirstGe: the first element not less than a sortfld value.
+    // void tfunc_Atree_FirstGe(); // amcdb.tfunc:Atree.FirstGe
 
-    // A recursive function to delete elements.
-    // if del flag is set it also destroys the elements.
-    // void tfunc_Atree_RemoveAllImpl(); // gstatic/amcdb.tfunc:Atree.RemoveAllImpl
-    // void tfunc_Atree_Cascdel(); // gstatic/amcdb.tfunc:Atree.Cascdel
+    // Generate LastLt: the last element less than a sortfld value.
+    // void tfunc_Atree_LastLt(); // amcdb.tfunc:Atree.LastLt
 
-    // Remove all elements without deleting them.
-    // void tfunc_Atree_RemoveAll(); // gstatic/amcdb.tfunc:Atree.RemoveAll
-
-    // Remove the first element. Rebalance. Update root.
-    // void tfunc_Atree_RemoveFirst(); // gstatic/amcdb.tfunc:Atree.RemoveFirst
-
-    // Reinsert an element
-    // void tfunc_Atree_Reinsert(); // gstatic/amcdb.tfunc:Atree.Reinsert
-
-    // Connect 2 elements (either can be NULL).
-    // void tfunc_Atree_Connect(); // gstatic/amcdb.tfunc:Atree.Connect
-
-    // 1. Find next/prev element in my subtree (opposite of imbalance direction).
-    // 2. If that element has a child, swap it with the child by turning from child.
-    // 3. Swap the element to be removed with the next.
-    // 4. Remove the element.
-    // 5. Propagate up from the next's up.
-    // void tfunc_Atree_Remove(); // gstatic/amcdb.tfunc:Atree.Remove
-
-    // First element that is greater or equal to the given value
-    // void tfunc_Atree_FirstGe(); // gstatic/amcdb.tfunc:Atree.FirstGe
-
-    // First element that is smaller than given value
-    // void tfunc_Atree_LastLt(); // gstatic/amcdb.tfunc:Atree.LastLt
-
-    // Generate cursor related funcs and struct.
-    // Pretty straightforward since Next is done without extra state.
-    // void tfunc_Atree_curs(); // gstatic/amcdb.tfunc:Atree.curs
+    // Generate the cursor, which walks with Next and needs no state beyond the current row.
+    // void tfunc_Atree_curs(); // amcdb.tfunc:Atree.curs
 
     // -------------------------------------------------------------------
     // cpp/amc/base.cpp -- Base reftype
     //
     //     (user-implemented function, prototype is in amc-generated header)
-    // void tclass_Base(); // gstatic/amcdb.tclass:Base
+    // void tclass_Base(); // amcdb.tclass:Base
 
     // Generate a function to copy fields from a ctype to its base type
-    // void tfunc_Base_CopyOut(); // gstatic/amcdb.tfunc:Base.CopyOut
-    // void tfunc_Base_CopyIn(); // gstatic/amcdb.tfunc:Base.CopyIn
-    // void tfunc_Base_Castbase(); // gstatic/amcdb.tfunc:Base.Castbase
-    // void tfunc_Base_Castdown(); // gstatic/amcdb.tfunc:Base.Castdown
+    // void tfunc_Base_CopyOut(); // amcdb.tfunc:Base.CopyOut
+    // void tfunc_Base_CopyIn(); // amcdb.tfunc:Base.CopyIn
+    // void tfunc_Base_Castbase(); // amcdb.tfunc:Base.Castbase
+    // void tfunc_Base_Castdown(); // amcdb.tfunc:Base.Castdown
     double ChildRowid(double rowid);
     void CloneFields(amc::FCtype &from, amc::FCtype &to, double next_rowid);
 
     // -------------------------------------------------------------------
     // cpp/amc/bheap.cpp -- Binary heaps
     //
+
+    // Check the Bheap field being generated and declare its fields in the parent
+    // and in the row.
     //     (user-implemented function, prototype is in amc-generated header)
-    // void tclass_Bheap(); // gstatic/amcdb.tclass:Bheap
-    // void tfunc_Bheap_Upheap(); // gstatic/amcdb.tfunc:Bheap.Upheap
-    // void tfunc_Bheap_Downheap(); // gstatic/amcdb.tfunc:Bheap.Downheap
-    // void tfunc_Bheap_Reheap(); // gstatic/amcdb.tfunc:Bheap.Reheap
-    // void tfunc_Bheap_ReheapFirst(); // gstatic/amcdb.tfunc:Bheap.ReheapFirst
-    // void tfunc_Bheap_Set(); // gstatic/amcdb.tfunc:Bheap.Set
-    // void tfunc_Bheap_SetIfBetter(); // gstatic/amcdb.tfunc:Bheap.SetIfBetter
-    // void tfunc_Bheap_Cascdel(); // gstatic/amcdb.tfunc:Bheap.Cascdel
-    // void tfunc_Bheap_RemoveFirst(); // gstatic/amcdb.tfunc:Bheap.RemoveFirst
-    // void tfunc_Bheap_First(); // gstatic/amcdb.tfunc:Bheap.First
-    // void tfunc_Bheap_InBheapQ(); // gstatic/amcdb.tfunc:Bheap.InBheapQ
-    // void tfunc_Bheap_Insert(); // gstatic/amcdb.tfunc:Bheap.Insert
-    // void tfunc_Bheap_Compact(); // gstatic/amcdb.tfunc:Bheap.Compact
-    // void tfunc_Bheap_Remove(); // gstatic/amcdb.tfunc:Bheap.Remove
-    // void tfunc_Bheap_N(); // gstatic/amcdb.tfunc:Bheap.N
-    // void tfunc_Bheap_EmptyQ(); // gstatic/amcdb.tfunc:Bheap.EmptyQ
-    // void tfunc_Bheap_RemoveAll(); // gstatic/amcdb.tfunc:Bheap.RemoveAll
-    // void tfunc_Bheap_Dealloc(); // gstatic/amcdb.tfunc:Bheap.Dealloc
-    // void tfunc_Bheap_Reserve(); // gstatic/amcdb.tfunc:Bheap.Reserve
-    // void tfunc_Bheap_Init(); // gstatic/amcdb.tfunc:Bheap.Init
-    // void tfunc_Bheap_Uninit(); // gstatic/amcdb.tfunc:Bheap.Uninit
-    // void tfunc_Bheap_ElemLt(); // gstatic/amcdb.tfunc:Bheap.ElemLt
-    // void tfunc_Bheap_ElemLtval(); // gstatic/amcdb.tfunc:Bheap.ElemLtval
-    // void tfunc_Bheap_unordcurs(); // gstatic/amcdb.tfunc:Bheap.unordcurs
-    // void tfunc_Bheap_curs(); // gstatic/amcdb.tfunc:Bheap.curs
+    // void tclass_Bheap(); // amcdb.tclass:Bheap
+
+    // Generate Upheap, which moves a hole at heap slot IDX toward the root until
+    // ROW fits there.  With a run, it never moves the root: every caller passes a
+    // row that is at least the root.
+    // void tfunc_Bheap_Upheap(); // amcdb.tfunc:Bheap.Upheap
+
+    // Generate Downheap, which moves a hole at slot IDX, the root or below it,
+    // toward the leaves until ROW fits there.
+    // void tfunc_Bheap_Downheap(); // amcdb.tfunc:Bheap.Downheap
+
+    // Generate RemoveRoot, which empties the root when the run holds only the
+    // root: the last heap row fills it and sinks.  With no heap rows left the
+    // whole Bheap is empty.
+    // void tfunc_Bheap_RemoveRoot(); // amcdb.tfunc:Bheap.RemoveRoot
+
+    // Generate RunRemove, which takes the row in run slot IDX out.  The run rows
+    // to its left shift right by one; when IDX is the root, the next largest run
+    // row becomes the root, which keeps the heap order.
+    // void tfunc_Bheap_RunRemove(); // amcdb.tfunc:Bheap.RunRemove
+
+    // Generate Demote, which moves the root of a full run into the heap.  The run's
+    // rows shift right, so the next largest becomes the root.  The demoted row is
+    // at most every heap row, so it rises to just below the new root.
+    // void tfunc_Bheap_Demote(); // amcdb.tfunc:Bheap.Demote
+
+    // Generate RunInsert, which places ROW into its sorted position in a run that
+    // is not full.  ROW must be at most every heap row.  The run rows smaller than
+    // ROW, the root among them, move one slot left, so a ROW at least the root
+    // becomes the root.
+    // void tfunc_Bheap_RunInsert(); // amcdb.tfunc:Bheap.RunInsert
+
+    // Generate InsertImpl, which places a row that is not in the heap.  It fires
+    // no callback; Insert and Reheap decide which ones apply.
+    // void tfunc_Bheap_InsertImpl(); // amcdb.tfunc:Bheap.InsertImpl
+
+    // Generate RemoveImpl, which takes a row that is in the heap out of the run or
+    // out of the heap.  It fires no callback; Remove, RemoveFirst, Reheap and
+    // Cascdel decide which ones apply.
+    // void tfunc_Bheap_RemoveImpl(); // amcdb.tfunc:Bheap.RemoveImpl
+
+    // Generate Promote, which moves the smallest heap row into the run: the run
+    // shifts left by one slot, the old root becomes an ordinary run row, and the
+    // smaller child of the root takes the root's slot.  The last heap row fills
+    // the vacated slot and sinks.  The run must have room and the heap must hold
+    // a row.  Only fillcurs calls it, so it exists only for a field that asks for one.
+    // void tfunc_Bheap_Promote(); // amcdb.tfunc:Bheap.Promote
+
+    // Generate Reheap, which inserts a row or moves it after its key changed.
+    // Without a run, the row moves up or down from its slot.  With a run, a root
+    // that is the run's only row sinks in place, a heap row whose key is still at
+    // least the root moves within the heap, and any other row leaves and enters
+    // again.  A row already in the heap fires no OnXref or OnUnref, since it never
+    // leaves the index.
+    // void tfunc_Bheap_Reheap(); // amcdb.tfunc:Bheap.Reheap
+
+    // Generate ReheapFirst, which moves the first row after its key grew.  The root
+    // alone in the run sinks in place; the first of several run rows leaves and
+    // enters again.
+    // void tfunc_Bheap_ReheapFirst(); // amcdb.tfunc:Bheap.ReheapFirst
+
+    // Generate Set, which writes the key of a row and repositions it.  With a run,
+    // Reheap and Remove fire FirstChanged themselves.
+    // void tfunc_Bheap_Set(); // amcdb.tfunc:Bheap.Set
+
+    // Generate SetIfBetter, which writes the key of a row unless the row is in
+    // the heap with a smaller key.
+    // void tfunc_Bheap_SetIfBetter(); // amcdb.tfunc:Bheap.SetIfBetter
+
+    // Generate Cascdel, which deletes every row in the heap.  It always takes the
+    // row whose removal moves no other row: the last one without a run, and with a
+    // run the last heap row while the heap holds one, then the first row of the run.
+    // void tfunc_Bheap_Cascdel(); // amcdb.tfunc:Bheap.Cascdel
+
+    // Generate RemoveFirst, which takes the smallest row.  With a run of two or
+    // more rows, that is the run's leftmost slot, and nothing else moves.
+    // void tfunc_Bheap_RemoveFirst(); // amcdb.tfunc:Bheap.RemoveFirst
+
+    // Generate First, which returns the smallest row or NULL.
+    // void tfunc_Bheap_First(); // amcdb.tfunc:Bheap.First
+
+    // Generate InBheapQ, which tests a row for membership.  It takes the row alone,
+    // since the row's slot says whether it is in the heap.
+    // void tfunc_Bheap_InBheapQ(); // amcdb.tfunc:Bheap.InBheapQ
+
+    // Generate Insert, which adds a row that is not in the heap.
+    // void tfunc_Bheap_Insert(); // amcdb.tfunc:Bheap.Insert
+
+    // Generate Compact, which halves the pointer array when the rows fill less than
+    // a quarter of it.
+    // void tfunc_Bheap_Compact(); // amcdb.tfunc:Bheap.Compact
+
+    // Generate Remove, which takes a row out of the heap.
+    // void tfunc_Bheap_Remove(); // amcdb.tfunc:Bheap.Remove
+
+    // Generate N, the number of rows in the heap.
+    // void tfunc_Bheap_N(); // amcdb.tfunc:Bheap.N
+
+    // Generate EmptyQ
+    // void tfunc_Bheap_EmptyQ(); // amcdb.tfunc:Bheap.EmptyQ
+
+    // Generate RemoveAll, which empties the heap and keeps its memory.
+    // void tfunc_Bheap_RemoveAll(); // amcdb.tfunc:Bheap.RemoveAll
+
+    // Generate Dealloc, which empties the heap and frees its memory.
+    // void tfunc_Bheap_Dealloc(); // amcdb.tfunc:Bheap.Dealloc
+
+    // Generate Reserve, which makes room for N more rows.
+    // void tfunc_Bheap_Reserve(); // amcdb.tfunc:Bheap.Reserve
+
+    // Generate the Init statements of the parent
+    // void tfunc_Bheap_Init(); // amcdb.tfunc:Bheap.Init
+
+    // Generate the Uninit statements of the parent
+    // void tfunc_Bheap_Uninit(); // amcdb.tfunc:Bheap.Uninit
+
+    // Generate ElemLt, which compares the sort fields of rows A and B.
+    // void tfunc_Bheap_ElemLt(); // amcdb.tfunc:Bheap.ElemLt
+
+    // Generate ElemLtval, which compares the key of row A with the value B.
+    // void tfunc_Bheap_ElemLtval(); // amcdb.tfunc:Bheap.ElemLtval
+
+    // Generate the unordered cursor, which walks the occupied slots in index
+    // order.
+    // void tfunc_Bheap_unordcurs(); // amcdb.tfunc:Bheap.unordcurs
+
+    // Generate the sorted cursor, which walks the rows in key order.
+    // void tfunc_Bheap_curs(); // amcdb.tfunc:Bheap.curs
+
+    // Generate the fillcurs cursor, a sorted cursor that fills the run as it walks.
+    // A field asks for it with a dmmeta.fcurs row, and only a Bheap with a head has
+    // a run to fill, so amc refuses it on a field without one.
+    // void tfunc_Bheap_fillcurs(); // amcdb.tfunc:Bheap.fillcurs
 
     // -------------------------------------------------------------------
     // cpp/amc/bitfld.cpp -- Bit fields
@@ -218,19 +301,19 @@ namespace amc { // update-hdr
     // variables shared by the bitfield accessors: source field, bit offset,
     // width, mask, and the integer type the mask operations run on.
     //     (user-implemented function, prototype is in amc-generated header)
-    // void tclass_Bitfld(); // gstatic/amcdb.tclass:Bitfld
+    // void tclass_Bitfld(); // amcdb.tclass:Bitfld
 
     // Generate the bitfield's contribution to the parent's Init: a Set call
     // storing the field default, emitted only when a default exists.
-    // void tfunc_Bitfld_Init(); // gstatic/amcdb.tfunc:Bitfld.Init
+    // void tfunc_Bitfld_Init(); // amcdb.tfunc:Bitfld.Init
 
     // Generate the bitfield getter: shift and mask the source field's value
     // to extract the field's bits.
-    // void tfunc_Bitfld_Get(); // gstatic/amcdb.tfunc:Bitfld.Get
+    // void tfunc_Bitfld_Get(); // amcdb.tfunc:Bitfld.Get
 
     // Generate the bitfield setter: replace the field's bits within the
     // source field's value, leaving the other bits unchanged.
-    // void tfunc_Bitfld_Set(); // gstatic/amcdb.tfunc:Bitfld.Set
+    // void tfunc_Bitfld_Set(); // amcdb.tfunc:Bitfld.Set
 
     // -------------------------------------------------------------------
     // cpp/amc/bitset.cpp -- Bit sets
@@ -241,117 +324,146 @@ namespace amc { // update-hdr
     // bitset accessors: element width, the index shift and mask splitting a bit
     // index, and the bit-scan width.
     //     (user-implemented function, prototype is in amc-generated header)
-    // void tclass_Bitset(); // gstatic/amcdb.tclass:Bitset
+    // void tclass_Bitset(); // amcdb.tclass:Bitset
 
     // Generate the element-count function for a single-element bitset (the
     // constant 1); an array-backed bitset takes it from the array reftype.
-    // void tfunc_Bitset_N(); // gstatic/amcdb.tfunc:Bitset.N
+    // void tfunc_Bitset_N(); // amcdb.tfunc:Bitset.N
 
     // Generate the element accessor for a single-element bitset: return the
     // value itself, ignoring the index; arrays take it from the array reftype.
-    // void tfunc_Bitset_qFind(); // gstatic/amcdb.tfunc:Bitset.qFind
+    // void tfunc_Bitset_qFind(); // amcdb.tfunc:Bitset.qFind
 
     // Generate the capacity function: number of bits the bitset holds
     // (element count times element width).
-    // void tfunc_Bitset_NBits(); // gstatic/amcdb.tfunc:Bitset.NBits
+    // void tfunc_Bitset_NBits(); // amcdb.tfunc:Bitset.NBits
 
     // Generate the unchecked bit read: fetch one bit without bounds checking.
-    // void tfunc_Bitset_qGetBit(); // gstatic/amcdb.tfunc:Bitset.qGetBit
+    // void tfunc_Bitset_qGetBit(); // amcdb.tfunc:Bitset.qGetBit
 
     // Generate the checked bit read: fetch one bit, returning false when the
     // bit index is out of bounds.
-    // void tfunc_Bitset_GetBit(); // gstatic/amcdb.tfunc:Bitset.GetBit
+    // void tfunc_Bitset_GetBit(); // amcdb.tfunc:Bitset.GetBit
 
     // Generate the population count: total number of set bits over all elements.
-    // void tfunc_Bitset_Sum1s(); // gstatic/amcdb.tfunc:Bitset.Sum1s
+    // void tfunc_Bitset_Sum1s(); // amcdb.tfunc:Bitset.Sum1s
 
     // Generate the emptiness predicate: true when every bit is zero.
-    // void tfunc_Bitset_BitsEmptyQ(); // gstatic/amcdb.tfunc:Bitset.BitsEmptyQ
+    // void tfunc_Bitset_BitsEmptyQ(); // amcdb.tfunc:Bitset.BitsEmptyQ
 
     // Generate the unchecked bit clear: zero one bit without bounds checking.
-    // void tfunc_Bitset_qClearBit(); // gstatic/amcdb.tfunc:Bitset.qClearBit
+    // void tfunc_Bitset_qClearBit(); // amcdb.tfunc:Bitset.qClearBit
 
     // Generate the checked bit clear: zero one bit, a no-op when the bit
     // index is out of bounds.
-    // void tfunc_Bitset_ClearBit(); // gstatic/amcdb.tfunc:Bitset.ClearBit
+    // void tfunc_Bitset_ClearBit(); // amcdb.tfunc:Bitset.ClearBit
 
     // Generate the unchecked bit set: set one bit without bounds checking.
-    // void tfunc_Bitset_qSetBit(); // gstatic/amcdb.tfunc:Bitset.qSetBit
+    // void tfunc_Bitset_qSetBit(); // amcdb.tfunc:Bitset.qSetBit
 
     // Generate the checked bit set: set one bit, a no-op when the bit index
     // is out of bounds.
-    // void tfunc_Bitset_SetBit(); // gstatic/amcdb.tfunc:Bitset.SetBit
+    // void tfunc_Bitset_SetBit(); // amcdb.tfunc:Bitset.SetBit
 
     // Generate the unchecked bit write: overwrite one bit with VAL without
     // bounds checking.
-    // void tfunc_Bitset_qSetBitVal(); // gstatic/amcdb.tfunc:Bitset.qSetBitVal
+    // void tfunc_Bitset_qSetBitVal(); // amcdb.tfunc:Bitset.qSetBitVal
 
     // Generate the unchecked bit or: or VAL into one bit without bounds checking.
-    // void tfunc_Bitset_qOrBitVal(); // gstatic/amcdb.tfunc:Bitset.qOrBitVal
+    // void tfunc_Bitset_qOrBitVal(); // amcdb.tfunc:Bitset.qOrBitVal
 
     // Generate the whole-set clear: zero every element; the capacity is
     // unchanged.
-    // void tfunc_Bitset_ClearBitsAll(); // gstatic/amcdb.tfunc:Bitset.ClearBitsAll
+    // void tfunc_Bitset_ClearBitsAll(); // amcdb.tfunc:Bitset.ClearBitsAll
 
     // Generate the set difference: clear the bits of PARENT that are set in
     // RHS. Skipped for a global ctype, which has no second instance.
-    // void tfunc_Bitset_ClearBits(); // gstatic/amcdb.tfunc:Bitset.ClearBits
+    // void tfunc_Bitset_ClearBits(); // amcdb.tfunc:Bitset.ClearBits
 
     // Generate the set union: or RHS's bits into PARENT. Skipped for a global
     // ctype, which has no second instance.
-    // void tfunc_Bitset_OrBits(); // gstatic/amcdb.tfunc:Bitset.OrBits
+    // void tfunc_Bitset_OrBits(); // amcdb.tfunc:Bitset.OrBits
 
     // Generate the capacity grower for an expandable array: allocate zeroed
     // elements until at least N_BITS bits exist.
-    // void tfunc_Bitset_ExpandBits(); // gstatic/amcdb.tfunc:Bitset.ExpandBits
+    // void tfunc_Bitset_ExpandBits(); // amcdb.tfunc:Bitset.ExpandBits
 
     // Generate the single-bit grower for an expandable array: ensure bits up
     // to and including BIT_IDX exist, initialized to zero.
-    // void tfunc_Bitset_AllocBit(); // gstatic/amcdb.tfunc:Bitset.AllocBit
+    // void tfunc_Bitset_AllocBit(); // amcdb.tfunc:Bitset.AllocBit
 
     // Generate the supremum function: 1 plus the index of the highest set
     // bit, 0 when no bit is set.
-    // void tfunc_Bitset_Sup(); // gstatic/amcdb.tfunc:Bitset.Sup
+    // void tfunc_Bitset_Sup(); // amcdb.tfunc:Bitset.Sup
 
     // Generate the bitcurs cursor (struct plus Reset/ValidQ/Access/Next):
     // iterate the indexes of the set bits in ascending order, skipping zero
     // elements with a bit scan.
-    // void tfunc_Bitset_bitcurs(); // gstatic/amcdb.tfunc:Bitset.bitcurs
+    // void tfunc_Bitset_bitcurs(); // amcdb.tfunc:Bitset.bitcurs
 
     // -------------------------------------------------------------------
     // cpp/amc/blkhash.cpp
     //
+
+    // Return the member access path from a key value to the integer named by
+    // LINFLD, e.g. ".seq.value" for a (stream,seq) key whose LINFLD is its seq.
+    // Descends single-field wrapper ctypes (algo.SeqType) until a builtin is hit.
+    // Blkhash and Trie both reach their dense integer this way.
+    tempstr LinfldSuffix(amc::FField &linfld);
+
+    // Return the builtin ctype at the end of the wrapper chain that starts at
+    // LINFLD, or NULL if the chain does not terminate in a builtin.
+    amc::FCtype *LinfldTerminal(amc::FField &linfld);
     //     (user-implemented function, prototype is in amc-generated header)
-    // void tclass_Blkhash(); // gstatic/amcdb.tclass:Blkhash
-    // void tfunc_Blkhash_Find(); // gstatic/amcdb.tfunc:Blkhash.Find
-    // void tfunc_Blkhash_FindX(); // gstatic/amcdb.tfunc:Blkhash.FindX
-    // void tfunc_Blkhash_N(); // gstatic/amcdb.tfunc:Blkhash.N
-    // void tfunc_Blkhash_EmptyQ(); // gstatic/amcdb.tfunc:Blkhash.EmptyQ
-    // void tfunc_Blkhash_InsertMaybe(); // gstatic/amcdb.tfunc:Blkhash.InsertMaybe
-    // void tfunc_Blkhash_Remove(); // gstatic/amcdb.tfunc:Blkhash.Remove
-    // void tfunc_Blkhash_FindRemove(); // gstatic/amcdb.tfunc:Blkhash.FindRemove
-    // void tfunc_Blkhash_Cascdel(); // gstatic/amcdb.tfunc:Blkhash.Cascdel
-    // void tfunc_Blkhash_Init(); // gstatic/amcdb.tfunc:Blkhash.Init
-    // void tfunc_Blkhash_Uninit(); // gstatic/amcdb.tfunc:Blkhash.Uninit
-    // void tfunc_Blkhash_curs(); // gstatic/amcdb.tfunc:Blkhash.curs
+    // void tclass_Blkhash(); // amcdb.tclass:Blkhash
+
+    // Generate Head, which returns the address of bucket INDEX's chain head.  The
+    // bucket sits in segment INDEX/512 of the directory.
+    // void tfunc_Blkhash_Head(); // amcdb.tfunc:Blkhash.Head
+
+    // Generate Index, which returns the bucket a block of hash HASHVAL lives in.
+    // With n buckets and low the largest power of two not above n, buckets below
+    // n-low have been split already and are addressed by one more hash bit.
+    // void tfunc_Blkhash_Index(); // amcdb.tfunc:Blkhash.Index
+
+    // Generate Split, which adds bucket n and moves into it the blocks of bucket
+    // n-low whose next hash bit is set.  A new segment is allocated when bucket n
+    // starts one, and the directory doubles when it has no room for that segment.
+    // void tfunc_Blkhash_Split(); // amcdb.tfunc:Blkhash.Split
+    // void tfunc_Blkhash_Find(); // amcdb.tfunc:Blkhash.Find
+    // void tfunc_Blkhash_FindX(); // amcdb.tfunc:Blkhash.FindX
+    // void tfunc_Blkhash_N(); // amcdb.tfunc:Blkhash.N
+
+    // Generate BlkBytes, which returns the bytes one resident block holds: its
+    // header and its slot array.  Times nblk, it is what the index holds in blocks,
+    // which a caller with a memory budget charges.
+    // void tfunc_Blkhash_BlkBytes(); // amcdb.tfunc:Blkhash.BlkBytes
+    // void tfunc_Blkhash_EmptyQ(); // amcdb.tfunc:Blkhash.EmptyQ
+    // void tfunc_Blkhash_InsertMaybe(); // amcdb.tfunc:Blkhash.InsertMaybe
+    // void tfunc_Blkhash_Remove(); // amcdb.tfunc:Blkhash.Remove
+    // void tfunc_Blkhash_FindRemove(); // amcdb.tfunc:Blkhash.FindRemove
+    // void tfunc_Blkhash_Cascdel(); // amcdb.tfunc:Blkhash.Cascdel
+    // void tfunc_Blkhash_Init(); // amcdb.tfunc:Blkhash.Init
+    // void tfunc_Blkhash_Uninit(); // amcdb.tfunc:Blkhash.Uninit
+    // void tfunc_Blkhash_curs(); // amcdb.tfunc:Blkhash.curs
 
     // -------------------------------------------------------------------
     // cpp/amc/blkpool.cpp -- Block pool
     //
     //     (user-implemented function, prototype is in amc-generated header)
-    // void tclass_Blkpool(); // gstatic/amcdb.tclass:Blkpool
-    // void tfunc_Blkpool_AllocMem(); // gstatic/amcdb.tfunc:Blkpool.AllocMem
-    // void tfunc_Blkpool_SetBufferSize(); // gstatic/amcdb.tfunc:Blkpool.SetBufferSize
-    // void tfunc_Blkpool_ReserveBuffers(); // gstatic/amcdb.tfunc:Blkpool.ReserveBuffers
-    // void tfunc_Blkpool_FreeMem(); // gstatic/amcdb.tfunc:Blkpool.FreeMem
-    // void tfunc_Blkpool_UsedBytes(); // gstatic/amcdb.tfunc:Blkpool.UsedBytes
-    // void tfunc_Blkpool_Init(); // gstatic/amcdb.tfunc:Blkpool.Init
+    // void tclass_Blkpool(); // amcdb.tclass:Blkpool
+    // void tfunc_Blkpool_AllocMem(); // amcdb.tfunc:Blkpool.AllocMem
+    // void tfunc_Blkpool_SetBufferSize(); // amcdb.tfunc:Blkpool.SetBufferSize
+    // void tfunc_Blkpool_ReserveBuffers(); // amcdb.tfunc:Blkpool.ReserveBuffers
+    // void tfunc_Blkpool_FreeMem(); // amcdb.tfunc:Blkpool.FreeMem
+    // void tfunc_Blkpool_UsedBytes(); // amcdb.tfunc:Blkpool.UsedBytes
+    // void tfunc_Blkpool_Init(); // amcdb.tfunc:Blkpool.Init
 
     // -------------------------------------------------------------------
     // cpp/amc/cget.cpp -- Getters / Setters
     //
     //     (user-implemented function, prototype is in amc-generated header)
-    // void gen_cget(); // gstatic/amcdb.gen:cget
+    // void gen_cget(); // amcdb.gen:cget
 
     // -------------------------------------------------------------------
     // cpp/amc/charset.cpp -- Charset functions
@@ -359,15 +471,15 @@ namespace amc { // update-hdr
 
     // Preprocess charsets
     //     (user-implemented function, prototype is in amc-generated header)
-    // void gen_newfield_charset(); // gstatic/amcdb.gen:newfield_charset
-    // void tclass_Charset(); // gstatic/amcdb.tclass:Charset
-    // void tfunc_Charset_Match(); // gstatic/amcdb.tfunc:Charset.Match
+    // void gen_newfield_charset(); // amcdb.gen:newfield_charset
+    // void tclass_Charset(); // amcdb.tclass:Charset
+    // void tfunc_Charset_Match(); // amcdb.tfunc:Charset.Match
 
     // -------------------------------------------------------------------
     // cpp/amc/checkxref.cpp -- X-reference checker
     //
     //     (user-implemented function, prototype is in amc-generated header)
-    // void gen_check_xref(); // gstatic/amcdb.gen:check_xref
+    // void gen_check_xref(); // amcdb.gen:check_xref
 
     // -------------------------------------------------------------------
     // cpp/amc/cmdline.cpp
@@ -397,16 +509,16 @@ namespace amc { // update-hdr
 
     // Field comparison functions
     //     (user-implemented function, prototype is in amc-generated header)
-    // void tclass_Cmp(); // gstatic/amcdb.tclass:Cmp
+    // void tclass_Cmp(); // amcdb.tclass:Cmp
 
     // Next char function for version sort
-    // void tfunc_Cmp_Nextchar(); // gstatic/amcdb.tfunc:Cmp.Nextchar
+    // void tfunc_Cmp_Nextchar(); // amcdb.tfunc:Cmp.Nextchar
 
     // Comparison function for field
-    // void tfunc_Cmp_Cmp(); // gstatic/amcdb.tfunc:Cmp.Cmp
+    // void tfunc_Cmp_Cmp(); // amcdb.tfunc:Cmp.Cmp
 
     // Lt function for field
-    // void tfunc_Cmp_Lt(); // gstatic/amcdb.tfunc:Cmp.Lt
+    // void tfunc_Cmp_Lt(); // amcdb.tfunc:Cmp.Lt
 
     // -------------------------------------------------------------------
     // cpp/amc/concat.cpp -- Pkey constructor
@@ -417,21 +529,56 @@ namespace amc { // update-hdr
     // cpp/amc/count.cpp -- Count reftype
     //
     //     (user-implemented function, prototype is in amc-generated header)
-    // void tclass_Count(); // gstatic/amcdb.tclass:Count
-    // void tfunc_Count_Insert(); // gstatic/amcdb.tfunc:Count.Insert
-    // void tfunc_Count_Remove(); // gstatic/amcdb.tfunc:Count.Remove
-    // void tfunc_Count_N(); // gstatic/amcdb.tfunc:Count.N
+    // void tclass_Count(); // amcdb.tclass:Count
+    // void tfunc_Count_Insert(); // amcdb.tfunc:Count.Insert
+    // void tfunc_Count_Remove(); // amcdb.tfunc:Count.Remove
+    // void tfunc_Count_N(); // amcdb.tfunc:Count.N
 
     // -------------------------------------------------------------------
     // cpp/amc/cppfunc.cpp -- Cppfunc reftype
     //
     //     (user-implemented function, prototype is in amc-generated header)
-    // void tclass_Cppfunc(); // gstatic/amcdb.tclass:Cppfunc
-    // void tfunc_Cppfunc_Get(); // gstatic/amcdb.tfunc:Cppfunc.Get
+    // void tclass_Cppfunc(); // amcdb.tclass:Cppfunc
+    // void tfunc_Cppfunc_Get(); // amcdb.tfunc:Cppfunc.Get
 
     // C++ already constructs the field; no extra Init needed.
-    // void tfunc_Cppfunc_Init(); // gstatic/amcdb.tfunc:Cppfunc.Init
-    // void tfunc_Cppfunc_Set(); // gstatic/amcdb.tfunc:Cppfunc.Set
+    // void tfunc_Cppfunc_Init(); // amcdb.tfunc:Cppfunc.Init
+    // void tfunc_Cppfunc_Set(); // amcdb.tfunc:Cppfunc.Set
+
+    // -------------------------------------------------------------------
+    // cpp/amc/cppsym.cpp
+    //
+
+    // Return the key of the record TUPLE holds, <ssimfile>:<first attribute>,
+    // the spelling every record key takes.
+    tempstr GetTupleRec(algo::Tuple &tuple);
+
+    // Register CPPNAME, a symbol spelled ns.name (or name alone at global scope),
+    // as coming from the record whose key is ACRKEY.  With EXTRN, hand-written
+    // code defines the symbol and generated code calls it; otherwise generated code
+    // defines it.  One name can come from several records, as the overloads of one
+    // user function do, so the row's key is the pair.
+    // An empty CPPNAME, which the schema's empty ctype row yields, names nothing and
+    // registers nothing.
+    void InsCppsym(algo::strptr cppname, algo::strptr acrkey, bool extrn = false);
+
+    // Return the C++ name of FUNC as ns.name, or name alone at global scope, the
+    // spelling gendb.cppsym uses.
+    tempstr GetCppname(amc::FFunc &func);
+
+    // Return the key of the record that makes amc call user function FUNC, as
+    // <ssimfile>:<pkey>, or empty when no record does.  amc spells the binding
+    // gstatic/<ssimfile>:<pkey> for a gstatic table, and <table>:<pkey> for a
+    // dmmeta table such as fstep or dispatch_msg.
+    tempstr GetFuncAcrkey(amc::FFunc &func);
+
+    // Mark what the run loaded from disk, before any generator adds ctypes or
+    // constants of its own.  A loaded ctype is original, and in a namespace with
+    // C++ output its struct ns::Name comes from dmmeta.ctype.  A loaded
+    // constant comes from its own dmmeta.fconst row; a constant amc makes up later
+    // sets its own record or none.
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void gen_origin(); // amcdb.gen:origin
 
     // -------------------------------------------------------------------
     // cpp/amc/ctype.cpp -- Ctype code generators
@@ -441,7 +588,7 @@ namespace amc { // update-hdr
     // no ccmp, no chash, and no second instance, and minmax requires a raw
     // operator < (builtin, extrn ccmp, or genop:Y order:Y ccmp).
     //     (user-implemented function, prototype is in amc-generated header)
-    // void tclass_Ctype(); // gstatic/amcdb.tclass:Ctype
+    // void tclass_Ctype(); // amcdb.tclass:Ctype
 
     // Generate de-initialization function:
     // - cascdel fields
@@ -449,31 +596,31 @@ namespace amc { // update-hdr
     // - user-defined cleanup for all fields
     // - un-init fields (frees memory)
     // All fields are scanned in reverse order
-    // void tfunc_Ctype_Uninit(); // gstatic/amcdb.tfunc:Ctype.Uninit
+    // void tfunc_Ctype_Uninit(); // amcdb.tfunc:Ctype.Uninit
 
     // Introduce local variable that points to the parent side of XREF
     // by evaluating the path provided by xref + xreffld + xrefvia records.
     bool ComputeAccess(algo_lib::Replscope &R, amc::FCtype &ctype, amc::FXref &xref, amc::FFunc &func, amc::FGenXref &frame, bool check_null, algo::strptr rowname);
     //     (user-implemented function, prototype is in amc-generated header)
-    // void tfunc_Ctype_XrefMaybe(); // gstatic/amcdb.tfunc:Ctype.XrefMaybe
-    // void tfunc_Ctype_Unref(); // gstatic/amcdb.tfunc:Ctype.Unref
-    // void tfunc_Ctype_Hash(); // gstatic/amcdb.tfunc:Ctype.Hash
+    // void tfunc_Ctype_XrefMaybe(); // amcdb.tfunc:Ctype.XrefMaybe
+    // void tfunc_Ctype_Unref(); // amcdb.tfunc:Ctype.Unref
+    // void tfunc_Ctype_Hash(); // amcdb.tfunc:Ctype.Hash
 
     // Comparison function for ctype
     // In amc, equality is not strictly a property of a type; it can be overriden on a per-field basis
     // For example, the same field (algo.Smallstr100 for instance) can be made case-insensitive
     // for the purposes of comparison within some ctype
     // That's why the Cmp function for ctype does not call out fo
-    // void tfunc_Ctype_Cmp(); // gstatic/amcdb.tfunc:Ctype.Cmp
+    // void tfunc_Ctype_Cmp(); // amcdb.tfunc:Ctype.Cmp
 
     // Less-than function for ctype
-    // void tfunc_Ctype_Lt(); // gstatic/amcdb.tfunc:Ctype.Lt
-    // void tfunc_Ctype_Init(); // gstatic/amcdb.tfunc:Ctype.Init
-    // void tfunc_Ctype_Update(); // gstatic/amcdb.tfunc:Ctype.Update
-    // void tfunc_Ctype_Min(); // gstatic/amcdb.tfunc:Ctype.Min
-    // void tfunc_Ctype_Max(); // gstatic/amcdb.tfunc:Ctype.Max
-    // void tfunc_Ctype_UpdateMin(); // gstatic/amcdb.tfunc:Ctype.UpdateMin
-    // void tfunc_Ctype_UpdateMax(); // gstatic/amcdb.tfunc:Ctype.UpdateMax
+    // void tfunc_Ctype_Lt(); // amcdb.tfunc:Ctype.Lt
+    // void tfunc_Ctype_Init(); // amcdb.tfunc:Ctype.Init
+    // void tfunc_Ctype_Update(); // amcdb.tfunc:Ctype.Update
+    // void tfunc_Ctype_Min(); // amcdb.tfunc:Ctype.Min
+    // void tfunc_Ctype_Max(); // amcdb.tfunc:Ctype.Max
+    // void tfunc_Ctype_UpdateMin(); // amcdb.tfunc:Ctype.UpdateMin
+    // void tfunc_Ctype_UpdateMax(); // amcdb.tfunc:Ctype.UpdateMax
 
     // Equality function for ctype
     // The function proceeds field-by-field, using the following rules:
@@ -484,21 +631,21 @@ namespace amc { // update-hdr
     // - any string fields are compared as regular strings
     // - if no custom Eq function is defined on a field, but the field's type has an Eq function, it is used
     // - for all other fields, c++ operator "==" is used. it better be defined
-    // void tfunc_Ctype_Eq(); // gstatic/amcdb.tfunc:Ctype.Eq
-    // void tfunc_Ctype_ToCmdline(); // gstatic/amcdb.tfunc:Ctype.ToCmdline
+    // void tfunc_Ctype_Eq(); // amcdb.tfunc:Ctype.Eq
+    // void tfunc_Ctype_ToCmdline(); // amcdb.tfunc:Ctype.ToCmdline
 
     // Used with command lines
-    // void tfunc_Ctype_NArgs(); // gstatic/amcdb.tfunc:Ctype.NArgs
-    // void tfunc_Ctype_Print(); // gstatic/amcdb.tfunc:Ctype.Print
-    // void tfunc_Ctype_Read(); // gstatic/amcdb.tfunc:Ctype.Read
-    // void tfunc_Ctype_EqEnum(); // gstatic/amcdb.tfunc:Ctype.EqEnum
-    // void tfunc_Ctype_GetAnon(); // gstatic/amcdb.tfunc:Ctype.GetAnon
-    // void tfunc_Ctype_GetMsgLength(); // gstatic/amcdb.tfunc:Ctype.GetMsgLength
-    // void tfunc_Ctype_GetMsgMemptr(); // gstatic/amcdb.tfunc:Ctype.GetMsgMemptr
-    // void tclass_Ctype2(); // gstatic/amcdb.tclass:Ctype2
+    // void tfunc_Ctype_NArgs(); // amcdb.tfunc:Ctype.NArgs
+    // void tfunc_Ctype_Print(); // amcdb.tfunc:Ctype.Print
+    // void tfunc_Ctype_Read(); // amcdb.tfunc:Ctype.Read
+    // void tfunc_Ctype_EqEnum(); // amcdb.tfunc:Ctype.EqEnum
+    // void tfunc_Ctype_GetAnon(); // amcdb.tfunc:Ctype.GetAnon
+    // void tfunc_Ctype_GetMsgLength(); // amcdb.tfunc:Ctype.GetMsgLength
+    // void tfunc_Ctype_GetMsgMemptr(); // amcdb.tfunc:Ctype.GetMsgMemptr
+    // void tclass_Ctype2(); // amcdb.tclass:Ctype2
 
     // Generate constructor.
-    // void tfunc_Ctype2_Ctor(); // gstatic/amcdb.tfunc:Ctype2.Ctor
+    // void tfunc_Ctype2_Ctor(); // amcdb.tfunc:Ctype2.Ctor
 
     // True when the ctype gets a fieldwise constructor: a cpptype row asking for a
     // constructor, over at least one field the constructor can take an argument for.
@@ -506,33 +653,33 @@ namespace amc { // update-hdr
 
     // Generate the ctype's fieldwise constructor: one argument per constructor-passable field, each member initialized from its argument.
     //     (user-implemented function, prototype is in amc-generated header)
-    // void tfunc_Ctype2_FieldwiseCtor(); // gstatic/amcdb.tfunc:Ctype2.FieldwiseCtor
-    // void tfunc_Ctype2_EnumCtor(); // gstatic/amcdb.tfunc:Ctype2.EnumCtor
+    // void tfunc_Ctype2_FieldwiseCtor(); // amcdb.tfunc:Ctype2.FieldwiseCtor
+    // void tfunc_Ctype2_EnumCtor(); // amcdb.tfunc:Ctype2.EnumCtor
 
     // Generator copy constructor or assignment operator
     // (the two functions are very similar)
     void GenCopyCtorOrAssignOp(bool copyctor);
     //     (user-implemented function, prototype is in amc-generated header)
-    // void tfunc_Ctype2_CopyCtor(); // gstatic/amcdb.tfunc:Ctype2.CopyCtor
-    // void tfunc_Ctype_AssignOp(); // gstatic/amcdb.tfunc:Ctype.AssignOp
-    // void tfunc_Ctype2_Dtor(); // gstatic/amcdb.tfunc:Ctype2.Dtor
-    // void tfunc_Ctype_EqOp(); // gstatic/amcdb.tfunc:Ctype.EqOp
-    // void tfunc_Ctype_NeOp(); // gstatic/amcdb.tfunc:Ctype.NeOp
-    // void tfunc_Ctype_LtOp(); // gstatic/amcdb.tfunc:Ctype.LtOp
-    // void tfunc_Ctype_GtOp(); // gstatic/amcdb.tfunc:Ctype.GtOp
-    // void tfunc_Ctype_LeOp(); // gstatic/amcdb.tfunc:Ctype.LeOp
-    // void tfunc_Ctype_GeOp(); // gstatic/amcdb.tfunc:Ctype.GeOp
-    // void tfunc_Ctype_EqOpAryptr(); // gstatic/amcdb.tfunc:Ctype.EqOpAryptr
+    // void tfunc_Ctype2_CopyCtor(); // amcdb.tfunc:Ctype2.CopyCtor
+    // void tfunc_Ctype_AssignOp(); // amcdb.tfunc:Ctype.AssignOp
+    // void tfunc_Ctype2_Dtor(); // amcdb.tfunc:Ctype2.Dtor
+    // void tfunc_Ctype_EqOp(); // amcdb.tfunc:Ctype.EqOp
+    // void tfunc_Ctype_NeOp(); // amcdb.tfunc:Ctype.NeOp
+    // void tfunc_Ctype_LtOp(); // amcdb.tfunc:Ctype.LtOp
+    // void tfunc_Ctype_GtOp(); // amcdb.tfunc:Ctype.GtOp
+    // void tfunc_Ctype_LeOp(); // amcdb.tfunc:Ctype.LeOp
+    // void tfunc_Ctype_GeOp(); // amcdb.tfunc:Ctype.GeOp
+    // void tfunc_Ctype_EqOpAryptr(); // amcdb.tfunc:Ctype.EqOpAryptr
 
     // -------------------------------------------------------------------
     // cpp/amc/delptr.cpp -- Delptr reftype
     //
     //     (user-implemented function, prototype is in amc-generated header)
-    // void tclass_Delptr(); // gstatic/amcdb.tclass:Delptr
-    // void tfunc_Delptr_Init(); // gstatic/amcdb.tfunc:Delptr.Init
-    // void tfunc_Delptr_Uninit(); // gstatic/amcdb.tfunc:Delptr.Uninit
-    // void tfunc_Delptr_Delete(); // gstatic/amcdb.tfunc:Delptr.Delete
-    // void tfunc_Delptr_Access(); // gstatic/amcdb.tfunc:Delptr.Access
+    // void tclass_Delptr(); // amcdb.tclass:Delptr
+    // void tfunc_Delptr_Init(); // amcdb.tfunc:Delptr.Init
+    // void tfunc_Delptr_Uninit(); // amcdb.tfunc:Delptr.Uninit
+    // void tfunc_Delptr_Delete(); // amcdb.tfunc:Delptr.Delete
+    // void tfunc_Delptr_Access(); // amcdb.tfunc:Delptr.Access
 
     // -------------------------------------------------------------------
     // cpp/amc/dflt.cpp -- Field default
@@ -627,12 +774,12 @@ namespace amc { // update-hdr
     // cpp/amc/disp/main.cpp -- Dispatch main
     //
     //     (user-implemented function, prototype is in amc-generated header)
-    // void gen_ns_dispatch(); // gstatic/amcdb.gen:ns_dispatch
+    // void gen_ns_dispatch(); // amcdb.gen:ns_dispatch
 
     // Create new fields for dispatch filters.
     void Disp_NewField();
     //     (user-implemented function, prototype is in amc-generated header)
-    // void gen_dispenum(); // gstatic/amcdb.gen:dispenum
+    // void gen_dispenum(); // amcdb.gen:dispenum
 
     // -------------------------------------------------------------------
     // cpp/amc/disp/msg.cpp -- Dispatch on message
@@ -650,6 +797,19 @@ namespace amc { // update-hdr
 
     // Generate Dispatch_Print function
     void Disp_Print(amc::FDispatch &disp);
+
+    // Generate <Dname>_PrintFmt for DISP, the dispatch of every message framed by one
+    // header with a length field: print a message under an algo::MsgFmt -- stripped of FMT.STRIP outer
+    // layers, as binary, as one ssim tuple, or pretty, with nested messages and byte
+    // payloads on lines of their own.  A message with no varlen field needs no case
+    // of its own: it prints as its tuple, indented when pretty.  A message of a type
+    // the dispatch does not know prints as its quoted bytes.
+    void Disp_PrintFmt(amc::FDispatch &disp);
+
+    // Generate <Dname>_HeartbeatQ for DISP: whether a message is a heartbeat, which
+    // its msgtype says with heartbeat:Y.  A trace leaves heartbeats out unless asked,
+    // since they arrive many times a second and say only that a peer is alive.
+    void Disp_HeartbeatQ(amc::FDispatch &disp);
 
     // -------------------------------------------------------------------
     // cpp/amc/disp/read.cpp -- Dispatch read from string
@@ -683,17 +843,23 @@ namespace amc { // update-hdr
     // cpp/amc/exec.cpp -- Exec reftype
     //
     //     (user-implemented function, prototype is in amc-generated header)
-    // void tclass_Exec(); // gstatic/amcdb.tclass:Exec
-    // void tfunc_Exec_Init(); // gstatic/amcdb.tfunc:Exec.Init
-    // void tfunc_Exec_Uninit(); // gstatic/amcdb.tfunc:Exec.Uninit
-    // void tfunc_Exec_Wait(); // gstatic/amcdb.tfunc:Exec.Wait
-    // void tfunc_Exec_Kill(); // gstatic/amcdb.tfunc:Exec.Kill
-    // void tfunc_Exec_Start(); // gstatic/amcdb.tfunc:Exec.Start
-    // void tfunc_Exec_Exec(); // gstatic/amcdb.tfunc:Exec.Exec
-    // void tfunc_Exec_ExecX(); // gstatic/amcdb.tfunc:Exec.ExecX
-    // void tfunc_Exec_ToCmdline(); // gstatic/amcdb.tfunc:Exec.ToCmdline
-    // void tfunc_Exec_ToArgv(); // gstatic/amcdb.tfunc:Exec.ToArgv
-    // void tfunc_Exec_Execv(); // gstatic/amcdb.tfunc:Exec.Execv
+    // void tclass_Exec(); // amcdb.tclass:Exec
+    // void tfunc_Exec_Init(); // amcdb.tfunc:Exec.Init
+    // void tfunc_Exec_Uninit(); // amcdb.tfunc:Exec.Uninit
+    // void tfunc_Exec_Wait(); // amcdb.tfunc:Exec.Wait
+    // void tfunc_Exec_Kill(); // amcdb.tfunc:Exec.Kill
+    // void tfunc_Exec_Start(); // amcdb.tfunc:Exec.Start
+    // void tfunc_Exec_Exec(); // amcdb.tfunc:Exec.Exec
+    // void tfunc_Exec_ExecX(); // amcdb.tfunc:Exec.ExecX
+    // void tfunc_Exec_ToCmdline(); // amcdb.tfunc:Exec.ToCmdline
+
+    // Append to FUNC's body code that passes this process's -verbose, -debug and
+    // -trace to the child whose argv it builds, when CMDTYPE is a command with a
+    // ccmdline, so a trace given to a tool also reaches the processes it starts.
+    void GenArgvInherit(algo_lib::Replscope &R, amc::FCtype &cmdtype, amc::FFunc &func);
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void tfunc_Exec_ToArgv(); // amcdb.tfunc:Exec.ToArgv
+    // void tfunc_Exec_Execv(); // amcdb.tfunc:Exec.Execv
     void NewFieldExec();
 
     // -------------------------------------------------------------------
@@ -708,20 +874,20 @@ namespace amc { // update-hdr
     // it per message, or per codec function of each message, would charge the same
     // defect hundreds of times and count each charge as an error.
     //     (user-implemented function, prototype is in amc-generated header)
-    // void gen_check_fast(); // gstatic/amcdb.gen:check_fast
+    // void gen_check_fast(); // amcdb.gen:check_fast
 
     // Prepare FAST data
-    // void gen_fast_presence(); // gstatic/amcdb.gen:fast_presence
+    // void gen_fast_presence(); // amcdb.gen:fast_presence
 
     // Type FAST encode
-    // void tfunc_Ctype_FastEncode(); // gstatic/amcdb.tfunc:Ctype.FastEncode
+    // void tfunc_Ctype_FastEncode(); // amcdb.tfunc:Ctype.FastEncode
 
     // Type FAST decode
-    // void tfunc_Ctype_FastDecode(); // gstatic/amcdb.tfunc:Ctype.FastDecode
-    // void tfunc_Ctype_FixEncode(); // gstatic/amcdb.tfunc:Ctype.FixEncode
+    // void tfunc_Ctype_FastDecode(); // amcdb.tfunc:Ctype.FastDecode
+    // void tfunc_Ctype_FixEncode(); // amcdb.tfunc:Ctype.FixEncode
 
     // FAST - ns functions
-    // void gen_ns_fast(); // gstatic/amcdb.gen:ns_fast
+    // void gen_ns_fast(); // amcdb.gen:ns_fast
 
     // -------------------------------------------------------------------
     // cpp/amc/fbuf.cpp -- Byte buffer
@@ -751,69 +917,69 @@ namespace amc { // update-hdr
     // when the scanner is amc's own: an ffunc ScanMsg with extrn:Y hands the scan to
     // the user, who compares the elements however the type allows.
     //     (user-implemented function, prototype is in amc-generated header)
-    // void gen_check_fbuf(); // gstatic/amcdb.gen:check_fbuf
+    // void gen_check_fbuf(); // amcdb.gen:check_fbuf
 
     // Generate the buffer's members and the functions its direction and buffer
     // type call for; txt/exe/amc/fbuf.md documents the reftype.
-    // void tclass_Fbuf(); // gstatic/amcdb.tclass:Fbuf
+    // void tclass_Fbuf(); // amcdb.tclass:Fbuf
 
     // Generate $name_BeginRead: attach a file descriptor to the read buffer and arm its edge-triggered epoll readiness hook.
-    // void tfunc_Fbuf_BeginRead(); // gstatic/amcdb.tfunc:Fbuf.BeginRead
-    // void tfunc_Fbuf_GetMsg(); // gstatic/amcdb.tfunc:Fbuf.GetMsg
-    // void tfunc_Fbuf_Init(); // gstatic/amcdb.tfunc:Fbuf.Init
-    // void tfunc_Fbuf_Max(); // gstatic/amcdb.tfunc:Fbuf.Max
-    // void tfunc_Fbuf_N(); // gstatic/amcdb.tfunc:Fbuf.N
+    // void tfunc_Fbuf_BeginRead(); // amcdb.tfunc:Fbuf.BeginRead
+    // void tfunc_Fbuf_GetMsg(); // amcdb.tfunc:Fbuf.GetMsg
+    // void tfunc_Fbuf_Init(); // amcdb.tfunc:Fbuf.Init
+    // void tfunc_Fbuf_Max(); // amcdb.tfunc:Fbuf.Max
+    // void tfunc_Fbuf_N(); // amcdb.tfunc:Fbuf.N
 
     // Generate $name_Refill: read available bytes from the file descriptor into the read buffer.
-    // void tfunc_Fbuf_Refill(); // gstatic/amcdb.tfunc:Fbuf.Refill
-    // void tfunc_Fbuf_RemoveAll(); // gstatic/amcdb.tfunc:Fbuf.RemoveAll
-    // void tfunc_Fbuf_ScanMsg(); // gstatic/amcdb.tfunc:Fbuf.ScanMsg
-    // void tfunc_Fbuf_Shift(); // gstatic/amcdb.tfunc:Fbuf.Shift
+    // void tfunc_Fbuf_Refill(); // amcdb.tfunc:Fbuf.Refill
+    // void tfunc_Fbuf_RemoveAll(); // amcdb.tfunc:Fbuf.RemoveAll
+    // void tfunc_Fbuf_ScanMsg(); // amcdb.tfunc:Fbuf.ScanMsg
+    // void tfunc_Fbuf_Shift(); // amcdb.tfunc:Fbuf.Shift
 
     // Generate $name_SkipBytes: mark a number of buffer bytes as consumed, advancing the read cursor.
-    // void tfunc_Fbuf_SkipBytes(); // gstatic/amcdb.tfunc:Fbuf.SkipBytes
+    // void tfunc_Fbuf_SkipBytes(); // amcdb.tfunc:Fbuf.SkipBytes
 
     // Generate $name_SkipMsg: advance the read cursor past the current message.
-    // void tfunc_Fbuf_SkipMsg(); // gstatic/amcdb.tfunc:Fbuf.SkipMsg
-    // void tfunc_Fbuf_WriteReserve(); // gstatic/amcdb.tfunc:Fbuf.WriteReserve
+    // void tfunc_Fbuf_SkipMsg(); // amcdb.tfunc:Fbuf.SkipMsg
+    // void tfunc_Fbuf_WriteReserve(); // amcdb.tfunc:Fbuf.WriteReserve
 
     // Generate $name_WriteAll: append a block of bytes to the write buffer, shifting or flushing to the fd to make room.
-    // void tfunc_Fbuf_WriteAll(); // gstatic/amcdb.tfunc:Fbuf.WriteAll
-    // void tfunc_Fbuf_WriteMsg(); // gstatic/amcdb.tfunc:Fbuf.WriteMsg
+    // void tfunc_Fbuf_WriteAll(); // amcdb.tfunc:Fbuf.WriteAll
+    // void tfunc_Fbuf_WriteMsg(); // amcdb.tfunc:Fbuf.WriteMsg
 
     // Generate $name_BeginWrite: attach a file descriptor to the write buffer and arm its edge-triggered outflow hook.
-    // void tfunc_Fbuf_BeginWrite(); // gstatic/amcdb.tfunc:Fbuf.BeginWrite
+    // void tfunc_Fbuf_BeginWrite(); // amcdb.tfunc:Fbuf.BeginWrite
 
     // Generate $name_PairReady: turn one descriptor's readiness into the ready condition of each buffer of the pair.
-    // void tfunc_Fbuf_PairReady(); // gstatic/amcdb.tfunc:Fbuf.PairReady
+    // void tfunc_Fbuf_PairReady(); // amcdb.tfunc:Fbuf.PairReady
 
     // Generate $name_BeginReadWrite: attach one descriptor to a read/write buffer pair under a single epoll registration.
-    // void tfunc_Fbuf_BeginReadWrite(); // gstatic/amcdb.tfunc:Fbuf.BeginReadWrite
+    // void tfunc_Fbuf_BeginReadWrite(); // amcdb.tfunc:Fbuf.BeginReadWrite
 
     // Generate $name_Outflow: write buffered bytes to the file descriptor, retiring the readiness hook once drained.
-    // void tfunc_Fbuf_Outflow(); // gstatic/amcdb.tfunc:Fbuf.Outflow
-    // void tfunc_Fbuf_EndRead(); // gstatic/amcdb.tfunc:Fbuf.EndRead
-    // void tfunc_Fbuf_EndWrite(); // gstatic/amcdb.tfunc:Fbuf.EndWrite
-    // void tfunc_Fbuf_Realloc(); // gstatic/amcdb.tfunc:Fbuf.Realloc
+    // void tfunc_Fbuf_Outflow(); // amcdb.tfunc:Fbuf.Outflow
+    // void tfunc_Fbuf_EndRead(); // amcdb.tfunc:Fbuf.EndRead
+    // void tfunc_Fbuf_EndWrite(); // amcdb.tfunc:Fbuf.EndWrite
+    // void tfunc_Fbuf_Realloc(); // amcdb.tfunc:Fbuf.Realloc
 
     // Generate the fbuf's contribution to the parent's Uninit: return the
     // buffer's memory to the pool it was taken from and leave the field in the
     // state a fresh Init produces, so a record that is reinitialized in place
     // neither frees the same block twice nor reuses a freed one.
-    // void tfunc_Fbuf_Uninit(); // gstatic/amcdb.tfunc:Fbuf.Uninit
-    // void tfunc_Fbuf_GetAlloc(); // gstatic/amcdb.tfunc:Fbuf.GetAlloc
-    // void tfunc_Fbuf_GetAllocReserve(); // gstatic/amcdb.tfunc:Fbuf.GetAllocReserve
+    // void tfunc_Fbuf_Uninit(); // amcdb.tfunc:Fbuf.Uninit
+    // void tfunc_Fbuf_GetAlloc(); // amcdb.tfunc:Fbuf.GetAlloc
+    // void tfunc_Fbuf_GetAllocReserve(); // amcdb.tfunc:Fbuf.GetAllocReserve
 
     // Generate $name_BeginAlloc: reserve a contiguous block of bytes in the byte buffer and return a write pointer, or NULL when it does not fit.
-    // void tfunc_Fbuf_BeginAlloc(); // gstatic/amcdb.tfunc:Fbuf.BeginAlloc
-    // void tfunc_Fbuf_BeginAllocReserve(); // gstatic/amcdb.tfunc:Fbuf.BeginAllocReserve
+    // void tfunc_Fbuf_BeginAlloc(); // amcdb.tfunc:Fbuf.BeginAlloc
+    // void tfunc_Fbuf_BeginAllocReserve(); // amcdb.tfunc:Fbuf.BeginAllocReserve
 
     // -------------------------------------------------------------------
     // cpp/amc/fcast.cpp -- Implicit casts
     //
     //     (user-implemented function, prototype is in amc-generated header)
-    // void tclass_Fcast(); // gstatic/amcdb.tclass:Fcast
-    // void tfunc_Fcast_Cast(); // gstatic/amcdb.tfunc:Fcast.Cast
+    // void tclass_Fcast(); // amcdb.tclass:Fcast
+    // void tfunc_Fcast_Cast(); // amcdb.tfunc:Fcast.Cast
 
     // -------------------------------------------------------------------
     // cpp/amc/fcmap.cpp -- Fcmap generation (enum<->enum conversion)
@@ -825,7 +991,7 @@ namespace amc { // update-hdr
     // TODO::warn about the following case:
     // A.b = A.c, A.d = A.e. That setup yields only one function A_FromA() instead of 2 (and a compile error).
     //     (user-implemented function, prototype is in amc-generated header)
-    // void gen_fcmap(); // gstatic/amcdb.gen:fcmap
+    // void gen_fcmap(); // amcdb.gen:fcmap
 
     // -------------------------------------------------------------------
     // cpp/amc/fcond.cpp
@@ -886,7 +1052,7 @@ namespace amc { // update-hdr
     // the inserted record (the watched ctype, or the via target) matches
     // the index's element type.
     //     (user-implemented function, prototype is in amc-generated header)
-    // void gen_check_fcond(); // gstatic/amcdb.gen:check_fcond
+    // void gen_check_fcond(); // amcdb.gen:check_fcond
 
     // Emit the fcond membership dispatch as the body of SET, the generated
     // setter of FIELD: on a value change, rows matching the old value remove
@@ -954,26 +1120,26 @@ namespace amc { // update-hdr
     // then has no numeric range and MIN holds the widest-signed fallback.
     bool FieldMinStore(amc::FField &field, u64 &min);
     //     (user-implemented function, prototype is in amc-generated header)
-    // void tclass_Fconst(); // gstatic/amcdb.tclass:Fconst
+    // void tclass_Fconst(); // amcdb.tclass:Fconst
 
     // Generate $name_GetEnum: read the field's stored value as its enum type.
-    // void tfunc_Fconst_GetEnum(); // gstatic/amcdb.tfunc:Fconst.GetEnum
-    // void tfunc_Fconst_SetEnum(); // gstatic/amcdb.tfunc:Fconst.SetEnum
+    // void tfunc_Fconst_GetEnum(); // amcdb.tfunc:Fconst.GetEnum
+    // void tfunc_Fconst_SetEnum(); // amcdb.tfunc:Fconst.SetEnum
 
     // Generate $name_ToCstr: map the field's numeric value to its string constant, or NULL when none matches.
-    // void tfunc_Fconst_ToCstr(); // gstatic/amcdb.tfunc:Fconst.ToCstr
+    // void tfunc_Fconst_ToCstr(); // amcdb.tfunc:Fconst.ToCstr
 
     // Generate $name_Print: emit the field as its string constant, falling back to the numeric value.
-    // void tfunc_Fconst_Print(); // gstatic/amcdb.tfunc:Fconst.Print
+    // void tfunc_Fconst_Print(); // amcdb.tfunc:Fconst.Print
 
     // Generate $name_SetStrptrMaybe: set the field from a string constant, returning false when the string matches none.
-    // void tfunc_Fconst_SetStrptrMaybe(); // gstatic/amcdb.tfunc:Fconst.SetStrptrMaybe
+    // void tfunc_Fconst_SetStrptrMaybe(); // amcdb.tfunc:Fconst.SetStrptrMaybe
 
     // Generate $name_SetStrptr: set the field from a string constant, using the supplied default when none matches.
-    // void tfunc_Fconst_SetStrptr(); // gstatic/amcdb.tfunc:Fconst.SetStrptr
+    // void tfunc_Fconst_SetStrptr(); // amcdb.tfunc:Fconst.SetStrptr
 
     // Generate $name_ReadStrptrMaybe: read the field from a string, trying the string constant first, then the underlying type.
-    // void tfunc_Fconst_ReadStrptrMaybe(); // gstatic/amcdb.tfunc:Fconst.ReadStrptrMaybe
+    // void tfunc_Fconst_ReadStrptrMaybe(); // amcdb.tfunc:Fconst.ReadStrptrMaybe
 
     // Validate each fconst's value against the store of the field it names.
     // A ten-bit bitfield with arg u32 that carries an fconst of 2000 sets 976
@@ -1002,7 +1168,7 @@ namespace amc { // update-hdr
     // rather than values of the field, so a word using its top bit carries a mask
     // past its own signed maximum by design; each such mask is bounded by the bits
     // of the word it sources, which gen_check_bitfld checks on the bitfield itself.
-    // void gen_check_fconst(); // gstatic/amcdb.gen:check_fconst
+    // void gen_check_fconst(); // amcdb.gen:check_fconst
 
     // -------------------------------------------------------------------
     // cpp/amc/fdec.cpp -- Decimal types
@@ -1015,19 +1181,19 @@ namespace amc { // update-hdr
     // The decimal place count is checked here as well, before any tfunc builds
     // arithmetic from it.
     //     (user-implemented function, prototype is in amc-generated header)
-    // void tclass_Dec(); // gstatic/amcdb.tclass:Dec
+    // void tclass_Dec(); // amcdb.tclass:Dec
 
     // Generate $name_GetDouble: return the fixed-point field as a double, dividing by the decimal scale.
-    // void tfunc_Dec_GetDouble(); // gstatic/amcdb.tfunc:Dec.GetDouble
+    // void tfunc_Dec_GetDouble(); // amcdb.tfunc:Dec.GetDouble
 
     // Generate $name_GetInt: return the integer portion of the fixed-point field, dividing by the decimal scale.
-    // void tfunc_Dec_GetInt(); // gstatic/amcdb.tfunc:Dec.GetInt
+    // void tfunc_Dec_GetInt(); // amcdb.tfunc:Dec.GetInt
 
     // Generate the ctype's GetScale accessor returning the fixed-point scale constant, only when the ctype carries a single fdec field.
-    // void tfunc_Dec_GetScale(); // gstatic/amcdb.tfunc:Dec.GetScale
+    // void tfunc_Dec_GetScale(); // amcdb.tfunc:Dec.GetScale
 
     // Generate $name_qSetDouble: set the fixed-point field from a double, rounding to the nearest representable value.
-    // void tfunc_Dec_qSetDouble(); // gstatic/amcdb.tfunc:Dec.qSetDouble
+    // void tfunc_Dec_qSetDouble(); // amcdb.tfunc:Dec.qSetDouble
 
     // Generate $name_SetDoubleMaybe: store VAL scaled and rounded to the
     // nearest scaled integer, returning false when that integer is outside the
@@ -1046,15 +1212,15 @@ namespace amc { // update-hdr
     // the type's minimum is itself a power of two, exactly representable, and the
     // half unit disappears the other way: the strict bound then refuses the
     // minimum, a double whose neighbors are a thousand units away.
-    // void tfunc_Dec_SetDoubleMaybe(); // gstatic/amcdb.tfunc:Dec.SetDoubleMaybe
+    // void tfunc_Dec_SetDoubleMaybe(); // amcdb.tfunc:Dec.SetDoubleMaybe
 
     // Generate $name_ReadStrptrMaybe: parse a decimal string into the scaled
     // integer the field stores, returning false on a bad character or a value
     // the field cannot hold.
-    // void tfunc_Dec_ReadStrptrMaybe(); // gstatic/amcdb.tfunc:Dec.ReadStrptrMaybe
+    // void tfunc_Dec_ReadStrptrMaybe(); // amcdb.tfunc:Dec.ReadStrptrMaybe
 
     // Generate $name_Print: format the fixed-point field as a decimal string.
-    // void tfunc_Dec_Print(); // gstatic/amcdb.tfunc:Dec.Print
+    // void tfunc_Dec_Print(); // amcdb.tfunc:Dec.Print
 
     // -------------------------------------------------------------------
     // cpp/amc/field.cpp -- Generic field generator
@@ -1067,27 +1233,27 @@ namespace amc { // update-hdr
     // is needed -- the set of tfuncs that actually run for the field is the
     // authority (this replaced the old amcdb.tcb table).
     //     (user-implemented function, prototype is in amc-generated header)
-    // void tclass_Field(); // gstatic/amcdb.tclass:Field
-    // void tclass_Field2(); // gstatic/amcdb.tclass:Field2
-    // void tfunc_Field_Cleanup(); // gstatic/amcdb.tfunc:Field.Cleanup
-    // void tfunc_Field_Userinit(); // gstatic/amcdb.tfunc:Field.Userinit
+    // void tclass_Field(); // amcdb.tclass:Field
+    // void tclass_Field2(); // amcdb.tclass:Field2
+    // void tfunc_Field_Cleanup(); // amcdb.tfunc:Field.Cleanup
+    // void tfunc_Field_Userinit(); // amcdb.tfunc:Field.Userinit
 
-    // Find an ffunc of the given name declared on FIELD (via dmmeta.ffunc).
-    // Returns NULL if none.  Pkey is '<field>.<name>'; build it via the
-    // amc-generated concat helper and look up in the unique ind_ffunc hash.
-    // If mark_used is true and the ffunc is found, set ffunc.used so gen_check_ffunc
+    // Find the ffunc named NAME that dmmeta.ffunc declares on FIELD; NULL if none.
+    // The field's zs_ffunc list holds every ffunc declared on it, and for almost
+    // every field the list is empty.
+    // If MARK_USED is true and the ffunc is found, set ffunc.used so gen_check_ffunc
     // does not warn about it.  Pass true at emission sites, false at
     // classification-only queries (e.g. PlaindataVisit).
     amc::FFfunc *FindFfunc(amc::FField &field, algo::strptr name, bool mark_used = false);
     //     (user-implemented function, prototype is in amc-generated header)
-    // void tfunc_Field_OnXref(); // gstatic/amcdb.tfunc:Field.OnXref
-    // void tfunc_Field_OnUnref(); // gstatic/amcdb.tfunc:Field.OnUnref
-    // void tfunc_Field_Cascdel(); // gstatic/amcdb.tfunc:Field.Cascdel
+    // void tfunc_Field_OnXref(); // amcdb.tfunc:Field.OnXref
+    // void tfunc_Field_OnUnref(); // amcdb.tfunc:Field.OnUnref
+    // void tfunc_Field_Cascdel(); // amcdb.tfunc:Field.Cascdel
 
     // provide a read function for the field if it already has a Set function,
     // or if the underlying type supports read.
-    // void tfunc_Field2_ReadStrptrMaybe(); // gstatic/amcdb.tfunc:Field2.ReadStrptrMaybe
-    // void tfunc_Field_Concat(); // gstatic/amcdb.tfunc:Field.Concat
+    // void tfunc_Field2_ReadStrptrMaybe(); // amcdb.tfunc:Field2.ReadStrptrMaybe
+    // void tfunc_Field_Concat(); // amcdb.tfunc:Field.Concat
 
     // True if ReadFieldExpr for the field
     bool HasReadExprQ(amc::FField &field);
@@ -1185,10 +1351,10 @@ namespace amc { // update-hdr
     // defined.
     bool FwdDeclQ(amc::FField &field);
     //     (user-implemented function, prototype is in amc-generated header)
-    // void gen_ns_fwddecl2(); // gstatic/amcdb.gen:ns_fwddecl2
+    // void gen_ns_fwddecl2(); // amcdb.gen:ns_fwddecl2
 
     // emit forward-declarations of steps
-    // void gen_ns_fwddecl(); // gstatic/amcdb.gen:ns_fwddecl
+    // void gen_ns_fwddecl(); // amcdb.gen:ns_fwddecl
 
     // -------------------------------------------------------------------
     // cpp/amc/gen.cpp -- AMC Generators (amcdb.gen)
@@ -1199,26 +1365,26 @@ namespace amc { // update-hdr
     void PlaceFieldAfter(amc::FField &field, amc::FField &after);
     bool HasAllocQ(amc::FField &field);
     //     (user-implemented function, prototype is in amc-generated header)
-    // void gen_usedns(); // gstatic/amcdb.gen:usedns
-    // void gen_include(); // gstatic/amcdb.gen:include
-    // void gen_ns_check_main(); // gstatic/amcdb.gen:ns_check_main
+    // void gen_usedns(); // amcdb.gen:usedns
+    // void gen_include(); // amcdb.gen:include
+    // void gen_ns_check_main(); // amcdb.gen:ns_check_main
 
     // Check that each cascdel field names an unambiguous delete target:
     // more than one instance access path to the field's target leaves
     // unclear which instance a cascade delete should remove.
-    // void gen_check_cascdel(); // gstatic/amcdb.gen:check_cascdel
-    // void gen_check_ssimsort(); // gstatic/amcdb.gen:check_ssimsort
-    // void gen_countxref(); // gstatic/amcdb.gen:countxref
+    // void gen_check_cascdel(); // amcdb.gen:check_cascdel
+    // void gen_check_ssimsort(); // amcdb.gen:check_ssimsort
+    // void gen_countxref(); // amcdb.gen:countxref
 
     // Check the dependency order of gstatic tables: a table may refer only to
     // tables loaded before it (earlier rowid), and never to a finput table --
     // finput data is not loaded yet when the static initializers run.
-    // void gen_check_static(); // gstatic/amcdb.gen:check_static
-    // void gen_check_prefix(); // gstatic/amcdb.gen:check_prefix
-    // void gen_basepool(); // gstatic/amcdb.gen:basepool
+    // void gen_check_static(); // amcdb.gen:check_static
+    // void gen_check_prefix(); // amcdb.gen:check_prefix
+    // void gen_basepool(); // amcdb.gen:basepool
 
     // TODO: also check that targdep path exists between namespaces?
-    // void gen_check_basepool(); // gstatic/amcdb.gen:check_basepool
+    // void gen_check_basepool(); // amcdb.gen:check_basepool
 
     // Validate each bitfield against its source field: the source must be a sized
     // integer, the bitfield must fit within its bits, and bitfields sharing a
@@ -1233,15 +1399,15 @@ namespace amc { // update-hdr
     // counts it as a defect rather than ending the run, so a universe with several
     // bad widths reports every one -- amc.FconstBitfldWidth holds a negative width,
     // a zero one and a 65 and draws a line for each.
-    // void gen_check_bitfld(); // gstatic/amcdb.gen:check_bitfld
+    // void gen_check_bitfld(); // amcdb.gen:check_bitfld
 
     // Rewrite reftype:Pkey fields into reftype:Val
-    // void gen_lookuppkey(); // gstatic/amcdb.gen:lookuppkey
+    // void gen_lookuppkey(); // amcdb.gen:lookuppkey
 
     // Ensure fregx record exists for each field of type Regx or RegxSql
     // Rewrite RegxSql fields as Regx, regxtype Sql
     // (generalization of original RegxSql reftype)
-    // void gen_rewrite_regx(); // gstatic/amcdb.gen:rewrite_regx
+    // void gen_rewrite_regx(); // amcdb.gen:rewrite_regx
 
     // Validate every ffunc by the code actually generated: each emission site calls
     // FindFfunc with mark_used=true, so an ffunc left unused names a function no
@@ -1249,14 +1415,14 @@ namespace amc { // update-hdr
     // FindRemove on a Val, OnXref on a field whose access path never inserts,
     // InputMaybe on a non-finput field).  This is the sole ffunc-name check; the
     // set of tfuncs that run for the field is the authority (replaced amcdb.tcb).
-    // void gen_check_ffunc(); // gstatic/amcdb.gen:check_ffunc
+    // void gen_check_ffunc(); // amcdb.gen:check_ffunc
 
     // Check that each field's reftype is backed by its per-reftype record
     // (dmmeta.tary, dmmeta.thash, ...); later gen phases dereference these
     // records, so reftype errors end the run here.
-    // void gen_check_reftype(); // gstatic/amcdb.gen:check_reftype
-    // void gen_detectinst(); // gstatic/amcdb.gen:detectinst
-    // void gen_prep_field(); // gstatic/amcdb.gen:prep_field
+    // void gen_check_reftype(); // amcdb.gen:check_reftype
+    // void gen_detectinst(); // amcdb.gen:detectinst
+    // void gen_prep_field(); // amcdb.gen:prep_field
 
     // Check that each big-endian field can be stored byteswapped: the field
     // is a Val of a builtin type flagged bigendok, and the type's width is one
@@ -1269,14 +1435,14 @@ namespace amc { // update-hdr
     // row instead of prescribing a width change for a type whose width may
     // already be right. Each rejection reports and continues, accumulating
     // into the exit code.
-    // void gen_check_bigend(); // gstatic/amcdb.gen:check_bigend
+    // void gen_check_bigend(); // amcdb.gen:check_bigend
 
     // walk over all xrefs and populate ctype.c_parent array,
     // which lists all the "parent" ctypes (ones used by this ctype)
     // check
-    // void gen_xref_parent(); // gstatic/amcdb.gen:xref_parent
-    // void gen_datafld(); // gstatic/amcdb.gen:datafld
-    // void gen_ctype_toposort(); // gstatic/amcdb.gen:ctype_toposort
+    // void gen_xref_parent(); // amcdb.gen:xref_parent
+    // void gen_datafld(); // amcdb.gen:datafld
+    // void gen_ctype_toposort(); // amcdb.gen:ctype_toposort
 
     // Determine CTYPE's plaindata and has_dtor flags, recursing into the type of
     // every member first, and store both on the ctype. See gen_plaindata for what
@@ -1297,81 +1463,83 @@ namespace amc { // update-hdr
     //
     // Both walk the same ctype graph, so one pass computes both.
     //     (user-implemented function, prototype is in amc-generated header)
-    // void gen_plaindata(); // gstatic/amcdb.gen:plaindata
+    // void gen_plaindata(); // amcdb.gen:plaindata
     tempstr Argtype(amc::FField &field);
     //     (user-implemented function, prototype is in amc-generated header)
-    // void gen_prep_ctype(); // gstatic/amcdb.gen:prep_ctype
-    // void gen_xref2(); // gstatic/amcdb.gen:xref2
-    // void gen_select_ns(); // gstatic/amcdb.gen:select_ns
+    // void gen_prep_ctype(); // amcdb.gen:prep_ctype
+    // void gen_xref2(); // amcdb.gen:xref2
+
+    // Select every namespace that generates C++ or is projected into a language.
+    // void gen_select_ns(); // amcdb.gen:select_ns
 
     //
     // Generate Fconst from a column of some table.
     //
     //
-    // void gen_gconst(); // gstatic/amcdb.gen:gconst
+    // void gen_gconst(); // amcdb.gen:gconst
 
     //
     // Generate Fconst from a column of some table.
     //
-    // void gen_bitfldenum(); // gstatic/amcdb.gen:bitfldenum
-    // void gen_prep_fconst(); // gstatic/amcdb.gen:prep_fconst
+    // void gen_bitfldenum(); // amcdb.gen:bitfldenum
+    // void gen_prep_fconst(); // amcdb.gen:prep_fconst
 
     // Side-load the ssimfile rows behind each gstatic field into the
     // static_tuple table; they become the compiled-in initializers of the
     // gstatic table.
-    // void gen_load_gstatic(); // gstatic/amcdb.gen:load_gstatic
+    // void gen_load_gstatic(); // amcdb.gen:load_gstatic
 
     // Generate numeric fconsts from string fconsts
-    // void gen_clonefconst(); // gstatic/amcdb.gen:clonefconst
-    // void gen_newfield_exec(); // gstatic/amcdb.gen:newfield_exec
-    // void gen_newfield_count(); // gstatic/amcdb.gen:newfield_count
+    // void gen_clonefconst(); // amcdb.gen:clonefconst
+    // void gen_newfield_exec(); // amcdb.gen:newfield_exec
+    // void gen_newfield_count(); // amcdb.gen:newfield_count
 
     // convert cbase records into fields of reftype Base
-    // void gen_newfield_cbase(); // gstatic/amcdb.gen:newfield_cbase
+    // void gen_newfield_cbase(); // amcdb.gen:newfield_cbase
 
     // convert cbase records into fields of reftype Base
-    // void gen_check_basefield(); // gstatic/amcdb.gen:check_basefield
-    // void gen_newfield_sortfld(); // gstatic/amcdb.gen:newfield_sortfld
+    // void gen_check_basefield(); // amcdb.gen:check_basefield
+    // void gen_newfield_sortfld(); // amcdb.gen:newfield_sortfld
 
     // Check that every Ptrary field has its dmmeta.ptrary record, and extend unique ptrarys
     // with a membership flag on the target ctype.
-    // void gen_newfield_ptrary(); // gstatic/amcdb.gen:newfield_ptrary
-    // void gen_newfield_dispatch(); // gstatic/amcdb.gen:newfield_dispatch
-    // void gen_newfield_cfmt(); // gstatic/amcdb.gen:newfield_cfmt
+    // void gen_newfield_ptrary(); // amcdb.gen:newfield_ptrary
+    // void gen_newfield_dispatch(); // amcdb.gen:newfield_dispatch
+    // void gen_newfield_cfmt(); // amcdb.gen:newfield_cfmt
 
     // Check pack consistency within a namespace: every ctype in a packed namespace must be packed, and every field of a packed ctype must be packed.
-    // void gen_ns_check_pack(); // gstatic/amcdb.gen:ns_check_pack
+    // void gen_ns_check_pack(); // amcdb.gen:ns_check_pack
 
     // A singly linked list requires scanning to locate the element to delete.
     // It is considered an access path with quadratic deletion cost.
     // So is a Ptrary.
     bool SlowDelQ(amc::FField &field);
     //     (user-implemented function, prototype is in amc-generated header)
-    // void gen_ns_check_path(); // gstatic/amcdb.gen:ns_check_path
-    // void gen_ns_pkeytypedef(); // gstatic/amcdb.gen:ns_pkeytypedef
-    // void gen_ns_enums(); // gstatic/amcdb.gen:ns_enums
-    // void gen_ns_include(); // gstatic/amcdb.gen:ns_include
-    // void gen_ns_funcindex(); // gstatic/amcdb.gen:ns_funcindex
+    // void gen_ns_check_path(); // amcdb.gen:ns_check_path
+    // void gen_ns_pkeytypedef(); // amcdb.gen:ns_pkeytypedef
+    // void gen_ns_enums(); // amcdb.gen:ns_enums
+    // void gen_ns_include(); // amcdb.gen:ns_include
+    // void gen_ns_funcindex(); // amcdb.gen:ns_funcindex
 
     // Print static function prototype declarations
     // to the cpp file
-    // void gen_ns_print_proto(); // gstatic/amcdb.gen:ns_print_proto
-    // void gen_ns_print_struct(); // gstatic/amcdb.gen:ns_print_struct
-    // void gen_ns_curstext(); // gstatic/amcdb.gen:ns_curstext
-    // void gen_ns_pnew(); // gstatic/amcdb.gen:ns_pnew
-    // void gen_ns_func(); // gstatic/amcdb.gen:ns_func
-    // void gen_ns_operators(); // gstatic/amcdb.gen:ns_operators
+    // void gen_ns_print_proto(); // amcdb.gen:ns_print_proto
+    // void gen_ns_print_struct(); // amcdb.gen:ns_print_struct
+    // void gen_ns_curstext(); // amcdb.gen:ns_curstext
+    // void gen_ns_pnew(); // amcdb.gen:ns_pnew
+    // void gen_ns_func(); // amcdb.gen:ns_func
+    // void gen_ns_operators(); // amcdb.gen:ns_operators
 
     // Generate code to load gstatic tables
     // (added to FDb Init function)
     // Gstatics are loaded in the order of their ctypes
-    // void gen_ns_gstatic(); // gstatic/amcdb.gen:ns_gstatic
-    // void gen_ns_check_lim(); // gstatic/amcdb.gen:ns_check_lim
-    // void gen_proc(); // gstatic/amcdb.gen:proc
+    // void gen_ns_gstatic(); // amcdb.gen:ns_gstatic
+    // void gen_ns_check_lim(); // amcdb.gen:ns_check_lim
+    // void gen_proc(); // amcdb.gen:proc
 
     // Check that each fcurs row names a cursor supported by its field's
     // reftype (the corresponding amcdb.tcurs row is in the input set).
-    // void gen_check_fcurs(); // gstatic/amcdb.gen:check_fcurs
+    // void gen_check_fcurs(); // amcdb.gen:check_fcurs
 
     // Check that the element type of a Varlen or Opt field has no destructor.
     // Both reftypes address their element in place inside the enclosing message --
@@ -1380,32 +1548,32 @@ namespace amc { // update-hdr
     // Check also that no ctype's fields claim the end of the fixed portion twice:
     // varlen data and an optional trailing element both begin there, and only
     // varlen fields carry the end offset that lets one follow another.
-    // void gen_check_varlen(); // gstatic/amcdb.gen:check_varlen
+    // void gen_check_varlen(); // amcdb.gen:check_varlen
 
     // Generate a global list c_ssimfile_sorted
     // which indexes ssimfiles in topological order
-    // void gen_sortssimfile(); // gstatic/amcdb.gen:sortssimfile
-    // void gen_create_userfunc(); // gstatic/amcdb.gen:create_userfunc
+    // void gen_sortssimfile(); // amcdb.gen:sortssimfile
+    // void gen_create_userfunc(); // amcdb.gen:create_userfunc
 
-    // Write the derived tables (ctypelen, dispsig, tracefld, tracerec,
-    // userfunc) back to the output dataset through an acr subprocess, so
+    // Write the derived tables (ctypelen, cppsym, dispsig, tracefld, tracerec)
+    // back to the output dataset through an acr subprocess, so
     // they match the code generated by this run.
-    // void gen_table_write(); // gstatic/amcdb.gen:table_write
-    // void gen_ssimdb(); // gstatic/amcdb.gen:ssimdb
+    // void gen_table_write(); // amcdb.gen:table_write
+    // void gen_ssimdb(); // amcdb.gen:ssimdb
 
     // -------------------------------------------------------------------
     // cpp/amc/global.cpp -- Global (FDb)
     //
     //     (user-implemented function, prototype is in amc-generated header)
-    // void tclass_Global(); // gstatic/amcdb.tclass:Global
-    // void tfunc_Global_Init(); // gstatic/amcdb.tfunc:Global.Init
+    // void tclass_Global(); // amcdb.tclass:Global
+    // void tfunc_Global_Init(); // amcdb.tfunc:Global.Init
     int c_parentns_FindIndex(amc::FNs& ns, amc::FNs *val);
     //     (user-implemented function, prototype is in amc-generated header)
-    // void tfunc_Global_LoadTuplesMaybe(); // gstatic/amcdb.tfunc:Global.LoadTuplesMaybe
-    // void tfunc_Global_LoadTuplesFile(); // gstatic/amcdb.tfunc:Global.LoadTuplesFile
-    // void tfunc_Global_LoadTuplesFd(); // gstatic/amcdb.tfunc:Global.LoadTuplesFd
-    // void tfunc_Global_SaveTuples(); // gstatic/amcdb.tfunc:Global.SaveTuples
-    // void tfunc_Global_InsertStrptrMaybe(); // gstatic/amcdb.tfunc:Global.InsertStrptrMaybe
+    // void tfunc_Global_LoadTuplesMaybe(); // amcdb.tfunc:Global.LoadTuplesMaybe
+    // void tfunc_Global_LoadTuplesFile(); // amcdb.tfunc:Global.LoadTuplesFile
+    // void tfunc_Global_LoadTuplesFd(); // amcdb.tfunc:Global.LoadTuplesFd
+    // void tfunc_Global_SaveTuples(); // amcdb.tfunc:Global.SaveTuples
+    // void tfunc_Global_InsertStrptrMaybe(); // amcdb.tfunc:Global.InsertStrptrMaybe
 
     // Generate <ns>::RemoveStrptrMaybe(strptr str): mirror of InsertStrptrMaybe
     // for the delete branch of Syscmd_SsimMsg.  Switches on the type-tag, parses
@@ -1413,15 +1581,24 @@ namespace amc { // update-hdr
     // <finput-name>_Delete.  Finputs without a pkey-Thash are skipped (the
     // generated case logs a verblog and returns true so unrelated tables don't
     // cause errors).
-    // void tfunc_Global_RemoveStrptrMaybe(); // gstatic/amcdb.tfunc:Global.RemoveStrptrMaybe
-    // void tfunc_Global_InitReflection(); // gstatic/amcdb.tfunc:Global.InitReflection
-    // void tfunc_Global_LoadSsimfileMaybe(); // gstatic/amcdb.tfunc:Global.LoadSsimfileMaybe
-    // void tfunc_Global_main(); // gstatic/amcdb.tfunc:Global.main
-    // void tfunc_Global_WinMain(); // gstatic/amcdb.tfunc:Global.WinMain
-    // void tfunc_Global_MainLoop(); // gstatic/amcdb.tfunc:Global.MainLoop
-    // void tfunc_Global_Steps(); // gstatic/amcdb.tfunc:Global.Steps
-    // void tfunc_Global_Step(); // gstatic/amcdb.tfunc:Global.Step
-    // void tfunc_Global_Main(); // gstatic/amcdb.tfunc:Global.Main
+    // void tfunc_Global_RemoveStrptrMaybe(); // amcdb.tfunc:Global.RemoveStrptrMaybe
+    // void tfunc_Global_InitReflection(); // amcdb.tfunc:Global.InitReflection
+    // void tfunc_Global_LoadSsimfileMaybe(); // amcdb.tfunc:Global.LoadSsimfileMaybe
+    // void tfunc_Global_main(); // amcdb.tfunc:Global.main
+    // void tfunc_Global_WinMain(); // amcdb.tfunc:Global.WinMain
+    // void tfunc_Global_MainLoop(); // amcdb.tfunc:Global.MainLoop
+
+    // Generate the Steps function of an executable NS: one call per direct step of
+    // every namespace in its closure.  Steps run by band (amcdb.stepband: input,
+    // work, output, idle, yield), and within a band in dependency order, the
+    // executable's own first.  A library contributes its steps here and emits no step function of
+    // its own, which is what lets a namespace override one of them.  An alias step
+    // on a list whose own namespace steps it takes that step's place, in that
+    // slot, and the library's step function is not called; the overriding step may
+    // call it.  An alias step on a list with no step of its own is an ordinary
+    // step of the namespace that declares it.
+    // void tfunc_Global_Steps(); // amcdb.tfunc:Global.Steps
+    // void tfunc_Global_Main(); // amcdb.tfunc:Global.Main
 
     // Return expression
     // $cpptype &NAME = $ns::$_db.$fieldname
@@ -1444,10 +1621,17 @@ namespace amc { // update-hdr
     // Emit $Name_ReadArgv only for ctypes that declare a readable strfmt:Argv
     // cfmt (command lines), the same gate tfunc_Ctype_NArgs uses.
     //     (user-implemented function, prototype is in amc-generated header)
-    // void tfunc_Ctype_ReadArgv(); // gstatic/amcdb.tfunc:Ctype.ReadArgv
+    // void tfunc_Ctype_ReadArgv(); // amcdb.tfunc:Ctype.ReadArgv
 
-    // Namespace ReadArgv function to read command line
-    // void tfunc_Global_ReadArgv(); // gstatic/amcdb.tfunc:Global.ReadArgv
+    // Emit a by-name lookup over the namespace's commands: how many words the
+    // option FIELD of the command named CMD takes.
+    //
+    // Each command has a $Name_NArgs, and nothing maps a name to one, so a caller
+    // holding only a typed line cannot ask.  Written by hand the map would fall
+    // behind the schema silently; emitted from the ctype list the functions come
+    // from, it cannot.
+    // void tfunc_Ns_CmdNArgs(); // amcdb.tfunc:Ns.CmdNArgs
+    // void tfunc_Global_ReadArgv(); // amcdb.tfunc:Global.ReadArgv
 
     // -------------------------------------------------------------------
     // cpp/amc/gsymbol.cpp -- Generate strings from tables
@@ -1455,7 +1639,7 @@ namespace amc { // update-hdr
 
     // Generate regular c++ symbols from tables
     //     (user-implemented function, prototype is in amc-generated header)
-    // void gen_ns_gsymbol(); // gstatic/amcdb.gen:ns_gsymbol
+    // void gen_ns_gsymbol(); // amcdb.gen:ns_gsymbol
 
     // -------------------------------------------------------------------
     // cpp/amc/hook.cpp -- Hook (function pointer)
@@ -1471,14 +1655,14 @@ namespace amc { // update-hdr
     // that of cursors.
     void NewFieldHook(amc::FHook &hook);
     //     (user-implemented function, prototype is in amc-generated header)
-    // void gen_newfield_hook(); // gstatic/amcdb.gen:newfield_hook
-    // void tclass_Hook(); // gstatic/amcdb.tclass:Hook
-    // void tfunc_Hook_Set0(); // gstatic/amcdb.tfunc:Hook.Set0
-    // void tfunc_Hook_Set1(); // gstatic/amcdb.tfunc:Hook.Set1
-    // void tfunc_Hook_Set2(); // gstatic/amcdb.tfunc:Hook.Set2
+    // void gen_newfield_hook(); // amcdb.gen:newfield_hook
+    // void tclass_Hook(); // amcdb.tclass:Hook
+    // void tfunc_Hook_Set0(); // amcdb.tfunc:Hook.Set0
+    // void tfunc_Hook_Set1(); // amcdb.tfunc:Hook.Set1
+    // void tfunc_Hook_Set2(); // amcdb.tfunc:Hook.Set2
 
     // Implement _Call function for the hook
-    // void tfunc_Hook_Call(); // gstatic/amcdb.tfunc:Hook.Call
+    // void tfunc_Hook_Call(); // amcdb.tfunc:Hook.Call
     bool InlaryQ(amc::FHook& hook);
 
     // -------------------------------------------------------------------
@@ -1521,54 +1705,54 @@ namespace amc { // update-hdr
     // print compatibility, the char/u8 min floor, min against max, and
     // remove-function suppression.
     //     (user-implemented function, prototype is in amc-generated header)
-    // void tclass_Inlary(); // gstatic/amcdb.tclass:Inlary
+    // void tclass_Inlary(); // amcdb.tclass:Inlary
 
     // Generate $name_AllocMem for a variable inlary: hand out the next raw slot, or NULL when the array is full.
-    // void tfunc_Inlary_AllocMem(); // gstatic/amcdb.tfunc:Inlary.AllocMem
+    // void tfunc_Inlary_AllocMem(); // amcdb.tfunc:Inlary.AllocMem
 
     // Generate $name_EmptyQ: true when a variable inlary holds no elements.
-    // void tfunc_Inlary_EmptyQ(); // gstatic/amcdb.tfunc:Inlary.EmptyQ
+    // void tfunc_Inlary_EmptyQ(); // amcdb.tfunc:Inlary.EmptyQ
 
     // Generate $name_Fill for a fixed inlary: assign the given value to every slot.
-    // void tfunc_Inlary_Fill(); // gstatic/amcdb.tfunc:Inlary.Fill
-    // void tfunc_Inlary_Find(); // gstatic/amcdb.tfunc:Inlary.Find
+    // void tfunc_Inlary_Fill(); // amcdb.tfunc:Inlary.Fill
+    // void tfunc_Inlary_Find(); // amcdb.tfunc:Inlary.Find
 
     // Generate $name_Getary: view the inlary's live elements as an aryptr.
-    // void tfunc_Inlary_Getary(); // gstatic/amcdb.tfunc:Inlary.Getary
+    // void tfunc_Inlary_Getary(); // amcdb.tfunc:Inlary.Getary
 
     // Generate the field's Init fragment: a variable inlary starts at zero
     // elements and preallocates its min floor; a fixed inlary with a field
     // default fills every slot with it
-    // void tfunc_Inlary_Init(); // gstatic/amcdb.tfunc:Inlary.Init
-    // void tfunc_Inlary_Eq(); // gstatic/amcdb.tfunc:Inlary.Eq
-    // void tfunc_Inlary_Cmp(); // gstatic/amcdb.tfunc:Inlary.Cmp
+    // void tfunc_Inlary_Init(); // amcdb.tfunc:Inlary.Init
+    // void tfunc_Inlary_Eq(); // amcdb.tfunc:Inlary.Eq
+    // void tfunc_Inlary_Cmp(); // amcdb.tfunc:Inlary.Cmp
 
     // Generate $name_Max: return the inlary's capacity, its maximum element count.
-    // void tfunc_Inlary_Max(); // gstatic/amcdb.tfunc:Inlary.Max
-    // void tfunc_Inlary_N(); // gstatic/amcdb.tfunc:Inlary.N
+    // void tfunc_Inlary_Max(); // amcdb.tfunc:Inlary.Max
+    // void tfunc_Inlary_N(); // amcdb.tfunc:Inlary.N
 
     // Generate $name_RemoveAll for a variable inlary: destroy every element and reset the count to zero.
-    // void tfunc_Inlary_RemoveAll(); // gstatic/amcdb.tfunc:Inlary.RemoveAll
+    // void tfunc_Inlary_RemoveAll(); // amcdb.tfunc:Inlary.RemoveAll
 
     // Generate $name_RemoveLast for a variable inlary: destroy the last element and shrink the count by one.
-    // void tfunc_Inlary_RemoveLast(); // gstatic/amcdb.tfunc:Inlary.RemoveLast
-    // void tfunc_Inlary_RowidFind(); // gstatic/amcdb.tfunc:Inlary.RowidFind
+    // void tfunc_Inlary_RemoveLast(); // amcdb.tfunc:Inlary.RemoveLast
+    // void tfunc_Inlary_RowidFind(); // amcdb.tfunc:Inlary.RowidFind
 
     // Generate $name_Setary, replacing the array's contents with a copy of the
     // source: plain data is copied with memcpy; otherwise a variable inlary
     // destroys the old elements and rebuilds, and a fixed one assigns in
     // place. A variable inlary with min>0 is topped back up to its floor
-    // void tfunc_Inlary_Setary(); // gstatic/amcdb.tfunc:Inlary.Setary
+    // void tfunc_Inlary_Setary(); // amcdb.tfunc:Inlary.Setary
 
     // Generate the variable inlary's Uninit fragment: destroy its elements when the parent is torn down, skipped in global scope.
-    // void tfunc_Inlary_Uninit(); // gstatic/amcdb.tfunc:Inlary.Uninit
-    // void tfunc_Inlary_qFind(); // gstatic/amcdb.tfunc:Inlary.qFind
+    // void tfunc_Inlary_Uninit(); // amcdb.tfunc:Inlary.Uninit
+    // void tfunc_Inlary_qFind(); // amcdb.tfunc:Inlary.qFind
 
     // Generate $name_rowid_Get: recover an element's rowid from its address within the inlary.
-    // void tfunc_Inlary_rowid_Get(); // gstatic/amcdb.tfunc:Inlary.rowid_Get
+    // void tfunc_Inlary_rowid_Get(); // amcdb.tfunc:Inlary.rowid_Get
 
     // Generate the inlary's cursor: a cursor type and the functions that walk the array's elements in order.
-    // void tfunc_Inlary_curs(); // gstatic/amcdb.tfunc:Inlary.curs
+    // void tfunc_Inlary_curs(); // amcdb.tfunc:Inlary.curs
 
     // Read/Accumulate inline array from string.
     // For fixed arrays:
@@ -1595,7 +1779,7 @@ namespace amc { // update-hdr
     // if the element doesn't fit, function returns false.
     // (for fixed array, element #0 is read)
     //
-    // void tfunc_Inlary_ReadStrptrMaybe(); // gstatic/amcdb.tfunc:Inlary.ReadStrptrMaybe
+    // void tfunc_Inlary_ReadStrptrMaybe(); // amcdb.tfunc:Inlary.ReadStrptrMaybe
 
     // Print array to string
     // char/u8 are printed as-is
@@ -1604,7 +1788,7 @@ namespace amc { // update-hdr
     // if none of the above conditions are present, the print function is not generated.
     // This function is reused by Tary and Varlen, so it cannot really assume
     // we're dealing with an Inlary
-    // void tfunc_Inlary_Print(); // gstatic/amcdb.tfunc:Inlary.Print
+    // void tfunc_Inlary_Print(); // amcdb.tfunc:Inlary.Print
 
     // -------------------------------------------------------------------
     // cpp/amc/io.cpp -- I/O functions
@@ -1614,13 +1798,13 @@ namespace amc { // update-hdr
     // the pool.  The user can take over via ffunc -- InputMaybe (whole function)
     // or Input (amc wraps it) -- see tclass-tfunc.md#ffunc.
     //     (user-implemented function, prototype is in amc-generated header)
-    // void tfunc_Io_InputMaybe(); // gstatic/amcdb.tfunc:Io.InputMaybe
+    // void tfunc_Io_InputMaybe(); // amcdb.tfunc:Io.InputMaybe
 
     // Emit the extern prototype for a user-supplied <pool>_Input when the field
     // declares ffunc:<field>.Input extrn:Y; InputMaybe calls it.
-    // void tfunc_Io_Input(); // gstatic/amcdb.tfunc:Io.Input
-    // void tfunc_Io_SaveSsimfile(); // gstatic/amcdb.tfunc:Io.SaveSsimfile
-    // void tclass_Io(); // gstatic/amcdb.tclass:Io
+    // void tfunc_Io_Input(); // amcdb.tfunc:Io.Input
+    // void tfunc_Io_SaveSsimfile(); // amcdb.tfunc:Io.SaveSsimfile
+    // void tclass_Io(); // amcdb.tclass:Io
 
     // Generate a name for the user-defined function based on the specified hook
     // I.e. amc::tclass_Io (hook name 'step' -- legacy -- all hooks before this feature
@@ -1629,19 +1813,65 @@ namespace amc { // update-hdr
     tempstr StaticHookName(amc::FField &field, strptr suffix);
     tempstr StaticHookPkey(amc::FField &field, strptr suffix);
     //     (user-implemented function, prototype is in amc-generated header)
-    // void tfunc_Io_LoadStatic(); // gstatic/amcdb.tfunc:Io.LoadStatic
+    // void tfunc_Io_LoadStatic(); // amcdb.tfunc:Io.LoadStatic
 
     // -------------------------------------------------------------------
-    // cpp/amc/js.cpp
+    // cpp/amc/kafka.cpp
+    //
+
+    // Generate the kafka wire codec for a ctype with a ckafka record:
+    // DIR 0 emits the encoder (ctype to byte buffer), any other value the
+    // decoder (byte buffer to ctype). Fields outside the message's valid
+    // version range are skipped at runtime by generated version checks.
+    void KafkaCodec(int dir);
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void tfunc_Ctype_KafkaEncode(); // amcdb.tfunc:Ctype.KafkaEncode
+    // void tfunc_Ctype_KafkaDecode(); // amcdb.tfunc:Ctype.KafkaDecode
+
+    // -------------------------------------------------------------------
+    // cpp/amc/lang_go.cpp
+    //
+
+    // Write go/gen/<ns>/<ns>_gen.go for the current namespace: a Go struct and codec
+    // per ctype of the projection, the constants those ctypes carry, and the
+    // signature of each dispatch of the namespace a displang row projects into Go.
+    // A namespace with nothing to project writes nothing.
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void gen_lang_go(); // amcdb.gen:lang_go
+
+    // -------------------------------------------------------------------
+    // cpp/amc/lang_py.cpp
+    //
+
+    // Write py/gen/<ns>_gen.py for the current namespace: a class and codec per
+    // ctype of the projection, the constants those ctypes carry, and the signature
+    // of each dispatch of the namespace a displang row projects into Python.  A
+    // namespace with nothing to project writes nothing.
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void gen_lang_py(); // amcdb.gen:lang_py
+
+    // -------------------------------------------------------------------
+    // cpp/amc/lang_rs.cpp
+    //
+
+    // Write rs/gen/src/<ns>_gen.rs for the current namespace: a struct, its
+    // constants, its Default, decode and Encode per ctype of the projection, and the
+    // signature of each dispatch of the namespace a displang row projects into Rust.
+    // The module of the first namespace holding such a dispatch is the crate root,
+    // and a second namespace holding one is refused, since a crate has one root.  A
+    // namespace with nothing to project writes nothing.
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void gen_lang_rs(); // amcdb.gen:lang_rs
+
+    // -------------------------------------------------------------------
+    // cpp/amc/lang_ts.cpp
     //
 
     // add separator if lhs is not empty
     void MaybeSep(cstring &lhs, strptr sep = ", ");
 
-    // return TRUE if javscript output is requested for this ctype
-    bool JsQ(amc::FCtype &ctype);
-
-    // return TRUE if typescript output is requested for this ctype
+    // Return TRUE when CTYPE is projected into TypeScript with a module entry of its
+    // own: a class and codec when it is packed, an interface otherwise.
     bool TsQ(amc::FCtype &ctype);
 
     // Map FIELD to a JavaScript built-in type.
@@ -1667,10 +1897,8 @@ namespace amc { // update-hdr
     void JsGenBitfld();
     void TsGenEnum();
     void JsGenField();
-    //     (user-implemented function, prototype is in amc-generated header)
-    // void gen_nsjs_field(); // gstatic/amcdb.gen:nsjs_field
 
-    // Refuse a jstype'd packed ctype carrying a field with no TypeScript wire
+    // Refuse a packed TypeScript ctype carrying a field with no TypeScript wire
     // form, naming every such field rather than stopping at the first.
     //
     // Consider a message whose second field is an inline array of char followed
@@ -1692,8 +1920,9 @@ namespace amc { // update-hdr
     // field's bytes are the frame's tail, and the decoder finds where that tail
     // ends by reading the frame's length word out of the ctype's length field.  A
     // ctype that declares a tail and no length field leaves the decoder with no
-    // length to read, so it is refused as amc.jstype_lenfld.
-    // void gen_check_jstype(); // gstatic/amcdb.gen:check_jstype
+    // length to read, so it is refused as amc.ts_lenfld.
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void gen_check_ts(); // amcdb.gen:check_ts
 
     // Generate $ctype_Encode: write PARENT's wire form into VIEW at OFFSET --
     // the varlen and Opt tails first (establishing the frame length), then the
@@ -1722,8 +1951,6 @@ namespace amc { // update-hdr
     // With JSON, most fields remain as strings
     void TsGenJsonInterface();
     void JsGenCtype();
-    //     (user-implemented function, prototype is in amc-generated header)
-    // void gen_nsjs_ctype(); // gstatic/amcdb.gen:nsjs_ctype
     void TsGenMsgtype();
 
     // Generate $ns_MsgPrint: decode a packed message by its msgtype and render it
@@ -1731,63 +1958,51 @@ namespace amc { // update-hdr
     void TsGenMsgPrint();
     void JsGenNs();
 
-    // nsjs_ns gen phase: emit each nsjs namespace's file-level prologue -- the
-    // text codec globals, the msgtype enum, and the message print dispatch.
+    // Write the TypeScript module of the current namespace when it holds a projected
+    // ctype: the prologue, then a class for each packed ctype with its codec and
+    // interface, an interface for each unpacked one, and the namespace's schemas
+    // and dispatch signatures.
     //     (user-implemented function, prototype is in amc-generated header)
-    // void gen_nsjs_ns(); // gstatic/amcdb.gen:nsjs_ns
-    // void gen_nsjs_module(); // gstatic/amcdb.gen:nsjs_module
-
-    // -------------------------------------------------------------------
-    // cpp/amc/kafka.cpp
-    //
-
-    // Generate the kafka wire codec for a ctype with a ckafka record:
-    // DIR 0 emits the encoder (ctype to byte buffer), any other value the
-    // decoder (byte buffer to ctype). Fields outside the message's valid
-    // version range are skipped at runtime by generated version checks.
-    void KafkaCodec(int dir);
-    //     (user-implemented function, prototype is in amc-generated header)
-    // void tfunc_Ctype_KafkaEncode(); // gstatic/amcdb.tfunc:Ctype.KafkaEncode
-    // void tfunc_Ctype_KafkaDecode(); // gstatic/amcdb.tfunc:Ctype.KafkaDecode
+    // void gen_lang_ts(); // amcdb.gen:lang_ts
 
     // -------------------------------------------------------------------
     // cpp/amc/lary.cpp -- Level array with permanent pointers
     //
     //     (user-implemented function, prototype is in amc-generated header)
-    // void tclass_Lary(); // gstatic/amcdb.tclass:Lary
-    // void tfunc_Lary_AllocMem(); // gstatic/amcdb.tfunc:Lary.AllocMem
-    // void tfunc_Lary_EmptyQ(); // gstatic/amcdb.tfunc:Lary.EmptyQ
-    // void tfunc_Lary_Find(); // gstatic/amcdb.tfunc:Lary.Find
-    // void tfunc_Lary_Init(); // gstatic/amcdb.tfunc:Lary.Init
-    // void tfunc_Lary_Last(); // gstatic/amcdb.tfunc:Lary.Last
-    // void tfunc_Lary_N(); // gstatic/amcdb.tfunc:Lary.N
-    // void tfunc_Lary_RemoveAll(); // gstatic/amcdb.tfunc:Lary.RemoveAll
-    // void tfunc_Lary_RemoveLast(); // gstatic/amcdb.tfunc:Lary.RemoveLast
-    // void tfunc_Lary_RowidFind(); // gstatic/amcdb.tfunc:Lary.RowidFind
-    // void tfunc_Lary_Uninit(); // gstatic/amcdb.tfunc:Lary.Uninit
-    // void tfunc_Lary_qFind(); // gstatic/amcdb.tfunc:Lary.qFind
-    // void tfunc_Lary_curs(); // gstatic/amcdb.tfunc:Lary.curs
+    // void tclass_Lary(); // amcdb.tclass:Lary
+    // void tfunc_Lary_AllocMem(); // amcdb.tfunc:Lary.AllocMem
+    // void tfunc_Lary_EmptyQ(); // amcdb.tfunc:Lary.EmptyQ
+    // void tfunc_Lary_Find(); // amcdb.tfunc:Lary.Find
+    // void tfunc_Lary_Init(); // amcdb.tfunc:Lary.Init
+    // void tfunc_Lary_Last(); // amcdb.tfunc:Lary.Last
+    // void tfunc_Lary_N(); // amcdb.tfunc:Lary.N
+    // void tfunc_Lary_RemoveAll(); // amcdb.tfunc:Lary.RemoveAll
+    // void tfunc_Lary_RemoveLast(); // amcdb.tfunc:Lary.RemoveLast
+    // void tfunc_Lary_RowidFind(); // amcdb.tfunc:Lary.RowidFind
+    // void tfunc_Lary_Uninit(); // amcdb.tfunc:Lary.Uninit
+    // void tfunc_Lary_qFind(); // amcdb.tfunc:Lary.qFind
+    // void tfunc_Lary_curs(); // amcdb.tfunc:Lary.curs
 
     // -------------------------------------------------------------------
     // cpp/amc/llist.cpp -- Linked lists
     //
     //     (user-implemented function, prototype is in amc-generated header)
-    // void tclass_Llist(); // gstatic/amcdb.tclass:Llist
-    // void tfunc_Llist_Cascdel(); // gstatic/amcdb.tfunc:Llist.Cascdel
-    // void tfunc_Llist_DestructiveFirst(); // gstatic/amcdb.tfunc:Llist.DestructiveFirst
-    // void tfunc_Llist_EmptyQ(); // gstatic/amcdb.tfunc:Llist.EmptyQ
-    // void tfunc_Llist_First(); // gstatic/amcdb.tfunc:Llist.First
-    // void tfunc_Llist_InLlistQ(); // gstatic/amcdb.tfunc:Llist.InLlistQ
-    // void tfunc_Llist_Init(); // gstatic/amcdb.tfunc:Llist.Init
-    // void tfunc_Llist_Last(); // gstatic/amcdb.tfunc:Llist.Last
-    // void tfunc_Llist_N(); // gstatic/amcdb.tfunc:Llist.N
-    // void tfunc_Llist_Next(); // gstatic/amcdb.tfunc:Llist.Next
-    // void tfunc_Llist_Prev(); // gstatic/amcdb.tfunc:Llist.Prev
-    // void tfunc_Llist_Remove(); // gstatic/amcdb.tfunc:Llist.Remove
-    // void tfunc_Llist_RemoveAll(); // gstatic/amcdb.tfunc:Llist.RemoveAll
-    // void tfunc_Llist_RemoveFirst(); // gstatic/amcdb.tfunc:Llist.RemoveFirst
-    // void tfunc_Llist_RotateFirst(); // gstatic/amcdb.tfunc:Llist.RotateFirst
-    // void tfunc_Llist_Insert(); // gstatic/amcdb.tfunc:Llist.Insert
+    // void tclass_Llist(); // amcdb.tclass:Llist
+    // void tfunc_Llist_Cascdel(); // amcdb.tfunc:Llist.Cascdel
+    // void tfunc_Llist_DestructiveFirst(); // amcdb.tfunc:Llist.DestructiveFirst
+    // void tfunc_Llist_EmptyQ(); // amcdb.tfunc:Llist.EmptyQ
+    // void tfunc_Llist_First(); // amcdb.tfunc:Llist.First
+    // void tfunc_Llist_InLlistQ(); // amcdb.tfunc:Llist.InLlistQ
+    // void tfunc_Llist_Init(); // amcdb.tfunc:Llist.Init
+    // void tfunc_Llist_Last(); // amcdb.tfunc:Llist.Last
+    // void tfunc_Llist_N(); // amcdb.tfunc:Llist.N
+    // void tfunc_Llist_Next(); // amcdb.tfunc:Llist.Next
+    // void tfunc_Llist_Prev(); // amcdb.tfunc:Llist.Prev
+    // void tfunc_Llist_Remove(); // amcdb.tfunc:Llist.Remove
+    // void tfunc_Llist_RemoveAll(); // amcdb.tfunc:Llist.RemoveAll
+    // void tfunc_Llist_RemoveFirst(); // amcdb.tfunc:Llist.RemoveFirst
+    // void tfunc_Llist_RotateFirst(); // amcdb.tfunc:Llist.RotateFirst
+    // void tfunc_Llist_Insert(); // amcdb.tfunc:Llist.Insert
 
     // Insert ROW at an explicit position: before BEFORE, or at the tail when
     // BEFORE is NULL -- the position-addressed primitive of a doubly-linked list,
@@ -1797,28 +2012,28 @@ namespace amc { // update-hdr
     // second list.  Emitted only for non-circular doubly-linked listtypes with a
     // tail pointer: prev links make the splice O(1), and the tail pointer makes
     // the BEFORE = NULL case O(1).
-    // void tfunc_Llist_InsertBefore(); // gstatic/amcdb.tfunc:Llist.InsertBefore
-    // void tfunc_Llist_qLast(); // gstatic/amcdb.tfunc:Llist.qLast
-    // void tclass_ZSListMT(); // gstatic/amcdb.tclass:ZSListMT
-    // void tfunc_ZSListMT_DestructiveFirst(); // gstatic/amcdb.tfunc:ZSListMT.DestructiveFirst
-    // void tfunc_ZSListMT_RemoveFirst(); // gstatic/amcdb.tfunc:ZSListMT.RemoveFirst
-    // void tfunc_ZSListMT_InLlistQ(); // gstatic/amcdb.tfunc:ZSListMT.InLlistQ
-    // void tfunc_ZSListMT_Insert(); // gstatic/amcdb.tfunc:ZSListMT.Insert
-    // void tfunc_ZSListMT_Remove(); // gstatic/amcdb.tfunc:ZSListMT.Remove
-    // void tfunc_ZSListMT_Init(); // gstatic/amcdb.tfunc:ZSListMT.Init
+    // void tfunc_Llist_InsertBefore(); // amcdb.tfunc:Llist.InsertBefore
+    // void tfunc_Llist_qLast(); // amcdb.tfunc:Llist.qLast
+    // void tclass_ZSListMT(); // amcdb.tclass:ZSListMT
+    // void tfunc_ZSListMT_DestructiveFirst(); // amcdb.tfunc:ZSListMT.DestructiveFirst
+    // void tfunc_ZSListMT_RemoveFirst(); // amcdb.tfunc:ZSListMT.RemoveFirst
+    // void tfunc_ZSListMT_InLlistQ(); // amcdb.tfunc:ZSListMT.InLlistQ
+    // void tfunc_ZSListMT_Insert(); // amcdb.tfunc:ZSListMT.Insert
+    // void tfunc_ZSListMT_Remove(); // amcdb.tfunc:ZSListMT.Remove
+    // void tfunc_ZSListMT_Init(); // amcdb.tfunc:ZSListMT.Init
 
     // Generate cursor for llist
     void Llist_curs(bool needdel);
     //     (user-implemented function, prototype is in amc-generated header)
-    // void tfunc_Llist_curs(); // gstatic/amcdb.tfunc:Llist.curs
-    // void tfunc_Llist_delcurs(); // gstatic/amcdb.tfunc:Llist.delcurs
+    // void tfunc_Llist_curs(); // amcdb.tfunc:Llist.curs
+    // void tfunc_Llist_delcurs(); // amcdb.tfunc:Llist.delcurs
 
     // -------------------------------------------------------------------
     // cpp/amc/lpool.cpp -- Variable-length free pool
     //
     //     (user-implemented function, prototype is in amc-generated header)
-    // void tclass_Lpool(); // gstatic/amcdb.tclass:Lpool
-    // void tfunc_Lpool_FreeMem(); // gstatic/amcdb.tfunc:Lpool.FreeMem
+    // void tclass_Lpool(); // amcdb.tclass:Lpool
+    // void tfunc_Lpool_FreeMem(); // amcdb.tfunc:Lpool.FreeMem
 
     // Generate the lpool's untyped allocator. Small size classes are served
     // from a per-class block (a freed record first, else the bump tip); larger
@@ -1834,15 +2049,15 @@ namespace amc { // update-hdr
     // it.  The refill is unmarked in the same breath where the base pool marks its
     // own handouts, since a block and the records carved from it may not both be
     // blocks the checker holds (see amc::MemcheckedPoolQ).
-    // void tfunc_Lpool_AllocMem(); // gstatic/amcdb.tfunc:Lpool.AllocMem
+    // void tfunc_Lpool_AllocMem(); // amcdb.tfunc:Lpool.AllocMem
 
     // Generate the lpool's pre-reservation function: allocate NBUF buffers of
     // BUFSIZE bytes through the allocator, then free them all, leaving the
     // free store stocked for later allocation.
-    // void tfunc_Lpool_ReserveBuffers(); // gstatic/amcdb.tfunc:Lpool.ReserveBuffers
-    // void tfunc_Lpool_ReallocMem(); // gstatic/amcdb.tfunc:Lpool.ReallocMem
-    // void tfunc_Lpool_Init(); // gstatic/amcdb.tfunc:Lpool.Init
-    // void tfunc_Lpool_N(); // gstatic/amcdb.tfunc:Lpool.N
+    // void tfunc_Lpool_ReserveBuffers(); // amcdb.tfunc:Lpool.ReserveBuffers
+    // void tfunc_Lpool_ReallocMem(); // amcdb.tfunc:Lpool.ReallocMem
+    // void tfunc_Lpool_Init(); // amcdb.tfunc:Lpool.Init
+    // void tfunc_Lpool_N(); // amcdb.tfunc:Lpool.N
 
     // -------------------------------------------------------------------
     // cpp/amc/main.cpp -- Main driver
@@ -2337,8 +2552,8 @@ namespace amc { // update-hdr
     void Field_AddChild(amc::FField &parent, const dmmeta::Field &field);
     bool NeedSetQ(amc::FField &field);
     //     (user-implemented function, prototype is in amc-generated header)
-    // void tclass_Cppstack(); // gstatic/amcdb.tclass:Cppstack
-    // void tclass_Pkey(); // gstatic/amcdb.tclass:Pkey
+    // void tclass_Cppstack(); // amcdb.tclass:Cppstack
+    // void tclass_Pkey(); // amcdb.tclass:Pkey
     int c_anonfld_N(amc::FCtype &ctype);
 
     // Go over `amcdb.gen` table and invoke each global generator
@@ -2348,16 +2563,16 @@ namespace amc { // update-hdr
 
     // OUTPUT        Generate files for the namespace(s)
     //     (user-implemented function, prototype is in amc-generated header)
-    // void Main(); // main:amc
+    // void Main(); // dmmeta.main:amc
 
     // -------------------------------------------------------------------
     // cpp/amc/malloc.cpp -- Malloc allocator
     //
     //     (user-implemented function, prototype is in amc-generated header)
-    // void tclass_Malloc(); // gstatic/amcdb.tclass:Malloc
-    // void tfunc_Malloc_AllocMem(); // gstatic/amcdb.tfunc:Malloc.AllocMem
-    // void tfunc_Malloc_ReallocMem(); // gstatic/amcdb.tfunc:Malloc.ReallocMem
-    // void tfunc_Malloc_FreeMem(); // gstatic/amcdb.tfunc:Malloc.FreeMem
+    // void tclass_Malloc(); // amcdb.tclass:Malloc
+    // void tfunc_Malloc_AllocMem(); // amcdb.tfunc:Malloc.AllocMem
+    // void tfunc_Malloc_ReallocMem(); // amcdb.tfunc:Malloc.ReallocMem
+    // void tfunc_Malloc_FreeMem(); // amcdb.tfunc:Malloc.FreeMem
 
     // -------------------------------------------------------------------
     // cpp/amc/msgcurs.cpp -- Message scanning cursor
@@ -2365,13 +2580,13 @@ namespace amc { // update-hdr
 
     // Generate a message-scanning cursor for each message header with length
     //     (user-implemented function, prototype is in amc-generated header)
-    // void gen_msgcurs(); // gstatic/amcdb.gen:msgcurs
+    // void gen_msgcurs(); // amcdb.gen:msgcurs
 
     // -------------------------------------------------------------------
     // cpp/amc/msgschema.cpp
     //
 
-    // Derive dmmeta.payloadhdr, dmmeta.msg and dmmeta.msgfield rows for every
+    // Derive gendb.payloadhdr, gendb.msg and gendb.msgfield rows for every
     // message ctype whose ultimate base is a header with typefld and lenfld,
     // and enforce that msgtype numbers are unique within one payload header.
     // Packing is not required: the layout walk inserts the same alignment
@@ -2381,7 +2596,7 @@ namespace amc { // update-hdr
     // naming the ctype.  Runs after compute_size (offsets need sizes) and
     // before table_write (which persists the derived rows).
     //     (user-implemented function, prototype is in amc-generated header)
-    // void gen_msgschema(); // gstatic/amcdb.gen:msgschema
+    // void gen_msgschema(); // amcdb.gen:msgschema
 
     // -------------------------------------------------------------------
     // cpp/amc/numstr.cpp -- Small strings
@@ -2393,43 +2608,43 @@ namespace amc { // update-hdr
     // apart from, a pad that reads as a digit, or a min_len wider than the
     // string, the pad budget, or the room the sign needs
     //     (user-implemented function, prototype is in amc-generated header)
-    // void tclass_Numstr(); // gstatic/amcdb.tclass:Numstr
+    // void tclass_Numstr(); // amcdb.tclass:Numstr
 
     // Generate $name_Getnum: parse the stored digit string back to the numeric
     // type, clearing and_ok on an invalid digit or a value outside the numtype
     // range; the empty string reads as zero
-    // void tfunc_Numstr_Getnum(); // gstatic/amcdb.tfunc:Numstr.Getnum
+    // void tfunc_Numstr_Getnum(); // amcdb.tfunc:Numstr.Getnum
 
     // Generate $name_GetnumDflt: read the stored value through Getnum,
     // returning DFLT when the string does not parse
-    // void tfunc_Numstr_GetnumDflt(); // gstatic/amcdb.tfunc:Numstr.GetnumDflt
+    // void tfunc_Numstr_GetnumDflt(); // amcdb.tfunc:Numstr.GetnumDflt
 
     // Generate $name_Geti64: read the stored value as an i64, failing a value
     // above i64max rather than wrapping it negative through the cast
-    // void tfunc_Numstr_Geti64(); // gstatic/amcdb.tfunc:Numstr.Geti64
+    // void tfunc_Numstr_Geti64(); // amcdb.tfunc:Numstr.Geti64
 
     // Generate $name_SetnumMaybe: format the number into the string through an
     // auxiliary buffer, refusing -- with the stored string left unchanged -- a
     // value outside the numtype range or digits that do not fit the string
-    // void tfunc_Numstr_SetnumMaybe(); // gstatic/amcdb.tfunc:Numstr.SetnumMaybe
+    // void tfunc_Numstr_SetnumMaybe(); // amcdb.tfunc:Numstr.SetnumMaybe
 
     // Generate $ns::ForAllStrings: each numstr field appends a block filling
     // a descriptor -- accessor pointers and the shape facts -- and calling
     // the test function on it
-    // void tfunc_Numstr_ForAllStrings(); // gstatic/amcdb.tfunc:Numstr.ForAllStrings
-    // void gen_parsenum(); // gstatic/amcdb.gen:parsenum
+    // void tfunc_Numstr_ForAllStrings(); // amcdb.tfunc:Numstr.ForAllStrings
+    // void gen_parsenum(); // amcdb.gen:parsenum
 
     // -------------------------------------------------------------------
     // cpp/amc/opt.cpp -- Opt reftype
     //
     //     (user-implemented function, prototype is in amc-generated header)
-    // void tclass_Opt(); // gstatic/amcdb.tclass:Opt
-    // void tfunc_Opt_Get(); // gstatic/amcdb.tfunc:Opt.Get
-    // void tfunc_Opt_Getary(); // gstatic/amcdb.tfunc:Opt.Getary
+    // void tclass_Opt(); // amcdb.tclass:Opt
+    // void tfunc_Opt_Get(); // amcdb.tfunc:Opt.Get
+    // void tfunc_Opt_Getary(); // amcdb.tfunc:Opt.Getary
 
     // Generate the print function for an Opt field: append the optional
     // trailing element to OUT when present.
-    // void tfunc_Opt_Print(); // gstatic/amcdb.tfunc:Opt.Print
+    // void tfunc_Opt_Print(); // amcdb.tfunc:Opt.Print
 
     // Generate the read function for an Opt field: parse the optional trailing
     // element from a string into the active varlen buffer and mark the field
@@ -2437,16 +2652,20 @@ namespace amc { // update-hdr
     // total lands off the scale of its lenfld has no representable length word,
     // and the read reports failure; the buffer holds a truncated length word,
     // and the caller discards it on the false return.
-    // void tfunc_Opt_ReadStrptrMaybe(); // gstatic/amcdb.tfunc:Opt.ReadStrptrMaybe
+    // void tfunc_Opt_ReadStrptrMaybe(); // amcdb.tfunc:Opt.ReadStrptrMaybe
 
     // -------------------------------------------------------------------
     // cpp/amc/outfile.cpp -- Output functions
     //
 
+    // Number of newline characters in TEXT: the number of lines in a text that ends
+    // with one.
+    int CountLines(strptr text);
+
     // Write output file to disk
     // and deallocate memory associated with it
     //     (user-implemented function, prototype is in amc-generated header)
-    // void gen_ns_write(); // gstatic/amcdb.gen:ns_write
+    // void gen_ns_write(); // amcdb.gen:ns_write
 
     // Create outfile record for specified filename
     // T here is one outfile per generated output file
@@ -2494,7 +2713,7 @@ namespace amc { // update-hdr
     // spelling when the row goes through the database, but amc reads a schema
     // out of -in_dir too, so the same value is checked here.
     //     (user-implemented function, prototype is in amc-generated header)
-    // void gen_check_pbuf(); // gstatic/amcdb.gen:check_pbuf
+    // void gen_check_pbuf(); // amcdb.gen:check_pbuf
 
     // Check that the variants of every oneof share one presence mask.
     // A oneof is a union: at most one variant may be set, and the encoder must
@@ -2514,15 +2733,15 @@ namespace amc { // update-hdr
     // because a mask's member set is derived there: a pmaskfld with no explicit
     // member rows takes every field of the ctype, and the membership this rule
     // reads does not exist until that has happened.
-    // void gen_check_pbufcase(); // gstatic/amcdb.gen:check_pbufcase
+    // void gen_check_pbufcase(); // amcdb.gen:check_pbufcase
 
     // Generate the protobuf codec of a cpbuf ctype: DIR 0 emits the encoder
     // (write each fpbuf field to a byte array), DIR 1 the decoder (a
     // tag-driven switch reading fields from a memptr)
     void PbufCodec(int dir);
     //     (user-implemented function, prototype is in amc-generated header)
-    // void tfunc_Ctype_PbufEncode(); // gstatic/amcdb.tfunc:Ctype.PbufEncode
-    // void tfunc_Ctype_PbufDecode(); // gstatic/amcdb.tfunc:Ctype.PbufDecode
+    // void tfunc_Ctype_PbufEncode(); // amcdb.tfunc:Ctype.PbufEncode
+    // void tfunc_Ctype_PbufDecode(); // amcdb.tfunc:Ctype.PbufDecode
 
     // -------------------------------------------------------------------
     // cpp/amc/pmask.cpp -- Presence masks
@@ -2533,18 +2752,18 @@ namespace amc { // update-hdr
     // explicit member list was provided), validate the members, and assign
     // each member its bit
     //     (user-implemented function, prototype is in amc-generated header)
-    // void gen_pmask(); // gstatic/amcdb.gen:pmask
+    // void gen_pmask(); // amcdb.gen:pmask
 
     // Check that every pmask has no more member fields than its pmask field has bits.
     // Runs after gen_compute_size: a pmask field of non-builtin type has no csize,
     // so its byte size is only known once struct sizes are computed.
     // A pmask field whose size is unknown even then (nbit 0) is reported by
     // tclass_Bitset, not here.
-    // void gen_check_pmask(); // gstatic/amcdb.gen:check_pmask
-    // void tclass_Pmask(); // gstatic/amcdb.tclass:Pmask
+    // void gen_check_pmask(); // amcdb.gen:check_pmask
+    // void tclass_Pmask(); // amcdb.tclass:Pmask
 
     // Create multiple functions, one for each pmask of which this field is a member
-    // void tfunc_Pmask_PresentQ(); // gstatic/amcdb.tfunc:Pmask.PresentQ
+    // void tfunc_Pmask_PresentQ(); // amcdb.tfunc:Pmask.PresentQ
 
     // Emit C++ that sets FIELD's bit on the pmaskfld carrying MEMBER and,
     // when FIELD is a oneof variant, clears the bits of its sibling
@@ -2566,10 +2785,10 @@ namespace amc { // update-hdr
 
     // Create multiple functions, one for each pmask of which this field is a member
     //     (user-implemented function, prototype is in amc-generated header)
-    // void tfunc_Pmask_SetPresent(); // gstatic/amcdb.tfunc:Pmask.SetPresent
+    // void tfunc_Pmask_SetPresent(); // amcdb.tfunc:Pmask.SetPresent
 
     // Create multiple functions, one for each pmask of which this field is a member
-    // void tfunc_Pmask_GetBit(); // gstatic/amcdb.tfunc:Pmask.GetBit
+    // void tfunc_Pmask_GetBit(); // amcdb.tfunc:Pmask.GetBit
 
     // Return FPmaskfld which filters printing for ctype CTYPE
     // NULL if none
@@ -2590,34 +2809,34 @@ namespace amc { // update-hdr
     // cpp/amc/pool.cpp -- Generic pool functions
     //
     //     (user-implemented function, prototype is in amc-generated header)
-    // void tclass_Pool(); // gstatic/amcdb.tclass:Pool
-    // void tfunc_Pool_AllocMaybe(); // gstatic/amcdb.tfunc:Pool.AllocMaybe
-    // void tfunc_Pool_Alloc(); // gstatic/amcdb.tfunc:Pool.Alloc
+    // void tclass_Pool(); // amcdb.tclass:Pool
+    // void tfunc_Pool_AllocMaybe(); // amcdb.tfunc:Pool.AllocMaybe
+    // void tfunc_Pool_Alloc(); // amcdb.tfunc:Pool.Alloc
 
     // Generate Alloc function that takes 2 additional arguments
     // -- pointer to extra (varlen portion) memory to tack onto the record,
     // and number of bytes
-    // void tfunc_Pool_AllocExtraMaybe(); // gstatic/amcdb.tfunc:Pool.AllocExtraMaybe
+    // void tfunc_Pool_AllocExtraMaybe(); // amcdb.tfunc:Pool.AllocExtraMaybe
 
     // Like AllocExtraMaybe, but die on out-of-memory
-    // void tfunc_Pool_AllocExtra(); // gstatic/amcdb.tfunc:Pool.AllocExtra
+    // void tfunc_Pool_AllocExtra(); // amcdb.tfunc:Pool.AllocExtra
 
     // VarlenMaybe -- array of fixed-size structs tacked onto the end of a struct
-    // void tfunc_Pool_AllocVarlenMaybe(); // gstatic/amcdb.tfunc:Pool.AllocVarlenMaybe
+    // void tfunc_Pool_AllocVarlenMaybe(); // amcdb.tfunc:Pool.AllocVarlenMaybe
 
     // Like VarlenMaybe, but die on out-of-memory
-    // void tfunc_Pool_AllocVarlen(); // gstatic/amcdb.tfunc:Pool.AllocVarlen
-    // void tfunc_Pool_InsertMaybe(); // gstatic/amcdb.tfunc:Pool.InsertMaybe
+    // void tfunc_Pool_AllocVarlen(); // amcdb.tfunc:Pool.AllocVarlen
+    // void tfunc_Pool_InsertMaybe(); // amcdb.tfunc:Pool.InsertMaybe
     amc::FField *FindFieldByName(amc::FCtype &ctype, algo::strptr name);
     //     (user-implemented function, prototype is in amc-generated header)
-    // void tfunc_Pool_UpdateMaybe(); // gstatic/amcdb.tfunc:Pool.UpdateMaybe
-    // void tfunc_Pool_Delete(); // gstatic/amcdb.tfunc:Pool.Delete
+    // void tfunc_Pool_UpdateMaybe(); // amcdb.tfunc:Pool.UpdateMaybe
+    // void tfunc_Pool_Delete(); // amcdb.tfunc:Pool.Delete
 
     // Check each lenfld against the store formula len = (fixed size + extra) / scale
     // (LenfldStoreExpr, the inverse of the reader formula): when the numerator is
     // not a multiple of scale, the stored length truncates and the reader
     // reconstructs less than was written.
-    // Consider a packed jstype ctype with a 6-byte fixed portion, a varlen tail,
+    // Consider a packed TypeScript ctype with a 6-byte fixed portion, a varlen tail,
     // and an unsigned 32-bit length field at scale 4. Its TypeScript encoder never
     // stores 6: it stores a runtime total that counts the tail, having already
     // guarded that total against the scale. Asking whether 6 divides by 4 rejects
@@ -2639,7 +2858,7 @@ namespace amc { // update-hdr
     // reason -- and it carries the divisibility arm. STORETOTAL adds the
     // TypeScript Encode of a ctype with a tail, and carries the range and
     // low-end arms.
-    // A TypeScript store site is a Val-reftype lenfld of a packed jstype ctype in
+    // A TypeScript store site is a Val-reftype lenfld of a packed TypeScript ctype in
     // a typescript namespace: the TS fixed walk skips bitfields and writes the
     // source word raw from the parent, so a Bitfld lenfld carried only by the TS
     // Encode has no store site.
@@ -2667,7 +2886,7 @@ namespace amc { // update-hdr
     // bound falls below the fixed size and every encode throws at first use.
     // Either way no frame the ctype can produce is storable, so the schema is
     // rejected rather than shipped as a runtime trap.
-    // void gen_check_lenfld(); // gstatic/amcdb.gen:check_lenfld
+    // void gen_check_lenfld(); // amcdb.gen:check_lenfld
 
     // Ensure that all instances of CTYPE's record are varlen pools
     void EnsureVarlenPool(amc::FCtype &ctype);
@@ -2685,6 +2904,13 @@ namespace amc { // update-hdr
     // cpp/amc/print.cpp -- Print ctype to string
     //
 
+    // Append to PRINT's body the code that prints the fixed fields of message
+    // CTYPE as an ssim tuple: the type tag, then each field that is not Varlen or
+    // Opt.  The code reads the message from a variable named row and appends to a
+    // string named str, so the caller declares both.  Return false, appending
+    // nothing, if CTYPE has no tuple print format.
+    bool GenPrintFixedTuple(amc::FCtype &ctype, amc::FFunc &print);
+
     // Create print function for ctype PARENT based on CFMT.
     // The pair (strfmt, printfmt) selects the body. The Extern printfmt hands the
     // body to the user for every strfmt; otherwise String takes a printfmt of
@@ -2698,58 +2924,219 @@ namespace amc { // update-hdr
     void GenPrint(amc::FCtype &parent, amc::FCfmt &cfmt);
 
     // -------------------------------------------------------------------
+    // cpp/amc/proj.cpp
+    //
+
+    // Collect the projection: every ctype of each nslang row's namespace and the
+    // ctype of each ctypelang row, closed over the ctypes they are made of, each
+    // marked with the row's language.  The TypeScript emitter then gets a record
+    // per projected ctype and per namespace holding one, to assemble its module in.
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void gen_prep_proj(); // amcdb.gen:prep_proj
+
+    // Return TRUE when CTYPE is projected into LANG.
+    bool ProjCtypeQ(amc::FCtype &ctype, amc::FLang &lang);
+
+    // Return TRUE when a displang row projects the messages of DISPATCH into LANG.
+    bool ProjDispatchQ(amc::FDispatch &dispatch, amc::FLang &lang);
+
+    // Return TRUE when namespace NS has anything to write in LANG: a ctype projected
+    // into LANG, or a dispatch a displang row projects into LANG.
+    bool ProjNsQ(amc::FNs &ns, amc::FLang &lang);
+
+    // Return TRUE when CTYPE is projected with a codec.  A packed ctype is a wire
+    // form, so a language encodes and decodes it; any other projected ctype is a
+    // type alone.
+    bool ProjCodecQ(amc::FCtype &ctype);
+
+    // Return TRUE when unpacked CTYPE has a memory layout a projected language
+    // states: it is plain data, so its bytes are its value, every member is a
+    // scalar or a nested ctype that starts at its own defaults, and sizing placed
+    // every member.  The recursion descends one level per nesting.  Its
+    // size and member offsets are then the ones C++ is held to, which is what lets
+    // a foreign program share a segment with a C++ one.
+    bool ProjLayoutQ(amc::FCtype &ctype);
+
+    // Return TRUE when the members of projected CTYPE start at their schema
+    // defaults: it has a codec or a layout.  Any other projected ctype is a
+    // declaration whose members start at their language's zero.
+    bool ProjDfltQ(amc::FCtype &ctype);
+
+    // Return TRUE when a type-only projection declares FIELD as a string: a key into
+    // another table, a pattern over one, an inline string or array of char, or a
+    // value of a string ctype.
+    bool ProjStringQ(amc::FField &field);
+
+    // Return TRUE when namespace NS has anything to write in any language.
+    bool ProjNsAnyQ(amc::FNs &ns);
+
+    // Return TRUE when the member FIELD is declared, in a projected language, as the
+    // projected ctype of its arg: any arg that is not a builtin, except a string a
+    // type-only projection declares as the language's own string.
+    bool ProjNestedQ(amc::FField &field);
+
+    // Return TRUE when FIELD is a member of its ctype in a projected language.  A
+    // Base field is an injection point whose fields appear individually, a bitfield
+    // is an accessor over its source word, and a message's type and length words are
+    // derived: the encoder writes the message's own type and the frame's length, and
+    // a decoded value that carried them would restate what the caller had to know to
+    // decode.
+    bool ProjMemberQ(amc::FField &field);
+
+    // Return TRUE when FIELD's bytes are the frame's tail rather than a fixed slot:
+    // a Varlen or an Opt field.
+    bool ProjTailQ(amc::FField &field);
+
+    // Return TRUE when FIELD is an rpascal inline string: characters, a spare byte,
+    // and the count in the byte after them.
+    bool ProjRpascalQ(amc::FField &field);
+
+    // Return the byte FIELD's rightpad inline string is padded with, read from its C++
+    // expression: a decimal number or a one-character quoted char.  Return -1 when
+    // FIELD is not a rightpad string or the expression is neither.
+    int ProjPadByte(amc::FField &field);
+
+    // Return TRUE when FIELD is a rightpad inline string a projected language
+    // models: exactly its characters, padded on the right with a known byte.
+    bool ProjRightpadQ(amc::FField &field);
+
+    // Return TRUE when CTYPE has a tail: a Varlen or an Opt field.
+    bool ProjAnyTailQ(amc::FCtype &ctype);
+
+    // Return TRUE when builtin ARG is a scalar with a fixed wire form every projected
+    // language reads: an integer of 8 to 64 bits, a char, or a bool.
+    bool ProjScalarQ(amc::FCtype &arg);
+
+    // Return TRUE when builtin ARG is a floating point number, which a type-only
+    // projection declares as its language's float.
+    bool ProjFloatQ(amc::FCtype &arg);
+
+    // Return the bytes FIELD occupies in the fixed region of its ctype's wire form,
+    // or -1 when FIELD has no wire form.  This is the one place a field's wire form
+    // is decided, so an encoder and a decoder cannot place a field at two different
+    // offsets, and neither can two languages.  A Base, a bitfield and a tail occupy
+    // no fixed slot.  A Val field of a ctype occupies that ctype's size only while
+    // the ctype has no tail of its own, since a nested tail would run into the next
+    // slot.  An inline array occupies its elements only when it is fixed, which is
+    // the shape C++ lays out as a bare element array.  An inline string occupies its
+    // characters, a spare byte and its count when it is rpascal, and its characters
+    // alone when it is rightpad; those are the string forms a projected language
+    // models.
+    int ProjSlotBytes(amc::FField &field);
+
+    // Return the default of FIELD as a projected language states it: a product of
+    // decimal integers folded to its value, with FOLD a negative default of an
+    // unsigned scalar folded to the value its bits hold, and any other default as
+    // written.  The scalar is the one ProjScalarArg names, so a nested member that
+    // wraps one scalar states its default in that scalar's terms.
+    //
+    // A field of type algo.SeqType, a u64, defaults to -1.  C++ converts
+    // that to the largest u64, while Go refuses -1 for a uint64 and Python's struct
+    // refuses it for Q, so Go, Python and Rust take the folded literal.  TypeScript
+    // writes an algo.SeqType through a signed word, where -1 is the value it holds,
+    // so it passes FOLD false.
+    tempstr ProjDflt(amc::FField &field, bool fold = true);
+
+    // Return TRUE when TEXT is a default every projected language can state as a
+    // literal: a decimal or hex integer, a decimal fraction, a product of decimal
+    // integers, true, false, or a one-character quoted char.
+    bool ProjLiteralQ(algo::strptr text);
+
+    // Return TRUE when the default of FIELD is its type's zero value, which every
+    // projected language starts a member at.
+    bool ProjZeroDfltQ(amc::FField &field);
+
+    // Return the ctype the value of FIELD is stated in: its own type, or the one
+    // field of that type when the type wraps a single scalar.  A bitfield's value is
+    // read as this ctype, and a nested member's own default is stated in it.
+    amc::FCtype &ProjScalarArg(amc::FField &field);
+
+    // Return TRUE when FIELD is a nested member with a default of its own, which a
+    // projection states on the one scalar its ctype wraps, as C++ does.
+    bool ProjNestedDfltQ(amc::FField &field);
+
+    // Return the member of the ctype nested member FIELD has, which the field's own
+    // default is stated on.  FIELD satisfies ProjNestedDfltQ, and gen_check_proj has
+    // admitted it, so its ctype wraps one scalar.
+    amc::FField &ProjNestedDfltField(amc::FField &field);
+
+    // Return TRUE when a ctype of namespace NS projected into LANG has a member typed
+    // by a ctype of namespace DEP, so NS's code in LANG imports DEP's.
+    bool ProjNsDepQ(amc::FNs &ns, amc::FNs &dep, amc::FLang &lang);
+
+    // Return TRUE when CTYPE is projected into a language whose codec this file's
+    // wire form describes: every language but TypeScript, whose codec admits more
+    // field forms and is checked by gen_check_ts.
+    bool ProjWireLangQ(amc::FCtype &ctype);
+
+    // Check every projected ctype once, whichever languages it is projected into,
+    // and every displang row, and fail the run when one does not hold.  A packed
+    // ctype must have a byte-exact wire form in the languages this file describes,
+    // an unpacked one a type in every language, and a projected dispatch must speak
+    // only projected messages.
+    //
+    // Each language emitter walks the fields these checks admit, and trusts that
+    // every one of them has a form in its language.  A packed ctype with a pointer
+    // member is refused here, and an emitter that walked it anyway would reach a
+    // field with no wire form and crash.  So the run records, after the last check,
+    // whether any check refused the schema, and every emitter then writes nothing,
+    // which is also what ns_write does with whatever it is handed after an error.
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void gen_check_proj(); // amcdb.gen:check_proj
+
+    // -------------------------------------------------------------------
     // cpp/amc/protocol.cpp -- Protocol functions
     //
     //     (user-implemented function, prototype is in amc-generated header)
-    // void tclass_Ns(); // gstatic/amcdb.tclass:Ns
-    // void tfunc_Ns_StaticCheck(); // gstatic/amcdb.tfunc:Ns.StaticCheck
+    // void tclass_Ns(); // amcdb.tclass:Ns
+    // void tfunc_Ns_StaticCheck(); // amcdb.tfunc:Ns.StaticCheck
 
     // -------------------------------------------------------------------
     // cpp/amc/ptr.cpp -- Ptr reftype
     //
     //     (user-implemented function, prototype is in amc-generated header)
-    // void tclass_Ptr(); // gstatic/amcdb.tclass:Ptr
-    // void tfunc_Ptr_Init(); // gstatic/amcdb.tfunc:Ptr.Init
-    // void tfunc_Ptr_InsertMaybe(); // gstatic/amcdb.tfunc:Ptr.InsertMaybe
-    // void tfunc_Ptr_Remove(); // gstatic/amcdb.tfunc:Ptr.Remove
-    // void tfunc_Ptr_Cascdel(); // gstatic/amcdb.tfunc:Ptr.Cascdel
+    // void tclass_Ptr(); // amcdb.tclass:Ptr
+    // void tfunc_Ptr_Init(); // amcdb.tfunc:Ptr.Init
+    // void tfunc_Ptr_InsertMaybe(); // amcdb.tfunc:Ptr.InsertMaybe
+    // void tfunc_Ptr_Remove(); // amcdb.tfunc:Ptr.Remove
+    // void tfunc_Ptr_Cascdel(); // amcdb.tfunc:Ptr.Cascdel
 
     // -------------------------------------------------------------------
     // cpp/amc/ptrary.cpp -- Ptrary reftype
     //
     //     (user-implemented function, prototype is in amc-generated header)
-    // void tclass_Ptrary(); // gstatic/amcdb.tclass:Ptrary
+    // void tclass_Ptrary(); // amcdb.tclass:Ptrary
 
     // Generate $name_Cascdel: delete the last row of the array until it is empty
-    // void tfunc_Ptrary_Cascdel(); // gstatic/amcdb.tfunc:Ptrary.Cascdel
-    // void tfunc_Ptrary_EmptyQ(); // gstatic/amcdb.tfunc:Ptrary.EmptyQ
-    // void tfunc_Ptrary_Find(); // gstatic/amcdb.tfunc:Ptrary.Find
-    // void tfunc_Ptrary_InAryQ(); // gstatic/amcdb.tfunc:Ptrary.InAryQ
-    // void tfunc_Ptrary_qFind(); // gstatic/amcdb.tfunc:Ptrary.qFind
-    // void tfunc_Ptrary_qLast(); // gstatic/amcdb.tfunc:Ptrary.qLast
-    // void tfunc_Ptrary_Getary(); // gstatic/amcdb.tfunc:Ptrary.Getary
-    // void tfunc_Ptrary_Init(); // gstatic/amcdb.tfunc:Ptrary.Init
-    // void tfunc_Ptrary_Insert(); // gstatic/amcdb.tfunc:Ptrary.Insert
-    // void tfunc_Ptrary_InsertMaybe(); // gstatic/amcdb.tfunc:Ptrary.InsertMaybe
+    // void tfunc_Ptrary_Cascdel(); // amcdb.tfunc:Ptrary.Cascdel
+    // void tfunc_Ptrary_EmptyQ(); // amcdb.tfunc:Ptrary.EmptyQ
+    // void tfunc_Ptrary_Find(); // amcdb.tfunc:Ptrary.Find
+    // void tfunc_Ptrary_InAryQ(); // amcdb.tfunc:Ptrary.InAryQ
+    // void tfunc_Ptrary_qFind(); // amcdb.tfunc:Ptrary.qFind
+    // void tfunc_Ptrary_qLast(); // amcdb.tfunc:Ptrary.qLast
+    // void tfunc_Ptrary_Getary(); // amcdb.tfunc:Ptrary.Getary
+    // void tfunc_Ptrary_Init(); // amcdb.tfunc:Ptrary.Init
+    // void tfunc_Ptrary_Insert(); // amcdb.tfunc:Ptrary.Insert
+    // void tfunc_Ptrary_InsertMaybe(); // amcdb.tfunc:Ptrary.InsertMaybe
 
     // Generate $name_ScanInsertMaybe of a non-unique Ptrary: a linear scan
     // finds a row already present; an absent row is appended by delegating
     // to $name_Insert, which also fires any OnXref hook
-    // void tfunc_Ptrary_ScanInsertMaybe(); // gstatic/amcdb.tfunc:Ptrary.ScanInsertMaybe
-    // void tfunc_Ptrary_N(); // gstatic/amcdb.tfunc:Ptrary.N
+    // void tfunc_Ptrary_ScanInsertMaybe(); // amcdb.tfunc:Ptrary.ScanInsertMaybe
+    // void tfunc_Ptrary_N(); // amcdb.tfunc:Ptrary.N
 
     // Generate $name_Remove: unlink the row -- an O(1) swap with the last
     // element for a heaplike array, a backward scan and shift for a unique
     // one, a compacting sweep of every occurrence otherwise -- firing any
     // OnUnref hook
-    // void tfunc_Ptrary_Remove(); // gstatic/amcdb.tfunc:Ptrary.Remove
-    // void tfunc_Ptrary_RemoveFirst(); // gstatic/amcdb.tfunc:Ptrary.RemoveFirst
-    // void tfunc_Ptrary_First(); // gstatic/amcdb.tfunc:Ptrary.First
-    // void tfunc_Ptrary_RemoveLast(); // gstatic/amcdb.tfunc:Ptrary.RemoveLast
-    // void tfunc_Ptrary_Last(); // gstatic/amcdb.tfunc:Ptrary.Last
-    // void tfunc_Ptrary_RemoveAll(); // gstatic/amcdb.tfunc:Ptrary.RemoveAll
-    // void tfunc_Ptrary_Reserve(); // gstatic/amcdb.tfunc:Ptrary.Reserve
-    // void tfunc_Ptrary_Uninit(); // gstatic/amcdb.tfunc:Ptrary.Uninit
+    // void tfunc_Ptrary_Remove(); // amcdb.tfunc:Ptrary.Remove
+    // void tfunc_Ptrary_RemoveFirst(); // amcdb.tfunc:Ptrary.RemoveFirst
+    // void tfunc_Ptrary_First(); // amcdb.tfunc:Ptrary.First
+    // void tfunc_Ptrary_RemoveLast(); // amcdb.tfunc:Ptrary.RemoveLast
+    // void tfunc_Ptrary_Last(); // amcdb.tfunc:Ptrary.Last
+    // void tfunc_Ptrary_RemoveAll(); // amcdb.tfunc:Ptrary.RemoveAll
+    // void tfunc_Ptrary_Reserve(); // amcdb.tfunc:Ptrary.Reserve
+    // void tfunc_Ptrary_Uninit(); // amcdb.tfunc:Ptrary.Uninit
 
     // Generate the Ptrary cursor: the struct plus Reset/ValidQ/Next/Access;
     // a ONCE cursor detaches the captured run's membership at Reset -- the
@@ -2761,8 +3148,8 @@ namespace amc { // update-hdr
     // overwrite the unread tail of the run
     void Ptrary_curs(bool once);
     //     (user-implemented function, prototype is in amc-generated header)
-    // void tfunc_Ptrary_curs(); // gstatic/amcdb.tfunc:Ptrary.curs
-    // void tfunc_Ptrary_oncecurs(); // gstatic/amcdb.tfunc:Ptrary.oncecurs
+    // void tfunc_Ptrary_curs(); // amcdb.tfunc:Ptrary.curs
+    // void tfunc_Ptrary_oncecurs(); // amcdb.tfunc:Ptrary.oncecurs
 
     // -------------------------------------------------------------------
     // cpp/amc/query.cpp -- Query mode
@@ -2778,34 +3165,34 @@ namespace amc { // update-hdr
 
     // Dispatach on field name, and read appropriate field
     //     (user-implemented function, prototype is in amc-generated header)
-    // void tfunc_Ctype_ReadFieldMaybe(); // gstatic/amcdb.tfunc:Ctype.ReadFieldMaybe
+    // void tfunc_Ctype_ReadFieldMaybe(); // amcdb.tfunc:Ctype.ReadFieldMaybe
     void GenRead(amc::FCtype &ctype, amc::FCfmt &cfmt);
 
     // -------------------------------------------------------------------
     // cpp/amc/regx.cpp -- Small strings
     //
     //     (user-implemented function, prototype is in amc-generated header)
-    // void tclass_RegxSql(); // gstatic/amcdb.tclass:RegxSql
-    // void tfunc_RegxSql_ReadStrptrMaybe(); // gstatic/amcdb.tfunc:RegxSql.ReadStrptrMaybe
-    // void tfunc_RegxSql_Print(); // gstatic/amcdb.tfunc:RegxSql.Print
-    // void tfunc_RegxSql_Init(); // gstatic/amcdb.tfunc:RegxSql.Init
-    // void tclass_Regx(); // gstatic/amcdb.tclass:Regx
-    // void tfunc_Regx_ReadStrptrMaybe(); // gstatic/amcdb.tfunc:Regx.ReadStrptrMaybe
-    // void tfunc_Regx_Print(); // gstatic/amcdb.tfunc:Regx.Print
-    // void tfunc_Regx_Init(); // gstatic/amcdb.tfunc:Regx.Init
+    // void tclass_RegxSql(); // amcdb.tclass:RegxSql
+    // void tfunc_RegxSql_ReadStrptrMaybe(); // amcdb.tfunc:RegxSql.ReadStrptrMaybe
+    // void tfunc_RegxSql_Print(); // amcdb.tfunc:RegxSql.Print
+    // void tfunc_RegxSql_Init(); // amcdb.tfunc:RegxSql.Init
+    // void tclass_Regx(); // amcdb.tclass:Regx
+    // void tfunc_Regx_ReadStrptrMaybe(); // amcdb.tfunc:Regx.ReadStrptrMaybe
+    // void tfunc_Regx_Print(); // amcdb.tfunc:Regx.Print
+    // void tfunc_Regx_Init(); // amcdb.tfunc:Regx.Init
 
     // -------------------------------------------------------------------
     // cpp/amc/sbrk.cpp -- Sbrk allocator
     //
     //     (user-implemented function, prototype is in amc-generated header)
-    // void tclass_Sbrk(); // gstatic/amcdb.tclass:Sbrk
+    // void tclass_Sbrk(); // amcdb.tclass:Sbrk
 
     // Emit the base allocator: it serves a block of a granule or more by mapping it,
     // preferring huge pages while the process is under its huge-page ceiling.
     //
     // The ceiling and the kernel's refusal are two different answers and the
     // allocator must not confuse them.  Consider a process whose ceiling is 4GB and
-    // whose receive cache asks for one 12GB block: the block cannot be served on
+    // whose txn cache asks for one 12GB block: the block cannot be served on
     // huge pages, and it is served on ordinary ones.  If that outcome also retires
     // the huge route, every later block -- a two-megabyte pool block that the
     // ceiling has ample room for -- is mapped on ordinary pages too, and the process
@@ -2818,9 +3205,9 @@ namespace amc { // update-hdr
     // change for the life of the process, which is what makes retiring the route the
     // right response to them and the wrong response to a block that was simply too
     // big to count against the ceiling.
-    // void tfunc_Sbrk_AllocMem(); // gstatic/amcdb.tfunc:Sbrk.AllocMem
-    // void tfunc_Sbrk_FreeMem(); // gstatic/amcdb.tfunc:Sbrk.FreeMem
-    // void tfunc_Sbrk_Init(); // gstatic/amcdb.tfunc:Sbrk.Init
+    // void tfunc_Sbrk_AllocMem(); // amcdb.tfunc:Sbrk.AllocMem
+    // void tfunc_Sbrk_FreeMem(); // amcdb.tfunc:Sbrk.FreeMem
+    // void tfunc_Sbrk_Init(); // amcdb.tfunc:Sbrk.Init
 
     // -------------------------------------------------------------------
     // cpp/amc/signature.cpp -- Signature calculation for protocols
@@ -2832,7 +3219,7 @@ namespace amc { // update-hdr
     // which impacts binary footprint of the top type
     void SignatureVisit(amc::FCtype &ctype);
     //     (user-implemented function, prototype is in amc-generated header)
-    // void gen_prep_signature(); // gstatic/amcdb.gen:prep_signature
+    // void gen_prep_signature(); // amcdb.gen:prep_signature
 
     // compute order-independent superposition of two signatures
     // that means H(A,B) == H(B,A)
@@ -2855,7 +3242,7 @@ namespace amc { // update-hdr
     // ctype's contents, so nothing asserts it by hand and nothing can assert it
     // wrongly.
     //     (user-implemented function, prototype is in amc-generated header)
-    // void gen_cheapcopy(); // gstatic/amcdb.gen:cheapcopy
+    // void gen_cheapcopy(); // amcdb.gen:cheapcopy
 
     // Bit width of a ctype's storage: builtins carry an explicit csize; other
     // types carry a computed totsize_byte. Returns 0 when the size is not known
@@ -2873,7 +3260,7 @@ namespace amc { // update-hdr
     // asserting that amc-computed sizes are the same as gcc-computed sizes.
     // The sizes are computed by scanning the actual generated struct for each ctype.
     //     (user-implemented function, prototype is in amc-generated header)
-    // void gen_compute_size(); // gstatic/amcdb.gen:compute_size
+    // void gen_compute_size(); // amcdb.gen:compute_size
 
     // Generate symbol corresponding to the size of ctype CTYPE.
     // SizeEnums are generated only for occasional ctypes, and are used
@@ -2883,7 +3270,7 @@ namespace amc { // update-hdr
     // Generate compile-time constants for sizes of certain ctypes
     // accessed from namespace NS, without having to include corresponding header.
     //     (user-implemented function, prototype is in amc-generated header)
-    // void gen_ns_size_enums(); // gstatic/amcdb.gen:ns_size_enums
+    // void gen_ns_size_enums(); // amcdb.gen:ns_size_enums
 
     // -------------------------------------------------------------------
     // cpp/amc/smallstr.cpp -- Small strings
@@ -2901,50 +3288,50 @@ namespace amc { // update-hdr
     // for the '0' that spells it.
     char PadChar(amc::FSmallstr &smallstr);
     //     (user-implemented function, prototype is in amc-generated header)
-    // void tclass_Smallstr(); // gstatic/amcdb.tclass:Smallstr
-    // void tfunc_Smallstr_Init(); // gstatic/amcdb.tfunc:Smallstr.Init
-    // void tfunc_Smallstr_Getary(); // gstatic/amcdb.tfunc:Smallstr.Getary
-    // void tfunc_Smallstr_Add(); // gstatic/amcdb.tfunc:Smallstr.Add
-    // void tfunc_Smallstr_AddStrptr(); // gstatic/amcdb.tfunc:Smallstr.AddStrptr
-    // void tfunc_Smallstr_ReadStrptrMaybe(); // gstatic/amcdb.tfunc:Smallstr.ReadStrptrMaybe
-    // void tfunc_Smallstr_Print(); // gstatic/amcdb.tfunc:Smallstr.Print
+    // void tclass_Smallstr(); // amcdb.tclass:Smallstr
+    // void tfunc_Smallstr_Init(); // amcdb.tfunc:Smallstr.Init
+    // void tfunc_Smallstr_Getary(); // amcdb.tfunc:Smallstr.Getary
+    // void tfunc_Smallstr_Add(); // amcdb.tfunc:Smallstr.Add
+    // void tfunc_Smallstr_AddStrptr(); // amcdb.tfunc:Smallstr.AddStrptr
+    // void tfunc_Smallstr_ReadStrptrMaybe(); // amcdb.tfunc:Smallstr.ReadStrptrMaybe
+    // void tfunc_Smallstr_Print(); // amcdb.tfunc:Smallstr.Print
 
     // compute length
-    // void tfunc_Smallstr_N(); // gstatic/amcdb.tfunc:Smallstr.N
+    // void tfunc_Smallstr_N(); // amcdb.tfunc:Smallstr.N
 
     // Max # of elements (constant)
-    // void tfunc_Smallstr_Max(); // gstatic/amcdb.tfunc:Smallstr.Max
+    // void tfunc_Smallstr_Max(); // amcdb.tfunc:Smallstr.Max
 
     // Set value as strptr
     // For a padded string, the string value is allowed to use the pad character
     // inside the string, i.e. a space-padded field can have a space ("abc def").
     // Length of a padded string is determined by stripping the padded characters
     // from the appropriate end.
-    // void tfunc_Smallstr_SetStrptr(); // gstatic/amcdb.tfunc:Smallstr.SetStrptr
+    // void tfunc_Smallstr_SetStrptr(); // amcdb.tfunc:Smallstr.SetStrptr
 
     // Assignment operator from strptr
     // Generated only if the containing struct has only one field
-    // void tfunc_Smallstr_AssignStrptr(); // gstatic/amcdb.tfunc:Smallstr.AssignStrptr
+    // void tfunc_Smallstr_AssignStrptr(); // amcdb.tfunc:Smallstr.AssignStrptr
 
     // Construct from strptr
     // Generated only if the containing struct has only one field
-    // void tfunc_Smallstr_CtorStrptr(); // gstatic/amcdb.tfunc:Smallstr.CtorStrptr
+    // void tfunc_Smallstr_CtorStrptr(); // amcdb.tfunc:Smallstr.CtorStrptr
 
     // -------------------------------------------------------------------
     // cpp/amc/sort.cpp -- Comparison & Sorting routines
     //
     //     (user-implemented function, prototype is in amc-generated header)
-    // void tclass_Sort(); // gstatic/amcdb.tclass:Sort
-    // void tfunc_Sort_Swap(); // gstatic/amcdb.tfunc:Sort.Swap
-    // void tfunc_Sort_Rotleft(); // gstatic/amcdb.tfunc:Sort.Rotleft
-    // void tfunc_Sort_Lt(); // gstatic/amcdb.tfunc:Sort.Lt
-    // void tfunc_Sort_SortedQ(); // gstatic/amcdb.tfunc:Sort.SortedQ
-    // void tfunc_Sort_IntInsertionSort(); // gstatic/amcdb.tfunc:Sort.IntInsertionSort
-    // void tfunc_Sort_IntHeapSort(); // gstatic/amcdb.tfunc:Sort.IntHeapSort
-    // void tfunc_Sort_IntQuickSort(); // gstatic/amcdb.tfunc:Sort.IntQuickSort
-    // void tfunc_Sort_InsertionSort(); // gstatic/amcdb.tfunc:Sort.InsertionSort
-    // void tfunc_Sort_HeapSort(); // gstatic/amcdb.tfunc:Sort.HeapSort
-    // void tfunc_Sort_QuickSort(); // gstatic/amcdb.tfunc:Sort.QuickSort
+    // void tclass_Sort(); // amcdb.tclass:Sort
+    // void tfunc_Sort_Swap(); // amcdb.tfunc:Sort.Swap
+    // void tfunc_Sort_Rotleft(); // amcdb.tfunc:Sort.Rotleft
+    // void tfunc_Sort_Lt(); // amcdb.tfunc:Sort.Lt
+    // void tfunc_Sort_SortedQ(); // amcdb.tfunc:Sort.SortedQ
+    // void tfunc_Sort_IntInsertionSort(); // amcdb.tfunc:Sort.IntInsertionSort
+    // void tfunc_Sort_IntHeapSort(); // amcdb.tfunc:Sort.IntHeapSort
+    // void tfunc_Sort_IntQuickSort(); // amcdb.tfunc:Sort.IntQuickSort
+    // void tfunc_Sort_InsertionSort(); // amcdb.tfunc:Sort.InsertionSort
+    // void tfunc_Sort_HeapSort(); // amcdb.tfunc:Sort.HeapSort
+    // void tfunc_Sort_QuickSort(); // amcdb.tfunc:Sort.QuickSort
 
     // -------------------------------------------------------------------
     // cpp/amc/step.cpp -- Step functions
@@ -2956,22 +3343,22 @@ namespace amc { // update-hdr
     // serve is reported here as a generation error, and the run continues so
     // one pass names every defect -- the error count withholds all output
     //     (user-implemented function, prototype is in amc-generated header)
-    // void tclass_Step(); // gstatic/amcdb.tclass:Step
-    // void tfunc_Step_UpdateCycles(); // gstatic/amcdb.tfunc:Step.UpdateCycles
-    // void tfunc_Step_Step(); // gstatic/amcdb.tfunc:Step.Step
+    // void tclass_Step(); // amcdb.tclass:Step
+    // void tfunc_Step_UpdateCycles(); // amcdb.tfunc:Step.UpdateCycles
+    // void tfunc_Step_Step(); // amcdb.tfunc:Step.Step
 
     // Generate the step's Init statements: the delay variable for
     // InlineRecur, the time-hook setup (and its delay) for the TimeHook
     // steptypes
-    // void tfunc_Step_Init(); // gstatic/amcdb.tfunc:Step.Init
+    // void tfunc_Step_Init(); // amcdb.tfunc:Step.Init
 
     // Generate $name_Call: invoke $name_Step on the steptype's schedule --
     // delay-gated for InlineRecur, expiration-driven off the first row's
     // sort field for the Once steptypes, every pass for Inline, bare for
     // the hook- and caller-driven steptypes
-    // void tfunc_Step_Call(); // gstatic/amcdb.tfunc:Step.Call
-    // void tfunc_Step_FirstChanged(); // gstatic/amcdb.tfunc:Step.FirstChanged
-    // void tfunc_Step_SetDelay(); // gstatic/amcdb.tfunc:Step.SetDelay
+    // void tfunc_Step_Call(); // amcdb.tfunc:Step.Call
+    // void tfunc_Step_FirstChanged(); // amcdb.tfunc:Step.FirstChanged
+    // void tfunc_Step_SetDelay(); // amcdb.tfunc:Step.SetDelay
 
     // -------------------------------------------------------------------
     // cpp/amc/struct.cpp -- C++ struct output
@@ -2987,9 +3374,9 @@ namespace amc { // update-hdr
     // cpp/amc/substr.cpp -- Substr fields
     //
     //     (user-implemented function, prototype is in amc-generated header)
-    // void tclass_Substr(); // gstatic/amcdb.tclass:Substr
-    // void tfunc_Substr_Get(); // gstatic/amcdb.tfunc:Substr.Get
-    // void tfunc_Substr_Get2(); // gstatic/amcdb.tfunc:Substr.Get2
+    // void tclass_Substr(); // amcdb.tclass:Substr
+    // void tfunc_Substr_Get(); // amcdb.tfunc:Substr.Get
+    // void tfunc_Substr_Get2(); // amcdb.tfunc:Substr.Get2
 
     // -------------------------------------------------------------------
     // cpp/amc/tableid.cpp -- Per-namespace enum of tables
@@ -3000,44 +3387,44 @@ namespace amc { // update-hdr
     // create TableId type.
     // generate an enum representing tables in the in-memory database
     //     (user-implemented function, prototype is in amc-generated header)
-    // void gen_tableenum(); // gstatic/amcdb.gen:tableenum
+    // void gen_tableenum(); // amcdb.gen:tableenum
     void GenFieldId(amc::FNs &ns);
     //     (user-implemented function, prototype is in amc-generated header)
-    // void gen_fieldid(); // gstatic/amcdb.gen:fieldid
+    // void gen_fieldid(); // amcdb.gen:fieldid
 
     // -------------------------------------------------------------------
     // cpp/amc/tary.cpp -- Tary (vector) reftype
     //
     //     (user-implemented function, prototype is in amc-generated header)
-    // void tclass_Tary(); // gstatic/amcdb.tclass:Tary
-    // void tfunc_Tary_Addary(); // gstatic/amcdb.tfunc:Tary.Addary
-    // void tfunc_Tary_Alloc(); // gstatic/amcdb.tfunc:Tary.Alloc
-    // void tfunc_Tary_AllocAt(); // gstatic/amcdb.tfunc:Tary.AllocAt
-    // void tfunc_Tary_AllocN(); // gstatic/amcdb.tfunc:Tary.AllocN
-    // void tfunc_Tary_AllocNAt(); // gstatic/amcdb.tfunc:Tary.AllocNAt
-    // void tfunc_Tary_AllocNVal(); // gstatic/amcdb.tfunc:Tary.AllocNVal
-    // void tfunc_Tary_EmptyQ(); // gstatic/amcdb.tfunc:Tary.EmptyQ
-    // void tfunc_Tary_Find(); // gstatic/amcdb.tfunc:Tary.Find
-    // void tfunc_Tary_Getary(); // gstatic/amcdb.tfunc:Tary.Getary
-    // void tfunc_Tary_Init(); // gstatic/amcdb.tfunc:Tary.Init
-    // void tfunc_Tary_Last(); // gstatic/amcdb.tfunc:Tary.Last
-    // void tfunc_Tary_Max(); // gstatic/amcdb.tfunc:Tary.Max
-    // void tfunc_Tary_N(); // gstatic/amcdb.tfunc:Tary.N
-    // void tfunc_Tary_Remove(); // gstatic/amcdb.tfunc:Tary.Remove
-    // void tfunc_Tary_RemoveAll(); // gstatic/amcdb.tfunc:Tary.RemoveAll
-    // void tfunc_Tary_RemoveLast(); // gstatic/amcdb.tfunc:Tary.RemoveLast
-    // void tfunc_Tary_AbsReserve(); // gstatic/amcdb.tfunc:Tary.AbsReserve
-    // void tfunc_Tary_Reserve(); // gstatic/amcdb.tfunc:Tary.Reserve
-    // void tfunc_Tary_RowidFind(); // gstatic/amcdb.tfunc:Tary.RowidFind
-    // void tfunc_Tary_Setary(); // gstatic/amcdb.tfunc:Tary.Setary
-    // void tfunc_Tary_Setary2(); // gstatic/amcdb.tfunc:Tary.Setary2
-    // void tfunc_Tary_Uninit(); // gstatic/amcdb.tfunc:Tary.Uninit
-    // void tfunc_Tary_qFind(); // gstatic/amcdb.tfunc:Tary.qFind
-    // void tfunc_Tary_qLast(); // gstatic/amcdb.tfunc:Tary.qLast
-    // void tfunc_Tary_rowid_Get(); // gstatic/amcdb.tfunc:Tary.rowid_Get
-    // void tfunc_Tary_Eq(); // gstatic/amcdb.tfunc:Tary.Eq
-    // void tfunc_Tary_Cmp(); // gstatic/amcdb.tfunc:Tary.Cmp
-    // void tfunc_Tary_curs(); // gstatic/amcdb.tfunc:Tary.curs
+    // void tclass_Tary(); // amcdb.tclass:Tary
+    // void tfunc_Tary_Addary(); // amcdb.tfunc:Tary.Addary
+    // void tfunc_Tary_Alloc(); // amcdb.tfunc:Tary.Alloc
+    // void tfunc_Tary_AllocAt(); // amcdb.tfunc:Tary.AllocAt
+    // void tfunc_Tary_AllocN(); // amcdb.tfunc:Tary.AllocN
+    // void tfunc_Tary_AllocNAt(); // amcdb.tfunc:Tary.AllocNAt
+    // void tfunc_Tary_AllocNVal(); // amcdb.tfunc:Tary.AllocNVal
+    // void tfunc_Tary_EmptyQ(); // amcdb.tfunc:Tary.EmptyQ
+    // void tfunc_Tary_Find(); // amcdb.tfunc:Tary.Find
+    // void tfunc_Tary_Getary(); // amcdb.tfunc:Tary.Getary
+    // void tfunc_Tary_Init(); // amcdb.tfunc:Tary.Init
+    // void tfunc_Tary_Last(); // amcdb.tfunc:Tary.Last
+    // void tfunc_Tary_Max(); // amcdb.tfunc:Tary.Max
+    // void tfunc_Tary_N(); // amcdb.tfunc:Tary.N
+    // void tfunc_Tary_Remove(); // amcdb.tfunc:Tary.Remove
+    // void tfunc_Tary_RemoveAll(); // amcdb.tfunc:Tary.RemoveAll
+    // void tfunc_Tary_RemoveLast(); // amcdb.tfunc:Tary.RemoveLast
+    // void tfunc_Tary_AbsReserve(); // amcdb.tfunc:Tary.AbsReserve
+    // void tfunc_Tary_Reserve(); // amcdb.tfunc:Tary.Reserve
+    // void tfunc_Tary_RowidFind(); // amcdb.tfunc:Tary.RowidFind
+    // void tfunc_Tary_Setary(); // amcdb.tfunc:Tary.Setary
+    // void tfunc_Tary_Setary2(); // amcdb.tfunc:Tary.Setary2
+    // void tfunc_Tary_Uninit(); // amcdb.tfunc:Tary.Uninit
+    // void tfunc_Tary_qFind(); // amcdb.tfunc:Tary.qFind
+    // void tfunc_Tary_qLast(); // amcdb.tfunc:Tary.qLast
+    // void tfunc_Tary_rowid_Get(); // amcdb.tfunc:Tary.rowid_Get
+    // void tfunc_Tary_Eq(); // amcdb.tfunc:Tary.Eq
+    // void tfunc_Tary_Cmp(); // amcdb.tfunc:Tary.Cmp
+    // void tfunc_Tary_curs(); // amcdb.tfunc:Tary.curs
 
     // Read/Accumulate Tary from string.
     // arg:char & U8
@@ -3052,22 +3439,22 @@ namespace amc { // update-hdr
     // one element is read from input string and appended to the array without flushing.
     // if the element cannot be read, the array is unchanged
     //
-    // void tfunc_Tary_ReadStrptrMaybe(); // gstatic/amcdb.tfunc:Tary.ReadStrptrMaybe
-    // void tfunc_Tary_Print(); // gstatic/amcdb.tfunc:Tary.Print
+    // void tfunc_Tary_ReadStrptrMaybe(); // amcdb.tfunc:Tary.ReadStrptrMaybe
+    // void tfunc_Tary_Print(); // amcdb.tfunc:Tary.Print
 
     // Assignment operator from aryptr
     // Generated only if the containing struct has only one field
-    // void tfunc_Tary_AssignAryptr(); // gstatic/amcdb.tfunc:Tary.AssignAryptr
+    // void tfunc_Tary_AssignAryptr(); // amcdb.tfunc:Tary.AssignAryptr
 
     // Construct from aryptr
     // Generated only if the containing struct has only one field
-    // void tfunc_Tary_CtorAryptr(); // gstatic/amcdb.tfunc:Tary.CtorAryptr
-    // void tfunc_Tary_Insary(); // gstatic/amcdb.tfunc:Tary.Insary
-    // void tfunc_Tary_GetAlloc(); // gstatic/amcdb.tfunc:Tary.GetAlloc
-    // void tfunc_Tary_BeginAlloc(); // gstatic/amcdb.tfunc:Tary.BeginAlloc
-    // void tfunc_Tary_GetAllocAppend(); // gstatic/amcdb.tfunc:Tary.GetAllocAppend
-    // void tfunc_Tary_BeginAllocAppend(); // gstatic/amcdb.tfunc:Tary.BeginAllocAppend
-    // void tfunc_Tary_RemRegion(); // gstatic/amcdb.tfunc:Tary.RemRegion
+    // void tfunc_Tary_CtorAryptr(); // amcdb.tfunc:Tary.CtorAryptr
+    // void tfunc_Tary_Insary(); // amcdb.tfunc:Tary.Insary
+    // void tfunc_Tary_GetAlloc(); // amcdb.tfunc:Tary.GetAlloc
+    // void tfunc_Tary_BeginAlloc(); // amcdb.tfunc:Tary.BeginAlloc
+    // void tfunc_Tary_GetAllocAppend(); // amcdb.tfunc:Tary.GetAllocAppend
+    // void tfunc_Tary_BeginAllocAppend(); // amcdb.tfunc:Tary.BeginAllocAppend
+    // void tfunc_Tary_RemRegion(); // amcdb.tfunc:Tary.RemRegion
 
     // -------------------------------------------------------------------
     // cpp/amc/tclass.cpp -- Driver for tfuncs
@@ -3115,9 +3502,11 @@ namespace amc { // update-hdr
     // and the record marks that follow are the only ones left.
     //
     // Malloc and Sbrk are absent for opposite reasons.  Every block malloc returns
-    // is one the checker already knows, and it drops such a block from the leak
-    // search by itself once marked blocks appear inside it.  Sbrk hands out
-    // mappings, which the checker never accounted for in the first place.
+    // is a heap chunk the checker already holds and cannot be told to forget, so a
+    // pool carving from malloc marks nothing inside it: a record at the block's first
+    // byte would share the chunk's address, and freeing it would read as a
+    // mismatched free.  Sbrk hands out mappings, which the checker never accounted
+    // for in the first place, so a pool on sbrk marks its records freely.
     bool MemcheckedPoolQ(amc::FField &field);
 
     // Call tfunc generators for every field in this ctype
@@ -3125,57 +3514,139 @@ namespace amc { // update-hdr
     // (template class, no relation to C++ notion of template or class)
     // based on its type and associated records, and each tclass generates zero or more tfuncs
     //     (user-implemented function, prototype is in amc-generated header)
-    // void gen_ns_tclass_field(); // gstatic/amcdb.gen:ns_tclass_field
+    // void gen_ns_tclass_field(); // amcdb.gen:ns_tclass_field
 
     // Call tfunc generators without field context (Ctype generators)
     // This must be called after field-specific generators, since by this time
     // ctype sizes have been computed.
-    // void gen_ns_tclass_ctype(); // gstatic/amcdb.gen:ns_tclass_ctype
-    // void gen_ns_tclass_ns(); // gstatic/amcdb.gen:ns_tclass_ns
+    // void gen_ns_tclass_ctype(); // amcdb.gen:ns_tclass_ctype
+    // void gen_ns_tclass_ns(); // amcdb.gen:ns_tclass_ns
 
     // -------------------------------------------------------------------
     // cpp/amc/thash.cpp -- Hash tables
     //
     //     (user-implemented function, prototype is in amc-generated header)
-    // void tclass_Thash(); // gstatic/amcdb.tclass:Thash
-    // void tfunc_Thash_Find(); // gstatic/amcdb.tfunc:Thash.Find
-    // void tfunc_Thash_FindX(); // gstatic/amcdb.tfunc:Thash.FindX
-    // void tfunc_Thash_Reserve(); // gstatic/amcdb.tfunc:Thash.Reserve
-    // void tfunc_Thash_AbsReserve(); // gstatic/amcdb.tfunc:Thash.AbsReserve
-    // void tfunc_Thash_GetOrCreate(); // gstatic/amcdb.tfunc:Thash.GetOrCreate
-    // void tfunc_Thash_N(); // gstatic/amcdb.tfunc:Thash.N
-    // void tfunc_Thash_EmptyQ(); // gstatic/amcdb.tfunc:Thash.EmptyQ
-    // void tfunc_Thash_InsertMaybe(); // gstatic/amcdb.tfunc:Thash.InsertMaybe
-    // void tfunc_Thash_Cascdel(); // gstatic/amcdb.tfunc:Thash.Cascdel
-    // void tfunc_Thash_Remove(); // gstatic/amcdb.tfunc:Thash.Remove
-    // void tfunc_Thash_FindRemove(); // gstatic/amcdb.tfunc:Thash.FindRemove
-    // void tfunc_Thash_Init(); // gstatic/amcdb.tfunc:Thash.Init
-    // void tfunc_Thash_Uninit(); // gstatic/amcdb.tfunc:Thash.Uninit
-    // void tfunc_Thash_curs(); // gstatic/amcdb.tfunc:Thash.curs
+    // void tclass_Thash(); // amcdb.tclass:Thash
+    // void tfunc_Thash_Find(); // amcdb.tfunc:Thash.Find
+    // void tfunc_Thash_FindX(); // amcdb.tfunc:Thash.FindX
+    // void tfunc_Thash_Reserve(); // amcdb.tfunc:Thash.Reserve
+    // void tfunc_Thash_AbsReserve(); // amcdb.tfunc:Thash.AbsReserve
+    // void tfunc_Thash_GetOrCreate(); // amcdb.tfunc:Thash.GetOrCreate
+    // void tfunc_Thash_N(); // amcdb.tfunc:Thash.N
+    // void tfunc_Thash_EmptyQ(); // amcdb.tfunc:Thash.EmptyQ
+    // void tfunc_Thash_InsertMaybe(); // amcdb.tfunc:Thash.InsertMaybe
+    // void tfunc_Thash_Cascdel(); // amcdb.tfunc:Thash.Cascdel
+    // void tfunc_Thash_Remove(); // amcdb.tfunc:Thash.Remove
+    // void tfunc_Thash_FindRemove(); // amcdb.tfunc:Thash.FindRemove
+    // void tfunc_Thash_Init(); // amcdb.tfunc:Thash.Init
+    // void tfunc_Thash_Uninit(); // amcdb.tfunc:Thash.Uninit
+    // void tfunc_Thash_curs(); // amcdb.tfunc:Thash.curs
 
     // -------------------------------------------------------------------
     // cpp/amc/tpool.cpp -- Tpool refetype (fixed-length freelist)
     //
     //     (user-implemented function, prototype is in amc-generated header)
-    // void tclass_Tpool(); // gstatic/amcdb.tclass:Tpool
-    // void tfunc_Tpool_ReserveMem(); // gstatic/amcdb.tfunc:Tpool.ReserveMem
-    // void tfunc_Tpool_Reserve(); // gstatic/amcdb.tfunc:Tpool.Reserve
-    // void tfunc_Tpool_AllocMem(); // gstatic/amcdb.tfunc:Tpool.AllocMem
-    // void tfunc_Tpool_FreeMem(); // gstatic/amcdb.tfunc:Tpool.FreeMem
-    // void tfunc_Tpool_Init(); // gstatic/amcdb.tfunc:Tpool.Init
+    // void tclass_Tpool(); // amcdb.tclass:Tpool
+    // void tfunc_Tpool_ReserveMem(); // amcdb.tfunc:Tpool.ReserveMem
+    // void tfunc_Tpool_Reserve(); // amcdb.tfunc:Tpool.Reserve
+    // void tfunc_Tpool_AllocMem(); // amcdb.tfunc:Tpool.AllocMem
+    // void tfunc_Tpool_FreeMem(); // amcdb.tfunc:Tpool.FreeMem
+    // void tfunc_Tpool_Init(); // amcdb.tfunc:Tpool.Init
 
     // -------------------------------------------------------------------
     // cpp/amc/trace.cpp -- Generate trace code
     //
     //     (user-implemented function, prototype is in amc-generated header)
-    // void gen_trace(); // gstatic/amcdb.gen:trace
+    // void gen_trace(); // amcdb.gen:trace
+
+    // -------------------------------------------------------------------
+    // cpp/amc/trie.cpp
+    //
+
+    // Declare the fields a Trie adds to its parent and the leaf and node structs,
+    // set the substitutions every Trie tfunc uses, and check the dmmeta.trie row.
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void tclass_Trie(); // amcdb.tclass:Trie
+
+    // Generate the initializer, which leaves the trie empty with no node allocated.
+    // void tfunc_Trie_Init(); // amcdb.tfunc:Trie.Init
+
+    // Generate the destructor, which frees every node of a trie on a record.
+    // void tfunc_Trie_Uninit(); // amcdb.tfunc:Trie.Uninit
+
+    // Generate N, which returns the number of values the trie holds.
+    // void tfunc_Trie_N(); // amcdb.tfunc:Trie.N
+
+    // Generate Bytes, the memory the trie holds: each leaf's header and value
+    // slots, and each interior node, from the resident counts the parent keeps.
+    // void tfunc_Trie_Bytes(); // amcdb.tfunc:Trie.Bytes
+
+    // Generate EmptyQ, which returns true when the trie holds no value.
+    // void tfunc_Trie_EmptyQ(); // amcdb.tfunc:Trie.EmptyQ
+
+    // Generate FindLeaf, which returns the leaf covering key K or NULL, and caches
+    // the leaf it found.  The walk descends one level per nbit bits of K, starting
+    // at the root, which covers keys below 2^(nbit*(height+1)).
+    // void tfunc_Trie_FindLeaf(); // amcdb.tfunc:Trie.FindLeaf
+
+    // Generate Find, which returns the value at a key, or NULL when its slot is empty.
+    // void tfunc_Trie_Find(); // amcdb.tfunc:Trie.Find
+
+    // Generate Alloc, which returns the value at a key and constructs it in an
+    // empty slot.  A key the root does not cover raises the root a level at a time,
+    // and a missing node or leaf on the way down is allocated and linked in.
+    // void tfunc_Trie_Alloc(); // amcdb.tfunc:Trie.Alloc
+
+    // Generate FreeNode, which destroys every value under NODE at LEVEL and frees
+    // NODE with its subtree.  The recursion is one call per level, so its depth is
+    // the height of the trie, at most 64/nbit rounded up.
+    // void tfunc_Trie_FreeNode(); // amcdb.tfunc:Trie.FreeNode
+
+    // Generate RemoveAll, which destroys every value and frees every node.
+    // void tfunc_Trie_RemoveAll(); // amcdb.tfunc:Trie.RemoveAll
+
+    // Generate RemoveRange, which destroys the values at keys LO..HI-1, and its
+    // recursive helper RemoveNode.  A leaf or a subtree the range covers whole is
+    // freed at once without visiting its slots.  An interior node the removal left
+    // with no child is freed on the way back up; it holds no count, so the test is
+    // a scan of its children, and it runs only for a node one of whose children
+    // was just freed.
+    // void tfunc_Trie_RemoveRange(); // amcdb.tfunc:Trie.RemoveRange
+
+    // Generate Remove, which destroys the value at one key through RemoveNode.  The
+    // range it passes ends one past the key, and at the largest key that end wraps
+    // to 0; RemoveNode compares the range's last key (HI-1), which is the key again,
+    // so the largest key is removed like any other.
+    // void tfunc_Trie_Remove(); // amcdb.tfunc:Trie.Remove
+
+    // Generate NextLeaf, which returns the first leaf at or past a key under a node,
+    // descending only into children that exist, so an absent subtree costs one
+    // skipped pointer.  The parent argument only tells two tries of one name apart.
+    // void tfunc_Trie_NextLeaf(); // amcdb.tfunc:Trie.NextLeaf
+
+    // Generate PrevLeaf, the mirror of NextLeaf: the last leaf at or below a key.
+    // void tfunc_Trie_PrevLeaf(); // amcdb.tfunc:Trie.PrevLeaf
+
+    // Generate NextKey, which finds the lowest key at or above FROM that holds a
+    // value.  The first leaf comes through FindLeaf, so a walk forward through
+    // dense keys stays on the cached leaf, and a leaf finds its next occupied slot
+    // a 64-bit word at a time.
+    // void tfunc_Trie_NextKey(); // amcdb.tfunc:Trie.NextKey
+
+    // Generate PrevKey, the mirror of NextKey: the highest key at or below FROM that
+    // holds a value.
+    // void tfunc_Trie_PrevKey(); // amcdb.tfunc:Trie.PrevKey
+
+    // Generate the cursor, which visits the values in key order, a leaf at a time
+    // through NextLeaf.
+    // void tfunc_Trie_curs(); // amcdb.tfunc:Trie.curs
 
     // -------------------------------------------------------------------
     // cpp/amc/upptr.cpp -- Upptr reftype
     //
     //     (user-implemented function, prototype is in amc-generated header)
-    // void tclass_Upptr(); // gstatic/amcdb.tclass:Upptr
-    // void tfunc_Upptr_Init(); // gstatic/amcdb.tfunc:Upptr.Init
+    // void tclass_Upptr(); // amcdb.tclass:Upptr
+    // void tfunc_Upptr_Init(); // amcdb.tfunc:Upptr.Init
 
     // -------------------------------------------------------------------
     // cpp/amc/val.cpp -- Val reftype
@@ -3186,12 +3657,12 @@ namespace amc { // update-hdr
     // field emits no variable. Rejects a non-extern finput on a Val field
     // and the fbigend+fldfunc combination.
     //     (user-implemented function, prototype is in amc-generated header)
-    // void tclass_Val(); // gstatic/amcdb.tclass:Val
-    // void tfunc_Val_Get(); // gstatic/amcdb.tfunc:Val.Get
-    // void tfunc_Val_Set(); // gstatic/amcdb.tfunc:Val.Set
-    // void tfunc_Val_Init(); // gstatic/amcdb.tfunc:Val.Init
-    // void tfunc_Val_RowidFind(); // gstatic/amcdb.tfunc:Val.RowidFind
-    // void tfunc_Val_N(); // gstatic/amcdb.tfunc:Val.N
+    // void tclass_Val(); // amcdb.tclass:Val
+    // void tfunc_Val_Get(); // amcdb.tfunc:Val.Get
+    // void tfunc_Val_Set(); // amcdb.tfunc:Val.Set
+    // void tfunc_Val_Init(); // amcdb.tfunc:Val.Init
+    // void tfunc_Val_RowidFind(); // amcdb.tfunc:Val.RowidFind
+    // void tfunc_Val_N(); // amcdb.tfunc:Val.N
 
     // -------------------------------------------------------------------
     // cpp/amc/varlen.cpp -- Varlen reftype
@@ -3203,15 +3674,30 @@ namespace amc { // update-hdr
     tempstr VarlenEndAssign(strptr parname, amc::FField &field, strptr value);
     tempstr VarlenEndIncr(strptr parname, amc::FField &field, strptr incr);
 
+    // C++ expression, true when every varlen end offset a message of CTYPE carries
+    // lies inside the message: each end is at or past the one before it, and none
+    // is past the varlen area, which is LENEXPR bytes less the fixed portion.  The
+    // message is reached through PARNAME.  "true" for a ctype whose varlen fields
+    // need no end offsets, so a caller can conjoin the result unconditionally.
+    //
+    // The ends come off the wire, and every accessor of a later varlen field
+    // subtracts one from another or from the length, in unsigned arithmetic.  A
+    // message from a client built against another layout puts payload bytes where
+    // the ends now sit, the subtraction wraps to a length of gigabytes, and the
+    // first read of the field walks off the buffer.  So the ends are validated at
+    // the cast and at the dispatch, before any accessor reads them, the way the
+    // length itself is.
+    tempstr VarlenBoundExpr(amc::FCtype &ctype, strptr parname, strptr lenexpr);
+
     // Set up the varlen field: declare its end-offset variable when a later
     // varlen field needs one, set the length expressions, ensure the parent
     // pool can hold trailing data, and fail the run when a non-varlen field
     // follows.  gen_check_varlen rejects an element type with a destructor.
     //     (user-implemented function, prototype is in amc-generated header)
-    // void tclass_Varlen(); // gstatic/amcdb.tclass:Varlen
-    // void tfunc_Varlen_Addr(); // gstatic/amcdb.tfunc:Varlen.Addr
-    // void tfunc_Varlen_Getary(); // gstatic/amcdb.tfunc:Varlen.Getary
-    // void tfunc_Varlen_N(); // gstatic/amcdb.tfunc:Varlen.N
+    // void tclass_Varlen(); // amcdb.tclass:Varlen
+    // void tfunc_Varlen_Addr(); // amcdb.tfunc:Varlen.Addr
+    // void tfunc_Varlen_Getary(); // amcdb.tfunc:Varlen.Getary
+    // void tfunc_Varlen_N(); // amcdb.tfunc:Varlen.N
 
     // Generate $name_ReadStrptrMaybe, appending one element parsed from the
     // string to the varlen buffer under construction: char/u8 bytes are copied
@@ -3219,8 +3705,8 @@ namespace amc { // update-hdr
     // other element parses in place -- a nested varlen element collects its
     // own tail in a fresh buffer, stores its length through its own lenfld,
     // and splices in at the field's end offset
-    // void tfunc_Varlen_ReadStrptrMaybe(); // gstatic/amcdb.tfunc:Varlen.ReadStrptrMaybe
-    // void tfunc_Varlen_curs(); // gstatic/amcdb.tfunc:Varlen.curs
-    // void tfunc_Varlen_Print(); // gstatic/amcdb.tfunc:Varlen.Print
-    // void tfunc_Varlen_Init(); // gstatic/amcdb.tfunc:Varlen.Init
+    // void tfunc_Varlen_ReadStrptrMaybe(); // amcdb.tfunc:Varlen.ReadStrptrMaybe
+    // void tfunc_Varlen_curs(); // amcdb.tfunc:Varlen.curs
+    // void tfunc_Varlen_Print(); // amcdb.tfunc:Varlen.Print
+    // void tfunc_Varlen_Init(); // amcdb.tfunc:Varlen.Init
 }

@@ -1,19 +1,19 @@
-// Copyright (C) 2023-2026 AlgoRND
+// Copyright (C) 2025-2026 AlgoX2 Corp
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2017-2019 NYSE | Intercontinental Exchange
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
@@ -32,7 +32,7 @@ static void Main_Trace_Field(strptr field_key, strptr comment) {
     field.reftype       = dmmeta_Reftype_reftype_Val;
     field.comment.value = comment;
     amc::InsField(field);
-    amc::tracefld_InsertMaybe(dmmeta::Tracefld(field_key, field.comment));
+    amc::tracefld_InsertMaybe(gendb::Tracefld(field_key, field.comment));
 }
 
 // -----------------------------------------------------------------------------
@@ -43,7 +43,7 @@ void amc::gen_trace() {
     ind_beg(amc::_db_ns_curs, ns, amc::_db) if (ind_ctype_Find(tempstr() << ns.ns<<".FDb") != NULL) {
         tempstr ctype_key = tempstr() <<ns.ns << ".trace";
         tempstr field_key = tempstr() <<ns.ns << ".FDb.trace";
-        amc::tracerec_InsertMaybe(dmmeta::Tracerec(ctype_key, algo::Comment()));
+        amc::tracerec_InsertMaybe(gendb::Tracerec(ctype_key, algo::Comment()));
         amc::ctype_InsertMaybe(dmmeta::Ctype(ctype_key, algo::Comment()));
         amc::cfmt_InsertMaybe(dmmeta::Cfmt(tempstr() << ctype_key << "." << dmmeta_Strfmt_strfmt_String
                                            , dmmeta_Printfmt_printfmt_Tuple
@@ -84,11 +84,13 @@ void amc::gen_trace() {
                 Main_Trace_Field(Subst(R,"$ns.trace.dispatch_$Dname_$Msgname_cycles"), algo::Comment());
             }
         }ind_end;
-        Main_Trace_Field(Subst(R,"$ns.trace.dispatch_$Dname_Unkmsg"), algo::Comment());
-        // this trace field will never be incremented but it's created anyway for symmetry --
-        // all trace fields that track steps are pairs of 2 u64's, N and total cycles.
-        if (dispatch.c_disptrace && dispatch.c_disptrace->cycle) {
-            Main_Trace_Field(Subst(R,"$ns.trace.dispatch_$Dname_Unkmsg_cycles"), algo::Comment());
+        if (dispatch.unkcount) {
+            Main_Trace_Field(Subst(R,"$ns.trace.dispatch_$Dname_Unkmsg"), algo::Comment());
+            // this trace field will never be incremented but it's created anyway for symmetry --
+            // all trace fields that track steps are pairs of 2 u64's, N and total cycles.
+            if (dispatch.c_disptrace && dispatch.c_disptrace->cycle) {
+                Main_Trace_Field(Subst(R,"$ns.trace.dispatch_$Dname_Unkmsg_cycles"), algo::Comment());
+            }
         }
     }ind_end;
 

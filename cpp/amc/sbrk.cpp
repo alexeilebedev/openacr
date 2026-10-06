@@ -1,21 +1,21 @@
-// Copyright (C) 2023-2026 AlgoRND
+// Copyright (C) 2025-2026 AlgoX2 Corp
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2021 Astra
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 // Copyright (C) 2008-2012 AlgoEngineering LLC
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
@@ -38,7 +38,7 @@ void amc::tclass_Sbrk() {
 //
 // The ceiling and the kernel's refusal are two different answers and the
 // allocator must not confuse them.  Consider a process whose ceiling is 4GB and
-// whose receive cache asks for one 12GB block: the block cannot be served on
+// whose txn cache asks for one 12GB block: the block cannot be served on
 // huge pages, and it is served on ordinary ones.  If that outcome also retires
 // the huge route, every later block -- a two-megabyte pool block that the
 // ceiling has ample room for -- is mapped on ordinary pages too, and the process
@@ -107,7 +107,12 @@ void amc::tfunc_Sbrk_AllocMem() {
     Ins(&R, allocmem.body    , "        if (use_huge) { // the kernel refused the huge route, so stop asking for it");
     Ins(&R, allocmem.body    , "            $parname.$name_huge_limit = 0;");
     Ins(&R, allocmem.body    , "        }");
-    Ins(&R, allocmem.body    , "        u8 *base = (u8*)mmap(0x0, size + bigsize, prot, flags, 0, 0);");
+    Ins(&R, allocmem.body    , "        // The block is mapped unpopulated, advised for transparent huge pages,");
+    Ins(&R, allocmem.body    , "        // and only then populated: pages faulted in by MAP_POPULATE are 4K pages");
+    Ins(&R, allocmem.body    , "        // before any advice could apply, and a host whose THP mode is madvise");
+    Ins(&R, allocmem.body    , "        // gives huge pages to advised regions alone.  A 256 MB block is then");
+    Ins(&R, allocmem.body    , "        // 128 faults where it was 65536.");
+    Ins(&R, allocmem.body    , "        u8 *base = (u8*)mmap(0x0, size + bigsize, prot, flags & ~MAP_POPULATE, 0, 0);");
     Ins(&R, allocmem.body    , "        if (base != MAP_FAILED) {");
     Ins(&R, allocmem.body    , "            u64 pad = ((u64)base + bigsize - 1) / bigsize * bigsize - (u64)base;");
     Ins(&R, allocmem.body    , "            if (pad) {");
@@ -115,6 +120,25 @@ void amc::tfunc_Sbrk_AllocMem() {
     Ins(&R, allocmem.body    , "            }");
     Ins(&R, allocmem.body    , "            munmap(base + pad + size, bigsize - pad);");
     Ins(&R, allocmem.body    , "            ret = base + pad;");
+    Ins(&R, allocmem.body    , "            (void)madvise(ret, size, MADV_HUGEPAGE);");
+    Ins(&R, allocmem.body    , "            // populating is where a size past what the machine holds fails, so a");
+    Ins(&R, allocmem.body    , "            // failure hands the block back and the caller sees out-of-memory.  A");
+    Ins(&R, allocmem.body    , "            // kernel before 5.14, or a build without the advice, populates by");
+    Ins(&R, allocmem.body    , "            // writing one byte per page instead, which faults the same pages.");
+    Ins(&R, allocmem.body    , "            bool populated = false;");
+    Ins(&R, allocmem.body    , "            bool refused = false;");
+    Ins(&R, allocmem.body    , "            #ifdef MADV_POPULATE_WRITE");
+    Ins(&R, allocmem.body    , "            populated = madvise(ret, size, MADV_POPULATE_WRITE) == 0;");
+    Ins(&R, allocmem.body    , "            refused = !populated && errno != EINVAL;");
+    Ins(&R, allocmem.body    , "            #endif");
+    Ins(&R, allocmem.body    , "            if (refused) {");
+    Ins(&R, allocmem.body    , "                munmap(ret, size);");
+    Ins(&R, allocmem.body    , "                ret = MAP_FAILED;");
+    Ins(&R, allocmem.body    , "            } else if (!populated) {");
+    Ins(&R, allocmem.body    , "                for (u64 off = 0; off < size; off += 4096) {");
+    Ins(&R, allocmem.body    , "                    ((volatile u8*)ret)[off] = 0;");
+    Ins(&R, allocmem.body    , "                }");
+    Ins(&R, allocmem.body    , "            }");
     Ins(&R, allocmem.body    , "        }");
     Ins(&R, allocmem.body    , "    }");
     Ins(&R, allocmem.body    , "    // Count the block by whichever route mapped it.  A process that cannot");

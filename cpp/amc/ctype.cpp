@@ -1,21 +1,21 @@
-// Copyright (C) 2023-2026 AlgoRND
+// Copyright (C) 2024-2026 AlgoX2 Corp
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2021 Astra
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 // Copyright (C) 2008-2012 AlgoEngineering LLC
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
@@ -784,6 +784,11 @@ void amc::tfunc_Ctype_ToCmdline() {
         Ins(&R, func.body   , "for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {");
         Ins(&R, func.body   , "    ret << \" -debug\";");
         Ins(&R, func.body   , "}");
+        Ins(&R, func.body   , "// a trace expression names categories, so the child receives it whole");
+        Ins(&R, func.body   , "if (algo_lib::_db.cmdline.trace != \"\") {");
+        Ins(&R, func.body   , "    ret << \" -trace:\";");
+        Ins(&R, func.body   , "    strptr_PrintBash(algo_lib::_db.cmdline.trace, ret);");
+        Ins(&R, func.body   , "}");
     }
 }
 
@@ -1105,7 +1110,7 @@ void amc::GenCopyCtorOrAssignOp(bool copyctor) {
             if (!amc::FixaryQ(fld) && (fld.reftype == dmmeta_Reftype_reftype_Tary || fld.reftype == dmmeta_Reftype_reftype_Inlary)) {
                 needcopy=true;
             }
-            if (fld.c_fbuf != NULL || fld.reftype == dmmeta_Reftype_reftype_Varlen || fld.reftype == dmmeta_Reftype_reftype_Opt) {
+            if (fld.c_fbuf != NULL || fld.reftype == dmmeta_Reftype_reftype_Varlen || fld.reftype == dmmeta_Reftype_reftype_Opt || fld.reftype == dmmeta_Reftype_reftype_Trie) {
                 cancopy=false;
                 reason<<"field "<<fld.field<<" prevents copy" << eol;
             } else if (fld.p_reftype->isval) {

@@ -1,27 +1,51 @@
 /*
-  The stylesheet doc inlines into every page it writes.  The palette is the one
-  ts/website/src/styles/global.css sets: a warm cream tint over near-black, with
-  hsl(42 63% 80%) -- the brand colour -- carrying every link, marker and rule.
-  The same records and the same documents are read in the browser and at the
-  terminal, so nothing here invents a second scheme for them.
+  The stylesheet doc inlines into every page it writes.  Two palettes meet here and
+  each owns half of it.
 
-  A heading carries the one colour beside it: a gold saturated enough to be told from
-  both the cream of the body and the paler cream of a link, and matched to the amber the
-  terminal draws a heading in.  A page is mostly prose, and what a reader scanning one
-  is looking for is where each part starts.
+  The greys are the console's -- the Flexoki base ramp the terminal client is drawn
+  with -- so a document and a command session put the same shades side by side
+  rather than one warm set against one neutral one.  They are named for their step
+  on that ramp and used nowhere by their value, which is what keeps the two in step
+  when either moves.
+
+  A page opens on the grey rather than on the black at the bottom of that ramp.
+  Black leaves the surfaces above it nowhere to go: a card, a raised control and a
+  rule have to be told apart, and three steps of near-black is not a difference a
+  reader sees.  Starting one step up spends the black on the console, where a
+  session wants it, and gives a document room for the shades above.
+
+  The colour is this stylesheet's own: hsl(42 63% 80%), the brand, carries every
+  link, marker and rule, and a heading takes a gold saturated enough to be told
+  from both the body and a link, matched to the amber the terminal draws a heading
+  in.  A page is mostly prose, and what a reader scanning one is looking for is
+  where each part starts.
 */
 
 :root {
-  --bg: hsl(42 10% 3%);
-  --fg: hsl(42 24% 91%);
-  --dim: hsl(42 8% 74%);
+  /* Flexoki base, the console's ramp.  Four steps of surface below the text and
+     three of grey above the background. */
+  --base-black: #100f0f;
+  --base-950: #1c1b1a;
+  --base-900: #282726;
+  --base-850: #343331;
+  --base-800: #403e3c;
+  --base-700: #575653;
+  --base-600: #6f6e69;
+  --base-500: #878580;
+  --base-300: #b7b5ac;
+  --base-200: #cecdc3;
+  --base-100: #e6e4d9;
+
+  --bg: var(--base-950);
+  --fg: var(--base-200);
+  --dim: var(--base-500);
   --brand: hsl(42 63% 80%);
   --head: hsl(45 92% 74%);
-  --card: hsl(42 10% 5%);
-  --raise: hsl(42 10% 8%);
-  --line: hsl(42 18% 15%);
-  --faint: hsl(42 5% 13%);
-  --code: hsl(42 8% 15%);
+  --card: var(--base-900);
+  --raise: var(--base-850);
+  --line: var(--base-850);
+  --faint: var(--base-900);
+  --code: var(--base-900);
   --sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   --mono: ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace;
 }
@@ -46,7 +70,16 @@ body {
 
 ::selection {
   background: var(--brand);
-  color: hsl(42 10% 8%);
+  color: var(--base-950);
+}
+
+/*
+  The page a server draws answers to one palette, so the control that turns a page over
+  is not one this sheet has anything to say to.  A site links a second sheet that does,
+  and reveals it there.
+*/
+.theme {
+  display: none;
 }
 
 a {
@@ -143,7 +176,7 @@ a:hover {
 }
 
 .find .shown:hover {
-  border-color: hsl(42 8% 30%);
+  border-color: var(--base-700);
 }
 
 .find .shown .flag,
@@ -156,7 +189,7 @@ a:hover {
 }
 
 .find .text::placeholder {
-  color: hsl(42 8% 40%);
+  color: var(--base-600);
 }
 
 .find .text:focus {
@@ -183,7 +216,7 @@ a:hover {
   overflow-y: auto;
   overscroll-behavior: contain;
   scrollbar-width: thin;
-  scrollbar-color: hsl(42 18% 25%) transparent;
+  scrollbar-color: var(--base-800) transparent;
   scrollbar-gutter: stable;
   font-size: 0.875rem;
 }
@@ -195,7 +228,7 @@ a:hover {
 }
 
 .side::-webkit-scrollbar-thumb {
-  background: hsl(42 18% 25%);
+  background: var(--base-800);
   border-radius: 4px;
 }
 
@@ -347,7 +380,7 @@ a:hover {
 }
 
 .page strong {
-  color: hsl(42 30% 92%);
+  color: var(--base-100);
   font-weight: 600;
 }
 
@@ -400,10 +433,10 @@ a:hover {
 .page blockquote {
   margin: 1.25rem 0;
   border-left: 3px solid var(--brand);
-  background: hsl(42 10% 6%);
+  background: var(--base-950);
   border-radius: 0.5rem;
   padding: 1rem 1.25rem;
-  color: hsl(42 20% 82%);
+  color: var(--base-300);
 }
 
 .page blockquote p:last-child {
@@ -453,7 +486,7 @@ a:hover {
   font-weight: 600;
   text-align: left;
   padding: 0.6rem 1rem;
-  border-bottom: 1px solid hsl(42 5% 20%);
+  border-bottom: 1px solid var(--base-850);
   font-size: 0.8125rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -471,7 +504,7 @@ a:hover {
 }
 
 .page tbody tr:hover {
-  background: hsl(42 10% 6%);
+  background: var(--base-950);
 }
 
 /* --- code --- */
@@ -479,7 +512,7 @@ a:hover {
 .page code {
   font-family: var(--mono);
   background: var(--code);
-  border: 1px solid hsl(42 5% 22%);
+  border: 1px solid var(--base-800);
   border-radius: 0.25rem;
   padding: 0.075rem 0.35rem;
   font-size: 0.875em;
@@ -517,7 +550,7 @@ a:hover {
 .c-blue      { color: hsl(210 60% 70%); }
 .c-magenta   { color: hsl(300 45% 72%); }
 .c-cyan      { color: hsl(185 45% 65%); }
-.c-white     { color: hsl(42 24% 91%); }
+.c-white     { color: var(--base-200); }
 .c-paleblue  { color: #afd7ff; }
 .c-skyblue   { color: #87d7ff; }
 .c-amber     { color: #ffd7af; }
@@ -752,7 +785,7 @@ a.rec {
   top: 0.9rem;
   width: 4.4ch;
   text-align: right;
-  color: hsl(42 8% 34%);
+  color: var(--base-700);
   user-select: none;
   -webkit-user-select: none;
   pointer-events: none;
@@ -764,16 +797,22 @@ a.rec {
   border-radius: 0;
   line-height: 1.5rem;
   background: var(--code);
-  background-image: repeating-linear-gradient(hsl(42 10% 15% / 0) 0 1.5rem,
-                                              hsl(42 24% 91% / 0.028) 1.5rem 3rem);
+  background-image: repeating-linear-gradient(rgb(40 39 38 / 0) 0 1.5rem,
+                                              rgb(206 205 195 / 0.028) 1.5rem 3rem);
   background-position: 0 0.9rem;
 }
 
-/* --- the footer: which commit this was built from --- */
+/* --- the footer: who made this and which commit it was built from --- */
 
+/*
+  Two columns.  On the left, two lines: the copyright and the credit on the first, the
+  day of the commit on the second.  On the right, the commit id, which is the one line a
+  reader copies.
+*/
 .foot {
   display: flex;
   justify-content: space-between;
+  align-items: flex-start;
   gap: 1rem;
   flex-wrap: wrap;
   max-width: 1400px;
@@ -783,6 +822,18 @@ a.rec {
   font-family: var(--mono);
   font-size: 0.75rem;
   color: var(--dim);
+}
+
+.foot .about {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.foot .line {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
 }
 
 .foot .ref {

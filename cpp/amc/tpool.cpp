@@ -1,21 +1,21 @@
-// Copyright (C) 2023-2026 AlgoRND
+// Copyright (C) 2025-2026 AlgoX2 Corp
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2023 Astra
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 // Copyright (C) 2008-2012 AlgoEngineering LLC
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
@@ -29,9 +29,24 @@
 // the first reservation to process exit whether every element is in use or none
 // is.  Each element is therefore marked as it is handed out and unmarked as it
 // comes back, and the reservation is unmarked where the base pool marks its own
-// handouts, so that no block the checker holds contains another.
+// handouts, so that no block the checker holds contains another.  A block from
+// malloc is a heap chunk the checker tracks on its own and cannot be told to
+// forget, so a pool on malloc marks no element (MarkElemQ).
 
 #include "include/amc.h"
+
+// True when FIELD, a tpool, marks each element for the memory checker.  An
+// element can be marked only where no block the checker holds contains it.  A
+// block from a marking pool is unmarked as it is reserved, and raw memory was
+// never marked.  A block from malloc is a heap chunk the checker holds, and the
+// element carved at its first byte shares the chunk's address: once the pool
+// hands that element out, freeing it reads as a mismatched free.  So a pool on
+// malloc leaves its elements unmarked, and the checker accounts for each block
+// whole.
+static bool MarkElemQ(amc::FField &field) {
+    amc::FField *basepool = GetBasepool(field);
+    return !basepool || basepool->reftype != dmmeta_Reftype_reftype_Malloc;
+}
 
 static bool MtfreeQ(amc::FField &field) {
     (void)field;
@@ -136,7 +151,9 @@ void amc::tfunc_Tpool_AllocMem() {
     Ins(&R, allocmem.body    , "if (row) {");
     Ins(&R, allocmem.body    , "    $parname.$name_free = row->$name_next;");
     Ins(&R, allocmem.body    , "}");
-    Ins(&R, allocmem.body    , "algo_lib::MemcheckAlloc(row, sizeof($Cpptype));");
+    if (MarkElemQ(field)) {
+        Ins(&R, allocmem.body, "algo_lib::MemcheckAlloc(row, sizeof($Cpptype));");
+    }
     Ins(&R, allocmem.body    , "return row;");
 }
 
@@ -152,7 +169,9 @@ void amc::tfunc_Tpool_FreeMem() {
     Ins(&R, freemem.body        , "if (UNLIKELY(row.$name_next != ($Cpptype*)-1)) {");
     Ins(&R, freemem.body        , "    FatalErrorExit(\"$ns.tpool_double_delete  pool:$field  comment:'double deletion caught'\");");
     Ins(&R, freemem.body        , "}");
-    Ins(&R, freemem.body        , "algo_lib::MemcheckFree(&row, sizeof($Cpptype)); // before the free list threads through the element");
+    if (MarkElemQ(field)) {
+        Ins(&R, freemem.body    , "algo_lib::MemcheckFree(&row, sizeof($Cpptype)); // before the free list threads through the element");
+    }
     if (mtfree) {
         Ins(&R, freemem.body    , "// OK to free from another thread.");
         Ins(&R, freemem.body    , "$Cpptype* temp = $parname.$name_free_mt; // insert into thread-safe free list");

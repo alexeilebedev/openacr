@@ -1,0 +1,207 @@
+# setenv HOME:$HOMEDIR
+# unsetenv CREDD_PASSWORD
+# start credd cmd:"$bindir/credd -add:$HOMEDIR/.ssh/id_plain.pub"
+# eof credd
+credd -> credd.error  credd.badfile  file:temp/atf_comp/credd.Import/home/.ssh/id_plain.pub  comment:"the public half of a key; add the private key file"
+# exit credd code:1
+# start bash cmd:"bash -c $'test -e $STORE/creddb/master.ssim || echo no store written'"
+# eof bash
+bash -> no store written
+# exit bash code:0
+# setenv CREDD_PASSWORD:pw
+# start credd-2 cmd:"$bindir/credd -add:%"
+credd-2 <- y
+credd-2 <- n
+credd-2 <- y
+credd-2 <- n
+credd-2 <- y
+credd-2 <- 
+credd-2 <- y
+credd-2 <- wrong
+credd-2 <- y
+credd-2 <- 
+credd-2 <- 2027-06-30
+# eof credd-2
+credd-2 -> credd.newstore  dir:temp/atf_comp/credd.Import/home/.ssh/credd  comment:"no master password yet; choose one"
+credd-2 -> credd.master  dir:temp/atf_comp/credd.Import/home/.ssh/credd  comment:"master password set"
+credd-2 -> credd -add:% walks temp/atf_comp/credd.Import/home/.ssh/ for credentials that predate credd and adds the ones you confirm to temp/atf_comp/credd.Import/home/.ssh/credd.
+credd-2 -> Each is sealed under the master password.  Nothing found here is deleted.
+credd-2 -> gli keeps API tokens as plain text in temp/atf_comp/credd.Import/home/.ssh/gli.ssim.
+credd-2 -> Record for remote ssh://git@gitlab.example.com/x/y.git: a token for https://gitlab.example.com as me.
+credd-2 ->   It becomes credential gitlab.example.com, kind gitlab, sealed under the master password.
+credd-2 ->   A binding line naming it goes after the record, and gli built with credd fetches the token from credd.
+credd-2 -> credd.add  cred:gitlab.example.com  kind:gitlab  linkto:""  perm:""
+credd-2 -> Record for remote ssh://git@gitlab.example.com/x/y.git: a token for https://gitlab.example.com as bot.
+credd-2 ->   It becomes credential gitlab.example.com@bot, kind gitlab, sealed under the master password.
+credd-2 ->   A binding line naming it goes after the record, and gli built with credd fetches the token from credd.
+credd-2 -> credd.badrecord  file:temp/atf_comp/credd.Import/home/.ssh/gli.ssim  remoteurl:ssh://git@nowhere.example.com/x/y.git  comment:"serverurl carries no scheme://host, so the token has no credential name; skipped"
+credd-2 -> The tokens stay in the records, so a gli built without credd, in another checkout on this machine, keeps working.
+credd-2 -> Once every gli on this machine is built with credd, run gli -auth in each checkout and answer - at its token prompt to drop the token from the record.
+credd-2 -> credd.rewrite  file:temp/atf_comp/credd.Import/home/.ssh/gli.ssim  n_record:1
+credd-2 -> credd.badfile  file:temp/atf_comp/credd.Import/home/.ssh/bin.token  comment:"not a text file holding a token; skipped"
+credd-2 -> temp/atf_comp/credd.Import/home/.ssh/me.token holds a token, 63 bytes, looks like aws.
+credd-2 ->   It becomes credential me, the file's content as the secret.
+credd-2 ->   Retrieve it with credd -show:me, or eval "$(credd -show:me)" for a shell fragment.
+credd-2 ->   The file stays until you remove it.
+credd-2 -> credd.add  cred:me  kind:aws  linkto:""  perm:""
+credd-2 -> temp/atf_comp/credd.Import/home/.ssh/id_locked is a private key, behind a passphrase.
+credd-2 ->   It becomes credential id_locked, kind sshkey, sealed under the master password.
+credd-2 ->   The daemon loads it into the agent at temp/atf_comp/credd.Import/home/.ssh/ssh_auth_sock; with SSH_AUTH_SOCK naming that, ssh finds it.
+credd-2 ->   Once the key is in the store the file is no longer needed, and you can remove it.  credd never removes it.
+credd-2 -> credd.badkey  name:id_locked  comment:"wrong passphrase, or ssh-keygen cannot read it; skipped"
+credd-2 -> temp/atf_comp/credd.Import/home/.ssh/id_plain is a private key.
+credd-2 ->   It becomes credential id_plain, kind sshkey, sealed under the master password.
+credd-2 ->   The daemon loads it into the agent at temp/atf_comp/credd.Import/home/.ssh/ssh_auth_sock; with SSH_AUTH_SOCK naming that, ssh finds it.
+credd-2 ->   Once the key is in the store the file is no longer needed, and you can remove it.  credd never removes it.
+credd-2 -> credd.add  cred:id_plain  kind:sshkey  linkto:""  perm:""
+credd-2 -> credd.import  n_add:3  n_cred:3  comment:"credd -list shows the store; credd -start serves it"
+# exit credd-2 code:0
+# start credd-3 cmd:"$bindir/credd -add:%"
+credd-3 <- n
+credd-3 <- y
+credd-3 <- kp
+credd-3 <- from the locked file
+credd-3 <- 
+# eof credd-3
+credd-3 -> credd -add:% walks temp/atf_comp/credd.Import/home/.ssh/ for credentials that predate credd and adds the ones you confirm to temp/atf_comp/credd.Import/home/.ssh/credd.
+credd-3 -> Each is sealed under the master password.  Nothing found here is deleted.
+credd-3 -> gli keeps API tokens as plain text in temp/atf_comp/credd.Import/home/.ssh/gli.ssim.
+credd-3 -> credd.bound  remoteurl:ssh://git@gitlab.example.com/x/y.git  checkout:""  comment:"the record already carries a binding line"
+credd-3 -> Record for remote ssh://git@gitlab.example.com/x/y.git: a token for https://gitlab.example.com as bot.
+credd-3 ->   It becomes credential gitlab.example.com@bot, kind gitlab, sealed under the master password.
+credd-3 ->   A binding line naming it goes after the record, and gli built with credd fetches the token from credd.
+credd-3 -> credd.badrecord  file:temp/atf_comp/credd.Import/home/.ssh/gli.ssim  remoteurl:ssh://git@nowhere.example.com/x/y.git  comment:"serverurl carries no scheme://host, so the token has no credential name; skipped"
+credd-3 -> credd.badfile  file:temp/atf_comp/credd.Import/home/.ssh/bin.token  comment:"not a text file holding a token; skipped"
+credd-3 -> credd.skip  name:me  source:temp/atf_comp/credd.Import/home/.ssh/me.token  comment:"a credential of this name is in the store already"
+credd-3 -> temp/atf_comp/credd.Import/home/.ssh/id_locked is a private key, behind a passphrase.
+credd-3 ->   It becomes credential id_locked, kind sshkey, sealed under the master password.
+credd-3 ->   The daemon loads it into the agent at temp/atf_comp/credd.Import/home/.ssh/ssh_auth_sock; with SSH_AUTH_SOCK naming that, ssh finds it.
+credd-3 ->   Once the key is in the store the file is no longer needed, and you can remove it.  credd never removes it.
+credd-3 -> credd.add  cred:id_locked  kind:sshkey  linkto:""  perm:""
+credd-3 -> credd.skip  name:id_plain  source:temp/atf_comp/credd.Import/home/.ssh/id_plain  comment:"a credential of this name is in the store already"
+credd-3 -> credd.import  n_add:1  n_cred:4  comment:"credd -list shows the store; credd -start serves it"
+# exit credd-3 code:0
+# start credd-4 cmd:"$bindir/credd -add:$HOMEDIR/.ssh/work.token"
+credd-4 <- y
+credd-4 <- 
+# eof credd-4
+credd-4 -> temp/atf_comp/credd.Import/home/.ssh/work.token holds a token, 11 bytes, looks like gitlab.
+credd-4 ->   It becomes credential work, the file's content as the secret.
+credd-4 ->   Retrieve it with credd -show:work, or eval "$(credd -show:work)" for a shell fragment.
+credd-4 ->   The file stays until you remove it.
+credd-4 -> credd.add  cred:work  kind:gitlab  linkto:""  perm:""
+credd-4 -> credd.import  n_add:1  n_cred:5  comment:"credd -list shows the store; credd -start serves it"
+# exit credd-4 code:0
+# start credd-5 cmd:"$bindir/credd -add:$HOMEDIR/.ssh/id_work"
+credd-5 <- y
+credd-5 <- 
+credd-5 <- 
+# eof credd-5
+credd-5 -> temp/atf_comp/credd.Import/home/.ssh/id_work is a private key.
+credd-5 ->   It becomes credential id_work, kind sshkey, sealed under the master password.
+credd-5 ->   The daemon loads it into the agent at temp/atf_comp/credd.Import/home/.ssh/ssh_auth_sock; with SSH_AUTH_SOCK naming that, ssh finds it.
+credd-5 ->   Once the key is in the store the file is no longer needed, and you can remove it.  credd never removes it.
+credd-5 -> credd.add  cred:id_work  kind:sshkey  linkto:""  perm:""
+credd-5 -> credd.import  n_add:1  n_cred:6  comment:"credd -list shows the store; credd -start serves it"
+# exit credd-5 code:0
+# start credd-6 cmd:"$bindir/credd -add:$HOMEDIR/.ssh/aws_prod"
+credd-6 <- y
+credd-6 <- 
+# eof credd-6
+credd-6 -> temp/atf_comp/credd.Import/home/.ssh/aws_prod holds a token, 24 bytes, looks like aws.
+credd-6 ->   It becomes credential aws_prod, the file's content as the secret.
+credd-6 ->   Retrieve it with credd -show:aws_prod, or eval "$(credd -show:aws_prod)" for a shell fragment.
+credd-6 ->   The file stays until you remove it.
+credd-6 -> credd.add  cred:aws_prod  kind:aws  linkto:""  perm:""
+credd-6 -> credd.import  n_add:1  n_cred:7  comment:"credd -list shows the store; credd -start serves it"
+# exit credd-6 code:0
+# start credd-7 cmd:"$bindir/credd -add:$HOMEDIR/.ssh/empty.token"
+# eof credd-7
+credd-7 -> credd.error  credd.badfile  file:temp/atf_comp/credd.Import/home/.ssh/empty.token  comment:"not a gli.ssim, a private key or a text file holding a token named by its file"
+# exit credd-7 code:1
+# start credd-8 cmd:"$bindir/credd -add:$HOMEDIR/.ssh/work.token -expires:2027-01-01"
+# eof credd-8
+credd-8 -> credd.error  credd.badopt  add:temp/atf_comp/credd.Import/home/.ssh/work.token  comment:"-linkto, -kind, -server, -account, -perm, -expires, -comment and -src go with -add:<name>; a file or the walk reads them from the file and asks"
+# exit credd-8 code:1
+# start credd-9 cmd:"$bindir/credd -add:$HOMEDIR/.ssh/id_work.pub"
+# eof credd-9
+credd-9 -> credd.error  credd.badfile  file:temp/atf_comp/credd.Import/home/.ssh/id_work.pub  comment:"the public half of a key; add the private key file"
+# exit credd-9 code:1
+# start credd-10 cmd:"$bindir/credd -add:%"
+credd-10 <- y
+credd-10 <- y
+credd-10 <- y
+# eof credd-10
+credd-10 -> credd -add:% walks temp/atf_comp/credd.Import/home/.ssh/ for credentials that predate credd and adds the ones you confirm to temp/atf_comp/credd.Import/home/.ssh/credd.
+credd-10 -> Each is sealed under the master password.  Nothing found here is deleted.
+credd-10 -> gli keeps API tokens as plain text in temp/atf_comp/credd.Import/home/.ssh/gli.ssim.
+credd-10 -> credd.bound  remoteurl:ssh://git@gitlab.example.com/x/y.git  checkout:""  comment:"the record already carries a binding line"
+credd-10 -> Record for remote ssh://git@gitlab.example.com/x/y.git: a token for https://gitlab.example.com as bot.
+credd-10 ->   It becomes credential gitlab.example.com@bot, kind gitlab, sealed under the master password.
+credd-10 ->   A binding line naming it goes after the record, and gli built with credd fetches the token from credd.
+credd-10 -> credd.add  cred:gitlab.example.com@bot  kind:gitlab  linkto:""  perm:""
+credd-10 -> credd.badrecord  file:temp/atf_comp/credd.Import/home/.ssh/gli.ssim  remoteurl:ssh://git@nowhere.example.com/x/y.git  comment:"serverurl carries no scheme://host, so the token has no credential name; skipped"
+credd-10 -> The tokens stay in the records, so a gli built without credd, in another checkout on this machine, keeps working.
+credd-10 -> Once every gli on this machine is built with credd, run gli -auth in each checkout and answer - at its token prompt to drop the token from the record.
+credd-10 -> credd.rewrite  file:temp/atf_comp/credd.Import/home/.ssh/gli.ssim  n_record:1
+credd-10 -> credd.badfile  file:temp/atf_comp/credd.Import/home/.ssh/bin.token  comment:"not a text file holding a token; skipped"
+credd-10 -> credd.badfile  file:temp/atf_comp/credd.Import/home/.ssh/empty.token  comment:"not a text file holding a token; skipped"
+credd-10 -> credd.skip  name:me  source:temp/atf_comp/credd.Import/home/.ssh/me.token  comment:"a credential of this name is in the store already"
+credd-10 -> credd.skip  name:work  source:temp/atf_comp/credd.Import/home/.ssh/work.token  comment:"a credential of this name is in the store already"
+credd-10 -> credd.skip  name:id_locked  source:temp/atf_comp/credd.Import/home/.ssh/id_locked  comment:"a credential of this name is in the store already"
+credd-10 -> credd.skip  name:id_plain  source:temp/atf_comp/credd.Import/home/.ssh/id_plain  comment:"a credential of this name is in the store already"
+credd-10 -> credd.skip  name:id_work  source:temp/atf_comp/credd.Import/home/.ssh/id_work  comment:"a credential of this name is in the store already"
+credd-10 -> credd.import  n_add:1  n_cred:8  comment:"credd -list shows the store; credd -start serves it"
+# exit credd-10 code:0
+# start credd-11 cmd:"$bindir/credd -add:$HOMEDIR/.ssh/ghdev.token"
+credd-11 <- y
+credd-11 <- 
+# eof credd-11
+credd-11 -> temp/atf_comp/credd.Import/home/.ssh/ghdev.token holds a token, 20 bytes, looks like github.
+credd-11 ->   It becomes credential ghdev, the file's content as the secret.
+credd-11 ->   Retrieve it with credd -show:ghdev, or eval "$(credd -show:ghdev)" for a shell fragment.
+credd-11 ->   The file stays until you remove it.
+credd-11 -> credd.add  cred:ghdev  kind:github  linkto:""  perm:""
+credd-11 -> credd.import  n_add:1  n_cred:9  comment:"credd -list shows the store; credd -start serves it"
+# exit credd-11 code:0
+# start credd-12 cmd:"$bindir/credd -list"
+# eof credd-12
+credd-12 -> cred                    kind    server                      comment
+credd-12 -> gitlab.example.com      gitlab  https://gitlab.example.com  from gli.ssim
+credd-12 -> me                      aws                                 from me.token
+credd-12 -> id_plain                sshkey                              plainkey
+credd-12 -> id_locked               sshkey                              from the locked file
+credd-12 -> work                    gitlab                              from work.token
+credd-12 -> id_work                 sshkey                              workkey
+credd-12 -> aws_prod                aws                                 from aws_prod
+credd-12 -> gitlab.example.com@bot  gitlab  https://gitlab.example.com  from gli.ssim
+credd-12 -> ghdev                   github                              from ghdev.token
+# exit credd-12 code:0
+# start bash-2 cmd:"bash -c $'cat $HOMEDIR/.ssh/gli.ssim'"
+# eof bash-2
+bash-2 -> lib_gli.Server  remoteurl:ssh://git@gitlab.example.com/x/y.git  serverurl:https://gitlab.example.com  username:me  token:glpat-one  project_path:x/y
+bash-2 -> lib_gli.Servercred  remoteurl:ssh://git@gitlab.example.com/x/y.git  checkout:""  cred:gitlab.example.com
+bash-2 -> lib_gli.Server  remoteurl:ssh://git@gitlab.example.com/x/y.git  serverurl:https://gitlab.example.com  username:bot  token:""  project_path:x/y  checkout:/home/me/bot
+bash-2 -> lib_gli.Servercred  remoteurl:ssh://git@gitlab.example.com/x/y.git  checkout:/home/me/bot  cred:gitlab.example.com@bot
+bash-2 -> lib_gli.Server  remoteurl:ssh://git@nowhere.example.com/x/y.git  serverurl:''  username:me  token:glpat-three  project_path:x/y
+bash-2 -> some unparsed line
+# exit bash-2 code:0
+# start bash-3 cmd:"bash -c $'ls $HOMEDIR/.ssh'"
+# eof bash-3
+bash-3 -> aws_prod
+bash-3 -> bin.token
+bash-3 -> credd
+bash-3 -> empty.token
+bash-3 -> ghdev.token
+bash-3 -> gli.ssim
+bash-3 -> id_locked
+bash-3 -> id_locked.pub
+bash-3 -> id_plain
+bash-3 -> id_plain.pub
+bash-3 -> id_work
+bash-3 -> id_work.pub
+bash-3 -> known_hosts
+bash-3 -> me.token
+bash-3 -> work.token
+# exit bash-3 code:0
+# clearenv

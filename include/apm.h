@@ -1,18 +1,18 @@
-// Copyright (C) 2023-2024,2026 AlgoRND
+// Copyright (C) 2026 AlgoX2 Corp
+// Copyright (C) 2023-2024 AlgoRND
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Target: apm (exe) -- Algo Package Manager
 // Exceptions: yes
@@ -39,6 +39,52 @@ namespace apm { // update-hdr
     //
     void Main_Check();
 
+    // Report every record of each selected open-source package whose license
+    // forbids it there, and return how many were found.
+    // An open-source package is published outside the company, so a namespace or a
+    // file under a proprietary license must never be part of it.  A target the
+    // package builds must not link a system library under a proprietary license
+    // either, nor one under a copyleft license such as the GPL: say acr_compl links
+    // GNU readline, then every acr_compl binary built from the package is a GPL program,
+    // whatever license its own sources carry.  Each finding names the package, the
+    // record and the license, so the fix is a key that excludes the record, a
+    // license change in the record's namespace, or a target that stops linking the
+    // library.
+    int CheckLicense();
+
+    // Report every record of each selected package that references a record the
+    // package does not carry, and return how many were found.
+    // A package installed into an empty repository holds exactly its own records and
+    // those of the packages it builds on, so a reference to anything else is one
+    // that repository cannot resolve: acr -check fails there, and amc stops on the
+    // first such reference it needs.  Each finding names the record and its target,
+    // so the fix is to bring the target into the package or to move the record out.
+    int CheckDangling();
+
+    // Report every source file that defines user functions for records a selected
+    // package carries and for records it does not, and return how many were found.
+    // Take a comptest driver that defines one test of openacr's and one of an
+    // extending package's.  openacr cannot carry the file, since the other test has
+    // no row there and amc would
+    // generate no prototype for its function.  Nor can openacr drop it, since its own
+    // test row would then name a function nothing defines, and the origin fails to
+    // link.  apm publishes a file whole, so the only fix is to split it, one owner per
+    // file.  Only a package that builds the file's target is asked, since a package
+    // that carries a target's data and not its namespace never compiles the file.
+    // Each finding names the file, one record on each side, and how many there are of
+    // each.
+    int CheckMixedFile();
+
+    // Report every file on which the projection of this tree at a selected package's
+    // localref and the origin at its baseref disagree, and return how many there are.
+    // A sync is a pair of commits, one per repository, and the origin's commit is
+    // the projection of this tree's: that is what lets a push take the whole origin
+    // as its base.  A file only one side holds means the pair does not correspond,
+    // and the next push would treat the difference as a change nobody made.  File
+    // contents are not compared, since each tree regenerates its own generated files;
+    // ssimfiles are records, and data/ is left out.
+    int CheckSyncPair();
+
     // -------------------------------------------------------------------
     // cpp/apm/diff.cpp
     //
@@ -58,12 +104,43 @@ namespace apm { // update-hdr
     void Main_Install();
 
     // -------------------------------------------------------------------
+    // cpp/apm/keyword.cpp
+    //
+
+    // Report every selected package that carries a word it must not contain, in a
+    // record, a file name or a line of a published file, and return how many
+    // findings there are.
+    //
+    // Each package names the words that identify it, in dev.pkgkeyword, and the
+    // rows belong to that package.  So openacr carries none of the words of a
+    // package that extends it, and carries no list of them either: the list ships
+    // only with the extender.  A package names the words it must never carry as
+    // forbid:Y rows, and those hold for what it carries too.
+    //
+    // What is checked is the package's evaluation, records and files alike, since
+    // that is exactly what a push carries, so a downstream table named in a
+    // published document is reported in the commit that writes it.
+    //
+    // Only the first ten findings of a package are printed, because a package that
+    // has gone wrong tends to go wrong in bulk, and -v prints them all.  The summary reports how many there
+    // are alongside how many it showed: a fix written from the printout alone would
+    // address ten of them and leave the rest to surface next run.
+    int CheckKeyword();
+
+    // Report every link of a selected package's published markdown that names a
+    // tracked file the package does not carry, and return how many there are.  The
+    // carrier set is the package and every package it carries, the files a push
+    // sends together, so a link from a contained package into its parent's docs
+    // resolves.  A package with no dev.pkgupstream row has no downstream for a
+    // link to dangle in, and the check starts with its first destination.
+    int CheckLink();
+
+    // -------------------------------------------------------------------
     // cpp/apm/main.cpp
     //
 
     // Initialize zd_sel_package list based on the command line regex
     // For -update, -install -- select parent packages as well
-    // For -remove -- select dependent packages
     // For parents, dependencies marked as 'soft' are not followed.
     // These dependencies are used to establish proper package order for the purposes
     // of determining which file/record belongs to which package (i.e. everything depends
@@ -87,7 +164,21 @@ namespace apm { // update-hdr
     // rather than a message on stderr the caller has no use for.
     tempstr RevParseMaybe(algo::strptr rev);
 
-    // Bring PACKAGE's origin into this repo and resolve REF to a commit id there.
+    // Return the destination of PACKAGE that this run acts on, or NULL when the
+    // package has none, which is a package that lives in this tree.  A package syncs
+    // with each of its dev.pkgupstream rows separately, and -dest names the row by
+    // its dest.  Without -dest the package's only row is the one; a package with
+    // several rows refuses, since picking one would merge or publish against an
+    // origin nobody named.
+    apm::FPkgupstream *GetPkgupstream(apm::FPackage &package);
+
+    // Return the namespace under refs/apm/ into which PACKAGE's origin is fetched:
+    // <package>/<dest> for a package with a destination, so that two origins of one
+    // package never overwrite each other's refs, and the package name otherwise.
+    tempstr GetRefns(apm::FPackage &package);
+
+    // Bring ORIGIN into this repo under refs/apm/REFNAME and resolve REF to a commit
+    // id there.
     // Return the commit, or the empty string when the origin cannot be reached or
     // REF names nothing in it.
     //
@@ -98,13 +189,13 @@ namespace apm { // update-hdr
     // baseref directly therefore dies with "couldn't find remote ref" on the one
     // value the field is supposed to hold.
     //
-    // The origin's heads come across as a set instead, into a ref namespace of this
-    // package's own, and REF is resolved locally afterwards.  Any commit an origin
+    // The origin's heads come across as a set instead, into the ref namespace
+    // REFNAME, and REF is resolved locally afterwards.  Any commit an origin
     // branch reaches is then in this repo's object store and rev-parse finds it, so
     // a commit id, a branch name and HEAD all resolve through one path.  The
     // namespace is consulted before the repo, because REF names something in the
     // origin and a local branch of the same spelling is a different commit.
-    tempstr FetchPackageOrigin(algo::strptr pkgname, algo::strptr origin, algo::strptr ref);
+    tempstr FetchPackageOrigin(algo::strptr refname, algo::strptr origin, algo::strptr ref);
 
     // Execute any commands accumulated in _DB.SCRIPT
     // if -dry_run, print it to the screen
@@ -124,7 +215,10 @@ namespace apm { // update-hdr
     // Command line field BINPATH names the subdirectory the binaries sit in.
     tempstr GetApmPath(algo::strptr dir);
 
-    // Return the mode bits of FILENAME, which are zero when it cannot be stat'ed.
+    // Return the mode bits of FILENAME, which are zero when it does not exist.  A
+    // symbolic link reports its own mode, because git tracks the link: a link whose
+    // target is not built yet still exists, and one whose target is a binary is
+    // still a link.
     int GetFileMode(algo::strptr filename);
 
     // Retrun regx of selected packages
@@ -139,14 +233,44 @@ namespace apm { // update-hdr
     // Definte fake packages based on 'ns' regx
     void DefPackages();
     //     (user-implemented function, prototype is in amc-generated header)
-    // void Main(); // main:apm
+    // void Main(); // dmmeta.main:apm
+
+    // -------------------------------------------------------------------
+    // cpp/apm/publish.cpp
+    //
+
+    // Publish the selected package to its destination, the dev.pkgupstream row -dest
+    // names: produce it in a fresh clone of the destination's origin, regenerate,
+    // verify, show the maintainer what goes out, and push it after two yeses.
+    //
+    // Each stage prints a heading and stops the run when it fails, so the clone under
+    // temp/apm-publish is left as the stage found it for the maintainer to look at.
+    // -dry_run stops after the delta is shown.  The stages, in order:
+    //
+    // - check: apm -check over this tree, which refuses a word the package must not
+    // carry, a dangling record, or proprietary content in an open-source package;
+    // - clone: the origin, fresh, which must sit at the destination's baseref, since a
+    // push replaces what the origin holds and anything newer there would be lost;
+    // - produce: apm -push of this tree's projection into the clone;
+    // - regenerate: amc and update-hdr in the clone, with this tree's binaries, since
+    // a generated file holds the output over the database that wrote it;
+    // - build: ai in the clone, which builds the clone's own binaries;
+    // - docs: the clone's abt_md, which regenerates and checks every document;
+    // - secrets: the clone's secret badlines over every file of the clone;
+    // - comptests: the clone's atf_comp, which is what says the package works;
+    // - show: the size of the tree and the delta against the origin's head;
+    // - commit and push, each after a yes, with the destination's credd token;
+    // - reset: this tree records the pushed commit as the destination's baseref.
+    void Main_Publish();
 
     // -------------------------------------------------------------------
     // cpp/apm/push.cpp
     //
 
-    // Push any differences in selected packages between current directory
-    // and BASE_DIR to BASE_DIR
+    // Make the origin BASE_DIR equal the projection of the selected packages.  The
+    // origin is the projection of the last sync, so the base of the push is the
+    // whole origin: every file and record it holds that the new projection does not
+    // is one the downstream tree deleted, and it is deleted there too.
     void PushDiff(algo::strptr base_dir);
 
     // Push any local differences between ORIGIN and current directory
@@ -158,6 +282,14 @@ namespace apm { // update-hdr
     // -------------------------------------------------------------------
     // cpp/apm/rec.cpp
     //
+
+    // Make PACKAGE and the packages whose content it carries the carriers that
+    // CarriedQ asks about, and every other package not one.
+    // With PACKAGE NULL there is no carrier.
+    void SetCarrier(apm::FPackage *package);
+
+    // Return true if a carrier set by SetCarrier holds REC.
+    bool CarriedQ(apm::FRec &rec);
 
     // Load all records (FRec) from dataset _db.cmdline.data_in)
     // For each record (FRec), compute p_ssimfile, pkey, tuple
@@ -184,15 +316,13 @@ namespace apm { // update-hdr
     // Remove from PACKAGE every pkgrec whose record is currently in zd_selrec.
     // With KEEP_LITERAL, a record the package names outright is kept.
     //
-    // The two callers want opposite things of a record both a package and one of
-    // its extenders capture.  An exclusion key is the package's own statement that
-    // the record is not its, so it removes whatever it matches.  The subtraction a
-    // relation derives is a statement about the extender instead, and the extender
-    // reaches records it never meant to claim: a downstream package asks for one of
-    // its own tables, the reference closure follows those rows into a table the base
-    // owns, and the base's rows would leave with them.  Naming a record outright is
-    // how a package says the record is its regardless, so that claim survives, and a
-    // blanket like `dev.%:%` does not.
+    // A record a package names outright stays with it against both of the package's
+    // statements about what is not its own: an exclusion, which is a blanket such as
+    // `dev.package:%` beside the literal `dev.package:openacr`, and the subtraction a
+    // relation derives, where an extender's reference closure reaches a table the
+    // base owns.  Naming a record outright is how a package says the record is its
+    // regardless, and a blanket like `dev.%:%` does not.  A record whose requirement
+    // the package lacks goes whatever named it, so DropUnmet passes KEEP_LITERAL false.
     //
     // The walk is by hand rather than by cursor because it deletes the rows it
     // visits, and a cursor over a list may not outlive the removal of its own node.
@@ -203,22 +333,15 @@ namespace apm { // update-hdr
     void SelectPkgRecs(apm::FPackage &package);
 
     // -------------------------------------------------------------------
-    // cpp/apm/remove.cpp
-    //
-
-    // Remove selected packages
-    // - Remove package record
-    // - Remove pkgfile and pkgkey records
-    // - Remove git files
-    // TODO: this must be implemented as an UPDATE
-    // with target being an empty set.
-    void Main_Remove();
-
-    // -------------------------------------------------------------------
     // cpp/apm/reset.cpp
     //
 
-    // Set the selected package's origin and baseref from the command line.
+    // Set the selected package's origin and baseref from the command line, and
+    // record this tree's HEAD as localref: -reset with -ref closes the sync loop
+    // after a push, when the origin's new commit is the projection of HEAD.
+    // The three values form the dev.pkgupstream row of the destination -dest names,
+    // which the reset creates when the package has no such row; the destination
+    // defaults to the package's only one, or to "origin" for a package with none.
     // A ref given with -ref is resolved against the origin before it is stored, so
     // what lands in the record is a commit id.  Storing the name instead would let
     // the origin move the branch afterwards, and the record would then describe a
@@ -241,6 +364,11 @@ namespace apm { // update-hdr
 
     // Save local package definitions to file
     void SavePackageDefs(algo::strptr filename);
+
+    // Return true if DIR is a repository no package has reached yet: it has no data
+    // directory, as in a fresh checkout that a first push populates.  An empty DIR
+    // names the current directory, which is never empty.
+    bool EmptyOriginQ(algo::strptr dir);
 
     // Collect package records from directory DIR into RECFILE
     // Return success code
@@ -268,11 +396,39 @@ namespace apm { // update-hdr
     // Throw exception on error
     void Main_Showfile();
 
-    // Save package records into apm/gen/<package>.ssim
+    // Print the records of every selected package to stdout, in sorted order, with a
+    // sha1 note above each hand-written file the package carries.
+    //
+    // The records used to be written into apm/gen/<package>.ssim and kept in git,
+    // where they were regenerated on every normalize run and conflicted with every
+    // branch that touched a tracked file.  Nothing read them: they are a view of the
+    // package, and a view is computed when it is asked for.
     void Main_Generate();
 
     // List packages in topological order
     void Main_List();
+
+    // -------------------------------------------------------------------
+    // cpp/apm/src.cpp
+    //
+
+    // Give every hand-written C++ file in the database a reference to each record
+    // whose generated symbol its code names or whose user function it defines.
+    // Take cpp/amc/ctype.cpp, which compares a field's reftype against
+    // dmmeta_Reftype_reftype_Val.  The constant exists because dmmeta.reftype has a
+    // row for it, so a package that carries the file and not the row ships code that does
+    // not compile -- and no record says so, because the file's dev.gitfile row
+    // references nothing.  amc knows which record each symbol comes from and writes
+    // that to gendb.cppsym, so reading the file is enough to draw the edge.  A user
+    // function is the same edge in the other direction: a file defining
+    // atf_comp::comptest_apm_SrcScan needs atfdb.comptest:apm.SrcScan, or amc
+    // generates no prototype for it and the definition fails to compile.  So the
+    // file requires that record, and a package that lacks the record cannot carry
+    // the file.  The record does not require the file in turn, since a package may
+    // carry a row whose file the origin keeps.  The
+    // edge is an ordinary reference: the ref closure brings the row with the file,
+    // and apm -check reports it as dangling for a package that leaves it behind.
+    void ScanSources();
 
     // -------------------------------------------------------------------
     // cpp/apm/update.cpp
@@ -308,10 +464,6 @@ namespace apm { // update-hdr
     // there are 3 possible actions: copy over, delete, or merge
     void MergeFiles(apm::FPackage &package);
 
-    // Rewrite dev.package files matching PACKAGE in FILENAME so that ORIGIN,BASEREF match those
-    // specified in the function arguments
-    void RewritePackageRecs(algo::strptr origin, algo::strptr baseref, algo::strptr pkgname, algo::strptr filename);
-
     // Update selected packages to the latest version,
     // or to `-ref` if specified
     // check that the directory is clean, abort if not.
@@ -327,7 +479,7 @@ namespace apm { // update-hdr
     // apply changes that can be applied to ssimfiles,
     // insert conflicts into ssimfiles in appropriate places
     // user continues with `git add ...`, `git commit` or `git reset --hard` to abort
-    // This function handles installation as well (the case where package.baseref = empty string)
+    // This function handles installation as well (the case where the baseref is an empty string)
     //
     // Each step below produces one of the inputs the next steps read: a sandbox
     // directory, one of the three sides of the record merge, the merged records, or
@@ -340,4 +492,18 @@ namespace apm { // update-hdr
     // the nonzero exit keeps the transaction from running. The steps, and what apm
     // does when each of them fails, are pinned by comptest apm.UpdateFate.
     void Main_Update();
+
+    // -------------------------------------------------------------------
+    // include/apm.inl.h
+    //
+
+    // Return the origin of PACKAGE's destination: the URL it was installed from, or "." for a
+    // package that has no dev.pkgupstream row and so lives in this tree.
+    inline algo::strptr GetOrigin(apm::FPackage &package);
+
+    // Return the baseref of PACKAGE's destination: the commit of its origin this tree last merged
+    // or published, or HEAD for a package that lives in this tree.
+    inline algo::strptr GetBaseref(apm::FPackage &package);
 }
+
+#include "include/apm.inl.h"

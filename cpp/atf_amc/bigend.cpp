@@ -1,20 +1,20 @@
-// Copyright (C) 2023-2024,2026 AlgoRND
+// Copyright (C) 2026 AlgoX2 Corp
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2023 Astra
 // Copyright (C) 2018-2019 NYSE | Intercontinental Exchange
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: atf_amc (exe) -- Unit tests for amc (see amctest table)
@@ -208,44 +208,44 @@ void atf_amc::amctest_BigEndian() {
     {
         const u64 val    = 0xfedcba9876543210;
         const u64 val_be = 0x1032547698badcfe;
-        atf_amc::TypeBE64 x1,x2;
-        value_Set(x1,val);
-        value_Set(x2,val_be);
-        vrfy_(u64_Hash(0,val)     == TypeBE64_Hash(0,x1));
-        vrfy_(u64_Hash(0,val_be)  == TypeBE64_Hash(0,x2));
+        atf_amc::TypeBE64 lhs,rhs;
+        value_Set(lhs,val);
+        value_Set(rhs,val_be);
+        vrfy_(u64_Hash(0,val)     == TypeBE64_Hash(0,lhs));
+        vrfy_(u64_Hash(0,val_be)  == TypeBE64_Hash(0,rhs));
     }
     // Big-endian u64 ==
     {
         const u64 val    = 0xfedcba9876543210;
         const u64 val_be = 0x1032547698badcfe;
-        atf_amc::TypeBE64 x1,x2;
-        value_Set(x1,val);
-        value_Set(x2,val_be);
-        vrfy_(  x1 == x1 );
-        vrfy_(  x2 == x2 );
-        vrfy_(!(x1 == x2));
-        vrfy_(!(x2 == x1));
+        atf_amc::TypeBE64 lhs,rhs;
+        value_Set(lhs,val);
+        value_Set(rhs,val_be);
+        vrfy_(  lhs == lhs );
+        vrfy_(  rhs == rhs );
+        vrfy_(!(lhs == rhs));
+        vrfy_(!(rhs == lhs));
     }
     // Big-endian u64 <, >
     {
         const u64 val    = 0xfedcba9876543210;
         const u64 val_be = 0x1032547698badcfe;
-        atf_amc::TypeBE64 x1,x2;
-        value_Set(x1,val);
-        value_Set(x2,val_be);
-        vrfy_(!(x1 < x1));
-        vrfy_(!(x2 < x2));
-        vrfy_(  x2 < x1 );
-        vrfy_(!(x1 < x2));
+        atf_amc::TypeBE64 lhs,rhs;
+        value_Set(lhs,val);
+        value_Set(rhs,val_be);
+        vrfy_(!(lhs < lhs));
+        vrfy_(!(rhs < rhs));
+        vrfy_(  rhs < lhs );
+        vrfy_(!(lhs < rhs));
 
-        vrfy_(!(x1 > x1));
-        vrfy_(!(x2 > x2));
-        vrfy_(!(x2 > x1));
-        vrfy_(x1 > x2);
-        vrfy_(x1 >= x1);
-        vrfy_(x1 <= x1);
-        vrfy_(x1 >= x2);
-        vrfy_(x2 <= x2);
+        vrfy_(!(lhs > lhs));
+        vrfy_(!(rhs > rhs));
+        vrfy_(!(rhs > lhs));
+        vrfy_(lhs > rhs);
+        vrfy_(lhs >= lhs);
+        vrfy_(lhs <= lhs);
+        vrfy_(lhs >= rhs);
+        vrfy_(rhs <= rhs);
     }
 }
 

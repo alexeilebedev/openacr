@@ -24,10 +24,16 @@ Usage: doc [[-key:]<string>] [options]
     -links                        List the page's followable links instead of showing it
     -follow       int     0       Show the document reached by following this link of the page
     -html                         Render the page as HTML instead of for a terminal
+    -body                         (with -html) emit only the rendered document, without the page around it
+    -catalog      string  ""      Write every published page, rendered, as a TypeScript module at this path
+    -site         string  ""      Write the documentation as a site of HTML files under this directory
+    -sitelist     string  ""      (with -site) Draw the locations named in this file, and print the ones they link
+    -maxjobs      int     0       (with -site) Pages to draw at once; 0 picks a good default
     -server       string  ""      URL prefix every generated link carries
     -bind         string  ""      Serve HTTP at this ip:port instead of showing one page
     -verbose      flag            Verbosity level (0..255); alias -v; cumulative
     -debug        flag            Debug level (0..255); alias -d; cumulative
+    -trace        string  ""      Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps
     -help                         Print help and exit; alias -h
     -version                      Print version and exit
     -signature                    Show signatures and exit; alias -sig
@@ -74,7 +80,7 @@ a table whose name is one of these words.
 
 | Key | Page |
 |---|---|
-| `ns:acr` | the namespace: its ctypes, sources, dependencies, inputs, tests |
+| `ns:acr` | the namespace: its rule file, ctypes, sources, dependencies, inputs, tests |
 | `ctype:dmmeta.Ctype` | one ctype: its declaration, then the C++ that acts on it |
 | `func:dmmeta.Ctype` | the functions that ctype appears in |
 | `func:doc.NavText` | one function's source |
@@ -136,7 +142,7 @@ record comes back follows from what was asked for, and there is nothing to set.
 
 The pane holds the shape of the page: the headings of a document, the sections of a page
 of records, the functions of a listing.  It is one text drawn twice -- above the page at
-the terminal, beside it in a browser.
+the terminal, to its left in a browser.
 
 `www/doc/page.html` and `www/doc/doc.css` are the page and its style, read from the top
 of the checkout and inlined, so a saved page carries its own style.
@@ -267,6 +273,46 @@ numbers them.
 
 Render the page as HTML instead of for a terminal.  The stylesheet is inlined, so a page
 written to a file carries its own style.
+
+#### -body -- (with -html) emit only the rendered document, without the page around it
+<a href="#-body"></a>
+
+#### -catalog -- Write every published page, rendered, as a TypeScript module at this path
+<a href="#-catalog"></a>
+
+#### -site -- Write the documentation as a site of HTML files under this directory
+<a href="#-site"></a>
+
+Write the documentation into this directory as files a static host serves, along with the
+two stylesheets its pages link.  With no key the site is the whole documentation; with one
+it is that location and everything it leads to, which is what to reach for when the
+question is what a page pulls in.
+
+What a site holds is the closure of the documents under linking, so every link on every
+page names a file that is also there.  A location it does not hold -- a source file, one
+row of a table -- is written as the words it was named by rather than as a link.  A
+location is resolved before it is linked, as the server resolves a request, so a link to a
+directory holding a README leads to the README.  Each page is read back afterwards and a
+link resolving to nothing is reported; so is a page the walk admitted that no file exists
+for, and that one fails the run.
+
+The search box on a site opens the file the typed location names, so a location copied
+off one page opens that page.  A key only a server can resolve, such as a tool's bare
+name, reaches the site's own 404 page, which the run writes beside the index.
+
+#### -sitelist -- (with -site) Draw the locations named in this file, and print the ones they link
+<a href="#-sitelist"></a>
+
+Draw the locations this file names, one per line, and print the locations they link.  This
+is how a site build divides its work: it deals a round of locations across a set of these
+and admits what they report.  Reading the tables that resolve a key costs a fifth of what
+a page costs, so a process is given many locations rather than one.
+
+#### -maxjobs -- (with -site) Pages to draw at once; 0 picks a good default
+<a href="#-maxjobs"></a>
+
+How many pages a site build draws at once.  Zero takes the number of online processors,
+which is the right answer on a machine doing nothing else.
 
 #### -server -- URL prefix every generated link carries
 <a href="#-server"></a>

@@ -1,5 +1,6 @@
 amcdb.curstype  curstype:bitcurs  comment:"Bit-scan forward cursor (yields bit numbers for 1's)"
 amcdb.curstype  curstype:curs  comment:"Regular forward cursor"
 amcdb.curstype  curstype:delcurs  comment:"Allow ind_del to delete current element during scanning"
+amcdb.curstype  curstype:fillcurs  comment:"Scan a bheap with a head in sorted order, promoting heap rows into the run"
 amcdb.curstype  curstype:oncecurs  comment:"Scan index once, removing elements after scanning"
 amcdb.curstype  curstype:unordcurs  comment:"Scan bheap in non-sorted order (faster)"

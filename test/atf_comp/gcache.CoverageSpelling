@@ -1,0 +1,90 @@
+# stage install
+# start gcache cmd:"cd $tempdir && $$OLDPWD/$bindir/gcache -install -dir:cache"
+gcache -> setting up gcache...
+gcache -> done
+# eof gcache
+# exit gcache code:0
+# stage both_first
+# start gcache-2 cmd:"cd $tempdir && $$OLDPWD/$bindir/gcache -report -- $$OLDPWD/test/gcache/cc --coverage -c x.cpp -o x.o"
+gcache-2 -> report.gcache  starttime:***  elapsed_sec:***  preproc_size:***  hit:N  cached_file:***  copy_file_range:***  pch_hit:N  pch_file:***  source:x.cpp  pch_source:""
+# eof gcache-2
+# exit gcache-2 code:0
+# stage both_second
+# start gcache-3 cmd:"cd $tempdir && $$OLDPWD/$bindir/gcache -report -- $$OLDPWD/test/gcache/cc --coverage -c x.cpp -o x.o"
+gcache-3 -> report.gcache  starttime:***  elapsed_sec:***  preproc_size:***  hit:Y  cached_file:***  copy_file_range:***  pch_hit:N  pch_file:***  source:x.cpp  pch_source:""
+# eof gcache-3
+# exit gcache-3 code:0
+# check both_o:present
+# check both_gcno:present
+# stage dashboth_first
+# start gcache-4 cmd:"cd $tempdir && $$OLDPWD/$bindir/gcache -report -- $$OLDPWD/test/gcache/cc -coverage -c x.cpp -o x.o"
+gcache-4 -> report.gcache  starttime:***  elapsed_sec:***  preproc_size:***  hit:N  cached_file:***  copy_file_range:***  pch_hit:N  pch_file:***  source:x.cpp  pch_source:""
+# eof gcache-4
+# exit gcache-4 code:0
+# stage dashboth_second
+# start gcache-5 cmd:"cd $tempdir && $$OLDPWD/$bindir/gcache -report -- $$OLDPWD/test/gcache/cc -coverage -c x.cpp -o x.o"
+gcache-5 -> report.gcache  starttime:***  elapsed_sec:***  preproc_size:***  hit:Y  cached_file:***  copy_file_range:***  pch_hit:N  pch_file:***  source:x.cpp  pch_source:""
+# eof gcache-5
+# exit gcache-5 code:0
+# check dashboth_o:present
+# check dashboth_gcno:present
+# stage notesonly_first
+# start gcache-6 cmd:"cd $tempdir && $$OLDPWD/$bindir/gcache -report -- $$OLDPWD/test/gcache/cc -ftest-coverage -c x.cpp -o x.o"
+gcache-6 -> report.gcache  starttime:***  elapsed_sec:***  preproc_size:***  hit:N  cached_file:***  copy_file_range:***  pch_hit:N  pch_file:***  source:x.cpp  pch_source:""
+# eof gcache-6
+# exit gcache-6 code:0
+# stage notesonly_second
+# start gcache-7 cmd:"cd $tempdir && $$OLDPWD/$bindir/gcache -report -- $$OLDPWD/test/gcache/cc -ftest-coverage -c x.cpp -o x.o"
+gcache-7 -> report.gcache  starttime:***  elapsed_sec:***  preproc_size:***  hit:Y  cached_file:***  copy_file_range:***  pch_hit:N  pch_file:***  source:x.cpp  pch_source:""
+# eof gcache-7
+# exit gcache-7 code:0
+# check notesonly_o:present
+# check notesonly_gcno:present
+# stage dashnotesonly_first
+# start gcache-8 cmd:"cd $tempdir && $$OLDPWD/$bindir/gcache -report -- $$OLDPWD/test/gcache/cc --test-coverage -c x.cpp -o x.o"
+gcache-8 -> report.gcache  starttime:***  elapsed_sec:***  preproc_size:***  hit:N  cached_file:***  copy_file_range:***  pch_hit:N  pch_file:***  source:x.cpp  pch_source:""
+# eof gcache-8
+# exit gcache-8 code:0
+# stage dashnotesonly_second
+# start gcache-9 cmd:"cd $tempdir && $$OLDPWD/$bindir/gcache -report -- $$OLDPWD/test/gcache/cc --test-coverage -c x.cpp -o x.o"
+gcache-9 -> report.gcache  starttime:***  elapsed_sec:***  preproc_size:***  hit:Y  cached_file:***  copy_file_range:***  pch_hit:N  pch_file:***  source:x.cpp  pch_source:""
+# eof gcache-9
+# exit gcache-9 code:0
+# check dashnotesonly_o:present
+# check dashnotesonly_gcno:present
+# stage arcsonly_first
+# start gcache-10 cmd:"cd $tempdir && $$OLDPWD/$bindir/gcache -report -- $$OLDPWD/test/gcache/cc -fprofile-arcs -c x.cpp -o x.o"
+gcache-10 -> report.gcache  starttime:***  elapsed_sec:***  preproc_size:***  hit:N  cached_file:***  copy_file_range:***  pch_hit:N  pch_file:***  source:x.cpp  pch_source:""
+# eof gcache-10
+# exit gcache-10 code:0
+# stage arcsonly_second
+# start gcache-11 cmd:"cd $tempdir && $$OLDPWD/$bindir/gcache -report -- $$OLDPWD/test/gcache/cc -fprofile-arcs -c x.cpp -o x.o"
+gcache-11 -> report.gcache  starttime:***  elapsed_sec:***  preproc_size:***  hit:Y  cached_file:***  copy_file_range:***  pch_hit:N  pch_file:***  source:x.cpp  pch_source:""
+# eof gcache-11
+# exit gcache-11 code:0
+# check arcsonly_o:present
+# check arcsonly_gcno:absent
+# stage dasharcsonly_first
+# start gcache-12 cmd:"cd $tempdir && $$OLDPWD/$bindir/gcache -report -- $$OLDPWD/test/gcache/cc --profile-arcs -c x.cpp -o x.o"
+gcache-12 -> report.gcache  starttime:***  elapsed_sec:***  preproc_size:***  hit:N  cached_file:***  copy_file_range:***  pch_hit:N  pch_file:***  source:x.cpp  pch_source:""
+# eof gcache-12
+# exit gcache-12 code:0
+# stage dasharcsonly_second
+# start gcache-13 cmd:"cd $tempdir && $$OLDPWD/$bindir/gcache -report -- $$OLDPWD/test/gcache/cc --profile-arcs -c x.cpp -o x.o"
+gcache-13 -> report.gcache  starttime:***  elapsed_sec:***  preproc_size:***  hit:Y  cached_file:***  copy_file_range:***  pch_hit:N  pch_file:***  source:x.cpp  pch_source:""
+# eof gcache-13
+# exit gcache-13 code:0
+# check dasharcsonly_o:present
+# check dasharcsonly_gcno:absent
+# stage plain_first
+# start gcache-14 cmd:"cd $tempdir && $$OLDPWD/$bindir/gcache -report -- $$OLDPWD/test/gcache/cc -c x.cpp -o x.o"
+gcache-14 -> report.gcache  starttime:***  elapsed_sec:***  preproc_size:***  hit:N  cached_file:***  copy_file_range:***  pch_hit:N  pch_file:***  source:x.cpp  pch_source:""
+# eof gcache-14
+# exit gcache-14 code:0
+# stage plain_second
+# start gcache-15 cmd:"cd $tempdir && $$OLDPWD/$bindir/gcache -report -- $$OLDPWD/test/gcache/cc -c x.cpp -o x.o"
+gcache-15 -> report.gcache  starttime:***  elapsed_sec:***  preproc_size:***  hit:Y  cached_file:***  copy_file_range:***  pch_hit:N  pch_file:***  source:x.cpp  pch_source:""
+# eof gcache-15
+# exit gcache-15 code:0
+# check plain_o:present
+# check plain_gcno:absent

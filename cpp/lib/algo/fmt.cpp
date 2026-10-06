@@ -1,20 +1,20 @@
-// Copyright (C) 2023-2026 AlgoRND
+// Copyright (C) 2024-2026 AlgoX2 Corp
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2023 Astra
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 //
-// License: GPL
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// License: Apache
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: algo_lib (lib) -- Support library for all executables
@@ -116,7 +116,11 @@ bool bool_ReadStrptrMaybe(bool &row, algo::strptr str) {
 
 // Read time from STR to ROW
 // Return success code.
-// If funciton does not succeed, ROW is not modified
+// If function does not succeed, ROW is not modified.
+// An empty STR is the unset value, as it is for every scalar an ssim attr
+// holds, and reads as the zero time; a caller asking whether STR carries a
+// time at all tests its length first.  Any other string no format reads a
+// field from is refused.
 // Several formats are supported:
 // %Y-%m-%dT%T
 // %Y-%m-%d %T
@@ -125,74 +129,89 @@ bool bool_ReadStrptrMaybe(bool &row, algo::strptr str) {
 // %Y/%m/%d
 // Where %T is %H:%M:%S.%X
 // And %X is the nanosecond portion
+// The time may end in an ISO 8601 zone designator, a Z or a numeric offset
+// such as -04:00, and then the fields are read in that zone and converted
+// to UTC, so every spelling of one instant reads to one value.  A time with
+// no zone is read as local time.
 bool algo::UnTime_ReadStrptrMaybe(algo::UnTime &row, algo::strptr str) {
     bool retval = true;
-    // ISO 8601 trailing 'Z' marks UTC -- strip it and convert via
-    // timegm() at the end instead of falling through to ToUnTime()
-    // (which uses mktime() and would otherwise bake the host's TZ
-    // offset into the result).
-    bool utc = elems_N(str) > 0 && str[elems_N(str)-1] == 'Z';
-    if (utc) { str = algo::ch_FirstN(str, elems_N(str)-1); }
-    algo::StringIter iter(str);
-    TimeStruct time_struct;
-    retval = TimeStruct_Read(time_struct, iter, "%Y-%m-%dT%T");//ISO 8601
-    if (!retval) {
-        iter.index = 0;
-        Refurbish(time_struct);
-        retval = TimeStruct_Read(time_struct, iter, "%Y-%m-%d %T");
-    }
-    if (!retval) {
-        iter.index = 0;
-        Refurbish(time_struct);
-        retval = TimeStruct_Read(time_struct, iter, "%Y/%m/%d %T");
-    }
-    if (!retval) {
-        iter.index = 0;
-        Refurbish(time_struct);
-        retval = TimeStruct_Read(time_struct, iter, "%Y-%m-%d");
-    }
-    if (!retval) {
-        iter.index = 0;
-        Refurbish(time_struct);
-        retval = TimeStruct_Read(time_struct, iter, "%Y/%m/%d");
-    }
-    if (!retval) {
-        iter.index = 0;
-        Refurbish(time_struct);
-        retval = TimeStruct_Read(time_struct, iter, "%Y%m%d");
-    }
-    if (LIKELY(retval)) {
-        if (utc) {
-            i64 secs = timegm((tm*)&time_struct);
-            if (secs != -1) {
-                row.value = secs * UNTIME_PER_SEC + time_struct.tm_nsec;
-            }
+    if (elems_N(str) == 0) {
+        row = algo::UnTime();
+    } else {
+        algo::StringIter iter(str);
+        TimeStruct time_struct;
+        retval = TimeStruct_Read(time_struct, iter, "%Y-%m-%dT%T");//ISO 8601
+        if (!retval) {
+            iter.index = 0;
+            Refurbish(time_struct);
+            retval = TimeStruct_Read(time_struct, iter, "%Y-%m-%d %T");
+        }
+        if (!retval) {
+            iter.index = 0;
+            Refurbish(time_struct);
+            retval = TimeStruct_Read(time_struct, iter, "%Y/%m/%d %T");
+        }
+        if (!retval) {
+            iter.index = 0;
+            Refurbish(time_struct);
+            retval = TimeStruct_Read(time_struct, iter, "%Y-%m-%d");
+        }
+        if (!retval) {
+            iter.index = 0;
+            Refurbish(time_struct);
+            retval = TimeStruct_Read(time_struct, iter, "%Y/%m/%d");
+        }
+        if (!retval) {
+            iter.index = 0;
+            Refurbish(time_struct);
+            retval = TimeStruct_Read(time_struct, iter, "%Y%m%d");
+        }
+        // The fields are wall time in the named zone: timegm() takes them
+        // as UTC, and the zone's offset is subtracted from that.  timegm()
+        // answers -1 both for a field set it cannot convert and for the
+        // instant one second before the epoch, and only the first sets
+        // errno, so that is what tells the refusal from the instant.
+        i64  gmtoff = 0;
+        i64  secs   = -1;
+        bool zone   = retval && ReadZoneOffset(iter, gmtoff);
+        if (zone) {
+            errno  = 0;
+            secs   = timegm((tm*)&time_struct);
+            retval = secs != -1 || errno == 0;
+        }
+        if (!retval) {
+            algo_lib::AppendErrtext("comment", "bad time");
+            algo_lib::AppendErrtext("value",str);
+        } else if (zone) {
+            row.value = (secs - gmtoff) * UNTIME_PER_SEC + time_struct.tm_nsec;
         } else {
             row = ToUnTime(time_struct);
         }
-    } else {
-        retval = false;
-        algo_lib::AppendErrtext("comment", "bad time");
-        algo_lib::AppendErrtext("value",str);
     }
     return retval;
 }
 
 // -----------------------------------------------------------------------------
 
+// Read duration from STR to ROW and return success code.  An empty STR is the
+// unset value and reads as a zero duration; any other string no field is read
+// from is refused and ROW is not modified.
 bool algo::UnDiff_ReadStrptrMaybe(UnDiff &row, algo::strptr str) {
     bool retval = true;
-    algo::StringIter iter(str);
-    TimeStruct time_struct;
-    strptr format = "%-%T";
-    retval = TimeStruct_Read(time_struct, iter, format);
-    if (LIKELY(retval)) {
-        row = ToUnDiff(time_struct);
+    if (elems_N(str) == 0) {
+        row = UnDiff();
     } else {
-        retval = false;
-        algo_lib::AppendErrtext("comment", "bad time");
-        algo_lib::AppendErrtext("value",str);
-        algo_lib::AppendErrtext("format",format);
+        algo::StringIter iter(str);
+        TimeStruct time_struct;
+        strptr format = "%-%T";
+        retval = TimeStruct_Read(time_struct, iter, format);
+        if (LIKELY(retval)) {
+            row = ToUnDiff(time_struct);
+        } else {
+            algo_lib::AppendErrtext("comment", "bad time");
+            algo_lib::AppendErrtext("value",str);
+            algo_lib::AppendErrtext("format",format);
+        }
     }
     return retval;
 }

@@ -636,6 +636,22 @@ The following functions are generated:
 amc -report:N atf_amc.FDb.ind_typea.% -proto
 ```
 
+### dmmeta.trie
+<a href="#dmmeta-trie"></a>
+
+This record is required on fields with reftype:Trie.  It names the integer the
+key reduces to and the number of key bits each level of the tree branches on.
+
+```ssim
+    dmmeta.field  field:atf_amc.TrieU64.trie  arg:u64  reftype:Trie  dflt:44  comment:""
+      dmmeta.trie  field:atf_amc.TrieU64.trie  linfld:algo.SeqType.value  nbit:8  comment:""
+```
+
+`linfld` is a field of the key ctype, reached through any single-field wrappers,
+and `nbit` sets the fanout: each node has 2^nbit children and each leaf holds
+2^nbit values.  [Trie](/txt/exe/amc/reftype/Trie.md) describes the operations and
+their costs.
+
 ### dmmeta.typefld
 <a href="#dmmeta-typefld"></a>
 
