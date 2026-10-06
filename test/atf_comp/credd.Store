@@ -17,18 +17,18 @@ credd-3 -> creddb.cred  cred:gl  kind:gitlab  linkto:""  server:https://gitlab.e
 credd-3 ->   creddb.credperm  credperm:gl/api  comment:""
 credd-3 ->   creddb.credperm  credperm:gl/read_api  comment:""
 # exit credd-3 code:0
-# start bash cmd:"bash -c $'$bindir/credd -list -format:json | grep -o \\'\"[a-z_]*\":\\' | sort | uniq -c'"
+# start bash cmd:"bash -c $'$bindir/credd -list -format:json | grep -o \\'\"[a-z_]*\":\\' | sort | uniq -c | sed \\'s/^ *//\\''"
 # eof bash
-bash ->       1 "account":
-bash ->       1 "comment":
-bash ->       1 "created":
-bash ->       1 "cred":
-bash ->       1 "expires":
-bash ->       1 "kind":
-bash ->       1 "linkto":
-bash ->       1 "pubkey":
-bash ->       1 "secret":
-bash ->       1 "server":
+bash -> 1 "account":
+bash -> 1 "comment":
+bash -> 1 "created":
+bash -> 1 "cred":
+bash -> 1 "expires":
+bash -> 1 "kind":
+bash -> 1 "linkto":
+bash -> 1 "pubkey":
+bash -> 1 "secret":
+bash -> 1 "server":
 # exit bash code:0
 # start credd-4 cmd:"$bindir/credd -add:gh -kind:github -perm:repo,bogus -src:@$tempdir/tok"
 # eof credd-4
@@ -98,22 +98,22 @@ credd-17 -> creddb.master  master:default  salt:***  verifier:***  comment:""
 credd-17 -> creddb.cred  cred:aws  kind:aws  linkto:""  server:""  account:keeper  pubkey:***  created:***  expires:""  secret:***  comment:"three values as one tuple"
 credd-17 -> creddb.cred  cred:late  kind:github  linkto:""  server:""  account:""  pubkey:***  created:***  expires:""  secret:***  comment:""
 # exit credd-17 code:0
-# start bash-3 cmd:"bash -c $'$bindir/credd -dump -format:json | grep -o \\'\"[a-z_]*\":\\' | sort | uniq -c'"
+# start bash-3 cmd:"bash -c $'$bindir/credd -dump -format:json | grep -o \\'\"[a-z_]*\":\\' | sort | uniq -c | sed \\'s/^ *//\\''"
 # eof bash-3
-bash-3 ->       2 "account":
-bash-3 ->       3 "comment":
-bash-3 ->       2 "created":
-bash-3 ->       3 "cred":
-bash-3 ->       1 "credperm":
-bash-3 ->       2 "expires":
-bash-3 ->       2 "kind":
-bash-3 ->       2 "linkto":
-bash-3 ->       2 "master":
-bash-3 ->       2 "pubkey":
-bash-3 ->       1 "salt":
-bash-3 ->       2 "secret":
-bash-3 ->       2 "server":
-bash-3 ->       1 "verifier":
+bash-3 -> 2 "account":
+bash-3 -> 3 "comment":
+bash-3 -> 2 "created":
+bash-3 -> 3 "cred":
+bash-3 -> 1 "credperm":
+bash-3 -> 2 "expires":
+bash-3 -> 2 "kind":
+bash-3 -> 2 "linkto":
+bash-3 -> 2 "master":
+bash-3 -> 2 "pubkey":
+bash-3 -> 1 "salt":
+bash-3 -> 2 "secret":
+bash-3 -> 2 "server":
+bash-3 -> 1 "verifier":
 # exit bash-3 code:0
 # start credd-18 cmd:"$bindir/credd -dump -format:text"
 # eof credd-18

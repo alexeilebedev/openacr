@@ -93,7 +93,7 @@ void atf_comp::comptest_credd_Store() {
     // it with the permissions under it, json the cred rows as one array
     CreddRun("pw1","-list",0);
     CreddRun("pw1","-list -format:ssim",0);
-    CreddSh("$bindir/credd -list -format:json | grep -o '\"[a-z_]*\":' | sort | uniq -c",0);
+    CreddSh("$bindir/credd -list -format:json | grep -o '\"[a-z_]*\":' | sort | uniq -c | sed 's/^ *//'",0);
     CreddRun("pw1","-add:gh -kind:github -perm:repo,bogus -src:@$tempdir/tok",1);
     CreddRun("pw1","-add:gl -kind:gitlab -src:@$tempdir/tok",1);
     // the refusal lists the kinds the tree defines, so only the refusal is kept
@@ -116,7 +116,7 @@ void atf_comp::comptest_credd_Store() {
     CreddRun("pw1","-add:late -kind:github -src:@$tempdir/tok",1);
     CreddRun("pw2","-add:late -kind:github -src:@$tempdir/tok",0);
     CreddRun("pw2","-dump",0);
-    CreddSh("$bindir/credd -dump -format:json | grep -o '\"[a-z_]*\":' | sort | uniq -c",0);
+    CreddSh("$bindir/credd -dump -format:json | grep -o '\"[a-z_]*\":' | sort | uniq -c | sed 's/^ *//'",0);
     CreddRun("pw2","-dump -format:text",1);
     CreddSh("LC_ALL=C ls $STORE/creddb && cat $STORE/creddb/credperm.ssim",0);
 }
@@ -124,16 +124,19 @@ void atf_comp::comptest_credd_Store() {
 // -----------------------------------------------------------------------------
 // Wait until the credd daemon of the scenario's home, $HOMEDIR, answers
 // -status, which it does once its socket is bound; a daemon that never answers
-// within four seconds fails the test.
+// within 200 tries fails the test, and the failure carries what the last
+// -status printed, since that is the client's own account of why.
 void atf_comp::WaitCredd() {
     bool up = false;
+    tempstr last;
     for (int i = 0; i < 200 && !up; i++) {
-        up = SysCmd(CreddVal("$bindir/credd -status | grep -q lib_cred.Status"),FailokQ(true),DryrunQ(false),EchoQ(false)) == 0;
+        last = SysEval(CreddVal("$bindir/credd -status 2>&1"),FailokQ(true),4096);
+        up = FindStr(last, "lib_cred.Status") != -1;
         if (!up) {
             usleep(20000);
         }
     }
-    vrfy(up, "atf_comp: credd never answered on its socket");
+    vrfy(up, tempstr() << "atf_comp: credd never answered on its socket" << Keyval("status", Trimmed(last)));
 }
 
 // -----------------------------------------------------------------------------

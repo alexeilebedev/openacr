@@ -84,6 +84,9 @@ void credd::Start() {
             (void)dup2(log, 2);
             close(devnull);
             close(log);
+            // a kqueue does not survive fork, so the child opens its own event
+            // queue before the daemon registers its socket in it
+            algo_lib::IohookInit();
             credd::RunDaemon();
             _exit(0);
         }

@@ -2216,7 +2216,8 @@ namespace atf_comp { // update-hdr
 
     // Wait until the credd daemon of the scenario's home, $HOMEDIR, answers
     // -status, which it does once its socket is bound; a daemon that never answers
-    // within four seconds fails the test.
+    // within 200 tries fails the test, and the failure carries what the last
+    // -status printed, since that is the client's own account of why.
     void WaitCredd();
 
     // The daemon.  It is started in the foreground under the harness with the
