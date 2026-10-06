@@ -76,6 +76,12 @@ int pipe2(int fd[2], int flags) {
 // errno.  Darwin allocates with F_PREALLOCATE, which takes contiguous space
 // first and falls back to whatever the volume has; the truncate after it gives
 // the file its length.
+//
+// A POSIX shared memory object is memory with no filesystem under it, so it has
+// no space to run out of.  F_PREALLOCATE refuses it with EBADF, and Darwin lets
+// its length be set only once, by the ftruncate that made it.  An object that
+// is already OFFSET+LEN long therefore has its space, and the call succeeds
+// without touching it.
 int posix_fallocate(int fd, off_t offset, off_t len) {
     int ret = 0;
     fstore_t store;
@@ -90,7 +96,11 @@ int posix_fallocate(int fd, off_t offset, off_t len) {
             ret = errno;
         }
     }
-    if (ret == 0 && ftruncate(fd, offset + len) == -1) {
+    struct stat st;
+    bool sized = ret == EBADF && fstat(fd, &st) == 0 && st.st_size >= offset + len;
+    if (sized) {
+        ret = 0;
+    } else if (ret == 0 && ftruncate(fd, offset + len) == -1) {
         ret = errno;
     }
     return ret;
