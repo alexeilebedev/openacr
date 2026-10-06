@@ -218,13 +218,16 @@ void atf_ci::citest_ams_sendtest() {
     // before the lane does: the writer must be refused on its limit and still
     // deliver every message, and ams_sendtest checks that each channel ends with
     // everything written read and nothing written past its limit.  A board
-    // message travels by the board's own path and writes on no channel.
+    // message travels by the board's own path and writes on no channel.  The
+    // readers are slowed, since a reader that keeps pace with the writer never
+    // lets its window fill, and on a fast host the refusal would not happen.
     for (int shape = 0; shape < 4; shape++) {
         command::ams_sendtest_proc ams_sendtest;
         ams_sendtest.cmd.uc = (shape & 1) != 0;
         ams_sendtest.cmd.signaled = (shape & 2) != 0;
         ams_sendtest.cmd.channel = true;
         ams_sendtest.cmd.channel_window = 1024;
+        ams_sendtest.cmd.recvdelay_ns = 200000;
         u64 n_limit_wait = RunAmsSendtest(ams_sendtest).n_limit_wait;
         vrfy(n_limit_wait > 0, tempstr()<<"atf_ci.sendtest_nolimit"
              <<Keyval("cmd",ams_sendtest_ToCmdline(ams_sendtest))
