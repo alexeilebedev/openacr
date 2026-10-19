@@ -19,7 +19,7 @@ N=$(cat test/filt.sed | wc -l)
 for ((i=N; i>0; i--)); do
     echo "trying to remove line #$i"
     cp "test/filt.sed" "temp/filt.bak"
-    sed -i "${i}d" "test/filt.sed"
+    perl -i -ne "print unless \$. == $i" "test/filt.sed"
     atf_comp -capture % >/dev/null 2>/dev/null
     mod=$(git ls-files -m "test/atf_comp/")
     if [ "$mod" != "" ]; then

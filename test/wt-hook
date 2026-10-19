@@ -14,7 +14,7 @@
 # of team/ too.  The branch file that the checkout's .branch/team/x.md held
 # moves into the worktree, as wt/team/x/.branch/team/x.md, and the checkout's
 # path becomes a link to it; a second create of the same name leaves it as it
-# is and answers the same path.  `sed -i` through the link turns the
+# is and answers the same path.  `perl -i` through the link turns the
 # checkout's path back into a file with the edit, and a create then refuses
 # the two files that differ and keeps both; once they hold the same text, a
 # create links the checkout's path again.  A create of team, whose directory is the
@@ -99,7 +99,7 @@ cat wt/team/x/.branch/team/x.md
 readlink wt/team/x/scratch
 git -C wt/team/x branch --show-current
 hook create '{"name":"team/x"}'
-sed -i 's/$/, edited in the checkout/' .branch/team/x.md
+perl -i -pe 's/$/, edited in the checkout/' .branch/team/x.md
 hook create '{"name":"team/x"}'
 cat .branch/team/x.md wt/team/x/.branch/team/x.md
 cp .branch/team/x.md wt/team/x/.branch/team/x.md

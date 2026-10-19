@@ -28,7 +28,7 @@ bash -> peer left before the reply
 # eof credd-6
 credd-6 -> lib_cred.Status  dir:temp/atf_comp/credd.Daemon/home/.ssh/credd  agent:temp/atf_comp/credd.Daemon/home/.ssh/ssh_auth_sock  n_cred:1  build:***
 # exit credd-6 code:0
-# start bash-2 cmd:"bash -c $'cp $STORE/creddb/cred.ssim $tempdir/cred.ssim && sed -i \\'1i creddb.cred  cred:bad  kind:nosuchkind\\' $STORE/creddb/cred.ssim'"
+# start bash-2 cmd:"bash -c $'cp $STORE/creddb/cred.ssim $tempdir/cred.ssim && perl -0 -i -pe \\'s/^/creddb.cred  cred:bad  kind:nosuchkind\\\\n/\\' $STORE/creddb/cred.ssim'"
 # eof bash-2
 # exit bash-2 code:0
 # start bash-3 cmd:"bash -c $'perl $tempdir/ask.pl $STORE/credd.sock \\'lib_cred.ReloadReq  client:test\\''"

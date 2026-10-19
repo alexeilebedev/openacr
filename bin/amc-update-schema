@@ -78,7 +78,7 @@ if [ -f "$dm/fbuf.ssim" ] && grep -q 'fbuftype:BytebufExtern' "$dm/fbuf.ssim"; t
     grep 'fbuftype:BytebufExtern' "$dm/fbuf.ssim" \
         | sed -E 's#^dmmeta\.fbuf[[:space:]]+field:([^ ]*).*#dmmeta.ffunc  ffunc:\1.ScanMsg  extrn:Y  comment:"custom message scanner"#' \
               >> "$ffunc"
-    sed -i 's#fbuftype:BytebufExtern#fbuftype:Bytebuf#g' "$dm/fbuf.ssim"
+    perl -i -pe 's#fbuftype:BytebufExtern#fbuftype:Bytebuf#g' "$dm/fbuf.ssim"
     log "rewrote BytebufExtern fbuf field(s) -> Bytebuf + ffunc ScanMsg"
 fi
 
@@ -101,7 +101,7 @@ if [ -f "$dm/finput.ssim" ] && grep -qE '[[:space:]]extrn:[YN]' "$dm/finput.ssim
         esac
     done < "$dm/finput.ssim"
     # drop the now-removed extrn column from every finput record
-    sed -i -E 's#([[:space:]])extrn:[YN]([[:space:]])#\1\2#' "$dm/finput.ssim"
+    perl -i -pe 's#([[:space:]])extrn:[YN]([[:space:]])#$1$2#' "$dm/finput.ssim"
 fi
 
 # --- amcdb.tcb: table removed entirely ---

@@ -210,7 +210,7 @@ void atf_comp::comptest_credd_Daemon() {
     CreddRun("","-status",0);
     // a row of a kind the daemon does not know reaches the store: the reload
     // fails, and the daemon goes on serving every credential it held
-    CreddSh("cp $STORE/creddb/cred.ssim $tempdir/cred.ssim && sed -i '1i creddb.cred  cred:bad  kind:nosuchkind' $STORE/creddb/cred.ssim",0);
+    CreddSh("cp $STORE/creddb/cred.ssim $tempdir/cred.ssim && perl -0 -i -pe 's/^/creddb.cred  cred:bad  kind:nosuchkind\\n/' $STORE/creddb/cred.ssim",0);
     // the command line reads the store itself, so the daemon is asked directly
     StringToFile("use IO::Socket::UNIX;\n"
                  "my $sock = IO::Socket::UNIX->new(Peer => shift) or die;\n"
