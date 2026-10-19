@@ -27,6 +27,12 @@
 void ainst::extpkg_kafkaui(ainst::FExtpkg &extpkg) {
     AddStage(extpkg,tempstr()<<"ainst_install 644 "<<GetExtpkgsrcVar(extpkg,"jar")<<" /home/kafkausr/kafka-ui-api.jar");
     AddStage(extpkg,"ainst_mkdir /etc/kafkaui");
+    // The staged jar brings /home/kafkausr into place, owned by root, before
+    // the account exists, and useradd -m leaves an existing home alone: it
+    // neither copies the skeleton nor hands the directory over.  So the post
+    // fills in the skeleton and gives the whole home to the account, which
+    // writes its log and config in it.
     AddPost(extpkg,"useradd kafkausr -u 1101 -U -m -s /bin/bash || true");
-    AddPost(extpkg,"chown -R kafkausr:kafkausr /home/kafkausr/kafka-ui-api.jar /etc/kafkaui");
+    AddPost(extpkg,"cp -rn /etc/skel/. /home/kafkausr/");
+    AddPost(extpkg,"chown -R kafkausr:kafkausr /home/kafkausr /etc/kafkaui");
 }

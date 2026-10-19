@@ -81,6 +81,8 @@ namespace acr_compl { // gen:ns_print_proto
     static bool          ccmdline_InputMaybe(dmmeta::Ccmdline &elem) __attribute__((nothrow));
     // func:acr_compl.FDb.floadtuples.InputMaybe
     static bool          floadtuples_InputMaybe(dmmeta::Floadtuples &elem) __attribute__((nothrow));
+    // func:acr_compl.FDb.fcompldir.InputMaybe
+    static bool          fcompldir_InputMaybe(dmmeta::Fcompldir &elem) __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
     // func:acr_compl.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
@@ -275,14 +277,14 @@ void acr_compl::Completion_Print(acr_compl::Completion& row, algo::cstring& str)
     PrintAttrSpaceReset(str,"nospace", temp);
 }
 
-// --- acr_compl.FAnonfld.msghdr.CopyOut
+// --- acr_compl.FAnonfld.base.CopyOut
 // Copy fields out of row
 void acr_compl::anonfld_CopyOut(acr_compl::FAnonfld &row, dmmeta::Anonfld &out) {
     out.field = row.field;
     out.comment = algo::Comment(row.comment);
 }
 
-// --- acr_compl.FAnonfld.msghdr.CopyIn
+// --- acr_compl.FAnonfld.base.CopyIn
 // Copy fields in to row
 void acr_compl::anonfld_CopyIn(acr_compl::FAnonfld &row, dmmeta::Anonfld &in) {
     row.field = in.field;
@@ -358,14 +360,14 @@ void acr_compl::FCmd_Uninit(acr_compl::FCmd& parent) {
     ind_cmd_Remove(parent); // remove cmd from index ind_cmd
 }
 
-// --- acr_compl.FCompletion.msghdr.CopyOut
+// --- acr_compl.FCompletion.base.CopyOut
 // Copy fields out of row
 void acr_compl::completion_CopyOut(acr_compl::FCompletion &row, acr_compl::Completion &out) {
     out.value = row.value;
     out.nospace = row.nospace;
 }
 
-// --- acr_compl.FCompletion.msghdr.CopyIn
+// --- acr_compl.FCompletion.base.CopyIn
 // Copy fields in to row
 void acr_compl::completion_CopyIn(acr_compl::FCompletion &row, acr_compl::Completion &in) {
     row.value = in.value;
@@ -378,7 +380,7 @@ bool acr_compl::FCompletion_ReadFieldMaybe(acr_compl::FCompletion& parent, algo:
     acr_compl::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
     switch(field_id) {
-        case acr_compl_FieldId_msghdr: {
+        case acr_compl_FieldId_base: {
             retval = false;
         } break;
         case acr_compl_FieldId_value: {
@@ -443,14 +445,14 @@ void acr_compl::FCompletion_Print(acr_compl::FCompletion& row, algo::cstring& st
     PrintAttrSpaceReset(str,"field", temp);
 }
 
-// --- acr_compl.FCtype.msghdr.CopyOut
+// --- acr_compl.FCtype.base.CopyOut
 // Copy fields out of row
 void acr_compl::ctype_CopyOut(acr_compl::FCtype &row, dmmeta::Ctype &out) {
     out.ctype = row.ctype;
     out.comment = algo::Comment(row.comment);
 }
 
-// --- acr_compl.FCtype.msghdr.CopyIn
+// --- acr_compl.FCtype.base.CopyIn
 // Copy fields in to row
 void acr_compl::ctype_CopyIn(acr_compl::FCtype &row, dmmeta::Ctype &in) {
     row.ctype = in.ctype;
@@ -709,7 +711,7 @@ static void acr_compl::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_compl.Input'  signature:'01ef0d9911f9bad5e527ff119c1174f88a3559b0'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_compl.Input'  signature:'09b4cf021f9aa28563fbbe4b4691bfe0c6ef76c9'");
 }
 
 // --- acr_compl.FDb._db.InsertStrptrMaybe
@@ -800,6 +802,12 @@ bool acr_compl::InsertStrptrMaybe(algo::strptr str) {
             retval = retval && floadtuples_InputMaybe(elem);
             break;
         }
+        case acr_compl_TableId_dmmeta_Fcompldir: { // finput:acr_compl.FDb.fcompldir
+            dmmeta::Fcompldir elem;
+            retval = dmmeta::Fcompldir_ReadStrptrMaybe(elem, str);
+            retval = retval && fcompldir_InputMaybe(elem);
+            break;
+        }
         default:
         break;
     } //switch
@@ -826,6 +834,7 @@ bool acr_compl::LoadTuplesMaybe(algo::strptr root, bool recursive) {
         retval = retval && acr_compl::LoadTuplesFile(algo::SsimFname(root,"dmmeta.finsertwhen"),recursive);
         retval = retval && acr_compl::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fflag"),recursive);
         retval = retval && acr_compl::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fconst"),recursive);
+        retval = retval && acr_compl::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fcompldir"),recursive);
         retval = retval && acr_compl::LoadTuplesFile(algo::SsimFname(root,"dmmeta.falias"),recursive);
         retval = retval && acr_compl::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
         retval = retval && acr_compl::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ccmdline"),recursive);
@@ -971,6 +980,12 @@ bool acr_compl::RemoveStrptrMaybe(algo::strptr str) {
         }
         case acr_compl_TableId_dmmeta_Floadtuples: { // finput:acr_compl.FDb.floadtuples
             // finput acr_compl.FDb.floadtuples: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case acr_compl_TableId_dmmeta_Fcompldir: { // finput:acr_compl.FDb.fcompldir
+            // finput acr_compl.FDb.fcompldir: random delete unsupported
             // (need reftype del:Y plus a Thash on the pkey)
             retval = false;
             break;
@@ -3826,6 +3841,118 @@ void acr_compl::ind_floadtuples_AbsReserve(int n) {
     }
 }
 
+// --- acr_compl.FDb.fcompldir.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+acr_compl::FFcompldir& acr_compl::fcompldir_Alloc() {
+    acr_compl::FFcompldir* row = fcompldir_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("acr_compl.out_of_mem  field:acr_compl.FDb.fcompldir  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- acr_compl.FDb.fcompldir.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+acr_compl::FFcompldir* acr_compl::fcompldir_AllocMaybe() {
+    acr_compl::FFcompldir *row = (acr_compl::FFcompldir*)fcompldir_AllocMem();
+    if (row) {
+        new (row) acr_compl::FFcompldir; // call constructor
+    }
+    return row;
+}
+
+// --- acr_compl.FDb.fcompldir.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+acr_compl::FFcompldir* acr_compl::fcompldir_InsertMaybe(const dmmeta::Fcompldir &value) {
+    acr_compl::FFcompldir *row = &fcompldir_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    fcompldir_CopyIn(*row,const_cast<dmmeta::Fcompldir&>(value));
+    bool ok = fcompldir_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        fcompldir_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- acr_compl.FDb.fcompldir.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* acr_compl::fcompldir_AllocMem() {
+    u64 new_nelems     = _db.fcompldir_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    acr_compl::FFcompldir*  lev   = NULL;
+    if (bsr < 36) {
+        lev = _db.fcompldir_lary[bsr];
+        if (!lev) {
+            lev=(acr_compl::FFcompldir*)algo_lib::malloc_AllocMem(sizeof(acr_compl::FFcompldir) * (u64(1)<<bsr));
+            _db.fcompldir_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.fcompldir_n = i64(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- acr_compl.FDb.fcompldir.RemoveAll
+// Remove all elements from Lary
+void acr_compl::fcompldir_RemoveAll() {
+    for (u64 n = _db.fcompldir_n; n>0; ) {
+        n--;
+        fcompldir_qFind(u64(n)).~FFcompldir(); // destroy last element
+        _db.fcompldir_n = i64(n);
+    }
+}
+
+// --- acr_compl.FDb.fcompldir.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void acr_compl::fcompldir_RemoveLast() {
+    u64 n = _db.fcompldir_n;
+    if (n > 0) {
+        n -= 1;
+        fcompldir_qFind(u64(n)).~FFcompldir();
+        _db.fcompldir_n = i64(n);
+    }
+}
+
+// --- acr_compl.FDb.fcompldir.InputMaybe
+static bool acr_compl::fcompldir_InputMaybe(dmmeta::Fcompldir &elem) {
+    bool retval = true;
+    retval = fcompldir_InsertMaybe(elem) != nullptr;
+    return retval;
+}
+
+// --- acr_compl.FDb.fcompldir.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool acr_compl::fcompldir_XrefMaybe(acr_compl::FFcompldir &row) {
+    bool retval = true;
+    (void)row;
+    acr_compl::FField* p_field = acr_compl::ind_field_Find(row.field);
+    if (UNLIKELY(!p_field)) {
+        algo_lib::ResetErrtext() << "acr_compl.bad_xref  index:acr_compl.FDb.ind_field" << Keyval("key", row.field);
+        return false;
+    }
+    // insert fcompldir into index c_fcompldir
+    if (true) { // user-defined insert condition
+        bool success = c_fcompldir_InsertMaybe(*p_field, row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "acr_compl.duplicate_key  xref:acr_compl.FField.c_fcompldir"; // check for duplicate key
+            return false;
+        }
+    }
+    return retval;
+}
+
 // --- acr_compl.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
 static algo::ImrowPtr acr_compl::trace_RowidFind(int t) {
@@ -4161,12 +4288,26 @@ void acr_compl::FDb_Init() {
     }
     memset(_db.ind_floadtuples_buckets_elems, 0, sizeof(acr_compl::FFloadtuples*)*_db.ind_floadtuples_buckets_n); // (acr_compl.FDb.ind_floadtuples)
     _db.p_cmd_ctype = NULL;
+    // initialize LAry fcompldir (acr_compl.FDb.fcompldir)
+    _db.fcompldir_n = 0;
+    memset(_db.fcompldir_lary, 0, sizeof(_db.fcompldir_lary)); // zero out all level pointers
+    acr_compl::FFcompldir* fcompldir_first = (acr_compl::FFcompldir*)algo_lib::malloc_AllocMem(sizeof(acr_compl::FFcompldir) * (u64(1)<<4));
+    if (!fcompldir_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.fcompldir_lary[i]  = fcompldir_first;
+        fcompldir_first    += 1ULL<<i;
+    }
 
     acr_compl::InitReflection();
 }
 
 // --- acr_compl.FDb..Uninit
 void acr_compl::FDb_Uninit() {
+
+    // acr_compl.FDb.fcompldir.Uninit (Lary)  //
+    // skip destruction in global scope
 
     // acr_compl.FDb.ind_floadtuples.Uninit (Thash)  //
     // skip destruction of ind_floadtuples in global scope
@@ -4272,6 +4413,30 @@ void acr_compl::FFalias_Uninit(acr_compl::FFalias& parent) {
     }
 }
 
+// --- acr_compl.FFcompldir.base.CopyOut
+// Copy fields out of row
+void acr_compl::fcompldir_CopyOut(acr_compl::FFcompldir &row, dmmeta::Fcompldir &out) {
+    out.field = row.field;
+    out.dir = row.dir;
+    out.comment = algo::Comment(row.comment);
+}
+
+// --- acr_compl.FFcompldir.base.CopyIn
+// Copy fields in to row
+void acr_compl::fcompldir_CopyIn(acr_compl::FFcompldir &row, dmmeta::Fcompldir &in) {
+    row.field = in.field;
+    row.dir = in.dir;
+    row.comment = in.comment;
+}
+
+// --- acr_compl.FFcompldir..Uninit
+void acr_compl::FFcompldir_Uninit(acr_compl::FFcompldir& parent) {
+    acr_compl::FField* p_field = acr_compl::ind_field_Find(parent.field);
+    if (p_field)  {
+        c_fcompldir_Remove(*p_field, parent);// remove fcompldir from index c_fcompldir
+    }
+}
+
 // --- acr_compl.FFconst.base.CopyOut
 // Copy fields out of row
 void acr_compl::fconst_CopyOut(acr_compl::FFconst &row, dmmeta::Fconst &out) {
@@ -4332,7 +4497,7 @@ void acr_compl::FFflag_Uninit(acr_compl::FFflag& parent) {
     }
 }
 
-// --- acr_compl.FField.msghdr.CopyOut
+// --- acr_compl.FField.base.CopyOut
 // Copy fields out of row
 void acr_compl::field_CopyOut(acr_compl::FField &row, dmmeta::Field &out) {
     out.field = row.field;
@@ -4342,7 +4507,7 @@ void acr_compl::field_CopyOut(acr_compl::FField &row, dmmeta::Field &out) {
     out.comment = algo::Comment(row.comment);
 }
 
-// --- acr_compl.FField.msghdr.CopyIn
+// --- acr_compl.FField.base.CopyIn
 // Copy fields in to row
 void acr_compl::field_CopyIn(acr_compl::FField &row, dmmeta::Field &in) {
     row.field = in.field;
@@ -4501,6 +4666,7 @@ void acr_compl::FField_Init(acr_compl::FField& parent) {
     parent.c_fconst_max = 0; // (acr_compl.FField.c_fconst)
     parent.seen = bool(false);
     parent.c_fflag = NULL;
+    parent.c_fcompldir = NULL;
     parent.p_ctype = NULL;
     parent.c_falias = NULL;
     parent.c_falias_srcfield_elems = NULL; // (acr_compl.FField.c_falias_srcfield)
@@ -4562,6 +4728,9 @@ void acr_compl::FField_Print(acr_compl::FField& row, algo::cstring& str) {
 
     u64_PrintHex(u64(row.c_fflag), temp, 8, true);
     PrintAttrSpaceReset(str,"c_fflag", temp);
+
+    u64_PrintHex(u64(row.c_fcompldir), temp, 8, true);
+    PrintAttrSpaceReset(str,"c_fcompldir", temp);
 
     u64_PrintHex(u64(row.c_falias), temp, 8, true);
     PrintAttrSpaceReset(str,"c_falias", temp);
@@ -4626,14 +4795,14 @@ void acr_compl::FFloadtuples_Uninit(acr_compl::FFloadtuples& parent) {
     }
 }
 
-// --- acr_compl.FSsimfile.msghdr.CopyOut
+// --- acr_compl.FSsimfile.base.CopyOut
 // Copy fields out of row
 void acr_compl::ssimfile_CopyOut(acr_compl::FSsimfile &row, dmmeta::Ssimfile &out) {
     out.ssimfile = row.ssimfile;
     out.ctype = row.ctype;
 }
 
-// --- acr_compl.FSsimfile.msghdr.CopyIn
+// --- acr_compl.FSsimfile.base.CopyIn
 // Copy fields in to row
 void acr_compl::ssimfile_CopyIn(acr_compl::FSsimfile &row, dmmeta::Ssimfile &in) {
     row.ssimfile = in.ssimfile;
@@ -4704,7 +4873,7 @@ const char* acr_compl::value_ToCstr(const acr_compl::FieldId& parent) {
         case acr_compl_FieldId_strkey      : ret = "strkey";  break;
         case acr_compl_FieldId_value       : ret = "value";  break;
         case acr_compl_FieldId_nospace     : ret = "nospace";  break;
-        case acr_compl_FieldId_msghdr      : ret = "msghdr";  break;
+        case acr_compl_FieldId_base        : ret = "base";  break;
         case acr_compl_FieldId_field       : ret = "field";  break;
         case acr_compl_FieldId_type        : ret = "type";  break;
         case acr_compl_FieldId_id          : ret = "id";  break;
@@ -4751,6 +4920,9 @@ bool acr_compl::value_SetStrptrMaybe(acr_compl::FieldId& parent, algo::strptr rh
         }
         case 4: {
             switch (u64(algo::ReadLE32(rhs.elems))) {
+                case LE_STR4('b','a','s','e'): {
+                    value_SetEnum(parent,acr_compl_FieldId_base); ret = true; break;
+                }
                 case LE_STR4('l','i','n','e'): {
                     value_SetEnum(parent,acr_compl_FieldId_line); ret = true; break;
                 }
@@ -4773,9 +4945,6 @@ bool acr_compl::value_SetStrptrMaybe(acr_compl::FieldId& parent, algo::strptr rh
         }
         case 6: {
             switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)) {
-                case LE_STR6('m','s','g','h','d','r'): {
-                    value_SetEnum(parent,acr_compl_FieldId_msghdr); ret = true; break;
-                }
                 case LE_STR6('s','t','r','k','e','y'): {
                     value_SetEnum(parent,acr_compl_FieldId_strkey); ret = true; break;
                 }
@@ -4940,6 +5109,7 @@ const char* acr_compl::value_ToCstr(const acr_compl::TableId& parent) {
         case acr_compl_TableId_dmmeta_Ccmdline: ret = "dmmeta.Ccmdline";  break;
         case acr_compl_TableId_dmmeta_Ctype: ret = "dmmeta.Ctype";  break;
         case acr_compl_TableId_dmmeta_Falias: ret = "dmmeta.Falias";  break;
+        case acr_compl_TableId_dmmeta_Fcompldir: ret = "dmmeta.Fcompldir";  break;
         case acr_compl_TableId_dmmeta_Fconst: ret = "dmmeta.Fconst";  break;
         case acr_compl_TableId_dmmeta_Fflag: ret = "dmmeta.Fflag";  break;
         case acr_compl_TableId_dmmeta_Field: ret = "dmmeta.Field";  break;
@@ -5053,6 +5223,19 @@ bool acr_compl::value_SetStrptrMaybe(acr_compl::TableId& parent, algo::strptr rh
                 }
                 case LE_STR8('d','m','m','e','t','a','.','s'): {
                     if (memcmp(rhs.elems+8,"simfile",7)==0) { value_SetEnum(parent,acr_compl_TableId_dmmeta_ssimfile); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+        case 16: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('d','m','m','e','t','a','.','F'): {
+                    if (memcmp(rhs.elems+8,"compldir",8)==0) { value_SetEnum(parent,acr_compl_TableId_dmmeta_Fcompldir); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('d','m','m','e','t','a','.','f'): {
+                    if (memcmp(rhs.elems+8,"compldir",8)==0) { value_SetEnum(parent,acr_compl_TableId_dmmeta_fcompldir); ret = true; break; }
                     break;
                 }
             }

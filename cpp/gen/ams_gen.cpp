@@ -612,6 +612,47 @@ const char* ams::value_ToCstr(const ams::FieldId& parent) {
         case ams_FieldId_qty               : ret = "qty";  break;
         case ams_FieldId_ioc               : ret = "ioc";  break;
         case ams_FieldId_buy               : ret = "buy";  break;
+        case ams_FieldId_client            : ret = "client";  break;
+        case ams_FieldId_gateway           : ret = "gateway";  break;
+        case ams_FieldId_request_id        : ret = "request_id";  break;
+        case ams_FieldId_t1                : ret = "t1";  break;
+        case ams_FieldId_t2                : ret = "t2";  break;
+        case ams_FieldId_t3                : ret = "t3";  break;
+        case ams_FieldId_t4                : ret = "t4";  break;
+        case ams_FieldId_rtt_ns            : ret = "rtt_ns";  break;
+        case ams_FieldId_svc_ns            : ret = "svc_ns";  break;
+        case ams_FieldId_offset_ns         : ret = "offset_ns";  break;
+        case ams_FieldId_opened            : ret = "opened";  break;
+        case ams_FieldId_stream            : ret = "stream";  break;
+        case ams_FieldId_data              : ret = "data";  break;
+        case ams_FieldId_acct              : ret = "acct";  break;
+        case ams_FieldId_balance           : ret = "balance";  break;
+        case ams_FieldId_nonce             : ret = "nonce";  break;
+        case ams_FieldId_amount            : ret = "amount";  break;
+        case ams_FieldId_ok                : ret = "ok";  break;
+        case ams_FieldId_seg_from          : ret = "seg_from";  break;
+        case ams_FieldId_seg_to            : ret = "seg_to";  break;
+        case ams_FieldId_title             : ret = "title";  break;
+        case ams_FieldId_poll              : ret = "poll";  break;
+        case ams_FieldId_close_segno       : ret = "close_segno";  break;
+        case ams_FieldId_options           : ret = "options";  break;
+        case ams_FieldId_nvote             : ret = "nvote";  break;
+        case ams_FieldId_winner            : ret = "winner";  break;
+        case ams_FieldId_counts            : ret = "counts";  break;
+        case ams_FieldId_last_time         : ret = "last_time";  break;
+        case ams_FieldId_reason            : ret = "reason";  break;
+        case ams_FieldId_segno             : ret = "segno";  break;
+        case ams_FieldId_pts_ms            : ret = "pts_ms";  break;
+        case ams_FieldId_dur_ms            : ret = "dur_ms";  break;
+        case ams_FieldId_chat_pos          : ret = "chat_pos";  break;
+        case ams_FieldId_uri               : ret = "uri";  break;
+        case ams_FieldId_seg_end           : ret = "seg_end";  break;
+        case ams_FieldId_open_pos          : ret = "open_pos";  break;
+        case ams_FieldId_close_pos         : ret = "close_pos";  break;
+        case ams_FieldId_close_known       : ret = "close_known";  break;
+        case ams_FieldId_canceled          : ret = "canceled";  break;
+        case ams_FieldId_option            : ret = "option";  break;
+        case ams_FieldId_pos               : ret = "pos";  break;
         case ams_FieldId_write             : ret = "write";  break;
         case ams_FieldId_read              : ret = "read";  break;
         case ams_FieldId_write_err         : ret = "write_err";  break;
@@ -697,6 +738,21 @@ bool ams::value_SetStrptrMaybe(ams::FieldId& parent, algo::strptr rhs) {
                 case LE_STR2('i','n'): {
                     value_SetEnum(parent,ams_FieldId_in); ret = true; break;
                 }
+                case LE_STR2('o','k'): {
+                    value_SetEnum(parent,ams_FieldId_ok); ret = true; break;
+                }
+                case LE_STR2('t','1'): {
+                    value_SetEnum(parent,ams_FieldId_t1); ret = true; break;
+                }
+                case LE_STR2('t','2'): {
+                    value_SetEnum(parent,ams_FieldId_t2); ret = true; break;
+                }
+                case LE_STR2('t','3'): {
+                    value_SetEnum(parent,ams_FieldId_t3); ret = true; break;
+                }
+                case LE_STR2('t','4'): {
+                    value_SetEnum(parent,ams_FieldId_t4); ret = true; break;
+                }
             }
             break;
         }
@@ -726,19 +782,31 @@ bool ams::value_SetStrptrMaybe(ams::FieldId& parent, algo::strptr rhs) {
                 case LE_STR3('p','i','d'): {
                     value_SetEnum(parent,ams_FieldId_pid); ret = true; break;
                 }
+                case LE_STR3('p','o','s'): {
+                    value_SetEnum(parent,ams_FieldId_pos); ret = true; break;
+                }
                 case LE_STR3('q','t','y'): {
                     value_SetEnum(parent,ams_FieldId_qty); ret = true; break;
                 }
                 case LE_STR3('s','u','m'): {
                     value_SetEnum(parent,ams_FieldId_sum); ret = true; break;
                 }
+                case LE_STR3('u','r','i'): {
+                    value_SetEnum(parent,ams_FieldId_uri); ret = true; break;
+                }
             }
             break;
         }
         case 4: {
             switch (u64(algo::ReadLE32(rhs.elems))) {
+                case LE_STR4('a','c','c','t'): {
+                    value_SetEnum(parent,ams_FieldId_acct); ret = true; break;
+                }
                 case LE_STR4('b','a','s','e'): {
                     value_SetEnum(parent,ams_FieldId_base); ret = true; break;
+                }
+                case LE_STR4('d','a','t','a'): {
+                    value_SetEnum(parent,ams_FieldId_data); ret = true; break;
                 }
                 case LE_STR4('h','a','s','h'): {
                     value_SetEnum(parent,ams_FieldId_hash); ret = true; break;
@@ -754,6 +822,9 @@ bool ams::value_SetStrptrMaybe(ams::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR4('p','a','g','e'): {
                     value_SetEnum(parent,ams_FieldId_page); ret = true; break;
+                }
+                case LE_STR4('p','o','l','l'): {
+                    value_SetEnum(parent,ams_FieldId_poll); ret = true; break;
                 }
                 case LE_STR4('r','a','t','e'): {
                     value_SetEnum(parent,ams_FieldId_rate); ret = true; break;
@@ -799,8 +870,14 @@ bool ams::value_SetStrptrMaybe(ams::FieldId& parent, algo::strptr rhs) {
                 case LE_STR5('m','a','g','i','c'): {
                     value_SetEnum(parent,ams_FieldId_magic); ret = true; break;
                 }
+                case LE_STR5('n','o','n','c','e'): {
+                    value_SetEnum(parent,ams_FieldId_nonce); ret = true; break;
+                }
                 case LE_STR5('n','r','e','a','d'): {
                     value_SetEnum(parent,ams_FieldId_nread); ret = true; break;
+                }
+                case LE_STR5('n','v','o','t','e'): {
+                    value_SetEnum(parent,ams_FieldId_nvote); ret = true; break;
                 }
                 case LE_STR5('o','r','d','e','r'): {
                     value_SetEnum(parent,ams_FieldId_order); ret = true; break;
@@ -808,11 +885,17 @@ bool ams::value_SetStrptrMaybe(ams::FieldId& parent, algo::strptr rhs) {
                 case LE_STR5('p','r','i','c','e'): {
                     value_SetEnum(parent,ams_FieldId_price); ret = true; break;
                 }
+                case LE_STR5('s','e','g','n','o'): {
+                    value_SetEnum(parent,ams_FieldId_segno); ret = true; break;
+                }
                 case LE_STR5('s','e','q','n','o'): {
                     value_SetEnum(parent,ams_FieldId_seqno); ret = true; break;
                 }
                 case LE_STR5('s','t','a','r','t'): {
                     value_SetEnum(parent,ams_FieldId_start); ret = true; break;
+                }
+                case LE_STR5('t','i','t','l','e'): {
+                    value_SetEnum(parent,ams_FieldId_title); ret = true; break;
                 }
                 case LE_STR5('v','a','l','u','e'): {
                     value_SetEnum(parent,ams_FieldId_value); ret = true; break;
@@ -825,6 +908,18 @@ bool ams::value_SetStrptrMaybe(ams::FieldId& parent, algo::strptr rhs) {
         }
         case 6: {
             switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)) {
+                case LE_STR6('a','m','o','u','n','t'): {
+                    value_SetEnum(parent,ams_FieldId_amount); ret = true; break;
+                }
+                case LE_STR6('c','l','i','e','n','t'): {
+                    value_SetEnum(parent,ams_FieldId_client); ret = true; break;
+                }
+                case LE_STR6('c','o','u','n','t','s'): {
+                    value_SetEnum(parent,ams_FieldId_counts); ret = true; break;
+                }
+                case LE_STR6('d','u','r','_','m','s'): {
+                    value_SetEnum(parent,ams_FieldId_dur_ms); ret = true; break;
+                }
                 case LE_STR6('g','r','p','_','i','d'): {
                     value_SetEnum(parent,ams_FieldId_grp_id); ret = true; break;
                 }
@@ -846,14 +941,38 @@ bool ams::value_SetStrptrMaybe(ams::FieldId& parent, algo::strptr rhs) {
                 case LE_STR6('o','f','f','s','e','t'): {
                     value_SetEnum(parent,ams_FieldId_offset); ret = true; break;
                 }
+                case LE_STR6('o','p','e','n','e','d'): {
+                    value_SetEnum(parent,ams_FieldId_opened); ret = true; break;
+                }
+                case LE_STR6('o','p','t','i','o','n'): {
+                    value_SetEnum(parent,ams_FieldId_option); ret = true; break;
+                }
                 case LE_STR6('p','r','e','f','i','x'): {
                     value_SetEnum(parent,ams_FieldId_prefix); ret = true; break;
+                }
+                case LE_STR6('p','t','s','_','m','s'): {
+                    value_SetEnum(parent,ams_FieldId_pts_ms); ret = true; break;
                 }
                 case LE_STR6('r','e','a','d','e','r'): {
                     value_SetEnum(parent,ams_FieldId_reader); ret = true; break;
                 }
+                case LE_STR6('r','e','a','s','o','n'): {
+                    value_SetEnum(parent,ams_FieldId_reason); ret = true; break;
+                }
+                case LE_STR6('r','t','t','_','n','s'): {
+                    value_SetEnum(parent,ams_FieldId_rtt_ns); ret = true; break;
+                }
+                case LE_STR6('s','e','g','_','t','o'): {
+                    value_SetEnum(parent,ams_FieldId_seg_to); ret = true; break;
+                }
                 case LE_STR6('s','h','a','d','o','w'): {
                     value_SetEnum(parent,ams_FieldId_shadow); ret = true; break;
+                }
+                case LE_STR6('s','t','r','e','a','m'): {
+                    value_SetEnum(parent,ams_FieldId_stream); ret = true; break;
+                }
+                case LE_STR6('s','v','c','_','n','s'): {
+                    value_SetEnum(parent,ams_FieldId_svc_ns); ret = true; break;
                 }
                 case LE_STR6('s','y','m','b','o','l'): {
                     value_SetEnum(parent,ams_FieldId_symbol); ret = true; break;
@@ -864,11 +983,20 @@ bool ams::value_SetStrptrMaybe(ams::FieldId& parent, algo::strptr rhs) {
                 case LE_STR6('w','i','n','d','o','w'): {
                     value_SetEnum(parent,ams_FieldId_window); ret = true; break;
                 }
+                case LE_STR6('w','i','n','n','e','r'): {
+                    value_SetEnum(parent,ams_FieldId_winner); ret = true; break;
+                }
             }
             break;
         }
         case 7: {
             switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)|(u64(rhs[6])<<48)) {
+                case LE_STR7('b','a','l','a','n','c','e'): {
+                    value_SetEnum(parent,ams_FieldId_balance); ret = true; break;
+                }
+                case LE_STR7('g','a','t','e','w','a','y'): {
+                    value_SetEnum(parent,ams_FieldId_gateway); ret = true; break;
+                }
                 case LE_STR7('g','r','p','t','y','p','e'): {
                     value_SetEnum(parent,ams_FieldId_grptype); ret = true; break;
                 }
@@ -880,6 +1008,9 @@ bool ams::value_SetStrptrMaybe(ams::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR7('n','o','d','e','i','d','x'): {
                     value_SetEnum(parent,ams_FieldId_nodeidx); ret = true; break;
+                }
+                case LE_STR7('o','p','t','i','o','n','s'): {
+                    value_SetEnum(parent,ams_FieldId_options); ret = true; break;
                 }
                 case LE_STR7('o','u','t','_','g','r','p'): {
                     value_SetEnum(parent,ams_FieldId_out_grp); ret = true; break;
@@ -893,6 +1024,9 @@ bool ams::value_SetStrptrMaybe(ams::FieldId& parent, algo::strptr rhs) {
                 case LE_STR7('p','r','o','c','i','d','x'): {
                     value_SetEnum(parent,ams_FieldId_procidx); ret = true; break;
                 }
+                case LE_STR7('s','e','g','_','e','n','d'): {
+                    value_SetEnum(parent,ams_FieldId_seg_end); ret = true; break;
+                }
                 case LE_STR7('w','b','u','d','g','e','t'): {
                     value_SetEnum(parent,ams_FieldId_wbudget); ret = true; break;
                 }
@@ -901,8 +1035,20 @@ bool ams::value_SetStrptrMaybe(ams::FieldId& parent, algo::strptr rhs) {
         }
         case 8: {
             switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('c','a','n','c','e','l','e','d'): {
+                    value_SetEnum(parent,ams_FieldId_canceled); ret = true; break;
+                }
+                case LE_STR8('c','h','a','t','_','p','o','s'): {
+                    value_SetEnum(parent,ams_FieldId_chat_pos); ret = true; break;
+                }
+                case LE_STR8('o','p','e','n','_','p','o','s'): {
+                    value_SetEnum(parent,ams_FieldId_open_pos); ret = true; break;
+                }
                 case LE_STR8('p','r','o','c','t','y','p','e'): {
                     value_SetEnum(parent,ams_FieldId_proctype); ret = true; break;
+                }
+                case LE_STR8('s','e','g','_','f','r','o','m'): {
+                    value_SetEnum(parent,ams_FieldId_seg_from); ret = true; break;
                 }
                 case LE_STR8('s','i','g','n','a','l','e','d'): {
                     value_SetEnum(parent,ams_FieldId_signaled); ret = true; break;
@@ -918,6 +1064,10 @@ bool ams::value_SetStrptrMaybe(ams::FieldId& parent, algo::strptr rhs) {
         }
         case 9: {
             switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('c','l','o','s','e','_','p','o'): {
+                    if (memcmp(rhs.elems+8,"s",1)==0) { value_SetEnum(parent,ams_FieldId_close_pos); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('d','a','t','a','s','t','a','r'): {
                     if (memcmp(rhs.elems+8,"t",1)==0) { value_SetEnum(parent,ams_FieldId_datastart); ret = true; break; }
                     break;
@@ -926,8 +1076,16 @@ bool ams::value_SetStrptrMaybe(ams::FieldId& parent, algo::strptr rhs) {
                     if (memcmp(rhs.elems+8,"r",1)==0) { value_SetEnum(parent,ams_FieldId_grpmember); ret = true; break; }
                     break;
                 }
+                case LE_STR8('l','a','s','t','_','t','i','m'): {
+                    if (memcmp(rhs.elems+8,"e",1)==0) { value_SetEnum(parent,ams_FieldId_last_time); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('n','n','o','b','u','d','g','e'): {
                     if (memcmp(rhs.elems+8,"t",1)==0) { value_SetEnum(parent,ams_FieldId_nnobudget); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('o','f','f','s','e','t','_','n'): {
+                    if (memcmp(rhs.elems+8,"s",1)==0) { value_SetEnum(parent,ams_FieldId_offset_ns); ret = true; break; }
                     break;
                 }
                 case LE_STR8('w','r','i','t','e','_','e','r'): {
@@ -947,6 +1105,10 @@ bool ams::value_SetStrptrMaybe(ams::FieldId& parent, algo::strptr rhs) {
                     if (memcmp(rhs.elems+8,"er",2)==0) { value_SetEnum(parent,ams_FieldId_n_shmember); ret = true; break; }
                     break;
                 }
+                case LE_STR8('r','e','q','u','e','s','t','_'): {
+                    if (memcmp(rhs.elems+8,"id",2)==0) { value_SetEnum(parent,ams_FieldId_request_id); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('w','r','i','t','e','r','_','p'): {
                     if (memcmp(rhs.elems+8,"id",2)==0) { value_SetEnum(parent,ams_FieldId_writer_pid); ret = true; break; }
                     break;
@@ -958,6 +1120,14 @@ bool ams::value_SetStrptrMaybe(ams::FieldId& parent, algo::strptr rhs) {
             switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('c','l','o','c','k','_','f','l'): {
                     if (memcmp(rhs.elems+8,"oor",3)==0) { value_SetEnum(parent,ams_FieldId_clock_floor); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('c','l','o','s','e','_','k','n'): {
+                    if (memcmp(rhs.elems+8,"own",3)==0) { value_SetEnum(parent,ams_FieldId_close_known); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('c','l','o','s','e','_','s','e'): {
+                    if (memcmp(rhs.elems+8,"gno",3)==0) { value_SetEnum(parent,ams_FieldId_close_segno); ret = true; break; }
                     break;
                 }
                 case LE_STR8('c','r','e','a','t','o','r','_'): {
@@ -1546,6 +1716,20 @@ const char* ams::type_ToCstr(const ams::MsgHeader& parent) {
         case ams_MsgHeader_type_ams_SampMengSymbolrowMsg: ret = "ams.SampMengSymbolrowMsg";  break;
         case ams_MsgHeader_type_ams_SampMengTextMsg: ret = "ams.SampMengTextMsg";  break;
         case ams_MsgHeader_type_ams_SampMengUserrowMsg: ret = "ams.SampMengUserrowMsg";  break;
+        case ams_MsgHeader_type_ams_SampPcapjoinMatchMsg: ret = "ams.SampPcapjoinMatchMsg";  break;
+        case ams_MsgHeader_type_ams_SampPcapjoinMissMsg: ret = "ams.SampPcapjoinMissMsg";  break;
+        case ams_MsgHeader_type_ams_SampPcapjoinPairMsg: ret = "ams.SampPcapjoinPairMsg";  break;
+        case ams_MsgHeader_type_ams_SampPcapjoinStateMsg: ret = "ams.SampPcapjoinStateMsg";  break;
+        case ams_MsgHeader_type_ams_SampRpcAcctMsg: ret = "ams.SampRpcAcctMsg";  break;
+        case ams_MsgHeader_type_ams_SampRpcReplyMsg: ret = "ams.SampRpcReplyMsg";  break;
+        case ams_MsgHeader_type_ams_SampRpcReqMsg: ret = "ams.SampRpcReqMsg";  break;
+        case ams_MsgHeader_type_ams_SampVodChatMsg: ret = "ams.SampVodChatMsg";  break;
+        case ams_MsgHeader_type_ams_SampVodClipMsg: ret = "ams.SampVodClipMsg";  break;
+        case ams_MsgHeader_type_ams_SampVodPollCancelMsg: ret = "ams.SampVodPollCancelMsg";  break;
+        case ams_MsgHeader_type_ams_SampVodPollOpenMsg: ret = "ams.SampVodPollOpenMsg";  break;
+        case ams_MsgHeader_type_ams_SampVodPollResultMsg: ret = "ams.SampVodPollResultMsg";  break;
+        case ams_MsgHeader_type_ams_SampVodRejectMsg: ret = "ams.SampVodRejectMsg";  break;
+        case ams_MsgHeader_type_ams_SampVodSegMsg: ret = "ams.SampVodSegMsg";  break;
         case ams_MsgHeader_type_ams_ShmHbMsg: ret = "ams.ShmHbMsg";  break;
         case ams_MsgHeader_type_ams_TerminateMsg: ret = "ams.TerminateMsg";  break;
         case ams_MsgHeader_type_ams_UdpFrame: ret = "ams.UdpFrame";  break;
@@ -1663,6 +1847,11 @@ bool ams::type_SetStrptrMaybe(ams::MsgHeader& parent, algo::strptr rhs) {
         }
         case 17: {
             switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('a','m','s','.','S','a','m','p'): {
+                    if (memcmp(rhs.elems+8,"RpcReqMsg",9)==0) { type_SetEnum(parent,ams_MsgHeader_type_ams_SampRpcReqMsg); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"VodSegMsg",9)==0) { type_SetEnum(parent,ams_MsgHeader_type_ams_SampVodSegMsg); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('w','s','.','S','e','r','v','e'): {
                     if (memcmp(rhs.elems+8,"rStartMsg",9)==0) { type_SetEnum(parent,ams_MsgHeader_type_ws_ServerStartMsg); ret = true; break; }
                     break;
@@ -1675,6 +1864,9 @@ bool ams::type_SetStrptrMaybe(ams::MsgHeader& parent, algo::strptr rhs) {
                 case LE_STR8('a','m','s','.','S','a','m','p'): {
                     if (memcmp(rhs.elems+8,"AggLateMsg",10)==0) { type_SetEnum(parent,ams_MsgHeader_type_ams_SampAggLateMsg); ret = true; break; }
                     if (memcmp(rhs.elems+8,"AggPaneMsg",10)==0) { type_SetEnum(parent,ams_MsgHeader_type_ams_SampAggPaneMsg); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"RpcAcctMsg",10)==0) { type_SetEnum(parent,ams_MsgHeader_type_ams_SampRpcAcctMsg); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"VodChatMsg",10)==0) { type_SetEnum(parent,ams_MsgHeader_type_ams_SampVodChatMsg); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"VodClipMsg",10)==0) { type_SetEnum(parent,ams_MsgHeader_type_ams_SampVodClipMsg); ret = true; break; }
                     break;
                 }
             }
@@ -1687,6 +1879,7 @@ bool ams::type_SetStrptrMaybe(ams::MsgHeader& parent, algo::strptr rhs) {
                     if (memcmp(rhs.elems+8,"AggClockMsg",11)==0) { type_SetEnum(parent,ams_MsgHeader_type_ams_SampAggClockMsg); ret = true; break; }
                     if (memcmp(rhs.elems+8,"MengBookMsg",11)==0) { type_SetEnum(parent,ams_MsgHeader_type_ams_SampMengBookMsg); ret = true; break; }
                     if (memcmp(rhs.elems+8,"MengTextMsg",11)==0) { type_SetEnum(parent,ams_MsgHeader_type_ams_SampMengTextMsg); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"RpcReplyMsg",11)==0) { type_SetEnum(parent,ams_MsgHeader_type_ams_SampRpcReplyMsg); ret = true; break; }
                     break;
                 }
             }
@@ -1696,6 +1889,7 @@ bool ams::type_SetStrptrMaybe(ams::MsgHeader& parent, algo::strptr rhs) {
             switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('a','m','s','.','S','a','m','p'): {
                     if (memcmp(rhs.elems+8,"AggWindowMsg",12)==0) { type_SetEnum(parent,ams_MsgHeader_type_ams_SampAggWindowMsg); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"VodRejectMsg",12)==0) { type_SetEnum(parent,ams_MsgHeader_type_ams_SampVodRejectMsg); ret = true; break; }
                     break;
                 }
             }
@@ -1707,6 +1901,7 @@ bool ams::type_SetStrptrMaybe(ams::MsgHeader& parent, algo::strptr rhs) {
                     if (memcmp(rhs.elems+8,"MengNewUserMsg",14)==0) { type_SetEnum(parent,ams_MsgHeader_type_ams_SampMengNewUserMsg); ret = true; break; }
                     if (memcmp(rhs.elems+8,"MengRestingMsg",14)==0) { type_SetEnum(parent,ams_MsgHeader_type_ams_SampMengRestingMsg); ret = true; break; }
                     if (memcmp(rhs.elems+8,"MengUserrowMsg",14)==0) { type_SetEnum(parent,ams_MsgHeader_type_ams_SampMengUserrowMsg); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"VodPollOpenMsg",14)==0) { type_SetEnum(parent,ams_MsgHeader_type_ams_SampVodPollOpenMsg); ret = true; break; }
                     break;
                 }
             }
@@ -1716,6 +1911,8 @@ bool ams::type_SetStrptrMaybe(ams::MsgHeader& parent, algo::strptr rhs) {
             switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('a','m','s','.','S','a','m','p'): {
                     if (memcmp(rhs.elems+8,"MengNewOrderMsg",15)==0) { type_SetEnum(parent,ams_MsgHeader_type_ams_SampMengNewOrderMsg); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"PcapjoinMissMsg",15)==0) { type_SetEnum(parent,ams_MsgHeader_type_ams_SampPcapjoinMissMsg); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"PcapjoinPairMsg",15)==0) { type_SetEnum(parent,ams_MsgHeader_type_ams_SampPcapjoinPairMsg); ret = true; break; }
                     break;
                 }
             }
@@ -1727,6 +1924,10 @@ bool ams::type_SetStrptrMaybe(ams::MsgHeader& parent, algo::strptr rhs) {
                     if (memcmp(rhs.elems+8,"MengCancelReqMsg",16)==0) { type_SetEnum(parent,ams_MsgHeader_type_ams_SampMengCancelReqMsg); ret = true; break; }
                     if (memcmp(rhs.elems+8,"MengNewSymbolMsg",16)==0) { type_SetEnum(parent,ams_MsgHeader_type_ams_SampMengNewSymbolMsg); ret = true; break; }
                     if (memcmp(rhs.elems+8,"MengSymbolrowMsg",16)==0) { type_SetEnum(parent,ams_MsgHeader_type_ams_SampMengSymbolrowMsg); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"PcapjoinMatchMsg",16)==0) { type_SetEnum(parent,ams_MsgHeader_type_ams_SampPcapjoinMatchMsg); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"PcapjoinStateMsg",16)==0) { type_SetEnum(parent,ams_MsgHeader_type_ams_SampPcapjoinStateMsg); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"VodPollCancelMsg",16)==0) { type_SetEnum(parent,ams_MsgHeader_type_ams_SampVodPollCancelMsg); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"VodPollResultMsg",16)==0) { type_SetEnum(parent,ams_MsgHeader_type_ams_SampVodPollResultMsg); ret = true; break; }
                     break;
                 }
             }
@@ -1868,6 +2069,20 @@ const char* ams::value_ToCstr(const ams::MsgHeaderMsgsCase& parent) {
         case ams_MsgHeaderMsgsCase_ams_SampMengSymbolrowMsg: ret = "ams.SampMengSymbolrowMsg";  break;
         case ams_MsgHeaderMsgsCase_ams_SampMengTextMsg: ret = "ams.SampMengTextMsg";  break;
         case ams_MsgHeaderMsgsCase_ams_SampMengUserrowMsg: ret = "ams.SampMengUserrowMsg";  break;
+        case ams_MsgHeaderMsgsCase_ams_SampPcapjoinMatchMsg: ret = "ams.SampPcapjoinMatchMsg";  break;
+        case ams_MsgHeaderMsgsCase_ams_SampPcapjoinMissMsg: ret = "ams.SampPcapjoinMissMsg";  break;
+        case ams_MsgHeaderMsgsCase_ams_SampPcapjoinPairMsg: ret = "ams.SampPcapjoinPairMsg";  break;
+        case ams_MsgHeaderMsgsCase_ams_SampPcapjoinStateMsg: ret = "ams.SampPcapjoinStateMsg";  break;
+        case ams_MsgHeaderMsgsCase_ams_SampRpcAcctMsg: ret = "ams.SampRpcAcctMsg";  break;
+        case ams_MsgHeaderMsgsCase_ams_SampRpcReplyMsg: ret = "ams.SampRpcReplyMsg";  break;
+        case ams_MsgHeaderMsgsCase_ams_SampRpcReqMsg: ret = "ams.SampRpcReqMsg";  break;
+        case ams_MsgHeaderMsgsCase_ams_SampVodChatMsg: ret = "ams.SampVodChatMsg";  break;
+        case ams_MsgHeaderMsgsCase_ams_SampVodClipMsg: ret = "ams.SampVodClipMsg";  break;
+        case ams_MsgHeaderMsgsCase_ams_SampVodPollCancelMsg: ret = "ams.SampVodPollCancelMsg";  break;
+        case ams_MsgHeaderMsgsCase_ams_SampVodPollOpenMsg: ret = "ams.SampVodPollOpenMsg";  break;
+        case ams_MsgHeaderMsgsCase_ams_SampVodPollResultMsg: ret = "ams.SampVodPollResultMsg";  break;
+        case ams_MsgHeaderMsgsCase_ams_SampVodRejectMsg: ret = "ams.SampVodRejectMsg";  break;
+        case ams_MsgHeaderMsgsCase_ams_SampVodSegMsg: ret = "ams.SampVodSegMsg";  break;
         case ams_MsgHeaderMsgsCase_ams_ShmHbMsg: ret = "ams.ShmHbMsg";  break;
         case ams_MsgHeaderMsgsCase_ams_TerminateMsg: ret = "ams.TerminateMsg";  break;
         case ams_MsgHeaderMsgsCase_ams_UdpFrame: ret = "ams.UdpFrame";  break;
@@ -1985,6 +2200,11 @@ bool ams::value_SetStrptrMaybe(ams::MsgHeaderMsgsCase& parent, algo::strptr rhs)
         }
         case 17: {
             switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('a','m','s','.','S','a','m','p'): {
+                    if (memcmp(rhs.elems+8,"RpcReqMsg",9)==0) { value_SetEnum(parent,ams_MsgHeaderMsgsCase_ams_SampRpcReqMsg); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"VodSegMsg",9)==0) { value_SetEnum(parent,ams_MsgHeaderMsgsCase_ams_SampVodSegMsg); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('w','s','.','S','e','r','v','e'): {
                     if (memcmp(rhs.elems+8,"rStartMsg",9)==0) { value_SetEnum(parent,ams_MsgHeaderMsgsCase_ws_ServerStartMsg); ret = true; break; }
                     break;
@@ -1997,6 +2217,9 @@ bool ams::value_SetStrptrMaybe(ams::MsgHeaderMsgsCase& parent, algo::strptr rhs)
                 case LE_STR8('a','m','s','.','S','a','m','p'): {
                     if (memcmp(rhs.elems+8,"AggLateMsg",10)==0) { value_SetEnum(parent,ams_MsgHeaderMsgsCase_ams_SampAggLateMsg); ret = true; break; }
                     if (memcmp(rhs.elems+8,"AggPaneMsg",10)==0) { value_SetEnum(parent,ams_MsgHeaderMsgsCase_ams_SampAggPaneMsg); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"RpcAcctMsg",10)==0) { value_SetEnum(parent,ams_MsgHeaderMsgsCase_ams_SampRpcAcctMsg); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"VodChatMsg",10)==0) { value_SetEnum(parent,ams_MsgHeaderMsgsCase_ams_SampVodChatMsg); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"VodClipMsg",10)==0) { value_SetEnum(parent,ams_MsgHeaderMsgsCase_ams_SampVodClipMsg); ret = true; break; }
                     break;
                 }
             }
@@ -2009,6 +2232,7 @@ bool ams::value_SetStrptrMaybe(ams::MsgHeaderMsgsCase& parent, algo::strptr rhs)
                     if (memcmp(rhs.elems+8,"AggClockMsg",11)==0) { value_SetEnum(parent,ams_MsgHeaderMsgsCase_ams_SampAggClockMsg); ret = true; break; }
                     if (memcmp(rhs.elems+8,"MengBookMsg",11)==0) { value_SetEnum(parent,ams_MsgHeaderMsgsCase_ams_SampMengBookMsg); ret = true; break; }
                     if (memcmp(rhs.elems+8,"MengTextMsg",11)==0) { value_SetEnum(parent,ams_MsgHeaderMsgsCase_ams_SampMengTextMsg); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"RpcReplyMsg",11)==0) { value_SetEnum(parent,ams_MsgHeaderMsgsCase_ams_SampRpcReplyMsg); ret = true; break; }
                     break;
                 }
             }
@@ -2018,6 +2242,7 @@ bool ams::value_SetStrptrMaybe(ams::MsgHeaderMsgsCase& parent, algo::strptr rhs)
             switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('a','m','s','.','S','a','m','p'): {
                     if (memcmp(rhs.elems+8,"AggWindowMsg",12)==0) { value_SetEnum(parent,ams_MsgHeaderMsgsCase_ams_SampAggWindowMsg); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"VodRejectMsg",12)==0) { value_SetEnum(parent,ams_MsgHeaderMsgsCase_ams_SampVodRejectMsg); ret = true; break; }
                     break;
                 }
             }
@@ -2029,6 +2254,7 @@ bool ams::value_SetStrptrMaybe(ams::MsgHeaderMsgsCase& parent, algo::strptr rhs)
                     if (memcmp(rhs.elems+8,"MengNewUserMsg",14)==0) { value_SetEnum(parent,ams_MsgHeaderMsgsCase_ams_SampMengNewUserMsg); ret = true; break; }
                     if (memcmp(rhs.elems+8,"MengRestingMsg",14)==0) { value_SetEnum(parent,ams_MsgHeaderMsgsCase_ams_SampMengRestingMsg); ret = true; break; }
                     if (memcmp(rhs.elems+8,"MengUserrowMsg",14)==0) { value_SetEnum(parent,ams_MsgHeaderMsgsCase_ams_SampMengUserrowMsg); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"VodPollOpenMsg",14)==0) { value_SetEnum(parent,ams_MsgHeaderMsgsCase_ams_SampVodPollOpenMsg); ret = true; break; }
                     break;
                 }
             }
@@ -2038,6 +2264,8 @@ bool ams::value_SetStrptrMaybe(ams::MsgHeaderMsgsCase& parent, algo::strptr rhs)
             switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('a','m','s','.','S','a','m','p'): {
                     if (memcmp(rhs.elems+8,"MengNewOrderMsg",15)==0) { value_SetEnum(parent,ams_MsgHeaderMsgsCase_ams_SampMengNewOrderMsg); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"PcapjoinMissMsg",15)==0) { value_SetEnum(parent,ams_MsgHeaderMsgsCase_ams_SampPcapjoinMissMsg); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"PcapjoinPairMsg",15)==0) { value_SetEnum(parent,ams_MsgHeaderMsgsCase_ams_SampPcapjoinPairMsg); ret = true; break; }
                     break;
                 }
             }
@@ -2049,6 +2277,10 @@ bool ams::value_SetStrptrMaybe(ams::MsgHeaderMsgsCase& parent, algo::strptr rhs)
                     if (memcmp(rhs.elems+8,"MengCancelReqMsg",16)==0) { value_SetEnum(parent,ams_MsgHeaderMsgsCase_ams_SampMengCancelReqMsg); ret = true; break; }
                     if (memcmp(rhs.elems+8,"MengNewSymbolMsg",16)==0) { value_SetEnum(parent,ams_MsgHeaderMsgsCase_ams_SampMengNewSymbolMsg); ret = true; break; }
                     if (memcmp(rhs.elems+8,"MengSymbolrowMsg",16)==0) { value_SetEnum(parent,ams_MsgHeaderMsgsCase_ams_SampMengSymbolrowMsg); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"PcapjoinMatchMsg",16)==0) { value_SetEnum(parent,ams_MsgHeaderMsgsCase_ams_SampPcapjoinMatchMsg); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"PcapjoinStateMsg",16)==0) { value_SetEnum(parent,ams_MsgHeaderMsgsCase_ams_SampPcapjoinStateMsg); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"VodPollCancelMsg",16)==0) { value_SetEnum(parent,ams_MsgHeaderMsgsCase_ams_SampVodPollCancelMsg); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"VodPollResultMsg",16)==0) { value_SetEnum(parent,ams_MsgHeaderMsgsCase_ams_SampVodPollResultMsg); ret = true; break; }
                     break;
                 }
             }
@@ -3762,6 +3994,1772 @@ void ams::SampMengUserrowMsg_Print(ams::SampMengUserrowMsg row, algo::cstring& s
     PrintAttrSpaceReset(str,"user", temp);
 }
 
+// --- ams.SampPcapjoinMatchMsg.base.CopyOut
+// Copy fields out of row
+void ams::samp_pcapjoin_match_msg_CopyOut(ams::SampPcapjoinMatchMsg &row, ams::MsgHeader &out) {
+    // type: field value is computed
+    // length: field value is computed
+    (void)row;//only to avoid -Wunused-parameter
+    (void)out;//only to avoid -Wunused-parameter
+}
+
+// --- ams.SampPcapjoinMatchMsg..ReadFieldMaybe
+bool ams::SampPcapjoinMatchMsg_ReadFieldMaybe(ams::SampPcapjoinMatchMsg& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    ams::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case ams_FieldId_base: {
+            retval = false;
+        } break;
+        case ams_FieldId_type: {
+            retval = false;
+        } break;
+        case ams_FieldId_length: {
+            retval = false;
+        } break;
+        case ams_FieldId_client: {
+            retval = ietf::Ipport_ReadStrptrMaybe(parent.client, strval);
+        } break;
+        case ams_FieldId_gateway: {
+            retval = ietf::Ipport_ReadStrptrMaybe(parent.gateway, strval);
+        } break;
+        case ams_FieldId_request_id: {
+            retval = u64_ReadStrptrMaybe(parent.request_id, strval);
+        } break;
+        case ams_FieldId_t1: {
+            retval = u64_ReadStrptrMaybe(parent.t1, strval);
+        } break;
+        case ams_FieldId_t2: {
+            retval = u64_ReadStrptrMaybe(parent.t2, strval);
+        } break;
+        case ams_FieldId_t3: {
+            retval = u64_ReadStrptrMaybe(parent.t3, strval);
+        } break;
+        case ams_FieldId_t4: {
+            retval = u64_ReadStrptrMaybe(parent.t4, strval);
+        } break;
+        case ams_FieldId_rtt_ns: {
+            retval = i64_ReadStrptrMaybe(parent.rtt_ns, strval);
+        } break;
+        case ams_FieldId_svc_ns: {
+            retval = i64_ReadStrptrMaybe(parent.svc_ns, strval);
+        } break;
+        case ams_FieldId_offset_ns: {
+            retval = i64_ReadStrptrMaybe(parent.offset_ns, strval);
+        } break;
+        default: {
+            if (!ch_N(field) || (algo_lib::_db.strict_attr && field != "acr.rowid")) {
+                retval = false;
+                algo_lib::AppendErrtext("comment", "unrecognized attr");
+            }
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- ams.SampPcapjoinMatchMsg..ReadStrptrMaybe
+// Read fields of ams::SampPcapjoinMatchMsg from an ascii string.
+// The format of the string is an ssim Tuple
+bool ams::SampPcapjoinMatchMsg_ReadStrptrMaybe(ams::SampPcapjoinMatchMsg &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "ams.SampPcapjoinMatchMsg");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && SampPcapjoinMatchMsg_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- ams.SampPcapjoinMatchMsg..Init
+// Set all fields to initial values.
+void ams::SampPcapjoinMatchMsg_Init(ams::SampPcapjoinMatchMsg& parent) {
+    parent.type = u32(2025);
+    parent.length = u32(ssizeof(parent));
+    parent.request_id = u64(0);
+    parent.t1 = u64(0);
+    parent.t2 = u64(0);
+    parent.t3 = u64(0);
+    parent.t4 = u64(0);
+    parent.rtt_ns = i64(0);
+    parent.svc_ns = i64(0);
+    parent.offset_ns = i64(0);
+}
+
+// --- ams.SampPcapjoinMatchMsg..Print
+// print string representation of ROW to string STR
+// cfmt:ams.SampPcapjoinMatchMsg.String  printfmt:Tuple
+void ams::SampPcapjoinMatchMsg_Print(ams::SampPcapjoinMatchMsg& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "ams.SampPcapjoinMatchMsg";
+
+    ietf::Ipport_Print(row.client, temp);
+    PrintAttrSpaceReset(str,"client", temp);
+
+    ietf::Ipport_Print(row.gateway, temp);
+    PrintAttrSpaceReset(str,"gateway", temp);
+
+    u64_Print(row.request_id, temp);
+    PrintAttrSpaceReset(str,"request_id", temp);
+
+    u64_Print(row.t1, temp);
+    PrintAttrSpaceReset(str,"t1", temp);
+
+    u64_Print(row.t2, temp);
+    PrintAttrSpaceReset(str,"t2", temp);
+
+    u64_Print(row.t3, temp);
+    PrintAttrSpaceReset(str,"t3", temp);
+
+    u64_Print(row.t4, temp);
+    PrintAttrSpaceReset(str,"t4", temp);
+
+    i64_Print(row.rtt_ns, temp);
+    PrintAttrSpaceReset(str,"rtt_ns", temp);
+
+    i64_Print(row.svc_ns, temp);
+    PrintAttrSpaceReset(str,"svc_ns", temp);
+
+    i64_Print(row.offset_ns, temp);
+    PrintAttrSpaceReset(str,"offset_ns", temp);
+}
+
+// --- ams.SampPcapjoinMissMsg.base.CopyOut
+// Copy fields out of row
+void ams::samp_pcapjoin_miss_msg_CopyOut(ams::SampPcapjoinMissMsg &row, ams::MsgHeader &out) {
+    // type: field value is computed
+    // length: field value is computed
+    (void)row;//only to avoid -Wunused-parameter
+    (void)out;//only to avoid -Wunused-parameter
+}
+
+// --- ams.SampPcapjoinMissMsg..ReadFieldMaybe
+bool ams::SampPcapjoinMissMsg_ReadFieldMaybe(ams::SampPcapjoinMissMsg& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    ams::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case ams_FieldId_base: {
+            retval = false;
+        } break;
+        case ams_FieldId_type: {
+            retval = false;
+        } break;
+        case ams_FieldId_length: {
+            retval = false;
+        } break;
+        case ams_FieldId_client: {
+            retval = ietf::Ipport_ReadStrptrMaybe(parent.client, strval);
+        } break;
+        case ams_FieldId_gateway: {
+            retval = ietf::Ipport_ReadStrptrMaybe(parent.gateway, strval);
+        } break;
+        case ams_FieldId_request_id: {
+            retval = u64_ReadStrptrMaybe(parent.request_id, strval);
+        } break;
+        case ams_FieldId_t1: {
+            retval = u64_ReadStrptrMaybe(parent.t1, strval);
+        } break;
+        case ams_FieldId_t2: {
+            retval = u64_ReadStrptrMaybe(parent.t2, strval);
+        } break;
+        case ams_FieldId_t3: {
+            retval = u64_ReadStrptrMaybe(parent.t3, strval);
+        } break;
+        case ams_FieldId_t4: {
+            retval = u64_ReadStrptrMaybe(parent.t4, strval);
+        } break;
+        default: {
+            if (!ch_N(field) || (algo_lib::_db.strict_attr && field != "acr.rowid")) {
+                retval = false;
+                algo_lib::AppendErrtext("comment", "unrecognized attr");
+            }
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- ams.SampPcapjoinMissMsg..ReadStrptrMaybe
+// Read fields of ams::SampPcapjoinMissMsg from an ascii string.
+// The format of the string is an ssim Tuple
+bool ams::SampPcapjoinMissMsg_ReadStrptrMaybe(ams::SampPcapjoinMissMsg &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "ams.SampPcapjoinMissMsg");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && SampPcapjoinMissMsg_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- ams.SampPcapjoinMissMsg..Print
+// print string representation of ROW to string STR
+// cfmt:ams.SampPcapjoinMissMsg.String  printfmt:Tuple
+void ams::SampPcapjoinMissMsg_Print(ams::SampPcapjoinMissMsg& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "ams.SampPcapjoinMissMsg";
+
+    ietf::Ipport_Print(row.client, temp);
+    PrintAttrSpaceReset(str,"client", temp);
+
+    ietf::Ipport_Print(row.gateway, temp);
+    PrintAttrSpaceReset(str,"gateway", temp);
+
+    u64_Print(row.request_id, temp);
+    PrintAttrSpaceReset(str,"request_id", temp);
+
+    u64_Print(row.t1, temp);
+    PrintAttrSpaceReset(str,"t1", temp);
+
+    u64_Print(row.t2, temp);
+    PrintAttrSpaceReset(str,"t2", temp);
+
+    u64_Print(row.t3, temp);
+    PrintAttrSpaceReset(str,"t3", temp);
+
+    u64_Print(row.t4, temp);
+    PrintAttrSpaceReset(str,"t4", temp);
+}
+
+// --- ams.SampPcapjoinPairMsg.base.CopyOut
+// Copy fields out of row
+void ams::samp_pcapjoin_pair_msg_CopyOut(ams::SampPcapjoinPairMsg &row, ams::MsgHeader &out) {
+    // type: field value is computed
+    // length: field value is computed
+    (void)row;//only to avoid -Wunused-parameter
+    (void)out;//only to avoid -Wunused-parameter
+}
+
+// --- ams.SampPcapjoinPairMsg..ReadFieldMaybe
+bool ams::SampPcapjoinPairMsg_ReadFieldMaybe(ams::SampPcapjoinPairMsg& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    ams::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case ams_FieldId_base: {
+            retval = false;
+        } break;
+        case ams_FieldId_type: {
+            retval = false;
+        } break;
+        case ams_FieldId_length: {
+            retval = false;
+        } break;
+        case ams_FieldId_client: {
+            retval = ietf::Ipport_ReadStrptrMaybe(parent.client, strval);
+        } break;
+        case ams_FieldId_gateway: {
+            retval = ietf::Ipport_ReadStrptrMaybe(parent.gateway, strval);
+        } break;
+        case ams_FieldId_request_id: {
+            retval = u64_ReadStrptrMaybe(parent.request_id, strval);
+        } break;
+        case ams_FieldId_opened: {
+            retval = u64_ReadStrptrMaybe(parent.opened, strval);
+        } break;
+        case ams_FieldId_t1: {
+            retval = u64_ReadStrptrMaybe(parent.t1, strval);
+        } break;
+        case ams_FieldId_t2: {
+            retval = u64_ReadStrptrMaybe(parent.t2, strval);
+        } break;
+        case ams_FieldId_t3: {
+            retval = u64_ReadStrptrMaybe(parent.t3, strval);
+        } break;
+        case ams_FieldId_t4: {
+            retval = u64_ReadStrptrMaybe(parent.t4, strval);
+        } break;
+        case ams_FieldId_stream: {
+            retval = u64_ReadStrptrMaybe(parent.stream, strval);
+        } break;
+        default: {
+            if (!ch_N(field) || (algo_lib::_db.strict_attr && field != "acr.rowid")) {
+                retval = false;
+                algo_lib::AppendErrtext("comment", "unrecognized attr");
+            }
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- ams.SampPcapjoinPairMsg..ReadStrptrMaybe
+// Read fields of ams::SampPcapjoinPairMsg from an ascii string.
+// The format of the string is an ssim Tuple
+bool ams::SampPcapjoinPairMsg_ReadStrptrMaybe(ams::SampPcapjoinPairMsg &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "ams.SampPcapjoinPairMsg");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && SampPcapjoinPairMsg_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- ams.SampPcapjoinPairMsg..Init
+// Set all fields to initial values.
+void ams::SampPcapjoinPairMsg_Init(ams::SampPcapjoinPairMsg& parent) {
+    parent.type = u32(2028);
+    parent.length = u32(ssizeof(parent));
+    parent.request_id = u64(0);
+    parent.opened = u64(0);
+    parent.t1 = u64(0);
+    parent.t2 = u64(0);
+    parent.t3 = u64(0);
+    parent.t4 = u64(0);
+    parent.stream = u64(0);
+}
+
+// --- ams.SampPcapjoinPairMsg..Print
+// print string representation of ROW to string STR
+// cfmt:ams.SampPcapjoinPairMsg.String  printfmt:Tuple
+void ams::SampPcapjoinPairMsg_Print(ams::SampPcapjoinPairMsg& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "ams.SampPcapjoinPairMsg";
+
+    ietf::Ipport_Print(row.client, temp);
+    PrintAttrSpaceReset(str,"client", temp);
+
+    ietf::Ipport_Print(row.gateway, temp);
+    PrintAttrSpaceReset(str,"gateway", temp);
+
+    u64_Print(row.request_id, temp);
+    PrintAttrSpaceReset(str,"request_id", temp);
+
+    u64_Print(row.opened, temp);
+    PrintAttrSpaceReset(str,"opened", temp);
+
+    u64_Print(row.t1, temp);
+    PrintAttrSpaceReset(str,"t1", temp);
+
+    u64_Print(row.t2, temp);
+    PrintAttrSpaceReset(str,"t2", temp);
+
+    u64_Print(row.t3, temp);
+    PrintAttrSpaceReset(str,"t3", temp);
+
+    u64_Print(row.t4, temp);
+    PrintAttrSpaceReset(str,"t4", temp);
+
+    u64_Print(row.stream, temp);
+    PrintAttrSpaceReset(str,"stream", temp);
+}
+
+// --- ams.SampPcapjoinStateMsg.base.CopyOut
+// Copy fields out of row
+void ams::samp_pcapjoin_state_msg_CopyOut(ams::SampPcapjoinStateMsg &row, ams::MsgHeader &out) {
+    // type: field value is computed
+    // length: field value is computed
+    (void)row;//only to avoid -Wunused-parameter
+    (void)out;//only to avoid -Wunused-parameter
+}
+
+// --- ams.SampPcapjoinStateMsg.data.Getary
+// Access var-length portion as an aryptr. Length is determined from one of the fields.
+algo::aryptr<u8> ams::data_Getary(ams::SampPcapjoinStateMsg& parent) {
+    return algo::aryptr<u8>(data_Addr(parent), data_N(parent));
+}
+
+// --- ams.SampPcapjoinStateMsg.data.Addr
+u8* ams::data_Addr(ams::SampPcapjoinStateMsg& parent) {
+    return (u8*)((u8*)&parent + sizeof(ams::SampPcapjoinStateMsg)); // address of varlen portion
+}
+
+// --- ams.SampPcapjoinStateMsg.data.ReadStrptrMaybe
+// Convert string to field. Return success value
+bool ams::data_ReadStrptrMaybe(ams::SampPcapjoinStateMsg& parent, algo::strptr in_str) {
+    bool retval = true;
+    if (algo_lib::_db.varlenbuf) {
+        ary_Addary(*algo_lib::_db.varlenbuf, strptr_ToMemptr(in_str));
+    }
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
+}
+
+// --- ams.SampPcapjoinStateMsg.data.Print
+// Convert data to a string.
+// Array is printed as a regular string.
+void ams::data_Print(ams::SampPcapjoinStateMsg& parent, algo::cstring &rhs) {
+    rhs << algo::memptr_ToStrptr(data_Getary(parent));
+}
+
+// --- ams.SampPcapjoinStateMsg..ReadFieldMaybe
+bool ams::SampPcapjoinStateMsg_ReadFieldMaybe(ams::SampPcapjoinStateMsg& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    ams::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,algo::Pathcomp(field, ".LL"));
+    switch(field_id) {
+        case ams_FieldId_base: {
+            retval = false;
+        } break;
+        case ams_FieldId_type: {
+            retval = false;
+        } break;
+        case ams_FieldId_length: {
+            retval = false;
+        } break;
+        case ams_FieldId_gateway: {
+            retval = bool_ReadStrptrMaybe(parent.gateway, strval);
+        } break;
+        case ams_FieldId_offset: {
+            retval = u64_ReadStrptrMaybe(parent.offset, strval);
+        } break;
+        case ams_FieldId_data: {
+            retval = data_ReadStrptrMaybe(parent, strval);
+        } break;
+        default: {
+            if (!ch_N(field) || (algo_lib::_db.strict_attr && field != "acr.rowid")) {
+                retval = false;
+                algo_lib::AppendErrtext("comment", "unrecognized attr");
+            }
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- ams.SampPcapjoinStateMsg..ReadStrptrMaybe
+// Any varlen fields are returned in algo_lib::_db.varlenbuf if set
+// Read fields of ams::SampPcapjoinStateMsg from an ascii string.
+// The format of the string is an ssim Tuple
+bool ams::SampPcapjoinStateMsg_ReadStrptrMaybe(ams::SampPcapjoinStateMsg &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "ams.SampPcapjoinStateMsg");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && SampPcapjoinStateMsg_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- ams.SampPcapjoinStateMsg..Print
+// print string representation of ROW to string STR
+// cfmt:ams.SampPcapjoinStateMsg.String  printfmt:Tuple
+void ams::SampPcapjoinStateMsg_Print(ams::SampPcapjoinStateMsg& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "ams.SampPcapjoinStateMsg";
+
+    bool_Print(row.gateway, temp);
+    PrintAttrSpaceReset(str,"gateway", temp);
+
+    u64_Print(row.offset, temp);
+    PrintAttrSpaceReset(str,"offset", temp);
+
+    ams::data_Print(row, temp);
+    PrintAttrSpaceReset(str,"data", temp);
+}
+
+// --- ams.SampRpcAcctMsg.base.CopyOut
+// Copy fields out of row
+void ams::samp_rpc_acct_msg_CopyOut(ams::SampRpcAcctMsg &row, ams::MsgHeader &out) {
+    // type: field value is computed
+    // length: field value is computed
+    (void)row;//only to avoid -Wunused-parameter
+    (void)out;//only to avoid -Wunused-parameter
+}
+
+// --- ams.SampRpcAcctMsg..ReadFieldMaybe
+bool ams::SampRpcAcctMsg_ReadFieldMaybe(ams::SampRpcAcctMsg& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    ams::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case ams_FieldId_base: {
+            retval = false;
+        } break;
+        case ams_FieldId_type: {
+            retval = false;
+        } break;
+        case ams_FieldId_length: {
+            retval = false;
+        } break;
+        case ams_FieldId_acct: {
+            retval = u32_ReadStrptrMaybe(parent.acct, strval);
+        } break;
+        case ams_FieldId_balance: {
+            retval = i64_ReadStrptrMaybe(parent.balance, strval);
+        } break;
+        default: {
+            if (!ch_N(field) || (algo_lib::_db.strict_attr && field != "acr.rowid")) {
+                retval = false;
+                algo_lib::AppendErrtext("comment", "unrecognized attr");
+            }
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- ams.SampRpcAcctMsg..ReadStrptrMaybe
+// Read fields of ams::SampRpcAcctMsg from an ascii string.
+// The format of the string is an ssim Tuple
+bool ams::SampRpcAcctMsg_ReadStrptrMaybe(ams::SampRpcAcctMsg &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "ams.SampRpcAcctMsg");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && SampRpcAcctMsg_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- ams.SampRpcAcctMsg..Print
+// print string representation of ROW to string STR
+// cfmt:ams.SampRpcAcctMsg.String  printfmt:Tuple
+void ams::SampRpcAcctMsg_Print(ams::SampRpcAcctMsg& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "ams.SampRpcAcctMsg";
+
+    u32_Print(row.acct, temp);
+    PrintAttrSpaceReset(str,"acct", temp);
+
+    i64_Print(row.balance, temp);
+    PrintAttrSpaceReset(str,"balance", temp);
+}
+
+// --- ams.SampRpcReplyMsg.base.CopyOut
+// Copy fields out of row
+void ams::samp_rpc_reply_msg_CopyOut(ams::SampRpcReplyMsg &row, ams::MsgHeader &out) {
+    // type: field value is computed
+    // length: field value is computed
+    (void)row;//only to avoid -Wunused-parameter
+    (void)out;//only to avoid -Wunused-parameter
+}
+
+// --- ams.SampRpcReplyMsg.client.Getary
+// Access var-length portion as an aryptr. Length is determined from one of the fields.
+algo::aryptr<char> ams::client_Getary(ams::SampRpcReplyMsg& parent) {
+    return algo::aryptr<char>(client_Addr(parent), client_N(parent));
+}
+
+// --- ams.SampRpcReplyMsg.client.Addr
+char* ams::client_Addr(ams::SampRpcReplyMsg& parent) {
+    return (char*)((u8*)&parent + sizeof(ams::SampRpcReplyMsg)); // address of varlen portion
+}
+
+// --- ams.SampRpcReplyMsg.client.ReadStrptrMaybe
+// Convert string to field. Return success value
+bool ams::client_ReadStrptrMaybe(ams::SampRpcReplyMsg& parent, algo::strptr in_str) {
+    bool retval = true;
+    if (algo_lib::_db.varlenbuf) {
+        ary_Addary(*algo_lib::_db.varlenbuf, strptr_ToMemptr(in_str));
+    }
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
+}
+
+// --- ams.SampRpcReplyMsg.client.Print
+// Convert client to a string.
+// Array is printed as a regular string.
+void ams::client_Print(ams::SampRpcReplyMsg& parent, algo::cstring &rhs) {
+    rhs << client_Getary(parent);
+}
+
+// --- ams.SampRpcReplyMsg..ReadFieldMaybe
+bool ams::SampRpcReplyMsg_ReadFieldMaybe(ams::SampRpcReplyMsg& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    ams::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,algo::Pathcomp(field, ".LL"));
+    switch(field_id) {
+        case ams_FieldId_base: {
+            retval = false;
+        } break;
+        case ams_FieldId_type: {
+            retval = false;
+        } break;
+        case ams_FieldId_length: {
+            retval = false;
+        } break;
+        case ams_FieldId_nonce: {
+            retval = u64_ReadStrptrMaybe(parent.nonce, strval);
+        } break;
+        case ams_FieldId_acct: {
+            retval = u32_ReadStrptrMaybe(parent.acct, strval);
+        } break;
+        case ams_FieldId_amount: {
+            retval = i64_ReadStrptrMaybe(parent.amount, strval);
+        } break;
+        case ams_FieldId_ok: {
+            retval = bool_ReadStrptrMaybe(parent.ok, strval);
+        } break;
+        case ams_FieldId_balance: {
+            retval = i64_ReadStrptrMaybe(parent.balance, strval);
+        } break;
+        case ams_FieldId_client: {
+            retval = client_ReadStrptrMaybe(parent, strval);
+        } break;
+        default: {
+            if (!ch_N(field) || (algo_lib::_db.strict_attr && field != "acr.rowid")) {
+                retval = false;
+                algo_lib::AppendErrtext("comment", "unrecognized attr");
+            }
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- ams.SampRpcReplyMsg..ReadStrptrMaybe
+// Any varlen fields are returned in algo_lib::_db.varlenbuf if set
+// Read fields of ams::SampRpcReplyMsg from an ascii string.
+// The format of the string is an ssim Tuple
+bool ams::SampRpcReplyMsg_ReadStrptrMaybe(ams::SampRpcReplyMsg &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "ams.SampRpcReplyMsg");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && SampRpcReplyMsg_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- ams.SampRpcReplyMsg..Print
+// print string representation of ROW to string STR
+// cfmt:ams.SampRpcReplyMsg.String  printfmt:Tuple
+void ams::SampRpcReplyMsg_Print(ams::SampRpcReplyMsg& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "ams.SampRpcReplyMsg";
+
+    u64_Print(row.nonce, temp);
+    PrintAttrSpaceReset(str,"nonce", temp);
+
+    u32_Print(row.acct, temp);
+    PrintAttrSpaceReset(str,"acct", temp);
+
+    i64_Print(row.amount, temp);
+    PrintAttrSpaceReset(str,"amount", temp);
+
+    bool_Print(row.ok, temp);
+    PrintAttrSpaceReset(str,"ok", temp);
+
+    i64_Print(row.balance, temp);
+    PrintAttrSpaceReset(str,"balance", temp);
+
+    ams::client_Print(row, temp);
+    PrintAttrSpaceReset(str,"client", temp);
+}
+
+// --- ams.SampRpcReqMsg.base.CopyOut
+// Copy fields out of row
+void ams::samp_rpc_req_msg_CopyOut(ams::SampRpcReqMsg &row, ams::MsgHeader &out) {
+    // type: field value is computed
+    // length: field value is computed
+    (void)row;//only to avoid -Wunused-parameter
+    (void)out;//only to avoid -Wunused-parameter
+}
+
+// --- ams.SampRpcReqMsg.client.Getary
+// Access var-length portion as an aryptr. Length is determined from one of the fields.
+algo::aryptr<char> ams::client_Getary(ams::SampRpcReqMsg& parent) {
+    return algo::aryptr<char>(client_Addr(parent), client_N(parent));
+}
+
+// --- ams.SampRpcReqMsg.client.Addr
+char* ams::client_Addr(ams::SampRpcReqMsg& parent) {
+    return (char*)((u8*)&parent + sizeof(ams::SampRpcReqMsg)); // address of varlen portion
+}
+
+// --- ams.SampRpcReqMsg.client.ReadStrptrMaybe
+// Convert string to field. Return success value
+bool ams::client_ReadStrptrMaybe(ams::SampRpcReqMsg& parent, algo::strptr in_str) {
+    bool retval = true;
+    if (algo_lib::_db.varlenbuf) {
+        ary_Addary(*algo_lib::_db.varlenbuf, strptr_ToMemptr(in_str));
+    }
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
+}
+
+// --- ams.SampRpcReqMsg.client.Print
+// Convert client to a string.
+// Array is printed as a regular string.
+void ams::client_Print(ams::SampRpcReqMsg& parent, algo::cstring &rhs) {
+    rhs << client_Getary(parent);
+}
+
+// --- ams.SampRpcReqMsg..ReadFieldMaybe
+bool ams::SampRpcReqMsg_ReadFieldMaybe(ams::SampRpcReqMsg& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    ams::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,algo::Pathcomp(field, ".LL"));
+    switch(field_id) {
+        case ams_FieldId_base: {
+            retval = false;
+        } break;
+        case ams_FieldId_type: {
+            retval = false;
+        } break;
+        case ams_FieldId_length: {
+            retval = false;
+        } break;
+        case ams_FieldId_nonce: {
+            retval = u64_ReadStrptrMaybe(parent.nonce, strval);
+        } break;
+        case ams_FieldId_acct: {
+            retval = u32_ReadStrptrMaybe(parent.acct, strval);
+        } break;
+        case ams_FieldId_amount: {
+            retval = i64_ReadStrptrMaybe(parent.amount, strval);
+        } break;
+        case ams_FieldId_client: {
+            retval = client_ReadStrptrMaybe(parent, strval);
+        } break;
+        default: {
+            if (!ch_N(field) || (algo_lib::_db.strict_attr && field != "acr.rowid")) {
+                retval = false;
+                algo_lib::AppendErrtext("comment", "unrecognized attr");
+            }
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- ams.SampRpcReqMsg..ReadStrptrMaybe
+// Any varlen fields are returned in algo_lib::_db.varlenbuf if set
+// Read fields of ams::SampRpcReqMsg from an ascii string.
+// The format of the string is an ssim Tuple
+bool ams::SampRpcReqMsg_ReadStrptrMaybe(ams::SampRpcReqMsg &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "ams.SampRpcReqMsg");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && SampRpcReqMsg_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- ams.SampRpcReqMsg..Print
+// print string representation of ROW to string STR
+// cfmt:ams.SampRpcReqMsg.String  printfmt:Tuple
+void ams::SampRpcReqMsg_Print(ams::SampRpcReqMsg& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "ams.SampRpcReqMsg";
+
+    u64_Print(row.nonce, temp);
+    PrintAttrSpaceReset(str,"nonce", temp);
+
+    u32_Print(row.acct, temp);
+    PrintAttrSpaceReset(str,"acct", temp);
+
+    i64_Print(row.amount, temp);
+    PrintAttrSpaceReset(str,"amount", temp);
+
+    ams::client_Print(row, temp);
+    PrintAttrSpaceReset(str,"client", temp);
+}
+
+// --- ams.SampVodChatMsg.base.CopyOut
+// Copy fields out of row
+void ams::samp_vod_chat_msg_CopyOut(ams::SampVodChatMsg &row, ams::MsgHeader &out) {
+    // type: field value is computed
+    // length: field value is computed
+    (void)row;//only to avoid -Wunused-parameter
+    (void)out;//only to avoid -Wunused-parameter
+}
+
+// --- ams.SampVodChatMsg.text.Getary
+// Access var-length portion as an aryptr. Length is determined from one of the fields.
+algo::aryptr<char> ams::text_Getary(ams::SampVodChatMsg& parent) {
+    return algo::aryptr<char>(text_Addr(parent), text_N(parent));
+}
+
+// --- ams.SampVodChatMsg.text.Addr
+char* ams::text_Addr(ams::SampVodChatMsg& parent) {
+    return (char*)((u8*)&parent + sizeof(ams::SampVodChatMsg)); // address of varlen portion
+}
+
+// --- ams.SampVodChatMsg.text.ReadStrptrMaybe
+// Convert string to field. Return success value
+bool ams::text_ReadStrptrMaybe(ams::SampVodChatMsg& parent, algo::strptr in_str) {
+    bool retval = true;
+    if (algo_lib::_db.varlenbuf) {
+        ary_Addary(*algo_lib::_db.varlenbuf, strptr_ToMemptr(in_str));
+    }
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
+}
+
+// --- ams.SampVodChatMsg.text.Print
+// Convert text to a string.
+// Array is printed as a regular string.
+void ams::text_Print(ams::SampVodChatMsg& parent, algo::cstring &rhs) {
+    rhs << text_Getary(parent);
+}
+
+// --- ams.SampVodChatMsg..ReadFieldMaybe
+bool ams::SampVodChatMsg_ReadFieldMaybe(ams::SampVodChatMsg& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    ams::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,algo::Pathcomp(field, ".LL"));
+    switch(field_id) {
+        case ams_FieldId_base: {
+            retval = false;
+        } break;
+        case ams_FieldId_type: {
+            retval = false;
+        } break;
+        case ams_FieldId_length: {
+            retval = false;
+        } break;
+        case ams_FieldId_user: {
+            retval = algo::RnullStr32_ReadStrptrMaybe(parent.user, strval);
+        } break;
+        case ams_FieldId_text: {
+            retval = text_ReadStrptrMaybe(parent, strval);
+        } break;
+        default: {
+            if (!ch_N(field) || (algo_lib::_db.strict_attr && field != "acr.rowid")) {
+                retval = false;
+                algo_lib::AppendErrtext("comment", "unrecognized attr");
+            }
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- ams.SampVodChatMsg..ReadStrptrMaybe
+// Any varlen fields are returned in algo_lib::_db.varlenbuf if set
+// Read fields of ams::SampVodChatMsg from an ascii string.
+// The format of the string is an ssim Tuple
+bool ams::SampVodChatMsg_ReadStrptrMaybe(ams::SampVodChatMsg &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "ams.SampVodChatMsg");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && SampVodChatMsg_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- ams.SampVodChatMsg..Print
+// print string representation of ROW to string STR
+// cfmt:ams.SampVodChatMsg.String  printfmt:Tuple
+void ams::SampVodChatMsg_Print(ams::SampVodChatMsg& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "ams.SampVodChatMsg";
+
+    algo::RnullStr32_Print(row.user, temp);
+    PrintAttrSpaceReset(str,"user", temp);
+
+    ams::text_Print(row, temp);
+    PrintAttrSpaceReset(str,"text", temp);
+}
+
+// --- ams.SampVodClipMsg.base.CopyOut
+// Copy fields out of row
+void ams::samp_vod_clip_msg_CopyOut(ams::SampVodClipMsg &row, ams::MsgHeader &out) {
+    // type: field value is computed
+    // length: field value is computed
+    (void)row;//only to avoid -Wunused-parameter
+    (void)out;//only to avoid -Wunused-parameter
+}
+
+// --- ams.SampVodClipMsg.title.Getary
+// Access var-length portion as an aryptr. Length is determined from one of the fields.
+algo::aryptr<char> ams::title_Getary(ams::SampVodClipMsg& parent) {
+    return algo::aryptr<char>(title_Addr(parent), title_N(parent));
+}
+
+// --- ams.SampVodClipMsg.title.Addr
+char* ams::title_Addr(ams::SampVodClipMsg& parent) {
+    return (char*)((u8*)&parent + sizeof(ams::SampVodClipMsg)); // address of varlen portion
+}
+
+// --- ams.SampVodClipMsg.title.ReadStrptrMaybe
+// Convert string to field. Return success value
+bool ams::title_ReadStrptrMaybe(ams::SampVodClipMsg& parent, algo::strptr in_str) {
+    bool retval = true;
+    if (algo_lib::_db.varlenbuf) {
+        ary_Addary(*algo_lib::_db.varlenbuf, strptr_ToMemptr(in_str));
+    }
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
+}
+
+// --- ams.SampVodClipMsg.title.Print
+// Convert title to a string.
+// Array is printed as a regular string.
+void ams::title_Print(ams::SampVodClipMsg& parent, algo::cstring &rhs) {
+    rhs << title_Getary(parent);
+}
+
+// --- ams.SampVodClipMsg..ReadFieldMaybe
+bool ams::SampVodClipMsg_ReadFieldMaybe(ams::SampVodClipMsg& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    ams::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,algo::Pathcomp(field, ".LL"));
+    switch(field_id) {
+        case ams_FieldId_base: {
+            retval = false;
+        } break;
+        case ams_FieldId_type: {
+            retval = false;
+        } break;
+        case ams_FieldId_length: {
+            retval = false;
+        } break;
+        case ams_FieldId_seg_from: {
+            retval = u64_ReadStrptrMaybe(parent.seg_from, strval);
+        } break;
+        case ams_FieldId_seg_to: {
+            retval = u64_ReadStrptrMaybe(parent.seg_to, strval);
+        } break;
+        case ams_FieldId_user: {
+            retval = algo::RnullStr32_ReadStrptrMaybe(parent.user, strval);
+        } break;
+        case ams_FieldId_title: {
+            retval = title_ReadStrptrMaybe(parent, strval);
+        } break;
+        default: {
+            if (!ch_N(field) || (algo_lib::_db.strict_attr && field != "acr.rowid")) {
+                retval = false;
+                algo_lib::AppendErrtext("comment", "unrecognized attr");
+            }
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- ams.SampVodClipMsg..ReadStrptrMaybe
+// Any varlen fields are returned in algo_lib::_db.varlenbuf if set
+// Read fields of ams::SampVodClipMsg from an ascii string.
+// The format of the string is an ssim Tuple
+bool ams::SampVodClipMsg_ReadStrptrMaybe(ams::SampVodClipMsg &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "ams.SampVodClipMsg");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && SampVodClipMsg_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- ams.SampVodClipMsg..Print
+// print string representation of ROW to string STR
+// cfmt:ams.SampVodClipMsg.String  printfmt:Tuple
+void ams::SampVodClipMsg_Print(ams::SampVodClipMsg& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "ams.SampVodClipMsg";
+
+    u64_Print(row.seg_from, temp);
+    PrintAttrSpaceReset(str,"seg_from", temp);
+
+    u64_Print(row.seg_to, temp);
+    PrintAttrSpaceReset(str,"seg_to", temp);
+
+    algo::RnullStr32_Print(row.user, temp);
+    PrintAttrSpaceReset(str,"user", temp);
+
+    ams::title_Print(row, temp);
+    PrintAttrSpaceReset(str,"title", temp);
+}
+
+// --- ams.SampVodPollCancelMsg.base.CopyOut
+// Copy fields out of row
+void ams::samp_vod_poll_cancel_msg_CopyOut(ams::SampVodPollCancelMsg &row, ams::MsgHeader &out) {
+    // type: field value is computed
+    // length: field value is computed
+    (void)row;//only to avoid -Wunused-parameter
+    (void)out;//only to avoid -Wunused-parameter
+}
+
+// --- ams.SampVodPollCancelMsg..ReadFieldMaybe
+bool ams::SampVodPollCancelMsg_ReadFieldMaybe(ams::SampVodPollCancelMsg& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    ams::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case ams_FieldId_base: {
+            retval = false;
+        } break;
+        case ams_FieldId_type: {
+            retval = false;
+        } break;
+        case ams_FieldId_length: {
+            retval = false;
+        } break;
+        case ams_FieldId_poll: {
+            retval = algo::RnullStr32_ReadStrptrMaybe(parent.poll, strval);
+        } break;
+        default: {
+            if (!ch_N(field) || (algo_lib::_db.strict_attr && field != "acr.rowid")) {
+                retval = false;
+                algo_lib::AppendErrtext("comment", "unrecognized attr");
+            }
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- ams.SampVodPollCancelMsg..ReadStrptrMaybe
+// Read fields of ams::SampVodPollCancelMsg from an ascii string.
+// The format of the string is an ssim Tuple
+bool ams::SampVodPollCancelMsg_ReadStrptrMaybe(ams::SampVodPollCancelMsg &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "ams.SampVodPollCancelMsg");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && SampVodPollCancelMsg_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- ams.SampVodPollCancelMsg..Print
+// print string representation of ROW to string STR
+// cfmt:ams.SampVodPollCancelMsg.String  printfmt:Tuple
+void ams::SampVodPollCancelMsg_Print(ams::SampVodPollCancelMsg& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "ams.SampVodPollCancelMsg";
+
+    algo::RnullStr32_Print(row.poll, temp);
+    PrintAttrSpaceReset(str,"poll", temp);
+}
+
+// --- ams.SampVodPollOpenMsg.base.CopyOut
+// Copy fields out of row
+void ams::samp_vod_poll_open_msg_CopyOut(ams::SampVodPollOpenMsg &row, ams::MsgHeader &out) {
+    // type: field value is computed
+    // length: field value is computed
+    (void)row;//only to avoid -Wunused-parameter
+    (void)out;//only to avoid -Wunused-parameter
+}
+
+// --- ams.SampVodPollOpenMsg.options.Getary
+// Access var-length portion as an aryptr. Length is determined from one of the fields.
+algo::aryptr<char> ams::options_Getary(ams::SampVodPollOpenMsg& parent) {
+    return algo::aryptr<char>(options_Addr(parent), options_N(parent));
+}
+
+// --- ams.SampVodPollOpenMsg.options.Addr
+char* ams::options_Addr(ams::SampVodPollOpenMsg& parent) {
+    return (char*)((u8*)&parent + sizeof(ams::SampVodPollOpenMsg)); // address of varlen portion
+}
+
+// --- ams.SampVodPollOpenMsg.options.ReadStrptrMaybe
+// Convert string to field. Return success value
+bool ams::options_ReadStrptrMaybe(ams::SampVodPollOpenMsg& parent, algo::strptr in_str) {
+    bool retval = true;
+    if (algo_lib::_db.varlenbuf) {
+        ary_Addary(*algo_lib::_db.varlenbuf, strptr_ToMemptr(in_str));
+    }
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
+}
+
+// --- ams.SampVodPollOpenMsg.options.Print
+// Convert options to a string.
+// Array is printed as a regular string.
+void ams::options_Print(ams::SampVodPollOpenMsg& parent, algo::cstring &rhs) {
+    rhs << options_Getary(parent);
+}
+
+// --- ams.SampVodPollOpenMsg..ReadFieldMaybe
+bool ams::SampVodPollOpenMsg_ReadFieldMaybe(ams::SampVodPollOpenMsg& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    ams::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,algo::Pathcomp(field, ".LL"));
+    switch(field_id) {
+        case ams_FieldId_base: {
+            retval = false;
+        } break;
+        case ams_FieldId_type: {
+            retval = false;
+        } break;
+        case ams_FieldId_length: {
+            retval = false;
+        } break;
+        case ams_FieldId_poll: {
+            retval = algo::RnullStr32_ReadStrptrMaybe(parent.poll, strval);
+        } break;
+        case ams_FieldId_close_segno: {
+            retval = u64_ReadStrptrMaybe(parent.close_segno, strval);
+        } break;
+        case ams_FieldId_options: {
+            retval = options_ReadStrptrMaybe(parent, strval);
+        } break;
+        default: {
+            if (!ch_N(field) || (algo_lib::_db.strict_attr && field != "acr.rowid")) {
+                retval = false;
+                algo_lib::AppendErrtext("comment", "unrecognized attr");
+            }
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- ams.SampVodPollOpenMsg..ReadStrptrMaybe
+// Any varlen fields are returned in algo_lib::_db.varlenbuf if set
+// Read fields of ams::SampVodPollOpenMsg from an ascii string.
+// The format of the string is an ssim Tuple
+bool ams::SampVodPollOpenMsg_ReadStrptrMaybe(ams::SampVodPollOpenMsg &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "ams.SampVodPollOpenMsg");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && SampVodPollOpenMsg_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- ams.SampVodPollOpenMsg..Print
+// print string representation of ROW to string STR
+// cfmt:ams.SampVodPollOpenMsg.String  printfmt:Tuple
+void ams::SampVodPollOpenMsg_Print(ams::SampVodPollOpenMsg& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "ams.SampVodPollOpenMsg";
+
+    algo::RnullStr32_Print(row.poll, temp);
+    PrintAttrSpaceReset(str,"poll", temp);
+
+    u64_Print(row.close_segno, temp);
+    PrintAttrSpaceReset(str,"close_segno", temp);
+
+    ams::options_Print(row, temp);
+    PrintAttrSpaceReset(str,"options", temp);
+}
+
+// --- ams.SampVodPollResultMsg.base.CopyOut
+// Copy fields out of row
+void ams::samp_vod_poll_result_msg_CopyOut(ams::SampVodPollResultMsg &row, ams::MsgHeader &out) {
+    // type: field value is computed
+    // length: field value is computed
+    (void)row;//only to avoid -Wunused-parameter
+    (void)out;//only to avoid -Wunused-parameter
+}
+
+// --- ams.SampVodPollResultMsg.counts.Getary
+// Access var-length portion as an aryptr. Length is determined from one of the fields.
+algo::aryptr<char> ams::counts_Getary(ams::SampVodPollResultMsg& parent) {
+    return algo::aryptr<char>(counts_Addr(parent), counts_N(parent));
+}
+
+// --- ams.SampVodPollResultMsg.counts.Addr
+char* ams::counts_Addr(ams::SampVodPollResultMsg& parent) {
+    return (char*)((u8*)&parent + sizeof(ams::SampVodPollResultMsg)); // address of varlen portion
+}
+
+// --- ams.SampVodPollResultMsg.counts.ReadStrptrMaybe
+// Convert string to field. Return success value
+bool ams::counts_ReadStrptrMaybe(ams::SampVodPollResultMsg& parent, algo::strptr in_str) {
+    bool retval = true;
+    if (algo_lib::_db.varlenbuf) {
+        ary_Addary(*algo_lib::_db.varlenbuf, strptr_ToMemptr(in_str));
+    }
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
+}
+
+// --- ams.SampVodPollResultMsg.counts.Print
+// Convert counts to a string.
+// Array is printed as a regular string.
+void ams::counts_Print(ams::SampVodPollResultMsg& parent, algo::cstring &rhs) {
+    rhs << counts_Getary(parent);
+}
+
+// --- ams.SampVodPollResultMsg..ReadFieldMaybe
+bool ams::SampVodPollResultMsg_ReadFieldMaybe(ams::SampVodPollResultMsg& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    ams::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,algo::Pathcomp(field, ".LL"));
+    switch(field_id) {
+        case ams_FieldId_base: {
+            retval = false;
+        } break;
+        case ams_FieldId_type: {
+            retval = false;
+        } break;
+        case ams_FieldId_length: {
+            retval = false;
+        } break;
+        case ams_FieldId_poll: {
+            retval = algo::RnullStr32_ReadStrptrMaybe(parent.poll, strval);
+        } break;
+        case ams_FieldId_nvote: {
+            retval = u32_ReadStrptrMaybe(parent.nvote, strval);
+        } break;
+        case ams_FieldId_winner: {
+            retval = algo::RnullStr32_ReadStrptrMaybe(parent.winner, strval);
+        } break;
+        case ams_FieldId_counts: {
+            retval = counts_ReadStrptrMaybe(parent, strval);
+        } break;
+        default: {
+            if (!ch_N(field) || (algo_lib::_db.strict_attr && field != "acr.rowid")) {
+                retval = false;
+                algo_lib::AppendErrtext("comment", "unrecognized attr");
+            }
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- ams.SampVodPollResultMsg..ReadStrptrMaybe
+// Any varlen fields are returned in algo_lib::_db.varlenbuf if set
+// Read fields of ams::SampVodPollResultMsg from an ascii string.
+// The format of the string is an ssim Tuple
+bool ams::SampVodPollResultMsg_ReadStrptrMaybe(ams::SampVodPollResultMsg &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "ams.SampVodPollResultMsg");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && SampVodPollResultMsg_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- ams.SampVodPollResultMsg..Print
+// print string representation of ROW to string STR
+// cfmt:ams.SampVodPollResultMsg.String  printfmt:Tuple
+void ams::SampVodPollResultMsg_Print(ams::SampVodPollResultMsg& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "ams.SampVodPollResultMsg";
+
+    algo::RnullStr32_Print(row.poll, temp);
+    PrintAttrSpaceReset(str,"poll", temp);
+
+    u32_Print(row.nvote, temp);
+    PrintAttrSpaceReset(str,"nvote", temp);
+
+    algo::RnullStr32_Print(row.winner, temp);
+    PrintAttrSpaceReset(str,"winner", temp);
+
+    ams::counts_Print(row, temp);
+    PrintAttrSpaceReset(str,"counts", temp);
+}
+
+// --- ams.SampVodRatestate..ReadFieldMaybe
+bool ams::SampVodRatestate_ReadFieldMaybe(ams::SampVodRatestate& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    ams::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case ams_FieldId_user: {
+            retval = algo::RnullStr32_ReadStrptrMaybe(parent.user, strval);
+        } break;
+        case ams_FieldId_last_time: {
+            retval = algo::UnTime_ReadStrptrMaybe(parent.last_time, strval);
+        } break;
+        default: {
+            if (!ch_N(field) || (algo_lib::_db.strict_attr && field != "acr.rowid")) {
+                retval = false;
+                algo_lib::AppendErrtext("comment", "unrecognized attr");
+            }
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- ams.SampVodRatestate..ReadStrptrMaybe
+// Read fields of ams::SampVodRatestate from an ascii string.
+// The format of the string is an ssim Tuple
+bool ams::SampVodRatestate_ReadStrptrMaybe(ams::SampVodRatestate &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "ams.SampVodRatestate");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && SampVodRatestate_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- ams.SampVodRatestate..Print
+// print string representation of ROW to string STR
+// cfmt:ams.SampVodRatestate.String  printfmt:Tuple
+void ams::SampVodRatestate_Print(ams::SampVodRatestate& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "ams.SampVodRatestate";
+
+    algo::RnullStr32_Print(row.user, temp);
+    PrintAttrSpaceReset(str,"user", temp);
+
+    algo::UnTime_Print(row.last_time, temp);
+    PrintAttrSpaceReset(str,"last_time", temp);
+}
+
+// --- ams.SampVodRejectMsg.base.CopyOut
+// Copy fields out of row
+void ams::samp_vod_reject_msg_CopyOut(ams::SampVodRejectMsg &row, ams::MsgHeader &out) {
+    // type: field value is computed
+    // length: field value is computed
+    (void)row;//only to avoid -Wunused-parameter
+    (void)out;//only to avoid -Wunused-parameter
+}
+
+// --- ams.SampVodRejectMsg.text.Getary
+// Access var-length portion as an aryptr. Length is determined from one of the fields.
+algo::aryptr<char> ams::text_Getary(ams::SampVodRejectMsg& parent) {
+    return algo::aryptr<char>(text_Addr(parent), text_N(parent));
+}
+
+// --- ams.SampVodRejectMsg.text.Addr
+char* ams::text_Addr(ams::SampVodRejectMsg& parent) {
+    return (char*)((u8*)&parent + sizeof(ams::SampVodRejectMsg)); // address of varlen portion
+}
+
+// --- ams.SampVodRejectMsg.text.ReadStrptrMaybe
+// Convert string to field. Return success value
+bool ams::text_ReadStrptrMaybe(ams::SampVodRejectMsg& parent, algo::strptr in_str) {
+    bool retval = true;
+    if (algo_lib::_db.varlenbuf) {
+        ary_Addary(*algo_lib::_db.varlenbuf, strptr_ToMemptr(in_str));
+    }
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
+}
+
+// --- ams.SampVodRejectMsg.text.Print
+// Convert text to a string.
+// Array is printed as a regular string.
+void ams::text_Print(ams::SampVodRejectMsg& parent, algo::cstring &rhs) {
+    rhs << text_Getary(parent);
+}
+
+// --- ams.SampVodRejectMsg..ReadFieldMaybe
+bool ams::SampVodRejectMsg_ReadFieldMaybe(ams::SampVodRejectMsg& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    ams::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,algo::Pathcomp(field, ".LL"));
+    switch(field_id) {
+        case ams_FieldId_base: {
+            retval = false;
+        } break;
+        case ams_FieldId_type: {
+            retval = false;
+        } break;
+        case ams_FieldId_length: {
+            retval = false;
+        } break;
+        case ams_FieldId_user: {
+            retval = algo::RnullStr32_ReadStrptrMaybe(parent.user, strval);
+        } break;
+        case ams_FieldId_reason: {
+            retval = algo::RnullStr32_ReadStrptrMaybe(parent.reason, strval);
+        } break;
+        case ams_FieldId_text: {
+            retval = text_ReadStrptrMaybe(parent, strval);
+        } break;
+        default: {
+            if (!ch_N(field) || (algo_lib::_db.strict_attr && field != "acr.rowid")) {
+                retval = false;
+                algo_lib::AppendErrtext("comment", "unrecognized attr");
+            }
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- ams.SampVodRejectMsg..ReadStrptrMaybe
+// Any varlen fields are returned in algo_lib::_db.varlenbuf if set
+// Read fields of ams::SampVodRejectMsg from an ascii string.
+// The format of the string is an ssim Tuple
+bool ams::SampVodRejectMsg_ReadStrptrMaybe(ams::SampVodRejectMsg &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "ams.SampVodRejectMsg");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && SampVodRejectMsg_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- ams.SampVodRejectMsg..Print
+// print string representation of ROW to string STR
+// cfmt:ams.SampVodRejectMsg.String  printfmt:Tuple
+void ams::SampVodRejectMsg_Print(ams::SampVodRejectMsg& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "ams.SampVodRejectMsg";
+
+    algo::RnullStr32_Print(row.user, temp);
+    PrintAttrSpaceReset(str,"user", temp);
+
+    algo::RnullStr32_Print(row.reason, temp);
+    PrintAttrSpaceReset(str,"reason", temp);
+
+    ams::text_Print(row, temp);
+    PrintAttrSpaceReset(str,"text", temp);
+}
+
+// --- ams.SampVodSegMsg.base.CopyOut
+// Copy fields out of row
+void ams::samp_vod_seg_msg_CopyOut(ams::SampVodSegMsg &row, ams::MsgHeader &out) {
+    // type: field value is computed
+    // length: field value is computed
+    (void)row;//only to avoid -Wunused-parameter
+    (void)out;//only to avoid -Wunused-parameter
+}
+
+// --- ams.SampVodSegMsg.uri.Getary
+// Access var-length portion as an aryptr. Length is determined from one of the fields.
+algo::aryptr<char> ams::uri_Getary(ams::SampVodSegMsg& parent) {
+    return algo::aryptr<char>(uri_Addr(parent), uri_N(parent));
+}
+
+// --- ams.SampVodSegMsg.uri.Addr
+char* ams::uri_Addr(ams::SampVodSegMsg& parent) {
+    return (char*)((u8*)&parent + sizeof(ams::SampVodSegMsg)); // address of varlen portion
+}
+
+// --- ams.SampVodSegMsg.uri.ReadStrptrMaybe
+// Convert string to field. Return success value
+bool ams::uri_ReadStrptrMaybe(ams::SampVodSegMsg& parent, algo::strptr in_str) {
+    bool retval = true;
+    if (algo_lib::_db.varlenbuf) {
+        ary_Addary(*algo_lib::_db.varlenbuf, strptr_ToMemptr(in_str));
+    }
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
+}
+
+// --- ams.SampVodSegMsg.uri.Print
+// Convert uri to a string.
+// Array is printed as a regular string.
+void ams::uri_Print(ams::SampVodSegMsg& parent, algo::cstring &rhs) {
+    rhs << uri_Getary(parent);
+}
+
+// --- ams.SampVodSegMsg..ReadFieldMaybe
+bool ams::SampVodSegMsg_ReadFieldMaybe(ams::SampVodSegMsg& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    ams::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,algo::Pathcomp(field, ".LL"));
+    switch(field_id) {
+        case ams_FieldId_base: {
+            retval = false;
+        } break;
+        case ams_FieldId_type: {
+            retval = false;
+        } break;
+        case ams_FieldId_length: {
+            retval = false;
+        } break;
+        case ams_FieldId_segno: {
+            retval = u64_ReadStrptrMaybe(parent.segno, strval);
+        } break;
+        case ams_FieldId_pts_ms: {
+            retval = u64_ReadStrptrMaybe(parent.pts_ms, strval);
+        } break;
+        case ams_FieldId_dur_ms: {
+            retval = u32_ReadStrptrMaybe(parent.dur_ms, strval);
+        } break;
+        case ams_FieldId_chat_pos: {
+            retval = u64_ReadStrptrMaybe(parent.chat_pos, strval);
+        } break;
+        case ams_FieldId_uri: {
+            retval = uri_ReadStrptrMaybe(parent, strval);
+        } break;
+        default: {
+            if (!ch_N(field) || (algo_lib::_db.strict_attr && field != "acr.rowid")) {
+                retval = false;
+                algo_lib::AppendErrtext("comment", "unrecognized attr");
+            }
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- ams.SampVodSegMsg..ReadStrptrMaybe
+// Any varlen fields are returned in algo_lib::_db.varlenbuf if set
+// Read fields of ams::SampVodSegMsg from an ascii string.
+// The format of the string is an ssim Tuple
+bool ams::SampVodSegMsg_ReadStrptrMaybe(ams::SampVodSegMsg &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "ams.SampVodSegMsg");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && SampVodSegMsg_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- ams.SampVodSegMsg..Print
+// print string representation of ROW to string STR
+// cfmt:ams.SampVodSegMsg.String  printfmt:Tuple
+void ams::SampVodSegMsg_Print(ams::SampVodSegMsg& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "ams.SampVodSegMsg";
+
+    u64_Print(row.segno, temp);
+    PrintAttrSpaceReset(str,"segno", temp);
+
+    u64_Print(row.pts_ms, temp);
+    PrintAttrSpaceReset(str,"pts_ms", temp);
+
+    u32_Print(row.dur_ms, temp);
+    PrintAttrSpaceReset(str,"dur_ms", temp);
+
+    u64_Print(row.chat_pos, temp);
+    PrintAttrSpaceReset(str,"chat_pos", temp);
+
+    ams::uri_Print(row, temp);
+    PrintAttrSpaceReset(str,"uri", temp);
+}
+
+// --- ams.SampVodTallyMark..ReadFieldMaybe
+bool ams::SampVodTallyMark_ReadFieldMaybe(ams::SampVodTallyMark& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    ams::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case ams_FieldId_seg_end: {
+            retval = u64_ReadStrptrMaybe(parent.seg_end, strval);
+        } break;
+        default: {
+            if (!ch_N(field) || (algo_lib::_db.strict_attr && field != "acr.rowid")) {
+                retval = false;
+                algo_lib::AppendErrtext("comment", "unrecognized attr");
+            }
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- ams.SampVodTallyMark..ReadStrptrMaybe
+// Read fields of ams::SampVodTallyMark from an ascii string.
+// The format of the string is an ssim Tuple
+bool ams::SampVodTallyMark_ReadStrptrMaybe(ams::SampVodTallyMark &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "ams.SampVodTallyMark");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && SampVodTallyMark_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- ams.SampVodTallyMark..Print
+// print string representation of ROW to string STR
+// cfmt:ams.SampVodTallyMark.String  printfmt:Tuple
+void ams::SampVodTallyMark_Print(ams::SampVodTallyMark row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "ams.SampVodTallyMark";
+
+    u64_Print(row.seg_end, temp);
+    PrintAttrSpaceReset(str,"seg_end", temp);
+}
+
+// --- ams.SampVodTallyPoll..ReadFieldMaybe
+bool ams::SampVodTallyPoll_ReadFieldMaybe(ams::SampVodTallyPoll& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    ams::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case ams_FieldId_poll: {
+            retval = algo::RnullStr32_ReadStrptrMaybe(parent.poll, strval);
+        } break;
+        case ams_FieldId_close_segno: {
+            retval = u64_ReadStrptrMaybe(parent.close_segno, strval);
+        } break;
+        case ams_FieldId_open_pos: {
+            retval = u64_ReadStrptrMaybe(parent.open_pos, strval);
+        } break;
+        case ams_FieldId_close_pos: {
+            retval = u64_ReadStrptrMaybe(parent.close_pos, strval);
+        } break;
+        case ams_FieldId_close_known: {
+            retval = bool_ReadStrptrMaybe(parent.close_known, strval);
+        } break;
+        case ams_FieldId_options: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.options, strval);
+        } break;
+        case ams_FieldId_canceled: {
+            retval = bool_ReadStrptrMaybe(parent.canceled, strval);
+        } break;
+        default: {
+            if (!ch_N(field) || (algo_lib::_db.strict_attr && field != "acr.rowid")) {
+                retval = false;
+                algo_lib::AppendErrtext("comment", "unrecognized attr");
+            }
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- ams.SampVodTallyPoll..ReadStrptrMaybe
+// Read fields of ams::SampVodTallyPoll from an ascii string.
+// The format of the string is an ssim Tuple
+bool ams::SampVodTallyPoll_ReadStrptrMaybe(ams::SampVodTallyPoll &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "ams.SampVodTallyPoll");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && SampVodTallyPoll_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- ams.SampVodTallyPoll..Print
+// print string representation of ROW to string STR
+// cfmt:ams.SampVodTallyPoll.String  printfmt:Tuple
+void ams::SampVodTallyPoll_Print(ams::SampVodTallyPoll& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "ams.SampVodTallyPoll";
+
+    algo::RnullStr32_Print(row.poll, temp);
+    PrintAttrSpaceReset(str,"poll", temp);
+
+    u64_Print(row.close_segno, temp);
+    PrintAttrSpaceReset(str,"close_segno", temp);
+
+    u64_Print(row.open_pos, temp);
+    PrintAttrSpaceReset(str,"open_pos", temp);
+
+    u64_Print(row.close_pos, temp);
+    PrintAttrSpaceReset(str,"close_pos", temp);
+
+    bool_Print(row.close_known, temp);
+    PrintAttrSpaceReset(str,"close_known", temp);
+
+    algo::cstring_Print(row.options, temp);
+    PrintAttrSpaceReset(str,"options", temp);
+
+    bool_Print(row.canceled, temp);
+    PrintAttrSpaceReset(str,"canceled", temp);
+}
+
+// --- ams.SampVodTallySeg..ReadFieldMaybe
+bool ams::SampVodTallySeg_ReadFieldMaybe(ams::SampVodTallySeg& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    ams::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case ams_FieldId_segno: {
+            retval = u64_ReadStrptrMaybe(parent.segno, strval);
+        } break;
+        case ams_FieldId_chat_pos: {
+            retval = u64_ReadStrptrMaybe(parent.chat_pos, strval);
+        } break;
+        default: {
+            if (!ch_N(field) || (algo_lib::_db.strict_attr && field != "acr.rowid")) {
+                retval = false;
+                algo_lib::AppendErrtext("comment", "unrecognized attr");
+            }
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- ams.SampVodTallySeg..ReadStrptrMaybe
+// Read fields of ams::SampVodTallySeg from an ascii string.
+// The format of the string is an ssim Tuple
+bool ams::SampVodTallySeg_ReadStrptrMaybe(ams::SampVodTallySeg &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "ams.SampVodTallySeg");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && SampVodTallySeg_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- ams.SampVodTallySeg..Print
+// print string representation of ROW to string STR
+// cfmt:ams.SampVodTallySeg.String  printfmt:Tuple
+void ams::SampVodTallySeg_Print(ams::SampVodTallySeg row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "ams.SampVodTallySeg";
+
+    u64_Print(row.segno, temp);
+    PrintAttrSpaceReset(str,"segno", temp);
+
+    u64_Print(row.chat_pos, temp);
+    PrintAttrSpaceReset(str,"chat_pos", temp);
+}
+
+// --- ams.SampVodTallyVote..ReadFieldMaybe
+bool ams::SampVodTallyVote_ReadFieldMaybe(ams::SampVodTallyVote& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    ams::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case ams_FieldId_poll: {
+            retval = algo::RnullStr32_ReadStrptrMaybe(parent.poll, strval);
+        } break;
+        case ams_FieldId_user: {
+            retval = algo::RnullStr32_ReadStrptrMaybe(parent.user, strval);
+        } break;
+        case ams_FieldId_option: {
+            retval = algo::RnullStr32_ReadStrptrMaybe(parent.option, strval);
+        } break;
+        case ams_FieldId_pos: {
+            retval = u64_ReadStrptrMaybe(parent.pos, strval);
+        } break;
+        default: {
+            if (!ch_N(field) || (algo_lib::_db.strict_attr && field != "acr.rowid")) {
+                retval = false;
+                algo_lib::AppendErrtext("comment", "unrecognized attr");
+            }
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- ams.SampVodTallyVote..ReadStrptrMaybe
+// Read fields of ams::SampVodTallyVote from an ascii string.
+// The format of the string is an ssim Tuple
+bool ams::SampVodTallyVote_ReadStrptrMaybe(ams::SampVodTallyVote &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "ams.SampVodTallyVote");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && SampVodTallyVote_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- ams.SampVodTallyVote..Print
+// print string representation of ROW to string STR
+// cfmt:ams.SampVodTallyVote.String  printfmt:Tuple
+void ams::SampVodTallyVote_Print(ams::SampVodTallyVote& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "ams.SampVodTallyVote";
+
+    algo::RnullStr32_Print(row.poll, temp);
+    PrintAttrSpaceReset(str,"poll", temp);
+
+    algo::RnullStr32_Print(row.user, temp);
+    PrintAttrSpaceReset(str,"user", temp);
+
+    algo::RnullStr32_Print(row.option, temp);
+    PrintAttrSpaceReset(str,"option", temp);
+
+    u64_Print(row.pos, temp);
+    PrintAttrSpaceReset(str,"pos", temp);
+}
+
 // --- ams.ShmFlags.write.ReadStrptrMaybe
 inline static bool ams::write_ReadStrptrMaybe(ams::ShmFlags& parent, algo::strptr in_str) {
     bool retval = true;
@@ -4637,6 +6635,11 @@ void ams::StaticCheck() {
     algo_assert(_offset_of(ams::SampMengRestingMsg, buy) + sizeof(((ams::SampMengRestingMsg*)0)->buy) == sizeof(ams::SampMengRestingMsg));
     algo_assert(_offset_of(ams::SampMengSymbolrowMsg, symbol) + sizeof(((ams::SampMengSymbolrowMsg*)0)->symbol) == sizeof(ams::SampMengSymbolrowMsg));
     algo_assert(_offset_of(ams::SampMengUserrowMsg, user) + sizeof(((ams::SampMengUserrowMsg*)0)->user) == sizeof(ams::SampMengUserrowMsg));
+    algo_assert(_offset_of(ams::SampPcapjoinMatchMsg, offset_ns) + sizeof(((ams::SampPcapjoinMatchMsg*)0)->offset_ns) == sizeof(ams::SampPcapjoinMatchMsg));
+    algo_assert(_offset_of(ams::SampPcapjoinMissMsg, t4) + sizeof(((ams::SampPcapjoinMissMsg*)0)->t4) == sizeof(ams::SampPcapjoinMissMsg));
+    algo_assert(_offset_of(ams::SampPcapjoinPairMsg, stream) + sizeof(((ams::SampPcapjoinPairMsg*)0)->stream) == sizeof(ams::SampPcapjoinPairMsg));
+    algo_assert(_offset_of(ams::SampRpcAcctMsg, balance) + sizeof(((ams::SampRpcAcctMsg*)0)->balance) == sizeof(ams::SampRpcAcctMsg));
+    algo_assert(_offset_of(ams::SampVodPollCancelMsg, poll) + sizeof(((ams::SampVodPollCancelMsg*)0)->poll) == sizeof(ams::SampVodPollCancelMsg));
     // check that bitfield fits width
     algo_assert(sizeof(((ams::ShmFlags*)0)->value)*8 >= 7);
     algo_assert(_offset_of(ams::ShmFlags, value) + sizeof(((ams::ShmFlags*)0)->value) == sizeof(ams::ShmFlags));
@@ -4768,6 +6771,76 @@ bool ams::MsgHeaderMsgs_Print(algo::cstring &str, ams::MsgHeader &msg, u32 msg_l
         case 2014: {
             if (sizeof(ams::SampMengUserrowMsg) > msg_len) { return false; }
             SampMengUserrowMsg_Print((ams::SampMengUserrowMsg&)(msg), str);
+            return true;
+        }
+        case 2025: {
+            if (sizeof(ams::SampPcapjoinMatchMsg) > msg_len) { return false; }
+            SampPcapjoinMatchMsg_Print((ams::SampPcapjoinMatchMsg&)(msg), str);
+            return true;
+        }
+        case 2026: {
+            if (sizeof(ams::SampPcapjoinMissMsg) > msg_len) { return false; }
+            SampPcapjoinMissMsg_Print((ams::SampPcapjoinMissMsg&)(msg), str);
+            return true;
+        }
+        case 2028: {
+            if (sizeof(ams::SampPcapjoinPairMsg) > msg_len) { return false; }
+            SampPcapjoinPairMsg_Print((ams::SampPcapjoinPairMsg&)(msg), str);
+            return true;
+        }
+        case 2027: {
+            if (sizeof(ams::SampPcapjoinStateMsg) > msg_len) { return false; }
+            SampPcapjoinStateMsg_Print((ams::SampPcapjoinStateMsg&)(msg), str);
+            return true;
+        }
+        case 2023: {
+            if (sizeof(ams::SampRpcAcctMsg) > msg_len) { return false; }
+            SampRpcAcctMsg_Print((ams::SampRpcAcctMsg&)(msg), str);
+            return true;
+        }
+        case 2022: {
+            if (sizeof(ams::SampRpcReplyMsg) > msg_len) { return false; }
+            SampRpcReplyMsg_Print((ams::SampRpcReplyMsg&)(msg), str);
+            return true;
+        }
+        case 2021: {
+            if (sizeof(ams::SampRpcReqMsg) > msg_len) { return false; }
+            SampRpcReqMsg_Print((ams::SampRpcReqMsg&)(msg), str);
+            return true;
+        }
+        case 2031: {
+            if (sizeof(ams::SampVodChatMsg) > msg_len) { return false; }
+            SampVodChatMsg_Print((ams::SampVodChatMsg&)(msg), str);
+            return true;
+        }
+        case 2030: {
+            if (sizeof(ams::SampVodClipMsg) > msg_len) { return false; }
+            SampVodClipMsg_Print((ams::SampVodClipMsg&)(msg), str);
+            return true;
+        }
+        case 2035: {
+            if (sizeof(ams::SampVodPollCancelMsg) > msg_len) { return false; }
+            SampVodPollCancelMsg_Print((ams::SampVodPollCancelMsg&)(msg), str);
+            return true;
+        }
+        case 2033: {
+            if (sizeof(ams::SampVodPollOpenMsg) > msg_len) { return false; }
+            SampVodPollOpenMsg_Print((ams::SampVodPollOpenMsg&)(msg), str);
+            return true;
+        }
+        case 2034: {
+            if (sizeof(ams::SampVodPollResultMsg) > msg_len) { return false; }
+            SampVodPollResultMsg_Print((ams::SampVodPollResultMsg&)(msg), str);
+            return true;
+        }
+        case 2032: {
+            if (sizeof(ams::SampVodRejectMsg) > msg_len) { return false; }
+            SampVodRejectMsg_Print((ams::SampVodRejectMsg&)(msg), str);
+            return true;
+        }
+        case 2029: {
+            if (sizeof(ams::SampVodSegMsg) > msg_len) { return false; }
+            SampVodSegMsg_Print((ams::SampVodSegMsg&)(msg), str);
             return true;
         }
         case 3: {
@@ -5067,6 +7140,297 @@ void ams::MsgHeaderMsgs_PrintFmt(algo::MsgFmt &fmt, ams::MsgHeader &msg, algo::c
                         algo_lib::MsgFmt_Showlen(fmt, i32(msg.length), out);
                     }
                     algo_lib::MsgFmt_PrintBytes(fmt, "text", ams::text_Getary(row), out);
+                    fmt.strip = strip;
+                }
+                printed = true;
+            }
+            break;
+        }
+        case 2027: {
+            if (ams::SampPcapjoinStateMsg *castrow = ams::SampPcapjoinStateMsg_Castdown(msg)) {
+                ams::SampPcapjoinStateMsg &row = *castrow;
+                if (fmt.format == algo_MsgFmt_format_bin) {
+                    out << algo::strptr((char*)&msg, i32(msg.length));
+                } else if (!fmt.pretty) {
+                    ams::SampPcapjoinStateMsg_Print(row, out);
+                } else {
+                    i32 strip = fmt.strip;
+                    fmt.strip = 0;
+                    algo_lib::MsgFmt_Indent(fmt, out);
+                    if (fmt.strip == 0) {
+                        algo::cstring &str = out;
+                        algo::tempstr temp;
+                        str << "ams.SampPcapjoinStateMsg";
+
+                        bool_Print(row.gateway, temp);
+                        PrintAttrSpaceReset(str,"gateway", temp);
+
+                        u64_Print(row.offset, temp);
+                        PrintAttrSpaceReset(str,"offset", temp);
+                        algo_lib::MsgFmt_Showlen(fmt, i32(msg.length), out);
+                    }
+                    algo_lib::MsgFmt_PrintBytes(fmt, "data", algo::memptr_ToStrptr(ams::data_Getary(row)), out);
+                    fmt.strip = strip;
+                }
+                printed = true;
+            }
+            break;
+        }
+        case 2022: {
+            if (ams::SampRpcReplyMsg *castrow = ams::SampRpcReplyMsg_Castdown(msg)) {
+                ams::SampRpcReplyMsg &row = *castrow;
+                if (fmt.format == algo_MsgFmt_format_bin) {
+                    out << algo::strptr((char*)&msg, i32(msg.length));
+                } else if (!fmt.pretty) {
+                    ams::SampRpcReplyMsg_Print(row, out);
+                } else {
+                    i32 strip = fmt.strip;
+                    fmt.strip = 0;
+                    algo_lib::MsgFmt_Indent(fmt, out);
+                    if (fmt.strip == 0) {
+                        algo::cstring &str = out;
+                        algo::tempstr temp;
+                        str << "ams.SampRpcReplyMsg";
+
+                        u64_Print(row.nonce, temp);
+                        PrintAttrSpaceReset(str,"nonce", temp);
+
+                        u32_Print(row.acct, temp);
+                        PrintAttrSpaceReset(str,"acct", temp);
+
+                        i64_Print(row.amount, temp);
+                        PrintAttrSpaceReset(str,"amount", temp);
+
+                        bool_Print(row.ok, temp);
+                        PrintAttrSpaceReset(str,"ok", temp);
+
+                        i64_Print(row.balance, temp);
+                        PrintAttrSpaceReset(str,"balance", temp);
+                        algo_lib::MsgFmt_Showlen(fmt, i32(msg.length), out);
+                    }
+                    algo_lib::MsgFmt_PrintBytes(fmt, "client", ams::client_Getary(row), out);
+                    fmt.strip = strip;
+                }
+                printed = true;
+            }
+            break;
+        }
+        case 2021: {
+            if (ams::SampRpcReqMsg *castrow = ams::SampRpcReqMsg_Castdown(msg)) {
+                ams::SampRpcReqMsg &row = *castrow;
+                if (fmt.format == algo_MsgFmt_format_bin) {
+                    out << algo::strptr((char*)&msg, i32(msg.length));
+                } else if (!fmt.pretty) {
+                    ams::SampRpcReqMsg_Print(row, out);
+                } else {
+                    i32 strip = fmt.strip;
+                    fmt.strip = 0;
+                    algo_lib::MsgFmt_Indent(fmt, out);
+                    if (fmt.strip == 0) {
+                        algo::cstring &str = out;
+                        algo::tempstr temp;
+                        str << "ams.SampRpcReqMsg";
+
+                        u64_Print(row.nonce, temp);
+                        PrintAttrSpaceReset(str,"nonce", temp);
+
+                        u32_Print(row.acct, temp);
+                        PrintAttrSpaceReset(str,"acct", temp);
+
+                        i64_Print(row.amount, temp);
+                        PrintAttrSpaceReset(str,"amount", temp);
+                        algo_lib::MsgFmt_Showlen(fmt, i32(msg.length), out);
+                    }
+                    algo_lib::MsgFmt_PrintBytes(fmt, "client", ams::client_Getary(row), out);
+                    fmt.strip = strip;
+                }
+                printed = true;
+            }
+            break;
+        }
+        case 2031: {
+            if (ams::SampVodChatMsg *castrow = ams::SampVodChatMsg_Castdown(msg)) {
+                ams::SampVodChatMsg &row = *castrow;
+                if (fmt.format == algo_MsgFmt_format_bin) {
+                    out << algo::strptr((char*)&msg, i32(msg.length));
+                } else if (!fmt.pretty) {
+                    ams::SampVodChatMsg_Print(row, out);
+                } else {
+                    i32 strip = fmt.strip;
+                    fmt.strip = 0;
+                    algo_lib::MsgFmt_Indent(fmt, out);
+                    if (fmt.strip == 0) {
+                        algo::cstring &str = out;
+                        algo::tempstr temp;
+                        str << "ams.SampVodChatMsg";
+
+                        algo::RnullStr32_Print(row.user, temp);
+                        PrintAttrSpaceReset(str,"user", temp);
+                        algo_lib::MsgFmt_Showlen(fmt, i32(msg.length), out);
+                    }
+                    algo_lib::MsgFmt_PrintBytes(fmt, "text", ams::text_Getary(row), out);
+                    fmt.strip = strip;
+                }
+                printed = true;
+            }
+            break;
+        }
+        case 2030: {
+            if (ams::SampVodClipMsg *castrow = ams::SampVodClipMsg_Castdown(msg)) {
+                ams::SampVodClipMsg &row = *castrow;
+                if (fmt.format == algo_MsgFmt_format_bin) {
+                    out << algo::strptr((char*)&msg, i32(msg.length));
+                } else if (!fmt.pretty) {
+                    ams::SampVodClipMsg_Print(row, out);
+                } else {
+                    i32 strip = fmt.strip;
+                    fmt.strip = 0;
+                    algo_lib::MsgFmt_Indent(fmt, out);
+                    if (fmt.strip == 0) {
+                        algo::cstring &str = out;
+                        algo::tempstr temp;
+                        str << "ams.SampVodClipMsg";
+
+                        u64_Print(row.seg_from, temp);
+                        PrintAttrSpaceReset(str,"seg_from", temp);
+
+                        u64_Print(row.seg_to, temp);
+                        PrintAttrSpaceReset(str,"seg_to", temp);
+
+                        algo::RnullStr32_Print(row.user, temp);
+                        PrintAttrSpaceReset(str,"user", temp);
+                        algo_lib::MsgFmt_Showlen(fmt, i32(msg.length), out);
+                    }
+                    algo_lib::MsgFmt_PrintBytes(fmt, "title", ams::title_Getary(row), out);
+                    fmt.strip = strip;
+                }
+                printed = true;
+            }
+            break;
+        }
+        case 2033: {
+            if (ams::SampVodPollOpenMsg *castrow = ams::SampVodPollOpenMsg_Castdown(msg)) {
+                ams::SampVodPollOpenMsg &row = *castrow;
+                if (fmt.format == algo_MsgFmt_format_bin) {
+                    out << algo::strptr((char*)&msg, i32(msg.length));
+                } else if (!fmt.pretty) {
+                    ams::SampVodPollOpenMsg_Print(row, out);
+                } else {
+                    i32 strip = fmt.strip;
+                    fmt.strip = 0;
+                    algo_lib::MsgFmt_Indent(fmt, out);
+                    if (fmt.strip == 0) {
+                        algo::cstring &str = out;
+                        algo::tempstr temp;
+                        str << "ams.SampVodPollOpenMsg";
+
+                        algo::RnullStr32_Print(row.poll, temp);
+                        PrintAttrSpaceReset(str,"poll", temp);
+
+                        u64_Print(row.close_segno, temp);
+                        PrintAttrSpaceReset(str,"close_segno", temp);
+                        algo_lib::MsgFmt_Showlen(fmt, i32(msg.length), out);
+                    }
+                    algo_lib::MsgFmt_PrintBytes(fmt, "options", ams::options_Getary(row), out);
+                    fmt.strip = strip;
+                }
+                printed = true;
+            }
+            break;
+        }
+        case 2034: {
+            if (ams::SampVodPollResultMsg *castrow = ams::SampVodPollResultMsg_Castdown(msg)) {
+                ams::SampVodPollResultMsg &row = *castrow;
+                if (fmt.format == algo_MsgFmt_format_bin) {
+                    out << algo::strptr((char*)&msg, i32(msg.length));
+                } else if (!fmt.pretty) {
+                    ams::SampVodPollResultMsg_Print(row, out);
+                } else {
+                    i32 strip = fmt.strip;
+                    fmt.strip = 0;
+                    algo_lib::MsgFmt_Indent(fmt, out);
+                    if (fmt.strip == 0) {
+                        algo::cstring &str = out;
+                        algo::tempstr temp;
+                        str << "ams.SampVodPollResultMsg";
+
+                        algo::RnullStr32_Print(row.poll, temp);
+                        PrintAttrSpaceReset(str,"poll", temp);
+
+                        u32_Print(row.nvote, temp);
+                        PrintAttrSpaceReset(str,"nvote", temp);
+
+                        algo::RnullStr32_Print(row.winner, temp);
+                        PrintAttrSpaceReset(str,"winner", temp);
+                        algo_lib::MsgFmt_Showlen(fmt, i32(msg.length), out);
+                    }
+                    algo_lib::MsgFmt_PrintBytes(fmt, "counts", ams::counts_Getary(row), out);
+                    fmt.strip = strip;
+                }
+                printed = true;
+            }
+            break;
+        }
+        case 2032: {
+            if (ams::SampVodRejectMsg *castrow = ams::SampVodRejectMsg_Castdown(msg)) {
+                ams::SampVodRejectMsg &row = *castrow;
+                if (fmt.format == algo_MsgFmt_format_bin) {
+                    out << algo::strptr((char*)&msg, i32(msg.length));
+                } else if (!fmt.pretty) {
+                    ams::SampVodRejectMsg_Print(row, out);
+                } else {
+                    i32 strip = fmt.strip;
+                    fmt.strip = 0;
+                    algo_lib::MsgFmt_Indent(fmt, out);
+                    if (fmt.strip == 0) {
+                        algo::cstring &str = out;
+                        algo::tempstr temp;
+                        str << "ams.SampVodRejectMsg";
+
+                        algo::RnullStr32_Print(row.user, temp);
+                        PrintAttrSpaceReset(str,"user", temp);
+
+                        algo::RnullStr32_Print(row.reason, temp);
+                        PrintAttrSpaceReset(str,"reason", temp);
+                        algo_lib::MsgFmt_Showlen(fmt, i32(msg.length), out);
+                    }
+                    algo_lib::MsgFmt_PrintBytes(fmt, "text", ams::text_Getary(row), out);
+                    fmt.strip = strip;
+                }
+                printed = true;
+            }
+            break;
+        }
+        case 2029: {
+            if (ams::SampVodSegMsg *castrow = ams::SampVodSegMsg_Castdown(msg)) {
+                ams::SampVodSegMsg &row = *castrow;
+                if (fmt.format == algo_MsgFmt_format_bin) {
+                    out << algo::strptr((char*)&msg, i32(msg.length));
+                } else if (!fmt.pretty) {
+                    ams::SampVodSegMsg_Print(row, out);
+                } else {
+                    i32 strip = fmt.strip;
+                    fmt.strip = 0;
+                    algo_lib::MsgFmt_Indent(fmt, out);
+                    if (fmt.strip == 0) {
+                        algo::cstring &str = out;
+                        algo::tempstr temp;
+                        str << "ams.SampVodSegMsg";
+
+                        u64_Print(row.segno, temp);
+                        PrintAttrSpaceReset(str,"segno", temp);
+
+                        u64_Print(row.pts_ms, temp);
+                        PrintAttrSpaceReset(str,"pts_ms", temp);
+
+                        u32_Print(row.dur_ms, temp);
+                        PrintAttrSpaceReset(str,"dur_ms", temp);
+
+                        u64_Print(row.chat_pos, temp);
+                        PrintAttrSpaceReset(str,"chat_pos", temp);
+                        algo_lib::MsgFmt_Showlen(fmt, i32(msg.length), out);
+                    }
+                    algo_lib::MsgFmt_PrintBytes(fmt, "uri", ams::uri_Getary(row), out);
                     fmt.strip = strip;
                 }
                 printed = true;
@@ -5443,6 +7807,153 @@ ams::MsgHeaderMsgsCase ams::MsgHeaderMsgs_ReadStrptr(algo::strptr str, algo::Byt
             ams::SampMengUserrowMsg *ctype = new(ary_AllocN(buf, len).elems) ams::SampMengUserrowMsg; // default values
             ok = SampMengUserrowMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
         } break; // ams::SampMengUserrowMsg case
+
+        case ams_MsgHeaderMsgsCase_ams_SampPcapjoinMatchMsg: {
+            int len = sizeof(ams::SampPcapjoinMatchMsg);
+            ams::SampPcapjoinMatchMsg *ctype = new(ary_AllocN(buf, len).elems) ams::SampPcapjoinMatchMsg; // default values
+            ok = SampPcapjoinMatchMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
+        } break; // ams::SampPcapjoinMatchMsg case
+
+        case ams_MsgHeaderMsgsCase_ams_SampPcapjoinMissMsg: {
+            int len = sizeof(ams::SampPcapjoinMissMsg);
+            ams::SampPcapjoinMissMsg *ctype = new(ary_AllocN(buf, len).elems) ams::SampPcapjoinMissMsg; // default values
+            ok = SampPcapjoinMissMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
+        } break; // ams::SampPcapjoinMissMsg case
+
+        case ams_MsgHeaderMsgsCase_ams_SampPcapjoinPairMsg: {
+            int len = sizeof(ams::SampPcapjoinPairMsg);
+            ams::SampPcapjoinPairMsg *ctype = new(ary_AllocN(buf, len).elems) ams::SampPcapjoinPairMsg; // default values
+            ok = SampPcapjoinPairMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
+        } break; // ams::SampPcapjoinPairMsg case
+
+        case ams_MsgHeaderMsgsCase_ams_SampPcapjoinStateMsg: {
+            int len = sizeof(ams::SampPcapjoinStateMsg);
+            ams::SampPcapjoinStateMsg *ctype = new(ary_AllocN(buf, len).elems) ams::SampPcapjoinStateMsg; // default values
+            algo::ByteAry varlenbuf;
+            algo::ByteAry *varlenbuf_save = algo_lib::_db.varlenbuf;
+            algo_lib::_db.varlenbuf = &varlenbuf;
+            ok = SampPcapjoinStateMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
+            len += ary_N(varlenbuf);
+            ctype->length = u32(len);
+            ary_Addary(buf, ary_Getary(varlenbuf));
+            algo_lib::_db.varlenbuf = varlenbuf_save;
+        } break; // ams::SampPcapjoinStateMsg case
+
+        case ams_MsgHeaderMsgsCase_ams_SampRpcAcctMsg: {
+            int len = sizeof(ams::SampRpcAcctMsg);
+            ams::SampRpcAcctMsg *ctype = new(ary_AllocN(buf, len).elems) ams::SampRpcAcctMsg; // default values
+            ok = SampRpcAcctMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
+        } break; // ams::SampRpcAcctMsg case
+
+        case ams_MsgHeaderMsgsCase_ams_SampRpcReplyMsg: {
+            int len = sizeof(ams::SampRpcReplyMsg);
+            ams::SampRpcReplyMsg *ctype = new(ary_AllocN(buf, len).elems) ams::SampRpcReplyMsg; // default values
+            algo::ByteAry varlenbuf;
+            algo::ByteAry *varlenbuf_save = algo_lib::_db.varlenbuf;
+            algo_lib::_db.varlenbuf = &varlenbuf;
+            ok = SampRpcReplyMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
+            len += ary_N(varlenbuf);
+            ctype->length = u32(len);
+            ary_Addary(buf, ary_Getary(varlenbuf));
+            algo_lib::_db.varlenbuf = varlenbuf_save;
+        } break; // ams::SampRpcReplyMsg case
+
+        case ams_MsgHeaderMsgsCase_ams_SampRpcReqMsg: {
+            int len = sizeof(ams::SampRpcReqMsg);
+            ams::SampRpcReqMsg *ctype = new(ary_AllocN(buf, len).elems) ams::SampRpcReqMsg; // default values
+            algo::ByteAry varlenbuf;
+            algo::ByteAry *varlenbuf_save = algo_lib::_db.varlenbuf;
+            algo_lib::_db.varlenbuf = &varlenbuf;
+            ok = SampRpcReqMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
+            len += ary_N(varlenbuf);
+            ctype->length = u32(len);
+            ary_Addary(buf, ary_Getary(varlenbuf));
+            algo_lib::_db.varlenbuf = varlenbuf_save;
+        } break; // ams::SampRpcReqMsg case
+
+        case ams_MsgHeaderMsgsCase_ams_SampVodChatMsg: {
+            int len = sizeof(ams::SampVodChatMsg);
+            ams::SampVodChatMsg *ctype = new(ary_AllocN(buf, len).elems) ams::SampVodChatMsg; // default values
+            algo::ByteAry varlenbuf;
+            algo::ByteAry *varlenbuf_save = algo_lib::_db.varlenbuf;
+            algo_lib::_db.varlenbuf = &varlenbuf;
+            ok = SampVodChatMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
+            len += ary_N(varlenbuf);
+            ctype->length = u32(len);
+            ary_Addary(buf, ary_Getary(varlenbuf));
+            algo_lib::_db.varlenbuf = varlenbuf_save;
+        } break; // ams::SampVodChatMsg case
+
+        case ams_MsgHeaderMsgsCase_ams_SampVodClipMsg: {
+            int len = sizeof(ams::SampVodClipMsg);
+            ams::SampVodClipMsg *ctype = new(ary_AllocN(buf, len).elems) ams::SampVodClipMsg; // default values
+            algo::ByteAry varlenbuf;
+            algo::ByteAry *varlenbuf_save = algo_lib::_db.varlenbuf;
+            algo_lib::_db.varlenbuf = &varlenbuf;
+            ok = SampVodClipMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
+            len += ary_N(varlenbuf);
+            ctype->length = u32(len);
+            ary_Addary(buf, ary_Getary(varlenbuf));
+            algo_lib::_db.varlenbuf = varlenbuf_save;
+        } break; // ams::SampVodClipMsg case
+
+        case ams_MsgHeaderMsgsCase_ams_SampVodPollCancelMsg: {
+            int len = sizeof(ams::SampVodPollCancelMsg);
+            ams::SampVodPollCancelMsg *ctype = new(ary_AllocN(buf, len).elems) ams::SampVodPollCancelMsg; // default values
+            ok = SampVodPollCancelMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
+        } break; // ams::SampVodPollCancelMsg case
+
+        case ams_MsgHeaderMsgsCase_ams_SampVodPollOpenMsg: {
+            int len = sizeof(ams::SampVodPollOpenMsg);
+            ams::SampVodPollOpenMsg *ctype = new(ary_AllocN(buf, len).elems) ams::SampVodPollOpenMsg; // default values
+            algo::ByteAry varlenbuf;
+            algo::ByteAry *varlenbuf_save = algo_lib::_db.varlenbuf;
+            algo_lib::_db.varlenbuf = &varlenbuf;
+            ok = SampVodPollOpenMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
+            len += ary_N(varlenbuf);
+            ctype->length = u32(len);
+            ary_Addary(buf, ary_Getary(varlenbuf));
+            algo_lib::_db.varlenbuf = varlenbuf_save;
+        } break; // ams::SampVodPollOpenMsg case
+
+        case ams_MsgHeaderMsgsCase_ams_SampVodPollResultMsg: {
+            int len = sizeof(ams::SampVodPollResultMsg);
+            ams::SampVodPollResultMsg *ctype = new(ary_AllocN(buf, len).elems) ams::SampVodPollResultMsg; // default values
+            algo::ByteAry varlenbuf;
+            algo::ByteAry *varlenbuf_save = algo_lib::_db.varlenbuf;
+            algo_lib::_db.varlenbuf = &varlenbuf;
+            ok = SampVodPollResultMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
+            len += ary_N(varlenbuf);
+            ctype->length = u32(len);
+            ary_Addary(buf, ary_Getary(varlenbuf));
+            algo_lib::_db.varlenbuf = varlenbuf_save;
+        } break; // ams::SampVodPollResultMsg case
+
+        case ams_MsgHeaderMsgsCase_ams_SampVodRejectMsg: {
+            int len = sizeof(ams::SampVodRejectMsg);
+            ams::SampVodRejectMsg *ctype = new(ary_AllocN(buf, len).elems) ams::SampVodRejectMsg; // default values
+            algo::ByteAry varlenbuf;
+            algo::ByteAry *varlenbuf_save = algo_lib::_db.varlenbuf;
+            algo_lib::_db.varlenbuf = &varlenbuf;
+            ok = SampVodRejectMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
+            len += ary_N(varlenbuf);
+            ctype->length = u32(len);
+            ary_Addary(buf, ary_Getary(varlenbuf));
+            algo_lib::_db.varlenbuf = varlenbuf_save;
+        } break; // ams::SampVodRejectMsg case
+
+        case ams_MsgHeaderMsgsCase_ams_SampVodSegMsg: {
+            int len = sizeof(ams::SampVodSegMsg);
+            ams::SampVodSegMsg *ctype = new(ary_AllocN(buf, len).elems) ams::SampVodSegMsg; // default values
+            algo::ByteAry varlenbuf;
+            algo::ByteAry *varlenbuf_save = algo_lib::_db.varlenbuf;
+            algo_lib::_db.varlenbuf = &varlenbuf;
+            ok = SampVodSegMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
+            len += ary_N(varlenbuf);
+            ctype->length = u32(len);
+            ary_Addary(buf, ary_Getary(varlenbuf));
+            algo_lib::_db.varlenbuf = varlenbuf_save;
+        } break; // ams::SampVodSegMsg case
 
         case ams_MsgHeaderMsgsCase_ams_ShmHbMsg: {
             int len = sizeof(ams::ShmHbMsg);

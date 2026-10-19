@@ -18,10 +18,10 @@ Usage: acr_compl [options]
     -install                      Produce bash commands to install the handler
     -debug_log    string  ""      Log file for debug information, overrides ACR_COMPL_DEBUG_LOG
     -check                        Check command line validity
-    -check_batch                  Batch mode: read acr_compl.checkreq from stdin, emit acr_compl.checkerr per failure
+    -check_batch                  Batch mode: check each checkreq row on stdin, print a checkerr per failure
     -verbose      flag            Verbosity level (0..255); alias -v; cumulative
     -debug        flag            Debug level (0..255); alias -d; cumulative
-    -trace        string  ""      Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps
+    -trace        string  ""      Trace expression: log categories to enable, as category[:filter],...
     -help                         Print help and exit; alias -h
     -version                      Print version and exit
     -signature                    Show signatures and exit; alias -sig
@@ -43,7 +43,10 @@ names and then to keys.
 whose default is true to its `:N` form.  A value completes by prefix first.
 When no key starts with what you typed, `acr_compl` tries the last word of the
 key, then any substring.  A tool that reads rows from a directory named on its
-command line, such as `-in:<dir>`, completes from that directory.  Press Tab
+command line, such as `-in:<dir>`, completes from that directory.  An option
+with a `dmmeta.fcompldir` row also completes to the names of the subdirectories
+of the directory that the row names, so `wt -del -b <Tab>` offers every
+worktree under `wt/`.  Press Tab
 twice to list the choices, where an option that needs a value shows its type.
 
 #### Checking a command line
@@ -144,7 +147,7 @@ would garble the command line.
 Validate the whole of `-line` and print the first error.  The exit code is 1
 when the line fails.
 
-#### -check_batch -- Batch mode: read acr_compl.checkreq from stdin, emit acr_compl.checkerr per failure
+#### -check_batch -- Batch mode: check each checkreq row on stdin, print a checkerr per failure
 <a href="#-check_batch"></a>
 
 Read `acr_compl.checkreq` rows (`id`, `line`) on stdin and print an

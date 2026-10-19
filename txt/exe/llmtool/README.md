@@ -16,12 +16,12 @@ Usage: llmtool [options]
     -session     string  ""    Session id to report on; default is every session in this directory
     -transcript  string  ""    Transcript file to report on, instead of a session id
     -all                       Report on every directory claude code has recorded, not just this one
-    -rate        string  ""    Price list to use; default is the .claude/costrate.json of the tree this binary was built from
+    -rate        string  ""    Price list file; empty = .claude/costrate.json above the binary
     -analyze                   Report cost per worktree and per model, as ssim tuples
     -status                    Print the claude code status line; its json arrives on stdin
     -verbose     flag          Verbosity level (0..255); alias -v; cumulative
     -debug       flag          Debug level (0..255); alias -d; cumulative
-    -trace       string  ""    Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps
+    -trace       string  ""    Trace expression: log categories to enable, as category[:filter],...
     -help                      Print help and exit; alias -h
     -version                   Print version and exit
     -signature                 Show signatures and exit; alias -sig
@@ -169,7 +169,7 @@ the transcripts rather than from this interface.
 #### -all -- Report on every directory claude code has recorded, not just this one
 <a href="#-all"></a>
 
-#### -rate -- Price list to use; default is the .claude/costrate.json of the tree this binary was built from
+#### -rate -- Price list file; empty = .claude/costrate.json above the binary
 <a href="#-rate"></a>
 
 #### -analyze -- Report cost per worktree and per model, as ssim tuples

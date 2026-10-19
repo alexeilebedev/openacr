@@ -83,9 +83,28 @@ The precompiled header marker is a function prototype,
 `void __gcache_pragma_pch_preprocess();`, that nothing defines.  gcache finds
 the header to precompile by reading the preprocessed text, where a macro no
 longer exists.  A prototype passes through the preprocessor as it is, and it
-can repeat without harm, so any number of headers can carry it.  gcache splices the
+can repeat without harm, so any number of headers can carry it.  Under gcc, gcache splices the
 precompiled header in by replacing the header's text with
 `#pragma GCC pch_preprocess "<file>.gch"` at the top of the preprocessed file.
+
+Under clang the object is compiled from the source, never from the preprocessed
+text.  clang's warnings depend on where a name came from: a local named
+`stdout` shadows nothing in the source, and in the preprocessed text it is
+`__stdoutp` shadowing a global, which `-Wshadow -Werror` fails.  clang also
+ignores the `pch_preprocess` pragma, so gcache splices no precompiled header
+into a compile under clang.  A `.gch` target is still compiled, from the
+preprocessed text.
+The entry is still keyed by the preprocessed text.  A compile from the source
+reads the files again after that text was taken, so an edit saved in between
+would file the edited source's object under the old key.  gcache therefore
+preprocesses the source a second time after the compile, and files the object
+only when the text matches the key (`gcache.ClangSource`).
+
+Whether a compiler is clang is read from the macros it predefines, since macOS
+installs clang under the name `g++`.  The answer is a cache file of its own,
+keyed by the name the command gives the compiler and the path, size and time of
+the program that name reaches.  A probe that never ran the compiler keeps no
+answer.
 
 Age alone does not bound the cache in bytes.  A machine whose builds span
 several configurations can write tens of gigabytes inside the one-week window,

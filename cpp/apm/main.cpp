@@ -107,7 +107,7 @@ int apm::CreatePackageSandbox(algo::strptr sandbox_name, algo::strptr baseref) {
 // rather than a message on stderr the caller has no use for.
 tempstr apm::RevParseMaybe(algo::strptr rev) {
     tempstr cmd(tempstr()<<"git rev-parse -q --verify "<<strptr_ToBash(tempstr()<<rev<<"^{commit}"));
-    tempstr out(SysEval(cmd,FailokQ(true),1024));
+    tempstr out(SysEval(cmd,FailokQ(true)));
     return tempstr(Trimmed(out));
 }
 
@@ -147,6 +147,25 @@ tempstr apm::GetRefns(apm::FPackage &package) {
 
 // Bring ORIGIN into this repo under refs/apm/REFNAME and resolve REF to a commit
 // id there.
+// Return the start of a git command line that talks to an origin.  When
+// APM_TOKEN holds a destination's token, git gets a credential helper that
+// answers with it, so every command that reaches a token destination -- the
+// clone, the push, and the fetch of a reset after it -- authenticates the same
+// way.  The token reaches git through the environment, so it never appears on a
+// command line, in a URL, in a clone's config or in a log.  Without a token the
+// command is plain git, which uses whatever the user's own setup provides.
+tempstr apm::GitCmd() {
+    const char *token = getenv("APM_TOKEN");
+    tempstr ret("git");
+    if (token && *token) {
+        ret << " -c credential.helper= -c "
+            << algo::strptr_ToBash("credential.helper=!f() { test \"$1\" = get && echo username=apm && echo \"password=$APM_TOKEN\"; }; f");
+    }
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
 // Return the commit, or the empty string when the origin cannot be reached or
 // REF names nothing in it.
 //
@@ -169,11 +188,11 @@ tempstr apm::FetchPackageOrigin(algo::strptr refname, algo::strptr origin, algo:
         if (ref == "HEAD") {
             gitref=ref;
         } else {
-            gitref=Trimmed(SysEval(tempstr()<<"git rev-parse "<<ref,FailokQ(true),1024));
+            gitref=Trimmed(SysEval(tempstr()<<"git rev-parse "<<ref,FailokQ(true)));
         }
     } else {
         tempstr refns(tempstr()<<"refs/apm/"<<refname);
-        tempstr fetch(tempstr()<<"git fetch -q --prune "<<strptr_ToBash(origin));
+        tempstr fetch(tempstr()<<GitCmd()<<" fetch -q --prune "<<strptr_ToBash(origin));
         fetch << " " << strptr_ToBash(tempstr()<<"+refs/heads/*:"<<refns<<"/*");
         fetch << " " << strptr_ToBash(tempstr()<<"+HEAD:"<<refns<<"/HEAD");
         int rc=SysCmd(fetch);
@@ -249,10 +268,18 @@ void apm::Main_Transaction() {
 // the package definition being evaluated is ours and only our binary parses it.
 // Command line field BINPATH names the subdirectory the binaries sit in.
 tempstr apm::GetApmPath(algo::strptr dir) {
-    tempstr ours(DirFileJoin(algo::GetCurDir(),DirFileJoin(_db.cmdline.binpath,"apm")));
+    tempstr ours(GetOurApmPath());
     tempstr theirs(DirFileJoin(algo::GetCurDir(),DirFileJoin(dir,DirFileJoin(_db.cmdline.binpath,"apm"))));
     return (_db.cmdline.l || !FileQ(theirs)) ? ours : theirs;
 }
+
+// Return the absolute path of this tree's apm, in the subdirectory that command
+// line field BINPATH names.
+tempstr apm::GetOurApmPath() {
+    return DirFileJoin(algo::GetCurDir(),DirFileJoin(_db.cmdline.binpath,"apm"));
+}
+
+// -----------------------------------------------------------------------------
 
 // Return the mode bits of FILENAME, which are zero when it does not exist.  A
 // symbolic link reports its own mode, because git tracks the link: a link whose
@@ -357,6 +384,7 @@ void apm::Main() {
     if (_db.cmdline.pkgdata != "") {
         pkgdep_RemoveAll();
         pkgkey_RemoveAll();
+        pkgfile_RemoveAll();
         package_RemoveAll();
         bool ok = apm::LoadTuplesFile(_db.cmdline.pkgdata,true);
         vrfy(ok, tempstr()<<"apm.load_error"
@@ -369,6 +397,8 @@ void apm::Main() {
     }
     // convert -ns to a package definition
     DefPackages();
+    // a package's readmefile is a mapping like any other
+    DerivePkgfile();
     // topologically sort packages
     SortPackages();
     // a push makes the origin one projection: the package with the packages it
@@ -395,7 +425,8 @@ void apm::Main() {
         ssimreq.exclude=StartsWithQ(ssimreq.ssimreq,"dev.gitfile:data/");
     }ind_end;
     vrfy(_db.cmdline.install + _db.cmdline.update + _db.cmdline.push + _db.cmdline.diff + _db.cmdline.showrec
-         + _db.cmdline.showfile + _db.cmdline.generate + _db.cmdline.e + _db.cmdline.reset + _db.cmdline.publish <= 1,
+         + _db.cmdline.showfile + _db.cmdline.generate + _db.cmdline.e + _db.cmdline.reset + _db.cmdline.build
+         + _db.cmdline.publish <= 1,
          "more than one action selected");
     if (_db.cmdline.annotate != "" || _db.cmdline.check || _db.cmdline.diff || _db.cmdline.showrec || _db.cmdline.push
         || _db.cmdline.showfile || _db.cmdline.generate || _db.cmdline.update || _db.cmdline.install) {
@@ -474,6 +505,9 @@ void apm::Main() {
         actions++;
     } else if (_db.cmdline.reset) {
         Main_Reset();
+        actions++;
+    } else if (_db.cmdline.build) {
+        Main_Build();
         actions++;
     } else if (_db.cmdline.publish) {
         Main_Publish();

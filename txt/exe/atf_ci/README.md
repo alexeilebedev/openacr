@@ -20,7 +20,7 @@ Usage: atf_ci [[-citest:]<regx>] [options]
     -check_clean          Y       Check for modifications after each test
     -verbose      flag            Verbosity level (0..255); alias -v; cumulative
     -debug        flag            Debug level (0..255); alias -d; cumulative
-    -trace        string  ""      Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps
+    -trace        string  ""      Trace expression: log categories to enable, as category[:filter],...
     -help                         Print help and exit; alias -h
     -version                      Print version and exit
     -signature                    Show signatures and exit; alias -sig
@@ -35,11 +35,51 @@ Usage: atf_ci [[-citest:]<regx>] [options]
 Each citest is a row of `atfdb.citest`, and there are ~85 of them.  The row
 names the cijob the test belongs to, whether it runs in a sandbox, its timeout
 in seconds, and whether a failure ends the run (`failfast`).  The cijobs are
-the rows of `atfdb.cijob`: `normalize` is the fast pre-merge gate, `comp` runs
-the unit and component tests, the `memcheck` shards and `coverage` run the
-comptests under valgrind and gcov.  The test's function is `citest_<name>`, in
+the rows of `atfdb.cijob`: `normalize` is the fast pre-merge gate, `compA` and `compB` run
+the unit and component tests, and the `memcheck` shards run the comptests under
+valgrind.  `coverageA` and `coverageB` run the suites under gcov on two hosts,
+and `covfinal` merges their line counts.  The test's function is `citest_<name>`, in
 the file under `cpp/atf_ci/` named after its cijob.  `acr_ed -create -citest`
 adds a row to the `normalize` job.
+
+#### Scanning third-party dependencies
+<a href="#scanning-third-party-dependencies"></a>
+
+The `depscan` cijob matches the dependencies of the tree against public
+advisory databases, so an advisory published against a release the tree
+already uses fails the job with no change to the code.  Run it with
+`bin/normalize depscan`.  It holds two citests:
+
+| citest              | what it checks |
+| ------------------- | -------------- |
+| `depscan_lockfile`  | every tracked lockfile and pom, with `osv-scanner` |
+| `depscan_vendorlib` | every `dev.vendorlib` row, against the NVD |
+
+A library vendored as source, such as SQLite under `extern/`, is a row of
+`dev.vendorlib` that gives its release and its CPE name.  Update the row in
+the same change that updates the library.
+
+Each advisory is printed with its severity band, a row of `dev.vulnsev` picked
+by its CVSS base score, and an advisory with no score falls in the `unscored`
+band.  An advisory fails the scan when its band is marked `fail:Y`, and
+`acr dev.vulnsev` shows which bands are.  A scan that cannot run fails
+whatever the bands say.  Mark the critical and high bands `fail:Y` to fail on
+a score of 7.0 and up:
+
+```bash
+printf '%s\n' 'dev.vulnsev  vulnsev:critical  fail:Y' 'dev.vulnsev  vulnsev:high  fail:Y' | acr -merge -write
+```
+
+Accept an advisory after review with a row of `dev.vulnaccept`.  Its key is
+the advisory id, its comment is the rationale, and its `until` date is when
+the advisory fails the scan again:
+
+```bash
+echo 'dev.vulnaccept  vulnaccept:GHSA-xxxx-xxxx-xxxx  until:"2027-04-15 00:00:00"  comment:"why it does not apply"' | acr -insert -check -write
+```
+
+Each run writes the answers it judged under `temp/depscan`.  Install the
+scanner with `ainst osv_scanner -install`.
 
 #### Running the citests
 <a href="#running-the-citests"></a>
@@ -59,8 +99,8 @@ normalized.  Read the diff, commit the change if it is right, and run again.
 
 A citest marked `sandbox:Y` runs in the `atf_ci` sandbox, `wt/atf_ci`.  The
 first such test in a run resets the sandbox, the later
-ones clean it, and the clean check skips them.  A citest in the `coverage` job
-writes its gcov data to `temp/cov/<citest>.d`.
+ones clean it, and the clean check skips them.  A citest marked `gcov:Y` writes
+its gcov data to `temp/cov/<citest>.d`.
 
 A citest that runs past its timeout ends the whole run with an
 `atf_ci.timeout` line naming it and exit code 124.  The citests after it never
@@ -87,11 +127,11 @@ it takes a cijob name as its argument.
 
 ```bash
 bin/normalize                        # build, then run the normalize job and report every failure
-bin/normalize comp                   # the same for the comp job
-atf_ci -citest:atf_comp              # run the comptests the way the comp job does
+bin/normalize compB                  # the same for the compB job
+atf_ci -citest:'atf_compA|atf_compB' # run the comptests the way the compA and compB jobs do
 atf_ci amc                           # run one citest: regenerate code with amc and check the tree
 atf_ci -cijob:normalize -maxerr:100  # run the normalize job without stopping at the first failure
-acr atfdb.citest.cijob:comp -field citest   # list the citests of the comp job
+acr atfdb.citest.cijob:compB -field citest  # list the citests of the compB job
 acr citest:amc                       # show one citest's row
 ```
 
@@ -107,8 +147,9 @@ acr citest:amc                       # show one citest's row
   `-maxerr:1000` so a single run reports them all.
 - A timeout ends the run and leaves every later citest unrun, so exit code 124
   is an incomplete verdict.
-- `atf_ci -citest:atf_comp` is the component-test gate.  An `atf_comp` run with
-  a pattern tests only what the pattern names.
+- `atf_ci -citest:'atf_compA|atf_compB'` is the component-test gate: the two
+  halves together run every comptest.  An `atf_comp` run with a pattern tests
+  only what the pattern names.
 
 ### Options
 <a href="#options"></a>
@@ -144,7 +185,7 @@ combines with `-citest`.
 <a href="#-capture"></a>
 
 Passes `-capture` to the suites a citest runs, so `atf_unit` and `atf_comp`
-rewrite their reference files.  Under the `coverage` job, `atf_cov` then
+rewrite their reference files.  Under the `covfinal` job, `atf_cov` then
 updates `dev.tgtcov` and skips its check.  The `normalize` citests capture with
 or without this flag.
 

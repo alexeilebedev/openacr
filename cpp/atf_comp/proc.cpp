@@ -212,16 +212,23 @@ void atf_comp::CheckFile(strptr name, strptr file) {
     Check(name, state);
 }
 
-// If stablefld is set on the current comptest, replace unstable field values with ***
-// Check if attribute is unstable by looking up head.attr and %.attr.
+// Return true when the attribute ATTRNAME of a tuple headed HEAD is unstable,
+// looking up head.attr and %.attr.
 //
 // An element of a varlen field is printed under the field's name and its index,
 // as `gw.0`, so a message carrying three gateways prints three attributes and no
 // name a table could list covers them.  What is unstable about one element is
 // what is unstable about the field, so the index is dropped and the field
 // itself is looked up too: one `%.gw` row masks `gw`, `gw.0` and `gw.7` alike.
+//
+// A family of attributes that share a last word is unstable the same way: a
+// trace counter amc makes for a step, or for a dispatch whose disptrace row
+// counts cycles, has a twin ending in `_cycles`, which counts CPU time.  So the
+// field is looked up by that word as well, as `%.%_<word>`, and one
+// `%.%_cycles` row masks every such twin and every element of one.
 static bool UnstableAttrQ(strptr head, strptr attrname) {
     strptr base = Pathcomp(attrname, ".LL");
+    strptr word = Pathcomp(base, "_RR");
     bool ret = false;
     if (atf_comp::ind_unstableattr_Find(tempstr() << head << "." << attrname)) {
         ret = true;
@@ -229,10 +236,14 @@ static bool UnstableAttrQ(strptr head, strptr attrname) {
         ret = true;
     } else if (base != attrname && atf_comp::ind_unstableattr_Find(tempstr() << "%." << base)) {
         ret = true;
+    } else if (word != base && atf_comp::ind_unstableattr_Find(tempstr() << "%.%_" << word)) {
+        ret = true;
     }
     return ret;
 }
 
+// Return LINE with the values of its unstable attributes (UnstableAttrQ)
+// replaced by ***, when the current comptest sets stablefld.
 static tempstr StabilizeLine(strptr line) {
     atf_comp::FComptest *ct = atf_comp::_db.c_cur_comptest;
     if (ct && ct->stablefld) {
@@ -662,11 +673,37 @@ void atf_comp::ProcSignalAll(int signal) {
     }ind_end;
 }
 
+// The name of SIGNAL, such as SIGUSR1, or its number when it has no standard
+// name.  A test's expected output records a kill by this name, since the numbers
+// differ between platforms: SIGUSR1 is 10 on Linux and 30 on macOS.
+static tempstr SignalName(int signal) {
+    tempstr ret;
+    switch (signal) {
+    case SIGHUP : ret << "SIGHUP" ; break;
+    case SIGINT : ret << "SIGINT" ; break;
+    case SIGQUIT: ret << "SIGQUIT"; break;
+    case SIGABRT: ret << "SIGABRT"; break;
+    case SIGKILL: ret << "SIGKILL"; break;
+    case SIGUSR1: ret << "SIGUSR1"; break;
+    case SIGSEGV: ret << "SIGSEGV"; break;
+    case SIGUSR2: ret << "SIGUSR2"; break;
+    case SIGPIPE: ret << "SIGPIPE"; break;
+    case SIGALRM: ret << "SIGALRM"; break;
+    case SIGTERM: ret << "SIGTERM"; break;
+    case SIGCHLD: ret << "SIGCHLD"; break;
+    case SIGCONT: ret << "SIGCONT"; break;
+    case SIGSTOP: ret << "SIGSTOP"; break;
+    case SIGTSTP: ret << "SIGTSTP"; break;
+    default     : ret << signal   ; break;
+    }
+    return ret;
+}
+
 // Send SIGNAL to the process group PROC leads, which holds the shell the
 // command runs under together with any tool that shell forked.  Records the kill
 // so ProcWait reports the status as -1 rather than an exit code.
 void atf_comp::ProcKill(atf_comp::FProc &proc, int signal) {
-    Log(tempstr() << "# kill " << proc.proc << " signal:" << signal);
+    Log(tempstr() << "# kill " << proc.proc << " signal:" << SignalName(signal));
     bool sent = atf_comp::ProcSignal(proc, signal);
     if (sent) {
         proc.killed = true;
@@ -745,22 +782,7 @@ tempstr atf_comp::ProcRead(atf_comp::FProc &proc, strptr until, bool kill_on_tim
             pfd.events = POLLIN;
             int rc = poll(&pfd, 1, 1000);
             int err = errno;
-            if (rc == 0) {
-                if (TimedOutQ()) {
-                    if (!kill_on_timeout) {
-                        vrfy(false, tempstr() << "atf_comp.timeout"
-                             << Keyval("proc", proc.proc)
-                             << Keyval("until", until));
-                    } else if (!term_sent) {
-                        ProcKill(proc, SIGTERM);
-                        term_time = algo::CurrSchedTime();
-                        term_sent = true;
-                    } else if (!kill_sent && algo::ElapsedSecs(term_time, algo::CurrSchedTime()) > 5.0) {
-                        ProcKill(proc, SIGKILL);
-                        kill_sent = true;
-                    }
-                }
-            } else if (rc < 0 && err == EINTR) {
+            if (rc < 0 && err == EINTR) {
                 // A signal interrupted the wait, and an interrupted wait is not
                 // an end of output.  Reading it as one returns whatever the child
                 // had written so far as its whole transcript, which the golden
@@ -779,6 +801,25 @@ tempstr atf_comp::ProcRead(atf_comp::FProc &proc, strptr until, bool kill_on_tim
                      << Keyval("until", until)
                      << Keyval("revents", pfd.revents)
                      << Keyval("comment", rc < 0 ? strerror(err) : "pipe reported an error"));
+            } else if (TimedOutQ()) {
+                // The deadline is checked on every pass that yields no line, not
+                // only when the poll times out.  Say the shell a test runs exits
+                // while a child it started keeps the pipe open: on macOS the poll
+                // then reports the pipe readable at once, every pass, while the
+                // read finds nothing, and a check made only on a quiet second is
+                // never reached, so the sweep waits forever.
+                if (!kill_on_timeout) {
+                    vrfy(false, tempstr() << "atf_comp.timeout"
+                         << Keyval("proc", proc.proc)
+                         << Keyval("until", until));
+                } else if (!term_sent) {
+                    ProcKill(proc, SIGTERM);
+                    term_time = algo::CurrSchedTime();
+                    term_sent = true;
+                } else if (!kill_sent && algo::ElapsedSecs(term_time, algo::CurrSchedTime()) > 5.0) {
+                    ProcKill(proc, SIGKILL);
+                    kill_sent = true;
+                }
             }
         }
     }

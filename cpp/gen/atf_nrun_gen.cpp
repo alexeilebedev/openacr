@@ -42,12 +42,12 @@ namespace atf_nrun { // gen:ns_print_proto
     // func:atf_nrun.FDb.ind_running.UpdateCycles
     inline static void   ind_running_UpdateCycles() __attribute__((nothrow));
     // func:atf_nrun.FDb.ind_running.Call
-    inline static void   ind_running_Call() __attribute__((nothrow));
+    inline static void   ind_running_Call();
     // Update cycles count from previous clock capture
     // func:atf_nrun.FDb.zd_todo.UpdateCycles
     inline static void   zd_todo_UpdateCycles() __attribute__((nothrow));
     // func:atf_nrun.FDb.zd_todo.Call
-    inline static void   zd_todo_Call() __attribute__((nothrow));
+    inline static void   zd_todo_Call();
     // find trace by row id (used to implement reflection)
     // func:atf_nrun.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
@@ -706,15 +706,7 @@ int atf_nrun::job_Start(atf_nrun::FEntry& parent) {
         parent.job_pid = fork();
         if (parent.job_pid == 0) { // child
             algo_lib::DieWithParent();
-            // inherited signal handlers stay live until exec, so a kill aimed at
-            // the child in the fork-to-exec window would run the parent's handler
-            // in the child and be consumed instead of killing; restore the default
-            // dispositions so the signal does what the sender means
-            (void)signal(SIGTERM, SIG_DFL);
-            (void)signal(SIGINT , SIG_DFL);
-            (void)signal(SIGHUP , SIG_DFL);
-            (void)signal(SIGQUIT, SIG_DFL);
-            (void)signal(SIGALRM, SIG_DFL);
+            algo_lib::ResetChildSignal();
             if (parent.job_pgroup) {
                 // own process group: a kill by the child's pid alone would
                 // orphan its descendants alive; the group is one killable unit

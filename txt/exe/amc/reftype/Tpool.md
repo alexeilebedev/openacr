@@ -25,16 +25,16 @@ dmmeta.field  field:ssim2mysql.FDb.cmd  arg:ssim2mysql.FCmd  reftype:Tpool  dflt
 State in the **parent** ctype
 (see `tclass_Tpool` in `cpp/amc/tpool.cpp`):
 
-| Field                  | Type         | Meaning                                       |
-|------------------------|--------------|-----------------------------------------------|
-| `<name>_blocksize`     | `u64`        | bytes per refill request (default: power-of-2 ≥ 64 × sizeof T) |
-| `<name>_free`          | `T*`         | freelist head; NULL when empty                 |
+| Field              | Type  | Meaning |
+| ------------------ | ----- | ------- |
+| `<name>_blocksize` | `u64` | bytes per refill request (default: power-of-2 ≥ 64 × sizeof T) |
+| `<name>_free`      | `T*`  | freelist head; NULL when empty |
 
 State in the **element** ctype:
 
-| Field           | Type | Meaning                                                |
-|-----------------|------|--------------------------------------------------------|
-| `<name>_next`   | `T*` | next free element; `(T*)-1` while in-use (sentinel)    |
+| Field         | Type | Meaning |
+| ------------- | ---- | ------- |
+| `<name>_next` | `T*` | next free element; `(T*)-1` while in-use (sentinel) |
 
 The element's `_Init` sets `_next = (T*)-1` so that double-free
 can be detected by `_FreeMem`.
@@ -67,13 +67,13 @@ No spec table.
 
 Source: `cpp/amc/tpool.cpp`.
 
-| Tfunc                  | Generated function                                  | Effect |
-|------------------------|-----------------------------------------------------|--------|
-| `Tpool.Init`           | `<name>_Init(P&)` (folded)                          | Empty freelist; set `_blocksize` to a sensible power of 2. |
-| `Tpool.Reserve`        | `u64 <name>_Reserve(P&, u64 n)`                     | Preallocate at least `n` elements onto the freelist. |
-| `Tpool.ReserveMem`     | `u64 <name>_ReserveMem(P&, u64 size)`               | Ask base pool for `size` bytes, slice into elements. |
-| `Tpool.AllocMem`       | `void* <name>_AllocMem(P&)`                         | Pop the freelist (refilling if empty); NULL on OOM. |
-| `Tpool.FreeMem`        | `void <name>_FreeMem(P&, T& row)`                   | Push `row` onto the freelist.  Aborts on double-free (via the `_next == (T*)-1` sentinel). |
+| Tfunc              | Generated function                    | Effect |
+| ------------------ | ------------------------------------- | ------ |
+| `Tpool.Init`       | `<name>_Init(P&)` (folded)            | Empty freelist; set `_blocksize` to a sensible power of 2. |
+| `Tpool.Reserve`    | `u64 <name>_Reserve(P&, u64 n)`       | Preallocate at least `n` elements onto the freelist. |
+| `Tpool.ReserveMem` | `u64 <name>_ReserveMem(P&, u64 size)` | Ask base pool for `size` bytes, slice into elements. |
+| `Tpool.AllocMem`   | `void* <name>_AllocMem(P&)`           | Pop the freelist (refilling if empty); NULL on OOM. |
+| `Tpool.FreeMem`    | `void <name>_FreeMem(P&, T& row)`     | Push `row` onto the freelist.  Aborts on double-free (via the `_next == (T*)-1` sentinel). |
 
 Plus the full `Pool.*` family.
 

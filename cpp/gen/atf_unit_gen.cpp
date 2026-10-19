@@ -27,12 +27,16 @@
 #include "include/gen/command_gen.inl.h"
 #include "include/gen/report_gen.h"
 #include "include/gen/report_gen.inl.h"
+#include "include/gen/amcdb_gen.h"
+#include "include/gen/amcdb_gen.inl.h"
 #include "include/gen/atfdb_gen.h"
 #include "include/gen/atfdb_gen.inl.h"
 #include "include/gen/lib_exec_gen.h"
 #include "include/gen/lib_exec_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
+#include "include/gen/lib_amcdb_gen.h"
+#include "include/gen/lib_amcdb_gen.inl.h"
 #include "include/gen/lib_prot_gen.h"
 #include "include/gen/lib_prot_gen.inl.h"
 #include "include/gen/lib_ams_gen.h"
@@ -84,6 +88,8 @@ namespace atf_unit { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
     // func:atf_unit.FDb._db.InitReflection
     static void          InitReflection();
+    // func:atf_unit.FDb.regxcase.InputMaybe
+    static bool          regxcase_InputMaybe(amcdb::Regxcase &elem) __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
     // func:atf_unit.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
@@ -201,15 +207,7 @@ int atf_unit::acr_ed_Start() {
         _db.acr_ed_pid = fork();
         if (_db.acr_ed_pid == 0) { // child
             algo_lib::DieWithParent();
-            // inherited signal handlers stay live until exec, so a kill aimed at
-            // the child in the fork-to-exec window would run the parent's handler
-            // in the child and be consumed instead of killing; restore the default
-            // dispositions so the signal does what the sender means
-            (void)signal(SIGTERM, SIG_DFL);
-            (void)signal(SIGINT , SIG_DFL);
-            (void)signal(SIGHUP , SIG_DFL);
-            (void)signal(SIGQUIT, SIG_DFL);
-            (void)signal(SIGALRM, SIG_DFL);
+            algo_lib::ResetChildSignal();
             if (_db.acr_ed_pgroup) {
                 // own process group: a kill by the child's pid alone would
                 // orphan its descendants alive; the group is one killable unit
@@ -1141,6 +1139,7 @@ static void atf_unit::unittest_LoadStatic() {
         ,{ "atfdb.unittest  unittest:algo_lib.ExitCode  comment:\"\"", atf_unit::unittest_algo_lib_ExitCode }
         ,{ "atfdb.unittest  unittest:algo_lib.FProc  comment:\"spawn an external process via algo_lib.FProc\"", atf_unit::unittest_algo_lib_FProc }
         ,{ "atfdb.unittest  unittest:algo_lib.FTruncate  comment:\"\"", atf_unit::unittest_algo_lib_FTruncate }
+        ,{ "atfdb.unittest  unittest:algo_lib.Fallocate  comment:\"a reservation allocates what it names, and mode 0 never shortens a file\"", atf_unit::unittest_algo_lib_Fallocate }
         ,{ "atfdb.unittest  unittest:algo_lib.FileAppend  comment:\"\"", atf_unit::unittest_algo_lib_FileAppend }
         ,{ "atfdb.unittest  unittest:algo_lib.FileLine_curs  comment:\"\"", atf_unit::unittest_algo_lib_FileLine_curs }
         ,{ "atfdb.unittest  unittest:algo_lib.FileQ  comment:\"\"", atf_unit::unittest_algo_lib_FileQ }
@@ -1149,6 +1148,7 @@ static void atf_unit::unittest_LoadStatic() {
         ,{ "atfdb.unittest  unittest:algo_lib.GetCpuHz  comment:\"\"", atf_unit::unittest_algo_lib_GetCpuHz }
         ,{ "atfdb.unittest  unittest:algo_lib.I32Dec3Fmt  comment:\"Formatting of Dec number\"", atf_unit::unittest_algo_lib_I32Dec3Fmt }
         ,{ "atfdb.unittest  unittest:algo_lib.IntPrice  comment:\"\"", atf_unit::unittest_algo_lib_IntPrice }
+        ,{ "atfdb.unittest  unittest:algo_lib.IohookRegularFile  comment:\"A read hook on an empty regular file is called back at once\"", atf_unit::unittest_algo_lib_IohookRegularFile }
         ,{ "atfdb.unittest  unittest:algo_lib.Keyval  comment:\"\"", atf_unit::unittest_algo_lib_Keyval }
         ,{ "atfdb.unittest  unittest:algo_lib.KillRecurse  comment:\"\"", atf_unit::unittest_algo_lib_KillRecurse }
         ,{ "atfdb.unittest  unittest:algo_lib.Lockfile  comment:\"\"", atf_unit::unittest_algo_lib_Lockfile }
@@ -1194,6 +1194,7 @@ static void atf_unit::unittest_LoadStatic() {
         ,{ "atfdb.unittest  unittest:algo_lib.ReadModuleId  comment:\"\"", atf_unit::unittest_algo_lib_ReadModuleId }
         ,{ "atfdb.unittest  unittest:algo_lib.ReadUuid  comment:\"\"", atf_unit::unittest_algo_lib_ReadUuid }
         ,{ "atfdb.unittest  unittest:algo_lib.Regx  comment:\"\"", atf_unit::unittest_algo_lib_Regx }
+        ,{ "atfdb.unittest  unittest:algo_lib.RegxCase  comment:\"\"", atf_unit::unittest_algo_lib_RegxCase }
         ,{ "atfdb.unittest  unittest:algo_lib.RegxDotEof  comment:\"A dot never matches at end of input, even before a trailing .*\"", atf_unit::unittest_algo_lib_RegxDotEof }
         ,{ "atfdb.unittest  unittest:algo_lib.RegxReadTwice  comment:\"\"", atf_unit::unittest_algo_lib_RegxReadTwice }
         ,{ "atfdb.unittest  unittest:algo_lib.RegxReadTwice2  comment:\"\"", atf_unit::unittest_algo_lib_RegxReadTwice2 }
@@ -1203,9 +1204,11 @@ static void atf_unit::unittest_LoadStatic() {
         ,{ "atfdb.unittest  unittest:algo_lib.Replscope  comment:\"\"", atf_unit::unittest_algo_lib_Replscope }
         ,{ "atfdb.unittest  unittest:algo_lib.ReplscopeSharedPrefix  comment:\"\"", atf_unit::unittest_algo_lib_ReplscopeSharedPrefix }
         ,{ "atfdb.unittest  unittest:algo_lib.RequireKernelCpuHz  comment:\"hz comes from the kernel export, else the caller-named variable, never measured; a stated rate outranks the constant_tsc scan\"", atf_unit::unittest_algo_lib_RequireKernelCpuHz }
+        ,{ "atfdb.unittest  unittest:algo_lib.ResetChildSignal  comment:\"A child started with every signal blocked starts with nothing blocked or ignored\"", atf_unit::unittest_algo_lib_ResetChildSignal }
         ,{ "atfdb.unittest  unittest:algo_lib.RetryMute  comment:\"A retry body runs with verbose off; accept, nesting and a throw restore it\"", atf_unit::unittest_algo_lib_RetryMute }
         ,{ "atfdb.unittest  unittest:algo_lib.ReverseBits  comment:\"\"", atf_unit::unittest_algo_lib_ReverseBits }
         ,{ "atfdb.unittest  unittest:algo_lib.SchedTime  comment:\"\"", atf_unit::unittest_algo_lib_SchedTime }
+        ,{ "atfdb.unittest  unittest:algo_lib.SetupHangupSignal  comment:\"A daemon started with SIGHUP blocked still hears its hangup\"", atf_unit::unittest_algo_lib_SetupHangupSignal }
         ,{ "atfdb.unittest  unittest:algo_lib.Sleep  comment:\"\"", atf_unit::unittest_algo_lib_Sleep }
         ,{ "atfdb.unittest  unittest:algo_lib.Smallstr  comment:\"\"", atf_unit::unittest_algo_lib_Smallstr }
         ,{ "atfdb.unittest  unittest:algo_lib.SmallstrEq  comment:\"\"", atf_unit::unittest_algo_lib_SmallstrEq }
@@ -1474,8 +1477,8 @@ void atf_unit::MainLoop() {
 static void atf_unit::InitReflection() {
     algo_lib::FImdb &row = algo_lib::imdb_Alloc();
     row.imdb               = "atf_unit";
-    row.InsertStrptrMaybe  = NULL;
-    row.RemoveStrptrMaybe  = NULL;
+    row.InsertStrptrMaybe  = atf_unit::InsertStrptrMaybe;
+    row.RemoveStrptrMaybe  = atf_unit::RemoveStrptrMaybe;
     row.Step               = atf_unit::Steps;
     row.MainLoop           = atf_unit::MainLoop;
     algo_lib::imdb_XrefMaybe(row);
@@ -1492,6 +1495,7 @@ static void atf_unit::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'atf_unit.Input'  signature:'00ab855bafc42a287c5401fe4be51a1d07161dc7'");
 }
 
 // --- atf_unit.FDb._db.InsertStrptrMaybe
@@ -1499,7 +1503,21 @@ static void atf_unit::InitReflection() {
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
 bool atf_unit::InsertStrptrMaybe(algo::strptr str) {
     bool retval = true;
-    (void)str;//only to avoid -Wunused-parameter
+    atf_unit::TableId table_id(-1);
+    value_SetStrptrMaybe(table_id, algo::GetTypeTag(str));
+    switch (value_GetEnum(table_id)) {
+        case atf_unit_TableId_amcdb_Regxcase: { // finput:atf_unit.FDb.regxcase
+            amcdb::Regxcase elem;
+            retval = amcdb::Regxcase_ReadStrptrMaybe(elem, str);
+            retval = retval && regxcase_InputMaybe(elem);
+            break;
+        }
+        default:
+        break;
+    } //switch
+    if (!retval) {
+        algo_lib::NoteInsertErr(str); // increment error counter
+    }
     return retval;
 }
 
@@ -1513,6 +1531,7 @@ bool atf_unit::LoadTuplesMaybe(algo::strptr root, bool recursive) {
         retval = atf_unit::LoadTuplesFd(algo::Fildes(0),"(stdin)",recursive);
     } else if (DirectoryQ(root)) {
         retval = retval && atf_unit::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
+        retval = retval && atf_unit::LoadTuplesFile(algo::SsimFname(root,"amcdb.regxcase"),recursive);
     } else {
         algo_lib::AppendErrtext("path", root);
         algo_lib::AppendErrtext("comment", "Wrong working directory?");
@@ -1547,6 +1566,7 @@ bool atf_unit::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive)
         if (recursive) {
             retval = retval && algo_lib::InsertStrptrMaybe(line);
         }
+        retval = retval && atf_unit::InsertStrptrMaybe(line);
         if (!retval) {
             algo_lib::_db.errtext << eol
             << fname << ":"
@@ -1586,7 +1606,19 @@ void atf_unit::Steps() {
 // Return value is true if the record was found and removed, false otherwise.
 bool atf_unit::RemoveStrptrMaybe(algo::strptr str) {
     bool retval = true;
-    (void)str;//only to avoid -Wunused-parameter
+    atf_unit::TableId table_id(-1);
+    value_SetStrptrMaybe(table_id, algo::GetTypeTag(str));
+    switch (value_GetEnum(table_id)) {
+        case atf_unit_TableId_amcdb_Regxcase: { // finput:atf_unit.FDb.regxcase
+            // finput atf_unit.FDb.regxcase: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        default:
+        retval = false;
+        break;
+    } //switch
     return retval;
 }
 
@@ -1878,6 +1910,104 @@ bool atf_unit::msg_XrefMaybe(atf_unit::FMsg &row) {
     return retval;
 }
 
+// --- atf_unit.FDb.regxcase.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+atf_unit::FRegxcase& atf_unit::regxcase_Alloc() {
+    atf_unit::FRegxcase* row = regxcase_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("atf_unit.out_of_mem  field:atf_unit.FDb.regxcase  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- atf_unit.FDb.regxcase.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+atf_unit::FRegxcase* atf_unit::regxcase_AllocMaybe() {
+    atf_unit::FRegxcase *row = (atf_unit::FRegxcase*)regxcase_AllocMem();
+    if (row) {
+        new (row) atf_unit::FRegxcase; // call constructor
+    }
+    return row;
+}
+
+// --- atf_unit.FDb.regxcase.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+atf_unit::FRegxcase* atf_unit::regxcase_InsertMaybe(const amcdb::Regxcase &value) {
+    atf_unit::FRegxcase *row = &regxcase_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    regxcase_CopyIn(*row,const_cast<amcdb::Regxcase&>(value));
+    bool ok = regxcase_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        regxcase_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- atf_unit.FDb.regxcase.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* atf_unit::regxcase_AllocMem() {
+    u64 new_nelems     = _db.regxcase_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    atf_unit::FRegxcase*  lev   = NULL;
+    if (bsr < 36) {
+        lev = _db.regxcase_lary[bsr];
+        if (!lev) {
+            lev=(atf_unit::FRegxcase*)algo_lib::malloc_AllocMem(sizeof(atf_unit::FRegxcase) * (u64(1)<<bsr));
+            _db.regxcase_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.regxcase_n = i64(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- atf_unit.FDb.regxcase.RemoveAll
+// Remove all elements from Lary
+void atf_unit::regxcase_RemoveAll() {
+    for (u64 n = _db.regxcase_n; n>0; ) {
+        n--;
+        regxcase_qFind(u64(n)).~FRegxcase(); // destroy last element
+        _db.regxcase_n = i64(n);
+    }
+}
+
+// --- atf_unit.FDb.regxcase.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void atf_unit::regxcase_RemoveLast() {
+    u64 n = _db.regxcase_n;
+    if (n > 0) {
+        n -= 1;
+        regxcase_qFind(u64(n)).~FRegxcase();
+        _db.regxcase_n = i64(n);
+    }
+}
+
+// --- atf_unit.FDb.regxcase.InputMaybe
+static bool atf_unit::regxcase_InputMaybe(amcdb::Regxcase &elem) {
+    bool retval = true;
+    retval = regxcase_InsertMaybe(elem) != nullptr;
+    return retval;
+}
+
+// --- atf_unit.FDb.regxcase.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool atf_unit::regxcase_XrefMaybe(atf_unit::FRegxcase &row) {
+    bool retval = true;
+    (void)row;
+    return retval;
+}
+
 // --- atf_unit.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
 static algo::ImrowPtr atf_unit::trace_RowidFind(int t) {
@@ -1933,6 +2063,17 @@ void atf_unit::FDb_Init() {
     _db.msg_cur = NULL;
     _db.msg_reserved_bytes = 0;
     _db.msg_free_bytes = 0;
+    // initialize LAry regxcase (atf_unit.FDb.regxcase)
+    _db.regxcase_n = 0;
+    memset(_db.regxcase_lary, 0, sizeof(_db.regxcase_lary)); // zero out all level pointers
+    atf_unit::FRegxcase* regxcase_first = (atf_unit::FRegxcase*)algo_lib::malloc_AllocMem(sizeof(atf_unit::FRegxcase) * (u64(1)<<4));
+    if (!regxcase_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.regxcase_lary[i]  = regxcase_first;
+        regxcase_first    += 1ULL<<i;
+    }
 
     atf_unit::InitReflection();
     unittest_LoadStatic(); // gen:ns_gstatic  gstatic:atf_unit.FDb.unittest  load atf_unit.FUnittest records
@@ -1940,6 +2081,9 @@ void atf_unit::FDb_Init() {
 
 // --- atf_unit.FDb..Uninit
 void atf_unit::FDb_Uninit() {
+
+    // atf_unit.FDb.regxcase.Uninit (Lary)  //
+    // skip destruction in global scope
 
     // atf_unit.FDb.ind_unittest.Uninit (Thash)  //
     // skip destruction of ind_unittest in global scope
@@ -2789,6 +2933,30 @@ atf_unit::FPerfSort& atf_unit::FPerfSort::operator =(const atf_unit::FPerfSort &
     index_Setary(*this, index_Getary(const_cast<atf_unit::FPerfSort&>(rhs)));
 }
 
+// --- atf_unit.FRegxcase.base.CopyOut
+// Copy fields out of row
+void atf_unit::regxcase_CopyOut(atf_unit::FRegxcase &row, amcdb::Regxcase &out) {
+    out.regxcase = row.regxcase;
+    out.regxstyle = row.regxstyle;
+    out.pattern = row.pattern;
+    out.subject = row.subject;
+    out.full = row.full;
+    out.match = row.match;
+    out.comment = algo::Comment(row.comment);
+}
+
+// --- atf_unit.FRegxcase.base.CopyIn
+// Copy fields in to row
+void atf_unit::regxcase_CopyIn(atf_unit::FRegxcase &row, amcdb::Regxcase &in) {
+    row.regxcase = in.regxcase;
+    row.regxstyle = in.regxstyle;
+    row.pattern = in.pattern;
+    row.subject = in.subject;
+    row.full = in.full;
+    row.match = in.match;
+    row.comment = in.comment;
+}
+
 // --- atf_unit.FUnittest.base.CopyOut
 // Copy fields out of row
 void atf_unit::unittest_CopyOut(atf_unit::FUnittest &row, atfdb::Unittest &out) {
@@ -3019,6 +3187,87 @@ lib_json::FNode * atf_unit::JsonAry_FmtJson(atf_unit::JsonAry& row, lib_json::FN
         algo::Smallstr20_Print(name_ary[i], lib_json::NewStringNode(&name_node).value);
     }
     return &name_node;
+}
+
+// --- atf_unit.TableId.value.ToCstr
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+const char* atf_unit::value_ToCstr(const atf_unit::TableId& parent) {
+    const char *ret = NULL;
+    switch(value_GetEnum(parent)) {
+        case atf_unit_TableId_amcdb_Regxcase: ret = "amcdb.Regxcase";  break;
+    }
+    return ret;
+}
+
+// --- atf_unit.TableId.value.Print
+// Convert value to a string. First, attempt conversion to a known string.
+// If no string matches, print value as a numeric value.
+void atf_unit::value_Print(const atf_unit::TableId& parent, algo::cstring &lhs) {
+    const char *strval = value_ToCstr(parent);
+    if (strval) {
+        lhs << strval;
+    } else {
+        lhs << parent.value;
+    }
+}
+
+// --- atf_unit.TableId.value.SetStrptrMaybe
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+bool atf_unit::value_SetStrptrMaybe(atf_unit::TableId& parent, algo::strptr rhs) {
+    bool ret = false;
+    switch (elems_N(rhs)) {
+        case 14: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('a','m','c','d','b','.','R','e'): {
+                    if (memcmp(rhs.elems+8,"gxcase",6)==0) { value_SetEnum(parent,atf_unit_TableId_amcdb_Regxcase); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('a','m','c','d','b','.','r','e'): {
+                    if (memcmp(rhs.elems+8,"gxcase",6)==0) { value_SetEnum(parent,atf_unit_TableId_amcdb_regxcase); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+    }
+    return ret;
+}
+
+// --- atf_unit.TableId.value.SetStrptr
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+void atf_unit::value_SetStrptr(atf_unit::TableId& parent, algo::strptr rhs, atf_unit_TableIdEnum dflt) {
+    if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
+}
+
+// --- atf_unit.TableId.value.ReadStrptrMaybe
+// Convert string to field. Return success value
+bool atf_unit::value_ReadStrptrMaybe(atf_unit::TableId& parent, algo::strptr rhs) {
+    bool retval = false;
+    retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
+    if (!retval) { // didn't work? try reading as underlying type
+        retval = i32_ReadStrptrMaybe(parent.value,rhs);
+    }
+    return retval;
+}
+
+// --- atf_unit.TableId..ReadStrptrMaybe
+// Read fields of atf_unit::TableId from an ascii string.
+// The format of the string is the format of the atf_unit::TableId's only field
+bool atf_unit::TableId_ReadStrptrMaybe(atf_unit::TableId &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = retval && value_ReadStrptrMaybe(parent, in_str);
+    return retval;
+}
+
+// --- atf_unit.TableId..Print
+// print string representation of ROW to string STR
+// cfmt:atf_unit.TableId.String  printfmt:Raw
+void atf_unit::TableId_Print(atf_unit::TableId row, algo::cstring& str) {
+    atf_unit::value_Print(row, str);
 }
 
 // --- atf_unit.TypeA..ReadStrptrMaybe

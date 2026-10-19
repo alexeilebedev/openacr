@@ -44,12 +44,12 @@ cannot decide whether the optional is present.
 ### Opt vs Varlen
 <a href="#opt-vs-varlen"></a>
 
-|              | **Opt**                            | **Varlen**                  |
-|--------------|------------------------------------|-----------------------------|
-| Count        | 0 or 1                             | 0..N                        |
-| API          | `_Get` returns `T*` or NULL        | `_Getary` returns span      |
-| Last field?  | yes                                | yes                         |
-| Element ctor | placement-new via `AllocVarlen`    | typically `memcpy`'d in     |
+|              | **Opt**                         | **Varlen** |
+| ------------ | ------------------------------- | ---------- |
+| Count        | 0 or 1                          | 0..N |
+| API          | `_Get` returns `T*` or NULL     | `_Getary` returns span |
+| Last field?  | yes                             | yes |
+| Element ctor | placement-new via `AllocVarlen` | typically `memcpy`'d in |
 
 Both are used for tail content in protocol messages; Opt is
 the right choice when the trailing piece is itself a single
@@ -78,12 +78,12 @@ No spec table.
 
 Source: `cpp/amc/opt.cpp`.
 
-| Tfunc                  | Generated function                                        | Effect |
-|------------------------|-----------------------------------------------------------|--------|
-| `Opt.Get`              | `T* <name>_Get(P&)`                                       | Returns pointer to the trailing optional, or NULL if the parent's length is too short.  If the optional itself has a `lenfld`, also validates that the optional's declared length fits. |
-| `Opt.Getary`           | `aryptr<u8> <name>_Getary(P&)`                            | Raw byte span over the trailing region. |
-| `Opt.Print`            | `void <name>_Print(P&, cstring& out)`                     | If present, dispatch on the optional's `typefld` (for tagged types) or print directly. |
-| `Opt.ReadStrptrMaybe`  | `bool <name>_ReadStrptrMaybe(P&, strptr in)`              | Parse the optional from a string and append it to the buffer pointed to by `algo_lib::_db.varlenbuf`. |
+| Tfunc                 | Generated function                           | Effect |
+| --------------------- | -------------------------------------------- | ------ |
+| `Opt.Get`             | `T* <name>_Get(P&)`                          | Returns pointer to the trailing optional, or NULL if the parent's length is too short.  If the optional itself has a `lenfld`, also validates that the optional's declared length fits. |
+| `Opt.Getary`          | `aryptr<u8> <name>_Getary(P&)`               | Raw byte span over the trailing region. |
+| `Opt.Print`           | `void <name>_Print(P&, cstring& out)`        | If present, dispatch on the optional's `typefld` (for tagged types) or print directly. |
+| `Opt.ReadStrptrMaybe` | `bool <name>_ReadStrptrMaybe(P&, strptr in)` | Parse the optional from a string and append it to the buffer pointed to by `algo_lib::_db.varlenbuf`. |
 
 ### Memory model
 <a href="#memory-model"></a>

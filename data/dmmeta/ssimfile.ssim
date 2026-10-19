@@ -4,6 +4,11 @@ dmmeta.ssimfile  ssimfile:amcdb.curstype  ctype:amcdb.Curstype
 dmmeta.ssimfile  ssimfile:amcdb.gen  ctype:amcdb.Gen
 dmmeta.ssimfile  ssimfile:amcdb.lang  ctype:amcdb.Lang
 dmmeta.ssimfile  ssimfile:amcdb.pbtype  ctype:amcdb.Pbtype
+dmmeta.ssimfile  ssimfile:amcdb.regxcase  ctype:amcdb.Regxcase
+dmmeta.ssimfile  ssimfile:amcdb.regxlenient  ctype:amcdb.Regxlenient
+dmmeta.ssimfile  ssimfile:amcdb.regxmacro  ctype:amcdb.Regxmacro
+dmmeta.ssimfile  ssimfile:amcdb.regxrule  ctype:amcdb.Regxrule
+dmmeta.ssimfile  ssimfile:amcdb.regxstyle  ctype:amcdb.Regxstyle
 dmmeta.ssimfile  ssimfile:amcdb.regxtype  ctype:amcdb.Regxtype
 dmmeta.ssimfile  ssimfile:amcdb.stepband  ctype:amcdb.Stepband
 dmmeta.ssimfile  ssimfile:amcdb.tclass  ctype:amcdb.Tclass
@@ -16,6 +21,7 @@ dmmeta.ssimfile  ssimfile:amsdb.proctype  ctype:amsdb.Proctype
 dmmeta.ssimfile  ssimfile:amsdb.trafficclass  ctype:amsdb.Trafficclass
 dmmeta.ssimfile  ssimfile:atfdb.age  ctype:atfdb.Age
 dmmeta.ssimfile  ssimfile:atfdb.amctest  ctype:atfdb.Amctest
+dmmeta.ssimfile  ssimfile:atfdb.benchgate  ctype:atfdb.Benchgate
 dmmeta.ssimfile  ssimfile:atfdb.benchprofile  ctype:atfdb.Benchprofile
 dmmeta.ssimfile  ssimfile:atfdb.cijob  ctype:atfdb.Cijob
 dmmeta.ssimfile  ssimfile:atfdb.citest  ctype:atfdb.Citest
@@ -29,6 +35,9 @@ dmmeta.ssimfile  ssimfile:atfdb.test_gsymbol_strptr  ctype:atfdb.TestGsymbolStrp
 dmmeta.ssimfile  ssimfile:atfdb.testenv  ctype:atfdb.Testenv
 dmmeta.ssimfile  ssimfile:atfdb.tfilt  ctype:atfdb.Tfilt
 dmmeta.ssimfile  ssimfile:atfdb.tifilt  ctype:atfdb.Tifilt
+dmmeta.ssimfile  ssimfile:atfdb.tlamodel  ctype:atfdb.Tlamodel
+dmmeta.ssimfile  ssimfile:atfdb.tlastrategy  ctype:atfdb.Tlastrategy
+dmmeta.ssimfile  ssimfile:atfdb.tlaverdict  ctype:atfdb.Tlaverdict
 dmmeta.ssimfile  ssimfile:atfdb.unittest  ctype:atfdb.Unittest
 dmmeta.ssimfile  ssimfile:atfdb.unstableattr  ctype:atfdb.Unstableattr
 dmmeta.ssimfile  ssimfile:atfdb.unstableline  ctype:atfdb.Unstableline
@@ -38,6 +47,7 @@ dmmeta.ssimfile  ssimfile:creddb.credperm  ctype:creddb.Credperm
 dmmeta.ssimfile  ssimfile:creddb.kind  ctype:creddb.Kind
 dmmeta.ssimfile  ssimfile:creddb.master  ctype:creddb.Master
 dmmeta.ssimfile  ssimfile:creddb.perm  ctype:creddb.Perm
+dmmeta.ssimfile  ssimfile:creddb.role  ctype:creddb.Role
 dmmeta.ssimfile  ssimfile:dev.arch  ctype:dev.Arch
 dmmeta.ssimfile  ssimfile:dev.badline  ctype:dev.Badline
 dmmeta.ssimfile  ssimfile:dev.builddir  ctype:dev.Builddir
@@ -48,12 +58,16 @@ dmmeta.ssimfile  ssimfile:dev.covfile  ctype:dev.Covfile
 dmmeta.ssimfile  ssimfile:dev.covline  ctype:dev.Covline
 dmmeta.ssimfile  ssimfile:dev.covtarget  ctype:dev.Covtarget
 dmmeta.ssimfile  ssimfile:dev.cred  ctype:dev.Cred
+dmmeta.ssimfile  ssimfile:dev.credperm  ctype:dev.Credperm
+dmmeta.ssimfile  ssimfile:dev.credrole  ctype:dev.Credrole
 dmmeta.ssimfile  ssimfile:dev.dbgtarget  ctype:dev.Dbgtarget
 dmmeta.ssimfile  ssimfile:dev.docpage  ctype:dev.Docpage
 dmmeta.ssimfile  ssimfile:dev.edaction  ctype:dev.Edaction
 dmmeta.ssimfile  ssimfile:dev.edacttype  ctype:dev.Edacttype
 dmmeta.ssimfile  ssimfile:dev.envvar  ctype:dev.Envvar
 dmmeta.ssimfile  ssimfile:dev.extpkg  ctype:dev.Extpkg
+dmmeta.ssimfile  ssimfile:dev.extpkgnoarch  ctype:dev.Extpkgnoarch
+dmmeta.ssimfile  ssimfile:dev.extpkgprobe  ctype:dev.Extpkgprobe
 dmmeta.ssimfile  ssimfile:dev.extpkgsrc  ctype:dev.Extpkgsrc
 dmmeta.ssimfile  ssimfile:dev.extpkgver  ctype:dev.Extpkgver
 dmmeta.ssimfile  ssimfile:dev.gitfile  ctype:dev.Gitfile
@@ -71,6 +85,7 @@ dmmeta.ssimfile  ssimfile:dev.opt_type  ctype:dev.OptType
 dmmeta.ssimfile  ssimfile:dev.package  ctype:dev.Package
 dmmeta.ssimfile  ssimfile:dev.pkgdep  ctype:dev.Pkgdep
 dmmeta.ssimfile  ssimfile:dev.pkgdeptype  ctype:dev.Pkgdeptype
+dmmeta.ssimfile  ssimfile:dev.pkgfile  ctype:dev.Pkgfile
 dmmeta.ssimfile  ssimfile:dev.pkgkey  ctype:dev.Pkgkey
 dmmeta.ssimfile  ssimfile:dev.pkgkeyword  ctype:dev.Pkgkeyword
 dmmeta.ssimfile  ssimfile:dev.pkgupstream  ctype:dev.Pkgupstream
@@ -84,6 +99,7 @@ dmmeta.ssimfile  ssimfile:dev.srcfile  ctype:dev.Srcfile
 dmmeta.ssimfile  ssimfile:dev.syscmd  ctype:dev.Syscmd
 dmmeta.ssimfile  ssimfile:dev.syscmddep  ctype:dev.Syscmddep
 dmmeta.ssimfile  ssimfile:dev.syslib  ctype:dev.Syslib
+dmmeta.ssimfile  ssimfile:dev.syslibuname  ctype:dev.Syslibuname
 dmmeta.ssimfile  ssimfile:dev.targdep  ctype:dev.Targdep
 dmmeta.ssimfile  ssimfile:dev.target  ctype:dev.Target
 dmmeta.ssimfile  ssimfile:dev.targsrc  ctype:dev.Targsrc
@@ -96,6 +112,9 @@ dmmeta.ssimfile  ssimfile:dev.uname  ctype:dev.Uname
 dmmeta.ssimfile  ssimfile:dev.uncovfunc  ctype:dev.Uncovfunc
 dmmeta.ssimfile  ssimfile:dev.unstablefld  ctype:dev.Unstablefld
 dmmeta.ssimfile  ssimfile:dev.upstreamtype  ctype:dev.Upstreamtype
+dmmeta.ssimfile  ssimfile:dev.vendorlib  ctype:dev.Vendorlib
+dmmeta.ssimfile  ssimfile:dev.vulnaccept  ctype:dev.Vulnaccept
+dmmeta.ssimfile  ssimfile:dev.vulnsev  ctype:dev.Vulnsev
 dmmeta.ssimfile  ssimfile:dmmeta.anonfld  ctype:dmmeta.Anonfld
 dmmeta.ssimfile  ssimfile:dmmeta.argvtype  ctype:dmmeta.Argvtype
 dmmeta.ssimfile  ssimfile:dmmeta.basepool  ctype:dmmeta.Basepool
@@ -145,6 +164,7 @@ dmmeta.ssimfile  ssimfile:dmmeta.fcast  ctype:dmmeta.Fcast
 dmmeta.ssimfile  ssimfile:dmmeta.fcmap  ctype:dmmeta.Fcmap
 dmmeta.ssimfile  ssimfile:dmmeta.fcmp  ctype:dmmeta.Fcmp
 dmmeta.ssimfile  ssimfile:dmmeta.fcompact  ctype:dmmeta.Fcompact
+dmmeta.ssimfile  ssimfile:dmmeta.fcompldir  ctype:dmmeta.Fcompldir
 dmmeta.ssimfile  ssimfile:dmmeta.fcond  ctype:dmmeta.Fcond
 dmmeta.ssimfile  ssimfile:dmmeta.fconst  ctype:dmmeta.Fconst
 dmmeta.ssimfile  ssimfile:dmmeta.fcurs  ctype:dmmeta.Fcurs

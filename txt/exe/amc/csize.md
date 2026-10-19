@@ -7,11 +7,11 @@ that reads or writes the protocol starts producing garbage.
 amc has three ssim tables that pin that layout at compile
 time:
 
-| Table             | What it asserts                                 |
-|-------------------|--------------------------------------------------|
-| `dmmeta.csize`    | The total size of a ctype in bytes.              |
-| `dmmeta.fldoffset`| The offset of a named field within a ctype.     |
-| `gendb.ctypelen` | The calculated length / alignment / pad-byte count of a ctype.  Auto-populated by amc, used by `Opt`/`Varlen` sizing. |
+| Table              | What it asserts |
+| ------------------ | --------------- |
+| `dmmeta.csize`     | The total size of a ctype in bytes. |
+| `dmmeta.fldoffset` | The offset of a named field within a ctype. |
+| `gendb.ctypelen`   | The calculated length / alignment / pad-byte count of a ctype.  Auto-populated by amc, used by `Opt`/`Varlen` sizing. |
 
 amc emits a `StaticCheck()` function per namespace that
 materializes each of these assertions as an `algo_assert` —
@@ -69,7 +69,7 @@ and fail the build.
 `gendb.ctypelen` is **calculated by amc**, not handwritten:
 
 | Attribute   | Source |
-|-------------|--------|
+| ----------- | ------ |
 | `len`       | Sum of field sizes, with alignment padding. |
 | `alignment` | Maximum alignment among fields. |
 | `padbytes`  | Total bytes of padding inserted. |

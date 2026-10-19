@@ -72,14 +72,14 @@ namespace acr_in { // gen:ns_print_proto
     inline static void   SizeCheck();
 } // gen:ns_print_proto
 
-// --- acr_in.FCtype.msghdr.CopyOut
+// --- acr_in.FCtype.base.CopyOut
 // Copy fields out of row
 void acr_in::ctype_CopyOut(acr_in::FCtype &row, dmmeta::Ctype &out) {
     out.ctype = row.ctype;
     out.comment = algo::Comment(row.comment);
 }
 
-// --- acr_in.FCtype.msghdr.CopyIn
+// --- acr_in.FCtype.base.CopyIn
 // Copy fields in to row
 void acr_in::ctype_CopyIn(acr_in::FCtype &row, dmmeta::Ctype &in) {
     row.ctype = in.ctype;
@@ -563,7 +563,7 @@ static void acr_in::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_in.Input'  signature:'16942bc05358733a4661b4df73c82009d59b018a'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_in.Input'  signature:'bcf9a761c453218cdb3097e404e4aa044cd3175c'");
 }
 
 // --- acr_in.FDb._db.InsertStrptrMaybe
@@ -3713,14 +3713,14 @@ void acr_in::FDb_Uninit() {
     // skip destruction in global scope
 }
 
-// --- acr_in.FDispsig.msghdr.CopyOut
+// --- acr_in.FDispsig.base.CopyOut
 // Copy fields out of row
 void acr_in::dispsig_CopyOut(acr_in::FDispsig &row, gendb::Dispsig &out) {
     out.dispsig = row.dispsig;
     out.signature = row.signature;
 }
 
-// --- acr_in.FDispsig.msghdr.CopyIn
+// --- acr_in.FDispsig.base.CopyIn
 // Copy fields in to row
 void acr_in::dispsig_CopyIn(acr_in::FDispsig &row, gendb::Dispsig &in) {
     row.dispsig = in.dispsig;
@@ -3742,7 +3742,7 @@ void acr_in::FDispsig_Uninit(acr_in::FDispsig& parent) {
     ind_dispsig_Remove(parent); // remove dispsig from index ind_dispsig
 }
 
-// --- acr_in.FField.msghdr.CopyOut
+// --- acr_in.FField.base.CopyOut
 // Copy fields out of row
 void acr_in::field_CopyOut(acr_in::FField &row, dmmeta::Field &out) {
     out.field = row.field;
@@ -3752,7 +3752,7 @@ void acr_in::field_CopyOut(acr_in::FField &row, dmmeta::Field &out) {
     out.comment = algo::Comment(row.comment);
 }
 
-// --- acr_in.FField.msghdr.CopyIn
+// --- acr_in.FField.base.CopyIn
 // Copy fields in to row
 void acr_in::field_CopyIn(acr_in::FField &row, dmmeta::Field &in) {
     row.field = in.field;
@@ -3798,7 +3798,7 @@ void acr_in::FField_Uninit(acr_in::FField& parent) {
     }
 }
 
-// --- acr_in.FFinput.msghdr.CopyOut
+// --- acr_in.FFinput.base.CopyOut
 // Copy fields out of row
 void acr_in::finput_CopyOut(acr_in::FFinput &row, dmmeta::Finput &out) {
     out.field = row.field;
@@ -3807,7 +3807,7 @@ void acr_in::finput_CopyOut(acr_in::FFinput &row, dmmeta::Finput &out) {
     out.comment = algo::Comment(row.comment);
 }
 
-// --- acr_in.FFinput.msghdr.CopyIn
+// --- acr_in.FFinput.base.CopyIn
 // Copy fields in to row
 void acr_in::finput_CopyIn(acr_in::FFinput &row, dmmeta::Finput &in) {
     row.field = in.field;
@@ -3826,7 +3826,7 @@ void acr_in::FFinput_Uninit(acr_in::FFinput& parent) {
     ind_finput_Remove(parent); // remove finput from index ind_finput
 }
 
-// --- acr_in.FNs.msghdr.CopyOut
+// --- acr_in.FNs.base.CopyOut
 // Copy fields out of row
 void acr_in::ns_CopyOut(acr_in::FNs &row, dmmeta::Ns &out) {
     out.ns = row.ns;
@@ -3835,7 +3835,7 @@ void acr_in::ns_CopyOut(acr_in::FNs &row, dmmeta::Ns &out) {
     out.comment = algo::Comment(row.comment);
 }
 
-// --- acr_in.FNs.msghdr.CopyIn
+// --- acr_in.FNs.base.CopyIn
 // Copy fields in to row
 void acr_in::ns_CopyIn(acr_in::FNs &row, dmmeta::Ns &in) {
     row.ns = in.ns;
@@ -3967,14 +3967,14 @@ void acr_in::FNsssimfile_Uninit(acr_in::FNsssimfile& parent) {
     }
 }
 
-// --- acr_in.FSsimfile.msghdr.CopyOut
+// --- acr_in.FSsimfile.base.CopyOut
 // Copy fields out of row
 void acr_in::ssimfile_CopyOut(acr_in::FSsimfile &row, dmmeta::Ssimfile &out) {
     out.ssimfile = row.ssimfile;
     out.ctype = row.ctype;
 }
 
-// --- acr_in.FSsimfile.msghdr.CopyIn
+// --- acr_in.FSsimfile.base.CopyIn
 // Copy fields in to row
 void acr_in::ssimfile_CopyIn(acr_in::FSsimfile &row, dmmeta::Ssimfile &in) {
     row.ssimfile = in.ssimfile;
@@ -4096,7 +4096,7 @@ void acr_in::FSsimfile_Uninit(acr_in::FSsimfile& parent) {
     ind_ssimfile_Remove(parent); // remove ssimfile from index ind_ssimfile
 }
 
-// --- acr_in.FSubstr.msghdr.CopyOut
+// --- acr_in.FSubstr.base.CopyOut
 // Copy fields out of row
 void acr_in::substr_CopyOut(acr_in::FSubstr &row, dmmeta::Substr &out) {
     out.field = row.field;
@@ -4104,7 +4104,7 @@ void acr_in::substr_CopyOut(acr_in::FSubstr &row, dmmeta::Substr &out) {
     out.srcfield = row.srcfield;
 }
 
-// --- acr_in.FSubstr.msghdr.CopyIn
+// --- acr_in.FSubstr.base.CopyIn
 // Copy fields in to row
 void acr_in::substr_CopyIn(acr_in::FSubstr &row, dmmeta::Substr &in) {
     row.field = in.field;
@@ -4120,14 +4120,14 @@ void acr_in::FSubstr_Uninit(acr_in::FSubstr& parent) {
     }
 }
 
-// --- acr_in.FTargdep.msghdr.CopyOut
+// --- acr_in.FTargdep.base.CopyOut
 // Copy fields out of row
 void acr_in::targdep_CopyOut(acr_in::FTargdep &row, dev::Targdep &out) {
     out.targdep = row.targdep;
     out.comment = algo::Comment(row.comment);
 }
 
-// --- acr_in.FTargdep.msghdr.CopyIn
+// --- acr_in.FTargdep.base.CopyIn
 // Copy fields in to row
 void acr_in::targdep_CopyIn(acr_in::FTargdep &row, dev::Targdep &in) {
     row.targdep = in.targdep;
@@ -4156,13 +4156,13 @@ void acr_in::FTargdep_Uninit(acr_in::FTargdep& parent) {
     }
 }
 
-// --- acr_in.FTarget.msghdr.CopyOut
+// --- acr_in.FTarget.base.CopyOut
 // Copy fields out of row
 void acr_in::target_CopyOut(acr_in::FTarget &row, dev::Target &out) {
     out.target = row.target;
 }
 
-// --- acr_in.FTarget.msghdr.CopyIn
+// --- acr_in.FTarget.base.CopyIn
 // Copy fields in to row
 void acr_in::target_CopyIn(acr_in::FTarget &row, dev::Target &in) {
     row.target = in.target;

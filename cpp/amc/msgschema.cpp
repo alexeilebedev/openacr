@@ -70,58 +70,82 @@ static bool ScalarArgQ(amc::FCtype &ctype) {
         || name == "bool" || name == "char" || name == "float" || name == "double";
 }
 
-// Append one leaf field row of MSG: dotted NAME at byte OFFSET, read as
-// ctype ARG of WIDTH bytes (for a fixed char array, the array length).
-// The row is returned so a caller can describe what the columns above cannot.
+// Append one field row of MSG: dotted NAME, laid out as FLDTYPE, holding ctype
+// ARG at byte OFFSET, with WIDTH and AUX read as FLDTYPE says (algo.Fldtype).
 //
-// ARG is a leaf scalar for every field with a width, and the element ctype for a varlen
-// tail, which has none: a tail of char is text and a tail of a message ctype is a run of
-// framed messages, and a reader of the row wants to be told which.
-static amc::FMsgfield &AddMsgfield(amc::FMsg &msg, algo::strptr name, int offset, algo::strptr arg, int width, bool bigend, bool varlen) {
+// ARG is a leaf scalar for every fixed field, and the element ctype of a varlen:
+// a varlen of char is text and a varlen of a message ctype is a run of framed
+// messages, and a reader of the row wants to be told which.
+static void AddMsgfield(amc::FMsg &msg, algo::strptr name, algo::Fldtype fldtype, algo::strptr arg, int offset, int width, int aux) {
     amc::FMsgfield &row = amc::msgfield_Alloc();
     row.msgfield = tempstr() << msg.ctype << "/" << name;
-    row.offset = offset;
+    row.fldtype = fldtype;
     row.arg = arg;
+    row.offset = offset;
     row.width = width;
-    row.bigend = bigend;
-    row.varlen = varlen;
+    row.aux = aux;
     (void)amc::msgfield_XrefMaybe(row);
-    return row;
 }
 
-// Say on ROW how the inline string of ctype ARG ends: an rpascal string by the
-// count in its last byte, a padded one where its padding begins.  The padding
-// character is written as its byte value, and a format that pads with nothing
-// writes nothing.
-static void StrtypeSet(amc::FMsgfield &row, amc::FCtype &arg) {
+// Return the layout of the inline string ctype ARG, and set PAD to its padding
+// byte: rpascal ends at the count in its last byte, rightpad where its padding
+// begins, and leftpad where its padding ends.  Set OK to false for any other
+// format, which no reader of the table decodes.
+static algo::Fldtype StrFldtypeGet(amc::FCtype &arg, int &pad, bool &ok) {
+    algo::Fldtype ret(algo_Fldtype_rpascal);
     ind_beg(amc::ctype_c_field_curs, field, arg) {
         if (field.c_smallstr) {
-            u64 pad = 0;
+            u64 padval = 0;
             algo::strptr expr = field.c_smallstr->pad.value;
-            row.strtype = field.c_smallstr->strtype;
-            if (ch_N(expr) > 0 && MsgtypeEvalMaybe(expr, pad)) {
-                row.pad = tempstr() << pad;
+            ok = ok && algo::Fldtype_ReadStrptrMaybe(ret, field.c_smallstr->strtype);
+            if (ch_N(expr) > 0 && MsgtypeEvalMaybe(expr, padval)) {
+                pad = int(padval);
             }
         }
     }ind_end;
+    return ret;
+}
+
+// Return how many fields of CTYPE a gendb.msgfield row describes: each
+// computed field, and each field with storage of its own that is not framing.
+static int MsgfieldN(amc::FCtype &ctype) {
+    int ret = 0;
+    ind_beg(amc::ctype_c_field_curs, field, ctype) {
+        bool stored = !FldfuncQ(field) && !field.c_typefld && !field.c_lenfld
+            && (field.reftype == dmmeta_Reftype_reftype_Val || field.reftype == dmmeta_Reftype_reftype_Inlary);
+        ret += field.c_cppfunc || stored ? 1 : 0;
+    }ind_end;
+    return ret;
 }
 
 // Walk the physical fields of CTYPE, advancing OFFSET past each one, and
 // classify every field as a leaf scalar, a fixed string, a nested struct
 // (recursed into with a dotted PREFIX), a varlen tail, or framing (the
-// typefld/lenfld the payload header already describes).  With EMIT set,
+// typefld/lenfld the payload header already describes).  A cppfunc field takes
+// no bytes and gets a row of its own: a reader that knows the field by name
+// computes it with the field's getter, and every other reader skips it.  With EMIT set,
 // append a gendb.msgfield row per leaf under MSG; without it, only
 // classify.  Returns false when some field cannot be represented — the
 // caller then derives no rows for the message at all, because a partial
 // layout would place later fields at wrong offsets and decode garbage.
-static bool WalkMsgfield(amc::FCtype &ctype, amc::FMsg *msg, algo::strptr prefix, int &offset, bool emit) {
+//
+// WHOLE says that PREFIX is the whole name of CTYPE's one data field.  A struct
+// of one data field, such as ams.ProcId around its value, stands for that
+// field, so ams.LogMsg's proc_id is the row ams.LogMsg/proc_id: the inner name
+// (proc_id.value) says nothing a reader wants to type when naming the field.
+static bool WalkMsgfield(amc::FCtype &ctype, amc::FMsg *msg, algo::strptr prefix, int &offset, bool emit, bool whole) {
     bool ok = true;
     ind_beg(amc::ctype_c_field_curs, field, ctype) {
+        if (ok && emit && field.c_cppfunc) {
+            tempstr name;
+            name << prefix << (whole ? algo::strptr() : name_Get(field));
+            AddMsgfield(*msg, name, algo::Fldtype(algo_Fldtype_cppfunc), field.p_arg->ctype, 0, 0, 0);
+        }
         if (ok && !FldfuncQ(field)) {
             amc::FCtype &arg = *field.p_arg;
             int size = arg.totsize_byte == 0 ? 1 : arg.totsize_byte;
             tempstr name;
-            name << prefix << name_Get(field);
+            name << prefix << (whole ? algo::strptr() : name_Get(field));
             if (field.reftype == dmmeta_Reftype_reftype_Base) {
                 // base fields are cloned into the derived ctype; the clones follow
             } else if (field.reftype == dmmeta_Reftype_reftype_Bitfld) {
@@ -130,17 +154,13 @@ static bool WalkMsgfield(amc::FCtype &ctype, amc::FMsg *msg, algo::strptr prefix
                 // an optional trailing message; it begins past the fixed
                 // layout this walk measures, and AddOpttail describes it
             } else if (field.reftype == dmmeta_Reftype_reftype_Varlen) {
-                // a varlen is the last field of its message, so what it holds cannot
-                // shift anything after it: the row says where the tail begins and the
-                // arg says what it is made of, whether that is a byte or a message
-                if (emit) {
-                    AddMsgfield(*msg, name, offset, arg.ctype, 0, false, true);
-                }
+                // the varlens follow the fixed layout and the end fields amc adds
+                // for them, so AddVarlen describes them once the walk is over
             } else if (field.reftype == dmmeta_Reftype_reftype_Inlary) {
                 bool fixed_char = FixaryQ(field) && arg.ctype == "char" && field.c_inlary;
                 if (fixed_char) {
                     if (emit) {
-                        AddMsgfield(*msg, name, offset, arg.ctype, size * field.c_inlary->max, false, false);
+                        AddMsgfield(*msg, name, algo::Fldtype(algo_Fldtype_fixed), arg.ctype, offset, size * field.c_inlary->max, 0);
                     }
                     offset += size * field.c_inlary->max;
                 } else {
@@ -154,18 +174,21 @@ static bool WalkMsgfield(amc::FCtype &ctype, amc::FMsg *msg, algo::strptr prefix
                     // framing; the payload header row describes it
                 } else if (ScalarArgQ(arg)) {
                     if (emit) {
-                        AddMsgfield(*msg, name, offset, arg.ctype, size, field.c_fbigend != NULL, false);
+                        algo::Fldtype fldtype(field.c_fbigend ? algo_Fldtype_fixed_be : algo_Fldtype_fixed);
+                        AddMsgfield(*msg, name, fldtype, arg.ctype, offset, size, 0);
                     }
                 } else if (arg.c_cstr) {
-                    if (emit) {
-                        amc::FMsgfield &row = AddMsgfield(*msg, name, offset, "char", size, false, false);
-                        StrtypeSet(row, arg);
+                    int pad = 0;
+                    algo::Fldtype fldtype = StrFldtypeGet(arg, pad, ok);
+                    if (emit && ok) {
+                        AddMsgfield(*msg, name, fldtype, "char", offset, size, pad);
                     }
                 } else if (c_field_N(arg) > 0) {
+                    bool one = MsgfieldN(arg) == 1;
                     tempstr subprefix;
-                    subprefix << name << ".";
+                    subprefix << name << (one ? "" : ".");
                     int subo = offset;
-                    ok = WalkMsgfield(arg, msg, subprefix, subo, emit);
+                    ok = WalkMsgfield(arg, msg, subprefix, subo, emit, one);
                 } else {
                     ok = false;
                 }
@@ -236,8 +259,35 @@ static amc::FPayloadhdr *GetOrCreatePayloadhdr(amc::FCtype &hdr) {
 static void AddOpttail(amc::FMsg &msg, amc::FCtype &ctype) {
     ind_beg(amc::ctype_c_field_curs, field, ctype) {
         if (field.reftype == dmmeta_Reftype_reftype_Opt && GetOrCreatePayloadhdr(*field.p_arg)) {
-            AddMsgfield(msg, name_Get(field), ctype.totsize_byte, field.p_arg->ctype, 0, false, true);
+            AddMsgfield(msg, name_Get(field), algo::Fldtype(algo_Fldtype_varlen), field.p_arg->ctype, ctype.totsize_byte, 0, 0);
         }
+    }ind_end;
+}
+
+// Describe the varlen fields of CTYPE as fields of MSG, whose length field is
+// LENWIDTH bytes wide.
+//
+// Consider a message with a varlen key followed by a varlen payload.  The two
+// share one area past the fixed layout, and the message says where the key
+// stops in a field amc adds to it, key_end, which no dmmeta.field names.  amc adds one such
+// end field per varlen but the last, as wide as the length field, together
+// after the fixed fields, and each holds an offset into the varlen area.  So
+// the area begins at the message's full size, and a varlen runs from the end
+// field before it, or from the area's start, to its own end field, or to the
+// end of the message.  A row says all of that with offsets: OFFSET is the
+// area's start, WIDTH the offset of the end field it starts at, and AUX the
+// offset of the end field it ends at.
+static void AddVarlen(amc::FMsg &msg, amc::FCtype &ctype, int lenwidth) {
+    int nvarlen = amc::zd_varlenfld_N(ctype);
+    int base = ctype.totsize_byte;
+    int idx = 0;
+    ind_beg(amc::ctype_zd_varlenfld_curs, field, ctype) {
+        int endoff = base - (nvarlen - 1 - idx) * lenwidth;
+        bool last = idx == nvarlen - 1;
+        algo::Fldtype fldtype(last ? algo_Fldtype_varlen : algo_Fldtype_varlen2);
+        int begfld = idx == 0 ? 0 : endoff - lenwidth;
+        AddMsgfield(msg, name_Get(field), fldtype, field.p_arg->ctype, base, begfld, last ? 0 : endoff);
+        idx++;
     }ind_end;
 }
 
@@ -258,7 +308,7 @@ void amc::gen_msgschema() {
             u64 typeval = 0;
             bool typeok = MsgtypeEvalMaybe(ctype.c_msgtype->type.value, typeval);
             int endoffset = 0;
-            bool layoutok = payloadhdr && typeok && WalkMsgfield(ctype, NULL, "", endoffset, false);
+            bool layoutok = payloadhdr && typeok && WalkMsgfield(ctype, NULL, "", endoffset, false, false);
             if (!layoutok) {
                 verblog("amc.msgschema_skip"
                         << Keyval("ctype", ctype.ctype)
@@ -280,7 +330,8 @@ void amc::gen_msgschema() {
                          << Keyval("comment", "msgtype numbers must be unique within one payload header"));
                 if (unique && amc::msg_XrefMaybe(msg)) {
                     int offset = 0;
-                    (void)WalkMsgfield(ctype, &msg, "", offset, true);
+                    (void)WalkMsgfield(ctype, &msg, "", offset, true, false);
+                    AddVarlen(msg, ctype, payloadhdr->lenwidth);
                     AddOpttail(msg, ctype);
                 }
             }

@@ -99,8 +99,6 @@ void abt_md::mdsection_Options(abt_md::FFileSection &section) {
 
 // -----------------------------------------------------------------------------
 
-// -----------------------------------------------------------------------------
-
 // Update title of document
 // - For a page whose subject set a title, use that title
 // - For namespace, pull namespace name and comment from ns table

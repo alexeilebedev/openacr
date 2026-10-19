@@ -38,11 +38,11 @@ No spec table; Malloc has no parameters.
 
 Source: `cpp/amc/malloc.cpp`.
 
-| Tfunc                  | Generated function                                                  | Effect |
-|------------------------|---------------------------------------------------------------------|--------|
-| `Malloc.AllocMem`      | `void* <name>_AllocMem(size_t n)`                                   | `malloc(n)`; returns NULL on failure. |
-| `Malloc.ReallocMem`    | `void* <name>_ReallocMem(void* mem, size_t old, size_t new)`        | `realloc(mem, new)`; NULL leaves `mem` untouched. |
-| `Malloc.FreeMem`       | `void <name>_FreeMem(void* mem, size_t n)`                          | `free(mem)`; the size is taken but unused. |
+| Tfunc               | Generated function                                           | Effect |
+| ------------------- | ------------------------------------------------------------ | ------ |
+| `Malloc.AllocMem`   | `void* <name>_AllocMem(size_t n)`                            | `malloc(n)`; returns NULL on failure. |
+| `Malloc.ReallocMem` | `void* <name>_ReallocMem(void* mem, size_t old, size_t new)` | `realloc(mem, new)`; NULL leaves `mem` untouched. |
+| `Malloc.FreeMem`    | `void <name>_FreeMem(void* mem, size_t n)`                   | `free(mem)`; the size is taken but unused. |
 
 Plus the full `Pool.*` family (Alloc, AllocMaybe, AllocVarlen,
 Delete, …).

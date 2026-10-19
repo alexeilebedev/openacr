@@ -434,6 +434,13 @@ void ams_sendtest::Main() {
          << Keyval("channel_window", _db.cmdline.channel_window)
          << Keyval("max_msg_size", lib_ams::_db.max_msg_size)
          << Keyval("comment", "a channel window must exceed the ring's largest message"));
+    // The board refuses a message longer than one chunk, and the writer would
+    // retry it until -timeout, so the run is refused before any process starts.
+    vrfy(!_db.cmdline.board || u64(_db.cmdline.msgsize_max) + 64 <= u64(_db.cmdline.chunk_size)
+         , tempstr() << "ams_sendtest.badchunk"
+         << Keyval("chunk_size", _db.cmdline.chunk_size)
+         << Keyval("msgsize_max", _db.cmdline.msgsize_max)
+         << Keyval("comment", "a board chunk must hold the largest message"));
     // A parked writer is woken by a signal, and in polling mode nothing sends one;
     // a blocking send waits in place and never parks.
     vrfy(!_db.cmdline.parkwrite || (_db.cmdline.signaled && !_db.cmdline.blocking && !_db.cmdline.board)
@@ -455,6 +462,11 @@ void ams_sendtest::Main() {
     if (_db.cmdline.signaled) {
         lib_ams::SetSignaledMode(true);
     }
+    // a platform with no signal wake leaves signaled mode off, and a writer
+    // parked there would sleep out the time limit
+    vrfy(!_db.cmdline.parkwrite || lib_ams::_db.signaled
+         , tempstr() << "ams_sendtest.nowake"
+         << Keyval("comment", "-parkwrite needs the signal wake, which this platform lacks"));
 
     // setup:
     // log0: output for root process.  In unicast mode every reader gets a lane

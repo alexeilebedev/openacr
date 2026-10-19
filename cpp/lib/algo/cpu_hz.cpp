@@ -80,20 +80,36 @@ static double GetCpuHzSysdev(void) {
 
 // -----------------------------------------------------------------------------
 
-// The kernel's calibrated TSC rate in Hz, or 0 when the kernel does not
-// export it.  /sys/devices/system/cpu/cpu0/tsc_freq_khz states the exact
-// figure the kernel calibrated at boot; kernels carrying the tsc_freq_khz
-// patch (amazon linux) or the tsc_freq_khz module provide it, mainline
-// kernels do not.  This file is the first of the three statements of the
-// counter's rate a process that schedules on the counter will accept, the
-// others being a host file and an environment variable the caller names --
-// either way the rate is read, never measured.
-static double GetCpuHzKernel(void) {
+// Return the counter's rate in Hz as the machine states it, or 0 when it
+// states none.  On x86 the statement is the kernel's calibrated TSC rate:
+// /sys/devices/system/cpu/cpu0/tsc_freq_khz states the exact figure the kernel
+// calibrated at boot; kernels carrying the tsc_freq_khz patch (amazon linux)
+// or the tsc_freq_khz module provide it, mainline kernels do not.  On Linux ARM
+// the counter is the generic timer, and the architecture fixes its rate and
+// states it in cntfrq_el0, which any process reads.  On macOS ARM the counter is
+// mach_absolute_time, whose rate the Mach timebase states.  This is the first of the
+// three statements of the counter's rate a process that schedules on the
+// counter will accept, the others being a host file and an environment
+// variable the caller names -- either way the rate is read, never measured.
+double algo_lib::GetCpuHzKernel() {
+    double hz = 0;
+#if defined(__MACH__) && defined(__aarch64__)
+    mach_timebase_info_data_t timebase;
+    if (mach_timebase_info(&timebase) == KERN_SUCCESS && timebase.numer != 0) {
+        hz = 1e9 * double(timebase.denom) / double(timebase.numer);
+    }
+#elif defined(__aarch64__)
+    u64 cntfrq = 0;
+    asm volatile ("mrs %0, cntfrq_el0" : "=r" (cntfrq));
+    hz = double(cntfrq);
+#else
     i32 freq_khz = 0;
     tempstr value = algo::FileToString("/sys/devices/system/cpu/cpu0/tsc_freq_khz", algo::FileFlags());
     algo::StringIter iter(value);
     (void)TryParseI32(iter, freq_khz);
-    return double(freq_khz)*1e3;
+    hz = double(freq_khz)*1e3;
+#endif
+    return hz;
 }
 
 // -----------------------------------------------------------------------------
@@ -138,6 +154,8 @@ static bool CpuHzRangeQ(double hz) {
 // Install HZ as the process's cycles<->seconds calibration: refuse an
 // implausible value, set the conversion constants, and re-anchor the
 // scheduler clock so elapsed time counts from the calibration point.
+// REJECTED names the figures of the sources tried before HZ, which a refusal
+// prints beside it, since the first of them is the one an operator fixes.
 //
 // The refusal states the range it applied, because the rate that lands here
 // came from somewhere an operator can go and change -- a kernel export, a
@@ -145,10 +163,11 @@ static bool CpuHzRangeQ(double hz) {
 // which end of the range it missed.  An emulated guest is where this bites:
 // Bochs presents a 40 MHz processor, four times the floor, and a slower one
 // would put every process of a cluster out on a line that named no bound.
-void algo_lib::ApplyCpuHz(double hz) {
+void algo_lib::ApplyCpuHz(double hz, algo::strptr rejected DFLTVAL("")) {
     if (!CpuHzRangeQ(hz)) {
         FatalErrorExit(Zeroterm(tempstr()<<"algo_lib.bad_hz"
                                 <<Keyval("hz",hz)
+                                <<Keyval("rejected",rejected)
                                 <<Keyval("min_hz",u64(10000000))
                                 <<Keyval("max_hz",u64(10000000000ULL))
                                 <<Keyval("comment","the counter's stated rate is outside the range this process schedules on")));
@@ -167,6 +186,7 @@ void algo_lib::InitCpuHz() {
     (void)&GetCpuHzCpuinfo;
     (void)&GetCpuHzSysdev;
     double hz = 0;
+    tempstr rejected;
 #if __FreeBSD__>0
     uint64_t freq = 0;
     size_t size = sizeof(freq);
@@ -218,20 +238,23 @@ void algo_lib::InitCpuHz() {
     // counter demands the kernel figure instead (RequireKernelCpuHz), and it
     // is there that a counter no source vouches for is refused.
     //
-    // The first source whose figure is a rate in range is taken.  A guest can
-    // report a boost ceiling no processor reaches -- a GitHub runner stated
-    // 10.5GHz -- and a figure that describes P-states is no reason to refuse to
-    // start, when the next source may state a plausible one.
+    // The kernel's figure states the counter's rate, so where the export
+    // exists it is installed and an implausible one is refused.  Between the
+    // two P-state figures the first in range is taken: a guest can report a
+    // boost ceiling no processor reaches -- a GitHub runner stated 10.5GHz --
+    // and a figure that only describes P-states is no reason to refuse to
+    // start when cpuinfo states a plausible one.
     tempstr cpuinfo(FileToString("/proc/cpuinfo", algo::FileFlags()));
-    hz = GetCpuHzKernel();
-    if (!CpuHzRangeQ(hz)) {
+    hz = algo_lib::GetCpuHzKernel();
+    if (hz == 0) {
         hz = GetCpuHzSysdev();
-    }
-    if (!CpuHzRangeQ(hz)) {
-        hz = GetCpuHzCpuinfo(cpuinfo);
+        if (!CpuHzRangeQ(hz)) {
+            rejected << "sysdev:" << hz;
+            hz = GetCpuHzCpuinfo(cpuinfo);
+        }
     }
 #endif
-    ApplyCpuHz(hz);
+    ApplyCpuHz(hz, rejected);
 }
 
 // -----------------------------------------------------------------------------
@@ -304,7 +327,7 @@ void algo_lib::InitCpuHz() {
 // `atf_tsc` reports the calibration sources unconditionally, which is where an
 // operator confirms which one a process would take.
 void algo_lib::RequireKernelCpuHz(strptr tscfreq_path, strptr tscfreq_env) {
-    double kernel_hz = GetCpuHzKernel();
+    double kernel_hz = algo_lib::GetCpuHzKernel();
     double env_hz = GetCpuHzEnv(tscfreq_env);
     double host_hz = GetCpuHzHost(tscfreq_path);
     double stated_hz = env_hz != 0 ? env_hz : host_hz;

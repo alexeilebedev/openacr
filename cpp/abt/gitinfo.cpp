@@ -52,7 +52,7 @@
 // format git renders is a format something here has to parse back, and the two would then
 // have to agree about the timezone as well.
 static void ReadGitfact(tempstr &shortref, tempstr &gitref, algo::UnTime &commitdate) {
-    tempstr out = SysEval("git log -1 --date=short --format=%ad.%h%n%H%n%ct 2>/dev/null", algo::FailokQ(true), 1024);
+    tempstr out = SysEval("git log -1 --date=short --format=%ad.%h%n%H%n%ct 2>/dev/null", algo::FailokQ(true));
     int line_n = 0;
     ind_beg(algo::Line_curs,line,out) {
         u64 secs = 0;

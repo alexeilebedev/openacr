@@ -1,0 +1,5 @@
+# start bash cmd:"bash -c 'cd $tempdir && mkdir -p bed/rose bed/rosemary bed/1511-userproc-pidns && touch bed/roseleaf && $$OLDPWD/$bindir/acr_compl -schema:$$OLDPWD/test/acr_compl.schema.ssim -data:$$OLDPWD/test/acr_compl.schema.ssim -line:\"atf_cmdline -dflower:ro\" -type:63'"
+# eof bash
+bash -> rose
+bash -> rosemary
+# exit bash code:0

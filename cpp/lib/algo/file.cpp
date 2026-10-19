@@ -1214,8 +1214,8 @@ void algo_lib::CloseInheritedFd() {
 // read the machine's total would size itself for eight cores while pinned to two.
 // So the affinity mask is the reading, and the machine's online count is the
 // fallback for a kernel that refuses it.  The mask is a Linux facility, and
-// `cpu_set_t` exists nowhere else, so on every other system the online count is
-// the whole answer.
+// macOS's stand-in refuses every call, so on every other system the online
+// count is the whole answer.
 i32 algo::GetNcore() {
     i32 ret = 0;
 #ifdef __linux__

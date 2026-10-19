@@ -23,8 +23,12 @@
 #include "include/apm.h"
 
 // Set the selected package's origin and baseref from the command line, and
-// record this tree's HEAD as localref: -reset with -ref closes the sync loop
-// after a push, when the origin's new commit is the projection of HEAD.
+// record this tree's HEAD as localref when the origin's commit is the
+// projection of HEAD: -reset with -ref closes the sync loop after a push.
+// When the two disagree on a file -- this tree gained one after the
+// publication, or the destination dropped one that this tree still has -- no
+// pair exists, and localref is left empty, with each such file reported as
+// apm.syncdrift and the row as apm.unpaired.
 // The three values form the dev.pkgupstream row of the destination -dest names,
 // which the reset creates when the package has no such row; the destination
 // defaults to the package's only one, or to "origin" for a package with none.
@@ -51,7 +55,16 @@ void apm::Main_Reset() {
             tempstr gitref = FetchPackageOrigin(out.pkgupstream,out.origin,_db.cmdline.ref);
             vrfy(gitref!="", tempstr()<<"failed to resolve "<<_db.cmdline.ref<<" in "<<out.origin);
             out.baseref=gitref;
-            out.localref=RevParseMaybe("HEAD");
+            tempstr head(RevParseMaybe("HEAD"));
+            int ndrift = CountSyncDrift(package,out.pkgupstream,out.origin,gitref,head);
+            out.localref = ndrift == 0 ? algo::strptr(head) : algo::strptr();
+            if (ndrift > 0) {
+                prlog("apm.unpaired"
+                      <<Keyval("pkgupstream",out.pkgupstream)
+                      <<Keyval("baseref",gitref)
+                      <<Keyval("ndrift",ndrift)
+                      <<Keyval("comment","HEAD's projection is not the origin at baseref, so localref is left empty"));
+            }
         }
         acrscript << out << eol;
     }ind_end;

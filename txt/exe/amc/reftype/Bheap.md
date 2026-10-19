@@ -25,17 +25,17 @@ is reversed (e.g. via a `dmmeta.fcmp`).
 State in the **parent** ctype (see `tclass_Bheap` in
 `cpp/amc/bheap.cpp`):
 
-| Field (parent)       | Type   | Meaning                                                |
-|----------------------|--------|--------------------------------------------------------|
-| `<name>_elems`       | `T**`  | array of pointers ordered as a binary heap by `sortfld` |
-| `<name>_n`           | `i32`  | number of elements in the heap; with a head, `_nrun` and `_nheap` |
-| `<name>_max`         | `i32`  | capacity in pointers before realloc                     |
+| Field (parent) | Type  | Meaning |
+| -------------- | ----- | ------- |
+| `<name>_elems` | `T**` | array of pointers ordered as a binary heap by `sortfld` |
+| `<name>_n`     | `i32` | number of elements in the heap; with a head, `_nrun` and `_nheap` |
+| `<name>_max`   | `i32` | capacity in pointers before realloc |
 
 State in the **element** ctype:
 
-| Field (element)   | Type | Meaning                                              |
-|-------------------|------|------------------------------------------------------|
-| `<xfname>_idx`    | `i32`| current position in the heap array; -1 = not in heap |
+| Field (element) | Type  | Meaning |
+| --------------- | ----- | ------- |
+| `<xfname>_idx`  | `i32` | current position in the heap array; -1 = not in heap |
 
 The element's `Init` is augmented to set `idx=-1`.  The back-
 pointer makes `Remove` and `Reheap` O(log N) — you locate the
@@ -122,12 +122,12 @@ active.  amc refuses `fillcurs` on a Bheap without a head.
 `atf_amc -amctest:PerfBheapHead` runs one scenario against a Bheap, a Bheap with a head of
 32 rows, and an Atree.  With four million rows, on an AMD EPYC 7702P:
 
-|Workload|nhead 1|nhead 32|
-|---|---|---|
-|book: 16 levels below all others, churned by pops and cancels|~125 ns|~45 ns|
-|depth: the book workload plus a walk of the best 10 rows|~275 ns|~75 ns|
-|pop the first row, push it back with a later key|~1.1 µs|~1.1 µs|
-|change a random row's key, Reheap|~290 ns|~290 ns|
+| Workload                                                      | nhead 1 | nhead 32 |
+| ------------------------------------------------------------- | ------- | -------- |
+| book: 16 levels below all others, churned by pops and cancels | ~125 ns | ~45 ns |
+| depth: the book workload plus a walk of the best 10 rows      | ~275 ns | ~75 ns |
+| pop the first row, push it back with a later key              | ~1.1 µs | ~1.1 µs |
+| change a random row's key, Reheap                             | ~290 ns | ~290 ns |
 
 A head helps when the traffic concentrates on a band of the best rows that fits in it, as
 in an order book or a deadline queue whose near deadlines keep moving, so pick an `nhead`
@@ -175,34 +175,34 @@ Optional:
 
 Source: `cpp/amc/bheap.cpp`.
 
-| Tfunc                  | Generated function                                       | Effect |
-|------------------------|----------------------------------------------------------|--------|
-| `Bheap.Init`           | `<name>_Init(P&)` (macro)                                | Zero `_elems`, the counts and `_max`.  No initial allocation. |
-| `Bheap.Uninit`         | `<name>_Uninit(P&)` (macro)                              | Free the pointer array (no-op for global FDb). |
-| `Bheap.N`              | `i32 <name>_N(const P&)`                                 | Count. |
-| `Bheap.EmptyQ`         | `bool <name>_EmptyQ(P&)`                                 | `_n == 0`. |
-| `Bheap.First`          | `T* <name>_First(P&)`                                    | Pointer to top (min) element; NULL if empty. |
-| `Bheap.RemoveFirst`    | `T* <name>_RemoveFirst(P&)`                              | Pop the top, sift down; return removed pointer. |
-| `Bheap.Insert`         | `void <name>_Insert(P&, T& row)`                         | Add `row`; no-op if already in heap. |
-| `Bheap.Remove`         | `void <name>_Remove(P&, T& row)`                         | Remove `row` via its back-pointer; no-op if not in heap. |
-| `Bheap.RemoveAll`      | `void <name>_RemoveAll(P&)`                              | Mark every element `idx=-1`, set `_n=0`.  Keeps the array. |
-| `Bheap.InBheapQ`       | `bool <xfname>_InBheapQ(T& row)`                         | `row.<xfname>_idx != -1`. |
-| `Bheap.Reheap`         | `i32 <name>_Reheap(P&, T& row)`                          | Insert or re-sift `row` to its correct position; returns new index. |
-| `Bheap.ReheapFirst`    | `i32 <name>_ReheapFirst(P&)`                             | Re-sift the top element after its key changed in place; UB if empty. |
-| `Bheap.Set`            | `void <sortfld>_Set(P&, T& row, K new_key)`              | Write `row.<sortfld>=new_key`, then `Reheap` (or `Remove` if the xref's `inscond` is now false). |
-| `Bheap.SetIfBetter`    | `void <sortfld>_SetIfBetter(P&, T& row, K new_key)`      | Same as Set, but only writes when `new_key` is strictly better than the current key. |
-| `Bheap.Cascdel`        | (private)                                                | Pop from the back and `Delete` each row.  Emitted when xref has `cascdel:Y`. |
-| `Bheap.Reserve`        | `void <name>_Reserve(P&, i32 n)`                         | Grow the pointer array so that `n` *more* elements would fit; doubling growth. |
-| `Bheap.Compact`        | `void <name>_Compact(P&)`                                | Halve the pointer array while the rows fill less than a quarter of it, returning memory to the base pool. |
-| `Bheap.Dealloc`        | (private)                                                | Free the pointer array unconditionally. |
-| `Bheap.Upheap`         | (private) `<name>_Upheap(P&, T&, i32)`                   | Sift-up helper. |
-| `Bheap.Downheap`       | (private) `<name>_Downheap(P&, T&, i32)`                 | Sift-down helper. |
-| `Bheap.ElemLt`         | (private) `<name>_ElemLt(P&, T&, T&)`                    | Comparator: `a < b` by sortfld. |
-| `Bheap.ElemLtval`      | (private) `<name>_ElemLtval(P&, T&, const K&)`           | Compare row's key against a raw value (used by SetIfBetter). |
-| `Bheap.curs`           | `<P>_<name>_curs` + `_Reset/_ValidQ/_Next/_Access`       | Cursor that returns the heap in sorted order through a helper heap; the heap is unchanged.  With a head, it walks the run in place first. |
-| `Bheap.unordcurs`      | `<P>_<name>_unordcurs` + accessors *(opt-in)*            | Cursor that iterates the underlying array in arbitrary order — does **not** modify the heap.  Request it with a `dmmeta.fcurs` row, see [cursors](/txt/exe/amc/reftype.md#cursors). |
-| `Bheap.fillcurs`       | `<P>_<name>_fillcurs` + accessors *(opt-in, head only)*  | Sorted cursor that promotes heap rows into the run as it walks; nothing else may walk the heap meanwhile. |
-| `Bheap.RunInsert`, `RunRemove`, `RemoveRoot`, `Demote`, `InsertImpl`, `RemoveImpl` | (private) | The run's helpers; generated only with a head.  `Promote` exists only beside a `fillcurs`. |
+| Tfunc                                                                              | Generated function                                      | Effect |
+| ---------------------------------------------------------------------------------- | ------------------------------------------------------- | ------ |
+| `Bheap.Init`                                                                       | `<name>_Init(P&)` (macro)                               | Zero `_elems`, the counts and `_max`.  No initial allocation. |
+| `Bheap.Uninit`                                                                     | `<name>_Uninit(P&)` (macro)                             | Free the pointer array (no-op for global FDb). |
+| `Bheap.N`                                                                          | `i32 <name>_N(const P&)`                                | Count. |
+| `Bheap.EmptyQ`                                                                     | `bool <name>_EmptyQ(P&)`                                | `_n == 0`. |
+| `Bheap.First`                                                                      | `T* <name>_First(P&)`                                   | Pointer to top (min) element; NULL if empty. |
+| `Bheap.RemoveFirst`                                                                | `T* <name>_RemoveFirst(P&)`                             | Pop the top, sift down; return removed pointer. |
+| `Bheap.Insert`                                                                     | `void <name>_Insert(P&, T& row)`                        | Add `row`; no-op if already in heap. |
+| `Bheap.Remove`                                                                     | `void <name>_Remove(P&, T& row)`                        | Remove `row` via its back-pointer; no-op if not in heap. |
+| `Bheap.RemoveAll`                                                                  | `void <name>_RemoveAll(P&)`                             | Mark every element `idx=-1`, set `_n=0`.  Keeps the array. |
+| `Bheap.InBheapQ`                                                                   | `bool <xfname>_InBheapQ(T& row)`                        | `row.<xfname>_idx != -1`. |
+| `Bheap.Reheap`                                                                     | `i32 <name>_Reheap(P&, T& row)`                         | Insert or re-sift `row` to its correct position; returns new index. |
+| `Bheap.ReheapFirst`                                                                | `i32 <name>_ReheapFirst(P&)`                            | Re-sift the top element after its key changed in place; UB if empty. |
+| `Bheap.Set`                                                                        | `void <sortfld>_Set(P&, T& row, K new_key)`             | Write `row.<sortfld>=new_key`, then `Reheap` (or `Remove` if the xref's `inscond` is now false). |
+| `Bheap.SetIfBetter`                                                                | `void <sortfld>_SetIfBetter(P&, T& row, K new_key)`     | Same as Set, but only writes when `new_key` is strictly better than the current key. |
+| `Bheap.Cascdel`                                                                    | (private)                                               | Pop from the back and `Delete` each row.  Emitted when xref has `cascdel:Y`. |
+| `Bheap.Reserve`                                                                    | `void <name>_Reserve(P&, i32 n)`                        | Grow the pointer array so that `n` *more* elements would fit; doubling growth. |
+| `Bheap.Compact`                                                                    | `void <name>_Compact(P&)`                               | Halve the pointer array while the rows fill less than a quarter of it, returning memory to the base pool. |
+| `Bheap.Dealloc`                                                                    | (private)                                               | Free the pointer array unconditionally. |
+| `Bheap.Upheap`                                                                     | (private) `<name>_Upheap(P&, T&, i32)`                  | Sift-up helper. |
+| `Bheap.Downheap`                                                                   | (private) `<name>_Downheap(P&, T&, i32)`                | Sift-down helper. |
+| `Bheap.ElemLt`                                                                     | (private) `<name>_ElemLt(P&, T&, T&)`                   | Comparator: `a < b` by sortfld. |
+| `Bheap.ElemLtval`                                                                  | (private) `<name>_ElemLtval(P&, T&, const K&)`          | Compare row's key against a raw value (used by SetIfBetter). |
+| `Bheap.curs`                                                                       | `<P>_<name>_curs` + `_Reset/_ValidQ/_Next/_Access`      | Cursor that returns the heap in sorted order through a helper heap; the heap is unchanged.  With a head, it walks the run in place first. |
+| `Bheap.unordcurs`                                                                  | `<P>_<name>_unordcurs` + accessors *(opt-in)*           | Cursor that iterates the underlying array in arbitrary order — does **not** modify the heap.  Request it with a `dmmeta.fcurs` row, see [cursors](/txt/exe/amc/reftype.md#cursors). |
+| `Bheap.fillcurs`                                                                   | `<P>_<name>_fillcurs` + accessors *(opt-in, head only)* | Sorted cursor that promotes heap rows into the run as it walks; nothing else may walk the heap meanwhile. |
+| `Bheap.RunInsert`, `RunRemove`, `RemoveRoot`, `Demote`, `InsertImpl`, `RemoveImpl` | (private)                                               | The run's helpers; generated only with a head.  `Promote` exists only beside a `fillcurs`. |
 
 ### Memory model
 <a href="#memory-model"></a>

@@ -1,0 +1,110 @@
+#!/usr/bin/env bash
+# Copyright (C) 2026 AlgoX2 Corp
+#
+# License: Apache
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# amc-update-schema -- rewrite ssim data from the pre-ffunc schema to dmmeta.ffunc.
+# The commit that introduced dmmeta.ffunc removed several tables/columns that amc
+# used to consume.  If you carry ssim records in the old form (in a branch, a
+# downstream repo, or pending changes), run this script once after merging that
+# commit to rewrite them; amc no longer upgrades the schema on the fly.
+# Rewrites (all into dmmeta.ffunc, pkey <field>.<name>):
+# dmmeta.fcb        fcb:<field>/<cbtype>  -> ffunc:<field>.<cbtype>    extrn:Y
+# dmmeta.findrem    field:<field>         -> ffunc:<field>.FindRemove  extrn:N
+# dmmeta.fcleanup   field:<field>         -> ffunc:<field>.Cleanup     extrn:Y
+# dmmeta.fuserinit  field:<field>         -> ffunc:<field>.Userinit    extrn:Y
+# dmmeta.fbuf       fbuftype:BytebufExtern-> fbuftype:Bytebuf + ffunc:<field>.ScanMsg extrn:Y
+# dmmeta.finput     ...  extrn:Y          -> ffunc:<field>.{Input,InputMaybe} extrn:Y
+# (the extrn column is dropped from finput)
+# amcdb.tcb         (whole table)         -> removed
+# Usage: amc-update-schema [DATADIR]   (DATADIR defaults to ./data)
+# Idempotent: tables already migrated (file absent / column gone) are skipped.
+# After running, regenerate canonical form: amc && acr -check % -x
+
+set -euo pipefail
+
+data="${1:-data}"
+dm="$data/dmmeta"
+ffunc="$dm/ffunc.ssim"
+userfunc="$dm/userfunc.ssim"
+
+emit() { printf '%s\n' "$1" >> "$ffunc"; }
+log()  { printf 'amc-update-schema  %s\n' "$1" >&2; }
+
+[ -d "$dm" ] || { log "no $dm directory -- nothing to do"; exit 0; }
+touch "$ffunc"
+
+# --- dmmeta.fcb -> ffunc/<cbtype> extrn:Y  (the '/' separator becomes '.') ---
+if [ -s "$dm/fcb.ssim" ]; then
+    sed -E 's#^dmmeta\.fcb[[:space:]]+fcb:([^ ]*)/([^ /]*)#dmmeta.ffunc  ffunc:\1.\2  extrn:Y#' "$dm/fcb.ssim" >> "$ffunc"
+    log "migrated $(grep -c . "$dm/fcb.ssim" || true) fcb record(s)"
+fi
+rm -f "$dm/fcb.ssim"
+
+# --- dmmeta.findrem -> ffunc/FindRemove extrn:N (amc generates the body) ---
+if [ -s "$dm/findrem.ssim" ]; then
+    sed -E 's#^dmmeta\.findrem[[:space:]]+field:([^ ]*)#dmmeta.ffunc  ffunc:\1.FindRemove  extrn:N#' "$dm/findrem.ssim" >> "$ffunc"
+    log "migrated $(grep -c . "$dm/findrem.ssim" || true) findrem record(s)"
+fi
+rm -f "$dm/findrem.ssim"
+
+# --- dmmeta.fcleanup -> ffunc/Cleanup extrn:Y ---
+if [ -s "$dm/fcleanup.ssim" ]; then
+    sed -E 's#^dmmeta\.fcleanup[[:space:]]+field:([^ ]*)#dmmeta.ffunc  ffunc:\1.Cleanup  extrn:Y#' "$dm/fcleanup.ssim" >> "$ffunc"
+    log "migrated $(grep -c . "$dm/fcleanup.ssim" || true) fcleanup record(s)"
+fi
+rm -f "$dm/fcleanup.ssim"
+
+# --- dmmeta.fuserinit -> ffunc/Userinit extrn:Y ---
+if [ -s "$dm/fuserinit.ssim" ]; then
+    sed -E 's#^dmmeta\.fuserinit[[:space:]]+field:([^ ]*)#dmmeta.ffunc  ffunc:\1.Userinit  extrn:Y#' "$dm/fuserinit.ssim" >> "$ffunc"
+    log "migrated $(grep -c . "$dm/fuserinit.ssim" || true) fuserinit record(s)"
+fi
+rm -f "$dm/fuserinit.ssim"
+
+# --- dmmeta.fbuf fbuftype:BytebufExtern -> Bytebuf + ffunc/ScanMsg extrn:Y ---
+if [ -f "$dm/fbuf.ssim" ] && grep -q 'fbuftype:BytebufExtern' "$dm/fbuf.ssim"; then
+    grep 'fbuftype:BytebufExtern' "$dm/fbuf.ssim" \
+        | sed -E 's#^dmmeta\.fbuf[[:space:]]+field:([^ ]*).*#dmmeta.ffunc  ffunc:\1.ScanMsg  extrn:Y  comment:"custom message scanner"#' \
+              >> "$ffunc"
+    perl -i -pe 's#fbuftype:BytebufExtern#fbuftype:Bytebuf#g' "$dm/fbuf.ssim"
+    log "rewrote BytebufExtern fbuf field(s) -> Bytebuf + ffunc ScanMsg"
+fi
+
+# --- dmmeta.finput extrn:Y -> ffunc/{Input,InputMaybe} extrn:Y, drop extrn column ---
+if [ -f "$dm/finput.ssim" ] && grep -qE '[[:space:]]extrn:[YN]' "$dm/finput.ssim"; then
+    # which function the user supplies (Input under exceptions, else InputMaybe) is
+    # recorded in the existing userfunc pkey keyed by acrkey finput:<field>.
+    while IFS= read -r line; do
+        case "$line" in
+            *"  extrn:Y"*)
+                field=$(printf '%s\n' "$line" | sed -E 's#^dmmeta\.finput[[:space:]]+field:([^ ]*).*#\1#')
+                name=InputMaybe
+                if [ -f "$userfunc" ]; then
+                    uf=$(grep -F "acrkey:finput:${field}  " "$userfunc" 2>/dev/null | head -1 || true)
+                    [ -n "$uf" ] && name=$(printf '%s\n' "$uf" | sed -E 's#.*userfunc:[^ ]*\.([^. ]+).*#\1#')
+                fi
+                emit "dmmeta.ffunc  ffunc:${field}.${name}  extrn:Y  comment:\"user-supplied input\""
+                log "finput extrn:Y $field -> ffunc:$field.$name"
+                ;;
+        esac
+    done < "$dm/finput.ssim"
+    # drop the now-removed extrn column from every finput record
+    perl -i -pe 's#([[:space:]])extrn:[YN]([[:space:]])#$1$2#' "$dm/finput.ssim"
+fi
+
+# --- amcdb.tcb: table removed entirely ---
+rm -f "$data/amcdb/tcb.ssim"
+
+log "done.  Now run:  amc && acr -check % -x   (this also canonicalizes $ffunc)"

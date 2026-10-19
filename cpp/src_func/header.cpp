@@ -222,10 +222,14 @@ static int RawstrN(strptr text, cstring &rawterm) {
 // they started. A caller locating the brace a section opens reads it, since a
 // section whose braces are all closed on one line is not a section whose opening
 // is still ahead.
-static int BraceDelta(strptr line, bool &incomment, cstring &rawterm, cstring &contlit, bool &contcomment, int &ncode, int &nmax) {
+// NMIN is set to the shallowest the line goes, counted the same way. A line
+// carries a brace that nests code exactly when NMAX or NMIN moved off zero, which
+// tells `} namespace yy {` -- level at both ends -- from a line with no brace.
+static int BraceDelta(strptr line, bool &incomment, cstring &rawterm, cstring &contlit, bool &contcomment, int &ncode, int &nmax, int &nmin) {
     int ret=0;
     int i=0;
     nmax=0;
+    nmin=0;
     ncode = incomment || contcomment ? 0 : elems_N(line);
     while (i<elems_N(line)) {
         char c=line.elems[i];
@@ -261,6 +265,7 @@ static int BraceDelta(strptr line, bool &incomment, cstring &rawterm, cstring &c
             nmax = ret>nmax ? ret : nmax;
         } else if (c=='}') {
             ret--;
+            nmin = ret<nmin ? ret : nmin;
         }
         i+=step;
     }
@@ -491,6 +496,32 @@ static void ReportUnbracedClose(strptr fname, strptr ns) {
 
 // -----------------------------------------------------------------------------
 
+// Report the update-hdr section of namespace NS in FNAME whose body holds a line
+// that carries a brace, and fail the run.
+// `namespace xx { // update-hdr` followed by `inline int Bar() { return 1; }` and
+// `}` is the shape. The rewrite replaces a section's body with the prototypes it
+// generates, so the definition is dropped as body. The header still balances and
+// still compiles on its own, every caller of Bar stops compiling, and the run that
+// removed it exits 0. A definition whose body spans lines, a struct, an enum, a
+// namespace and a macro spelling a brace are the same shape.
+// The insight is that a section body holds only text the rewrite produces: the
+// banner, which is comments, and prototypes, which are declarations. Neither carries
+// a brace that nests code, so a body line that carries one is hand-written, and
+// dropping it destroys code that no later run can produce again.
+// So the section is refused, and the file is left as it stands, as it is for every
+// other disagreement about a section. Moving the code out of the section, or
+// removing the word update-hdr from the marker line, clears the diagnostic.
+// Pinned by src_func.SectionNested.
+static void ReportHandwrittenSection(strptr fname, strptr ns) {
+    prerr("src_func.handwritten_section"
+          <<Keyval("file",fname)
+          <<Keyval("ns",ns)
+          <<Keyval("comment","update-hdr section body carries a brace, which no prototype does; file not rewritten"));
+    algo_lib::_db.exit_code++;
+}
+
+// -----------------------------------------------------------------------------
+
 // Report FNAME, whose braces do not balance, as a file whose update-hdr sections
 // cannot be located, and fail the run. DEPTH is what the count reaches at end of
 // file.
@@ -540,6 +571,8 @@ static void ReportUnbalancedFile(strptr fname, int depth) {
 // section's close would be located.
 // A marker line naming no namespace is reported and left unwritten as well, since
 // the name is what selects the functions the section receives.
+// A section whose body carries a brace is reported and left unwritten, since the
+// line that carries it is hand-written code the rewrite would drop.
 static void UpdateHeader(src_func::FTarget &target, strptr fname) {
     algo_lib::MmapFile file;
     if (!MmapFile_Load(file,fname)) {
@@ -567,7 +600,8 @@ static void UpdateHeader(src_func::FTarget &target, strptr fname) {
             bool openlit=contlit != "";
             int ncode=0;
             int nmax=0;
-            int delta=BraceDelta(line,incomment,rawterm,contlit,contcomment,ncode,nmax);
+            int nmin=0;
+            int delta=BraceDelta(line,incomment,rawterm,contlit,contcomment,ncode,nmax,nmin);
             filedepth += delta;
             // A line opens a section only when the compiler reads the namespace
             // and the marker tag as code. A header carrying a commented-out
@@ -687,13 +721,16 @@ static void UpdateHeader(src_func::FTarget &target, strptr fname) {
             // lone brace anywhere below is taken as the close. The header is then
             // written back at exit 0 with lines deleted and the fresh prototypes
             // standing in another namespace.
-            // With NOPEN known, the line's text is not read at all. A line is
-            // section body while the depth stays at or above NOPEN, because
-            // whatever the body opens nests deeper than the marker's own braces:
-            // a struct's `};`, a template's function body, a namespace the body
-            // itself opens. The first line that brings the depth back below NOPEN
+            // With NOPEN known, a line is section body while the depth stays at or
+            // above NOPEN. The first line that brings the depth back below NOPEN
             // is the section's close: the prototypes go above it, the line itself
             // is copied, and the section ends there.
+            // A body line that carries a brace at all is hand-written code. The
+            // body is replaced by the banner and the prototypes, and neither
+            // carries a brace, so `inline int Bar() { return 1; }`, a struct's
+            // members or a namespace the body opens would be dropped and never
+            // written again. The section is refused instead, and since that ends
+            // it at its first brace, the depth inside a body never leaves NOPEN.
             // A marker opening two namespaces is closed by two separate `}`
             // lines, and only the first of them is the section's close. The second
             // is copied for the reason every line below a section is -- it is
@@ -727,6 +764,7 @@ static void UpdateHeader(src_func::FTarget &target, strptr fname) {
             bool closedepth = inside && nopen>0 && depth>=nopen && newdepth<nopen;
             bool sectionclose = closedepth && StartsWithQ(trimmed,"}");
             bool unbracedclose = closedepth && !sectionclose;
+            bool handwritten = body && (nmax>0 || nmin<0);
             if (sectionclose) {
                 PrintGlobalProtos(target,ns,srcfilter,newfile);
             }
@@ -739,6 +777,9 @@ static void UpdateHeader(src_func::FTarget &target, strptr fname) {
             if (unbracedclose) {
                 ReportUnbracedClose(fname,ns);
             }
+            if (handwritten) {
+                ReportHandwrittenSection(fname,ns);
+            }
             if (!body) {
                 newfile << line << eol;
             }
@@ -750,7 +791,7 @@ static void UpdateHeader(src_func::FTarget &target, strptr fname) {
                 if (sectionclose) {
                     nupdate++;
                 }
-                if (sectionclose || bodyless || foreignbrace || unbracedclose) {
+                if (sectionclose || bodyless || foreignbrace || unbracedclose || handwritten) {
                     inside=false;
                 }
             }

@@ -62,6 +62,11 @@ void apm::SavePackageDefs(algo::strptr filename) {
         pkgkey_CopyOut(pkgkey,out);
         str << out << eol;
     }ind_end;
+    ind_beg(_db_pkgfile_curs,pkgfile,_db) {
+        dev::Pkgfile out;
+        pkgfile_CopyOut(pkgfile,out);
+        str << out << eol;
+    }ind_end;
     StringToFile(str,filename);
 }
 

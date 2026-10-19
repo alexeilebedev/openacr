@@ -31,10 +31,12 @@ const char *creddb_Kind_kind_cloudflare   = "cloudflare";
 const char *creddb_Kind_kind_github       = "github";
 const char *creddb_Kind_kind_gitlab       = "gitlab";
 
-const char *creddb_Kind_kind_latitude   = "latitude";
-const char *creddb_Kind_kind_link       = "link";
-const char *creddb_Kind_kind_openai     = "openai";
-const char *creddb_Kind_kind_sshkey     = "sshkey";
+const char *creddb_Kind_kind_gitlab_group     = "gitlab_group";
+const char *creddb_Kind_kind_gitlab_project   = "gitlab_project";
+const char *creddb_Kind_kind_latitude         = "latitude";
+const char *creddb_Kind_kind_link             = "link";
+const char *creddb_Kind_kind_openai           = "openai";
+const char *creddb_Kind_kind_sshkey           = "sshkey";
 
 namespace creddb { // gen:ns_print_proto
     // func:creddb...SizeCheck
@@ -249,12 +251,16 @@ const char* creddb::value_ToCstr(const creddb::FieldId& parent) {
         case creddb_FieldId_name           : ret = "name";  break;
         case creddb_FieldId_tokenurl       : ret = "tokenurl";  break;
         case creddb_FieldId_howto          : ret = "howto";  break;
+        case creddb_FieldId_minturl        : ret = "minturl";  break;
+        case creddb_FieldId_rotateurl      : ret = "rotateurl";  break;
         case creddb_FieldId_prefix         : ret = "prefix";  break;
         case creddb_FieldId_multiline      : ret = "multiline";  break;
         case creddb_FieldId_master         : ret = "master";  break;
         case creddb_FieldId_salt           : ret = "salt";  break;
         case creddb_FieldId_verifier       : ret = "verifier";  break;
         case creddb_FieldId_perm           : ret = "perm";  break;
+        case creddb_FieldId_role           : ret = "role";  break;
+        case creddb_FieldId_level          : ret = "level";  break;
         case creddb_FieldId_value          : ret = "value";  break;
     }
     return ret;
@@ -293,6 +299,9 @@ bool creddb::value_SetStrptrMaybe(creddb::FieldId& parent, algo::strptr rhs) {
                 case LE_STR4('p','e','r','m'): {
                     value_SetEnum(parent,creddb_FieldId_perm); ret = true; break;
                 }
+                case LE_STR4('r','o','l','e'): {
+                    value_SetEnum(parent,creddb_FieldId_role); ret = true; break;
+                }
                 case LE_STR4('s','a','l','t'): {
                     value_SetEnum(parent,creddb_FieldId_salt); ret = true; break;
                 }
@@ -303,6 +312,9 @@ bool creddb::value_SetStrptrMaybe(creddb::FieldId& parent, algo::strptr rhs) {
             switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
                 case LE_STR5('h','o','w','t','o'): {
                     value_SetEnum(parent,creddb_FieldId_howto); ret = true; break;
+                }
+                case LE_STR5('l','e','v','e','l'): {
+                    value_SetEnum(parent,creddb_FieldId_level); ret = true; break;
                 }
                 case LE_STR5('v','a','l','u','e'): {
                     value_SetEnum(parent,creddb_FieldId_value); ret = true; break;
@@ -347,6 +359,9 @@ bool creddb::value_SetStrptrMaybe(creddb::FieldId& parent, algo::strptr rhs) {
                 case LE_STR7('e','x','p','i','r','e','s'): {
                     value_SetEnum(parent,creddb_FieldId_expires); ret = true; break;
                 }
+                case LE_STR7('m','i','n','t','u','r','l'): {
+                    value_SetEnum(parent,creddb_FieldId_minturl); ret = true; break;
+                }
             }
             break;
         }
@@ -368,6 +383,10 @@ bool creddb::value_SetStrptrMaybe(creddb::FieldId& parent, algo::strptr rhs) {
             switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('m','u','l','t','i','l','i','n'): {
                     if (memcmp(rhs.elems+8,"e",1)==0) { value_SetEnum(parent,creddb_FieldId_multiline); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('r','o','t','a','t','e','u','r'): {
+                    if (memcmp(rhs.elems+8,"l",1)==0) { value_SetEnum(parent,creddb_FieldId_rotateurl); ret = true; break; }
                     break;
                 }
             }
@@ -426,6 +445,12 @@ bool creddb::Kind_ReadFieldMaybe(creddb::Kind& parent, algo::strptr field, algo:
         case creddb_FieldId_howto: {
             retval = algo::cstring_ReadStrptrMaybe(parent.howto, strval);
         } break;
+        case creddb_FieldId_minturl: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.minturl, strval);
+        } break;
+        case creddb_FieldId_rotateurl: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.rotateurl, strval);
+        } break;
         case creddb_FieldId_prefix: {
             retval = algo::cstring_ReadStrptrMaybe(parent.prefix, strval);
         } break;
@@ -476,6 +501,12 @@ void creddb::Kind_Print(creddb::Kind& row, algo::cstring& str) {
     algo::cstring_Print(row.howto, temp);
     PrintAttrSpaceReset(str,"howto", temp);
 
+    algo::cstring_Print(row.minturl, temp);
+    PrintAttrSpaceReset(str,"minturl", temp);
+
+    algo::cstring_Print(row.rotateurl, temp);
+    PrintAttrSpaceReset(str,"rotateurl", temp);
+
     algo::cstring_Print(row.prefix, temp);
     PrintAttrSpaceReset(str,"prefix", temp);
 
@@ -496,6 +527,8 @@ const char* creddb::kind_ToCstr(const creddb::KindCase& parent) {
         case creddb_KindCase_cloudflare    : ret = "cloudflare";  break;
         case creddb_KindCase_github        : ret = "github";  break;
         case creddb_KindCase_gitlab        : ret = "gitlab";  break;
+        case creddb_KindCase_gitlab_group  : ret = "gitlab_group";  break;
+        case creddb_KindCase_gitlab_project: ret = "gitlab_project";  break;
         case creddb_KindCase_latitude      : ret = "latitude";  break;
         case creddb_KindCase_link          : ret = "link";  break;
         case creddb_KindCase_openai        : ret = "openai";  break;
@@ -568,6 +601,24 @@ bool creddb::kind_SetStrptrMaybe(creddb::KindCase& parent, algo::strptr rhs) {
             switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('c','l','o','u','d','f','l','a'): {
                     if (memcmp(rhs.elems+8,"re",2)==0) { kind_SetEnum(parent,creddb_KindCase_cloudflare); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+        case 12: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('g','i','t','l','a','b','_','g'): {
+                    if (memcmp(rhs.elems+8,"roup",4)==0) { kind_SetEnum(parent,creddb_KindCase_gitlab_group); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+        case 14: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('g','i','t','l','a','b','_','p'): {
+                    if (memcmp(rhs.elems+8,"roject",6)==0) { kind_SetEnum(parent,creddb_KindCase_gitlab_project); ret = true; break; }
                     break;
                 }
             }
@@ -724,6 +775,94 @@ void creddb::Perm_Print(creddb::Perm& row, algo::cstring& str) {
 
     algo::Smallstr100_Print(row.perm, temp);
     PrintAttrSpaceReset(str,"perm", temp);
+
+    algo::Comment_Print(row.comment, temp);
+    PrintAttrSpaceReset(str,"comment", temp);
+}
+
+// --- creddb.Role.kind.Get
+algo::strptr creddb::kind_Get(creddb::Role& parent) {
+    return algo::Pathcomp(parent.role, "/RL");
+}
+
+// --- creddb.Role.kind.Get2
+algo::strptr creddb::Role_kind_Get(algo::strptr arg) {
+    return algo::Pathcomp(arg, "/RL");
+}
+
+// --- creddb.Role.name.Get
+algo::strptr creddb::name_Get(creddb::Role& parent) {
+    return algo::Pathcomp(parent.role, "/RR");
+}
+
+// --- creddb.Role.name.Get2
+algo::strptr creddb::Role_name_Get(algo::strptr arg) {
+    return algo::Pathcomp(arg, "/RR");
+}
+
+// --- creddb.Role..Concat_kind_name
+tempstr creddb::Role_Concat_kind_name( const algo::strptr& kind ,const algo::strptr& name ) {
+    return tempstr() << kind <<'/'<< name ;
+}
+
+// --- creddb.Role..ReadFieldMaybe
+bool creddb::Role_ReadFieldMaybe(creddb::Role& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    creddb::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case creddb_FieldId_role: {
+            retval = algo::Smallstr100_ReadStrptrMaybe(parent.role, strval);
+        } break;
+        case creddb_FieldId_kind: {
+            retval = false;
+        } break;
+        case creddb_FieldId_name: {
+            retval = false;
+        } break;
+        case creddb_FieldId_level: {
+            retval = i32_ReadStrptrMaybe(parent.level, strval);
+        } break;
+        case creddb_FieldId_comment: {
+            retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
+        } break;
+        default: {
+            if (!ch_N(field) || (algo_lib::_db.strict_attr && field != "acr.rowid")) {
+                retval = false;
+                algo_lib::AppendErrtext("comment", "unrecognized attr");
+            }
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- creddb.Role..ReadStrptrMaybe
+// Read fields of creddb::Role from an ascii string.
+// The format of the string is an ssim Tuple
+bool creddb::Role_ReadStrptrMaybe(creddb::Role &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "creddb.role") || algo::StripTypeTag(in_str, "creddb.Role");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && Role_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- creddb.Role..Print
+// print string representation of ROW to string STR
+// cfmt:creddb.Role.String  printfmt:Tuple
+void creddb::Role_Print(creddb::Role& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "creddb.role";
+
+    algo::Smallstr100_Print(row.role, temp);
+    PrintAttrSpaceReset(str,"role", temp);
+
+    i32_Print(row.level, temp);
+    PrintAttrSpaceReset(str,"level", temp);
 
     algo::Comment_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);

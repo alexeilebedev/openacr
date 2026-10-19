@@ -26,5 +26,5 @@
 // Install oauth2-proxy, the reverse proxy nginx authenticates through.
 void ainst::extpkg_oauth2_proxy(ainst::FExtpkg &extpkg) {
     AddStage(extpkg,tempstr()<<"dir=$(ainst_unpack "<<GetExtpkgsrcVar(extpkg,"tgz")<<")");
-    AddStage(extpkg,"ainst_install 755 \"$dir/oauth2-proxy-v7.9.0.linux-amd64/oauth2-proxy\" /usr/local/bin/oauth2-proxy");
+    AddStage(extpkg,"ainst_install 755 \"$dir/oauth2-proxy-v7.9.0.linux-$(dpkg --print-architecture)/oauth2-proxy\" /usr/local/bin/oauth2-proxy");
 }

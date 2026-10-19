@@ -57,16 +57,16 @@ should let amc do it).
 
 The full set:
 
-| Record | Role |
-|--------|------|
-| `dmmeta.ccmdline ctype:command.<ns> read:Y/N basecmdline:<>` | Declares the cmdline; ties it to amc's main() |
-| `dmmeta.field    field:command.<ns>.<flag> arg:<T> reftype:Val dflt:"…"` | One field per option |
-| `dmmeta.anonfld  field:command.<ns>.<flag>` | Treat this field as positional |
-| `dmmeta.fflag    field:command.<ns>.<flag> cumulative:Y emptyval:""` | Special argv treatments — see "Flags vs value arguments" |
+| Record                                                                    | Role |
+| ------------------------------------------------------------------------- | ---- |
+| `dmmeta.ccmdline ctype:command.<ns> read:Y/N basecmdline:<>`              | Declares the cmdline; ties it to amc's main() |
+| `dmmeta.field    field:command.<ns>.<flag> arg:<T> reftype:Val dflt:"…"`  | One field per option |
+| `dmmeta.anonfld  field:command.<ns>.<flag>`                               | Treat this field as positional |
+| `dmmeta.fflag    field:command.<ns>.<flag> cumulative:Y emptyval:""`      | Special argv treatments — see "Flags vs value arguments" |
 | `dmmeta.falias   field:command.<ns>.<short> srcfield:command.<ns>.<long>` | Short alias for an option |
-| `dmmeta.fconst   fconst:command.<ns>.<flag>/<value> value:N` | Allowed enum values; show in `-help` |
-| `dmmeta.argvtype ctype:<T> argvtype:<T2>` | Override the parsed type for an argument (e.g., `double` for floats) |
-| `dmmeta.cfmt     cfmt:command.<ns>.Argv  printfmt:Auto  print:Y` | Generate the argv printer (used by [Exec](/txt/exe/amc/reftype/Exec.md)) |
+| `dmmeta.fconst   fconst:command.<ns>.<flag>/<value> value:N`              | Allowed enum values; show in `-help` |
+| `dmmeta.argvtype ctype:<T> argvtype:<T2>`                                 | Override the parsed type for an argument (e.g., `double` for floats) |
+| `dmmeta.cfmt     cfmt:command.<ns>.Argv  printfmt:Auto  print:Y`          | Generate the argv printer (used by [Exec](/txt/exe/amc/reftype/Exec.md)) |
 
 ### Positional vs named arguments
 <a href="#positional-vs-named-arguments"></a>
@@ -94,19 +94,19 @@ Each field falls into one of four ergonomic categories,
 combining "is the value required?" and "is the field
 positional?":
 
-| Required value? | anonfld? | Form in help                | Example                       |
-|-----------------|----------|-----------------------------|-------------------------------|
-| yes             | yes      | `[-target:]<target>`        | `foo abt% …`                 |
-| yes             | no       | `-target:<target>`          | `foo -target:abt% …`         |
-| no              | yes      | `[[-target:]<target>]`      | `foo … (target optional)`     |
-| no              | no       | `[options]`                 | `foo …` (one of many opts)    |
+| Required value? | anonfld? | Form in help           | Example |
+| --------------- | -------- | ---------------------- | ------- |
+| yes             | yes      | `[-target:]<target>`   | `foo abt% …` |
+| yes             | no       | `-target:<target>`     | `foo -target:abt% …` |
+| no              | yes      | `[[-target:]<target>]` | `foo … (target optional)` |
+| no              | no       | `[options]`            | `foo …` (one of many opts) |
 
 `dmmeta.fflag`:
 
-| Field            | Effect |
-|------------------|--------|
-| `cumulative:Y`   | Each occurrence on argv accumulates (e.g., `-v -v -v` raises verbosity).  Bumps the integer field rather than overwriting. |
-| `emptyval:"v"`   | If the flag is given without a value, set the field to `v`.  Used for `-debug` → `-debug:1`. |
+| Field          | Effect |
+| -------------- | ------ |
+| `cumulative:Y` | Each occurrence on argv accumulates (e.g., `-v -v -v` raises verbosity).  Bumps the integer field rather than overwriting. |
+| `emptyval:"v"` | If the flag is given without a value, set the field to `v`.  Used for `-debug` → `-debug:1`. |
 
 Boolean flags use `arg:bool` plus typically `emptyval:Y`, so
 `-verbose` is shorthand for `-verbose:Y`.  An i32 flag with
@@ -152,11 +152,11 @@ against the fconst keys; an unknown value produces an
 `dmmeta.argvtype` overrides how amc generates the parser for
 specific built-in C types.  The default mappings are:
 
-| ctype     | Effective argv type | Comment                  |
-|-----------|---------------------|--------------------------|
-| `bool`    | (empty — flag form) | `-verbose` ≡ `-verbose:Y` |
-| `double`  | `double`            |                          |
-| `float`   | `double`            |                          |
+| ctype    | Effective argv type | Comment |
+| -------- | ------------------- | ------- |
+| `bool`   | (empty — flag form) | `-verbose` ≡ `-verbose:Y` |
+| `double` | `double`            |  |
+| `float`  | `double`            |  |
 
 Add a row for any new built-in to override.
 

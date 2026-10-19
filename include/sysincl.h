@@ -87,8 +87,11 @@
 #include <errno.h>
 #include <signal.h>
 
-#if _linux__
+#if defined(__linux__)
 #include <byteswap.h>
+#include <endian.h>
+#include <linux/falloc.h>
+#include <sys/sysinfo.h>
 #endif
 
 #ifdef __MACH__
@@ -97,7 +100,7 @@
 #include <mach-o/dyld.h>
 #endif
 
-#if defined(__APPLE__) && defined(__aarch64__)
+#if defined(__aarch64__) && defined(__ARM_FEATURE_CRC32)
 #include <arm_acle.h>
 #endif
 

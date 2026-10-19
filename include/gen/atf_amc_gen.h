@@ -236,7 +236,6 @@ enum atf_amc_FieldIdEnum {    // atf_amc.FieldId.value
     ,atf_amc_FieldId_val1
     ,atf_amc_FieldId_val2
     ,atf_amc_FieldId_val3
-    ,atf_amc_FieldId_msghdr
     ,atf_amc_FieldId_payload
     ,atf_amc_FieldId_text
     ,atf_amc_FieldId_typea
@@ -270,7 +269,7 @@ enum atf_amc_FieldIdEnum {    // atf_amc.FieldId.value
     ,atf_amc_FieldId_end_intval
 };
 
-enum { atf_amc_FieldIdEnum_N = 147 };
+enum { atf_amc_FieldIdEnum_N = 146 };
 
 
 // --- atf_amc_MsgHdrLT_type_Enum
@@ -2705,15 +2704,15 @@ private:
     friend void                 amctest_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:atf_amc.FAmctest.msghdr.CopyOut
+// func:atf_amc.FAmctest.base.CopyOut
 void                 amctest_CopyOut(atf_amc::FAmctest &row, atfdb::Amctest &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:atf_amc.FAmctest.msghdr.CopyIn
+// func:atf_amc.FAmctest.base.CopyIn
 void                 amctest_CopyIn(atf_amc::FAmctest &row, atfdb::Amctest &in) __attribute__((nothrow));
 
 // Invoke function by pointer
 // func:atf_amc.FAmctest.step.Call
-inline void          step_Call(atf_amc::FAmctest& parent) __attribute__((nothrow));
+inline void          step_Call(atf_amc::FAmctest& parent);
 
 // Set all fields to initial values.
 // func:atf_amc.FAmctest..Init
@@ -3431,10 +3430,10 @@ private:
     friend void                 cstring_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:atf_amc.FCstring.msghdr.CopyOut
+// func:atf_amc.FCstring.base.CopyOut
 void                 cstring_CopyOut(atf_amc::FCstring &row, atf_amc::Cstring &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:atf_amc.FCstring.msghdr.CopyIn
+// func:atf_amc.FCstring.base.CopyIn
 void                 cstring_CopyIn(atf_amc::FCstring &row, atf_amc::Cstring &in) __attribute__((nothrow));
 
 // Set all fields to initial values.
@@ -3466,7 +3465,7 @@ void                 listtype_CopyIn(atf_amc::FListtype &row, dmmeta::Listtype &
 
 // Invoke function by pointer
 // func:atf_amc.FListtype.step.Call
-inline void          step_Call(atf_amc::FListtype& parent, atf_amc::FListtype& arg) __attribute__((nothrow));
+inline void          step_Call(atf_amc::FListtype& parent, atf_amc::FListtype& arg);
 
 // Set all fields to initial values.
 // func:atf_amc.FListtype..Init
@@ -3827,9 +3826,9 @@ void                 bh_typec_FirstChanged() __attribute__((nothrow));
 void                 bh_typec_UpdateCycles() __attribute__((nothrow));
 // func:atf_amc.FDb.bh_typec.Step
 // this function is 'extrn' and implemented by user
-void                 bh_typec_Step() __attribute__((nothrow));
+void                 bh_typec_Step();
 // func:atf_amc.FDb.bh_typec.Call
-inline void          bh_typec_Call() __attribute__((nothrow));
+inline void          bh_typec_Call();
 
 // Return true if index is empty
 // func:atf_amc.FDb.zdl_h_typec.EmptyQ
@@ -4072,9 +4071,9 @@ void                 zsl_h_typec_FirstChanged() __attribute__((nothrow));
 void                 zsl_h_typec_UpdateCycles() __attribute__((nothrow));
 // func:atf_amc.FDb.zsl_h_typec.Step
 // this function is 'extrn' and implemented by user
-void                 zsl_h_typec_Step() __attribute__((nothrow));
+void                 zsl_h_typec_Step();
 // func:atf_amc.FDb.zsl_h_typec.Call
-inline void          zsl_h_typec_Call() __attribute__((nothrow));
+inline void          zsl_h_typec_Call();
 
 // Return true if index is empty
 // func:atf_amc.FDb.zs_t_typec.EmptyQ
@@ -4121,9 +4120,9 @@ void                 zs_t_typec_FirstChanged() __attribute__((nothrow));
 void                 zs_t_typec_UpdateCycles() __attribute__((nothrow));
 // func:atf_amc.FDb.zs_t_typec.Step
 // this function is 'extrn' and implemented by user
-void                 zs_t_typec_Step() __attribute__((nothrow));
+void                 zs_t_typec_Step();
 // func:atf_amc.FDb.zs_t_typec.Call
-inline void          zs_t_typec_Call() __attribute__((nothrow));
+inline void          zs_t_typec_Call();
 
 // If index is empty, return NULL
 // Otherwise return first key in index.
@@ -4308,9 +4307,9 @@ void                 csl_h_typec_FirstChanged() __attribute__((nothrow));
 void                 csl_h_typec_UpdateCycles() __attribute__((nothrow));
 // func:atf_amc.FDb.csl_h_typec.Step
 // this function is 'extrn' and implemented by user
-void                 csl_h_typec_Step() __attribute__((nothrow));
+void                 csl_h_typec_Step();
 // func:atf_amc.FDb.csl_h_typec.Call
-inline void          csl_h_typec_Call() __attribute__((nothrow));
+inline void          csl_h_typec_Call();
 
 // Return true if index is empty
 // func:atf_amc.FDb.cs_t_typec.EmptyQ
@@ -4361,9 +4360,9 @@ void                 cs_t_typec_FirstChanged() __attribute__((nothrow));
 void                 cs_t_typec_UpdateCycles() __attribute__((nothrow));
 // func:atf_amc.FDb.cs_t_typec.Step
 // this function is 'extrn' and implemented by user
-void                 cs_t_typec_Step() __attribute__((nothrow));
+void                 cs_t_typec_Step();
 // func:atf_amc.FDb.cs_t_typec.Call
-inline void          cs_t_typec_Call() __attribute__((nothrow));
+inline void          cs_t_typec_Call();
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -4708,7 +4707,7 @@ atf_amc::Msgbuf*     cd_in_msg_RotateFirst() __attribute__((nothrow));
 inline atf_amc::Msgbuf& cd_in_msg_qLast() __attribute__((__warn_unused_result__, nothrow));
 // func:atf_amc.FDb.cd_in_msg.Step
 // this function is 'extrn' and implemented by user
-void                 cd_in_msg_Step() __attribute__((nothrow));
+void                 cd_in_msg_Step();
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -5524,7 +5523,7 @@ atf_amc::FTimeEntry* bh_time_entry_RemoveFirst() __attribute__((nothrow));
 void                 bh_time_entry_Reserve(int n) __attribute__((nothrow));
 // func:atf_amc.FDb.bh_time_entry.Step
 // this function is 'extrn' and implemented by user
-void                 bh_time_entry_Step() __attribute__((nothrow));
+void                 bh_time_entry_Step();
 
 // Return true if hash is empty
 // func:atf_amc.FDb.ind_linear.EmptyQ
@@ -6899,7 +6898,7 @@ atf_amc::FTimeEntry* bh_time_entry_head_RemoveFirst() __attribute__((nothrow));
 void                 bh_time_entry_head_Reserve(int n) __attribute__((nothrow));
 // func:atf_amc.FDb.bh_time_entry_head.Step
 // this function is 'extrn' and implemented by user
-void                 bh_time_entry_head_Step() __attribute__((nothrow));
+void                 bh_time_entry_head_Step();
 
 // Remove all elements from heap and free memory used by the array.
 // func:atf_amc.FDb.bh_time_entry_recur.Dealloc
@@ -6944,7 +6943,7 @@ atf_amc::FTimeEntry* bh_time_entry_recur_RemoveFirst() __attribute__((nothrow));
 void                 bh_time_entry_recur_Reserve(int n) __attribute__((nothrow));
 // func:atf_amc.FDb.bh_time_entry_recur.Step
 // this function is 'extrn' and implemented by user
-void                 bh_time_entry_recur_Step() __attribute__((nothrow));
+void                 bh_time_entry_recur_Step();
 
 // Remove all elements from heap and free memory used by the array.
 // func:atf_amc.FDb.bh_time_entry_once.Dealloc
@@ -6992,7 +6991,7 @@ void                 bh_time_entry_once_Reserve(int n) __attribute__((nothrow));
 void                 bh_time_entry_once_FirstChanged() __attribute__((nothrow));
 // func:atf_amc.FDb.bh_time_entry_once.Step
 // this function is 'extrn' and implemented by user
-void                 bh_time_entry_once_Step() __attribute__((nothrow));
+void                 bh_time_entry_once_Step();
 
 // Remove all elements from heap and free memory used by the array.
 // func:atf_amc.FDb.bh_condtest_heaped.Dealloc
@@ -8359,10 +8358,10 @@ struct FTypeC { // atf_amc.FTypeC
     inline               FTypeC(const atf_amc::FTypeC &rhs) = delete;
 };
 // Copy fields out of row
-// func:atf_amc.FTypeC.msghdr.CopyOut
+// func:atf_amc.FTypeC.base.CopyOut
 void                 type_c_CopyOut(atf_amc::FTypeC &row, atf_amc::TypeC &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:atf_amc.FTypeC.msghdr.CopyIn
+// func:atf_amc.FTypeC.base.CopyIn
 void                 type_c_CopyIn(atf_amc::FTypeC &row, atf_amc::TypeC &in) __attribute__((nothrow));
 
 // Set all fields to initial values.
@@ -8413,10 +8412,10 @@ private:
     friend void                 typea_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:atf_amc.FTypeA.msghdr.CopyOut
+// func:atf_amc.FTypeA.base.CopyOut
 void                 type_a_CopyOut(atf_amc::FTypeA &row, atf_amc::TypeA &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:atf_amc.FTypeA.msghdr.CopyIn
+// func:atf_amc.FTypeA.base.CopyIn
 void                 type_a_CopyIn(atf_amc::FTypeA &row, atf_amc::TypeA &in) __attribute__((nothrow));
 
 // Allocate memory for new default row.
@@ -8625,10 +8624,10 @@ private:
     friend void                 typeb_Delete(atf_amc::FTypeB &row) __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:atf_amc.FTypeB.msghdr.CopyOut
+// func:atf_amc.FTypeB.base.CopyOut
 void                 type_b_CopyOut(atf_amc::FTypeB &row, atf_amc::TypeB &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:atf_amc.FTypeB.msghdr.CopyIn
+// func:atf_amc.FTypeB.base.CopyIn
 void                 type_b_CopyIn(atf_amc::FTypeB &row, atf_amc::TypeB &in) __attribute__((nothrow));
 
 // Set all fields to initial values.
@@ -8668,10 +8667,10 @@ private:
     friend void                 typed_Delete(atf_amc::FTypeD &row) __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:atf_amc.FTypeD.msghdr.CopyOut
+// func:atf_amc.FTypeD.base.CopyOut
 void                 type_d_CopyOut(atf_amc::FTypeD &row, atf_amc::TypeC &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:atf_amc.FTypeD.msghdr.CopyIn
+// func:atf_amc.FTypeD.base.CopyIn
 void                 type_d_CopyIn(atf_amc::FTypeD &row, atf_amc::TypeC &in) __attribute__((nothrow));
 
 // Set all fields to initial values.
@@ -8750,10 +8749,10 @@ private:
     friend void                 types_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:atf_amc.FTypeS.msghdr.CopyOut
+// func:atf_amc.FTypeS.base.CopyOut
 void                 type_s_CopyOut(atf_amc::FTypeS &row, atf_amc::TypeS &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:atf_amc.FTypeS.msghdr.CopyIn
+// func:atf_amc.FTypeS.base.CopyIn
 void                 type_s_CopyIn(atf_amc::FTypeS &row, atf_amc::TypeS &in) __attribute__((nothrow));
 
 // Return true if index is empty
@@ -8842,10 +8841,10 @@ private:
     friend void                 typet_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:atf_amc.FTypeT.msghdr.CopyOut
+// func:atf_amc.FTypeT.base.CopyOut
 void                 type_t_CopyOut(atf_amc::FTypeT &row, atf_amc::TypeT &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:atf_amc.FTypeT.msghdr.CopyIn
+// func:atf_amc.FTypeT.base.CopyIn
 void                 type_t_CopyIn(atf_amc::FTypeT &row, atf_amc::TypeT &in) __attribute__((nothrow));
 
 // Set all fields to initial values.
@@ -9291,7 +9290,7 @@ struct Hooktype { // atf_amc.Hooktype
 };
 // Invoke function by pointer
 // func:atf_amc.Hooktype.callback.Call
-inline void          callback_Call(atf_amc::Hooktype& parent, atf_amc::Hooktype& arg) __attribute__((nothrow));
+inline void          callback_Call(atf_amc::Hooktype& parent, atf_amc::Hooktype& arg);
 // Assign 0-argument hook with no context pointer
 // func:atf_amc.Hooktype.callback.Set0
 inline void          callback_Set0(atf_amc::Hooktype& parent, void (*fcn)() ) __attribute__((nothrow));
@@ -13713,15 +13712,15 @@ struct Seqmsg { // atf_amc.Seqmsg: Sequenced message for stream
 };
 #pragma pack(pop)
 // Copy fields out of row
-// func:atf_amc.Seqmsg.msghdr.CopyOut
+// func:atf_amc.Seqmsg.base.CopyOut
 void                 seqmsg_CopyOut(atf_amc::Seqmsg &row, atf_amc::MsgHeader &out) __attribute__((nothrow));
 // Check if atf_amc::MsgHeader is an instance of Seqmsg by checking the type field
 // If it is, return the pointer of target type.
 // Additionally, check if the length field permits valid instance of Seqmsg.
 // If not successful, quietly return NULL.
-// func:atf_amc.Seqmsg.msghdr.Castdown
+// func:atf_amc.Seqmsg.base.Castdown
 inline atf_amc::Seqmsg* Seqmsg_Castdown(atf_amc::MsgHeader &hdr);
-// func:atf_amc.Seqmsg.msghdr.Castbase
+// func:atf_amc.Seqmsg.base.Castbase
 inline atf_amc::MsgHeader& Castbase(atf_amc::Seqmsg& parent);
 
 // Return pointer to optional last element (NULL if none)
@@ -14341,15 +14340,15 @@ struct Text { // atf_amc.Text
 };
 #pragma pack(pop)
 // Copy fields out of row
-// func:atf_amc.Text.msghdr.CopyOut
+// func:atf_amc.Text.base.CopyOut
 void                 text_CopyOut(atf_amc::Text &row, atf_amc::MsgHeader &out) __attribute__((nothrow));
 // Check if atf_amc::MsgHeader is an instance of Text by checking the type field
 // If it is, return the pointer of target type.
 // Additionally, check if the length field permits valid instance of Text.
 // If not successful, quietly return NULL.
-// func:atf_amc.Text.msghdr.Castdown
+// func:atf_amc.Text.base.Castdown
 inline atf_amc::Text* Text_Castdown(atf_amc::MsgHeader &hdr);
-// func:atf_amc.Text.msghdr.Castbase
+// func:atf_amc.Text.base.Castbase
 inline atf_amc::MsgHeader& Castbase(atf_amc::Text& parent);
 
 // Access var-length portion as an aryptr. Length is determined from one of the fields.

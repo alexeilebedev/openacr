@@ -185,3 +185,29 @@ void algo::FileLine_curs_Next(algo::FileLine_curs &curs) {
     curs.eof.value = !ReadLine(curs.file, curs.line);
     curs.i++;
 }
+
+// -----------------------------------------------------------------------------
+
+// Wait until file FILENAME holds a line that starts with PREFIX, and return
+// whether it does.  The call blocks: it reads the file every 100 ms, for at most
+// TIMEOUT.  A file that does not exist yet reads as empty, so the wait may start
+// before the writer creates the file.  A program uses it to wait for the line
+// that a server it started prints once it can serve.  The time a start takes
+// depends on the host, so TIMEOUT is a bound on a failed start rather than an
+// estimate of a good one.
+bool algo::WaitFileLine(strptr filename, strptr prefix, algo::UnDiff timeout) {
+    algo::UnTime deadline = algo::CurrUnTime() + timeout;
+    bool found = false;
+    while (!found && algo::CurrUnTime() < deadline) {
+        ind_beg(algo::FileLine_curs, line, filename) {
+            if (algo::StartsWithQ(line, prefix)) {
+                found = true;
+                break;
+            }
+        }ind_end;
+        if (!found) {
+            algo::SleepMsec(100);
+        }
+    }
+    return found;
+}

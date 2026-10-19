@@ -230,6 +230,7 @@ namespace algo_lib { // gen:ns_gsymbol
 namespace algo_lib { // gen:ns_gsymbol
     extern const char* dev_envvar_ACR_COMPL_DEBUG_LOG; // "ACR_COMPL_DEBUG_LOG"
     extern const char* dev_envvar_ALGOFATALDIR; // "ALGOFATALDIR"
+    extern const char* dev_envvar_ALGO_DIE_WITH; // "ALGO_DIE_WITH"
     extern const char* dev_envvar_ATF_UNIT_TSCFREQKHZ; // "ATF_UNIT_TSCFREQKHZ"
     extern const char* dev_envvar_AWS_ACCESS_KEY_ID; // "AWS_ACCESS_KEY_ID"
     extern const char* dev_envvar_AWS_SECRET_ACCESS_KEY; // "AWS_SECRET_ACCESS_KEY"
@@ -254,6 +255,7 @@ namespace algo_lib { // gen:ns_gsymbol
     extern const char* dev_envvar_GIT_COMMITTER_EMAIL; // "GIT_COMMITTER_EMAIL"
     extern const char* dev_envvar_GIT_COMMITTER_NAME; // "GIT_COMMITTER_NAME"
     extern const char* dev_envvar_GIT_DIR; // "GIT_DIR"
+    extern const char* dev_envvar_GIT_SSH_COMMAND; // "GIT_SSH_COMMAND"
     extern const char* dev_envvar_GIT_WORK_TREE; // "GIT_WORK_TREE"
     extern const char* dev_envvar_HOME; // "HOME"
     extern const char* dev_envvar_LD_PRELOAD; // "LD_PRELOAD"
@@ -262,12 +264,28 @@ namespace algo_lib { // gen:ns_gsymbol
     extern const char* dev_envvar_PATH; // "PATH"
     extern const char* dev_envvar_PORT; // "PORT"
     extern const char* dev_envvar_SSH_AUTH_SOCK; // "SSH_AUTH_SOCK"
+    extern const char* dev_envvar_STUB_AI_CMD; // "STUB_AI_CMD"
     extern const char* dev_envvar_STUB_AI_MSG; // "STUB_AI_MSG"
     extern const char* dev_envvar_STUB_AI_RC; // "STUB_AI_RC"
     extern const char* dev_envvar_STUB_AI_SLEEP; // "STUB_AI_SLEEP"
+    extern const char* dev_envvar_STUB_CLAUDE_BLOCKED; // "STUB_CLAUDE_BLOCKED"
     extern const char* dev_envvar_STUB_CLAUDE_CLOSE; // "STUB_CLAUDE_CLOSE"
+    extern const char* dev_envvar_STUB_CLAUDE_FAILED; // "STUB_CLAUDE_FAILED"
+    extern const char* dev_envvar_STUB_CLAUDE_NOLIST; // "STUB_CLAUDE_NOLIST"
+    extern const char* dev_envvar_STUB_CLAUDE_PROMPT; // "STUB_CLAUDE_PROMPT"
+    extern const char* dev_envvar_STUB_CLAUDE_RETRO; // "STUB_CLAUDE_RETRO"
+    extern const char* dev_envvar_STUB_CLAUDE_SETTINGS; // "STUB_CLAUDE_SETTINGS"
+    extern const char* dev_envvar_STUB_CLAUDE_STALE; // "STUB_CLAUDE_STALE"
     extern const char* dev_envvar_STUB_CLAUDE_SUMMARY; // "STUB_CLAUDE_SUMMARY"
+    extern const char* dev_envvar_STUB_CLAUDE_TRIAGE; // "STUB_CLAUDE_TRIAGE"
     extern const char* dev_envvar_STUB_FLOCK_RC; // "STUB_FLOCK_RC"
+    extern const char* dev_envvar_STUB_GLI_LOST; // "STUB_GLI_LOST"
+    extern const char* dev_envvar_STUB_GLI_NODISCUSS; // "STUB_GLI_NODISCUSS"
+    extern const char* dev_envvar_STUB_GLI_NOME; // "STUB_GLI_NOME"
+    extern const char* dev_envvar_STUB_GLI_REAL; // "STUB_GLI_REAL"
+    extern const char* dev_envvar_STUB_GLI_SEEN; // "STUB_GLI_SEEN"
+    extern const char* dev_envvar_STUB_GLI_TIMEOUT; // "STUB_GLI_TIMEOUT"
+    extern const char* dev_envvar_STUB_SSH_ROOT; // "STUB_SSH_ROOT"
     extern const char* dev_envvar_SUDO_USER; // "SUDO_USER"
     extern const char* dev_envvar_TERM; // "TERM"
     extern const char* dev_envvar_TMPDIR; // "TMPDIR"
@@ -275,6 +293,20 @@ namespace algo_lib { // gen:ns_gsymbol
     extern const char* dev_envvar_USER; // "USER"
     extern const char* dev_envvar_VISUAL; // "VISUAL"
 } // gen:ns_gsymbol
+namespace algo_lib { // gen:ns_regxstyle
+    // True when C is ASCII punctuation, which the canonical regx syntax escapes when it means itself
+    bool RegxPunctQ(char c);
+    // True when \C is an escape that stands for a class of characters (amcdb.regxmacro)
+    bool RegxMacroQ(char c);
+    // The characters escape \C stands for, as pairs of low and high characters; NEG says it means every other one
+    algo::strptr RegxMacroClass(char c, bool &neg);
+    // Append to OUT the default-syntax form of STR, a pattern of regx style STYLE (amcdb.regxrule)
+    void RegxRewrite(algo::strptr str, algo_lib::RegxStyle style, algo::cstring &out);
+    // Append to OUT the canonical form of STR, a default-syntax pattern; return false when the pattern is invalid
+    bool RegxNormalize(algo::strptr str, algo::cstring &out);
+    // True when a pattern of regx style STYLE must escape C to mean C (amcdb.regxrule)
+    bool RegxQuoteQ(char c, algo_lib::RegxStyle style);
+} // gen:ns_regxstyle
 namespace algo_lib { // gen:ns_print_struct
 
 // --- algo_lib.Bitset
@@ -479,7 +511,7 @@ void                 Bitset_Print(algo_lib::Bitset& row, algo::cstring& str) __a
 struct Cmdline { // algo_lib.Cmdline: *can't move this to command namespace because of circular dependency*
     u8              verbose;     //   0  Verbosity level (0..255)
     u8              debug;       //   0  Debug level (0..255)
-    algo::cstring   trace;       //   ""  Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps
+    algo::cstring   trace;       //   ""  Trace expression: log categories to enable, as category[:filter],...
     bool            help;        //   false  Print help and exit
     bool            version;     //   false  Print version and exit
     bool            signature;   //   false  Show signatures and exit
@@ -894,7 +926,7 @@ inline i32           time_Cmp(algo_lib::FTimehook& parent, algo_lib::FTimehook &
 
 // Invoke function by pointer
 // func:algo_lib.FTimehook.hook.Call
-inline void          hook_Call(algo_lib::FTimehook& parent, algo_lib::FTimehook& arg) __attribute__((nothrow));
+inline void          hook_Call(algo_lib::FTimehook& parent, algo_lib::FTimehook& arg);
 // Assign 0-argument hook with no context pointer
 // func:algo_lib.FTimehook.hook.Set0
 inline void          hook_Set0(algo_lib::FTimehook& parent, void (*fcn)() ) __attribute__((nothrow));
@@ -944,10 +976,10 @@ struct FImdb { // algo_lib.FImdb
     inline               FImdb(const algo_lib::FImdb &rhs) = delete;
 };
 // Copy fields out of row
-// func:algo_lib.FImdb.msghdr.CopyOut
+// func:algo_lib.FImdb.base.CopyOut
 void                 imdb_CopyOut(algo_lib::FImdb &row, algo::Imdb &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:algo_lib.FImdb.msghdr.CopyIn
+// func:algo_lib.FImdb.base.CopyIn
 void                 imdb_CopyIn(algo_lib::FImdb &row, algo::Imdb &in) __attribute__((nothrow));
 
 // Set all fields to initial values.
@@ -1301,7 +1333,7 @@ struct FErrns { // algo_lib.FErrns
 };
 // Invoke function by pointer
 // func:algo_lib.FErrns.decode.Call
-inline void          decode_Call(algo_lib::FErrns& parent, i32& arg) __attribute__((nothrow));
+inline void          decode_Call(algo_lib::FErrns& parent, i32& arg);
 // Assign 0-argument hook with no context pointer
 // func:algo_lib.FErrns.decode.Set0
 inline void          decode_Set0(algo_lib::FErrns& parent, void (*fcn)() ) __attribute__((nothrow));
@@ -1369,7 +1401,6 @@ struct FDb { // algo_lib.FDb: In-memory database for algo_lib
     algo::cstring                     temp_strings_elems[8];                         // fixed array
     algo::Charset                     ArgvIdent;                                     //
     algo::Charset                     BashQuotesafe;                                 //
-    algo::Charset                     RegxSqlSpecial;                                //
     algo::Charset                     SsimBreakName;                                 //
     algo::Charset                     SsimBreakValue;                                //
     algo::Charset                     SsimQuotesafe;                                 //
@@ -1447,6 +1478,7 @@ struct FDb { // algo_lib.FDb: In-memory database for algo_lib
     i32                               bh_timehook_idle_n;                            // number of elements in the heap
     i32                               bh_timehook_idle_max;                          // max elements in bh_timehook_idle_elems
     bool                              dotline;                                       //   false  A run of progress dots is open on the stdout log line
+    i32                               die_with;                                      //   0  On macOS, the pid whose exit kills this process (DieWithParent); 0 for none
     algo_lib::trace                   trace;                                         //
 };
 // Allocate a new piece of memory at least SIZE bytes long.
@@ -1528,9 +1560,6 @@ inline bool          ArgvIdentQ(u32 ch) __attribute__((nothrow));
 // func:algo_lib.FDb.BashQuotesafe.Match
 inline bool          BashQuotesafeQ(u32 ch) __attribute__((nothrow));
 
-// func:algo_lib.FDb.RegxSqlSpecial.Match
-inline bool          RegxSqlSpecialQ(u32 ch) __attribute__((nothrow));
-
 // func:algo_lib.FDb.SsimBreakName.Match
 inline bool          SsimBreakNameQ(u32 ch) __attribute__((nothrow));
 
@@ -1591,9 +1620,9 @@ void                 bh_timehook_FirstChanged() __attribute__((nothrow));
 inline void          bh_timehook_UpdateCycles() __attribute__((nothrow));
 // func:algo_lib.FDb.bh_timehook.Step
 // this function is 'extrn' and implemented by user
-void                 bh_timehook_Step() __attribute__((nothrow));
+void                 bh_timehook_Step();
 // func:algo_lib.FDb.bh_timehook.Call
-inline void          bh_timehook_Call() __attribute__((nothrow));
+inline void          bh_timehook_Call();
 
 // Declaration for user-defined init function
 // User-defined init function invoked for field _db of algo_lib::FDb
@@ -1959,7 +1988,7 @@ bool                 txttbl_XrefMaybe(algo_lib::FTxttbl &row);
 
 // Invoke function by pointer
 // func:algo_lib.FDb.h_fatalerror.Call
-inline void          h_fatalerror_Call() __attribute__((nothrow));
+inline void          h_fatalerror_Call();
 // Assign 0-argument hook with no context pointer
 // func:algo_lib.FDb.h_fatalerror.Set0
 inline void          h_fatalerror_Set0(void (*fcn)() ) __attribute__((nothrow));
@@ -2275,9 +2304,9 @@ bool                 errns_XrefMaybe(algo_lib::FErrns &row);
 void                 giveup_time_UpdateCycles() __attribute__((nothrow));
 // func:algo_lib.FDb.giveup_time.Step
 // this function is 'extrn' and implemented by user
-void                 giveup_time_Step() __attribute__((nothrow));
+void                 giveup_time_Step();
 // func:algo_lib.FDb.giveup_time.Call
-inline void          giveup_time_Call() __attribute__((nothrow));
+inline void          giveup_time_Call();
 
 // Remove all elements from heap and free memory used by the array.
 // func:algo_lib.FDb.bh_timehook_idle.Dealloc
@@ -2330,9 +2359,9 @@ void                 bh_timehook_idle_FirstChanged() __attribute__((nothrow));
 inline void          bh_timehook_idle_UpdateCycles() __attribute__((nothrow));
 // func:algo_lib.FDb.bh_timehook_idle.Step
 // this function is 'extrn' and implemented by user
-void                 bh_timehook_idle_Step() __attribute__((nothrow));
+void                 bh_timehook_idle_Step();
 // func:algo_lib.FDb.bh_timehook_idle.Call
-inline void          bh_timehook_idle_Call() __attribute__((nothrow));
+inline void          bh_timehook_idle_Call();
 
 // cursor points to valid item
 // func:algo_lib.FDb.temp_strings_curs.Reset
@@ -2481,10 +2510,10 @@ private:
     friend void                 dispsigcheck_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:algo_lib.FDispsigcheck.msghdr.CopyOut
+// func:algo_lib.FDispsigcheck.base.CopyOut
 void                 dispsigcheck_CopyOut(algo_lib::FDispsigcheck &row, dmmeta::Dispsigcheck &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:algo_lib.FDispsigcheck.msghdr.CopyIn
+// func:algo_lib.FDispsigcheck.base.CopyIn
 void                 dispsigcheck_CopyIn(algo_lib::FDispsigcheck &row, dmmeta::Dispsigcheck &in) __attribute__((nothrow));
 
 // Set all fields to initial values.
@@ -2528,10 +2557,10 @@ private:
     friend void                 imtable_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:algo_lib.FImtable.msghdr.CopyOut
+// func:algo_lib.FImtable.base.CopyOut
 void                 imtable_CopyOut(algo_lib::FImtable &row, algo::Imtable &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:algo_lib.FImtable.msghdr.CopyIn
+// func:algo_lib.FImtable.base.CopyIn
 void                 imtable_CopyIn(algo_lib::FImtable &row, algo::Imtable &in) __attribute__((nothrow));
 
 // Set all fields to initial values.
@@ -2558,7 +2587,7 @@ struct FIohook { // algo_lib.FIohook
 };
 // Invoke function by pointer
 // func:algo_lib.FIohook.callback.Call
-inline void          callback_Call(algo_lib::FIohook& parent, algo_lib::FIohook& arg) __attribute__((nothrow));
+inline void          callback_Call(algo_lib::FIohook& parent, algo_lib::FIohook& arg);
 // Assign 0-argument hook with no context pointer
 // func:algo_lib.FIohook.callback.Set0
 inline void          callback_Set0(algo_lib::FIohook& parent, void (*fcn)() ) __attribute__((nothrow));

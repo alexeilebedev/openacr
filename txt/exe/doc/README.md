@@ -16,6 +16,7 @@ Usage: doc [[-key:]<string>] [options]
     -vis                          Show the access paths of the ctypes on the page (amc_vis)
     -code                         Show the C++ amc generated for the ctypes on the page, and their functions
     -data                         Show the rows of the table the page is about (acr <ssimfile>)
+    -dir                          List the documents beside this one in the pane; a terminal folds the list
     -list                         List matching documents instead of rendering one
     -width        int     0       Measure in columns; 0 takes it from the terminal
     -color                Y       Style the output when stdout is a terminal
@@ -33,7 +34,7 @@ Usage: doc [[-key:]<string>] [options]
     -bind         string  ""      Serve HTTP at this ip:port instead of showing one page
     -verbose      flag            Verbosity level (0..255); alias -v; cumulative
     -debug        flag            Debug level (0..255); alias -d; cumulative
-    -trace        string  ""      Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps
+    -trace        string  ""      Trace expression: log categories to enable, as category[:filter],...
     -help                         Print help and exit; alias -h
     -version                      Print version and exit
     -signature                    Show signatures and exit; alias -sig
@@ -51,20 +52,21 @@ at the terminal, as an HTML page, or from a small HTTP server it runs itself.
 The argument is a key.  Any substring of a `dev.readmefile` path is a valid
 selection, and so is the name of a documented thing:
 
-| Key | Page |
-|---|---|
-| *nothing* | the documentation index, `txt/README.md` |
-| `acr` | that tool's README |
-| `txt/openacr` | that directory's README |
-| `txt/openacr/` | that directory: what it holds |
-| `dmmeta.ctype` | the document describing that ssimfile |
-| `cpp/doc/html.cpp` | a source file, as a listing |
+| Key                         | Page |
+| --------------------------- | ---- |
+| *nothing*                   | the documentation index, `txt/README.md` |
+| `acr`                       | that tool's README |
+| `txt/openacr`               | that directory's README |
+| `txt/openacr/`              | that directory: what it holds |
+| `dmmeta.ctype`              | the document describing that ssimfile |
+| `cpp/doc/html.cpp`          | a source file, as a listing |
 | `dmmeta.ctype:dmmeta.Ctype` | that record, from `acr` |
-| `dmmeta.Ctype` | the same, for a key naming a ctype |
-| `msg` | the protocols: every message header in the tree |
-| `msg:ams.MsgHeader` | that header, and the messages that begin with it |
-| `msg:ams.LogMsg` | that message, and the dispatches that read it |
-| `help` | the reader's keys |
+| `dmmeta.Ctype`              | the same, for a key naming a ctype |
+| `gen`                       | a table named by its short name: its rows, or its gist when they stand for functions |
+| `msg`                       | the protocols: every message header in the tree |
+| `msg:ams.MsgHeader`         | that header, and the messages that begin with it |
+| `msg:ams.LogMsg`            | that message, and the dispatches that read it |
+| `help`                      | the reader's keys |
 
 A leading `/` means the top of the repository.  A key matching several documents,
 or none, is answered with what it could have meant: the documents whose path
@@ -78,15 +80,16 @@ other word is a table's name, and a table's short name expands to its full one, 
 `ssimfile:dmmeta.ctype` and `dmmeta.ssimfile:dmmeta.ctype` are one page.  `-q` reaches
 a table whose name is one of these words.
 
-| Key | Page |
-|---|---|
-| `ns:acr` | the namespace: its rule file, ctypes, sources, dependencies, inputs, tests |
-| `ctype:dmmeta.Ctype` | one ctype: its declaration, then the C++ that acts on it |
-| `func:dmmeta.Ctype` | the functions that ctype appears in |
-| `func:doc.NavText` | one function's source |
+| Key                      | Page |
+| ------------------------ | ---- |
+| `ns:acr`                 | the namespace: its rule file, ctypes, sources, dependencies, inputs, tests |
+| `ctype:dmmeta.Ctype`     | one ctype: its declaration, then the C++ that acts on it |
+| `func:dmmeta.Ctype`      | the functions that ctype appears in |
+| `func:doc.NavText`       | one function's source |
 | `cpp/doc/ns.cpp:NavText` | the same, named by the file it lives in |
-| `code:dmmeta.Ctype` | what `amc` generated for it |
-| `accesspath:acr.%` | the access paths of those ctypes, drawn by `amc_vis` |
+| `code:dmmeta.Ctype`      | what `amc` generated for it |
+| `accesspath:acr.%`       | the access paths of those ctypes, drawn by `amc_vis` |
+| `gist:amcdb.gen:prep%`   | those steps of amc, each with the comment of the function that runs it |
 
 A comptest is not among them.  `comptest:doc.Ssimdb` is the short name of
 `atfdb.comptest` and a key of it, so it is an ordinary page of records -- and what a
@@ -97,6 +100,26 @@ is checked against, arrives there as two sections read off the row itself.
 addresses it by, its comment what the page shows.  The rows are compiled into the tool and
 each is bound to the function that draws it, so a page is a row and a function rather than
 a case in two dispatch chains.
+
+### Tables of functions
+<a href="#tables-of-functions"></a>
+
+Some tables are compiled into a program, and each of their rows stands for a function of
+that program.  Each row of `amcdb.gen` is a step that `amc` runs, and its function is
+the step.  Read such a table with `doc gen`, which shows its gist: a section per
+row, headed by the key, holding the row's comment, the comment of the function, and the
+function's name, which opens its source.  The comptests, the citests and the pages of this
+tool read the same way.  Put a pattern after `gist:` to read only the rows it selects.
+Name the rows with `:%`, as in `doc gen:%`, or add `-meta`, `-showcmd`, `-vis`, `-code` or
+`-data`, to open the table's records page.
+
+```bash
+doc gen
+doc gist:comptest:doc.%
+```
+
+A table of constants compiled in, such as `dmmeta.logcat`, stands for no function and has
+no gist.
 
 ### At the terminal
 <a href="#at-the-terminal"></a>
@@ -129,7 +152,8 @@ That text is a command line, and this tool takes it under exactly those names.  
 copied out of the box runs, and what it opens is the page it was copied from.
 
 A page of records carries three tabs -- the records, the schema they are instances of, and
-the command line that fetched them -- and two sections that open under a triangle: the
+the command line that fetched them -- plus the gist when its rows stand for functions, and
+two sections that open under a triangle: the
 access paths of the ctypes it is about, and the code `amc` generated for them.  The tabs
 are alternatives and travel no further than the page; a section stays open as a reader
 walks, since a reader who opened the code once means it for the next page too.
@@ -142,7 +166,8 @@ record comes back follows from what was asked for, and there is nothing to set.
 
 The pane holds the shape of the page: the headings of a document, the sections of a page
 of records, the functions of a listing.  It is one text drawn twice -- above the page at
-the terminal, to its left in a browser.
+the terminal, to its left in a browser.  A document's pane also lists the other documents
+of its directory, which the terminal folds (`-dir`).
 
 `www/doc/page.html` and `www/doc/doc.css` are the page and its style, read from the top
 of the checkout and inlined, so a saved page carries its own style.
@@ -175,7 +200,8 @@ itself.
 
 Read the key as a query over the ssim database, never as a page `doc` builds.  `ctype`,
 `ns` and `func` are words this tool answers itself and they shadow the tables of those
-names, so `-q ctype:%` is how the table is reached.  The flag expands the key and stops
+names, so `-q ctype:%` is how the table is reached.  A table's name under `-q`, as in
+`doc -q gen`, is every row of the table, never its gist.  The flag expands the key and stops
 -- what it produces is an ordinary query, and nothing downstream asks whether it was
 set.
 
@@ -224,6 +250,15 @@ Open the data section, which a page about one table carries: the rows of that ta
 a reader looking at a table's declaration wants next is what is in it, so the rows are a
 section of that page rather than another location to walk to -- and closed until asked for,
 since a table of ten thousand rows is not what somebody reading the declaration asked for.
+
+#### -dir -- List the documents beside this one in the pane; a terminal folds the list
+<a href="#-dir"></a>
+
+Open the directory in the pane of a document.  At the terminal the pane sits above the
+text, and a directory such as `txt/rule` holds ninety documents, so the pane names the
+directory as a fold and lists the document being read alone.  Press Enter on the
+directory's entry to open it, and again to close it.  A browser draws the pane beside the
+page and lists the directory either way.
 
 #### -list -- List matching documents instead of rendering one
 <a href="#-list"></a>

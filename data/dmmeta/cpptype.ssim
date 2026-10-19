@@ -17,6 +17,7 @@ dmmeta.cpptype  ctype:algo.Errns  ctor:Y
 dmmeta.cpptype  ctype:algo.FailokQ  ctor:Y
 dmmeta.cpptype  ctype:algo.Fildes  ctor:Y
 dmmeta.cpptype  ctype:algo.FileFlags  ctor:Y
+dmmeta.cpptype  ctype:algo.Fldtype  ctor:Y
 dmmeta.cpptype  ctype:algo.I32Dec1  ctor:Y
 dmmeta.cpptype  ctype:algo.I32Dec2  ctor:Y
 dmmeta.cpptype  ctype:algo.I32Dec3  ctor:Y

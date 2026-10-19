@@ -32,7 +32,7 @@ void ainst::extpkg_vma(ainst::FExtpkg &extpkg) {
     AddStage(extpkg,"(cd \"$dir\" && ./autogen.sh)");
     AddStage(extpkg,"(cd \"$dir\" && ./configure --with-ofed=/usr --prefix=/usr --libdir=/usr/lib"
              " --includedir=/usr/include --docdir=/usr/share/doc/libvma --sysconfdir=/etc)");
-    AddStage(extpkg,"(cd \"$dir\" && make -j\"$(nproc)\")");
+    AddStage(extpkg,"(cd \"$dir\" && make -j\"$(ainst_nproc)\")");
     AddStage(extpkg,"(cd \"$dir\" && make install DESTDIR=\"$ROOT\")");
     AddPost(extpkg,"ldconfig");
     AddPost(extpkg,"chmod u+s /usr/lib/libvma*");

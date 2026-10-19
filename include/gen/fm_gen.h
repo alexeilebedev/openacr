@@ -66,13 +66,14 @@ enum fm_FieldIdEnum {    // fm.FieldId.value
     ,fm_FieldId_objtype_summary
     ,fm_FieldId_summary
     ,fm_FieldId_description
+    ,fm_FieldId_metric
     ,fm_FieldId_shelved
     ,fm_FieldId_n_flap
     ,fm_FieldId_ch
     ,fm_FieldId_value
 };
 
-enum { fm_FieldIdEnum_N = 21 };
+enum { fm_FieldIdEnum_N = 22 };
 
 namespace fm { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
@@ -551,24 +552,25 @@ void                 Description_Print(fm::Description& row, algo::cstring& str)
 // --- fm.AlarmMsg
 #pragma pack(push,1)
 struct AlarmMsg { // fm.AlarmMsg
-    u32                type;              //   17
-    u32                length;            //   ssizeof(parent)
-    fm::Code           code;              // Alarm code
-    fm::Objtype        objtype;           // Alarmed object type
-    fm::Objinst        objinst;           // Alarmed object instance
-    algo::Smallstr30   objname;           // Human-facing name of the alarmed object; empty when its key is its name
-    fm::Flag           flag;              // Flag: raised or cleared
-    fm::Severity       severity;          // Perceived severity
-    i32                n_occurred;        //   0  How many times the alarm occurred since first_time
-    algo::UnTime       first_time;        // Time of first occurrence
-    algo::UnTime       last_time;         // Time of last occurrence
-    algo::UnTime       clear_time;        // Time when the alarm has beed cleared (only for cleared alarms
-    algo::UnTime       update_time;       // Time of last update
-    fm::Summary        objtype_summary;   // Object type explained
-    fm::Summary        summary;           // Alarm summary from inventory
-    fm::Description    description;       // Alarm message from object
-    bool               shelved;           //   false  RFC 8632 shelving: published but hidden from the default operator view
-    u32                n_flap;            //   0  Reading transitions absorbed by the debounce window
+    u32                 type;              //   17
+    u32                 length;            //   ssizeof(parent)
+    fm::Code            code;              // Alarm code
+    fm::Objtype         objtype;           // Alarmed object type
+    fm::Objinst         objinst;           // Alarmed object instance
+    algo::Smallstr30    objname;           // Human-facing name of the alarmed object; empty when its key is its name
+    fm::Flag            flag;              // Flag: raised or cleared
+    fm::Severity        severity;          // Perceived severity
+    i32                 n_occurred;        //   0  How many times the alarm occurred since first_time
+    algo::UnTime        first_time;        // Time of first occurrence
+    algo::UnTime        last_time;         // Time of last occurrence
+    algo::UnTime        clear_time;        // Time when the alarm has beed cleared (only for cleared alarms
+    algo::UnTime        update_time;       // Time of last update
+    fm::Summary         objtype_summary;   // Object type explained
+    fm::Summary         summary;           // Alarm summary from inventory
+    fm::Description     description;       // Alarm message from object
+    algo::Smallstr200   metric;            // Metric whose reading raised the alarm; empty when no metric carries it
+    bool                shelved;           //   false  RFC 8632 shelving: published but hidden from the default operator view
+    u32                 n_flap;            //   0  Reading transitions absorbed by the debounce window
     // func:fm.AlarmMsg..Ctor
     inline               AlarmMsg() __attribute__((nothrow));
 };

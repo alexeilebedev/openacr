@@ -206,22 +206,148 @@ static tempstr NewlineToBr(strptr s) {
 
 // -----------------------------------------------------------------------------
 
-// Print table TXTTBL using markdown, appending to string STR.
-// First row of the table is assumed to be the header.
+// Return how many characters the bytes S spell, a UTF-8 sequence counting as one,
+// so an em dash pads like a hyphen.
+static int TextWidth(algo::strptr s) {
+    int ret = 0;
+    for (int i = 0; i < s.n_elems; i++) {
+        ret += (u8(s.elems[i]) & 0xc0) != 0x80 ? 1 : 0;
+    }
+    return ret;
+}
+
+// Print table TXTTBL using markdown, appending to string STR, aligned so that the
+// table reads as a table in the markdown source as it does rendered.  The first row
+// is the header, and the delimiter row after it gives each column the justification
+// of its header cell: plain dashes for left, a colon on the right for right, and
+// colons on both ends for center.  Every cell is padded to the width of its column in
+// characters, at least three for the delimiter's dashes, on the side its justification
+// says.  A left-justified last column is the exception: its text ends where it ends,
+// since a column holding prose would otherwise pad every row to its longest paragraph.
 // Newlines in cells are converted to '<br>'.
 void algo_lib::FTxttbl_Markdown(algo_lib::FTxttbl &txttbl, algo::cstring &str) {
+    algo::U64Ary width;
+    ind_beg(algo_lib::txttbl_c_txtrow_curs,txtrow,txttbl) if (txtrow.select) {
+        ind_beg(algo_lib::txtrow_c_txtcell_curs, txtcell, txtrow) {
+            int col = ind_curs(txtcell).index;
+            while (ary_N(width) <= col) {
+                ary_Alloc(width) = 3;
+            }
+            ary_qFind(width, col) = u64_Max(ary_qFind(width, col), TextWidth(NewlineToBr(txtcell.text)));
+        }ind_end;
+    }ind_end;
     ind_beg(algo_lib::txttbl_c_txtrow_curs,txtrow,txttbl) if (txtrow.select && c_txtcell_N(txtrow)) {
         str<<"|";
         ind_beg(algo_lib::txtrow_c_txtcell_curs, txtcell, txtrow) {
             // markdown is thrown away by \n in the cells, so it has to be replaced with <br>
-            str<<NewlineToBr(txtcell.text)<<"|";
+            tempstr text = NewlineToBr(txtcell.text);
+            int col = ind_curs(txtcell).index;
+            bool ragged = col == ary_N(width) - 1 && txtcell.justify == algo_TextJust_j_left;
+            int extra = ragged ? 0 : int(ary_qFind(width, col)) - TextWidth(text);
+            int l = txtcell.justify>0 ? extra
+                : txtcell.justify<0 ? 0
+                : extra/2;
+            str<<" ";
+            char_PrintNTimes(' ', str, l);
+            str<<text;
+            char_PrintNTimes(' ', str, extra-l);
+            str<<" |";
         }ind_end;
         str<<eol;
         if (ind_curs(txtrow).index==0) {
-            frep_(i,c_txtcell_N(txtrow)) {
-                str<<"|---";
-            };
-            str<<"|"<<eol;
+            str<<"|";
+            ind_beg(algo_lib::txtrow_c_txtcell_curs, txtcell, txtrow) {
+                int col = ind_curs(txtcell).index;
+                bool ragged = col == ary_N(width) - 1 && txtcell.justify == algo_TextJust_j_left;
+                int ndash = ragged ? i32_Max(3, TextWidth(NewlineToBr(txtcell.text))) : int(ary_qFind(width, col));
+                str<<" "<<(txtcell.justify==algo_TextJust_j_center ? ':' : '-');
+                char_PrintNTimes('-', str, ndash - 2);
+                str<<(txtcell.justify==algo_TextJust_j_left ? '-' : ':')<<" |";
+            }ind_end;
+            str<<eol;
         }
     }ind_end;
+}
+
+// -----------------------------------------------------------------------------
+
+// Add a header cell to TXTTBL naming ATTR in upper case, or nothing when ATTR has no name.
+static void AddHeaderCell(algo_lib::FTxttbl &txttbl, algo::Attr &attr) {
+    if (attr.name != "") {
+        tempstr name(attr.name);
+        ind_beg(algo::cstring_ch_curs,ch,name) {
+            ch = algo::ToUpper(ch);
+        }ind_end;
+        algo_lib::AddCol(txttbl,name);
+    }
+}
+
+// Add a cell to the last row of TXTTBL holding the value of ATTR, or EMPTY when the value
+// is empty; nothing when ATTR has no name.
+static void AddValueCell(algo_lib::FTxttbl &txttbl, algo::Attr &attr, algo::strptr empty) {
+    if (attr.name != "") {
+        algo_lib::AddCell(txttbl) = attr.value == "" ? empty : algo::strptr(attr.value);
+    }
+}
+
+// Return true when tuple NEXT cannot join the table whose first row is tuple FIRST, so
+// that a new table starts at NEXT.  A table has one column per attr of its first row, and
+// a row of another type, or with another number of attrs, would put its values under the
+// wrong headers.  The type of a tuple is its head's name when the head has one, as in
+// `key:value` form, and the head's value otherwise.
+bool algo_lib::NewTableQ(algo::Tuple &first, algo::Tuple &next) {
+    bool ret = first.head.name == ""
+        ? first.head.value != next.head.value
+        : first.head.name != next.head.name;
+    return ret || attrs_N(first) != attrs_N(next);
+}
+
+// Add TUPLE to table TXTTBL as one row with a cell per named attr.  The first tuple of an
+// empty table also adds the header row, which names each attr in upper case.  The head is a
+// column only when it has a name, since a bare type tag is the same on every row.  A cell
+// whose value is empty holds EMPTY instead, so that a reader who splits a line on blanks
+// finds every column where the header says it is.
+void algo_lib::FTxttbl_AddTuple(algo_lib::FTxttbl &txttbl, algo::Tuple &tuple, algo::strptr empty) {
+    if (c_txtrow_N(txttbl) == 0) {
+        AddHeaderCell(txttbl, tuple.head);
+        ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
+            AddHeaderCell(txttbl, attr);
+        }ind_end;
+    }
+    AddRow(txttbl);
+    AddValueCell(txttbl, tuple.head, empty);
+    ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
+        AddValueCell(txttbl, attr, empty);
+    }ind_end;
+}
+
+// Append table TXTTBL to OUT, aligned, with a blank line after it, and empty the table so the
+// next one starts from a header row.
+static void FlushTable(algo_lib::FTxttbl &txttbl, algo::cstring &out) {
+    algo_lib::FTxttbl_Print(txttbl, out);
+    out << eol;
+    algo_lib::c_txtrow_Cascdel(txttbl);
+    txttbl.normalized = false;
+}
+
+// Append to OUT the ssim tuples of TEXT, one per line, as aligned text tables.  A table
+// starts at the first tuple and at every tuple that NewTableQ separates from the first row
+// of the table in progress, and a blank line ends each table.  A line that does not read
+// as a tuple with at least one attr is skipped.  An empty value prints as EMPTY.
+void algo_lib::SsimToTable(algo::strptr text, algo::strptr empty, algo::cstring &out) {
+    algo_lib::FTxttbl txttbl;
+    algo::Tuple first;
+    ind_beg(algo::Line_curs,line,text) {
+        algo::Tuple tuple;
+        if (Tuple_ReadStrptr(tuple,line,false) && attrs_N(tuple) > 0) {
+            if (c_txtrow_N(txttbl) > 0 && NewTableQ(first, tuple)) {
+                FlushTable(txttbl, out);
+            }
+            if (c_txtrow_N(txttbl) == 0) {
+                first = tuple;
+            }
+            FTxttbl_AddTuple(txttbl, tuple, empty);
+        }
+    }ind_end;
+    FlushTable(txttbl, out);
 }

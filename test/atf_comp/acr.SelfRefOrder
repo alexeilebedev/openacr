@@ -1,0 +1,24 @@
+# start bash cmd:"bash -c 'rm -rf $tempdir/s && mkdir -p $tempdir/s && cp -r data/dmmeta $tempdir/s/dmmeta && $bindir/acr -in:$tempdir/s -insert -write -print:N -report:N'"
+bash <- dmmeta.ns  ns:dsmp  nstype:ssimdb  license:GPL  comment:''
+bash <- dmmeta.ctype  ctype:dsmp.Grant  comment:''
+bash <- dmmeta.ctype  ctype:dsmp.Node  comment:''
+bash <- dmmeta.field  field:dsmp.Grant.grant  arg:algo.cstring  reftype:Val  dflt:''  comment:''
+bash <- dmmeta.field  field:dsmp.Grant.node  arg:dsmp.Node  reftype:Pkey  dflt:''  comment:''
+bash <- dmmeta.field  field:dsmp.Node.node  arg:algo.cstring  reftype:Val  dflt:''  comment:''
+bash <- dmmeta.field  field:dsmp.Node.parent  arg:dsmp.Node  reftype:Pkey  dflt:''  comment:''
+bash <- dmmeta.ssimfile  ssimfile:dsmp.grant  ctype:dsmp.Grant
+bash <- dmmeta.ssimfile  ssimfile:dsmp.node  ctype:dsmp.Node
+bash <- dmmeta.ssimsort  ssimfile:dsmp.node  sortfld:dsmp.Node.node  comment:''
+# eof bash
+# exit bash code:0
+# start acr cmd:"$bindir/acr -in:- -schema:$tempdir/s % -report:N"
+acr <- dsmp.grant  grant:g1  node:a/b
+acr <- dsmp.node  node:a/b  parent:a
+acr <- dsmp.node  node:a  parent:''
+acr <- dsmp.node  node:''  parent:''
+# eof acr
+acr -> dsmp.node  node:""   parent:""
+acr -> dsmp.node  node:a    parent:""
+acr -> dsmp.node  node:a/b  parent:a
+acr -> dsmp.grant  grant:g1  node:a/b
+# exit acr code:0

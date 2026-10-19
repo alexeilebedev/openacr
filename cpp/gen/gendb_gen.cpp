@@ -286,13 +286,11 @@ const char* gendb::value_ToCstr(const gendb::FieldId& parent) {
         case gendb_FieldId_comment         : ret = "comment";  break;
         case gendb_FieldId_msgfield        : ret = "msgfield";  break;
         case gendb_FieldId_msg             : ret = "msg";  break;
-        case gendb_FieldId_offset          : ret = "offset";  break;
+        case gendb_FieldId_fldtype         : ret = "fldtype";  break;
         case gendb_FieldId_arg             : ret = "arg";  break;
+        case gendb_FieldId_offset          : ret = "offset";  break;
         case gendb_FieldId_width           : ret = "width";  break;
-        case gendb_FieldId_bigend          : ret = "bigend";  break;
-        case gendb_FieldId_varlen          : ret = "varlen";  break;
-        case gendb_FieldId_strtype         : ret = "strtype";  break;
-        case gendb_FieldId_pad             : ret = "pad";  break;
+        case gendb_FieldId_aux             : ret = "aux";  break;
         case gendb_FieldId_typeoffset      : ret = "typeoffset";  break;
         case gendb_FieldId_typewidth       : ret = "typewidth";  break;
         case gendb_FieldId_typebig         : ret = "typebig";  break;
@@ -340,14 +338,14 @@ bool gendb::value_SetStrptrMaybe(gendb::FieldId& parent, algo::strptr rhs) {
                 case LE_STR3('a','r','g'): {
                     value_SetEnum(parent,gendb_FieldId_arg); ret = true; break;
                 }
+                case LE_STR3('a','u','x'): {
+                    value_SetEnum(parent,gendb_FieldId_aux); ret = true; break;
+                }
                 case LE_STR3('l','e','n'): {
                     value_SetEnum(parent,gendb_FieldId_len); ret = true; break;
                 }
                 case LE_STR3('m','s','g'): {
                     value_SetEnum(parent,gendb_FieldId_msg); ret = true; break;
-                }
-                case LE_STR3('p','a','d'): {
-                    value_SetEnum(parent,gendb_FieldId_pad); ret = true; break;
                 }
             }
             break;
@@ -385,9 +383,6 @@ bool gendb::value_SetStrptrMaybe(gendb::FieldId& parent, algo::strptr rhs) {
                 case LE_STR6('a','c','r','k','e','y'): {
                     value_SetEnum(parent,gendb_FieldId_acrkey); ret = true; break;
                 }
-                case LE_STR6('b','i','g','e','n','d'): {
-                    value_SetEnum(parent,gendb_FieldId_bigend); ret = true; break;
-                }
                 case LE_STR6('c','p','p','s','y','m'): {
                     value_SetEnum(parent,gendb_FieldId_cppsym); ret = true; break;
                 }
@@ -396,9 +391,6 @@ bool gendb::value_SetStrptrMaybe(gendb::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR6('o','f','f','s','e','t'): {
                     value_SetEnum(parent,gendb_FieldId_offset); ret = true; break;
-                }
-                case LE_STR6('v','a','r','l','e','n'): {
-                    value_SetEnum(parent,gendb_FieldId_varlen); ret = true; break;
                 }
             }
             break;
@@ -414,8 +406,8 @@ bool gendb::value_SetStrptrMaybe(gendb::FieldId& parent, algo::strptr rhs) {
                 case LE_STR7('d','i','s','p','s','i','g'): {
                     value_SetEnum(parent,gendb_FieldId_dispsig); ret = true; break;
                 }
-                case LE_STR7('s','t','r','t','y','p','e'): {
-                    value_SetEnum(parent,gendb_FieldId_strtype); ret = true; break;
+                case LE_STR7('f','l','d','t','y','p','e'): {
+                    value_SetEnum(parent,gendb_FieldId_fldtype); ret = true; break;
                 }
                 case LE_STR7('t','y','p','e','b','i','g'): {
                     value_SetEnum(parent,gendb_FieldId_typebig); ret = true; break;
@@ -634,29 +626,20 @@ bool gendb::Msgfield_ReadFieldMaybe(gendb::Msgfield& parent, algo::strptr field,
         case gendb_FieldId_name: {
             retval = false;
         } break;
-        case gendb_FieldId_offset: {
-            retval = i32_ReadStrptrMaybe(parent.offset, strval);
+        case gendb_FieldId_fldtype: {
+            retval = algo::Fldtype_ReadStrptrMaybe(parent.fldtype, strval);
         } break;
         case gendb_FieldId_arg: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.arg, strval);
         } break;
+        case gendb_FieldId_offset: {
+            retval = i32_ReadStrptrMaybe(parent.offset, strval);
+        } break;
         case gendb_FieldId_width: {
             retval = i32_ReadStrptrMaybe(parent.width, strval);
         } break;
-        case gendb_FieldId_bigend: {
-            retval = bool_ReadStrptrMaybe(parent.bigend, strval);
-        } break;
-        case gendb_FieldId_varlen: {
-            retval = bool_ReadStrptrMaybe(parent.varlen, strval);
-        } break;
-        case gendb_FieldId_strtype: {
-            retval = algo::Smallstr50_ReadStrptrMaybe(parent.strtype, strval);
-        } break;
-        case gendb_FieldId_pad: {
-            retval = algo::Smallstr10_ReadStrptrMaybe(parent.pad, strval);
-        } break;
-        case gendb_FieldId_comment: {
-            retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
+        case gendb_FieldId_aux: {
+            retval = i32_ReadStrptrMaybe(parent.aux, strval);
         } break;
         default: {
             if (!ch_N(field) || (algo_lib::_db.strict_attr && field != "acr.rowid")) {
@@ -683,15 +666,6 @@ bool gendb::Msgfield_ReadStrptrMaybe(gendb::Msgfield &parent, algo::strptr in_st
     return retval;
 }
 
-// --- gendb.Msgfield..Init
-// Set all fields to initial values.
-void gendb::Msgfield_Init(gendb::Msgfield& parent) {
-    parent.offset = i32(0);
-    parent.width = i32(0);
-    parent.bigend = bool(false);
-    parent.varlen = bool(false);
-}
-
 // --- gendb.Msgfield..Print
 // print string representation of ROW to string STR
 // cfmt:gendb.Msgfield.String  printfmt:Tuple
@@ -702,29 +676,20 @@ void gendb::Msgfield_Print(gendb::Msgfield& row, algo::cstring& str) {
     algo::Smallstr100_Print(row.msgfield, temp);
     PrintAttrSpaceReset(str,"msgfield", temp);
 
-    i32_Print(row.offset, temp);
-    PrintAttrSpaceReset(str,"offset", temp);
+    algo::Fldtype_Print(row.fldtype, temp);
+    PrintAttrSpaceReset(str,"fldtype", temp);
 
     algo::Smallstr100_Print(row.arg, temp);
     PrintAttrSpaceReset(str,"arg", temp);
 
+    i32_Print(row.offset, temp);
+    PrintAttrSpaceReset(str,"offset", temp);
+
     i32_Print(row.width, temp);
     PrintAttrSpaceReset(str,"width", temp);
 
-    bool_Print(row.bigend, temp);
-    PrintAttrSpaceReset(str,"bigend", temp);
-
-    bool_Print(row.varlen, temp);
-    PrintAttrSpaceReset(str,"varlen", temp);
-
-    algo::Smallstr50_Print(row.strtype, temp);
-    PrintAttrSpaceReset(str,"strtype", temp);
-
-    algo::Smallstr10_Print(row.pad, temp);
-    PrintAttrSpaceReset(str,"pad", temp);
-
-    algo::Comment_Print(row.comment, temp);
-    PrintAttrSpaceReset(str,"comment", temp);
+    i32_Print(row.aux, temp);
+    PrintAttrSpaceReset(str,"aux", temp);
 }
 
 // --- gendb.Payloadhdr..ReadFieldMaybe

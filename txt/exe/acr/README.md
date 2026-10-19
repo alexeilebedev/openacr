@@ -53,7 +53,7 @@ Usage: acr [[-query:]<string>] [options]
     -meta                       Select meta-data for selected records
     -verbose    flag            Verbosity level (0..255); alias -v; cumulative
     -debug      flag            Debug level (0..255); alias -d; cumulative
-    -trace      string  ""      Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps
+    -trace      string  ""      Trace expression: log categories to enable, as category[:filter],...
     -help                       Print help and exit; alias -h
     -version                    Print version and exit
     -signature                  Show signatures and exit; alias -sig
@@ -163,7 +163,8 @@ its correct place and the diff carries only that row.
 deleted record, recursively.  `-x` extends the cascade to the records that
 `ssimreq` rules tie to the selection.  `acr ns:<ns> -del -x -g -write`
 therefore removes a namespace along with its ctypes, fields, target and source
-files.
+files.  An `acr.delete` line on stdin cascades the same way.  The cascade
+reaches the records inserted earlier in the same input as well.
 
 #### Renaming
 <a href="#renaming"></a>

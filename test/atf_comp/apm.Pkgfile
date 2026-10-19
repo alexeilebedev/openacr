@@ -1,0 +1,18 @@
+# start bash cmd:"bash -c 'cd $tempdir && bash $$OLDPWD/test/apm/pkgfile.sh $$OLDPWD $bindir'"
+# eof bash
+bash -> apm.pkgfile_push  n:1  exit:0
+bash -> apm.pkgfile_origin  file:AGENTS.md  text:"## Package guidance for agents"
+bash -> apm.pkgfile_origin  file:txt/README.md  text:"## Package front page"
+bash -> apm.pkgfile_origin  file:txt/pkg/AGENTS.md  text:"## Package guidance for agents"
+bash -> apm.pkgfile_origin  file:txt/pkg/README.md  text:"## Package front page"
+bash -> apm.pkgfile_push  n:2  exit:0
+bash -> apm.pkgfile_origin  file:txt/README.md  text:"## Package front page"
+bash -> apm.pkgfile_origin  file:txt/pkg/AGENTS.md  text:"## Package guidance for agents"
+bash -> apm.pkgfile_origin  file:txt/pkg/README.md  text:"## Package front page"
+bash -> D  AGENTS.md
+bash ->  M data/dev/gitfile.ssim
+bash -> apm.pkgfile_check  exit:1
+bash -> apm.pkgfile_nosrc  pkgfile:pkg/llms.txt  gitfile:txt/pkg/llms.txt  comment:"the file the package maps is not in this tree"
+bash -> apm.pkgfile_ambiguous  pkgfile:pkg/txt/pkg/AGENTS.md  gitfile:txt/pkg/README.md  comment:"the package also carries the mapped path from its own keys; drop the key or the mapping"
+bash -> apm.pkgfile_conflict  dest:AGENTS.md  pkgfile:base/AGENTS.md  other:pkg/AGENTS.md  comment:"two packages map different files to one path of the projection"
+# exit bash code:0

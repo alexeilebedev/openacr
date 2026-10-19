@@ -26,6 +26,6 @@
 // Install kcat, a kafka producer and consumer for the command line.
 void ainst::extpkg_kcat(ainst::FExtpkg &extpkg) {
     AddStage(extpkg,tempstr()<<"dir=$(ainst_unpack "<<GetExtpkgsrcVar(extpkg,"src")<<")/kcat-1.7.1");
-    AddStage(extpkg,"(cd \"$dir\" && ./configure --prefix=/usr --mandir=/usr/share/man && make)");
+    AddStage(extpkg,"(cd \"$dir\" && ./configure --prefix=\"$PREFIX\" --mandir=\"$PREFIX/share/man\" && make)");
     AddStage(extpkg,"(cd \"$dir\" && make install DESTDIR=\"$ROOT\")");
 }

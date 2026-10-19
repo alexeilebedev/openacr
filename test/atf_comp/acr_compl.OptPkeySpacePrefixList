@@ -1,4 +1,5 @@
-# start acr_compl cmd:"$bindir/acr_compl -schema:test/acr_compl.schema.ssim -data:test/acr_compl.schema.ssim -line:'atf_cmdline -dpkey garden.Fruit' -type:63"
+# start acr_compl cmd:"$bindir/acr_compl -schema:test/acr_compl.schema.ssim -data:test/acr_compl.schema.ssim -line:'atf_cmdline -dpkey garden.F' -type:63"
 # eof acr_compl
+acr_compl -> garden.Flower
 acr_compl -> garden.Fruit
 # exit acr_compl code:0

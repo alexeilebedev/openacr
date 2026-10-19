@@ -72,68 +72,68 @@ that touch the type).
 #### Lifecycle (pass 1: `Ctype`)
 <a href="#lifecycle-pass-1-ctype-"></a>
 
-| Tfunc            | Generated function                       | When emitted | Effect |
-|------------------|------------------------------------------|--------------|--------|
-| `Ctype.Init`     | `void <Name>_Init(<Type>& row)`          | when ctor needed | Initialize each field in declaration order. |
-| `Ctype.Uninit`   | `void <Name>_Uninit(<Type>& row)`        | always        | Run `Cleanup` callbacks, `Cascdel` indexes, then per-field `Uninit` in **reverse** order. |
-| `Ctype.XrefMaybe`| `bool <Name>_XrefMaybe(<Type>& row)`     | when ctype has xref destinations | Try to insert `row` into every index registered against it.  Returns false (and rolls back) if any insert fails. |
-| `Ctype.Unref`    | `void <Name>_Unref(<Type>& row)`         | always        | Remove `row` from every index it currently sits in.  Called by `Delete`. |
+| Tfunc             | Generated function                   | When emitted                     | Effect |
+| ----------------- | ------------------------------------ | -------------------------------- | ------ |
+| `Ctype.Init`      | `void <Name>_Init(<Type>& row)`      | when ctor needed                 | Initialize each field in declaration order. |
+| `Ctype.Uninit`    | `void <Name>_Uninit(<Type>& row)`    | always                           | Run `Cleanup` callbacks, `Cascdel` indexes, then per-field `Uninit` in **reverse** order. |
+| `Ctype.XrefMaybe` | `bool <Name>_XrefMaybe(<Type>& row)` | when ctype has xref destinations | Try to insert `row` into every index registered against it.  Returns false (and rolls back) if any insert fails. |
+| `Ctype.Unref`     | `void <Name>_Unref(<Type>& row)`     | always                           | Remove `row` from every index it currently sits in.  Called by `Delete`. |
 
 #### Lifecycle (pass 2: `Ctype2`)
 <a href="#lifecycle-pass-2-ctype2-"></a>
 
-| Tfunc              | Generated function          | Effect |
-|--------------------|------------------------------|--------|
-| `Ctype2.Ctor`      | `<Type>::<Type>()`           | Calls `<Name>_Init(*this)`. |
-| `Ctype2.Dtor`      | `<Type>::~<Type>()`          | Calls `<Name>_Uninit(*this)`. |
-| `Ctype2.CopyCtor`  | `<Type>::<Type>(const <Type>&)` | Field-wise copy.  Emitted only when the ctype is safely copyable. |
-| `Ctype2.AssignOp`  | `<Type>& operator=(...)`     | Field-wise assignment. |
+| Tfunc                  | Generated function                    | Effect |
+| ---------------------- | ------------------------------------- | ------ |
+| `Ctype2.Ctor`          | `<Type>::<Type>()`                    | Calls `<Name>_Init(*this)`. |
+| `Ctype2.Dtor`          | `<Type>::~<Type>()`                   | Calls `<Name>_Uninit(*this)`. |
+| `Ctype2.CopyCtor`      | `<Type>::<Type>(const <Type>&)`       | Field-wise copy.  Emitted only when the ctype is safely copyable. |
+| `Ctype2.AssignOp`      | `<Type>& operator=(...)`              | Field-wise assignment. |
 | `Ctype2.FieldwiseCtor` | `<Type>::<Type>(field1, field2, ...)` | When `cpptype.ctor:Y`, a positional ctor. |
-| `Ctype2.EnumCtor`  | `<Type>::<Type>(<ns>_<Name>Enum arg)` | Construct from the ctype's own enum type.  Emitted for a single-field ctype whose field carries `dmmeta.fconst`, which is what lets `algo::Bool(algo_Bool_Y)` compile. |
+| `Ctype2.EnumCtor`      | `<Type>::<Type>(<ns>_<Name>Enum arg)` | Construct from the ctype's own enum type.  Emitted for a single-field ctype whose field carries `dmmeta.fconst`, which is what lets `algo::Bool(algo_Bool_Y)` compile. |
 
 #### Comparison (`dmmeta.ccmp`)
 <a href="#comparison-dmmeta-ccmp-"></a>
 
-| Tfunc                | Emit predicate                  | Effect |
-|----------------------|--------------------------------|--------|
-| `Ctype.Eq` / `Ctype.EqOp` | `extrn:N`                   | Field-wise equality + `operator==`. |
-| `Ctype.NeOp`         | with `EqOp`                    | `operator!=` complement. |
-| `Ctype.Cmp` / `Ctype.Lt` | `order:Y`                   | Lexicographic 3-way and `<`. |
-| `Ctype.LtOp/GtOp/LeOp/GeOp` | with `Lt` and `genop:Y`  | Operator forms. |
-| `Ctype.Min` / `Ctype.Max` | `minmax:Y`                  | `<Type>_Min/Max(<Type> a, <Type> b)`. |
-| `Ctype.Update`       | with `order:Y`                 | `Update(<Type>& a, <Type> b)` — set+return-changed. |
-| `Ctype.UpdateMin` / `Ctype.UpdateMax` | `minmax:Y`        | Take the smaller / larger of two values. |
-| `Ctype.EqOpAryptr`   | when ctype has a Tary of char/u8 | `operator==` against `algo::strptr`. |
+| Tfunc                                 | Emit predicate                   | Effect |
+| ------------------------------------- | -------------------------------- | ------ |
+| `Ctype.Eq` / `Ctype.EqOp`             | `extrn:N`                        | Field-wise equality + `operator==`. |
+| `Ctype.NeOp`                          | with `EqOp`                      | `operator!=` complement. |
+| `Ctype.Cmp` / `Ctype.Lt`              | `order:Y`                        | Lexicographic 3-way and `<`. |
+| `Ctype.LtOp/GtOp/LeOp/GeOp`           | with `Lt` and `genop:Y`          | Operator forms. |
+| `Ctype.Min` / `Ctype.Max`             | `minmax:Y`                       | `<Type>_Min/Max(<Type> a, <Type> b)`. |
+| `Ctype.Update`                        | with `order:Y`                   | `Update(<Type>& a, <Type> b)` — set+return-changed. |
+| `Ctype.UpdateMin` / `Ctype.UpdateMax` | `minmax:Y`                       | Take the smaller / larger of two values. |
+| `Ctype.EqOpAryptr`                    | when ctype has a Tary of char/u8 | `operator==` against `algo::strptr`. |
 
 #### Print / read (`dmmeta.cfmt`)
 <a href="#print-read-dmmeta-cfmt-"></a>
 
-| Tfunc                | Emit predicate                            | Effect |
-|----------------------|-------------------------------------------|--------|
-| `Ctype.Print`        | `cfmt.print:Y`                            | `void <Name>_Print(<Type>& row, cstring& out)`. |
-| `Ctype.Read`         | `cfmt.read:Y`                             | `bool <Name>_ReadStrptrMaybe(<Type>& row, strptr in)`. |
-| `Ctype.ReadFieldMaybe`| with `Read`, when ctype has fields       | Dispatcher invoked by `Read` for each tuple attribute. |
-| `Ctype.ToCmdline`    | `cfmt:Argv`                                | Encode to a `cstring` as an argv-style command line. |
-| `Ctype.NArgs`        | `cfmt:Argv` + has anonymous fields         | Count of mandatory positional args. |
-| `Ctype.GetAnon`      | `cfmt:Argv` + has anonymous fields         | Accessor for the *i*-th positional field. |
-| `Ctype.EqEnum`       | when ctype is an enum                      | Compare with `enum` constants. |
+| Tfunc                  | Emit predicate                     | Effect |
+| ---------------------- | ---------------------------------- | ------ |
+| `Ctype.Print`          | `cfmt.print:Y`                     | `void <Name>_Print(<Type>& row, cstring& out)`. |
+| `Ctype.Read`           | `cfmt.read:Y`                      | `bool <Name>_ReadStrptrMaybe(<Type>& row, strptr in)`. |
+| `Ctype.ReadFieldMaybe` | with `Read`, when ctype has fields | Dispatcher invoked by `Read` for each tuple attribute. |
+| `Ctype.ToCmdline`      | `cfmt:Argv`                        | Encode to a `cstring` as an argv-style command line. |
+| `Ctype.NArgs`          | `cfmt:Argv` + has anonymous fields | Count of mandatory positional args. |
+| `Ctype.GetAnon`        | `cfmt:Argv` + has anonymous fields | Accessor for the *i*-th positional field. |
+| `Ctype.EqEnum`         | when ctype is an enum              | Compare with `enum` constants. |
 
 #### Wire codecs (opt-in)
 <a href="#wire-codecs-opt-in-"></a>
 
-| Tfunc                | Triggered by         | Effect |
-|----------------------|----------------------|--------|
-| `Ctype.Hash`         | `dmmeta.chash`       | `u32 <Name>_Hash(u32 prev, const <Type>&)` — the rehash entry point for `Thash`. |
-| `Ctype.FastEncode` / `Ctype.FastDecode` | `dmmeta.cfast` | FAST presence codec. |
-| `Ctype.FixEncode`    | `dmmeta.cfast` (FIX dialect) | FIX wire encoder. |
-| `Ctype.KafkaEncode` / `Ctype.KafkaDecode` | `dmmeta.ckafka` | Kafka wire codec. |
-| `Ctype.PbufEncode` / `Ctype.PbufDecode` | `dmmeta.cpbuf` | Protobuf wire codec. |
+| Tfunc                                     | Triggered by                 | Effect |
+| ----------------------------------------- | ---------------------------- | ------ |
+| `Ctype.Hash`                              | `dmmeta.chash`               | `u32 <Name>_Hash(u32 prev, const <Type>&)` — the rehash entry point for `Thash`. |
+| `Ctype.FastEncode` / `Ctype.FastDecode`   | `dmmeta.cfast`               | FAST presence codec. |
+| `Ctype.FixEncode`                         | `dmmeta.cfast` (FIX dialect) | FIX wire encoder. |
+| `Ctype.KafkaEncode` / `Ctype.KafkaDecode` | `dmmeta.ckafka`              | Kafka wire codec. |
+| `Ctype.PbufEncode` / `Ctype.PbufDecode`   | `dmmeta.cpbuf`               | Protobuf wire codec. |
 
 #### Message helpers (for `dmmeta.lenfld` ctypes)
 <a href="#message-helpers-for-dmmeta-lenfld-ctypes-"></a>
 
 | Tfunc                | Effect |
-|----------------------|--------|
+| -------------------- | ------ |
 | `Ctype.GetMsgLength` | `u32 <Name>_GetMsgLength(const <Type>&)` — total length in bytes (uses the length field). |
 | `Ctype.GetMsgMemptr` | `memptr <Name>_GetMsgMemptr(<Type>&)` — span covering the whole on-wire message. |
 

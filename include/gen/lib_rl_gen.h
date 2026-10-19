@@ -347,7 +347,7 @@ void                 iohook_Cleanup() __attribute__((nothrow));
 
 // Invoke function by pointer
 // func:lib_rl.FDb.h_compl.Call
-inline void          h_compl_Call(lib_rl::Compl& arg) __attribute__((nothrow));
+inline void          h_compl_Call(lib_rl::Compl& arg);
 // Assign 0-argument hook with no context pointer
 // func:lib_rl.FDb.h_compl.Set0
 inline void          h_compl_Set0(void (*fcn)() ) __attribute__((nothrow));

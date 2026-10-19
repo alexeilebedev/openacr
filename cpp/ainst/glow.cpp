@@ -24,7 +24,11 @@
 // -----------------------------------------------------------------------------
 
 // Install glow, which renders markdown in a terminal.
+// The release archive wraps its files in one directory named for the release
+// and the architecture, glow_3.0.0_Linux_x86_64 for one, and the glob reaches
+// the binary inside whichever directory the fetched archive carries, so the
+// script spells neither and -update can move the version on its own.
 void ainst::extpkg_glow(ainst::FExtpkg &extpkg) {
     AddStage(extpkg,tempstr()<<"dir=$(ainst_unpack "<<GetExtpkgsrcVar(extpkg,"tgz")<<")");
-    AddStage(extpkg,"ainst_install 755 \"$dir/glow\" /usr/local/bin/glow");
+    AddStage(extpkg,"ainst_install 755 \"$dir\"/glow_*/glow /usr/local/bin/glow");
 }

@@ -92,6 +92,8 @@ namespace doc { // gen:ns_print_proto
     static bool          msg_InputMaybe(gendb::Msg &elem) __attribute__((nothrow));
     // func:doc.FDb.msgfield.InputMaybe
     static bool          msgfield_InputMaybe(gendb::Msgfield &elem) __attribute__((nothrow));
+    // func:doc.FDb.ssimreq.InputMaybe
+    static bool          ssimreq_InputMaybe(dmmeta::Ssimreq &elem) __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
     // func:doc.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
@@ -418,6 +420,7 @@ void doc::value_SetStrptr(doc::Color& parent, algo::strptr rhs, doc_ColorEnum df
 void doc::comptest_CopyOut(doc::FComptest &row, atfdb::Comptest &out) {
     out.comptest = row.comptest;
     out.timeout = row.timeout;
+    out.cijob = row.cijob;
     out.memcheck = row.memcheck;
     out.coverage = row.coverage;
     out.stablefld = row.stablefld;
@@ -429,6 +432,7 @@ void doc::comptest_CopyOut(doc::FComptest &row, atfdb::Comptest &out) {
 void doc::comptest_CopyIn(doc::FComptest &row, atfdb::Comptest &in) {
     row.comptest = in.comptest;
     row.timeout = in.timeout;
+    row.cijob = in.cijob;
     row.memcheck = in.memcheck;
     row.coverage = in.coverage;
     row.stablefld = in.stablefld;
@@ -572,7 +576,7 @@ static void doc::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'doc.Input'  signature:'169d8f6ac36e50486ebe36e47159c5e030346b71'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'doc.Input'  signature:'e335f322cc63a023dd1fea8d7a1315c40239c8c7'");
 }
 
 // --- doc.FDb._db.InsertStrptrMaybe
@@ -691,6 +695,12 @@ bool doc::InsertStrptrMaybe(algo::strptr str) {
             retval = retval && msgfield_InputMaybe(elem);
             break;
         }
+        case doc_TableId_dmmeta_Ssimreq: { // finput:doc.FDb.ssimreq
+            dmmeta::Ssimreq elem;
+            retval = dmmeta::Ssimreq_ReadStrptrMaybe(elem, str);
+            retval = retval && ssimreq_InputMaybe(elem);
+            break;
+        }
         default:
         break;
     } //switch
@@ -716,6 +726,7 @@ bool doc::LoadTuplesMaybe(algo::strptr root, bool recursive) {
         retval = retval && doc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.field"),recursive);
         retval = retval && doc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.typefld"),recursive);
         retval = retval && doc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ssimfile"),recursive);
+        retval = retval && doc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ssimreq"),recursive);
         retval = retval && doc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.msgtype"),recursive);
         retval = retval && doc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.gstatic"),recursive);
         retval = retval && doc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.finput"),recursive);
@@ -904,6 +915,12 @@ bool doc::RemoveStrptrMaybe(algo::strptr str) {
         }
         case doc_TableId_gendb_Msgfield: { // finput:doc.FDb.msgfield
             // finput doc.FDb.msgfield: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case doc_TableId_dmmeta_Ssimreq: { // finput:doc.FDb.ssimreq
+            // finput doc.FDb.ssimreq: random delete unsupported
             // (need reftype del:Y plus a Thash on the pkey)
             retval = false;
             break;
@@ -4165,14 +4182,15 @@ static void doc::docpage_LoadStatic() {
         const char *s;
         void (*step)();
     } data[] = {
-        { "dev.docpage  docpage:accesspath  word:Y  bare:N  bytable:N  comment:\"The access paths of the ctypes a regx names, drawn by amc_vis\"", doc::docpage_accesspath }
-        ,{ "dev.docpage  docpage:code  word:Y  bare:N  bytable:N  comment:\"What amc generated for the ctypes a selection is about\"", doc::docpage_code }
-        ,{ "dev.docpage  docpage:ctype  word:Y  bare:N  bytable:Y  comment:\"One ctype: its declaration, the prose about its table, where it sits\"", doc::docpage_ctype }
-        ,{ "dev.docpage  docpage:func  word:Y  bare:N  bytable:N  comment:\"The functions a selection is about, or one function's source\"", doc::docpage_func }
-        ,{ "dev.docpage  docpage:help  word:N  bare:Y  bytable:N  comment:\"The keys the reader at the terminal has\"", doc::docpage_help }
-        ,{ "dev.docpage  docpage:ns  word:Y  bare:N  bytable:Y  comment:\"One namespace: its ctypes, sources, dependencies, inputs, tests\"", doc::docpage_ns }
-        ,{ "dev.docpage  docpage:query  word:N  bare:N  bytable:N  comment:\"The records a query selects, under the tabs and the two sections\"", doc::docpage_query }
-        ,{ "dev.docpage  docpage:msg  word:Y  bare:Y  bytable:N  comment:\"The message roots, or one message: its definition, what it carries, where it is received\"", doc::docpage_msg }
+        { "dev.docpage  docpage:accesspath  word:Y  bare:N  bytable:N  view:N  comment:\"The access paths of the ctypes a regx names, drawn by amc_vis\"", doc::docpage_accesspath }
+        ,{ "dev.docpage  docpage:code  word:Y  bare:N  bytable:N  view:Y  comment:\"What amc generated for the ctypes a selection is about\"", doc::docpage_code }
+        ,{ "dev.docpage  docpage:ctype  word:Y  bare:N  bytable:Y  view:N  comment:\"One ctype: its declaration, the prose about its table, where it sits\"", doc::docpage_ctype }
+        ,{ "dev.docpage  docpage:func  word:Y  bare:N  bytable:N  view:Y  comment:\"The functions a selection is about, or one function's source\"", doc::docpage_func }
+        ,{ "dev.docpage  docpage:help  word:N  bare:Y  bytable:N  view:N  comment:\"The keys the reader at the terminal has\"", doc::docpage_help }
+        ,{ "dev.docpage  docpage:ns  word:Y  bare:N  bytable:Y  view:N  comment:\"One namespace: its ctypes, sources, dependencies, inputs, tests\"", doc::docpage_ns }
+        ,{ "dev.docpage  docpage:query  word:N  bare:N  bytable:N  view:N  comment:\"The records a query selects, under the tabs and the two sections\"", doc::docpage_query }
+        ,{ "dev.docpage  docpage:msg  word:Y  bare:Y  bytable:N  view:N  comment:\"The message roots, or one message: its definition, what it carries, where it is received\"", doc::docpage_msg }
+        ,{ "dev.docpage  docpage:gist  word:Y  bare:N  bytable:N  view:Y  comment:\"A gstatic table read as a document: each record and the function it stands for\"", doc::docpage_gist }
         ,{NULL, NULL}
     };
     (void)data;
@@ -6528,6 +6546,400 @@ bool doc::sitechunk_XrefMaybe(doc::FSitechunk &row) {
     return retval;
 }
 
+// --- doc.FDb.gist.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+doc::FGist& doc::gist_Alloc() {
+    doc::FGist* row = gist_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("doc.out_of_mem  field:doc.FDb.gist  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- doc.FDb.gist.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+doc::FGist* doc::gist_AllocMaybe() {
+    doc::FGist *row = (doc::FGist*)gist_AllocMem();
+    if (row) {
+        new (row) doc::FGist; // call constructor
+    }
+    return row;
+}
+
+// --- doc.FDb.gist.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* doc::gist_AllocMem() {
+    u64 new_nelems     = _db.gist_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    doc::FGist*  lev   = NULL;
+    if (bsr < 36) {
+        lev = _db.gist_lary[bsr];
+        if (!lev) {
+            lev=(doc::FGist*)algo_lib::malloc_AllocMem(sizeof(doc::FGist) * (u64(1)<<bsr));
+            _db.gist_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.gist_n = i64(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- doc.FDb.gist.RemoveAll
+// Remove all elements from Lary
+void doc::gist_RemoveAll() {
+    for (u64 n = _db.gist_n; n>0; ) {
+        n--;
+        gist_qFind(u64(n)).~FGist(); // destroy last element
+        _db.gist_n = i64(n);
+    }
+}
+
+// --- doc.FDb.gist.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void doc::gist_RemoveLast() {
+    u64 n = _db.gist_n;
+    if (n > 0) {
+        n -= 1;
+        gist_qFind(u64(n)).~FGist();
+        _db.gist_n = i64(n);
+    }
+}
+
+// --- doc.FDb.gist.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool doc::gist_XrefMaybe(doc::FGist &row) {
+    bool retval = true;
+    (void)row;
+    doc::FGistrec* p_p_gistrec = row.p_gistrec;
+    if (UNLIKELY(!p_p_gistrec)) {
+        algo_lib::ResetErrtext() << "doc.null_ref  xref:doc.FGistrec.zd_gist";
+        return false;
+    }
+    // insert gist into index zd_gist
+    if (true) { // user-defined insert condition
+        zd_gist_Insert(*p_p_gistrec, row);
+    }
+    return retval;
+}
+
+// --- doc.FDb.gistrec.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+doc::FGistrec& doc::gistrec_Alloc() {
+    doc::FGistrec* row = gistrec_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("doc.out_of_mem  field:doc.FDb.gistrec  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- doc.FDb.gistrec.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+doc::FGistrec* doc::gistrec_AllocMaybe() {
+    doc::FGistrec *row = (doc::FGistrec*)gistrec_AllocMem();
+    if (row) {
+        new (row) doc::FGistrec; // call constructor
+    }
+    return row;
+}
+
+// --- doc.FDb.gistrec.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* doc::gistrec_AllocMem() {
+    u64 new_nelems     = _db.gistrec_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    doc::FGistrec*  lev   = NULL;
+    if (bsr < 36) {
+        lev = _db.gistrec_lary[bsr];
+        if (!lev) {
+            lev=(doc::FGistrec*)algo_lib::malloc_AllocMem(sizeof(doc::FGistrec) * (u64(1)<<bsr));
+            _db.gistrec_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.gistrec_n = i64(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- doc.FDb.gistrec.RemoveAll
+// Remove all elements from Lary
+void doc::gistrec_RemoveAll() {
+    for (u64 n = _db.gistrec_n; n>0; ) {
+        n--;
+        gistrec_qFind(u64(n)).~FGistrec(); // destroy last element
+        _db.gistrec_n = i64(n);
+    }
+}
+
+// --- doc.FDb.gistrec.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void doc::gistrec_RemoveLast() {
+    u64 n = _db.gistrec_n;
+    if (n > 0) {
+        n -= 1;
+        gistrec_qFind(u64(n)).~FGistrec();
+        _db.gistrec_n = i64(n);
+    }
+}
+
+// --- doc.FDb.gistrec.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool doc::gistrec_XrefMaybe(doc::FGistrec &row) {
+    bool retval = true;
+    (void)row;
+    // insert gistrec into index ind_gistrec
+    if (true) { // user-defined insert condition
+        bool success = ind_gistrec_InsertMaybe(row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "doc.duplicate_key  xref:doc.FDb.ind_gistrec"; // check for duplicate key
+            return false;
+        }
+    }
+    return retval;
+}
+
+// --- doc.FDb.ind_gistrec.Find
+// Find row by key. Return NULL if not found.
+doc::FGistrec* doc::ind_gistrec_Find(const algo::strptr& key) {
+    u32 index = algo::cstring_Hash(0, key) & (_db.ind_gistrec_buckets_n - 1);
+    doc::FGistrec *ret = _db.ind_gistrec_buckets_elems[index];
+    for (; ret && !((*ret).gistrec == key); ret = ret->ind_gistrec_next) {
+    }
+    return ret;
+}
+
+// --- doc.FDb.ind_gistrec.FindX
+// Look up row by key and return reference. Throw exception if not found
+doc::FGistrec& doc::ind_gistrec_FindX(const algo::strptr& key) {
+    doc::FGistrec* ret = ind_gistrec_Find(key);
+    vrfy(ret, tempstr() << "doc.key_error  table:ind_gistrec  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
+}
+
+// --- doc.FDb.ind_gistrec.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+doc::FGistrec& doc::ind_gistrec_GetOrCreate(const algo::strptr& key) {
+    doc::FGistrec* ret = ind_gistrec_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &gistrec_Alloc();
+        (*ret).gistrec = key;
+        bool good = gistrec_XrefMaybe(*ret);
+        if (!good) {
+            gistrec_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
+    }
+    vrfy(ret, tempstr() << "doc.create_error  table:ind_gistrec  key:'"<<key<<"'  comment:'bad xref'");
+    return *ret;
+}
+
+// --- doc.FDb.ind_gistrec.InsertMaybe
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+bool doc::ind_gistrec_InsertMaybe(doc::FGistrec& row) {
+    bool retval = true; // if already in hash, InsertMaybe returns true
+    if (LIKELY(row.ind_gistrec_next == (doc::FGistrec*)-1)) {// check if in hash already
+        row.ind_gistrec_hashval = algo::cstring_Hash(0, row.gistrec);
+        ind_gistrec_Reserve(1);
+        u32 index = row.ind_gistrec_hashval & (_db.ind_gistrec_buckets_n - 1);
+        doc::FGistrec* *prev = &_db.ind_gistrec_buckets_elems[index];
+        do {
+            doc::FGistrec* ret = *prev;
+            if (!ret) { // exit condition 1: reached the end of the list
+                break;
+            }
+            if ((*ret).gistrec == row.gistrec) { // exit condition 2: found matching key
+                retval = false;
+                break;
+            }
+            prev = &ret->ind_gistrec_next;
+        } while (true);
+        if (retval) {
+            row.ind_gistrec_next = *prev;
+            _db.ind_gistrec_n++;
+            *prev = &row;
+        }
+    }
+    return retval;
+}
+
+// --- doc.FDb.ind_gistrec.Remove
+// Remove reference to element from hash index. If element is not in hash, do nothing
+void doc::ind_gistrec_Remove(doc::FGistrec& row) {
+    if (LIKELY(row.ind_gistrec_next != (doc::FGistrec*)-1)) {// check if in hash already
+        u32 index = row.ind_gistrec_hashval & (_db.ind_gistrec_buckets_n - 1);
+        doc::FGistrec* *prev = &_db.ind_gistrec_buckets_elems[index]; // addr of pointer to current element
+        while (doc::FGistrec *next = *prev) {                          // scan the collision chain for our element
+            if (next == &row) {        // found it?
+                *prev = next->ind_gistrec_next; // unlink (singly linked list)
+                _db.ind_gistrec_n--;
+                row.ind_gistrec_next = (doc::FGistrec*)-1;// not-in-hash
+                break;
+            }
+            prev = &next->ind_gistrec_next;
+        }
+    }
+}
+
+// --- doc.FDb.ind_gistrec.Reserve
+// Reserve enough room in the hash for N more elements. Return success code.
+void doc::ind_gistrec_Reserve(int n) {
+    ind_gistrec_AbsReserve(_db.ind_gistrec_n + n);
+}
+
+// --- doc.FDb.ind_gistrec.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void doc::ind_gistrec_AbsReserve(int n) {
+    u32 old_nbuckets = _db.ind_gistrec_buckets_n;
+    u32 new_nelems   = n;
+    // # of elements has to be roughly equal to the number of buckets
+    if (new_nelems > old_nbuckets) {
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
+        u32 old_size = old_nbuckets * sizeof(doc::FGistrec*);
+        u32 new_size = new_nbuckets * sizeof(doc::FGistrec*);
+        // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
+        // means new memory will have to be allocated anyway
+        doc::FGistrec* *new_buckets = (doc::FGistrec**)algo_lib::malloc_AllocMem(new_size);
+        if (UNLIKELY(!new_buckets)) {
+            FatalErrorExit("doc.out_of_memory  field:doc.FDb.ind_gistrec");
+        }
+        memset(new_buckets, 0, new_size); // clear pointers
+        // rehash all entries
+        for (int i = 0; i < _db.ind_gistrec_buckets_n; i++) {
+            doc::FGistrec* elem = _db.ind_gistrec_buckets_elems[i];
+            while (elem) {
+                doc::FGistrec &row        = *elem;
+                doc::FGistrec* next       = row.ind_gistrec_next;
+                u32 index          = row.ind_gistrec_hashval & (new_nbuckets-1);
+                row.ind_gistrec_next     = new_buckets[index];
+                new_buckets[index] = &row;
+                elem               = next;
+            }
+        }
+        // free old array
+        algo_lib::malloc_FreeMem(_db.ind_gistrec_buckets_elems, old_size);
+        _db.ind_gistrec_buckets_elems = new_buckets;
+        _db.ind_gistrec_buckets_n = new_nbuckets;
+    }
+}
+
+// --- doc.FDb.ssimreq.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+doc::FSsimreq& doc::ssimreq_Alloc() {
+    doc::FSsimreq* row = ssimreq_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("doc.out_of_mem  field:doc.FDb.ssimreq  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- doc.FDb.ssimreq.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+doc::FSsimreq* doc::ssimreq_AllocMaybe() {
+    doc::FSsimreq *row = (doc::FSsimreq*)ssimreq_AllocMem();
+    if (row) {
+        new (row) doc::FSsimreq; // call constructor
+    }
+    return row;
+}
+
+// --- doc.FDb.ssimreq.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+doc::FSsimreq* doc::ssimreq_InsertMaybe(const dmmeta::Ssimreq &value) {
+    doc::FSsimreq *row = &ssimreq_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    ssimreq_CopyIn(*row,const_cast<dmmeta::Ssimreq&>(value));
+    bool ok = ssimreq_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        ssimreq_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- doc.FDb.ssimreq.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* doc::ssimreq_AllocMem() {
+    u64 new_nelems     = _db.ssimreq_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    doc::FSsimreq*  lev   = NULL;
+    if (bsr < 36) {
+        lev = _db.ssimreq_lary[bsr];
+        if (!lev) {
+            lev=(doc::FSsimreq*)algo_lib::malloc_AllocMem(sizeof(doc::FSsimreq) * (u64(1)<<bsr));
+            _db.ssimreq_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.ssimreq_n = i64(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- doc.FDb.ssimreq.RemoveAll
+// Remove all elements from Lary
+void doc::ssimreq_RemoveAll() {
+    for (u64 n = _db.ssimreq_n; n>0; ) {
+        n--;
+        ssimreq_qFind(u64(n)).~FSsimreq(); // destroy last element
+        _db.ssimreq_n = i64(n);
+    }
+}
+
+// --- doc.FDb.ssimreq.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void doc::ssimreq_RemoveLast() {
+    u64 n = _db.ssimreq_n;
+    if (n > 0) {
+        n -= 1;
+        ssimreq_qFind(u64(n)).~FSsimreq();
+        _db.ssimreq_n = i64(n);
+    }
+}
+
+// --- doc.FDb.ssimreq.InputMaybe
+static bool doc::ssimreq_InputMaybe(dmmeta::Ssimreq &elem) {
+    bool retval = true;
+    retval = ssimreq_InsertMaybe(elem) != nullptr;
+    return retval;
+}
+
+// --- doc.FDb.ssimreq.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool doc::ssimreq_XrefMaybe(doc::FSsimreq &row) {
+    bool retval = true;
+    (void)row;
+    return retval;
+}
+
 // --- doc.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
 static algo::ImrowPtr doc::trace_RowidFind(int t) {
@@ -7063,6 +7475,48 @@ void doc::FDb_Init() {
         _db.sitechunk_lary[i]  = sitechunk_first;
         sitechunk_first    += 1ULL<<i;
     }
+    // initialize LAry gist (doc.FDb.gist)
+    _db.gist_n = 0;
+    memset(_db.gist_lary, 0, sizeof(_db.gist_lary)); // zero out all level pointers
+    doc::FGist* gist_first = (doc::FGist*)algo_lib::malloc_AllocMem(sizeof(doc::FGist) * (u64(1)<<4));
+    if (!gist_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.gist_lary[i]  = gist_first;
+        gist_first    += 1ULL<<i;
+    }
+    // initialize LAry gistrec (doc.FDb.gistrec)
+    _db.gistrec_n = 0;
+    memset(_db.gistrec_lary, 0, sizeof(_db.gistrec_lary)); // zero out all level pointers
+    doc::FGistrec* gistrec_first = (doc::FGistrec*)algo_lib::malloc_AllocMem(sizeof(doc::FGistrec) * (u64(1)<<4));
+    if (!gistrec_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.gistrec_lary[i]  = gistrec_first;
+        gistrec_first    += 1ULL<<i;
+    }
+    // initialize hash table for doc::FGistrec;
+    _db.ind_gistrec_n             	= 0; // (doc.FDb.ind_gistrec)
+    _db.ind_gistrec_buckets_n     	= 4; // (doc.FDb.ind_gistrec)
+    _db.ind_gistrec_buckets_elems 	= (doc::FGistrec**)algo_lib::malloc_AllocMem(sizeof(doc::FGistrec*)*_db.ind_gistrec_buckets_n); // initial buckets (doc.FDb.ind_gistrec)
+    if (!_db.ind_gistrec_buckets_elems) {
+        FatalErrorExit("out of memory"); // (doc.FDb.ind_gistrec)
+    }
+    memset(_db.ind_gistrec_buckets_elems, 0, sizeof(doc::FGistrec*)*_db.ind_gistrec_buckets_n); // (doc.FDb.ind_gistrec)
+    _db.dir = bool(false);
+    // initialize LAry ssimreq (doc.FDb.ssimreq)
+    _db.ssimreq_n = 0;
+    memset(_db.ssimreq_lary, 0, sizeof(_db.ssimreq_lary)); // zero out all level pointers
+    doc::FSsimreq* ssimreq_first = (doc::FSsimreq*)algo_lib::malloc_AllocMem(sizeof(doc::FSsimreq) * (u64(1)<<4));
+    if (!ssimreq_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.ssimreq_lary[i]  = ssimreq_first;
+        ssimreq_first    += 1ULL<<i;
+    }
 
     doc::InitReflection();
     docpage_LoadStatic(); // gen:ns_gstatic  gstatic:doc.FDb.docpage  load doc.FDocpage records
@@ -7070,6 +7524,18 @@ void doc::FDb_Init() {
 
 // --- doc.FDb..Uninit
 void doc::FDb_Uninit() {
+
+    // doc.FDb.ssimreq.Uninit (Lary)  //
+    // skip destruction in global scope
+
+    // doc.FDb.ind_gistrec.Uninit (Thash)  //Records of the gist page by key
+    // skip destruction of ind_gistrec in global scope
+
+    // doc.FDb.gistrec.Uninit (Lary)  //Records of the gist page, each with its functions
+    // skip destruction in global scope
+
+    // doc.FDb.gist.Uninit (Lary)  //Functions the records of a gist page stand for
+    // skip destruction in global scope
 
     // doc.FDb.sitechunk.Uninit (Lary)  //One chunk per process of a round, reused each round
     // skip destruction in global scope
@@ -7319,6 +7785,7 @@ void doc::docpage_CopyOut(doc::FDocpage &row, dev::Docpage &out) {
     out.word = row.word;
     out.bare = row.bare;
     out.bytable = row.bytable;
+    out.view = row.view;
     out.comment = algo::Comment(row.comment);
 }
 
@@ -7329,6 +7796,7 @@ void doc::docpage_CopyIn(doc::FDocpage &row, dev::Docpage &in) {
     row.word = in.word;
     row.bare = in.bare;
     row.bytable = in.bytable;
+    row.view = in.view;
     row.comment = in.comment;
 }
 
@@ -7426,6 +7894,109 @@ algo::strptr doc::ns_Get(doc::FFinput& parent) {
     return algo::Pathcomp(parent.field, ".LL");
 }
 
+// --- doc.FGist..Uninit
+void doc::FGist_Uninit(doc::FGist& parent) {
+    doc::FGistrec* p_p_gistrec = parent.p_gistrec;
+    if (p_p_gistrec)  {
+        zd_gist_Remove(*p_p_gistrec, parent);// remove gist from index zd_gist
+    }
+}
+
+// --- doc.FGistrec.zd_gist.Insert
+// Insert row into linked list. If row is already in linked list, do nothing.
+void doc::zd_gist_Insert(doc::FGistrec& parent, doc::FGist& row) {
+    if (!gistrec_zd_gist_InLlistQ(row)) {
+        doc::FGist* old_tail = parent.zd_gist_tail;
+        row.gistrec_zd_gist_next = NULL;
+        row.gistrec_zd_gist_prev = old_tail;
+        parent.zd_gist_tail = &row;
+        doc::FGist **new_row_a = &old_tail->gistrec_zd_gist_next;
+        doc::FGist **new_row_b = &parent.zd_gist_head;
+        doc::FGist **new_row = old_tail ? new_row_a : new_row_b;
+        *new_row = &row;
+        parent.zd_gist_n++;
+    }
+}
+
+// --- doc.FGistrec.zd_gist.Remove
+// Remove element from index. If element is not in index, do nothing.
+void doc::zd_gist_Remove(doc::FGistrec& parent, doc::FGist& row) {
+    if (gistrec_zd_gist_InLlistQ(row)) {
+        doc::FGist* old_head       = parent.zd_gist_head;
+        (void)old_head; // in case it's not used
+        doc::FGist* prev = row.gistrec_zd_gist_prev;
+        doc::FGist* next = row.gistrec_zd_gist_next;
+        // if element is first, adjust list head; otherwise, adjust previous element's next
+        doc::FGist **new_next_a = &prev->gistrec_zd_gist_next;
+        doc::FGist **new_next_b = &parent.zd_gist_head;
+        doc::FGist **new_next = prev ? new_next_a : new_next_b;
+        *new_next = next;
+        // if element is last, adjust list tail; otherwise, adjust next element's prev
+        doc::FGist **new_prev_a = &next->gistrec_zd_gist_prev;
+        doc::FGist **new_prev_b = &parent.zd_gist_tail;
+        doc::FGist **new_prev = next ? new_prev_a : new_prev_b;
+        *new_prev = prev;
+        parent.zd_gist_n--;
+        row.gistrec_zd_gist_next=(doc::FGist*)-1; // not-in-list
+    }
+}
+
+// --- doc.FGistrec.zd_gist.RemoveAll
+// Empty the index. (The rows are not deleted)
+void doc::zd_gist_RemoveAll(doc::FGistrec& parent) {
+    doc::FGist* row = parent.zd_gist_head;
+    parent.zd_gist_head = NULL;
+    parent.zd_gist_tail = NULL;
+    parent.zd_gist_n = 0;
+    while (row) {
+        doc::FGist* row_next = row->gistrec_zd_gist_next;
+        row->gistrec_zd_gist_next  = (doc::FGist*)-1;
+        row->gistrec_zd_gist_prev  = NULL;
+        row = row_next;
+    }
+}
+
+// --- doc.FGistrec.zd_gist.RemoveFirst
+// If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
+doc::FGist* doc::zd_gist_RemoveFirst(doc::FGistrec& parent) {
+    doc::FGist *row = NULL;
+    row = parent.zd_gist_head;
+    if (row) {
+        doc::FGist *next = row->gistrec_zd_gist_next;
+        parent.zd_gist_head = next;
+        doc::FGist **new_end_a = &next->gistrec_zd_gist_prev;
+        doc::FGist **new_end_b = &parent.zd_gist_tail;
+        doc::FGist **new_end = next ? new_end_a : new_end_b;
+        *new_end = NULL;
+        parent.zd_gist_n--;
+        row->gistrec_zd_gist_next = (doc::FGist*)-1; // mark as not-in-list
+    }
+    return row;
+}
+
+// --- doc.FGistrec.zd_gist.InsertBefore
+// Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
+void doc::zd_gist_InsertBefore(doc::FGistrec& parent, doc::FGist& row, doc::FGist* before) {
+    if (!gistrec_zd_gist_InLlistQ(row) && &row != before) {
+        doc::FGist* next = before;
+        doc::FGist* prev = next ? next->gistrec_zd_gist_prev : parent.zd_gist_tail;
+        row.gistrec_zd_gist_next = next;
+        row.gistrec_zd_gist_prev = prev;
+        doc::FGist **prev_link_a = &prev->gistrec_zd_gist_next;
+        doc::FGist **prev_link_b = &parent.zd_gist_head;
+        *(prev ? prev_link_a : prev_link_b) = &row;
+        doc::FGist **next_link_a = &next->gistrec_zd_gist_prev;
+        doc::FGist **next_link_b = &parent.zd_gist_tail;
+        *(next ? next_link_a : next_link_b) = &row;
+        parent.zd_gist_n++;
+    }
+}
+
+// --- doc.FGistrec..Uninit
+void doc::FGistrec_Uninit(doc::FGistrec& parent) {
+    ind_gistrec_Remove(parent); // remove gistrec from index ind_gistrec
+}
+
 // --- doc.FGitfile.base.CopyOut
 // Copy fields out of row
 void doc::gitfile_CopyOut(doc::FGitfile &row, dev::Gitfile &out) {
@@ -7465,6 +8036,73 @@ void doc::gstatic_CopyIn(doc::FGstatic &row, dmmeta::Gstatic &in) {
 // --- doc.FGstatic.ns.Get
 algo::strptr doc::ns_Get(doc::FGstatic& parent) {
     return algo::Pathcomp(parent.field, ".LL");
+}
+
+// --- doc.FGstatic.c_hook.Insert
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
+void doc::c_hook_Insert(doc::FGstatic& parent, doc::FField& row) {
+    if (!row.gstatic_c_hook_in_ary) {
+        c_hook_Reserve(parent, 1);
+        u64 n  = parent.c_hook_n++;
+        parent.c_hook_elems[n] = &row;
+        row.gstatic_c_hook_in_ary = true;
+    }
+}
+
+// --- doc.FGstatic.c_hook.InsertMaybe
+// Insert pointer to row in array.
+// If row is already in the array, do nothing.
+// Return value: whether element was inserted into array.
+bool doc::c_hook_InsertMaybe(doc::FGstatic& parent, doc::FField& row) {
+    bool retval = !gstatic_c_hook_InAryQ(row);
+    c_hook_Insert(parent,row); // check is performed in _Insert again
+    return retval;
+}
+
+// --- doc.FGstatic.c_hook.Remove
+// Find element using linear scan. If element is in array, remove, otherwise do nothing
+void doc::c_hook_Remove(doc::FGstatic& parent, doc::FField& row) {
+    i64 n = parent.c_hook_n;
+    if (bool_Update(row.gstatic_c_hook_in_ary,false)) {
+        doc::FField* *elems = parent.c_hook_elems;
+        // search backward, so that most recently added element is found first.
+        // if found, shift array.
+        for (i64 i = n-1; i>=0; i--) {
+            doc::FField* elem = elems[i]; // fetch element
+            if (elem == &row) {
+                i64 j = i + 1;
+                size_t nbytes = sizeof(doc::FField*) * (n - j);
+                memmove(elems + i, elems + j, nbytes);
+                parent.c_hook_n = n - 1;
+                break;
+            }
+        }
+    }
+}
+
+// --- doc.FGstatic.c_hook.Reserve
+// Reserve space in index for N more elements;
+void doc::c_hook_Reserve(doc::FGstatic& parent, u64 n) {
+    u64 old_max = parent.c_hook_max;
+    if (UNLIKELY(parent.c_hook_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_hook_n + n), 4);
+        u64 old_size = old_max * sizeof(doc::FField*);
+        u64 new_size = new_max * sizeof(doc::FField*);
+        void *new_mem = algo_lib::malloc_ReallocMem(parent.c_hook_elems, old_size, new_size);
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("doc.out_of_memory  field:doc.FGstatic.c_hook");
+        }
+        parent.c_hook_elems = (doc::FField**)new_mem;
+        parent.c_hook_max = new_max;
+    }
+}
+
+// --- doc.FGstatic..Uninit
+void doc::FGstatic_Uninit(doc::FGstatic& parent) {
+
+    // doc.FGstatic.c_hook.Uninit (Ptrary)  //Hook fields of the program's ctype: one function per row each
+    algo_lib::malloc_FreeMem(parent.c_hook_elems, sizeof(doc::FField*)*parent.c_hook_max); // (doc.FGstatic.c_hook)
 }
 
 // --- doc.FLoose..Uninit
@@ -7564,28 +8202,22 @@ void doc::FMsg_Uninit(doc::FMsg& parent) {
 // Copy fields out of row
 void doc::msgfield_CopyOut(doc::FMsgfield &row, gendb::Msgfield &out) {
     out.msgfield = row.msgfield;
-    out.offset = row.offset;
+    out.fldtype = row.fldtype;
     out.arg = row.arg;
+    out.offset = row.offset;
     out.width = row.width;
-    out.bigend = row.bigend;
-    out.varlen = row.varlen;
-    out.strtype = row.strtype;
-    out.pad = row.pad;
-    out.comment = algo::Comment(row.comment);
+    out.aux = row.aux;
 }
 
 // --- doc.FMsgfield.base.CopyIn
 // Copy fields in to row
 void doc::msgfield_CopyIn(doc::FMsgfield &row, gendb::Msgfield &in) {
     row.msgfield = in.msgfield;
-    row.offset = in.offset;
+    row.fldtype = in.fldtype;
     row.arg = in.arg;
+    row.offset = in.offset;
     row.width = in.width;
-    row.bigend = in.bigend;
-    row.varlen = in.varlen;
-    row.strtype = in.strtype;
-    row.pad = in.pad;
-    row.comment = in.comment;
+    row.aux = in.aux;
 }
 
 // --- doc.FMsgfield.msg.Get
@@ -7596,16 +8228,6 @@ algo::strptr doc::msg_Get(doc::FMsgfield& parent) {
 // --- doc.FMsgfield.name.Get
 algo::strptr doc::name_Get(doc::FMsgfield& parent) {
     return algo::Pathcomp(parent.msgfield, "/RR");
-}
-
-// --- doc.FMsgfield..Init
-// Set all fields to initial values.
-void doc::FMsgfield_Init(doc::FMsgfield& parent) {
-    parent.offset = i32(0);
-    parent.width = i32(0);
-    parent.bigend = bool(false);
-    parent.varlen = bool(false);
-    parent.msg_c_msgfield_in_ary = bool(false);
 }
 
 // --- doc.FMsgfield..Uninit
@@ -7673,8 +8295,10 @@ void doc::readmefile_CopyOut(doc::FReadmefile &row, dev::Readmefile &out) {
     out.gitfile = row.gitfile;
     out.inl = row.inl;
     out.sandbox = row.sandbox;
+    out.tut = row.tut;
     out.filter = row.filter;
     out.publish = row.publish;
+    out.narrow = row.narrow;
     out.comment = algo::Comment(row.comment);
 }
 
@@ -7684,8 +8308,10 @@ void doc::readmefile_CopyIn(doc::FReadmefile &row, dev::Readmefile &in) {
     row.gitfile = in.gitfile;
     row.inl = in.inl;
     row.sandbox = in.sandbox;
+    row.tut = in.tut;
     row.filter = in.filter;
     row.publish = in.publish;
+    row.narrow = in.narrow;
     row.comment = in.comment;
 }
 
@@ -8163,6 +8789,58 @@ void doc::FSsimfile_Uninit(doc::FSsimfile& parent) {
     ind_ssimfile_ctype_Remove(parent); // remove ssimfile from index ind_ssimfile_ctype
 }
 
+// --- doc.FSsimreq.base.CopyOut
+// Copy fields out of row
+void doc::ssimreq_CopyOut(doc::FSsimreq &row, dmmeta::Ssimreq &out) {
+    out.ssimreq = row.ssimreq;
+    out.parent = row.parent;
+    out.reqchild = row.reqchild;
+    out.bidir = row.bidir;
+    out.comment = algo::Comment(row.comment);
+}
+
+// --- doc.FSsimreq.base.CopyIn
+// Copy fields in to row
+void doc::ssimreq_CopyIn(doc::FSsimreq &row, dmmeta::Ssimreq &in) {
+    row.ssimreq = in.ssimreq;
+    row.parent = in.parent;
+    row.reqchild = in.reqchild;
+    row.bidir = in.bidir;
+    row.comment = in.comment;
+}
+
+// --- doc.FSsimreq.parent_field.Get
+algo::strptr doc::parent_field_Get(doc::FSsimreq& parent) {
+    return algo::Pathcomp(parent.parent, ":LL");
+}
+
+// --- doc.FSsimreq.parent_ctype.Get
+algo::strptr doc::parent_ctype_Get(doc::FSsimreq& parent) {
+    return algo::Pathcomp(parent.parent, ":LL.RL");
+}
+
+// --- doc.FSsimreq.value.Get
+algo::strptr doc::value_Get(doc::FSsimreq& parent) {
+    return algo::Pathcomp(parent.parent, ":LR");
+}
+
+// --- doc.FSsimreq.child_ssimfile.Get
+algo::strptr doc::child_ssimfile_Get(doc::FSsimreq& parent) {
+    return algo::Pathcomp(parent.ssimreq, ":LL");
+}
+
+// --- doc.FSsimreq.child_key.Get
+algo::strptr doc::child_key_Get(doc::FSsimreq& parent) {
+    return algo::Pathcomp(parent.ssimreq, ":RR");
+}
+
+// --- doc.FSsimreq..Init
+// Set all fields to initial values.
+void doc::FSsimreq_Init(doc::FSsimreq& parent) {
+    parent.reqchild = bool(false);
+    parent.bidir = bool(false);
+}
+
 // --- doc.FSubject..Uninit
 void doc::FSubject_Uninit(doc::FSubject& parent) {
     ind_subject_Remove(parent); // remove subject from index ind_subject
@@ -8479,6 +9157,7 @@ const char* doc::value_ToCstr(const doc::TableId& parent) {
         case doc_TableId_dmmeta_Ns         : ret = "dmmeta.Ns";  break;
         case doc_TableId_dev_Readmefile    : ret = "dev.Readmefile";  break;
         case doc_TableId_dmmeta_Ssimfile   : ret = "dmmeta.Ssimfile";  break;
+        case doc_TableId_dmmeta_Ssimreq    : ret = "dmmeta.Ssimreq";  break;
         case doc_TableId_dev_Targdep       : ret = "dev.Targdep";  break;
         case doc_TableId_dev_Targsrc       : ret = "dev.Targsrc";  break;
         case doc_TableId_dmmeta_Typefld    : ret = "dmmeta.Typefld";  break;
@@ -8611,6 +9290,10 @@ bool doc::value_SetStrptrMaybe(doc::TableId& parent, algo::strptr rhs) {
                     if (memcmp(rhs.elems+8,"sgtype",6)==0) { value_SetEnum(parent,doc_TableId_dmmeta_Msgtype); ret = true; break; }
                     break;
                 }
+                case LE_STR8('d','m','m','e','t','a','.','S'): {
+                    if (memcmp(rhs.elems+8,"simreq",6)==0) { value_SetEnum(parent,doc_TableId_dmmeta_Ssimreq); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('d','m','m','e','t','a','.','T'): {
                     if (memcmp(rhs.elems+8,"ypefld",6)==0) { value_SetEnum(parent,doc_TableId_dmmeta_Typefld); ret = true; break; }
                     break;
@@ -8621,6 +9304,10 @@ bool doc::value_SetStrptrMaybe(doc::TableId& parent, algo::strptr rhs) {
                 }
                 case LE_STR8('d','m','m','e','t','a','.','m'): {
                     if (memcmp(rhs.elems+8,"sgtype",6)==0) { value_SetEnum(parent,doc_TableId_dmmeta_msgtype); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('d','m','m','e','t','a','.','s'): {
+                    if (memcmp(rhs.elems+8,"simreq",6)==0) { value_SetEnum(parent,doc_TableId_dmmeta_ssimreq); ret = true; break; }
                     break;
                 }
                 case LE_STR8('d','m','m','e','t','a','.','t'): {

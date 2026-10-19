@@ -49,11 +49,11 @@ Optional:
 Source: `cpp/amc/regx.cpp` (RegxSql's tfuncs delegate to
 Regx's).
 
-| Tfunc                       | Generated function                          | Effect |
-|-----------------------------|---------------------------------------------|--------|
-| `RegxSql.Init`              | (folded)                                    | Compile dflt via `Regx_ReadSql`. |
-| `RegxSql.ReadStrptrMaybe`   | `bool <name>_ReadStrptrMaybe(P&, strptr in)`| Compile `in` via `Regx_ReadSql`. |
-| `RegxSql.Print`             | `void <name>_Print(P&, cstring& out)`       | Print the source SQL pattern. |
+| Tfunc                     | Generated function                           | Effect |
+| ------------------------- | -------------------------------------------- | ------ |
+| `RegxSql.Init`            | (folded)                                     | Compile dflt via `Regx_ReadSql`. |
+| `RegxSql.ReadStrptrMaybe` | `bool <name>_ReadStrptrMaybe(P&, strptr in)` | Compile `in` via `Regx_ReadSql`. |
+| `RegxSql.Print`           | `void <name>_Print(P&, cstring& out)`        | Print the source SQL pattern. |
 
 See the [Regx](/txt/exe/amc/reftype/Regx.md) page for the
 mechanics — RegxSql is a thin wrapper that forces the SQL

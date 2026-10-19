@@ -47,8 +47,8 @@ int lib_ams::NextBridgeSlot(ams::Proctype proctype, int nodeidx) {
 
 // Allocate FProc + both shm files (writable) for a bridged user process at
 // GRPIDX (use NextBridgeGrpidx to pick one). On success the inbound and
-// outbound shm files exist on disk so the forked child can find them via
-// shm_open. The child is pre-registered as a reader of shm_out so its
+// outbound shm files exist on disk so the forked child can find them by
+// name. The child is pre-registered as a reader of shm_out so its
 // ShmOpen(read) succeeds.  READER_PROC_ID is pre-registered as a reader of
 // shm_in (the child->parent ring) so the ring is bounded from the start:
 // a child that writes before the real reader (gateway/txn) opens the ring
@@ -99,6 +99,10 @@ bool lib_ams::CreateBridgeShms(ams::ProcId child_proc_id, int grpidx, ams::ProcI
         AddReadShmember(*shm_out, child_proc_id);
         if (proctype_Get(reader_proc_id) != ams_Proctype_) {
             AddReadShmember(*shm_in, reader_proc_id);
+            // The parent that reads the in ring writes the out ring, and both
+            // are keyed by the child, so the out ring's row names its writer: a
+            // board a message on it refers to is the parent's (LaneWriter).
+            shm_out->writer = reader_proc_id;
         }
     }
     return ok;
@@ -110,10 +114,14 @@ bool lib_ams::CreateBridgeShms(ams::ProcId child_proc_id, int grpidx, ams::ProcI
 // own side: it reads `in`, the parent's BridgeOutGrp, and writes `out`, the
 // parent's BridgeInGrp.  NICKNAME, the child's human-facing name (the userproc
 // name), prefixes its published metrics in place of the proc id.
+//
+// The prefix is a path, the segment directory and then the file prefix, so a
+// child finds its rings from the spec alone.  A child in Python or Rust has no
+// algo_lib::ShmDir to ask, and the directory differs between Linux and macOS.
 tempstr lib_ams::ChildProcStr(ams::ProcId child_proc_id, int grpidx, algo::strptr nickname DFLTVAL(algo::strptr())) {
     ams::Procspec spec;
     spec.id << child_proc_id;
-    spec.prefix = _db.file_prefix;
+    spec.prefix = _db.file_prefix == "" ? tempstr() : ShmPath(_db.file_prefix);
     spec.in = BridgeOutGrp(child_proc_id, grpidx);
     spec.out = BridgeInGrp(child_proc_id, grpidx);
     spec.nick = nickname;

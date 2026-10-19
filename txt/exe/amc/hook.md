@@ -45,12 +45,12 @@ this page covers the patterns.
 ### Choosing instance vs static hooks
 <a href="#choosing-instance-vs-static-hooks"></a>
 
-| Question                                          | Instance | Static |
-|---------------------------------------------------|----------|--------|
-| Does the callback change after construction?      | yes      | no     |
-| Does the value come from a gstatic ssim table?    | no       | yes    |
-| Does each row carry its own function pointer?     | depends  | yes    |
-| Is there a runtime `Set*` API?                    | yes      | no     |
+| Question                                       | Instance | Static |
+| ---------------------------------------------- | -------- | ------ |
+| Does the callback change after construction?   | yes      | no |
+| Does the value come from a gstatic ssim table? | no       | yes |
+| Does each row carry its own function pointer?  | depends  | yes |
+| Is there a runtime `Set*` API?                 | yes      | no |
 
 If you're declaring a hook on `FDb` so user code can rebind
 the callback later (e.g., a "log line received" callback),
@@ -149,18 +149,18 @@ See `Hook_FwdDecl` in `cpp/amc/fwddecl.cpp`.
 The `arg:` field of the Hook declaration plus a `Set*` arity
 determine the generated signature:
 
-| `Set*` variant   | C++ signature                                        |
-|------------------|------------------------------------------------------|
-| `Set0`           | `void (*fcn)()`                                      |
-| `Set1<T>`        | `void (*fcn)(T&)` — `T` is the user-supplied context |
-| `Set2<T>`        | `void (*fcn)(T&, Arg&)` where `Arg` is `field.arg`   |
+| `Set*` variant | C++ signature |
+| -------------- | ------------- |
+| `Set0`         | `void (*fcn)()` |
+| `Set1<T>`      | `void (*fcn)(T&)` — `T` is the user-supplied context |
+| `Set2<T>`      | `void (*fcn)(T&, Arg&)` where `Arg` is `field.arg` |
 
 `Call` matches:
 
-| Variant | Call signature                  |
-|---------|---------------------------------|
-| `Set0`  | `<name>_Call(P&)` (no arg)      |
-| `Set1`  | `<name>_Call(P&)` — passes ctx  |
+| Variant | Call signature |
+| ------- | -------------- |
+| `Set0`  | `<name>_Call(P&)` (no arg) |
+| `Set1`  | `<name>_Call(P&)` — passes ctx |
 | `Set2`  | `<name>_Call(P&, Arg)` — passes ctx + arg |
 
 For static hooks (no `_Set*`), `Call` simply invokes
@@ -173,11 +173,11 @@ check (pre-resolved by amc).
 amc has three "user-code-hook" mechanisms; they look similar
 but solve different problems:
 
-| Feature      | Use when…                                                | Storage           |
-|--------------|----------------------------------------------------------|-------------------|
-| **Hook**     | Need a typed function-pointer field, possibly rebound    | Function pointer  |
-| **Cppfunc**  | The value of a field is a *computed expression*         | None (computed)   |
-| **Fcb**      | Want to fire a callback at insert/remove/update time   | Forward decl only |
+| Feature     | Use when…                                             | Storage |
+| ----------- | ----------------------------------------------------- | ------- |
+| **Hook**    | Need a typed function-pointer field, possibly rebound | Function pointer |
+| **Cppfunc** | The value of a field is a *computed expression*       | None (computed) |
+| **Fcb**     | Want to fire a callback at insert/remove/update time  | Forward decl only |
 
 Hook is the most general — Cppfunc and Fcb are specialized for
 common cases (computed fields and table-change callbacks).
@@ -197,11 +197,11 @@ The `expr` is C++ pasted into the body of the getter, and it may refer to
 `parent` — the record — so it reaches the other fields through their own
 accessors.
 
-|Tfunc|Generated function|Emitted when|Effect|
-|---|---|---|---|
-|`Cppfunc.Get`|`<Fldtype> <name>_Get(P&)`|always|Returns `expr`.  With an empty `expr` amc emits the prototype only and the body is hand-written, which is how a computed field that needs real code rather than one expression is declared.|
-|`Cppfunc.Set`|`void <name>_Set(P&, rhs)`|`set:Y`|Prototype only — always hand-written.  A computed field has nowhere to store a value, so what assignment means is the author's decision.|
-|`Cppfunc.Init`|—|never|The generator is empty; a computed field has nothing to initialize.|
+| Tfunc          | Generated function         | Emitted when | Effect |
+| -------------- | -------------------------- | ------------ | ------ |
+| `Cppfunc.Get`  | `<Fldtype> <name>_Get(P&)` | always       | Returns `expr`.  With an empty `expr` amc emits the prototype only and the body is hand-written, which is how a computed field that needs real code rather than one expression is declared. |
+| `Cppfunc.Set`  | `void <name>_Set(P&, rhs)` | `set:Y`      | Prototype only — always hand-written.  A computed field has nowhere to store a value, so what assignment means is the author's decision. |
+| `Cppfunc.Init` | —                          | never        | The generator is empty; a computed field has nothing to initialize. |
 
 A cppfunc field is left out of the record's `Print` unless `print:Y`, since
 the fields it is computed from are printed already.

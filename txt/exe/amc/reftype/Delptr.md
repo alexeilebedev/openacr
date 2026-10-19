@@ -22,9 +22,9 @@ dmmeta.field  field:acr.FRec.oldpkey  arg:algo.cstring  reftype:Delptr  dflt:"" 
 A single pointer field is added to the parent ctype
 (see `tclass_Delptr` in `cpp/amc/delptr.cpp`):
 
-| Field        | Type   | Meaning                              |
-|--------------|--------|--------------------------------------|
-| `<name>`     | `T*`   | NULL or owns one heap-allocated `T`  |
+| Field    | Type | Meaning |
+| -------- | ---- | ------- |
+| `<name>` | `T*` | NULL or owns one heap-allocated `T` |
 
 Memory comes from the **namespace default pool**
 (`dmmeta.nsx.pool`).  Without a default pool, amc rejects the
@@ -49,12 +49,12 @@ constructor on the first `_Access` call.
 
 Source: `cpp/amc/delptr.cpp`.
 
-| Tfunc            | Generated function                          | Effect |
-|------------------|---------------------------------------------|--------|
-| `Delptr.Init`    | `<name>_Init(P&)` (inline)                  | `parent.<name> = NULL;` |
-| `Delptr.Uninit`  | `<name>_Uninit(P&)`                         | Calls `<name>_Delete(parent)`. |
-| `Delptr.Access`  | `T& <name>_Access(P&)`                      | Returns reference to the value, creating it via placement new (initialized to `dflt`) on first call.  OOM is fatal. |
-| `Delptr.Delete`  | `void <name>_Delete(P&)`                    | If the pointer is non-NULL, destruct the value and free its memory to the default pool, then set NULL.  Idempotent. |
+| Tfunc           | Generated function         | Effect |
+| --------------- | -------------------------- | ------ |
+| `Delptr.Init`   | `<name>_Init(P&)` (inline) | `parent.<name> = NULL;` |
+| `Delptr.Uninit` | `<name>_Uninit(P&)`        | Calls `<name>_Delete(parent)`. |
+| `Delptr.Access` | `T& <name>_Access(P&)`     | Returns reference to the value, creating it via placement new (initialized to `dflt`) on first call.  OOM is fatal. |
+| `Delptr.Delete` | `void <name>_Delete(P&)`   | If the pointer is non-NULL, destruct the value and free its memory to the default pool, then set NULL.  Idempotent. |
 
 ### Memory model
 <a href="#memory-model"></a>

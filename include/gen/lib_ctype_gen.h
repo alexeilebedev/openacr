@@ -244,10 +244,10 @@ private:
     friend void                 cfmt_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:lib_ctype.FCfmt.msghdr.CopyOut
+// func:lib_ctype.FCfmt.base.CopyOut
 void                 cfmt_CopyOut(lib_ctype::FCfmt &row, dmmeta::Cfmt &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:lib_ctype.FCfmt.msghdr.CopyIn
+// func:lib_ctype.FCfmt.base.CopyIn
 void                 cfmt_CopyIn(lib_ctype::FCfmt &row, dmmeta::Cfmt &in) __attribute__((nothrow));
 
 // func:lib_ctype.FCfmt.ctype.Get
@@ -349,10 +349,10 @@ private:
     friend void                 ctype_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:lib_ctype.FCtype.msghdr.CopyOut
+// func:lib_ctype.FCtype.base.CopyOut
 void                 ctype_CopyOut(lib_ctype::FCtype &row, dmmeta::Ctype &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:lib_ctype.FCtype.msghdr.CopyIn
+// func:lib_ctype.FCtype.base.CopyIn
 void                 ctype_CopyIn(lib_ctype::FCtype &row, dmmeta::Ctype &in) __attribute__((nothrow));
 
 // func:lib_ctype.FCtype.ns.Get
@@ -1390,10 +1390,10 @@ private:
     friend void                 fconst_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:lib_ctype.FFconst.msghdr.CopyOut
+// func:lib_ctype.FFconst.base.CopyOut
 void                 fconst_CopyOut(lib_ctype::FFconst &row, dmmeta::Fconst &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:lib_ctype.FFconst.msghdr.CopyIn
+// func:lib_ctype.FFconst.base.CopyIn
 void                 fconst_CopyIn(lib_ctype::FFconst &row, dmmeta::Fconst &in) __attribute__((nothrow));
 
 // func:lib_ctype.FFconst.field.Get
@@ -1470,10 +1470,10 @@ private:
     friend void                 field_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:lib_ctype.FField.msghdr.CopyOut
+// func:lib_ctype.FField.base.CopyOut
 void                 field_CopyOut(lib_ctype::FField &row, dmmeta::Field &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:lib_ctype.FField.msghdr.CopyIn
+// func:lib_ctype.FField.base.CopyIn
 void                 field_CopyIn(lib_ctype::FField &row, dmmeta::Field &in) __attribute__((nothrow));
 
 // func:lib_ctype.FField.ctype.Get
@@ -1647,10 +1647,10 @@ private:
     friend void                 ftuple_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:lib_ctype.FFtuple.msghdr.CopyOut
+// func:lib_ctype.FFtuple.base.CopyOut
 void                 ftuple_CopyOut(lib_ctype::FFtuple &row, dmmeta::Ftuple &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:lib_ctype.FFtuple.msghdr.CopyIn
+// func:lib_ctype.FFtuple.base.CopyIn
 void                 ftuple_CopyIn(lib_ctype::FFtuple &row, dmmeta::Ftuple &in) __attribute__((nothrow));
 
 // func:lib_ctype.FFtuple..Uninit
@@ -1714,10 +1714,10 @@ private:
     friend void                 ssimfile_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:lib_ctype.FSsimfile.msghdr.CopyOut
+// func:lib_ctype.FSsimfile.base.CopyOut
 void                 ssimfile_CopyOut(lib_ctype::FSsimfile &row, dmmeta::Ssimfile &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:lib_ctype.FSsimfile.msghdr.CopyIn
+// func:lib_ctype.FSsimfile.base.CopyIn
 void                 ssimfile_CopyIn(lib_ctype::FSsimfile &row, dmmeta::Ssimfile &in) __attribute__((nothrow));
 
 // func:lib_ctype.FSsimfile.ssimns.Get

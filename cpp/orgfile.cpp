@@ -94,7 +94,7 @@ orgfile::FFilename *orgfile::AccessFilename(strptr fname) {
         cmd << " ";
         strptr_PrintBash(fname,cmd);
         filename->filename = fname;
-        filename->filehash = TrimHash(SysEval(cmd,FailokQ(false),1024));
+        filename->filehash = TrimHash(SysEval(cmd,FailokQ(false)));
         vrfy(filename->filehash != "", tempstr("orgfile.nohash") << Keyval("cmd",cmd));
         // cascade create filehash
         ind_filehash_GetOrCreate(filename->filehash);

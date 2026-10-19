@@ -40,14 +40,14 @@ assigns the matching left-side fconst value.
 
 Each `dmmeta.fcmap` row defines one mapping:
 
-| Attribute     | Meaning |
-|---------------|---------|
-| `fcmap`       | Map name (string).  Multiple rows with the same name form one map. |
-| `leftField`   | Pkey of the left field (full `<ctype>.<field>` path). |
-| `leftVal`     | The left-side fconst value (or `*` for default). |
-| `rightField`  | Pkey of the right field. |
-| `rightVal`    | The right-side fconst value (or empty if the case has no mapping). |
-| `bidir`       | When `Y`, generate both `_To<right>` and `_From<right>`.  When `N`, only one direction. |
+| Attribute    | Meaning |
+| ------------ | ------- |
+| `fcmap`      | Map name (string).  Multiple rows with the same name form one map. |
+| `leftField`  | Pkey of the left field (full `<ctype>.<field>` path). |
+| `leftVal`    | The left-side fconst value (or `*` for default). |
+| `rightField` | Pkey of the right field. |
+| `rightVal`   | The right-side fconst value (or empty if the case has no mapping). |
+| `bidir`      | When `Y`, generate both `_To<right>` and `_From<right>`.  When `N`, only one direction. |
 
 The `leftField`/`rightField` types must both be either:
 
@@ -63,7 +63,7 @@ Source: `cpp/amc/fcmap.cpp`.
 For each fcmap (and per direction when `bidir:Y`), amc emits:
 
 | Generated function                                                   | Effect |
-|----------------------------------------------------------------------|--------|
+| -------------------------------------------------------------------- | ------ |
 | `void <NSleft>::<Lhs>_To<NSright>_<Rhs>(Lhs& rhs, Rhs& lhs)`         | `switch (rhs.<leftField>)` and assign the matching `<rightVal>` to `lhs.<rightField>`. |
 | `void <NSleft>::<Lhs>_From<NSright>_<Rhs>(const Rhs& rhs, Lhs& lhs)` | Inverse direction (emitted when `bidir:Y`). |
 

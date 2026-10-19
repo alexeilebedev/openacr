@@ -31,13 +31,12 @@
 // libcunit1-dev, libnuma-dev, libssl-dev, uuid-dev, meson, python3-pyelftools
 // -- are debs of the image that names this package, as they are for nginx and
 // vma, so a host that builds it declares them the same way.  The clone and its
-// build tree are removed once installed: they run to two gigabytes, and in an
-// image build they would otherwise ride along in the layer.
+// build tree, two gigabytes, live in a scratch directory that goes when the
+// script exits.
 void ainst::extpkg_spdk(ainst::FExtpkg &extpkg) {
-    AddStage(extpkg,"src=$(mktemp -d)");
+    AddStage(extpkg,"src=$(ainst_tmpdir)");
     AddStage(extpkg,tempstr()<<"git clone --branch v"<<GetExtpkgVersion(extpkg)<<" --depth 1 https://github.com/spdk/spdk.git \"$src/spdk\"");
     AddStage(extpkg,"(cd \"$src/spdk\" && git submodule update --init)");
-    AddStage(extpkg,"(cd \"$src/spdk\" && ./configure && make -j\"$(nproc)\")");
+    AddStage(extpkg,"(cd \"$src/spdk\" && ./configure && make -j\"$(ainst_nproc)\")");
     AddStage(extpkg,"(cd \"$src/spdk\" && make install DESTDIR=\"$ROOT\")");
-    AddStage(extpkg,"rm -rf \"$src\"");
 }

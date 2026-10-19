@@ -39,7 +39,7 @@ Usage: abt [[-target:]<regx>] [options]
     -shortlink                  Try to shorten sort link if possible
     -verbose    flag            Verbosity level (0..255); alias -v; cumulative
     -debug      flag            Debug level (0..255); alias -d; cumulative
-    -trace      string  ""      Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps
+    -trace      string  ""      Trace expression: log categories to enable, as category[:filter],...
     -help                       Print help and exit; alias -h
     -version                    Print version and exit
     -signature                  Show signatures and exit; alias -sig
@@ -67,6 +67,13 @@ the other libraries acr links.  A regex that matches nothing is an
 
 With a target and no action flag, abt builds.  With no target at all, it prints
 the list of every target it knows.
+
+A target builds only on a platform that provides every system library it needs.
+`dev.targsyslib` says what each target needs, and `dev.syslibuname` which
+libraries each platform provides.  abt drops a target whose required need the
+platform lacks, together with every target that depends on it, and prints an
+`abt.unavailable` line naming the library for each target the command line
+named.  A selection the drop leaves empty fails the run with exit code 1.
 
 #### How abt decides what to rebuild
 <a href="#how-abt-decides-what-to-rebuild"></a>
@@ -97,6 +104,14 @@ so `cpp/abt/main.cpp` compiles to `build/release/cpp.abt.main.o`.  A library
 carries its arch, as in `build/release/algo_lib-x86_64.a`.  An executable
 carries its bare name, and `bin/<target>` links to it, usually as
 `../build/release/<target>`.
+
+A shared object, such as a Python module, links only objects compiled
+with `-fPIC`, and an executable runs a few percent faster without it.  So a
+shared object and every library it links are built a second time, under the
+configuration's `so/` directory, with the `dev.tool_opt` options of type `SOCC`
+added to each compile.  `lib/<target>.so` links to the result, as in
+`../build/release/so/<target>.so`.  A library that an executable also needs is
+built once in each directory.
 
 #### Bootstrapping
 <a href="#bootstrapping"></a>
@@ -200,12 +215,12 @@ The combination with `-uname`, `-cfg` and `-arch` must be a row of
 Possible values are
 ```ssim
 inline-command: acr compiler -report:N | ssimfilt -t
-COMPILER  RANLIB  AR       LINK      LIBEXT  EXEEXT  PCHEXT  OBJEXT  RC      COMMENT
-                                                                             all
-cl                LIB.EXE  LINK.EXE  .lib    .exe    .pch    .obj    RC.EXE
-clang++   ranlib  ar       clang++   .a              .gch    .o
-g++       ranlib  ar       g++       .a              .gch    .o
-g++-9     ranlib  ar       g++-9     .a              .gch    .o
+COMPILER  RANLIB  AR       LINK      LIBEXT  EXEEXT  SOEXT  PCHEXT  OBJEXT  RC      COMMENT
+                                                                                    all
+cl                LIB.EXE  LINK.EXE  .lib    .exe    .dll   .pch    .obj    RC.EXE
+clang++   ranlib  ar       clang++   .a              .so    .gch    .o
+g++       ranlib  ar       g++       .a              .so    .gch    .o
+g++-9     ranlib  ar       g++-9     .a              .so    .gch    .o
 
 ```
 
@@ -234,14 +249,15 @@ Select the architecture to build for.  The default is the one named by the link
 Possible values are
 ```ssim
 inline-command: acr arch -report:N | ssimfilt -t
-ARCH    COMMENT
-        all
-amd64   64-bit mode on FreeBSD
-arm64   64-bit mode on Apple Silicon
-i686    Cygwin 64-bit mode
-i86pc   Solaris 64-bit mode
-x64     64-bit mode on windows (under cygwin)
-x86_64  64-bit mode on linux
+ARCH     COMMENT
+         all
+aarch64  64-bit ARM on Linux (AWS Graviton)
+amd64    64-bit mode on FreeBSD
+arm64    64-bit mode on Apple Silicon
+i686     Cygwin 64-bit mode
+i86pc    Solaris 64-bit mode
+x64      64-bit mode on windows (under cygwin)
+x86_64   64-bit mode on linux
 
 ```
 
@@ -354,8 +370,9 @@ still served from the cache, and `-cache:gcache-force` makes them real.
 #### -install -- Update soft-link under bin/
 <a href="#-install"></a>
 
-Build the selected executables, then point `bin/<target>` at each one.  A plain
-build leaves `bin/` alone.  `abt -install -cfg:debug acr` makes `bin/acr` a
+Build the selected executables, then point `bin/<target>` at each one.  A shared
+object, the target of an `so` namespace, gets its link under `lib/` instead, as
+`lib/<target>.so`.  A plain build leaves `bin/` and `lib/` alone.  `abt -install -cfg:debug acr` makes `bin/acr` a
 link to `../build/debug/acr`, and `abt -install acr` points it back at the
 release build.
 

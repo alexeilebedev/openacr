@@ -185,7 +185,7 @@ void                 ind_running_Reserve(int n) __attribute__((nothrow));
 void                 ind_running_AbsReserve(int n) __attribute__((nothrow));
 // func:atf_nrun.FDb.ind_running.Step
 // this function is 'extrn' and implemented by user
-void                 ind_running_Step() __attribute__((nothrow));
+void                 ind_running_Step();
 // Set inter-step delay to specified value.
 // The difference between new delay and current delay is added to the next scheduled time.
 // func:atf_nrun.FDb.ind_running.SetDelay
@@ -236,7 +236,7 @@ void                 zd_todo_InsertBefore(atf_nrun::FEntry& row, atf_nrun::FEntr
 void                 zd_todo_FirstChanged() __attribute__((nothrow));
 // func:atf_nrun.FDb.zd_todo.Step
 // this function is 'extrn' and implemented by user
-void                 zd_todo_Step() __attribute__((nothrow));
+void                 zd_todo_Step();
 // Set inter-step delay to specified value.
 // The difference between new delay and current delay is added to the next scheduled time.
 // func:atf_nrun.FDb.zd_todo.SetDelay

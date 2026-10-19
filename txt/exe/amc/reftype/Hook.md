@@ -26,10 +26,10 @@ field with `_funcptr` appended) that serves as the typed
 storage.  Then `tclass_Hook` adds the actual fields to the
 parent:
 
-| Field            | Type             | Always | Meaning                                  |
-|------------------|------------------|--------|------------------------------------------|
-| `<name>`         | `<HookCpptype>`  | yes    | function pointer, default NULL           |
-| `<name>_ctx`     | `u64`            | unless static-only | context pointer (cast to/from `void*`) |
+| Field        | Type            | Always             | Meaning |
+| ------------ | --------------- | ------------------ | ------- |
+| `<name>`     | `<HookCpptype>` | yes                | function pointer, default NULL |
+| `<name>_ctx` | `u64`           | unless static-only | context pointer (cast to/from `void*`) |
 
 The function-pointer type's signature is derived from:
 
@@ -76,12 +76,12 @@ Required:
 
 Source: `cpp/amc/hook.cpp`.
 
-| Tfunc           | Generated function                                                       | Effect |
-|-----------------|--------------------------------------------------------------------------|--------|
-| `Hook.Set0`     | `inline void <name>_Set0(P&, void (*fcn)())`                             | Bind a 0-arg function pointer; clears `_ctx`. |
-| `Hook.Set1`     | `template<class T> inline void <name>_Set1(P&, T& ctx, void (*fcn)(T&))` | Bind a 1-arg function with typed context. |
-| `Hook.Set2`     | `template<class T> inline void <name>_Set2(P&, T& ctx, void (*fcn)(T&, Arg&))` | Bind a 2-arg function. |
-| `Hook.Call`     | `inline void <name>_Call(P&, [Arg arg])`                                 | Invoke the hook.  No-op if NULL (unless static-inlary). |
+| Tfunc       | Generated function                                                             | Effect |
+| ----------- | ------------------------------------------------------------------------------ | ------ |
+| `Hook.Set0` | `inline void <name>_Set0(P&, void (*fcn)())`                                   | Bind a 0-arg function pointer; clears `_ctx`. |
+| `Hook.Set1` | `template<class T> inline void <name>_Set1(P&, T& ctx, void (*fcn)(T&))`       | Bind a 1-arg function with typed context. |
+| `Hook.Set2` | `template<class T> inline void <name>_Set2(P&, T& ctx, void (*fcn)(T&, Arg&))` | Bind a 2-arg function. |
+| `Hook.Call` | `inline void <name>_Call(P&, [Arg arg])`                                       | Invoke the hook.  No-op if NULL (unless static-inlary). |
 
 For **static hooks** the `Set*` tfuncs are not generated;
 only `Call` exists, and the function pointer is filled in via

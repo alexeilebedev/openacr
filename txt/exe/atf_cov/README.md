@@ -30,7 +30,7 @@ Usage: atf_cov [options]
     -incremental                                            Keep *.gcda files from previous run
     -verbose      flag                                      Verbosity level (0..255); alias -v; cumulative
     -debug        flag                                      Debug level (0..255); alias -d; cumulative
-    -trace        string  ""                                Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps
+    -trace        string  ""                                Trace expression: log categories to enable, as category[:filter],...
     -help                                                   Print help and exit; alias -h
     -version                                                Print version and exit
     -signature                                              Show signatures and exit; alias -sig
@@ -132,6 +132,11 @@ produced.  `n_fail` counts `gcov` commands that failed, and an
 holding profile data that yields no coverage reports `success:N` and fails the
 run.
 
+A merge of saved line counts reports each directory the same way, with
+`n_ssim` counting the `.cov.ssim` files read.  Such a directory holds the output
+of a run made elsewhere, so one with no files means that run's measurement
+never arrived, and it reports `success:N` and fails the run.
+
 #### Reports
 <a href="#reports"></a>
 
@@ -202,7 +207,7 @@ atf_cov.coverage_lost  n_covdir_empty:1  n_covtarget:18  n_unmeasured:56  succes
 
 The targets named there are the ones the missing data would have measured.  Run
 the job again.  The [coverage_lost
-recipe](/txt/rule/openacr.md#the-coverage-cijob-fails-with-atf_cov-coverage_lost)
+recipe](/txt/rule/openacr.md#a-coverage-job-fails-with-atf_cov-coverage_lost)
 says how to find which directory lost its data.
 
 `-capture` writes each measured coverage into `dev.tgtcov` as the target's new
@@ -220,8 +225,8 @@ atf_cov -report                                                         # report
 atf_cov -covdir temp/cov1 -runcmd "build/coverage/acr -check" -gcov -ssim   # measure a second case in its own directory
 atf_cov -mergepath temp/covdata:temp/cov1 -covdir temp/merged -report   # merge two saved runs
 atf_cov -mergepath temp/covdata:temp/cov1 -covdir temp/merged -gcov -report  # merge from raw .gcda files
-atf_ci -cijob:coverage                                                  # run the whole suite and check every floor
-atf_ci -cijob:coverage -capture                                         # run the whole suite and record new floors
+atf_ci -cijob:cov%                                                      # run the whole suite and check every floor
+atf_ci -cijob:cov% -capture                                             # run the whole suite and record new floors
 ```
 
 To wrap a command that sits in a pipeline, send the log to a file so the
@@ -320,7 +325,7 @@ for the unhit-function list.
 Record each measured target's coverage as its floor in `dev.tgtcov`, and replace
 `dev.uncovfunc` with this run's unhit functions.  It writes both ssimfiles
 through `acr`.  It refuses a run that lost data.  Use it through `atf_ci
--cijob:coverage -capture`, which runs the whole suite first.
+-cijob:cov% -capture`, which runs the whole suite first.
 
 #### -xmlpretty -- Generate pretty-formatted XML
 <a href="#-xmlpretty"></a>

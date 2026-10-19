@@ -284,6 +284,8 @@ enum command_FieldIdEnum {    // command.FieldId.value
     ,command_FieldId_perm
     ,command_FieldId_expires
     ,command_FieldId_src
+    ,command_FieldId_mint
+    ,command_FieldId_minter
     ,command_FieldId_keygen
     ,command_FieldId_pubfile
     ,command_FieldId_renew
@@ -387,6 +389,8 @@ enum command_FieldIdEnum {    // command.FieldId.value
     ,command_FieldId_header
     ,command_FieldId_prefer_signed
     ,command_FieldId_name
+    ,command_FieldId_hook
+    ,command_FieldId_merged
     ,command_FieldId_cow
     ,command_FieldId_claudesess
     ,command_FieldId_i
@@ -395,7 +399,7 @@ enum command_FieldIdEnum {    // command.FieldId.value
     ,command_FieldId_value
 };
 
-enum { command_FieldIdEnum_N = 366 };
+enum { command_FieldIdEnum_N = 370 };
 
 
 // --- command_abt_cache_Enum
@@ -797,7 +801,7 @@ struct abt_md { // command.abt_md: Tool to generate markdown documentation
     bool             dry_run;      //   false  Do not write changes to disk
     bool             external;     //   false  Check external links as well (may fail if no internet connection)
     bool             evalcmd;      //   true  Execute inline-commands
-    bool             tut;          //   false  (with -evalcmd) Evaluate the tutorials' inline commands too (txt/tut)
+    bool             tut;          //   false  (with -evalcmd) Evaluate the inline commands of the tutorials too
     // func:command.abt_md..Ctor
     inline               abt_md() __attribute__((nothrow));
 };
@@ -1261,7 +1265,7 @@ struct acr_compl { // command.acr_compl: ACR shell auto-complete for all targets
     bool            install;       //   false  Produce bash commands to install the handler
     algo::cstring   debug_log;     //   ""  Log file for debug information, overrides ACR_COMPL_DEBUG_LOG
     bool            check;         //   false  Check command line validity
-    bool            check_batch;   //   false  Batch mode: read acr_compl.checkreq from stdin, emit acr_compl.checkerr per failure
+    bool            check_batch;   //   false  Batch mode: check each checkreq row on stdin, print a checkerr per failure
     // func:command.acr_compl..Ctor
     inline               acr_compl() __attribute__((nothrow));
 };
@@ -1711,6 +1715,7 @@ struct acr_in { // command.acr_in: ACR Input - compute set of ssimfiles or tuple
     u64              data_dir_max;     // max. capacity of array before realloc
     algo::cstring    schema;           //   "data"
     algo::cstring    related;          //   ""  Select only tuples related to specified acr key
+    algo_lib::Regx   ssimfile;         //   ""  Sql Regx of dmmeta::Ssimfile
     algo_lib::Regx   notssimfile;      //   ""  Sql Regx of dmmeta::Ssimfile
     bool             checkable;        //   false  Ensure output passes acr -check
     algo_lib::Regx   r;                //   ""  Sql Regx of dmmeta::Ssimfile
@@ -1819,6 +1824,14 @@ void                 data_dir_Insary(command::acr_in& parent, algo::aryptr<algo:
 // If N is negative, nothing is removed.
 // func:command.acr_in.data_dir.RemRegion
 void                 data_dir_RemRegion(command::acr_in& parent, i64 beg, i64 n) __attribute__((nothrow));
+
+// Print back to string
+// func:command.acr_in.ssimfile.Print
+void                 ssimfile_Print(command::acr_in& parent, algo::cstring &out) __attribute__((nothrow));
+// Read Regx from string
+// Convert string to field. Return success value
+// func:command.acr_in.ssimfile.ReadStrptrMaybe
+bool                 ssimfile_ReadStrptrMaybe(command::acr_in& parent, algo::strptr in) __attribute__((nothrow));
 
 // Print back to string
 // func:command.acr_in.notssimfile.Print
@@ -2106,11 +2119,12 @@ struct ainst { // command.ainst: Install third-party software described by dev.e
     bool             script;    //   false  (action) Print the install script instead of running it
     bool             lib;       //   false  (action) Print the install functions of the selected packages as a shell library
     bool             rpm;       //   false  (action) Stage each package and build an rpm out of the staged tree
-    bool             update;    //   false  (action) Look upstream for a newer release and record its version, url and sha256
+    bool             update;    //   false  (action) Find a newer upstream release and record its version, url and sha256
     algo::cstring    root;      //   ""  Stage files under this directory instead of /
     algo::cstring    cache;     //   "temp/ainst/cache"  Where verified artifacts are kept, one file per sha256
     algo::cstring    outdir;    //   "temp/ainst"  (with -rpm) Directory the rpm is written to
     bool             dry_run;   //   false  Print actions, do not perform
+    bool             check;     //   false  (action) Stage each selected package under a scratch root and report which fail
     // func:command.ainst..Ctor
     inline               ainst() __attribute__((nothrow));
 };
@@ -2643,7 +2657,7 @@ struct amsspy { // command.amsspy: List ams sessions and monitor traffic on host
     bool             shm;       //   false  List shms
     algo_lib::Regx   spy;       //   ""  Sql Regx
     u8               f;         //   0  (output) Output format
-    bool             clean;     //   false  Unlink orphaned /dev/shm ams segments and exit
+    bool             clean;     //   false  Unlink orphaned ams segments and exit
     bool             dump;      //   false  Dump every segment's header + reader offsets/lag (out-of-band) and exit
     // func:command.amsspy..Ctor
     inline               amsspy() __attribute__((nothrow));
@@ -2786,6 +2800,7 @@ struct apm { // command.apm: Algo Package Manager
     bool                list;         //   false  List installed packages
     bool                diff;         //   false  Diff package with respect to installed version
     bool                push;         //   false  Evaluate package diff and push it to origin
+    bool                build;        //   false  Produce each package in an empty repo under temp/apm-build and build it
     bool                publish;      //   false  Verify, show and push the package to its destination, asking first
     bool                check;        //   false  Consistency check
     algo::Smallstr200   origin;       //   ""  Upstream URL of new package
@@ -4520,7 +4535,7 @@ void                 bash_proc_Uninit(command::bash_proc& parent) __attribute__(
 // access: command.credd_proc.credd (Exec)
 struct credd { // command.credd: Hold a session's credentials unlocked in memory and hand them to the tools that authenticate
     algo::cstring      dir;       //   ""  Store directory; empty = ~/.ssh/credd
-    bool               start;     //   false  (action) Start the daemon unless one answers: ask the master password, fork, load the ssh agent
+    bool               start;     //   false  (action) Start the daemon and its ssh agent, unless a daemon already answers
     bool               nostore;   //   false  hold no store on disk; the daemon keeps what -seed gives it
     algo::cstring      seed;      //   ""  (action) give the running daemon a credential of this name, read per -src
     bool               stop;      //   false  (action) Stop the daemon: empty and kill its ssh agent, forget the key
@@ -4529,18 +4544,21 @@ struct credd { // command.credd: Hold a session's credentials unlocked in memory
     algo::cstring      show;      //   ""  (action) Print the named credential's secret, fetched from the daemon
     bool               check;     //   false  (action) List credentials that expire within -window days
     i32                window;    //   14  (with -check) Days ahead
-    algo::cstring      add;       //   ""  (action) Add a credential: a name takes its secret per -src, % offers each token and key beside the store, a path offers that file
-    algo::cstring      linkto;    //   ""  (with -add:<name>) Make the new name a link to this credential, so a tool that asks for the new name gets that one's secret
-    algo::Smallstr50   kind;      //   ""  (with -add:<name>) Kind of credential, a row of creddb.kind: a token provider, sshkey, or link
-    algo::cstring      server;    //   ""  (with -add:<name>) Server URL of a token
-    algo::cstring      account;   //   ""  (with -add:<name>) Account a token belongs to
+    algo::cstring      add;       //   ""  (action) Add the named credential, or offer the files that % or a path names
+    algo::cstring      linkto;    //   ""  (with -add:<name>) Make the new name a link to this credential
+    algo::Smallstr50   kind;      //   ""  (with -add:<name>) Kind of credential, a row of creddb.kind
+    algo::cstring      server;    //   ""  (with -add:<name>, -mint) Server URL of a token
+    algo::cstring      account;   //   ""  (with -add:<name>, -mint) Token's account; for -mint, the group or project path
     algo::cstring      perm;      //   ""  (with -add:<name>) Permissions a token was issued with, comma-separated
-    algo::cstring      expires;   //   ""  (with -add:<name>, -keygen, -renew) Expiry as YYYY-MM-DD; empty = never
-    algo::cstring      comment;   //   ""  (with -add:<name>, -keygen) Comment on the record
-    algo::cstring      src;       //   "-"  (with -add:<name>, -renew) Where the secret is read: - the terminal, @file a file
+    algo::cstring      expires;   //   ""  (with -add:<name>, -mint, -keygen, -renew) Expiry as YYYY-MM-DD; empty = never
+    algo::cstring      comment;   //   ""  (with -add:<name>, -mint, -keygen) Comment on the record
+    algo::cstring      src;       //   "-"  (with -add:<name>, -mint, -renew) Secret source: - = terminal, @file = a file
+    algo::cstring      mint;      //   ""  (action) Mint the credential that dev.cred declares, or read it per -src
+    algo::cstring      minter;    //   ""  (with -mint) Token to mint with; empty = the store's gitlab token on -server
+    algo::cstring      in;        //   "data"  (with -mint, -renew) The tree's ssimfile directory, which holds dev.cred
     algo::cstring      keygen;    //   ""  (action) Make an ed25519 key under this name and add it sealed
-    algo::cstring      pubfile;   //   ""  (with -keygen, -show) Write the public key to this file, for installing where the key logs in; -show then shows no secret
-    algo::cstring      renew;     //   ""  (action) Print where the named token is reissued, then take its new value per -src
+    algo::cstring      pubfile;   //   ""  (with -keygen, -show) Write the public key to this file
+    algo::cstring      renew;     //   ""  (action) Renew the named token over the API, or take a new value per -src
     algo::cstring      remove;    //   ""  (action) Remove the named credential
     bool               passwd;    //   false  (action) Change the master password, resealing every secret
     bool               dump;      //   false  (action) Print the store, secrets still sealed
@@ -4671,6 +4689,7 @@ struct doc { // command.doc: Render a markdown document to the terminal
     bool            vis;           //   false  Show the access paths of the ctypes on the page (amc_vis)
     bool            code;          //   false  Show the C++ amc generated for the ctypes on the page, and their functions
     bool            data;          //   false  Show the rows of the table the page is about (acr <ssimfile>)
+    bool            dir;           //   false  List the documents beside this one in the pane; a terminal folds the list
     bool            list;          //   false  List matching documents instead of rendering one
     u32             width;         //   0  Measure in columns; 0 takes it from the terminal
     bool            color;         //   true  Style the output when stdout is a terminal
@@ -5301,7 +5320,7 @@ struct llmtool { // command.llmtool: Claude Code cost and status reporting
     algo::cstring   session;      //   ""  Session id to report on; default is every session in this directory
     algo::cstring   transcript;   //   ""  Transcript file to report on, instead of a session id
     bool            all;          //   false  Report on every directory claude code has recorded, not just this one
-    algo::cstring   rate;         //   ""  Price list to use; default is the .claude/costrate.json of the tree this binary was built from
+    algo::cstring   rate;         //   ""  Price list file; empty = .claude/costrate.json above the binary
     bool            analyze;      //   false  Report cost per worktree and per model, as ssim tuples
     bool            status;       //   false  Print the claude code status line; its json arrives on stdin
     // func:command.llmtool..Ctor
@@ -7248,9 +7267,11 @@ void                 sv2ssim_proc_Uninit(command::sv2ssim_proc& parent) __attrib
 // access: command.wt_proc.wt (Exec)
 struct wt { // command.wt: Worktree manager - reset, run, diff, delete
     algo::cstring    in;            //   "data"  Input directory or filename, - for stdin
-    algo_lib::Regx   name;          // Sql Regx of dev::Sandbox
+    algo_lib::Regx   name;          //   ""  Acr Regx of dev::Sandbox
+    algo::cstring    hook;          //   ""  Claude Code hook, create, remove or sessionstart: reads the hook's JSON on stdin
     bool             create;        //   false  Create new sandbox and register in dev.sandbox
     bool             b;             //   false  Branch worktree: create on new branch NAME; git-registered, no dev.sandbox row
+    bool             merged;        //   false  Select branch worktrees whose branch merged into the upstream branch
     bool             cow;           //   false  Sandbox is a copy-on-write farm (with -create/anon name)
     bool             list;          //   false  List existing sandboxes
     bool             reset;         //   false  Reset sandbox to match current directory

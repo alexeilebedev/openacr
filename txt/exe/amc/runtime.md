@@ -67,11 +67,11 @@ void <ns>::MainLoop() {
 
 Three `algo_lib`-level fields drive the loop:
 
-| Field                   | Meaning                                                                 |
-|-------------------------|-------------------------------------------------------------------------|
-| `algo_lib::_db.clock`   | Most recent `rdtsc` capture (refreshed by `_UpdateCycles`).             |
+| Field                     | Meaning |
+| ------------------------- | ------- |
+| `algo_lib::_db.clock`     | Most recent `rdtsc` capture (refreshed by `_UpdateCycles`). |
 | `algo_lib::_db.next_loop` | "Earliest time some step wants CPU again."  Reset to `limit` each iteration. |
-| `algo_lib::_db.limit`   | Loop-exit sentinel.  Default `0x7fff…ffff` (effectively infinity).      |
+| `algo_lib::_db.limit`     | Loop-exit sentinel.  Default `0x7fff…ffff` (effectively infinity). |
 
 Each scheduling cycle starts by **raising `next_loop` to
 infinity**.  Then `Steps()` runs through every step's `_Call`
@@ -128,12 +128,12 @@ The shape:
 
 The same binary thus seamlessly:
 
-| Workload                                   | Behavior                              |
-|--------------------------------------------|---------------------------------------|
-| All steps hot (`next_loop = clock`)        | Spin tight; no syscall overhead.      |
-| Some periodic, some hot                    | Spin while hot work pending, then sleep until next periodic deadline. |
-| All quiet, fds open                        | Block in `epoll_wait` up to next deadline. |
-| All quiet, no fds                          | `nanosleep` to next deadline.         |
+| Workload                            | Behavior |
+| ----------------------------------- | -------- |
+| All steps hot (`next_loop = clock`) | Spin tight; no syscall overhead. |
+| Some periodic, some hot             | Spin while hot work pending, then sleep until next periodic deadline. |
+| All quiet, fds open                 | Block in `epoll_wait` up to next deadline. |
+| All quiet, no fds                   | `nanosleep` to next deadline. |
 
 You don't pick blocking vs polling; you describe the work, and
 the scheduler picks based on what each step asked for *this
@@ -191,12 +191,12 @@ The field carrying the `fstep` is the **control field**, and its
 the right predicate based on the reftype (`GetStepCond` in
 `cpp/amc/step.cpp`):
 
-| Field type                                 | Predicate                              |
-|--------------------------------------------|----------------------------------------|
+| Field type                                                     | Predicate |
+| -------------------------------------------------------------- | --------- |
 | `Llist`, `Atree`, `Bheap`, `Tary`, `Inlary`, `Ptrary`, `Thash` | `!<name>_EmptyQ()` |
-| `Val` (typically `bool`), `Ptr`, `Upptr`   | `<ns>::_db.<name>` (zero-test)         |
-| `ZSListMT`                                 | `<name>_DestructiveFirst() != NULL`    |
-| `Global`                                   | `true` (always run)                    |
+| `Val` (typically `bool`), `Ptr`, `Upptr`                       | `<ns>::_db.<name>` (zero-test) |
+| `ZSListMT`                                                     | `<name>_DestructiveFirst() != NULL` |
+| `Global`                                                       | `true` (always run) |
 
 **This is why a `bool` on FDb works as a step trigger.**
 There's no special "trigger" reftype — a `reftype:Val arg:bool`
@@ -225,15 +225,15 @@ process cleanly after.
 
 The `dmmeta.steptype` table lists every supported variant:
 
-| `steptype`     | Comment                                                                 |
-|----------------|-------------------------------------------------------------------------|
-| `Inline`       | Inline; call step func every cycle.                                     |
-| `InlineOnce`   | Inline; call step func at given time (first element of Bheap).          |
-| `InlineRecur`  | Inline; call step func with given period (`fdelay`).                    |
-| `TimeHookOnce` | Routed through `bh_timehook` Bheap; call at given time.                 |
-| `TimeHookRecur`| Routed through `bh_timehook` Bheap; call with given period.             |
-| `Callback`     | Inline; call step func always; does not update `next_loop`.             |
-| `Extern`       | User provides scheduling by implementing `_FirstChanged`.               |
+| `steptype`      | Comment |
+| --------------- | ------- |
+| `Inline`        | Inline; call step func every cycle. |
+| `InlineOnce`    | Inline; call step func at given time (first element of Bheap). |
+| `InlineRecur`   | Inline; call step func with given period (`fdelay`). |
+| `TimeHookOnce`  | Routed through `bh_timehook` Bheap; call at given time. |
+| `TimeHookRecur` | Routed through `bh_timehook` Bheap; call with given period. |
+| `Callback`      | Inline; call step func always; does not update `next_loop`. |
+| `Extern`        | User provides scheduling by implementing `_FirstChanged`. |
 
 Direct steps (`Inline*`, `Callback`, `Extern`) inline into
 `Steps()` and take a handful of instructions each.  TimeHook
@@ -307,10 +307,10 @@ many tightly-clustered deadlines.
 `InlineRecur` runs every `_delay` cycles regardless of when work
 arrived.  amc adds two variables to FDb:
 
-| Variable            | Meaning                                  |
-|---------------------|------------------------------------------|
-| `<name>_delay`      | Inter-call delay, in `algo::SchedTime`.  |
-| `<name>_next`       | Time of next scheduled invocation.       |
+| Variable       | Meaning |
+| -------------- | ------- |
+| `<name>_delay` | Inter-call delay, in `algo::SchedTime`. |
+| `<name>_next`  | Time of next scheduled invocation. |
 
 The wrapper:
 
@@ -544,12 +544,12 @@ to has shifted.  amc emits `<name>_FirstChanged` on demand (see
 `tfunc_Step_FirstChanged` in `cpp/amc/step.cpp`) — but only
 for step types that need it:
 
-| `steptype`     | What `_FirstChanged` does                                                 |
-|----------------|--------------------------------------------------------------------------|
-| `TimeHookRecur`| If index empty → deschedule timehook; else → `bh_timehook_Reheap`.       |
-| `TimeHookOnce` | If index empty → deschedule; else → update timehook time to new head's deadline, reheap. |
-| `Inline`       | No-op (the inline loop will discover the change next cycle).             |
-| `Extern`       | User-provided.  amc emits only the extern prototype.                     |
+| `steptype`      | What `_FirstChanged` does |
+| --------------- | ------------------------- |
+| `TimeHookRecur` | If index empty → deschedule timehook; else → `bh_timehook_Reheap`. |
+| `TimeHookOnce`  | If index empty → deschedule; else → update timehook time to new head's deadline, reheap. |
+| `Inline`        | No-op (the inline loop will discover the change next cycle). |
+| `Extern`        | User-provided.  amc emits only the extern prototype. |
 
 The index reftype's `Insert`/`Remove`/`Reheap` operations are
 generated to call `_FirstChanged` whenever they observe a

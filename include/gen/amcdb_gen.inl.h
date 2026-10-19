@@ -127,6 +127,55 @@ inline  amcdb::Pbtype::Pbtype() {
     amcdb::Pbtype_Init(*this);
 }
 
+// --- amcdb.Regxcase..Init
+// Set all fields to initial values.
+inline void amcdb::Regxcase_Init(amcdb::Regxcase& parent) {
+    parent.full = bool(true);
+    parent.match = bool(false);
+}
+
+// --- amcdb.Regxcase..Ctor
+inline  amcdb::Regxcase::Regxcase() {
+    amcdb::Regxcase_Init(*this);
+}
+
+// --- amcdb.Regxlenient..Init
+// Set all fields to initial values.
+inline void amcdb::Regxlenient_Init(amcdb::Regxlenient& parent) {
+    parent.invalid = bool(false);
+}
+
+// --- amcdb.Regxlenient..Ctor
+inline  amcdb::Regxlenient::Regxlenient() {
+    amcdb::Regxlenient_Init(*this);
+}
+
+// --- amcdb.Regxmacro..Init
+// Set all fields to initial values.
+inline void amcdb::Regxmacro_Init(amcdb::Regxmacro& parent) {
+    parent.neg = bool(false);
+}
+
+// --- amcdb.Regxmacro..Ctor
+inline  amcdb::Regxmacro::Regxmacro() {
+    amcdb::Regxmacro_Init(*this);
+}
+
+// --- amcdb.Regxrule..Ctor
+inline  amcdb::Regxrule::Regxrule() {
+}
+
+// --- amcdb.Regxstyle..Init
+// Set all fields to initial values.
+inline void amcdb::Regxstyle_Init(amcdb::Regxstyle& parent) {
+    parent.esc = bool(false);
+}
+
+// --- amcdb.Regxstyle..Ctor
+inline  amcdb::Regxstyle::Regxstyle() {
+    amcdb::Regxstyle_Init(*this);
+}
+
 // --- amcdb.Regxtype..Ctor
 inline  amcdb::Regxtype::Regxtype() {
 }
@@ -183,6 +232,31 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const amcdb::Lang &r
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const amcdb::Pbtype &row) {// cfmt:amcdb.Pbtype.String
     amcdb::Pbtype_Print(const_cast<amcdb::Pbtype&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const amcdb::Regxcase &row) {// cfmt:amcdb.Regxcase.String
+    amcdb::Regxcase_Print(const_cast<amcdb::Regxcase&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const amcdb::Regxlenient &row) {// cfmt:amcdb.Regxlenient.String
+    amcdb::Regxlenient_Print(const_cast<amcdb::Regxlenient&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const amcdb::Regxmacro &row) {// cfmt:amcdb.Regxmacro.String
+    amcdb::Regxmacro_Print(const_cast<amcdb::Regxmacro&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const amcdb::Regxrule &row) {// cfmt:amcdb.Regxrule.String
+    amcdb::Regxrule_Print(const_cast<amcdb::Regxrule&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const amcdb::Regxstyle &row) {// cfmt:amcdb.Regxstyle.String
+    amcdb::Regxstyle_Print(const_cast<amcdb::Regxstyle&>(row), str);
     return str;
 }
 

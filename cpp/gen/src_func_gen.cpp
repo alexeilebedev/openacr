@@ -388,8 +388,8 @@ bool src_func::LoadTuplesMaybe(algo::strptr root, bool recursive) {
         retval = retval && src_func::LoadTuplesFile(algo::SsimFname(root,"gendb.ctypelen"),recursive);
         retval = retval && src_func::LoadTuplesFile(algo::SsimFname(root,"gendb.cppsym"),recursive);
         retval = retval && src_func::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
-        retval = retval && src_func::LoadTuplesFile(algo::SsimFname(root,"dev.target"),recursive);
         retval = retval && src_func::LoadTuplesFile(algo::SsimFname(root,"dev.gitfile"),recursive);
+        retval = retval && src_func::LoadTuplesFile(algo::SsimFname(root,"dev.target"),recursive);
         retval = retval && src_func::LoadTuplesFile(algo::SsimFname(root,"dev.targsrc"),recursive);
     } else {
         algo_lib::AppendErrtext("path", root);

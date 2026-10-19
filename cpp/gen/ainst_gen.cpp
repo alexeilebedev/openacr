@@ -56,6 +56,8 @@ namespace ainst { // gen:ns_print_proto
     static bool          extpkgver_InputMaybe(dev::Extpkgver &elem) __attribute__((nothrow));
     // func:ainst.FDb.upstreamtype.LoadStatic
     static void          upstreamtype_LoadStatic() __attribute__((nothrow));
+    // func:ainst.FDb.extpkgnoarch.InputMaybe
+    static bool          extpkgnoarch_InputMaybe(dev::Extpkgnoarch &elem) __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
     // func:ainst.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
@@ -164,7 +166,7 @@ static void ainst::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'ainst.Input'  signature:'ffa419fc903ea03b2a2f5ab08e72e0974fe40857'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'ainst.Input'  signature:'17f49cb29a7031fb5be98fc426601efea9042d46'");
 }
 
 // --- ainst.FDb._db.InsertStrptrMaybe
@@ -185,6 +187,12 @@ bool ainst::InsertStrptrMaybe(algo::strptr str) {
             dev::Extpkgver elem;
             retval = dev::Extpkgver_ReadStrptrMaybe(elem, str);
             retval = retval && extpkgver_InputMaybe(elem);
+            break;
+        }
+        case ainst_TableId_dev_Extpkgnoarch: { // finput:ainst.FDb.extpkgnoarch
+            dev::Extpkgnoarch elem;
+            retval = dev::Extpkgnoarch_ReadStrptrMaybe(elem, str);
+            retval = retval && extpkgnoarch_InputMaybe(elem);
             break;
         }
         default:
@@ -208,6 +216,7 @@ bool ainst::LoadTuplesMaybe(algo::strptr root, bool recursive) {
         retval = retval && ainst::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
         retval = retval && ainst::LoadTuplesFile(algo::SsimFname(root,"dev.extpkgver"),recursive);
         retval = retval && ainst::LoadTuplesFile(algo::SsimFname(root,"dev.extpkgsrc"),recursive);
+        retval = retval && ainst::LoadTuplesFile(algo::SsimFname(root,"dev.extpkgnoarch"),recursive);
     } else {
         algo_lib::AppendErrtext("path", root);
         algo_lib::AppendErrtext("comment", "Wrong working directory?");
@@ -288,6 +297,12 @@ bool ainst::RemoveStrptrMaybe(algo::strptr str) {
         }
         case ainst_TableId_dev_Extpkgver: { // finput:ainst.FDb.extpkgver
             // finput ainst.FDb.extpkgver: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case ainst_TableId_dev_Extpkgnoarch: { // finput:ainst.FDb.extpkgnoarch
+            // finput ainst.FDb.extpkgnoarch: random delete unsupported
             // (need reftype del:Y plus a Thash on the pkey)
             retval = false;
             break;
@@ -395,40 +410,49 @@ static void ainst::extpkg_LoadStatic() {
         const char *s;
         void (*step)(ainst::FExtpkg&);
     } data[] = {
-        { "dev.extpkg  extpkg:aws  probe:\"command -v aws >/dev/null\"  comment:\"aws command line client, version 2\"", ainst::extpkg_aws }
-        ,{ "dev.extpkg  extpkg:buildkit  probe:\"systemctl is-active --quiet buildkit\"  comment:\"buildkit daemon and client, the builder nerdctl drives\"", ainst::extpkg_buildkit }
-        ,{ "dev.extpkg  extpkg:certbot  probe:\"\"  comment:\"lets encrypt client, installed into its own venv\"", ainst::extpkg_certbot }
-        ,{ "dev.extpkg  extpkg:chrome  probe:\"command -v google-chrome-stable >/dev/null\"  comment:\"headless chrome from the vendor apt repository\"", ainst::extpkg_chrome }
-        ,{ "dev.extpkg  extpkg:docker  probe:\"systemctl is-active --quiet docker\"  comment:\"docker engine from the vendor apt repository\"", ainst::extpkg_docker }
-        ,{ "dev.extpkg  extpkg:gitlab_runner  probe:\"\"  comment:\"gitlab ci runner\"", ainst::extpkg_gitlab_runner }
-        ,{ "dev.extpkg  extpkg:glow  probe:\"command -v glow >/dev/null\"  comment:\"markdown renderer for the terminal\"", ainst::extpkg_glow }
-        ,{ "dev.extpkg  extpkg:go  probe:\"command -v go >/dev/null\"  comment:\"the go toolchain from the upstream tarball\"", ainst::extpkg_go }
-        ,{ "dev.extpkg  extpkg:grpcurl  probe:\"command -v grpcurl >/dev/null\"  comment:\"grpc command line client\"", ainst::extpkg_grpcurl }
-        ,{ "dev.extpkg  extpkg:kafka  probe:\"\"  comment:\"apache kafka broker and its jmx exporter\"", ainst::extpkg_kafka }
-        ,{ "dev.extpkg  extpkg:kafka_connectors  probe:\"\"  comment:\"s3 and iceberg connectors for kafka connect\"", ainst::extpkg_kafka_connectors }
-        ,{ "dev.extpkg  extpkg:kafkaui  probe:\"\"  comment:\"web console for kafka\"", ainst::extpkg_kafkaui }
-        ,{ "dev.extpkg  extpkg:kcat  probe:\"command -v kcat >/dev/null\"  comment:\"kafka producer and consumer for the command line\"", ainst::extpkg_kcat }
-        ,{ "dev.extpkg  extpkg:kdi  probe:\"\"  comment:\"kafka delta ingest, built from a pinned commit\"", ainst::extpkg_kdi }
-        ,{ "dev.extpkg  extpkg:librdkafka  probe:\"\"  comment:\"c kafka client library\"", ainst::extpkg_librdkafka }
-        ,{ "dev.extpkg  extpkg:linux_tools  probe:\"test -x /usr/lib/linux-tools/$(uname -r)/cpupower\"  comment:\"cpupower and the kernel tools of the running kernel\"", ainst::extpkg_linux_tools }
-        ,{ "dev.extpkg  extpkg:mc  probe:\"command -v mc >/dev/null\"  comment:\"minio client\"", ainst::extpkg_mc }
-        ,{ "dev.extpkg  extpkg:minio  probe:\"command -v minio >/dev/null\"  comment:\"s3 compatible object store\"", ainst::extpkg_minio }
-        ,{ "dev.extpkg  extpkg:nats  probe:\"command -v nats >/dev/null\"  comment:\"nats command line client\"", ainst::extpkg_nats }
-        ,{ "dev.extpkg  extpkg:nats_server  probe:\"command -v nats-server >/dev/null\"  comment:\"nats-server broker, jetstream capable\"", ainst::extpkg_nats_server }
-        ,{ "dev.extpkg  extpkg:nerdctl  probe:\"command -v nerdctl >/dev/null\"  comment:\"containerd command line client, with buildkit\"", ainst::extpkg_nerdctl }
-        ,{ "dev.extpkg  extpkg:nodejs  probe:\"\"  comment:\"node from the nodesource apt repository, plus pnpm\"", ainst::extpkg_nodejs }
-        ,{ "dev.extpkg  extpkg:oauth2_proxy  probe:\"\"  comment:\"reverse proxy that authenticates against an oidc provider\"", ainst::extpkg_oauth2_proxy }
-        ,{ "dev.extpkg  extpkg:ofed  probe:\"dpkg -s ofed-scripts >/dev/null 2>&1\"  comment:\"mellanox ofed user space stack\"", ainst::extpkg_ofed }
-        ,{ "dev.extpkg  extpkg:postgresql  probe:\"\"  comment:\"postgresql server and client, with no auto-created cluster\"", ainst::extpkg_postgresql }
-        ,{ "dev.extpkg  extpkg:redpanda  probe:\"\"  comment:\"redpanda broker from the vendor apt repository\"", ainst::extpkg_redpanda }
-        ,{ "dev.extpkg  extpkg:rust  probe:\"command -v cargo >/dev/null && command -v rustfmt >/dev/null\"  comment:\"the rust toolchain from static.rust-lang.org: rustc, cargo, the standard library, rustfmt and clippy\"", ainst::extpkg_rust }
-        ,{ "dev.extpkg  extpkg:shfmt  probe:\"command -v shfmt >/dev/null\"  comment:\"shell formatter\"", ainst::extpkg_shfmt }
-        ,{ "dev.extpkg  extpkg:spark  probe:\"\"  comment:\"delta, hadoop-aws and postgres jars for the spark image\"", ainst::extpkg_spark }
-        ,{ "dev.extpkg  extpkg:spdk  probe:\"command -v spdk_tgt >/dev/null\"  comment:\"storage performance development kit\"", ainst::extpkg_spdk }
-        ,{ "dev.extpkg  extpkg:ssm_plugin  probe:\"\"  comment:\"aws session manager plugin\"", ainst::extpkg_ssm_plugin }
-        ,{ "dev.extpkg  extpkg:tsc_freq_khz  probe:\"test -r /sys/devices/system/cpu/cpu0/tsc_freq_khz\"  comment:\"kernel module exporting the tsc frequency\"", ainst::extpkg_tsc_freq_khz }
-        ,{ "dev.extpkg  extpkg:vma  probe:\"\"  comment:\"mellanox libvma, built from the release tag\"", ainst::extpkg_vma }
-        ,{ "dev.extpkg  extpkg:wstunnel  probe:\"command -v wstunnel >/dev/null\"  comment:\"tunnel tcp over websocket\"", ainst::extpkg_wstunnel }
+        { "dev.extpkg  extpkg:aws  comment:\"aws command line client, version 2\"", ainst::extpkg_aws }
+        ,{ "dev.extpkg  extpkg:buildkit  comment:\"buildkit daemon and client, the builder nerdctl drives\"", ainst::extpkg_buildkit }
+        ,{ "dev.extpkg  extpkg:certbot  comment:\"lets encrypt client, installed into its own venv\"", ainst::extpkg_certbot }
+        ,{ "dev.extpkg  extpkg:chrome  comment:\"headless chrome from the vendor apt repository\"", ainst::extpkg_chrome }
+        ,{ "dev.extpkg  extpkg:docker  comment:\"docker engine from the vendor apt repository\"", ainst::extpkg_docker }
+        ,{ "dev.extpkg  extpkg:gitlab_runner  comment:\"gitlab ci runner\"", ainst::extpkg_gitlab_runner }
+        ,{ "dev.extpkg  extpkg:glow  comment:\"markdown renderer for the terminal\"", ainst::extpkg_glow }
+        ,{ "dev.extpkg  extpkg:go  comment:\"the go toolchain from the upstream tarball\"", ainst::extpkg_go }
+        ,{ "dev.extpkg  extpkg:grpcurl  comment:\"grpc command line client\"", ainst::extpkg_grpcurl }
+        ,{ "dev.extpkg  extpkg:java  comment:\"Java runtime that Kafka's tools run on\"", ainst::extpkg_java }
+        ,{ "dev.extpkg  extpkg:jq  comment:\"JSON on the command line, which scripts and tests filter with\"", ainst::extpkg_jq }
+        ,{ "dev.extpkg  extpkg:kafka  comment:\"apache kafka broker and its jmx exporter\"", ainst::extpkg_kafka }
+        ,{ "dev.extpkg  extpkg:kafka_connectors  comment:\"s3 and iceberg connectors for kafka connect\"", ainst::extpkg_kafka_connectors }
+        ,{ "dev.extpkg  extpkg:kafkaui  comment:\"web console for kafka\"", ainst::extpkg_kafkaui }
+        ,{ "dev.extpkg  extpkg:kcat  comment:\"kafka producer and consumer for the command line\"", ainst::extpkg_kcat }
+        ,{ "dev.extpkg  extpkg:kdi  comment:\"kafka delta ingest, built from a pinned commit\"", ainst::extpkg_kdi }
+        ,{ "dev.extpkg  extpkg:librdkafka  comment:\"c kafka client library\"", ainst::extpkg_librdkafka }
+        ,{ "dev.extpkg  extpkg:linux_tools  comment:\"cpupower and the kernel tools of the running kernel\"", ainst::extpkg_linux_tools }
+        ,{ "dev.extpkg  extpkg:mc  comment:\"minio client\"", ainst::extpkg_mc }
+        ,{ "dev.extpkg  extpkg:minio  comment:\"s3 compatible object store\"", ainst::extpkg_minio }
+        ,{ "dev.extpkg  extpkg:mosquitto  comment:\"mosquitto_pub, mosquitto_sub and mosquitto_rr, the MQTT clients\"", ainst::extpkg_mosquitto }
+        ,{ "dev.extpkg  extpkg:nats  comment:\"nats command line client\"", ainst::extpkg_nats }
+        ,{ "dev.extpkg  extpkg:nats_server  comment:\"nats-server broker, jetstream capable\"", ainst::extpkg_nats_server }
+        ,{ "dev.extpkg  extpkg:nerdctl  comment:\"containerd command line client, with buildkit\"", ainst::extpkg_nerdctl }
+        ,{ "dev.extpkg  extpkg:nodejs  comment:\"node, npm and npx from the nodejs.org release\"", ainst::extpkg_nodejs }
+        ,{ "dev.extpkg  extpkg:oauth2_proxy  comment:\"reverse proxy that authenticates against an oidc provider\"", ainst::extpkg_oauth2_proxy }
+        ,{ "dev.extpkg  extpkg:ofed  comment:\"DOCA-OFED user space stack and xlio, from the NVIDIA apt repository\"", ainst::extpkg_ofed }
+        ,{ "dev.extpkg  extpkg:ofed_kernel  comment:\"DOCA-OFED kernel drivers for a host, built by DKMS over the ofed user space\"", ainst::extpkg_ofed_kernel }
+        ,{ "dev.extpkg  extpkg:osv_scanner  comment:\"dependency scanner the depscan cijob runs\"", ainst::extpkg_osv_scanner }
+        ,{ "dev.extpkg  extpkg:pnpm  comment:\"pnpm, bootstrapped with the npm of nodejs\"", ainst::extpkg_pnpm }
+        ,{ "dev.extpkg  extpkg:postgresql  comment:\"postgresql server and client, with no auto-created cluster\"", ainst::extpkg_postgresql }
+        ,{ "dev.extpkg  extpkg:redis  comment:\"redis-cli and redis-benchmark, the RESP clients\"", ainst::extpkg_redis }
+        ,{ "dev.extpkg  extpkg:redpanda  comment:\"redpanda broker from the vendor apt repository\"", ainst::extpkg_redpanda }
+        ,{ "dev.extpkg  extpkg:rsync  comment:\"file copy over ssh\"", ainst::extpkg_rsync }
+        ,{ "dev.extpkg  extpkg:rust  comment:\"the rust toolchain from static.rust-lang.org: rustc, cargo, the standard library, rustfmt and clippy\"", ainst::extpkg_rust }
+        ,{ "dev.extpkg  extpkg:shfmt  comment:\"shell formatter\"", ainst::extpkg_shfmt }
+        ,{ "dev.extpkg  extpkg:spark  comment:\"delta, hadoop-aws and postgres jars for the spark image\"", ainst::extpkg_spark }
+        ,{ "dev.extpkg  extpkg:spdk  comment:\"storage performance development kit\"", ainst::extpkg_spdk }
+        ,{ "dev.extpkg  extpkg:ssm_plugin  comment:\"aws session manager plugin\"", ainst::extpkg_ssm_plugin }
+        ,{ "dev.extpkg  extpkg:tla  comment:\"TLA+ tools: the SANY parser and the TLC model checker, which atla runs\"", ainst::extpkg_tla }
+        ,{ "dev.extpkg  extpkg:tsc_freq_khz  comment:\"kernel module exporting the tsc frequency\"", ainst::extpkg_tsc_freq_khz }
+        ,{ "dev.extpkg  extpkg:vma  comment:\"mellanox libvma, built from the release tag\"", ainst::extpkg_vma }
+        ,{ "dev.extpkg  extpkg:wstunnel  comment:\"tunnel tcp over websocket\"", ainst::extpkg_wstunnel }
         ,{NULL, NULL}
     };
     (void)data;
@@ -680,15 +704,6 @@ static bool ainst::extpkgsrc_InputMaybe(dev::Extpkgsrc &elem) {
 bool ainst::extpkgsrc_XrefMaybe(ainst::FExtpkgsrc &row) {
     bool retval = true;
     (void)row;
-    // insert extpkgsrc into index ind_extpkgsrc
-    if (true) { // user-defined insert condition
-        bool success = ind_extpkgsrc_InsertMaybe(row);
-        if (UNLIKELY(!success)) {
-            ch_RemoveAll(algo_lib::_db.errtext);
-            algo_lib::_db.errtext << "ainst.duplicate_key  xref:ainst.FDb.ind_extpkgsrc"; // check for duplicate key
-            return false;
-        }
-    }
     ainst::FExtpkg* p_extpkg = ainst::ind_extpkg_Find(extpkg_Get(row));
     if (UNLIKELY(!p_extpkg)) {
         algo_lib::ResetErrtext() << "ainst.bad_xref  index:ainst.FDb.ind_extpkg" << Keyval("key", extpkg_Get(row));
@@ -699,129 +714,6 @@ bool ainst::extpkgsrc_XrefMaybe(ainst::FExtpkgsrc &row) {
         zd_extpkgsrc_Insert(*p_extpkg, row);
     }
     return retval;
-}
-
-// --- ainst.FDb.ind_extpkgsrc.Find
-// Find row by key. Return NULL if not found.
-ainst::FExtpkgsrc* ainst::ind_extpkgsrc_Find(const algo::strptr& key) {
-    u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_extpkgsrc_buckets_n - 1);
-    ainst::FExtpkgsrc *ret = _db.ind_extpkgsrc_buckets_elems[index];
-    for (; ret && !((*ret).extpkgsrc == key); ret = ret->ind_extpkgsrc_next) {
-    }
-    return ret;
-}
-
-// --- ainst.FDb.ind_extpkgsrc.FindX
-// Look up row by key and return reference. Throw exception if not found
-ainst::FExtpkgsrc& ainst::ind_extpkgsrc_FindX(const algo::strptr& key) {
-    ainst::FExtpkgsrc* ret = ind_extpkgsrc_Find(key);
-    vrfy(ret, tempstr() << "ainst.key_error  table:ind_extpkgsrc  key:'"<<key<<"'  comment:'key not found'");
-    return *ret;
-}
-
-// --- ainst.FDb.ind_extpkgsrc.GetOrCreate
-// Find row by key. If not found, create and x-reference a new row with with this key.
-ainst::FExtpkgsrc* ainst::ind_extpkgsrc_GetOrCreate(const algo::strptr& key) {
-    ainst::FExtpkgsrc* ret = ind_extpkgsrc_Find(key);
-    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
-        ret         = &extpkgsrc_Alloc();
-        (*ret).extpkgsrc = key;
-        bool good = extpkgsrc_XrefMaybe(*ret);
-        if (!good) {
-            extpkgsrc_RemoveLast(); // delete offending row, any existing xrefs are cleared
-            ret = NULL;
-        }
-    }
-    return ret;
-}
-
-// --- ainst.FDb.ind_extpkgsrc.InsertMaybe
-// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool ainst::ind_extpkgsrc_InsertMaybe(ainst::FExtpkgsrc& row) {
-    bool retval = true; // if already in hash, InsertMaybe returns true
-    if (LIKELY(row.ind_extpkgsrc_next == (ainst::FExtpkgsrc*)-1)) {// check if in hash already
-        row.ind_extpkgsrc_hashval = algo::Smallstr50_Hash(0, row.extpkgsrc);
-        ind_extpkgsrc_Reserve(1);
-        u32 index = row.ind_extpkgsrc_hashval & (_db.ind_extpkgsrc_buckets_n - 1);
-        ainst::FExtpkgsrc* *prev = &_db.ind_extpkgsrc_buckets_elems[index];
-        do {
-            ainst::FExtpkgsrc* ret = *prev;
-            if (!ret) { // exit condition 1: reached the end of the list
-                break;
-            }
-            if ((*ret).extpkgsrc == row.extpkgsrc) { // exit condition 2: found matching key
-                retval = false;
-                break;
-            }
-            prev = &ret->ind_extpkgsrc_next;
-        } while (true);
-        if (retval) {
-            row.ind_extpkgsrc_next = *prev;
-            _db.ind_extpkgsrc_n++;
-            *prev = &row;
-        }
-    }
-    return retval;
-}
-
-// --- ainst.FDb.ind_extpkgsrc.Remove
-// Remove reference to element from hash index. If element is not in hash, do nothing
-void ainst::ind_extpkgsrc_Remove(ainst::FExtpkgsrc& row) {
-    if (LIKELY(row.ind_extpkgsrc_next != (ainst::FExtpkgsrc*)-1)) {// check if in hash already
-        u32 index = row.ind_extpkgsrc_hashval & (_db.ind_extpkgsrc_buckets_n - 1);
-        ainst::FExtpkgsrc* *prev = &_db.ind_extpkgsrc_buckets_elems[index]; // addr of pointer to current element
-        while (ainst::FExtpkgsrc *next = *prev) {                          // scan the collision chain for our element
-            if (next == &row) {        // found it?
-                *prev = next->ind_extpkgsrc_next; // unlink (singly linked list)
-                _db.ind_extpkgsrc_n--;
-                row.ind_extpkgsrc_next = (ainst::FExtpkgsrc*)-1;// not-in-hash
-                break;
-            }
-            prev = &next->ind_extpkgsrc_next;
-        }
-    }
-}
-
-// --- ainst.FDb.ind_extpkgsrc.Reserve
-// Reserve enough room in the hash for N more elements. Return success code.
-void ainst::ind_extpkgsrc_Reserve(int n) {
-    ind_extpkgsrc_AbsReserve(_db.ind_extpkgsrc_n + n);
-}
-
-// --- ainst.FDb.ind_extpkgsrc.AbsReserve
-// Reserve enough room for exacty N elements. Return success code.
-void ainst::ind_extpkgsrc_AbsReserve(int n) {
-    u32 old_nbuckets = _db.ind_extpkgsrc_buckets_n;
-    u32 new_nelems   = n;
-    // # of elements has to be roughly equal to the number of buckets
-    if (new_nelems > old_nbuckets) {
-        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
-        u32 old_size = old_nbuckets * sizeof(ainst::FExtpkgsrc*);
-        u32 new_size = new_nbuckets * sizeof(ainst::FExtpkgsrc*);
-        // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
-        // means new memory will have to be allocated anyway
-        ainst::FExtpkgsrc* *new_buckets = (ainst::FExtpkgsrc**)algo_lib::malloc_AllocMem(new_size);
-        if (UNLIKELY(!new_buckets)) {
-            FatalErrorExit("ainst.out_of_memory  field:ainst.FDb.ind_extpkgsrc");
-        }
-        memset(new_buckets, 0, new_size); // clear pointers
-        // rehash all entries
-        for (int i = 0; i < _db.ind_extpkgsrc_buckets_n; i++) {
-            ainst::FExtpkgsrc* elem = _db.ind_extpkgsrc_buckets_elems[i];
-            while (elem) {
-                ainst::FExtpkgsrc &row        = *elem;
-                ainst::FExtpkgsrc* next       = row.ind_extpkgsrc_next;
-                u32 index          = row.ind_extpkgsrc_hashval & (new_nbuckets-1);
-                row.ind_extpkgsrc_next     = new_buckets[index];
-                new_buckets[index] = &row;
-                elem               = next;
-            }
-        }
-        // free old array
-        algo_lib::malloc_FreeMem(_db.ind_extpkgsrc_buckets_elems, old_size);
-        _db.ind_extpkgsrc_buckets_elems = new_buckets;
-        _db.ind_extpkgsrc_buckets_n = new_nbuckets;
-    }
 }
 
 // --- ainst.FDb.zd_sel_extpkg.Insert
@@ -1403,6 +1295,113 @@ void ainst::ind_upstreamtype_AbsReserve(int n) {
     }
 }
 
+// --- ainst.FDb.extpkgnoarch.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+ainst::FExtpkgnoarch& ainst::extpkgnoarch_Alloc() {
+    ainst::FExtpkgnoarch* row = extpkgnoarch_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("ainst.out_of_mem  field:ainst.FDb.extpkgnoarch  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- ainst.FDb.extpkgnoarch.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+ainst::FExtpkgnoarch* ainst::extpkgnoarch_AllocMaybe() {
+    ainst::FExtpkgnoarch *row = (ainst::FExtpkgnoarch*)extpkgnoarch_AllocMem();
+    if (row) {
+        new (row) ainst::FExtpkgnoarch; // call constructor
+    }
+    return row;
+}
+
+// --- ainst.FDb.extpkgnoarch.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+ainst::FExtpkgnoarch* ainst::extpkgnoarch_InsertMaybe(const dev::Extpkgnoarch &value) {
+    ainst::FExtpkgnoarch *row = &extpkgnoarch_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    extpkgnoarch_CopyIn(*row,const_cast<dev::Extpkgnoarch&>(value));
+    bool ok = extpkgnoarch_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        extpkgnoarch_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- ainst.FDb.extpkgnoarch.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* ainst::extpkgnoarch_AllocMem() {
+    u64 new_nelems     = _db.extpkgnoarch_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    ainst::FExtpkgnoarch*  lev   = NULL;
+    if (bsr < 36) {
+        lev = _db.extpkgnoarch_lary[bsr];
+        if (!lev) {
+            lev=(ainst::FExtpkgnoarch*)algo_lib::malloc_AllocMem(sizeof(ainst::FExtpkgnoarch) * (u64(1)<<bsr));
+            _db.extpkgnoarch_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.extpkgnoarch_n = i64(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- ainst.FDb.extpkgnoarch.RemoveAll
+// Remove all elements from Lary
+void ainst::extpkgnoarch_RemoveAll() {
+    for (u64 n = _db.extpkgnoarch_n; n>0; ) {
+        n--;
+        extpkgnoarch_qFind(u64(n)).~FExtpkgnoarch(); // destroy last element
+        _db.extpkgnoarch_n = i64(n);
+    }
+}
+
+// --- ainst.FDb.extpkgnoarch.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void ainst::extpkgnoarch_RemoveLast() {
+    u64 n = _db.extpkgnoarch_n;
+    if (n > 0) {
+        n -= 1;
+        extpkgnoarch_qFind(u64(n)).~FExtpkgnoarch();
+        _db.extpkgnoarch_n = i64(n);
+    }
+}
+
+// --- ainst.FDb.extpkgnoarch.InputMaybe
+static bool ainst::extpkgnoarch_InputMaybe(dev::Extpkgnoarch &elem) {
+    bool retval = true;
+    retval = extpkgnoarch_InsertMaybe(elem) != nullptr;
+    return retval;
+}
+
+// --- ainst.FDb.extpkgnoarch.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool ainst::extpkgnoarch_XrefMaybe(ainst::FExtpkgnoarch &row) {
+    bool retval = true;
+    (void)row;
+    ainst::FExtpkg* p_extpkg = ainst::ind_extpkg_Find(extpkg_Get(row));
+    if (UNLIKELY(!p_extpkg)) {
+        algo_lib::ResetErrtext() << "ainst.bad_xref  index:ainst.FDb.ind_extpkg" << Keyval("key", extpkg_Get(row));
+        return false;
+    }
+    // insert extpkgnoarch into index zd_extpkgnoarch
+    if (true) { // user-defined insert condition
+        zd_extpkgnoarch_Insert(*p_extpkg, row);
+    }
+    return retval;
+}
+
 // --- ainst.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
 static algo::ImrowPtr ainst::trace_RowidFind(int t) {
@@ -1448,14 +1447,6 @@ void ainst::FDb_Init() {
         _db.extpkgsrc_lary[i]  = extpkgsrc_first;
         extpkgsrc_first    += 1ULL<<i;
     }
-    // initialize hash table for ainst::FExtpkgsrc;
-    _db.ind_extpkgsrc_n             	= 0; // (ainst.FDb.ind_extpkgsrc)
-    _db.ind_extpkgsrc_buckets_n     	= 4; // (ainst.FDb.ind_extpkgsrc)
-    _db.ind_extpkgsrc_buckets_elems 	= (ainst::FExtpkgsrc**)algo_lib::malloc_AllocMem(sizeof(ainst::FExtpkgsrc*)*_db.ind_extpkgsrc_buckets_n); // initial buckets (ainst.FDb.ind_extpkgsrc)
-    if (!_db.ind_extpkgsrc_buckets_elems) {
-        FatalErrorExit("out of memory"); // (ainst.FDb.ind_extpkgsrc)
-    }
-    memset(_db.ind_extpkgsrc_buckets_elems, 0, sizeof(ainst::FExtpkgsrc*)*_db.ind_extpkgsrc_buckets_n); // (ainst.FDb.ind_extpkgsrc)
     _db.zd_sel_extpkg_head = NULL; // (ainst.FDb.zd_sel_extpkg)
     _db.zd_sel_extpkg_n = 0; // (ainst.FDb.zd_sel_extpkg)
     _db.zd_sel_extpkg_tail = NULL; // (ainst.FDb.zd_sel_extpkg)
@@ -1497,6 +1488,17 @@ void ainst::FDb_Init() {
         FatalErrorExit("out of memory"); // (ainst.FDb.ind_upstreamtype)
     }
     memset(_db.ind_upstreamtype_buckets_elems, 0, sizeof(ainst::FUpstreamtype*)*_db.ind_upstreamtype_buckets_n); // (ainst.FDb.ind_upstreamtype)
+    // initialize LAry extpkgnoarch (ainst.FDb.extpkgnoarch)
+    _db.extpkgnoarch_n = 0;
+    memset(_db.extpkgnoarch_lary, 0, sizeof(_db.extpkgnoarch_lary)); // zero out all level pointers
+    ainst::FExtpkgnoarch* extpkgnoarch_first = (ainst::FExtpkgnoarch*)algo_lib::malloc_AllocMem(sizeof(ainst::FExtpkgnoarch) * (u64(1)<<4));
+    if (!extpkgnoarch_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.extpkgnoarch_lary[i]  = extpkgnoarch_first;
+        extpkgnoarch_first    += 1ULL<<i;
+    }
 
     ainst::InitReflection();
     extpkg_LoadStatic(); // gen:ns_gstatic  gstatic:ainst.FDb.extpkg  load ainst.FExtpkg records
@@ -1505,6 +1507,9 @@ void ainst::FDb_Init() {
 
 // --- ainst.FDb..Uninit
 void ainst::FDb_Uninit() {
+
+    // ainst.FDb.extpkgnoarch.Uninit (Lary)  //
+    // skip destruction in global scope
 
     // ainst.FDb.ind_upstreamtype.Uninit (Thash)  //
     // skip destruction of ind_upstreamtype in global scope
@@ -1517,9 +1522,6 @@ void ainst::FDb_Uninit() {
 
     // ainst.FDb.extpkgver.Uninit (Lary)  //
     // skip destruction in global scope
-
-    // ainst.FDb.ind_extpkgsrc.Uninit (Thash)  //
-    // skip destruction of ind_extpkgsrc in global scope
 
     // ainst.FDb.extpkgsrc.Uninit (Lary)  //
     // skip destruction in global scope
@@ -1535,7 +1537,6 @@ void ainst::FDb_Uninit() {
 // Copy fields out of row
 void ainst::extpkg_CopyOut(ainst::FExtpkg &row, dev::Extpkg &out) {
     out.extpkg = row.extpkg;
-    out.probe = row.probe;
     out.comment = algo::Comment(row.comment);
 }
 
@@ -1543,7 +1544,6 @@ void ainst::extpkg_CopyOut(ainst::FExtpkg &row, dev::Extpkg &out) {
 // Copy fields in to row
 void ainst::extpkg_CopyIn(ainst::FExtpkg &row, dev::Extpkg &in) {
     row.extpkg = in.extpkg;
-    row.probe = in.probe;
     row.comment = in.comment;
 }
 
@@ -1637,9 +1637,131 @@ void ainst::zd_extpkgsrc_InsertBefore(ainst::FExtpkg& parent, ainst::FExtpkgsrc&
     }
 }
 
+// --- ainst.FExtpkg.zd_extpkgnoarch.Insert
+// Insert row into linked list. If row is already in linked list, do nothing.
+void ainst::zd_extpkgnoarch_Insert(ainst::FExtpkg& parent, ainst::FExtpkgnoarch& row) {
+    if (!extpkg_zd_extpkgnoarch_InLlistQ(row)) {
+        ainst::FExtpkgnoarch* old_tail = parent.zd_extpkgnoarch_tail;
+        row.extpkg_zd_extpkgnoarch_next = NULL;
+        row.extpkg_zd_extpkgnoarch_prev = old_tail;
+        parent.zd_extpkgnoarch_tail = &row;
+        ainst::FExtpkgnoarch **new_row_a = &old_tail->extpkg_zd_extpkgnoarch_next;
+        ainst::FExtpkgnoarch **new_row_b = &parent.zd_extpkgnoarch_head;
+        ainst::FExtpkgnoarch **new_row = old_tail ? new_row_a : new_row_b;
+        *new_row = &row;
+        parent.zd_extpkgnoarch_n++;
+    }
+}
+
+// --- ainst.FExtpkg.zd_extpkgnoarch.Remove
+// Remove element from index. If element is not in index, do nothing.
+void ainst::zd_extpkgnoarch_Remove(ainst::FExtpkg& parent, ainst::FExtpkgnoarch& row) {
+    if (extpkg_zd_extpkgnoarch_InLlistQ(row)) {
+        ainst::FExtpkgnoarch* old_head       = parent.zd_extpkgnoarch_head;
+        (void)old_head; // in case it's not used
+        ainst::FExtpkgnoarch* prev = row.extpkg_zd_extpkgnoarch_prev;
+        ainst::FExtpkgnoarch* next = row.extpkg_zd_extpkgnoarch_next;
+        // if element is first, adjust list head; otherwise, adjust previous element's next
+        ainst::FExtpkgnoarch **new_next_a = &prev->extpkg_zd_extpkgnoarch_next;
+        ainst::FExtpkgnoarch **new_next_b = &parent.zd_extpkgnoarch_head;
+        ainst::FExtpkgnoarch **new_next = prev ? new_next_a : new_next_b;
+        *new_next = next;
+        // if element is last, adjust list tail; otherwise, adjust next element's prev
+        ainst::FExtpkgnoarch **new_prev_a = &next->extpkg_zd_extpkgnoarch_prev;
+        ainst::FExtpkgnoarch **new_prev_b = &parent.zd_extpkgnoarch_tail;
+        ainst::FExtpkgnoarch **new_prev = next ? new_prev_a : new_prev_b;
+        *new_prev = prev;
+        parent.zd_extpkgnoarch_n--;
+        row.extpkg_zd_extpkgnoarch_next=(ainst::FExtpkgnoarch*)-1; // not-in-list
+    }
+}
+
+// --- ainst.FExtpkg.zd_extpkgnoarch.RemoveAll
+// Empty the index. (The rows are not deleted)
+void ainst::zd_extpkgnoarch_RemoveAll(ainst::FExtpkg& parent) {
+    ainst::FExtpkgnoarch* row = parent.zd_extpkgnoarch_head;
+    parent.zd_extpkgnoarch_head = NULL;
+    parent.zd_extpkgnoarch_tail = NULL;
+    parent.zd_extpkgnoarch_n = 0;
+    while (row) {
+        ainst::FExtpkgnoarch* row_next = row->extpkg_zd_extpkgnoarch_next;
+        row->extpkg_zd_extpkgnoarch_next  = (ainst::FExtpkgnoarch*)-1;
+        row->extpkg_zd_extpkgnoarch_prev  = NULL;
+        row = row_next;
+    }
+}
+
+// --- ainst.FExtpkg.zd_extpkgnoarch.RemoveFirst
+// If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
+ainst::FExtpkgnoarch* ainst::zd_extpkgnoarch_RemoveFirst(ainst::FExtpkg& parent) {
+    ainst::FExtpkgnoarch *row = NULL;
+    row = parent.zd_extpkgnoarch_head;
+    if (row) {
+        ainst::FExtpkgnoarch *next = row->extpkg_zd_extpkgnoarch_next;
+        parent.zd_extpkgnoarch_head = next;
+        ainst::FExtpkgnoarch **new_end_a = &next->extpkg_zd_extpkgnoarch_prev;
+        ainst::FExtpkgnoarch **new_end_b = &parent.zd_extpkgnoarch_tail;
+        ainst::FExtpkgnoarch **new_end = next ? new_end_a : new_end_b;
+        *new_end = NULL;
+        parent.zd_extpkgnoarch_n--;
+        row->extpkg_zd_extpkgnoarch_next = (ainst::FExtpkgnoarch*)-1; // mark as not-in-list
+    }
+    return row;
+}
+
+// --- ainst.FExtpkg.zd_extpkgnoarch.InsertBefore
+// Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
+void ainst::zd_extpkgnoarch_InsertBefore(ainst::FExtpkg& parent, ainst::FExtpkgnoarch& row, ainst::FExtpkgnoarch* before) {
+    if (!extpkg_zd_extpkgnoarch_InLlistQ(row) && &row != before) {
+        ainst::FExtpkgnoarch* next = before;
+        ainst::FExtpkgnoarch* prev = next ? next->extpkg_zd_extpkgnoarch_prev : parent.zd_extpkgnoarch_tail;
+        row.extpkg_zd_extpkgnoarch_next = next;
+        row.extpkg_zd_extpkgnoarch_prev = prev;
+        ainst::FExtpkgnoarch **prev_link_a = &prev->extpkg_zd_extpkgnoarch_next;
+        ainst::FExtpkgnoarch **prev_link_b = &parent.zd_extpkgnoarch_head;
+        *(prev ? prev_link_a : prev_link_b) = &row;
+        ainst::FExtpkgnoarch **next_link_a = &next->extpkg_zd_extpkgnoarch_prev;
+        ainst::FExtpkgnoarch **next_link_b = &parent.zd_extpkgnoarch_tail;
+        *(next ? next_link_a : next_link_b) = &row;
+        parent.zd_extpkgnoarch_n++;
+    }
+}
+
 // --- ainst.FExtpkg..Uninit
 void ainst::FExtpkg_Uninit(ainst::FExtpkg& parent) {
     ind_extpkg_Remove(parent); // remove extpkg from index ind_extpkg
+}
+
+// --- ainst.FExtpkgnoarch.base.CopyOut
+// Copy fields out of row
+void ainst::extpkgnoarch_CopyOut(ainst::FExtpkgnoarch &row, dev::Extpkgnoarch &out) {
+    out.extpkgnoarch = row.extpkgnoarch;
+    out.comment = algo::Comment(row.comment);
+}
+
+// --- ainst.FExtpkgnoarch.base.CopyIn
+// Copy fields in to row
+void ainst::extpkgnoarch_CopyIn(ainst::FExtpkgnoarch &row, dev::Extpkgnoarch &in) {
+    row.extpkgnoarch = in.extpkgnoarch;
+    row.comment = in.comment;
+}
+
+// --- ainst.FExtpkgnoarch.extpkg.Get
+algo::strptr ainst::extpkg_Get(ainst::FExtpkgnoarch& parent) {
+    return algo::Pathcomp(parent.extpkgnoarch, "/RL");
+}
+
+// --- ainst.FExtpkgnoarch.arch.Get
+algo::strptr ainst::arch_Get(ainst::FExtpkgnoarch& parent) {
+    return algo::Pathcomp(parent.extpkgnoarch, "/RR");
+}
+
+// --- ainst.FExtpkgnoarch..Uninit
+void ainst::FExtpkgnoarch_Uninit(ainst::FExtpkgnoarch& parent) {
+    ainst::FExtpkg* p_extpkg = ainst::ind_extpkg_Find(extpkg_Get(parent));
+    if (p_extpkg)  {
+        zd_extpkgnoarch_Remove(*p_extpkg, parent);// remove extpkgnoarch from index zd_extpkgnoarch
+    }
 }
 
 // --- ainst.FExtpkgsrc.base.CopyOut
@@ -1667,12 +1789,16 @@ algo::strptr ainst::extpkg_Get(ainst::FExtpkgsrc& parent) {
 
 // --- ainst.FExtpkgsrc.name.Get
 algo::strptr ainst::name_Get(ainst::FExtpkgsrc& parent) {
-    return algo::Pathcomp(parent.extpkgsrc, "/RR");
+    return algo::Pathcomp(parent.extpkgsrc, "/RR.LL");
+}
+
+// --- ainst.FExtpkgsrc.arch.Get
+algo::strptr ainst::arch_Get(ainst::FExtpkgsrc& parent) {
+    return algo::Pathcomp(parent.extpkgsrc, "/RR.LR");
 }
 
 // --- ainst.FExtpkgsrc..Uninit
 void ainst::FExtpkgsrc_Uninit(ainst::FExtpkgsrc& parent) {
-    ind_extpkgsrc_Remove(parent); // remove extpkgsrc from index ind_extpkgsrc
     ainst::FExtpkg* p_extpkg = ainst::ind_extpkg_Find(extpkg_Get(parent));
     if (p_extpkg)  {
         zd_extpkgsrc_Remove(*p_extpkg, parent);// remove extpkgsrc from index zd_extpkgsrc
@@ -1807,6 +1933,7 @@ void ainst::FieldId_Print(ainst::FieldId row, algo::cstring& str) {
 const char* ainst::value_ToCstr(const ainst::TableId& parent) {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
+        case ainst_TableId_dev_Extpkgnoarch: ret = "dev.Extpkgnoarch";  break;
         case ainst_TableId_dev_Extpkgsrc   : ret = "dev.Extpkgsrc";  break;
         case ainst_TableId_dev_Extpkgver   : ret = "dev.Extpkgver";  break;
     }
@@ -1842,6 +1969,19 @@ bool ainst::value_SetStrptrMaybe(ainst::TableId& parent, algo::strptr rhs) {
                 case LE_STR8('d','e','v','.','e','x','t','p'): {
                     if (memcmp(rhs.elems+8,"kgsrc",5)==0) { value_SetEnum(parent,ainst_TableId_dev_extpkgsrc); ret = true; break; }
                     if (memcmp(rhs.elems+8,"kgver",5)==0) { value_SetEnum(parent,ainst_TableId_dev_extpkgver); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+        case 16: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('d','e','v','.','E','x','t','p'): {
+                    if (memcmp(rhs.elems+8,"kgnoarch",8)==0) { value_SetEnum(parent,ainst_TableId_dev_Extpkgnoarch); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('d','e','v','.','e','x','t','p'): {
+                    if (memcmp(rhs.elems+8,"kgnoarch",8)==0) { value_SetEnum(parent,ainst_TableId_dev_extpkgnoarch); ret = true; break; }
                     break;
                 }
             }

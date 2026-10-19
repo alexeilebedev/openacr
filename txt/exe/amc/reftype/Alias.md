@@ -43,11 +43,11 @@ redirection.
 
 Source: `cpp/amc/alias.cpp`.
 
-| Tfunc                  | Generated function                                      | Effect |
-|------------------------|---------------------------------------------------------|--------|
-| `Alias.Get`            | `T <name>_Get(const P&)` (inline)                       | `return parent.<srcfield_path>;` — reads through the source field's effective expression (handles bitflds, base composition, etc.). |
-| `Alias.Set`            | `void <name>_Set(P&, T rhs)`                            | Writes `rhs` to the source field via the source field's `AssignExpr`. |
-| `Alias.ReadStrptrMaybe`| `bool <name>_ReadStrptrMaybe(P&, strptr in)`            | Parses `in` into the source field by calling its own `ReadStrptrMaybe`. |
+| Tfunc                   | Generated function                           | Effect |
+| ----------------------- | -------------------------------------------- | ------ |
+| `Alias.Get`             | `T <name>_Get(const P&)` (inline)            | `return parent.<srcfield_path>;` — reads through the source field's effective expression (handles bitflds, base composition, etc.). |
+| `Alias.Set`             | `void <name>_Set(P&, T rhs)`                 | Writes `rhs` to the source field via the source field's `AssignExpr`. |
+| `Alias.ReadStrptrMaybe` | `bool <name>_ReadStrptrMaybe(P&, strptr in)` | Parses `in` into the source field by calling its own `ReadStrptrMaybe`. |
 
 The source field's full behavior (bitfield masking, default
 values, side effects of `_Set`, etc.) is preserved because the

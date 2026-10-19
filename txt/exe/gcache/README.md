@@ -28,7 +28,7 @@ Usage: gcache [[-cmd:]<string>] [options]
     -force                             Force recompile and update cache
     -verbose    flag                   Verbosity level (0..255); alias -v; cumulative
     -debug      flag                   Debug level (0..255); alias -d; cumulative
-    -trace      string  ""             Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps
+    -trace      string  ""             Trace expression: log categories to enable, as category[:filter],...
     -help                              Print help and exit; alias -h
     -version                           Print version and exit
     -signature                         Show signatures and exit; alias -sig
@@ -74,7 +74,11 @@ void __gcache_pragma_pch_preprocess();
 The line is a function prototype that nothing defines, so the compiler accepts
 it and gcache finds it in the preprocessed text.  gcache precompiles the marked
 header, stores the result in the cache, and makes the compile read the
-precompiled header in place of the header's text.
+precompiled header in place of the header's text.  This works under gcc only.
+Under clang, as on macOS, the marker does nothing, and gcache compiles an
+object from the source itself on a miss, still keyed by the preprocessed text,
+because clang's warnings depend on where a name came from, which preprocessed
+text no longer says.
 
 A marked header qualifies only when no code comes before it, in the source file
 and in every header on the way to it.  Preprocessor lines and comments are
@@ -87,7 +91,11 @@ precompiled header, the last marked header that qualifies.  In this tree
 
 An entry is a file named after the hex SHA-1 hash, two levels deep:
 `ab/cd/abcd...`.  A precompiled header adds a `.gch` file and a `.lock` file
-beside its hash.  `log.ssim` holds one `report.gcache` line per compile, naming
+beside its hash.  A file named after the hash of the name a command gives its
+compiler, and the path, size and modification time of the program that name
+reaches, holds `clang` or `gcc`, so each compiler is asked which it is once per
+name.  Every file gcache writes there is group-writable, so the users who share
+a cache refresh each other's entries.  `log.ssim` holds one `report.gcache` line per compile, naming
 the source file, the entry, and whether it was a hit.  `gc.time` records the
 last cleanup.
 

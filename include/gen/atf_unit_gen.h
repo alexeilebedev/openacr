@@ -22,6 +22,7 @@
 #include "include/gen/algo_gen.h"
 #include "include/gen/command_gen.h"
 #include "include/gen/report_gen.h"
+#include "include/gen/amcdb_gen.h"
 #include "include/gen/atfdb_gen.h"
 #include "include/gen/lib_exec_gen.h"
 //#pragma endinclude
@@ -38,6 +39,16 @@ enum atf_unit_FieldIdEnum {    // atf_unit.FieldId.value
 
 enum { atf_unit_FieldIdEnum_N = 4 };
 
+
+// --- atf_unit_TableIdEnum
+
+enum atf_unit_TableIdEnum {                  // atf_unit.TableId.value
+     atf_unit_TableId_amcdb_Regxcase   = 0   // amcdb.Regxcase -> atf_unit.FRegxcase
+    ,atf_unit_TableId_amcdb_regxcase   = 0   // amcdb.regxcase -> atf_unit.FRegxcase
+};
+
+enum { atf_unit_TableIdEnum_N = 2 };
+
 namespace atf_unit { // gen:ns_pkeytypedef
     typedef i32 TypeAPkey;
 } // gen:ns_pkeytypedef
@@ -53,6 +64,7 @@ struct msg_Bpbuf {
 namespace atfdb { struct Unittest; }
 namespace atf_unit { struct _db_tr_number_curs; }
 namespace atf_unit { struct _db_unittest_curs; }
+namespace atf_unit { struct _db_regxcase_curs; }
 namespace atf_unit { struct msg_msg_curs; }
 namespace atf_unit { struct FPerfSort_orig_curs; }
 namespace atf_unit { struct FPerfSort_sorted_curs; }
@@ -68,9 +80,11 @@ namespace atf_unit { struct FMsg; }
 namespace atf_unit { struct FMsg_curs; }
 namespace atf_unit { struct FNumber; }
 namespace atf_unit { struct FPerfSort; }
+namespace atf_unit { struct FRegxcase; }
 namespace atf_unit { struct FUnittest; }
 namespace atf_unit { struct FieldId; }
 namespace atf_unit { struct JsonAry; }
+namespace atf_unit { struct TableId; }
 namespace atf_unit { struct TypeA; }
 namespace atf_unit { struct TypeB; }
 namespace atf_unit { struct TestJson; }
@@ -225,6 +239,8 @@ struct FDb { // atf_unit.FDb: In-memory database for atf_unit
     u32                     msg_buf_dflt_size;            // size of next buffer
     u64                     msg_reserved_bytes;           // total buffer bytes taken from the base pool
     u64                     msg_free_bytes;               // buffer bytes sitting on the free list
+    atf_unit::FRegxcase*    regxcase_lary[36];            // level array
+    i64                     regxcase_n;                   // number of elements in array
     atf_unit::trace         trace;                        //
 };
 // Start subprocess
@@ -482,6 +498,46 @@ u64                  msg_UsedBytes() __attribute__((__warn_unused_result__, noth
 // func:atf_unit.FDb.msg.XrefMaybe
 bool                 msg_XrefMaybe(atf_unit::FMsg &row);
 
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:atf_unit.FDb.regxcase.Alloc
+atf_unit::FRegxcase& regxcase_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:atf_unit.FDb.regxcase.AllocMaybe
+atf_unit::FRegxcase* regxcase_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:atf_unit.FDb.regxcase.InsertMaybe
+atf_unit::FRegxcase* regxcase_InsertMaybe(const amcdb::Regxcase &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+// func:atf_unit.FDb.regxcase.AllocMem
+void*                regxcase_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:atf_unit.FDb.regxcase.EmptyQ
+inline bool          regxcase_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+// func:atf_unit.FDb.regxcase.Find
+inline atf_unit::FRegxcase* regxcase_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+// func:atf_unit.FDb.regxcase.Last
+inline atf_unit::FRegxcase* regxcase_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+// func:atf_unit.FDb.regxcase.N
+inline i64           regxcase_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+// func:atf_unit.FDb.regxcase.RemoveAll
+void                 regxcase_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:atf_unit.FDb.regxcase.RemoveLast
+void                 regxcase_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:atf_unit.FDb.regxcase.qFind
+inline atf_unit::FRegxcase& regxcase_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_unit.FDb.regxcase.XrefMaybe
+bool                 regxcase_XrefMaybe(atf_unit::FRegxcase &row);
+
 // cursor points to valid item
 // func:atf_unit.FDb.tr_number_curs.Reset
 inline void          _db_tr_number_curs_Reset(_db_tr_number_curs &curs, atf_unit::FDb& ) __attribute__((nothrow));
@@ -506,6 +562,18 @@ inline void          _db_unittest_curs_Next(_db_unittest_curs &curs) __attribute
 // item access
 // func:atf_unit.FDb.unittest_curs.Access
 inline atf_unit::FUnittest& _db_unittest_curs_Access(_db_unittest_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:atf_unit.FDb.regxcase_curs.Reset
+inline void          _db_regxcase_curs_Reset(_db_regxcase_curs &curs, atf_unit::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:atf_unit.FDb.regxcase_curs.ValidQ
+inline bool          _db_regxcase_curs_ValidQ(_db_regxcase_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:atf_unit.FDb.regxcase_curs.Next
+inline void          _db_regxcase_curs_Next(_db_regxcase_curs &curs) __attribute__((nothrow));
+// item access
+// func:atf_unit.FDb.regxcase_curs.Access
+inline atf_unit::FRegxcase& _db_regxcase_curs_Access(_db_regxcase_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atf_unit.FDb..Init
 void                 FDb_Init();
@@ -952,6 +1020,36 @@ inline void          FPerfSort_Init(atf_unit::FPerfSort& parent);
 // func:atf_unit.FPerfSort..Uninit
 void                 FPerfSort_Uninit(atf_unit::FPerfSort& parent) __attribute__((nothrow));
 
+// --- atf_unit.FRegxcase
+// create: atf_unit.FDb.regxcase (Lary)
+// global access: regxcase (Lary, by rowid)
+struct FRegxcase { // atf_unit.FRegxcase
+    algo::Smallstr50   regxcase;    //
+    algo::Smallstr50   regxstyle;   //
+    algo::cstring      pattern;     // A pattern in the style
+    algo::cstring      subject;     // The string matched against it
+    bool               full;        //   true  The pattern covers the whole subject
+    bool               match;       //   false  What algo_lib's Regx and the TypeScript RegExp both answer
+    algo::cstring      comment;     //
+private:
+    // func:atf_unit.FRegxcase..Ctor
+    inline               FRegxcase() __attribute__((nothrow));
+    friend atf_unit::FRegxcase& regxcase_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend atf_unit::FRegxcase* regxcase_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 regxcase_RemoveAll() __attribute__((nothrow));
+    friend void                 regxcase_RemoveLast() __attribute__((nothrow));
+};
+// Copy fields out of row
+// func:atf_unit.FRegxcase.base.CopyOut
+void                 regxcase_CopyOut(atf_unit::FRegxcase &row, amcdb::Regxcase &out) __attribute__((nothrow));
+// Copy fields in to row
+// func:atf_unit.FRegxcase.base.CopyIn
+void                 regxcase_CopyIn(atf_unit::FRegxcase &row, amcdb::Regxcase &in) __attribute__((nothrow));
+
+// Set all fields to initial values.
+// func:atf_unit.FRegxcase..Init
+inline void          FRegxcase_Init(atf_unit::FRegxcase& parent);
+
 // --- atf_unit.FUnittest
 // create: atf_unit.FDb.unittest (Lary)
 // global access: unittest (Lary, by rowid)
@@ -998,7 +1096,7 @@ algo::strptr         testname_Get(atf_unit::FUnittest& parent) __attribute__((__
 
 // Invoke function by pointer
 // func:atf_unit.FUnittest.step.Call
-inline void          step_Call(atf_unit::FUnittest& parent) __attribute__((nothrow));
+inline void          step_Call(atf_unit::FUnittest& parent);
 
 // Set all fields to initial values.
 // func:atf_unit.FUnittest..Init
@@ -1143,6 +1241,57 @@ void                 JsonAry_Uninit(atf_unit::JsonAry& parent) __attribute__((no
 // cfmt:atf_unit.JsonAry.Json  printfmt:Auto
 // func:atf_unit.JsonAry..FmtJson
 lib_json::FNode *    JsonAry_FmtJson(atf_unit::JsonAry& row, lib_json::FNode *parent) __attribute__((nothrow));
+
+// --- atf_unit.TableId
+struct TableId { // atf_unit.TableId: Index of table in this namespace
+    i32   value;   //   -1  index of table
+    // func:atf_unit.TableId.value.Cast
+    inline               operator atf_unit_TableIdEnum() const __attribute__((nothrow));
+    // func:atf_unit.TableId..Ctor
+    inline               TableId() __attribute__((nothrow));
+    // func:atf_unit.TableId..FieldwiseCtor
+    explicit inline               TableId(i32 in_value) __attribute__((nothrow));
+    // func:atf_unit.TableId..EnumCtor
+    inline               TableId(atf_unit_TableIdEnum arg) __attribute__((nothrow));
+};
+// Get value of field as enum type
+// func:atf_unit.TableId.value.GetEnum
+inline atf_unit_TableIdEnum value_GetEnum(const atf_unit::TableId& parent) __attribute__((nothrow));
+// Set value of field from enum type.
+// func:atf_unit.TableId.value.SetEnum
+inline void          value_SetEnum(atf_unit::TableId& parent, atf_unit_TableIdEnum rhs) __attribute__((nothrow));
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+// func:atf_unit.TableId.value.ToCstr
+const char*          value_ToCstr(const atf_unit::TableId& parent) __attribute__((nothrow));
+// Convert value to a string. First, attempt conversion to a known string.
+// If no string matches, print value as a numeric value.
+// func:atf_unit.TableId.value.Print
+void                 value_Print(const atf_unit::TableId& parent, algo::cstring &lhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+// func:atf_unit.TableId.value.SetStrptrMaybe
+bool                 value_SetStrptrMaybe(atf_unit::TableId& parent, algo::strptr rhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+// func:atf_unit.TableId.value.SetStrptr
+void                 value_SetStrptr(atf_unit::TableId& parent, algo::strptr rhs, atf_unit_TableIdEnum dflt) __attribute__((nothrow));
+// Convert string to field. Return success value
+// func:atf_unit.TableId.value.ReadStrptrMaybe
+bool                 value_ReadStrptrMaybe(atf_unit::TableId& parent, algo::strptr rhs) __attribute__((nothrow));
+
+// Read fields of atf_unit::TableId from an ascii string.
+// The format of the string is the format of the atf_unit::TableId's only field
+// func:atf_unit.TableId..ReadStrptrMaybe
+bool                 TableId_ReadStrptrMaybe(atf_unit::TableId &parent, algo::strptr in_str) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:atf_unit.TableId..Init
+inline void          TableId_Init(atf_unit::TableId& parent);
+// print string representation of ROW to string STR
+// cfmt:atf_unit.TableId.String  printfmt:Raw
+// func:atf_unit.TableId..Print
+void                 TableId_Print(atf_unit::TableId row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_unit.TypeA
 struct TypeA { // atf_unit.TypeA
@@ -1416,6 +1565,14 @@ struct _db_unittest_curs {// cursor
     atf_unit::FDb *parent;
     i64 index;
     _db_unittest_curs(){ parent=NULL; index=0; }
+};
+
+
+struct _db_regxcase_curs {// cursor
+    typedef atf_unit::FRegxcase ChildType;
+    atf_unit::FDb *parent;
+    i64 index;
+    _db_regxcase_curs(){ parent=NULL; index=0; }
 };
 
 
@@ -1705,6 +1862,10 @@ void                 unittest_algo_lib_FProc();
 // this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_FTruncate();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_Fallocate
+// this function is 'extrn' and implemented by user
+void                 unittest_algo_lib_Fallocate();
+// User-implemented function from gstatic:atf_unit.FDb.unittest
 // func:atf_unit...unittest_algo_lib_FileAppend
 // this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_FileAppend();
@@ -1736,6 +1897,10 @@ void                 unittest_algo_lib_I32Dec3Fmt();
 // func:atf_unit...unittest_algo_lib_IntPrice
 // this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_IntPrice();
+// User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_IohookRegularFile
+// this function is 'extrn' and implemented by user
+void                 unittest_algo_lib_IohookRegularFile();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
 // func:atf_unit...unittest_algo_lib_Keyval
 // this function is 'extrn' and implemented by user
@@ -1917,6 +2082,10 @@ void                 unittest_algo_lib_ReadUuid();
 // this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_Regx();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_RegxCase
+// this function is 'extrn' and implemented by user
+void                 unittest_algo_lib_RegxCase();
+// User-implemented function from gstatic:atf_unit.FDb.unittest
 // func:atf_unit...unittest_algo_lib_RegxDotEof
 // this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_RegxDotEof();
@@ -1953,6 +2122,10 @@ void                 unittest_algo_lib_ReplscopeSharedPrefix();
 // this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_RequireKernelCpuHz();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_ResetChildSignal
+// this function is 'extrn' and implemented by user
+void                 unittest_algo_lib_ResetChildSignal();
+// User-implemented function from gstatic:atf_unit.FDb.unittest
 // func:atf_unit...unittest_algo_lib_RetryMute
 // this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_RetryMute();
@@ -1964,6 +2137,10 @@ void                 unittest_algo_lib_ReverseBits();
 // func:atf_unit...unittest_algo_lib_SchedTime
 // this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_SchedTime();
+// User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_SetupHangupSignal
+// this function is 'extrn' and implemented by user
+void                 unittest_algo_lib_SetupHangupSignal();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
 // func:atf_unit...unittest_algo_lib_Sleep
 // this function is 'extrn' and implemented by user
@@ -2640,6 +2817,7 @@ inline algo::cstring &operator <<(algo::cstring &str, const atf_unit::Dbl &row);
 inline algo::cstring &operator <<(algo::cstring &str, const atf_unit::trace &row);// cfmt:atf_unit.trace.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_unit::FUnittest &row);// cfmt:atf_unit.FUnittest.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_unit::FieldId &row);// cfmt:atf_unit.FieldId.String
+inline algo::cstring &operator <<(algo::cstring &str, const atf_unit::TableId &row);// cfmt:atf_unit.TableId.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_unit::TypeA &row);// cfmt:atf_unit.TypeA.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_unit::TypeB &row);// cfmt:atf_unit.TypeB.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_unit::TestJson &row);// cfmt:atf_unit.TestJson.String

@@ -19,14 +19,15 @@ Usage: ainst [[-extpkg:]<regx>] [options]
     -script                                 (action) Print the install script instead of running it
     -lib                                    (action) Print the install functions of the selected packages as a shell library
     -rpm                                    (action) Stage each package and build an rpm out of the staged tree
-    -update                                 (action) Look upstream for a newer release and record its version, url and sha256
+    -update                                 (action) Find a newer upstream release and record its version, url and sha256
     -root       string  ""                  Stage files under this directory instead of /
     -cache      string  "temp/ainst/cache"  Where verified artifacts are kept, one file per sha256
     -outdir     string  "temp/ainst"        (with -rpm) Directory the rpm is written to
     -dry_run                                Print actions, do not perform
+    -check                                  (action) Stage each selected package under a scratch root and report which fail
     -verbose    flag                        Verbosity level (0..255); alias -v; cumulative
     -debug      flag                        Debug level (0..255); alias -d; cumulative
-    -trace      string  ""                  Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps
+    -trace      string  ""                  Trace expression: log categories to enable, as category[:filter],...
     -help                                   Print help and exit; alias -h
     -version                                Print version and exit
     -signature                              Show signatures and exit; alias -sig
@@ -44,12 +45,18 @@ Select packages by name with the positional regx and pick one action.  With no a
 A package here is an external package: third-party software this tree installs
 but does not build, named `extpkg` to keep it apart from an apm package.  It is a
 row of `ssimfile:dev.extpkg` and a C++ function in `cpp/ainst/<extpkg>.cpp` that
-writes its install steps.  The row carries a `probe`,
-a shell command that exits 0 on a host that holds the package.  The release it
+writes its install steps.  A row of `ssimfile:dev.extpkgprobe` gives the
+package's `probe`, a shell command that exits 0 on a host that holds the
+package, which names the pinned release as `$VERSION`.  The release it
 pins is a row of `ssimfile:dev.extpkgver`, whose `upstream` field says where
 newer releases appear.  Each file it downloads is a row of
 `ssimfile:dev.extpkgsrc`, keyed `<extpkg>/<name>`, with the url and the sha256
-the bytes must have.  `ainst` knows nothing about images: an image builder keeps
+the bytes must have.  A file built per architecture has one row for each, keyed
+`<extpkg>/<name>.<arch>` with the arch as `uname -m` prints it, and the script
+fetches the row of the machine it runs on; a machine with no row stops it with
+`ainst.noarch`.  A package not built for an architecture at all is a row of
+`ssimfile:dev.extpkgnoarch`, keyed `<extpkg>/<arch>`, and its functions print
+`ainst.skip` and return there.  `ainst` knows nothing about images: an image builder keeps
 its own list of the packages an image installs, asks `ainst -lib` for their
 functions, and writes the calls in the image's order.
 
@@ -69,20 +76,37 @@ Each package becomes three shell functions: `inst_<pkg>_stage`,
 `inst_<pkg>_post`, and `inst_<pkg>` which calls the two in order.
 
 A package function writes staging steps with `ainst::AddStage` and post steps
-with `ainst::AddPost`.  `ainst::GetPkgsrcVar` names the verified local path of
+with `ainst::AddPost`.  `ainst::GetExtpkgsrcVar` names the verified local path of
 one artifact.  `ainst::AddStageFileFrom` copies a file from
 `conf/ainst/<pkg>/` into the script, for a payload longer than a line or two
-such as an init script or a systemd unit.  The staging steps use six shell
+such as an init script or a systemd unit.  The staging steps use seven shell
 verbs, which apply the staging root:
 
-|verb|answers with, or does|
-|---|---|
-|`ainst_fetch <url> <sha256>`|the local path of one verified artifact|
-|`ainst_unpack <archive>`|the directory the archive unpacked into|
-|`ainst_install <mode> <src> <dest>`|places a file under the staging root|
-|`ainst_write <dest>`|writes stdin to a file under the staging root|
-|`ainst_mkdir <dir>`|creates a directory under the staging root|
-|`ainst_root <path>`|the path, under the staging root|
+| verb                                | answers with, or does |
+| ----------------------------------- | --------------------- |
+| `ainst_fetch <url> <sha256>`        | the local path of one verified artifact |
+| `ainst_tmpdir`                      | a fresh working directory, removed when the script exits |
+| `ainst_unpack <archive>`            | the directory the archive unpacked into |
+| `ainst_install <mode> <src> <dest>` | places a file under the staging root |
+| `ainst_write <dest>`                | writes stdin to a file under the staging root |
+| `ainst_mkdir <dir>`                 | creates a directory under the staging root |
+| `ainst_root <path>`                 | the path, under the staging root |
+
+#### Installing on macOS
+<a href="#installing-on-macos"></a>
+
+The script runs on macOS as well as Linux.  There every package installs under
+`/usr/local`, since macOS keeps `/usr` read-only, and a source build links
+against Homebrew's libraries.  The packages that the `mac` image declares
+install there.  A package fetched from a per-architecture source with no `arm64`
+build stops the install with `ainst.noarch`, and a package that installs from
+apt, such as docker or chrome, fails at its first `apt-get`.  Run the script as
+root with a cache that root owns:
+
+```
+ainst 'jq|nodejs' -script > /tmp/ainst.sh
+sudo AINST_CACHE=/var/cache/ainst bash /tmp/ainst.sh
+```
 
 #### Installing and printing
 <a href="#installing-and-printing"></a>
@@ -92,6 +116,14 @@ every selected package, and the calls in order.  `-install` writes the same
 program to `<outdir>/ainst.sh` and runs it with bash.  `-lib` prints the
 functions without the calls, for a script that sources them and decides at run
 time which packages to install.
+
+#### Checking that every package still builds
+<a href="#checking-that-every-package-still-builds"></a>
+
+An upstream moves a release, a mirror drops a file or a build starts needing a
+tool the runner lacks, and nothing in the tree changes.  `-check` stages every
+selected package under a scratch root and reports which ones fail, so a broken
+package shows up the next time anyone checks.  See [-check](#-check).
 
 #### Building an rpm
 <a href="#building-an-rpm"></a>
@@ -118,17 +150,17 @@ falls back to its newest tag.  A url is rewritten by replacing the old version
 string with the new one, so `v3.11.0` and `3.11.0` both move.  Each package
 answers with one line:
 
-|line|meaning|
-|---|---|
-|`ainst.update`|moved; every source was refetched and rehashed|
-|`ainst.current`|upstream names the release already pinned|
-|`ainst.notnewer`|upstream names an older release than the pin, which is left alone|
-|`ainst.noupstream`|the package records nowhere to look|
-|`ainst.badupstream`|no `ssimfile:dev.upstreamtype` row reads this scheme|
-|`ainst.unreadable`|upstream answered nothing; it may be down, rate-limiting, or renamed|
-|`ainst.verinsrc`|`cpp/ainst` spells the version too, so rows alone cannot move it|
-|`ainst.nosubst`, `ainst.nofetch`|a source url could not be rebuilt or does not answer|
-|`ainst.skip`|follows any of the last three; the whole package stays at its release|
+| line                             | meaning |
+| -------------------------------- | ------- |
+| `ainst.update`                   | moved; every source was refetched and rehashed |
+| `ainst.current`                  | upstream names the release already pinned |
+| `ainst.notnewer`                 | upstream names an older release than the pin, which is left alone |
+| `ainst.noupstream`               | the package records nowhere to look |
+| `ainst.badupstream`              | no `ssimfile:dev.upstreamtype` row reads this scheme |
+| `ainst.unreadable`               | upstream answered nothing; it may be down, rate-limiting, or renamed |
+| `ainst.verinsrc`                 | `cpp/ainst` spells the version too, so rows alone cannot move it |
+| `ainst.nosubst`, `ainst.nofetch` | a source url could not be rebuilt or does not answer |
+| `ainst.skip`                     | follows any of the last three; the whole package stays at its release |
 
 A package built from source names its version in C++ as well, such as the
 directory an archive unpacks into.  It answers `ainst.verinsrc`, and bumping it
@@ -139,15 +171,17 @@ the tag it is pinned to.
 #### Adding a package
 <a href="#adding-a-package"></a>
 
-Insert the package, its pinned version, and one source row per file it
-downloads.  Use underscores in the key, never dashes, because the key becomes
+Insert the package, its pinned version, the probe that checks a host for it, and
+one source row per file it downloads.  Use underscores in the key, never dashes, because the key becomes
 part of a C function name.
 
 ```bash
-echo 'dev.extpkg  pkg:mytool  probe:"command -v mytool >/dev/null"  comment:"what it is"' | acr -insert -check -write
-echo 'dev.extpkgver  pkg:mytool  version:1.2.3  upstream:github:<owner>/<repo>  comment:""' | acr -insert -check -write
+echo 'dev.extpkg  extpkg:mytool  comment:"what it is"' | acr -insert -check -write
+echo 'dev.extpkgprobe  extpkg:mytool  probe:"mytool --version | grep -qF $VERSION"  comment:""' | acr -insert -check -write
+echo 'dev.extpkgver  extpkg:mytool  version:1.2.3  upstream:github:<owner>/<repo>  comment:""' | acr -insert -check -write
 curl -fsSL <url> | sha256sum
-echo 'dev.extpkgsrc  pkgsrc:mytool/bin  url:"<url>"  sha256:<hash>  comment:""' | acr -insert -check -write
+echo 'dev.extpkgsrc  extpkgsrc:mytool/bin.x86_64  url:"<url>"  sha256:<hash>  comment:""' | acr -insert -check -write
+echo 'dev.extpkgsrc  extpkgsrc:mytool/bin.aarch64  url:"<arm url>"  sha256:<hash>  comment:""' | acr -insert -check -write
 ```
 
 Create the source file with `acr_ed -create -srcfile:cpp/ainst/mytool.cpp
@@ -252,7 +286,7 @@ the packages it decides at run time to install.
 Stage each selected package into its own buildroot under `-outdir` and build an
 rpm from it with `rpmbuild`.  The rpms land in `<outdir>/rpm`.
 
-#### -update -- (action) Look upstream for a newer release and record its version, url and sha256
+#### -update -- (action) Find a newer upstream release and record its version, url and sha256
 <a href="#-update"></a>
 
 Ask each selected package's upstream for a newer release, and when there is one,
@@ -286,3 +320,19 @@ the spec files, buildroots and rpms for `-rpm`, and `update.ssim` for
 Print the command that would run and do not run it.  With `-install` or `-rpm`
 the script is still written to `<outdir>/ainst.sh` for you to read.  With
 `-update` it prints the `acr` command that would record the rows.
+
+#### -check -- (action) Stage each selected package under a scratch root and report which fail
+<a href="#-check"></a>
+
+Stage each selected package under a scratch root of its own, and report which
+ones still fetch, verify and build.  Staging touches nothing outside the scratch
+root and runs no post-install step, so no root access is needed.  Each package
+prints one line, `ainst.check  extpkg:<pkg>  ok:Y`, or `ok:N` with the last line
+of its log as the comment and the log's tail below it.  The exit code is
+non-zero when any package failed.  Add `-script` to print the program instead of
+running it.
+
+A package's stage needs the build tools of the system it stages on, and a bare
+host may lack one that every image installing the package carries in its debs.
+An image build runs the stages of the packages that the image installs, with
+the image's debs, so check a package there when the host lacks its tools.

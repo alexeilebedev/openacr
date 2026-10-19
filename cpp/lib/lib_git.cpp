@@ -28,7 +28,7 @@
 // Return current git ref, e.g. ac18e6cb142a86136b58561f2f1d63e3ff4b749e
 // Any error output is suppressed.
 tempstr lib_git::CurrentRef() {
-    return tempstr(Trimmed(SysEval("git rev-parse HEAD 2>/dev/null", FailokQ(false), 1024)));
+    return tempstr(Trimmed(SysEval("git rev-parse HEAD 2>/dev/null", FailokQ(false))));
 }
 
 // -----------------------------------------------------------------------------
@@ -36,7 +36,7 @@ tempstr lib_git::CurrentRef() {
 // Return symbolic name for current branch, e.g. AB-12345
 // Any error output is suppressed.
 tempstr lib_git::CurrentBranch() {
-    return tempstr(Trimmed(SysEval("git symbolic-ref --short -q HEAD 2>/dev/null", FailokQ(false), 1024)));
+    return tempstr(Trimmed(SysEval("git symbolic-ref --short -q HEAD 2>/dev/null", FailokQ(false))));
 }
 
 // -----------------------------------------------------------------------------
@@ -46,7 +46,7 @@ tempstr lib_git::CurrentBranch() {
 // which survives a rebase; the author date does not move with one, so a stamp
 // built from it reads days stale the moment a lived-on branch merges.
 tempstr lib_git::ShortRef() {
-    return tempstr(Trimmed(SysEval("git log --pretty=format:'%cd.%h' --date=short -1",FailokQ(false),1024)));
+    return tempstr(Trimmed(SysEval("git log --pretty=format:'%cd.%h' --date=short -1",FailokQ(false))));
 }
 
 // -----------------------------------------------------------------------------
@@ -55,7 +55,7 @@ tempstr lib_git::ShortRef() {
 // If there was a merge, this will describe 2 or more commits. If there was a straight
 // commit, there will be just 1 entry (compare with git log -1)
 tempstr lib_git::LastCommitLog() {
-    return tempstr(SysEval("git log HEAD~..HEAD",FailokQ(true),1024*1024));
+    return tempstr(SysEval("git log HEAD~..HEAD",FailokQ(true)));
 }
 
 // -----------------------------------------------------------------------------
@@ -66,7 +66,7 @@ tempstr lib_git::LastCommitLog() {
 // (e.g. atf_ci's modfiles tracking) need every line to compute deltas
 // across many tests.
 tempstr lib_git::GitModifiedFiles(strptr dir) {
-    return tempstr(SysEval(tempstr()<<"git ls-files -m "<<dir, FailokQ(false), 1024*1024));
+    return tempstr(SysEval(tempstr()<<"git ls-files -m "<<dir, FailokQ(false)));
 }
 
 // -----------------------------------------------------------------------------
@@ -82,7 +82,7 @@ void lib_git::CheckGitCleanX(strptr dir, strptr msg) {
 
 // Return TRUE if REMOTE is a valid git remote
 bool lib_git::GitRemoteExistsQ(strptr remote) {
-    tempstr git_rem = SysEval("git remote 2>&1", FailokQ(false), 1024*1024);
+    tempstr git_rem = SysEval("git remote 2>&1", FailokQ(false));
     ind_beg(algo::Line_curs, str, git_rem) {
         if (str == remote) {
             return true;
@@ -93,18 +93,12 @@ bool lib_git::GitRemoteExistsQ(strptr remote) {
 
 // -----------------------------------------------------------------------------
 
-// Return TRUE if BRANCH is a valid git branch
+// Return TRUE if BRANCH names a local branch of the repository the current
+// directory is in, that is when refs/heads/BRANCH exists
 bool lib_git::GitBranchExistsQ(strptr branch) {
-    bool found = false;
-    tempstr git_br = SysEval("git branch 2>&1", FailokQ(false), 1024*1024);
-    algo::StringIter it(git_br);
-    while (!it.EofQ()) {
-        if (GetWordCharf(it) == branch) {
-            found = true;
-            break;
-        }
-    }
-    return found;
+    tempstr cmd;
+    cmd << "git show-ref --verify --quiet " << algo::strptr_ToBash(tempstr() << "refs/heads/" << branch);
+    return algo::SysCmd(cmd, FailokQ(true)) == 0;
 }
 
 // -----------------------------------------------------------------------------
@@ -112,8 +106,8 @@ bool lib_git::GitBranchExistsQ(strptr branch) {
 // Get configured user: name <email>
 tempstr lib_git::GetUser() {
     tempstr ret;
-    tempstr name(Trimmed(SysEval("git config user.name 2>/dev/null", FailokQ(true),1000)));
-    tempstr email(Trimmed(SysEval("git config user.email 2>/dev/null", FailokQ(true),1000)));
+    tempstr name(Trimmed(SysEval("git config user.name 2>/dev/null", FailokQ(true))));
+    tempstr email(Trimmed(SysEval("git config user.email 2>/dev/null", FailokQ(true))));
     if (ch_N(name)) {
         ret << name;
         if (ch_N(email)) {
@@ -126,6 +120,28 @@ tempstr lib_git::GetUser() {
 // Get year of latest commit of given file
 u32 lib_git::GetLastCommitYear(strptr file) {
     cstring cmd = tempstr() << "git log -1 --pretty=format:%ci " << file;
-    tempstr date(Trimmed(SysEval(cmd, FailokQ(false),1000)));
+    tempstr date(Trimmed(SysEval(cmd, FailokQ(false))));
     return ParseU32(date,0);
+}
+
+// -----------------------------------------------------------------------------
+
+// The main checkout the current directory belongs to: the directory holding
+// the repository's common git dir, which a worktree shares with the checkout
+// it was made from.  Empty outside a repository, and empty under a git too
+// old to answer --path-format.
+tempstr lib_git::ReadCheckout() {
+    tempstr gitdir(Trimmed(SysEval("git rev-parse --path-format=absolute --git-common-dir 2>/dev/null",FailokQ(true))));
+    return tempstr(gitdir == "" ? strptr() : Pathcomp(gitdir,"/RL"));
+}
+
+// -----------------------------------------------------------------------------
+
+// Return the remote that the local master branch tracks, or origin when master
+// tracks none.  A clone may give its remote any name, for example upstream, so
+// a tool that compares a branch with the upstream branch of master reads the
+// remote here.
+tempstr lib_git::GetMasterRemote() {
+    tempstr remote(Trimmed(SysEval("git config branch.master.remote 2>/dev/null",FailokQ(true),1024)));
+    return tempstr(remote == "" ? strptr("origin") : strptr(remote));
 }

@@ -63,9 +63,9 @@ The set is constructed at amc time via `algo::Charset_ReadStrptrMaybe`
 
 Source: `cpp/amc/charset.cpp`.
 
-| Tfunc            | Generated function          | Effect |
-|------------------|-----------------------------|--------|
-| `Charset.Match`  | `bool <name>Q(u32 ch)`      | True iff `ch` is in the set.  The function name ends in `Q` by convention (a predicate). |
+| Tfunc           | Generated function     | Effect |
+| --------------- | ---------------------- | ------ |
+| `Charset.Match` | `bool <name>Q(u32 ch)` | True iff `ch` is in the set.  The function name ends in `Q` by convention (a predicate). |
 
 Note: the function name is `<name>Q`, not `<name>_Match`.  This
 matches the project's predicate naming convention.

@@ -28,12 +28,26 @@ bash -> peer left before the reply
 # eof credd-6
 credd-6 -> lib_cred.Status  dir:temp/atf_comp/credd.Daemon/home/.ssh/credd  agent:temp/atf_comp/credd.Daemon/home/.ssh/ssh_auth_sock  n_cred:1  build:***
 # exit credd-6 code:0
-# setenv CREDD_PASSWORD:pw
-# start bash-2 cmd:"bash -c $'$bindir/credd -keygen:k1 -comment:\\'made here\\' | cut -d\\' \\' -f1,3-'"
+# start bash-2 cmd:"bash -c $'cp $STORE/creddb/cred.ssim $tempdir/cred.ssim && perl -0 -i -pe \\'s/^/creddb.cred  cred:bad  kind:nosuchkind\\\\n/\\' $STORE/creddb/cred.ssim'"
 # eof bash-2
-bash-2 -> credd.add cred:k1  kind:sshkey  linkto:""  perm:""
-bash-2 -> ssh-ed25519 made here
 # exit bash-2 code:0
+# start bash-3 cmd:"bash -c $'perl $tempdir/ask.pl $STORE/credd.sock \\'lib_cred.ReloadReq  client:test\\''"
+# eof bash-3
+bash-3 -> refused
+# exit bash-3 code:0
+# start bash-4 cmd:"bash -c $'perl $tempdir/ask.pl $STORE/credd.sock \\'lib_cred.ShowReq  name:gl\\''"
+# eof bash-4
+bash-4 -> lib_cred.Value  name:gl  value:glpat-atfcomp-token
+# exit bash-4 code:0
+# start bash-5 cmd:"bash -c $'cp $tempdir/cred.ssim $STORE/creddb/cred.ssim'"
+# eof bash-5
+# exit bash-5 code:0
+# setenv CREDD_PASSWORD:pw
+# start bash-6 cmd:"bash -c $'$bindir/credd -keygen:k1 -comment:\\'made here\\' | cut -d\\' \\' -f1,3-'"
+# eof bash-6
+bash-6 -> credd.add cred:k1  kind:sshkey  linkto:""  perm:""
+bash-6 -> ssh-ed25519 made here
+# exit bash-6 code:0
 # start credd-7 cmd:"$bindir/credd -add:k2 -kind:sshkey -src:@$tempdir/imp -comment:'brought in'"
 # eof credd-7
 credd-7 -> credd.add  cred:k2  kind:sshkey  linkto:""  perm:""
@@ -43,20 +57,20 @@ credd-7 -> credd.add  cred:k2  kind:sshkey  linkto:""  perm:""
 # eof credd-8
 credd-8 -> lib_cred.Status  dir:temp/atf_comp/credd.Daemon/home/.ssh/credd  agent:temp/atf_comp/credd.Daemon/home/.ssh/ssh_auth_sock  n_cred:3  build:***
 # exit credd-8 code:0
-# start bash-3 cmd:"bash -c $'SSH_AUTH_SOCK=$AGENT ssh-add -L | cut -d\\' \\' -f1,3- | sort'"
-# eof bash-3
-bash-3 -> ssh-ed25519 imported
-bash-3 -> ssh-ed25519 made here
-# exit bash-3 code:0
+# start bash-7 cmd:"bash -c $'SSH_AUTH_SOCK=$AGENT ssh-add -L | cut -d\\' \\' -f1,3- | sort'"
+# eof bash-7
+bash-7 -> ssh-ed25519 imported
+bash-7 -> ssh-ed25519 made here
+# exit bash-7 code:0
 # setenv CREDD_PASSWORD:pw
 # start credd-9 cmd:"$bindir/credd -remove:k1"
 # eof credd-9
 credd-9 -> credd.remove  name:k1
 # exit credd-9 code:0
-# start bash-4 cmd:"bash -c $'SSH_AUTH_SOCK=$AGENT ssh-add -L | cut -d\\' \\' -f1,3-'"
-# eof bash-4
-bash-4 -> ssh-ed25519 imported
-# exit bash-4 code:0
+# start bash-8 cmd:"bash -c $'SSH_AUTH_SOCK=$AGENT ssh-add -L | cut -d\\' \\' -f1,3-'"
+# eof bash-8
+bash-8 -> ssh-ed25519 imported
+# exit bash-8 code:0
 # start credd-10 cmd:"$bindir/credd -add:gli-mr -linkto:gl -comment:'what the review bot asks for'"
 # eof credd-10
 credd-10 -> credd.add  cred:gli-mr  kind:link  linkto:gl  perm:""
@@ -125,9 +139,9 @@ credd-21 -> lib_cred.Done  req:lib_cred.StopReq
 credd-2 -> credd.listen  sock:temp/atf_comp/credd.Daemon/home/.ssh/credd/credd.sock  agent:temp/atf_comp/credd.Daemon/home/.ssh/ssh_auth_sock  n_cred:1
 credd-2 -> credd.exit  sock:temp/atf_comp/credd.Daemon/home/.ssh/credd/credd.sock
 # exit credd-2 code:0
-# start bash-5 cmd:"bash -c $'test -e $AGENT || echo agent socket gone; test -e $STORE/credd.sock || echo daemon socket gone'"
-# eof bash-5
-bash-5 -> agent socket gone
-bash-5 -> daemon socket gone
-# exit bash-5 code:0
+# start bash-9 cmd:"bash -c $'test -e $AGENT || echo agent socket gone; test -e $STORE/credd.sock || echo daemon socket gone'"
+# eof bash-9
+bash-9 -> agent socket gone
+bash-9 -> daemon socket gone
+# exit bash-9 code:0
 # clearenv

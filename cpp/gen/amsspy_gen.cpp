@@ -50,7 +50,7 @@ namespace amsspy { // gen:ns_print_proto
     // func:amsspy.FDb.cd_shm_poll.UpdateCycles
     inline static void   cd_shm_poll_UpdateCycles() __attribute__((nothrow));
     // func:amsspy.FDb.cd_shm_poll.Call
-    inline static void   cd_shm_poll_Call() __attribute__((nothrow));
+    inline static void   cd_shm_poll_Call();
     // find trace by row id (used to implement reflection)
     // func:amsspy.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));

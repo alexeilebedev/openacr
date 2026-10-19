@@ -137,16 +137,15 @@ static void PutNsdep(algo::cstring &out, algo::strptr ns) {
 // A finput names the field it fills, and the table behind that field is what a reader
 // wants: the field is where the rows land and the table is what they are.  Two steps
 // reach it, because a target does not hold ssim rows as they are written -- it holds a
-// projection of them, a ctype of its own carrying the ssim ctype as its base.  So the
-// finput's field names the projection, the projection's base names the ssim ctype, and
-// the ssimfile of that ctype is the table.
+// projection of them, a ctype of its own carrying the ssim ctype as its Base field.  So the
+// finput's field names the projection, the projection's Base field names the ssim ctype,
+// and the ssimfile of that ctype is the table.
 static void PutNsinput(algo::cstring &out, algo::strptr ns) {
     tempstr body;
     int n = 0;
     ind_beg(doc::_db_finput_curs, finput, doc::_db) {
         doc::FField *field = doc::ns_Get(finput) == ns ? doc::ind_field_Find(finput.field) : NULL;
-        doc::FField *base = field ? doc::ind_field_Find(tempstr() << field->arg << ".base") : NULL;
-        doc::FSsimfile *ssimfile = base ? doc::ind_ssimfile_ctype_Find(base->arg) : NULL;
+        doc::FSsimfile *ssimfile = field ? doc::Basessimfile(field->arg) : NULL;
         if (ssimfile) {
             n++;
             body << "|";
@@ -577,7 +576,7 @@ tempstr doc::IntroText(algo::strptr path) {
 // Return the link to the internals of the namespace the document at PATH is about, as
 // markdown, and the empty string when the document is about no namespace.
 //
-// A README under txt/exe, txt/lib, txt/protocol or txt/ssimdb sits in a directory named
+// A README under txt/exe, txt/so, txt/lib, txt/protocol or txt/ssimdb sits in a directory named
 // after a namespace, and that is the whole of what says which document is about which
 // namespace.  What the link opens is the namespace page doc computes, so it says what
 // the tree holds now rather than what it held when a generator last ran.
@@ -598,19 +597,19 @@ tempstr doc::InternalsText(algo::strptr path) {
 // Return the namespace the document at PATH is about, and the empty string when it is
 // about none.
 //
-// A README under txt/exe, txt/lib, txt/protocol or txt/ssimdb sits in a directory named
-// after a namespace, and that path is the whole of what says which document is about
-// which one.  Reading it off the path rather than out of the file is what lets a
-// namespace nobody has written a word about carry the same page as one they have.
+// A namespace's README is txt/<nstype>/<ns>/README.md -- txt/exe, txt/so, txt/lib,
+// txt/protocol or txt/ssimdb, as the namespace's nstype says -- and that path is the
+// whole of what says which document is about which one.  Reading it off the path rather
+// than out of the file is what lets a namespace nobody has written a word about carry
+// the same page as one they have.
 tempstr doc::Docns(algo::strptr path) {
     algo::strptr dir = Pathcomp(path, "/RL");
     algo::strptr kind = Pathcomp(Pathcomp(dir, "/RL"), "/RR");
     algo::strptr name = Pathcomp(dir, "/RR");
     bool under = StartsWithQ(path, "txt/") && EndsWithQ(path, "/README.md");
-    bool named = kind == "exe" || kind == "lib" || kind == "protocol" || kind == "ssimdb";
-    doc::FNs *nsrec = under && named ? doc::ind_ns_Find(name) : NULL;
+    doc::FNs *nsrec = under ? doc::ind_ns_Find(name) : NULL;
     tempstr ret;
-    if (nsrec) {
+    if (nsrec && algo::strptr(nsrec->nstype) == kind) {
         ret << nsrec->ns;
     }
     return ret;
@@ -705,7 +704,7 @@ static void PutCtyperef(algo::cstring &out, algo::strptr name) {
         algo::strptr owner = Pathcomp(field.field, ".RL");
         algo::strptr ns = Pathcomp(owner, ".LL");
         doc::FNs *nsrec = field.arg == name ? doc::ind_ns_Find(ns) : NULL;
-        bool built = nsrec && (nsrec->nstype == "exe" || nsrec->nstype == "lib");
+        bool built = nsrec && (nsrec->nstype == "exe" || nsrec->nstype == "so" || nsrec->nstype == "lib");
         tempstr table(field.arg == name ? doc::CtypeSsimfile(owner) : tempstr());
         bool cmd = field.arg == name && ns == "command";
         if (built && field.reftype == "Base") {
@@ -783,7 +782,7 @@ tempstr doc::CtypeText(algo::strptr name) {
 // declares none.
 //
 // The name is the identifier just before the argument list, and the namespace in front
-// of it comes off -- a pane full of `lib_x2::` says nothing, since every entry on a
+// of it comes off -- a pane full of `amc::` says nothing, since every entry on a
 // file's page shares it.
 tempstr doc::Funcname(algo::strptr proto) {
     int open = algo::FindChar(proto, '(');
@@ -892,15 +891,26 @@ static void PutNavfold(algo::cstring &out, algo::strptr loc) {
         PutNaventry(out, "#transcript", "Transcript", 0);
     }
     if (ch_N(doc::Recfunc(loc)) > 0) {
-        PutNaventry(out, "#as-function", "As Function", 0);
+        PutNaventry(out, tempstr() << "#" << doc::Recanchor(loc), doc::Rechead(loc), 0);
     }
     if (ch_N(doc::Wholetable(doc::LocQuery(loc))) > 0) {
         PutNaventry(out, "#ssimfile", "Ssimfile", 0);
     }
+    tempstr gistloc(site ? tempstr() : doc::Gistloc(doc::LocQuery(loc)));
+    if (ch_N(gistloc) > 0) {
+        PutNaventry(out, gistloc, "Gist", 0);
+    }
+}
+
+// Return true when the page at LOC is a markdown document of the tree, whose pane lists
+// the documents of its directory (PutNavdoc).
+bool doc::DocpageQ(algo::strptr loc) {
+    return !doc::QueryQ(loc) && !doc::DirQ(loc) && EndsWithQ(loc, ".md") && algo::FileQ(loc);
 }
 
 // Append the documents of the directory holding PATH to OUT, with the headings of PATH
-// nested under its own entry.
+// nested under its own entry.  BESIDE says the pane is drawn beside the page, as a
+// browser draws it, rather than above it, as the terminal does.
 //
 // A document is one of several in its directory, and the others are where a reader goes
 // next: the tutorials beside a tutorial, the chapters beside an overview.  So the pane is
@@ -910,6 +920,14 @@ static void PutNavfold(algo::cstring &out, algo::strptr loc) {
 // The page keeps its place in that list rather than being lifted to the top, because a
 // reader who walks from one document to the next finds the pane the same shape every time,
 // with a different entry opened.
+//
+// Above the page the directory is a fold, closed until the reader opens it (-dir).
+// Consider a rule file: txt/rule holds ninety of them, and a pane listing every one sits
+// between the reader and the first line of the document for several screens.  Beside the
+// page the list costs nothing, since the page scrolls past it.  So at the terminal the
+// pane opens with an entry naming the directory, which flips -dir as a fold heading
+// flips its option, and while it is closed the list holds the document being read alone.
+// A directory holding no other document has nothing to fold.
 //
 // Each document is named by its title rather than by its path.  A subdirectory is left out:
 // its own README is what a reader wants of it, and that is one step further than a pane
@@ -932,7 +950,7 @@ static void PutNavfold(algo::cstring &out, algo::strptr loc) {
 // The entries come out in the order the page does, which is why the internals are the last
 // of them rather than a heading of the document: on the page they sit under the sections,
 // and a map that listed them above would send a reader to the wrong end of it.
-static void PutNavdoc(algo::cstring &out, algo::strptr path) {
+static void PutNavdoc(algo::cstring &out, algo::strptr path, bool beside) {
     tempstr intro(doc::IntroText(path));
     tempstr foot(doc::InternalsText(path));
     doc::ParseFile(path);
@@ -941,21 +959,29 @@ static void PutNavdoc(algo::cstring &out, algo::strptr path) {
     }
     tempstr dir;
     dir << Pathcomp(path, "/RL") << "/";
+    bool open = beside || doc::_db.dir;
     bool listed = false;
+    bool other = false;
+    tempstr list;
     ind_beg(doc::_db_readmefile_curs, readmefile, doc::_db) {
         algo::strptr rest = doc::RestFrom(readmefile.gitfile, ch_N(dir));
         bool under = StartsWithQ(readmefile.gitfile, dir) && algo::FindChar(rest, '/') < 0;
         bool here = under && algo::strptr(readmefile.gitfile) == path;
         tempstr title(under ? doc::Doctitle(readmefile.gitfile) : tempstr());
-        if (under) {
-            PutNaventry(out, tempstr() << "/" << readmefile.gitfile,
+        other = other || (under && !here);
+        if (under && (open || here)) {
+            PutNaventry(list, tempstr() << "/" << readmefile.gitfile,
                         ch_N(title) > 0 ? algo::strptr(title) : rest, 0);
         }
         if (here) {
             listed = true;
-            PutNavsect(out, 1, true);
+            PutNavsect(list, 1, true);
         }
     }ind_end;
+    if (!beside && listed && other) {
+        PutNaventry(out, "-dir", tempstr() << (doc::_db.dir ? "\u25be " : "\u25b8 ") << dir, 0);
+    }
+    out << list;
     if (!listed) {
         PutNavsect(out, 0, false);
     }
@@ -1038,7 +1064,11 @@ static void PutNavrec(algo::cstring &out, algo::strptr loc) {
 // A fourth-level heading keeps its anchor in the file, since a document elsewhere may link
 // to it; what it does not get is an entry here, where it would bury the sections it sits
 // under.
-tempstr doc::NavText(algo::strptr loc) {
+//
+// BESIDE says where the pane goes: beside the page in a browser, above it at the terminal.
+// The map is the same either way, except that above the page a document's directory is a
+// fold (PutNavdoc).
+tempstr doc::NavText(algo::strptr loc, bool beside) {
     bool leaf = !doc::QueryQ(loc) && !doc::DirQ(loc) && algo::FileQ(loc);
     bool listing = leaf && !EndsWithQ(loc, ".md");
     tempstr ret;
@@ -1046,10 +1076,13 @@ tempstr doc::NavText(algo::strptr loc) {
         PutNaventry(ret, "#records", "Records", 0);
         PutNaventry(ret, "#transcript", "Transcript", 0);
         PutNavfold(ret, loc);
+    } else if (doc::GistQ(loc)) {
+        doc::ParseText(doc::GistText(doc::LocQuery(loc)));
+        PutNavsect(ret, 0, false);
     } else if (doc::RecpageQ(loc)) {
         PutNavrec(ret, loc);
     } else if (leaf && !listing) {
-        PutNavdoc(ret, loc);
+        PutNavdoc(ret, loc, beside);
     } else {
         PutNavsect(ret, 0, false);
     }

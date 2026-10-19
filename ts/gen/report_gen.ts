@@ -114,6 +114,19 @@ export interface gcache_hitrate {
     pch_hitrate: string; // Precompiled header hit rate
 }
 
+export interface lathist {
+    name: string; // histogram name, lat-<kind>
+    nmsg: bigint; // latencies the window timed
+    min_usec: number; // minimum latency, usec
+    avg_usec: number; // average latency, usec
+    p50_usec: number; // median latency, usec
+    p90_usec: number; // 90th percentile latency, usec
+    p99_usec: number; // 99th percentile latency, usec
+    p999_usec: number; // 99.9th percentile latency, usec
+    p9999_usec: number; // 99.99th percentile latency, usec
+    max_usec: number; // maximum latency, usec
+}
+
 export interface llmtool {
     stat: string; // Worktree and qualifier, comma-separated
     n_request: number; // Requests counted into this row
@@ -347,6 +360,33 @@ export const ReportGcacheHitrate = {
 export interface ReportGcacheHitrateRow {
   readonly hitrate: string;
   readonly pch_hitrate: string;
+}
+
+// report.lathist: One closed window of a latency histogram
+export const ReportLathist = {
+  name: "string",
+  nmsg: "number",
+  min_usec: "number",
+  avg_usec: "number",
+  p50_usec: "number",
+  p90_usec: "number",
+  p99_usec: "number",
+  p999_usec: "number",
+  p9999_usec: "number",
+  max_usec: "number",
+} as const;
+
+export interface ReportLathistRow {
+  readonly name: string;
+  readonly nmsg: number;
+  readonly min_usec: number;
+  readonly avg_usec: number;
+  readonly p50_usec: number;
+  readonly p90_usec: number;
+  readonly p99_usec: number;
+  readonly p999_usec: number;
+  readonly p9999_usec: number;
+  readonly max_usec: number;
 }
 
 // report.llmtool: Cost of llm work in one worktree, by main or subagent

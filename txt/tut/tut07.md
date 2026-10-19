@@ -12,9 +12,9 @@
 OpenACR has three concrete test runners — and one umbrella
 driver that wraps them all.
 
-| Tool       | What it runs                                                          |
-|------------|-----------------------------------------------------------------------|
-| `atf_unit` | Single-function **unit tests** linked into `atf_unit`'s own binary.   |
+| Tool       | What it runs |
+| ---------- | ------------ |
+| `atf_unit` | Single-function **unit tests** linked into `atf_unit`'s own binary. |
 | `atf_comp` | **Component tests** — scripted invocations of real binaries, captured stdout/stderr diffed against reference files. |
 | `atf_amc`  | **amc-generator tests** — assert that amc emits the expected C++ from given ssim inputs. |
 | `atf_ci`   | The umbrella.  Runs **CI tests** (`citest` rows) grouped into **cijobs**.  Some citests are simple wrappers around `atf_unit`/`atf_comp`/`atf_amc`; others are custom logic (regenerate gitfile tables, check copyright headers, scan readmes, …). |
@@ -27,17 +27,19 @@ driver that wraps them all.
 
 The full list of cijobs:
 
-| `cijob`     | Purpose                                                                |
-|-------------|------------------------------------------------------------------------|
-| `normalize` | The pre-merge gate.  Fast invariants: gitfile/scanreadme/ssimfile checks, copyright headers, line endings, source-code police, generated-code freshness for selected targets, ssimdb round-trip via MariaDB, … |
-| `comp`      | Unit tests + all component tests + amc tests + sandboxed editor tests. |
-| `memcheck`  | Re-runs component tests under Valgrind memcheck.  Citests with `memcheck:N` are skipped. |
-| `coverage`  | Re-runs component tests under `gcov`, checks each target's coverage against `dev.tgtcov` thresholds. |
+| `cijob`                  | Purpose |
+| ------------------------ | ------- |
+| `normalize`              | The pre-merge gate.  Fast invariants: gitfile/scanreadme/ssimfile checks, copyright headers, line endings, source-code police, generated-code freshness for selected targets, ssimdb round-trip via MariaDB, … |
+| `compA`                  | One half of the component tests, cut from `compB` by `atfdb.comptest.cijob` so the two run side by side. |
+| `compB`                  | Unit tests + the other half of the component tests + amc tests + sandboxed editor tests. |
+| `memcheck`               | Re-runs component tests under Valgrind memcheck.  Citests with `memcheck:N` are skipped. |
+| `coverageA`, `coverageB` | Re-run the tests under `gcov` on two hosts, each uploading its line counts. |
+| `covfinal`               | Merges the two jobs' line counts and checks each target against `dev.tgtcov`. |
 
 Each cijob is a regex over `atfdb.citest.cijob`.  Run a single
 cijob:
 
-    $ atf_ci -cijob:comp
+    $ atf_ci -cijob:compB
 
 …or just one citest from any cijob:
 
@@ -55,8 +57,8 @@ A citest is one row in `atfdb.citest` plus one C++ function:
 
 ```ssim
 atfdb.citest  citest:gitfile     cijob:normalize  sandbox:N  comment:"Update gitfile tables by scanning filesystem"
-atfdb.citest  citest:atf_unit    cijob:comp       sandbox:N  comment:"Run unit tests"
-atfdb.citest  citest:atf_comp    cijob:comp       sandbox:N  comment:"Run component tests"
+atfdb.citest  citest:atf_unit    cijob:compB      sandbox:N  comment:"Run unit tests"
+atfdb.citest  citest:atf_compB   cijob:compB      sandbox:N  comment:"Run the comptests tagged cijob:compB"
 atfdb.citest  citest:apm_check     cijob:normalize  sandbox:N  comment:""
 ```
 
@@ -74,7 +76,8 @@ Some citests are very thin wrappers:
 
 - `citest_atf_unit` just spawns `atf_unit` and reports its
   exit code.
-- `citest_atf_comp` does the same for `atf_comp`.
+- `citest_atf_compA` and `citest_atf_compB` do the same for `atf_comp`, each
+  narrowed to its own half of the comptests.
 - `citest_atf_amc` does the same for `atf_amc`.
 
 Others are full implementations:
@@ -141,13 +144,13 @@ atfdb.comptest  comptest:acr.Insert  timeout:10  memcheck:Y  coverage:Y  stablef
 
 Per-test fields:
 
-| Field        | Meaning                                                         |
-|--------------|-----------------------------------------------------------------|
-| `comptest`   | `<target>.<name>` — primary key.  `target` substring picks the binary to test. |
-| `timeout`    | Per-process timeout in seconds (10 by default).  Auto-scaled in slow modes — see below. |
-| `memcheck`   | Y = include in `-mode:memcheck` runs.  N = skip (e.g., expected to leak by design). |
-| `coverage`   | Y = include in the `-cijob:coverage` run (`atf_comp -cfg:coverage`). |
-| `stablefld`  | Y = replace volatile fields (timestamps, PIDs) with `***` before diff. |
+| Field       | Meaning |
+| ----------- | ------- |
+| `comptest`  | `<target>.<name>` — primary key.  `target` substring picks the binary to test. |
+| `timeout`   | Per-process timeout in seconds (10 by default).  Auto-scaled in slow modes — see below. |
+| `memcheck`  | Y = include in `-mode:memcheck` runs.  N = skip (e.g., expected to leak by design). |
+| `coverage`  | Y = include in the `-cijob:coverageA` run (`atf_comp -cfg:coverage`). |
+| `stablefld` | Y = replace volatile fields (timestamps, PIDs) with `***` before diff. |
 
 The C++ entry point is `atf_comp::comptest_<name>()` (with the
 target prefix dropped); it's typically a small script in
@@ -183,19 +186,19 @@ Variables substituted by the framework:
 
 `atf_comp -mode:` is the most-used option.  The modes:
 
-| `-mode:`     | Effect                                                                       |
-|--------------|------------------------------------------------------------------------------|
+| `-mode:`     | Effect |
+| ------------ | ------ |
 | `run`        | Default.  Run each test, diff stdout/stderr against reference, report mismatches. |
 | `capture`    | Re-capture references.  Diffs old vs new before overwriting; `git add` new files. |
 | `memcheck`   | Run under Valgrind memcheck.  Filters out tests with `memcheck:N`.  Timeout × 30. |
 | `valgrind`   | Run under generic Valgrind (helgrind, drd, callgrind — picked via env).  Timeout × 50. |
 | `mdbg`       | Debug a single test under [mdbg](/txt/exe/mdbg/README.md).  Requires exactly one matching comptest.  Uses the debug config. |
 | `mdbgall`    | Like `mdbg`, but also wraps every child process the test spawns — multi-process debugging.  Use when the bug is in a subprocess, not in `atf_comp` itself. |
-| `print`      | Print the expected output for the matched tests (no execution).              |
-| `printinput` | Print just the stdin lines.                                                  |
-| `edit`       | Open the matching comptest rows in `$EDITOR` via `acr -t -e`.                |
-| `editsource` | Open the C++ functions implementing the matching tests.  Alias: `-ee`.       |
-| `del`        | Delete the matching comptests (rows, reference files, C++ stubs).            |
+| `print`      | Print the expected output for the matched tests (no execution). |
+| `printinput` | Print just the stdin lines. |
+| `edit`       | Open the matching comptest rows in `$EDITOR` via `acr -t -e`. |
+| `editsource` | Open the C++ functions implementing the matching tests.  Alias: `-ee`. |
+| `del`        | Delete the matching comptests (rows, reference files, C++ stubs). |
 
 Common combos:
 
@@ -205,7 +208,7 @@ Common combos:
     $ atf_comp 'acr\.%' -mode:memcheck             # memcheck just the acr suite
     $ atf_comp acr.BadInsert -mode:mdbg            # debug one test
     $ atf_comp <ns>.<Test> -mode:mdbgall          # debug a test that spawns a process tree
-    $ atf_ci -cijob:coverage                       # coverage gate (builds, runs, gcov-merges)
+    $ atf_ci -cijob:cov%                           # coverage gate (builds, runs, gcov-merges)
 
 Timeouts auto-scale: 1× for release, 4× for debug/coverage,
 30× for memcheck, 50× for valgrind.
@@ -246,8 +249,8 @@ The function returns `void` and signals failure by setting
 `algo_lib::_db.exit_code` or by `prerr`-ing an error message.
 
 Pick the cijob carefully — `normalize` is fast and runs every
-commit, while `comp` includes the full comptest suite and takes
-about five minutes.
+commit, while `compA` and `compB` split the full comptest suite and each take
+about a quarter hour.
 
 ### Debugging a failing test
 <a href="#debugging-a-failing-test"></a>

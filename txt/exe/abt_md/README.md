@@ -23,10 +23,10 @@ Usage: abt_md [[-readmefile:]<regx>] [[-section:]<regx>] [options]
     -dry_run                      Do not write changes to disk
     -external                     Check external links as well (may fail if no internet connection)
     -evalcmd              Y       Execute inline-commands
-    -tut                          (with -evalcmd) Evaluate the tutorials' inline commands too (txt/tut)
+    -tut                          (with -evalcmd) Evaluate the inline commands of the tutorials too
     -verbose      flag            Verbosity level (0..255); alias -v; cumulative
     -debug        flag            Debug level (0..255); alias -d; cumulative
-    -trace        string  ""      Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps
+    -trace        string  ""      Trace expression: log categories to enable, as category[:filter],...
     -help                         Print help and exit; alias -h
     -version                      Print version and exit
     -signature                    Show signatures and exit; alias -sig
@@ -53,7 +53,8 @@ abt_md splits a file into sections at its `##` and `###` headings, and matches
 each heading against `dev.mdsection`.  A section whose template names a path
 matching the file is generated: the title of a tool's README, its `Syntax`
 block, and the `####` heading of each command-line option under `Options`.
-Every other section is prose, and abt_md leaves it as it stands.
+Every other section is prose.  abt_md leaves its text as it stands and aligns
+the columns of each pipe table in it.
 
 The text under an option's heading is prose too.  abt_md regenerates the
 headings from the `dmmeta.field` rows of the tool's command, and puts back the
@@ -79,10 +80,10 @@ resets the sandbox before each such file, and the commands of the file share
 it.  So one command can edit the database and a later one can show the result,
 and the checkout stays untouched.
 
-The tutorials under `txt/tut` build a sample program with `acr_ed -write`, and
-running their commands takes most of a whole-tree pass.  A plain run
-regenerates their sections and leaves their output blocks as they are, and
-`-tut` runs them as well.
+A readme marked `tut:Y` in `dev.readmefile` is a tutorial.  The tutorials under
+`txt/tut` build a sample program with `acr_ed -write`, and a tutorial may also
+start a server, so running their commands takes most of a whole-tree pass.  A plain run regenerates their sections and
+leaves their output blocks as they are, and `-tut` runs them as well.
 
 #### Link checks
 <a href="#link-checks"></a>
@@ -261,13 +262,14 @@ Run the inline commands, which is the default.  `-evalcmd:N` skips all of them,
 the tutorials' included, and leaves each output block as the file holds it.
 The generated sections are regenerated either way.
 
-#### -tut -- (with -evalcmd) Evaluate the tutorials' inline commands too (txt/tut)
+#### -tut -- (with -evalcmd) Evaluate the inline commands of the tutorials too
 <a href="#-tut"></a>
 
-Also run the inline commands of the tutorials under `txt/tut`.  Three of them
-run up to a dozen `acr_ed -write` passes each in the sandbox, so a plain run
-leaves their output blocks alone.  `bin/normalize` runs the plain form, and the
-`comp` cijob runs `abt_md -tut` as its `readme_tut` citest, which fails with
+Also run the inline commands of the readmes marked `tut:Y`.  Three tutorials
+under `txt/tut` run up to a dozen `acr_ed -write` passes each in the sandbox,
+and a tutorial may start and stop a server, so a plain run leaves their output
+blocks alone.  `bin/normalize` runs the plain form, and the
+`compB` cijob runs `abt_md -tut` as its `readme_tut` citest, which fails with
 `atf_ci.modified_files` when a tutorial's output moved.  Run `abt_md -tut`
 after changing a tool a tutorial runs or a table it prints, and commit what it
 rewrites.

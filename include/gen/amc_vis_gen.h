@@ -152,10 +152,10 @@ private:
     friend void                 ctype_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc_vis.FCtype.msghdr.CopyOut
+// func:amc_vis.FCtype.base.CopyOut
 void                 ctype_CopyOut(amc_vis::FCtype &row, dmmeta::Ctype &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc_vis.FCtype.msghdr.CopyIn
+// func:amc_vis.FCtype.base.CopyIn
 void                 ctype_CopyIn(amc_vis::FCtype &row, dmmeta::Ctype &in) __attribute__((nothrow));
 
 // func:amc_vis.FCtype.ns.Get
@@ -1199,10 +1199,10 @@ private:
     friend void                 field_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc_vis.FField.msghdr.CopyOut
+// func:amc_vis.FField.base.CopyOut
 void                 field_CopyOut(amc_vis::FField &row, dmmeta::Field &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc_vis.FField.msghdr.CopyIn
+// func:amc_vis.FField.base.CopyIn
 void                 field_CopyIn(amc_vis::FField &row, dmmeta::Field &in) __attribute__((nothrow));
 
 // func:amc_vis.FField.ctype.Get
@@ -1250,10 +1250,10 @@ private:
     friend void                 finput_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc_vis.FFinput.msghdr.CopyOut
+// func:amc_vis.FFinput.base.CopyOut
 void                 finput_CopyOut(amc_vis::FFinput &row, dmmeta::Finput &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc_vis.FFinput.msghdr.CopyIn
+// func:amc_vis.FFinput.base.CopyIn
 void                 finput_CopyIn(amc_vis::FFinput &row, dmmeta::Finput &in) __attribute__((nothrow));
 
 // func:amc_vis.FFinput.ns.Get
@@ -2032,10 +2032,10 @@ private:
     friend void                 reftype_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc_vis.FReftype.msghdr.CopyOut
+// func:amc_vis.FReftype.base.CopyOut
 void                 reftype_CopyOut(amc_vis::FReftype &row, dmmeta::Reftype &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc_vis.FReftype.msghdr.CopyIn
+// func:amc_vis.FReftype.base.CopyIn
 void                 reftype_CopyIn(amc_vis::FReftype &row, dmmeta::Reftype &in) __attribute__((nothrow));
 
 // Set all fields to initial values.

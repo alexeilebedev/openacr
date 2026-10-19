@@ -899,9 +899,8 @@ tempstr doc::Curtab() {
 }
 
 // Append one entry of the tab strip to OUT: the word TEXT, leading to LOC under the tab
-// TAB, and marked when that is the tab now showing.
-static void PutTabitem(algo::cstring &out, algo::strptr loc, algo::strptr tab, algo::strptr text) {
-    bool on = tab == algo::strptr(doc::Curtab());
+// TAB, and marked when ON says it is the tab now showing.
+static void PutTabitem(algo::cstring &out, algo::strptr loc, algo::strptr tab, algo::strptr text, bool on) {
     out << "<a class=\"tab" << (on ? " on" : "") << "\" href=\"";
     doc::HtmlEsc(out, doc::Tabhref(loc, tab));
     out << "\">";
@@ -921,16 +920,31 @@ static void PutTabitem(algo::cstring &out, algo::strptr loc, algo::strptr tab, a
 // has none for a fold: a tab is a question put to a server, and asking it costs a run of
 // acr per page per tab.  So the strip is not drawn there, and the alternatives stay what
 // the tool itself is for.
+//
+// A selection of a table whose rows a program binds to functions has a fourth answer, its
+// gist: the records read as a document, each with the comment of the function it stands for.
+// The gist is a location a reader can type, so its tab links to that location, and the gist
+// page draws the same strip with that tab marked.  The gist page has no command line of its
+// own to show, so it has no Query tab.
 static void PutTab(algo::cstring &out, algo::strptr loc) {
+    bool gist = doc::GistQ(loc);
+    tempstr base(gist ? doc::LocQuery(loc) : tempstr(loc));
+    tempstr gistloc(doc::Gistloc(doc::LocQuery(base)));
+    tempstr tab(doc::Curtab());
     if (ch_N(doc::_db.cmdline.site) == 0) {
         out << "<nav class=\"tabs\">\n";
         if (doc::FuncsrcQ(loc)) {
-            PutTabitem(out, loc, "", "Code");
+            PutTabitem(out, loc, "", "Code", tab == "");
         } else {
-            PutTabitem(out, loc, "", "Records");
-            PutTabitem(out, loc, "meta", "Meta");
+            PutTabitem(out, base, "", "Records", !gist && tab == "");
+            PutTabitem(out, base, "meta", "Meta", !gist && tab == "meta");
         }
-        PutTabitem(out, loc, "cmd", "Query");
+        if (ch_N(gistloc) > 0) {
+            PutTabitem(out, gistloc, "", "Gist", gist);
+        }
+        if (!gist) {
+            PutTabitem(out, loc, "cmd", "Query", tab == "cmd");
+        }
         out << "</nav>\n";
     }
 }
@@ -1222,6 +1236,23 @@ void doc::PutNs(algo::cstring &out, algo::strptr ns) {
     }
 }
 
+// Append the gist at the location LOC to OUT: the tab strip, then the document.
+//
+// The text is markdown and goes through the parser a document goes through, so its
+// headings are the pane's entries and its links are followed like any other.
+void doc::PutGist(algo::cstring &out, algo::strptr loc) {
+    tempstr text(doc::GistText(doc::LocQuery(loc)));
+    PutTab(out, loc);
+    if (ch_N(text) > 0) {
+        doc::ParseText(text);
+        PutBlock(out, "");
+    } else {
+        out << "<p class=\"note\"><span class=\"miss\">";
+        doc::HtmlEsc(out, doc::LocQuery(loc));
+        out << " selects rows of no table a program binds to functions</span></p>\n";
+    }
+}
+
 // Append the page about the message location LOC to OUT: the roots of every protocol when
 // LOC names none, and otherwise one message -- its declaration, then what begins with it
 // or where it is received.
@@ -1261,14 +1292,8 @@ void doc::PutCtype(algo::cstring &out, algo::strptr name) {
     }
 }
 
-// Append the source of the function LOC names to OUT, under the two tabs such a page
-// carries: the source itself, and the command line that found it.
-//
-// The listing carries the file's own line numbers rather than starting again at one, so
-// a link naming L and a number lands on the line it names here exactly as it does on
-// the page showing the whole file.
-void doc::PutFuncsrc(algo::cstring &out, algo::strptr loc) {
-    doc::ReadFuncsrc(doc::FuncsrcName(loc), doc::FuncsrcSrc(loc));
+// Append the source held in _db.funcsrc to OUT, as the page at LOC shows it.
+static void PutFuncsrcText(algo::cstring &out, algo::strptr loc) {
     doc::Funcsrc &funcsrc = doc::_db.funcsrc;
     tempstr at;
     at << funcsrc.src << ":" << funcsrc.line;
@@ -1283,6 +1308,17 @@ void doc::PutFuncsrc(algo::cstring &out, algo::strptr loc) {
         out << "<p class=\"note\"><span class=\"miss\">the tree holds no such function</span></p>\n";
     }
     out << "</section>\n";
+}
+
+// Append the source of the function LOC names to OUT, under the two tabs such a page
+// carries: the source itself, and the command line that found it.
+//
+// The listing carries the file's own line numbers rather than starting again at one, so
+// a link naming L and a number lands on the line it names here exactly as it does on
+// the page showing the whole file.
+void doc::PutFuncsrc(algo::cstring &out, algo::strptr loc) {
+    doc::ReadFuncsrc(doc::FuncsrcName(loc), doc::FuncsrcSrc(loc));
+    PutFuncsrcText(out, loc);
 }
 
 // Append the access path drawing of the ctypes REGX names to OUT.
@@ -1405,10 +1441,11 @@ static void PutSection(algo::cstring &out, algo::strptr loc) {
             out << " has not been captured</span></p>\n";
         }
     }
-    tempstr func(doc::Recfunc(loc));
-    if (ch_N(func) > 0) {
-        out << "<h3 id=\"as-function\">As Function</h3>\n";
-        doc::PutFuncsrc(out, tempstr() << "func:" << func);
+    if (doc::ReadRecfunc(loc)) {
+        out << "<h3 id=\"" << doc::Recanchor(loc) << "\">";
+        doc::HtmlEsc(out, doc::Rechead(loc));
+        out << "</h3>\n";
+        PutFuncsrcText(out, tempstr() << "func:" << doc::Recfunc(loc));
     }
     tempstr whole(doc::Wholetable(doc::LocQuery(loc)));
     if (ch_N(whole) > 0) {
@@ -1463,7 +1500,7 @@ void doc::HtmlBody(algo::cstring &out, algo::strptr loc) {
 // the whole of that table, and the key, which is where the reader is.  A view of a
 // query opens with the view's own name, leading back to the records it is a view of.
 static void PutShownloc(algo::cstring &out, algo::strptr loc) {
-    bool view = !doc::FuncsrcQ(loc) && (doc::FuncQ(loc) || doc::CodeQ(loc));
+    bool view = !doc::FuncsrcQ(loc) && doc::QueryviewQ(loc);
     if (doc::FuncsrcQ(loc)) {
         PutHref(out, LocHref(Pathcomp(loc, ":LL")), Pathcomp(loc, ":LL"), "");
         out << ":";
@@ -1527,7 +1564,7 @@ static tempstr HtmlShown(algo::strptr loc) {
 // scrolls with the reader.  A page with no map carries no element at all rather than an
 // empty column.
 static tempstr HtmlNav(algo::strptr loc) {
-    tempstr text(doc::NavText(loc));
+    tempstr text(doc::NavText(loc, true));
     tempstr ret;
     if (ch_N(text) > 0) {
         doc::ParseText(text);
@@ -1769,7 +1806,7 @@ static tempstr ExpandTableName(algo::strptr head) {
 // bound.
 //
 // Prose is the case this has to refuse.  A document explaining a command line writes
-// `accesspath:<regx>` or `gclidb.mrjob:<mr>/<regex>`, and a document naming an option
+// `accesspath:<regx>` or `dev.targsrc:<target>/<regex>`, and a document naming an option
 // writes `code:` with nothing after it -- each of which reads as a location and names
 // none.  A server answers such a key with the page that says so and the reader moves on;
 // a site would write that page out and publish it.  So the spelling has to hold up: a
@@ -1953,6 +1990,38 @@ static doc::FSitechunk &SiteChunk(int at) {
 
 // -----------------------------------------------------------------------------
 
+// Create the directories under DIR that the page LEAF of the site sits in.
+//
+// apm's rule file cites `dev.tool_opt:%/\%-%`, the tool options that apply to every
+// target, and its page is the file `dev.tool_opt:%/\%-%.html`.  algo's path functions
+// read a backslash as a directory separator, so they find the page's directory at the
+// backslash.  The walk up from there skips `dev.tool_opt:%`, the mkdir under it fails, and
+// the process drawing the page dies.
+//
+// A leaf is a URL path, and a slash is the only separator a URL path has.  So the
+// directories are made here one slash at a time, and a backslash stays a character of a
+// file name, which is what it is to the kernel and to the host serving the site.
+//
+// A directory that cannot be made is reported and the walk goes on, as it does when a page
+// cannot be saved.  The page under it then fails to save and is reported too, and every
+// other page of the chunk is still written.
+static void SiteMkdir(algo::strptr dir, algo::strptr leaf) {
+    frep_(i, ch_N(leaf)) {
+        if (leaf.elems[i] == '/') {
+            tempstr sub;
+            sub << dir << "/" << algo::FirstN(leaf, i);
+            bool ok = mkdir(Zeroterm(sub), 0755) == 0;
+            ok |= errno == EEXIST;
+            if (!ok) {
+                prerr("doc.sitedir" << Keyval("dir", sub) << Keyval("err", strerror(errno))
+                      << Keyval("comment", "could not make a directory of the site"));
+            }
+        }
+    }
+}
+
+// -----------------------------------------------------------------------------
+
 // Draw every location named in the file LIST, and print the locations they link.
 //
 // A site is thousands of pages and each of them runs acr, src_func or amc_vis -- a
@@ -1973,10 +2042,11 @@ static doc::FSitechunk &SiteChunk(int at) {
 // per process rather than once per page.
 void doc::WriteSitelist(algo::strptr dir, algo::strptr list) {
     ind_beg(algo::FileLine_curs, loc, list) {
+        tempstr leaf(UrlLeaf(loc));
         tempstr path;
-        path << dir << "/" << UrlLeaf(loc);
+        path << dir << "/" << leaf;
         doc::_db.siteleaf = SiteLeafQ(loc);
-        algo::CreateDirRecurse(algo::GetDirName(path));
+        SiteMkdir(dir, leaf);
         algo::SaveFile(doc::HtmlPage(loc), path, "doc.sitepage", "could not write a page of the site");
     }ind_end;
     ind_beg(doc::_db_sitepage_curs, sitepage, doc::_db) {
@@ -1995,9 +2065,12 @@ void doc::WriteSitelist(algo::strptr dir, algo::strptr list) {
 // the locations that child named, which is how the walk goes on: the parent admits them and
 // the set closes exactly as it would have with one process doing everything.
 //
-// A child that fails leaves its page unwritten and names no location, so the walk carries on
-// and the missing page shows up as a link the site does not hold -- which SiteVerify reports
-// rather than hiding.
+// A child that dies on one page leaves that page and every later page of its chunk
+// unwritten, and it names no location.  The walk carries on, and SiteVerify reports each
+// missing page.  The chunks are dealt round-robin, so the pages lost to one death look
+// scattered across the site.  So the parent prints every line a child wrote that is not a
+// location it linked, and the error that killed the child sits in the log above the
+// missing pages it explains.
 //
 // A round is dealt round-robin across the processes rather than split into consecutive
 // blocks.  Page costs differ by a factor of ten -- a comptest's record answers in a moment,
@@ -2042,6 +2115,8 @@ static void SiteBatch(algo::strptr dir, int njob) {
                 report::Siteref siteref;
                 if (report::Siteref_ReadStrptrMaybe(siteref, line)) {
                     doc::SiteRef(siteref.loc);
+                } else {
+                    prerr(line);
                 }
             }ind_end;
             ch_RemoveAll(SiteChunk(i).loc);
@@ -2131,6 +2206,24 @@ static void TsEsc(algo::cstring &out, algo::strptr s) {
 
 // -----------------------------------------------------------------------------
 
+// Return the rendered document BODY without the title heading it opens with.  A
+// published document starts with its title as an `##` heading, which renders as
+// an h2, with an id when an anchor line follows the heading and without one
+// otherwise.  A catalog row carries that title beside the body, so a reader that
+// draws the title and then the body would show it twice.  A body opening any
+// other way is returned whole.
+static algo::strptr CatalogBody(algo::strptr body) {
+    algo::strptr ret = body;
+    bool title = algo::StartsWithQ(body, "<h2>") || algo::StartsWithQ(body, "<h2 ");
+    int end = title ? algo::FindStr(body, "</h2>\n") : -1;
+    if (end >= 0) {
+        ret = algo::RestFrom(body, end + 6);
+    }
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
 // Write every published document, rendered, as the TypeScript module at PATH.
 //
 // The interface shows the same documents this tool does, and rendering them twice
@@ -2143,7 +2236,8 @@ static void TsEsc(algo::cstring &out, algo::strptr s) {
 //
 // Which documents go is dev.readmefile.publish, so the module carries a chosen set
 // rather than a copy of the tree -- the schema references and the rule files are
-// documents too, and an operator has no use for them.
+// documents too, and an operator has no use for them.  Each row carries the
+// document's title and its body after the title heading (CatalogBody).
 void doc::WriteCatalog(algo::strptr path) {
     algo::cstring out;
     out << "// Generated by doc -catalog from the published documents. Do not edit.\n";
@@ -2162,7 +2256,7 @@ void doc::WriteCatalog(algo::strptr path) {
             out << "  \"" << readmefile.gitfile << "\": { path: \"" << readmefile.gitfile << "\", title: \"";
             TsEsc(out, readmefile.comment);
             out << "\", body: \"";
-            TsEsc(out, body);
+            TsEsc(out, CatalogBody(body));
             out << "\" },\n";
         }
     }ind_end;

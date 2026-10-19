@@ -4,6 +4,8 @@ dmmeta.cextern  ctype:HANDLE  initmemset:Y  isstruct:N  plaindata:Y
 dmmeta.cextern  ctype:LEVELDB  initmemset:N  isstruct:N  plaindata:Y
 dmmeta.cextern  ctype:MYSQL  initmemset:N  isstruct:N  plaindata:Y
 dmmeta.cextern  ctype:MYSQL_RES  initmemset:N  isstruct:N  plaindata:Y
+dmmeta.cextern  ctype:PyObject  initmemset:N  isstruct:Y  plaindata:Y
+dmmeta.cextern  ctype:PyThreadState  initmemset:N  isstruct:Y  plaindata:Y
 dmmeta.cextern  ctype:SQLHANDLE  initmemset:N  isstruct:N  plaindata:Y
 dmmeta.cextern  ctype:SQLINTEGER  initmemset:N  isstruct:N  plaindata:Y
 dmmeta.cextern  ctype:SQLLEN  initmemset:N  isstruct:N  plaindata:Y
@@ -50,6 +52,11 @@ dmmeta.cextern  ctype:iconv_t  initmemset:N  isstruct:N  plaindata:Y
 dmmeta.cextern  ctype:pid_t  initmemset:N  isstruct:N  plaindata:Y
 dmmeta.cextern  ctype:rdma_cm_id  initmemset:N  isstruct:N  plaindata:N
 dmmeta.cextern  ctype:rdma_event_channel  initmemset:N  isstruct:N  plaindata:N
+dmmeta.cextern  ctype:rocksdb_column_family_handle_t  initmemset:N  isstruct:N  plaindata:N
+dmmeta.cextern  ctype:rocksdb_options_t  initmemset:N  isstruct:N  plaindata:N
+dmmeta.cextern  ctype:rocksdb_readoptions_t  initmemset:N  isstruct:N  plaindata:N
+dmmeta.cextern  ctype:rocksdb_t  initmemset:N  isstruct:N  plaindata:N
+dmmeta.cextern  ctype:rocksdb_writeoptions_t  initmemset:N  isstruct:N  plaindata:N
 dmmeta.cextern  ctype:spdk_env_opts  initmemset:N  isstruct:Y  plaindata:N
 dmmeta.cextern  ctype:spdk_nvme_ctrlr  initmemset:N  isstruct:Y  plaindata:N
 dmmeta.cextern  ctype:spdk_nvme_ns  initmemset:N  isstruct:Y  plaindata:N

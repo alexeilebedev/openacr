@@ -118,8 +118,11 @@ void lib_ams::FChunk_Uninit(lib_ams::FChunk& parent) {
 // Set all fields to initial values.
 void lib_ams::trace_Init(lib_ams::trace& parent) {
     parent.n_board_badref = u64(0);
+    parent.n_board_noboard = u64(0);
     parent.n_board_nochunk = u64(0);
     parent.n_board_nochunkref = u64(0);
+    parent.n_board_open = u64(0);
+    parent.n_board_resolve = u64(0);
     parent.n_board_send = u64(0);
     parent.n_board_unlocked = u64(0);
     parent.n_board_unpopulated = u64(0);
@@ -159,11 +162,20 @@ void lib_ams::trace_Print(lib_ams::trace& row, algo::cstring& str) {
     u64_Print(row.n_board_badref, temp);
     PrintAttrSpaceReset(str,"n_board_badref", temp);
 
+    u64_Print(row.n_board_noboard, temp);
+    PrintAttrSpaceReset(str,"n_board_noboard", temp);
+
     u64_Print(row.n_board_nochunk, temp);
     PrintAttrSpaceReset(str,"n_board_nochunk", temp);
 
     u64_Print(row.n_board_nochunkref, temp);
     PrintAttrSpaceReset(str,"n_board_nochunkref", temp);
+
+    u64_Print(row.n_board_open, temp);
+    PrintAttrSpaceReset(str,"n_board_open", temp);
+
+    u64_Print(row.n_board_resolve, temp);
+    PrintAttrSpaceReset(str,"n_board_resolve", temp);
 
     u64_Print(row.n_board_send, temp);
     PrintAttrSpaceReset(str,"n_board_send", temp);
@@ -567,7 +579,7 @@ static void lib_ams::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'lib_ams.Msg'  signature:'28fa1bd7e54784db9096e80df4f3b58421a0dc25'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'lib_ams.Msg'  signature:'409ff8e5e095ac7af32aed44807fde8eff893284'");
 }
 
 // --- lib_ams.FDb._db.InsertStrptrMaybe

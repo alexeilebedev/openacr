@@ -124,18 +124,6 @@ inline ainst::FExtpkgsrc& ainst::extpkgsrc_qFind(u64 t) {
     return _db.extpkgsrc_lary[bsr][index];
 }
 
-// --- ainst.FDb.ind_extpkgsrc.EmptyQ
-// Return true if hash is empty
-inline bool ainst::ind_extpkgsrc_EmptyQ() {
-    return _db.ind_extpkgsrc_n == 0;
-}
-
-// --- ainst.FDb.ind_extpkgsrc.N
-// Return number of items in the hash
-inline i32 ainst::ind_extpkgsrc_N() {
-    return _db.ind_extpkgsrc_n;
-}
-
 // --- ainst.FDb.zd_sel_extpkg.EmptyQ
 // Return true if index is empty
 inline bool ainst::zd_sel_extpkg_EmptyQ() {
@@ -300,6 +288,48 @@ inline i32 ainst::ind_upstreamtype_N() {
     return _db.ind_upstreamtype_n;
 }
 
+// --- ainst.FDb.extpkgnoarch.EmptyQ
+// Return true if index is empty
+inline bool ainst::extpkgnoarch_EmptyQ() {
+    return _db.extpkgnoarch_n == 0;
+}
+
+// --- ainst.FDb.extpkgnoarch.Find
+// Look up row by row id. Return NULL if out of range
+inline ainst::FExtpkgnoarch* ainst::extpkgnoarch_Find(u64 t) {
+    ainst::FExtpkgnoarch *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.extpkgnoarch_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.extpkgnoarch_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- ainst.FDb.extpkgnoarch.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline ainst::FExtpkgnoarch* ainst::extpkgnoarch_Last() {
+    return extpkgnoarch_Find(u64(_db.extpkgnoarch_n-1));
+}
+
+// --- ainst.FDb.extpkgnoarch.N
+// Return number of items in the pool
+inline i64 ainst::extpkgnoarch_N() {
+    return _db.extpkgnoarch_n;
+}
+
+// --- ainst.FDb.extpkgnoarch.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline ainst::FExtpkgnoarch& ainst::extpkgnoarch_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.extpkgnoarch_lary[bsr][index];
+}
+
 // --- ainst.FDb.extpkg_curs.Reset
 // cursor points to valid item
 inline void ainst::_db_extpkg_curs_Reset(_db_extpkg_curs &curs, ainst::FDb &parent) {
@@ -425,6 +455,31 @@ inline ainst::FUpstreamtype& ainst::_db_upstreamtype_curs_Access(_db_upstreamtyp
     return upstreamtype_qFind(u64(curs.index));
 }
 
+// --- ainst.FDb.extpkgnoarch_curs.Reset
+// cursor points to valid item
+inline void ainst::_db_extpkgnoarch_curs_Reset(_db_extpkgnoarch_curs &curs, ainst::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- ainst.FDb.extpkgnoarch_curs.ValidQ
+// cursor points to valid item
+inline bool ainst::_db_extpkgnoarch_curs_ValidQ(_db_extpkgnoarch_curs &curs) {
+    return curs.index < _db.extpkgnoarch_n;
+}
+
+// --- ainst.FDb.extpkgnoarch_curs.Next
+// proceed to next item
+inline void ainst::_db_extpkgnoarch_curs_Next(_db_extpkgnoarch_curs &curs) {
+    curs.index++;
+}
+
+// --- ainst.FDb.extpkgnoarch_curs.Access
+// item access
+inline ainst::FExtpkgnoarch& ainst::_db_extpkgnoarch_curs_Access(_db_extpkgnoarch_curs &curs) {
+    return extpkgnoarch_qFind(u64(curs.index));
+}
+
 // --- ainst.FExtpkg.zd_extpkgsrc.EmptyQ
 // Return true if index is empty
 inline bool ainst::zd_extpkgsrc_EmptyQ(ainst::FExtpkg& parent) {
@@ -509,14 +564,72 @@ inline void ainst::c_extpkgver_Remove(ainst::FExtpkg& parent, ainst::FExtpkgver&
     }
 }
 
+// --- ainst.FExtpkg.zd_extpkgnoarch.EmptyQ
+// Return true if index is empty
+inline bool ainst::zd_extpkgnoarch_EmptyQ(ainst::FExtpkg& parent) {
+    return parent.zd_extpkgnoarch_head == NULL;
+}
+
+// --- ainst.FExtpkg.zd_extpkgnoarch.First
+// If index empty, return NULL. Otherwise return pointer to first element in index
+inline ainst::FExtpkgnoarch* ainst::zd_extpkgnoarch_First(ainst::FExtpkg& parent) {
+    ainst::FExtpkgnoarch *row = NULL;
+    row = parent.zd_extpkgnoarch_head;
+    return row;
+}
+
+// --- ainst.FExtpkg.zd_extpkgnoarch.InLlistQ
+// Return true if row is in the linked list, false otherwise
+inline bool ainst::extpkg_zd_extpkgnoarch_InLlistQ(ainst::FExtpkgnoarch& row) {
+    bool result = false;
+    result = !(row.extpkg_zd_extpkgnoarch_next == (ainst::FExtpkgnoarch*)-1);
+    return result;
+}
+
+// --- ainst.FExtpkg.zd_extpkgnoarch.Last
+// If index empty, return NULL. Otherwise return pointer to last element in index
+inline ainst::FExtpkgnoarch* ainst::zd_extpkgnoarch_Last(ainst::FExtpkg& parent) {
+    ainst::FExtpkgnoarch *row = NULL;
+    row = parent.zd_extpkgnoarch_tail;
+    return row;
+}
+
+// --- ainst.FExtpkg.zd_extpkgnoarch.N
+// Return number of items in the linked list
+inline i32 ainst::zd_extpkgnoarch_N(const ainst::FExtpkg& parent) {
+    return parent.zd_extpkgnoarch_n;
+}
+
+// --- ainst.FExtpkg.zd_extpkgnoarch.Next
+// Return pointer to next element in the list
+inline ainst::FExtpkgnoarch* ainst::extpkg_zd_extpkgnoarch_Next(ainst::FExtpkgnoarch &row) {
+    return row.extpkg_zd_extpkgnoarch_next;
+}
+
+// --- ainst.FExtpkg.zd_extpkgnoarch.Prev
+// Return pointer to previous element in the list
+inline ainst::FExtpkgnoarch* ainst::extpkg_zd_extpkgnoarch_Prev(ainst::FExtpkgnoarch &row) {
+    return row.extpkg_zd_extpkgnoarch_prev;
+}
+
+// --- ainst.FExtpkg.zd_extpkgnoarch.qLast
+// Return reference to last element in the index. No bounds checking.
+inline ainst::FExtpkgnoarch& ainst::zd_extpkgnoarch_qLast(ainst::FExtpkg& parent) {
+    ainst::FExtpkgnoarch *row = NULL;
+    row = parent.zd_extpkgnoarch_tail;
+    return *row;
+}
+
 // --- ainst.FExtpkg..Init
 // Set all fields to initial values.
 inline void ainst::FExtpkg_Init(ainst::FExtpkg& parent) {
-    parent.probe = algo::strptr("");
     parent.zd_extpkgsrc_head = NULL; // (ainst.FExtpkg.zd_extpkgsrc)
     parent.zd_extpkgsrc_n = 0; // (ainst.FExtpkg.zd_extpkgsrc)
     parent.zd_extpkgsrc_tail = NULL; // (ainst.FExtpkg.zd_extpkgsrc)
     parent.c_extpkgver = NULL;
+    parent.zd_extpkgnoarch_head = NULL; // (ainst.FExtpkg.zd_extpkgnoarch)
+    parent.zd_extpkgnoarch_n = 0; // (ainst.FExtpkg.zd_extpkgnoarch)
+    parent.zd_extpkgnoarch_tail = NULL; // (ainst.FExtpkg.zd_extpkgnoarch)
     parent.ind_extpkg_next = (ainst::FExtpkg*)-1; // (ainst.FDb.ind_extpkg) not-in-hash
     parent.ind_extpkg_hashval = 0; // stored hash value
     parent.zd_sel_extpkg_next = (ainst::FExtpkg*)-1; // (ainst.FDb.zd_sel_extpkg) not-in-list
@@ -549,6 +662,31 @@ inline ainst::FExtpkgsrc& ainst::extpkg_zd_extpkgsrc_curs_Access(extpkg_zd_extpk
     return *curs.row;
 }
 
+// --- ainst.FExtpkg.zd_extpkgnoarch_curs.Reset
+// cursor points to valid item
+inline void ainst::extpkg_zd_extpkgnoarch_curs_Reset(extpkg_zd_extpkgnoarch_curs &curs, ainst::FExtpkg &parent) {
+    curs.row = parent.zd_extpkgnoarch_head;
+}
+
+// --- ainst.FExtpkg.zd_extpkgnoarch_curs.ValidQ
+// cursor points to valid item
+inline bool ainst::extpkg_zd_extpkgnoarch_curs_ValidQ(extpkg_zd_extpkgnoarch_curs &curs) {
+    return curs.row != NULL;
+}
+
+// --- ainst.FExtpkg.zd_extpkgnoarch_curs.Next
+// proceed to next item
+inline void ainst::extpkg_zd_extpkgnoarch_curs_Next(extpkg_zd_extpkgnoarch_curs &curs) {
+    ainst::FExtpkgnoarch *next = (*curs.row).extpkg_zd_extpkgnoarch_next;
+    curs.row = next;
+}
+
+// --- ainst.FExtpkg.zd_extpkgnoarch_curs.Access
+// item access
+inline ainst::FExtpkgnoarch& ainst::extpkg_zd_extpkgnoarch_curs_Access(extpkg_zd_extpkgnoarch_curs &curs) {
+    return *curs.row;
+}
+
 // --- ainst.FExtpkg..Ctor
 inline  ainst::FExtpkg::FExtpkg() {
     ainst::FExtpkg_Init(*this);
@@ -559,11 +697,26 @@ inline  ainst::FExtpkg::~FExtpkg() {
     ainst::FExtpkg_Uninit(*this);
 }
 
+// --- ainst.FExtpkgnoarch..Init
+// Set all fields to initial values.
+inline void ainst::FExtpkgnoarch_Init(ainst::FExtpkgnoarch& parent) {
+    parent.extpkg_zd_extpkgnoarch_next = (ainst::FExtpkgnoarch*)-1; // (ainst.FExtpkg.zd_extpkgnoarch) not-in-list
+    parent.extpkg_zd_extpkgnoarch_prev = NULL; // (ainst.FExtpkg.zd_extpkgnoarch)
+}
+
+// --- ainst.FExtpkgnoarch..Ctor
+inline  ainst::FExtpkgnoarch::FExtpkgnoarch() {
+    ainst::FExtpkgnoarch_Init(*this);
+}
+
+// --- ainst.FExtpkgnoarch..Dtor
+inline  ainst::FExtpkgnoarch::~FExtpkgnoarch() {
+    ainst::FExtpkgnoarch_Uninit(*this);
+}
+
 // --- ainst.FExtpkgsrc..Init
 // Set all fields to initial values.
 inline void ainst::FExtpkgsrc_Init(ainst::FExtpkgsrc& parent) {
-    parent.ind_extpkgsrc_next = (ainst::FExtpkgsrc*)-1; // (ainst.FDb.ind_extpkgsrc) not-in-hash
-    parent.ind_extpkgsrc_hashval = 0; // stored hash value
     parent.extpkg_zd_extpkgsrc_next = (ainst::FExtpkgsrc*)-1; // (ainst.FExtpkg.zd_extpkgsrc) not-in-list
     parent.extpkg_zd_extpkgsrc_prev = NULL; // (ainst.FExtpkg.zd_extpkgsrc)
 }

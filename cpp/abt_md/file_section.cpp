@@ -299,7 +299,7 @@ void abt_md::EvalInlineCommand(abt_md::FFileSection &file_section) {
             // to carry the document's title, so a default assigned to it would land in
             // the ssimfile as though somebody had asked for it.
             algo::strptr filter(ch_N(readmefile.filter) > 0 ? algo::strptr(readmefile.filter) : algo::strptr("cat"));
-            out << SysEval(tempstr()<<filter<<" <"<<tempfile,FailokQ(true),1024*1024*10);
+            out << SysEval(tempstr()<<filter<<" <"<<tempfile,FailokQ(true));
             inlinecommand=true;
         } else if (StartsWithQ(line, "```")) {
             out << line << eol;
@@ -782,6 +782,8 @@ void abt_md::PrintSection(abt_md::FFileSection &file_section, cstring &out) {
 // (Note that contents of generated sections are not considered sections, so they may be empty
 //   and will not be deleted)
 // A blank line separates sections; the file ends with a single newline (no trailing blank line).
+// Every pipe table comes out aligned (AlignTables), so a table reads as a table in the
+// markdown source as it does rendered.
 void abt_md::PrintSections(cstring &out) {
     algo::ListSep sep("\n");
     ind_beg(abt_md::_db_bh_file_section_curs,file_section,_db) {
@@ -792,4 +794,5 @@ void abt_md::PrintSections(cstring &out) {
             PrintSection(file_section,out);
         }
     }ind_end;
+    out = AlignTables(out);
 }

@@ -78,9 +78,9 @@ void amc::gen_include() {
 
     ind_beg(amc::_db_ns_curs, ns,amc::_db) if (ns.c_nscpp && ch_N(ns.ns)) {
         tempstr glob_text;
-        if (ExeQ(ns)) {
+        if (ImageQ(ns)) {
             glob_text << eol;
-            glob_text << "// Instantiate all libraries linked into this executable,\n";
+            glob_text << "// Instantiate all libraries linked into this " << (ExeQ(ns) ? "executable" : "shared object") << ",\n";
             glob_text << "// in dependency order\n";
             ind_beg(amc::ns_c_parentns_curs, parentns, ns) if (parentns.c_globfld) {
                 glob_text << parentns.ns<<"::FDb \t"<<parentns.ns<<"::"<<name_Get(*parentns.c_globfld)
@@ -98,10 +98,11 @@ void amc::gen_ns_check_main() {
     amc::FNs &ns=*amc::_db.c_ns;
     if (ns.c_main) {
         bool ok = ns.nstype == dmmeta_Nstype_nstype_exe
+            || ns.nstype == dmmeta_Nstype_nstype_so
             || ns.nstype == dmmeta_Nstype_nstype_lib;
         amccheck(ok,"amc.main_course"
                  <<Keyval("main",ns.ns)
-                 <<Keyval("comment","Main is only allowed on an executable or a library"));
+                 <<Keyval("comment","Main is only allowed on an executable, a shared object or a library"));
     }
 }
 
@@ -156,6 +157,23 @@ void amc::gen_check_ssimsort() {
                  <<Keyval("ssimsort",ssimsort.ssimfile)
                  <<Keyval("sortfld",ssimsort.sortfld)
                  <<Keyval("comment","Sort field unrelated to the type"));
+    }ind_end;
+}
+
+
+// -----------------------------------------------------------------------------
+
+// Check that every field of a command line -- a ctype read with a strfmt:Argv
+// cfmt (HasArgvReadQ), whose fields are the options a person types -- carries a
+// comment of at most 80 characters.  The comment is the option's line in -help
+// and its heading in the README.  Whatever a reader needs beyond one line goes in
+// the README, under that heading.
+void amc::gen_check_cmdcomment() {
+    ind_beg(_db_field_curs,field,_db) {
+        amccheck(!amc::HasArgvReadQ(*field.p_ctype) || algo::ch_N(field.comment) <= 80, "amc.cmdcomment_long"
+                 <<Keyval("field",field.field)
+                 <<Keyval("length",algo::ch_N(field.comment))
+                 <<Keyval("comment","A command line field's comment fits in 80 characters; detail goes in the README under the option"));
     }ind_end;
 }
 
@@ -260,7 +278,7 @@ void amc::gen_basepool() {
 // ----------------------------------------------------------------------------
 
 static bool NeedNsxQ(amc::FNs &ns) {
-    return ns.nstype == dmmeta_Nstype_nstype_exe
+    return amc::ImageQ(ns)
         || (ns.nstype == dmmeta_Nstype_nstype_objlist && amc::ind_ctype_Find(tempstr()<<ns.ns<<".FDb"));
 }
 
@@ -1073,6 +1091,10 @@ void amc::gen_prep_fconst() {
         if (ch_N(fconst.rec)) {
             amc::InsCppsym(fconst.cpp_name, fconst.rec);
         }
+        // a constant a gconst makes from a table's row needs the gconst as well
+        if (fconst.p_field->c_gconst) {
+            amc::InsCppsym(fconst.cpp_name, tempstr() << "dmmeta.gconst:" << fconst.p_field->c_gconst->field);
+        }
 
         algo::StringIter s(fconst.value.value);
         // try to parse LE_STRd("c..")
@@ -1351,7 +1373,7 @@ static bool UnpackedQ(amc::FField &field) {
     return (field.p_reftype->isval || field.reftype ==dmmeta_Reftype_reftype_Base)
         && !field.p_arg->c_pack
         && !field.p_arg->c_cextern
-        && !field.c_substr;
+        && !amc::FldfuncQ(field);
 }
 
 // Check pack consistency within a namespace: every ctype in a packed namespace must be packed, and every field of a packed ctype must be packed.

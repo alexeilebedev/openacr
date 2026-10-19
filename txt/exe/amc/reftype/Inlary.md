@@ -27,9 +27,9 @@ Storage in the **parent** ctype
 #### Fixed (`min == max`)
 <a href="#fixed-min-max-"></a>
 
-| Field            | Type        | Meaning             |
-|------------------|-------------|---------------------|
-| `<name>_elems[N]`| `T`         | `N` slots inline    |
+| Field             | Type | Meaning |
+| ----------------- | ---- | ------- |
+| `<name>_elems[N]` | `T`  | `N` slots inline |
 
 No counter — the size is `max` and there are no `_Alloc`
 operations.
@@ -37,11 +37,11 @@ operations.
 #### Variable (`min < max`)
 <a href="#variable-min-max-"></a>
 
-| Field             | Type    | Meaning                                            |
-|-------------------|---------|----------------------------------------------------|
-| `<name>_data[]`   | `u8` or `u128` array | raw bytes sized for `max` elements; placement-new'd as needed |
-| `<name>_n`        | `i32`   | current element count                               |
-| `<name>_max`      | enum    | compile-time constant equal to `max`                |
+| Field           | Type                 | Meaning |
+| --------------- | -------------------- | ------- |
+| `<name>_data[]` | `u8` or `u128` array | raw bytes sized for `max` elements; placement-new'd as needed |
+| `<name>_n`      | `i32`                | current element count |
+| `<name>_max`    | enum                 | compile-time constant equal to `max` |
 
 Variable mode pulls in the `Pool` tclass — Inlary fields get
 `Alloc` / `AllocMaybe` / `Delete` / `InsertMaybe` etc. on top
@@ -72,27 +72,27 @@ whole gstatic table.
 Source: `cpp/amc/inlary.cpp`.  Many tfuncs are emitted only in
 the variable-size mode.
 
-| Tfunc                  | Generated function                              | When emitted | Effect |
-|------------------------|-------------------------------------------------|--------------|--------|
-| `Inlary.Init`          | `<name>_Init(P&)` (folded into parent)          | always       | Set `_n=0` (variable) or default-init each slot (fixed). |
-| `Inlary.Uninit`        | `<name>_Uninit(P&)`                             | always       | Destruct active elements. |
-| `Inlary.N`             | `i32 <name>_N(P&)`                              | always       | `_n` (variable) or `max` (fixed). |
-| `Inlary.Max`           | `i32 <name>_Max(P&)`                            | always       | `max`. |
-| `Inlary.EmptyQ`        | `bool <name>_EmptyQ(P&)`                        | variable     | `_n == 0`. |
-| `Inlary.AllocMem`      | `void* <name>_AllocMem(P&)`                     | variable     | Reserve next slot, return raw memory; NULL when full. |
-| `Inlary.Find`          | `T* <name>_Find(P&, Rowid t)`                   | always       | Bounded find; NULL if `t >= _n`. |
-| `Inlary.qFind`         | `T& <name>_qFind(P&, Rowid t)`                  | always       | Unchecked. |
-| `Inlary.Getary`        | `aryptr<T> <name>_Getary(P&)`                   | always       | Span over the active elements. |
-| `Inlary.Fill`          | `void <name>_Fill(P&, T value)`                 | fixed, copyable elements | Assign every slot. |
-| `Inlary.Setary`        | `void <name>_Setary(P&, aryptr<T> rhs)`         | variable     | Copy from aryptr. |
-| `Inlary.RemoveAll`     | `void <name>_RemoveAll(P&)`                     | variable     | Destruct each element, `_n = 0`. |
-| `Inlary.RemoveLast`    | `void <name>_RemoveLast(P&)`                    | variable     | Pop; no-op if empty. |
-| `Inlary.RowidFind`     | `<imrow helper>`                                | when `reflect:Y` | Reflection accessor. |
-| `Inlary.rowid_Get`     | `u64 <name>_rowid_Get(P&, T& elem)`             | always       | Index of `elem` within the array. |
-| `Inlary.Eq`            | `bool <name>_Eq(P&, P&)`                        | when elements comparable | Element-wise equality. |
-| `Inlary.Cmp`           | `i32 <name>_Cmp(P&, P&)`                        | when elements ordered | Lexicographic. |
-| `Inlary.curs`          | `<P>_<name>_curs` + accessors                   | always       | Forward cursor. |
-| `Inlary.ReadStrptrMaybe`| `bool <name>_ReadStrptrMaybe(P&, strptr)`      | when separator defined or arg is char/u8 | Parse into the array. |
+| Tfunc                    | Generated function                        | When emitted                             | Effect |
+| ------------------------ | ----------------------------------------- | ---------------------------------------- | ------ |
+| `Inlary.Init`            | `<name>_Init(P&)` (folded into parent)    | always                                   | Set `_n=0` (variable) or default-init each slot (fixed). |
+| `Inlary.Uninit`          | `<name>_Uninit(P&)`                       | always                                   | Destruct active elements. |
+| `Inlary.N`               | `i32 <name>_N(P&)`                        | always                                   | `_n` (variable) or `max` (fixed). |
+| `Inlary.Max`             | `i32 <name>_Max(P&)`                      | always                                   | `max`. |
+| `Inlary.EmptyQ`          | `bool <name>_EmptyQ(P&)`                  | variable                                 | `_n == 0`. |
+| `Inlary.AllocMem`        | `void* <name>_AllocMem(P&)`               | variable                                 | Reserve next slot, return raw memory; NULL when full. |
+| `Inlary.Find`            | `T* <name>_Find(P&, Rowid t)`             | always                                   | Bounded find; NULL if `t >= _n`. |
+| `Inlary.qFind`           | `T& <name>_qFind(P&, Rowid t)`            | always                                   | Unchecked. |
+| `Inlary.Getary`          | `aryptr<T> <name>_Getary(P&)`             | always                                   | Span over the active elements. |
+| `Inlary.Fill`            | `void <name>_Fill(P&, T value)`           | fixed, copyable elements                 | Assign every slot. |
+| `Inlary.Setary`          | `void <name>_Setary(P&, aryptr<T> rhs)`   | variable                                 | Copy from aryptr. |
+| `Inlary.RemoveAll`       | `void <name>_RemoveAll(P&)`               | variable                                 | Destruct each element, `_n = 0`. |
+| `Inlary.RemoveLast`      | `void <name>_RemoveLast(P&)`              | variable                                 | Pop; no-op if empty. |
+| `Inlary.RowidFind`       | `<imrow helper>`                          | when `reflect:Y`                         | Reflection accessor. |
+| `Inlary.rowid_Get`       | `u64 <name>_rowid_Get(P&, T& elem)`       | always                                   | Index of `elem` within the array. |
+| `Inlary.Eq`              | `bool <name>_Eq(P&, P&)`                  | when elements comparable                 | Element-wise equality. |
+| `Inlary.Cmp`             | `i32 <name>_Cmp(P&, P&)`                  | when elements ordered                    | Lexicographic. |
+| `Inlary.curs`            | `<P>_<name>_curs` + accessors             | always                                   | Forward cursor. |
+| `Inlary.ReadStrptrMaybe` | `bool <name>_ReadStrptrMaybe(P&, strptr)` | when separator defined or arg is char/u8 | Parse into the array. |
 
 Variable Inlary also gets the Pool family (`Alloc`,
 `AllocMaybe`, etc.) since it is `inst:Y` and `hasalloc:N` but

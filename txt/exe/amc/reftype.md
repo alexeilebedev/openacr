@@ -47,19 +47,19 @@ extreme case: eight prefixes select the eight list shapes, so renaming a
 field from `zs_` to `cd_` converts a zero-terminated singly-linked list
 into a circular doubly-linked one.
 
-|Prefix|Reftype|Required|Inferred|Meaning|
-|---|---|---|---|---|
-|`bh_`|[Bheap](/txt/exe/amc/reftype/Bheap.md)|Y|Y|Binary heap|
-|`c_`|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|Y|Y|Pointer array|
-|`c_`|[Delptr](/txt/exe/amc/reftype/Delptr.md)|N|N|Owned pointer; permitted, not required|
-|`c_`, `p_`|[Ptr](/txt/exe/amc/reftype/Ptr.md)|N|N|Pointer; permitted, not required|
-|`cd_`, `cdl_`, `cs_`, `csl_`, `zd_`, `zdl_`, `zs_`, `zsl_`|[Llist](/txt/exe/amc/reftype/Llist.md)|Y|Y|Circular or zero-terminated, doubly or singly linked, FIFO or LIFO|
-|`cnt_`|[Count](/txt/exe/amc/reftype/Count.md)|Y|Y|Count of items|
-|`ind_`|[Thash](/txt/exe/amc/reftype/Thash.md)|Y|Y|Hash index|
-|`ind_`|[Blkhash](/txt/exe/amc/reftype/Blkhash.md)|Y|N|Block hash index|
-|`p_`|[Upptr](/txt/exe/amc/reftype/Upptr.md)|Y|Y|Up-pointer|
-|`tr_`|[Atree](/txt/exe/amc/reftype/Atree.md)|Y|Y|AVL tree|
-|`zs_`|[ZSListMT](/txt/exe/amc/reftype/ZSListMT.md)|Y|N|Zero-terminated singly linked list with atomic head|
+| Prefix                                                     | Reftype                                      | Required | Inferred | Meaning |
+| ---------------------------------------------------------- | -------------------------------------------- | -------- | -------- | ------- |
+| `bh_`                                                      | [Bheap](/txt/exe/amc/reftype/Bheap.md)       | Y        | Y        | Binary heap |
+| `c_`                                                       | [Ptrary](/txt/exe/amc/reftype/Ptrary.md)     | Y        | Y        | Pointer array |
+| `c_`                                                       | [Delptr](/txt/exe/amc/reftype/Delptr.md)     | N        | N        | Owned pointer; permitted, not required |
+| `c_`, `p_`                                                 | [Ptr](/txt/exe/amc/reftype/Ptr.md)           | N        | N        | Pointer; permitted, not required |
+| `cd_`, `cdl_`, `cs_`, `csl_`, `zd_`, `zdl_`, `zs_`, `zsl_` | [Llist](/txt/exe/amc/reftype/Llist.md)       | Y        | Y        | Circular or zero-terminated, doubly or singly linked, FIFO or LIFO |
+| `cnt_`                                                     | [Count](/txt/exe/amc/reftype/Count.md)       | Y        | Y        | Count of items |
+| `ind_`                                                     | [Thash](/txt/exe/amc/reftype/Thash.md)       | Y        | Y        | Hash index |
+| `ind_`                                                     | [Blkhash](/txt/exe/amc/reftype/Blkhash.md)   | Y        | N        | Block hash index |
+| `p_`                                                       | [Upptr](/txt/exe/amc/reftype/Upptr.md)       | Y        | Y        | Up-pointer |
+| `tr_`                                                      | [Atree](/txt/exe/amc/reftype/Atree.md)       | Y        | Y        | AVL tree |
+| `zs_`                                                      | [ZSListMT](/txt/exe/amc/reftype/ZSListMT.md) | Y        | N        | Zero-terminated singly linked list with atomic head |
 
 Every other reftype places no constraint on the field name.  The live
 table is `acr fprefix`.
@@ -92,24 +92,24 @@ cursor, and `dflt:N` means the field must ask for it with a
 dmmeta.fcurs  fcurs:acr.FDb.zd_all_selrec/delcurs  comment:""
 ```
 
-|Cursor|Reftype|Default|What it walks|
-|---|---|---|---|
-|`curs`|[Atree](/txt/exe/amc/reftype/Atree.md)|Y|In-order traversal of the tree|
-|`curs`|[Bheap](/txt/exe/amc/reftype/Bheap.md)|Y|The heap in sorted order, through a helper heap; the heap is unchanged|
-|`unordcurs`|[Bheap](/txt/exe/amc/reftype/Bheap.md)|N|The underlying array, arbitrary order|
-|`fillcurs`|[Bheap](/txt/exe/amc/reftype/Bheap.md)|N|With a head: sorted order, promoting heap rows into the run; nothing else may walk the heap meanwhile|
-|`curs`|[Blkhash](/txt/exe/amc/reftype/Blkhash.md)|N|Each bucket's blocks, each block's occupied slots|
-|`curs`|[Inlary](/txt/exe/amc/reftype/Inlary.md)|Y|The inline elements in order|
-|`curs`|[Lary](/txt/exe/amc/reftype/Lary.md)|Y|Every level, in insertion order|
-|`curs`|[Llist](/txt/exe/amc/reftype/Llist.md)|Y|The list from head to tail|
-|`delcurs`|[Llist](/txt/exe/amc/reftype/Llist.md)|N|Same order, but the current row may be removed inside the loop|
-|`curs`|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|Y|The pointer array in order|
-|`oncecurs`|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|N|Drains the array: `Reset` captures the elements and empties it|
-|`curs`|[Tary](/txt/exe/amc/reftype/Tary.md)|Y|The array in order|
-|`curs`|[Thash](/txt/exe/amc/reftype/Thash.md)|N|Each bucket head-to-tail; no key order|
-|`curs`|[Trie](/txt/exe/amc/reftype/Trie.md)|N|The held values in key order|
-|`curs`|[Varlen](/txt/exe/amc/reftype/Varlen.md)|Y|The trailing array|
-|`bitcurs`|[Bitsets](/txt/exe/amc/bitset.md)|N|The indexes of the set bits|
+| Cursor      | Reftype                                    | Default | What it walks |
+| ----------- | ------------------------------------------ | ------- | ------------- |
+| `curs`      | [Atree](/txt/exe/amc/reftype/Atree.md)     | Y       | In-order traversal of the tree |
+| `curs`      | [Bheap](/txt/exe/amc/reftype/Bheap.md)     | Y       | The heap in sorted order, through a helper heap; the heap is unchanged |
+| `unordcurs` | [Bheap](/txt/exe/amc/reftype/Bheap.md)     | N       | The underlying array, arbitrary order |
+| `fillcurs`  | [Bheap](/txt/exe/amc/reftype/Bheap.md)     | N       | With a head: sorted order, promoting heap rows into the run; nothing else may walk the heap meanwhile |
+| `curs`      | [Blkhash](/txt/exe/amc/reftype/Blkhash.md) | N       | Each bucket's blocks, each block's occupied slots |
+| `curs`      | [Inlary](/txt/exe/amc/reftype/Inlary.md)   | Y       | The inline elements in order |
+| `curs`      | [Lary](/txt/exe/amc/reftype/Lary.md)       | Y       | Every level, in insertion order |
+| `curs`      | [Llist](/txt/exe/amc/reftype/Llist.md)     | Y       | The list from head to tail |
+| `delcurs`   | [Llist](/txt/exe/amc/reftype/Llist.md)     | N       | Same order, but the current row may be removed inside the loop |
+| `curs`      | [Ptrary](/txt/exe/amc/reftype/Ptrary.md)   | Y       | The pointer array in order |
+| `oncecurs`  | [Ptrary](/txt/exe/amc/reftype/Ptrary.md)   | N       | Drains the array: `Reset` captures the elements and empties it |
+| `curs`      | [Tary](/txt/exe/amc/reftype/Tary.md)       | Y       | The array in order |
+| `curs`      | [Thash](/txt/exe/amc/reftype/Thash.md)     | N       | Each bucket head-to-tail; no key order |
+| `curs`      | [Trie](/txt/exe/amc/reftype/Trie.md)       | N       | The held values in key order |
+| `curs`      | [Varlen](/txt/exe/amc/reftype/Varlen.md)   | Y       | The trailing array |
+| `bitcurs`   | [Bitsets](/txt/exe/amc/bitset.md)          | N       | The indexes of the set bits |
 
 The general rule for mutation inside a cursor loop is that you may not
 change the collection being walked; `delcurs` and `oncecurs` exist because
@@ -124,10 +124,10 @@ themselves are [amcdb.curstype](/txt/ssimdb/amcdb/README.md).
 ### Roots and infrastructure
 <a href="#roots-and-infrastructure"></a>
 
-|Reftype|One-line description|
-|---|---|
-|[Global](/txt/exe/amc/reftype/Global.md)|Global singleton — root of every access path in a process|
-|[Ctype](/txt/exe/amc/reftype/Ctype.md)|Embedded struct (composition); the field *is* a sub-record|
+| Reftype                                  | One-line description |
+| ---------------------------------------- | -------------------- |
+| [Global](/txt/exe/amc/reftype/Global.md) | Global singleton — root of every access path in a process |
+| [Ctype](/txt/exe/amc/reftype/Ctype.md)   | Embedded struct (composition); the field *is* a sub-record |
 
 ### Allocators
 <a href="#allocators"></a>
@@ -137,28 +137,28 @@ Pools that own memory and hand out records.  A pool is either a
 `dmmeta.basepool`.  See [Memory Pools](/txt/exe/amc/pool.md) for
 the overall allocator model.
 
-|Reftype|One-line description|
-|---|---|
-|[Malloc](/txt/exe/amc/reftype/Malloc.md)|Pass-through for libc `malloc` / `free` — base pool|
-|[Sbrk](/txt/exe/amc/reftype/Sbrk.md)|Bump-pointer allocator via `sbrk` / huge pages — base pool|
-|[Tpool](/txt/exe/amc/reftype/Tpool.md)|Singly-linked freelist; fixed-size, very fast, no return-to-OS|
-|[Lpool](/txt/exe/amc/reftype/Lpool.md)|36 Tpools, one per power-of-2 size class — varlen allocator|
-|[Blkpool](/txt/exe/amc/reftype/Blkpool.md)|Block allocator with refcount, suitable for FIFO message buffers|
-|[Lary](/txt/exe/amc/reftype/Lary.md)|Level array (36 doubling blocks) — append-only with permanent pointers|
-|[Delptr](/txt/exe/amc/reftype/Delptr.md)|Lazy single-element allocator — like Val but starts NULL|
+| Reftype                                    | One-line description |
+| ------------------------------------------ | -------------------- |
+| [Malloc](/txt/exe/amc/reftype/Malloc.md)   | Pass-through for libc `malloc` / `free` — base pool |
+| [Sbrk](/txt/exe/amc/reftype/Sbrk.md)       | Bump-pointer allocator via `sbrk` / huge pages — base pool |
+| [Tpool](/txt/exe/amc/reftype/Tpool.md)     | Singly-linked freelist; fixed-size, very fast, no return-to-OS |
+| [Lpool](/txt/exe/amc/reftype/Lpool.md)     | 36 Tpools, one per power-of-2 size class — varlen allocator |
+| [Blkpool](/txt/exe/amc/reftype/Blkpool.md) | Block allocator with refcount, suitable for FIFO message buffers |
+| [Lary](/txt/exe/amc/reftype/Lary.md)       | Level array (36 doubling blocks) — append-only with permanent pointers |
+| [Delptr](/txt/exe/amc/reftype/Delptr.md)   | Lazy single-element allocator — like Val but starts NULL |
 
 ### Inline and embedded data
 <a href="#inline-and-embedded-data"></a>
 
 Fields whose storage lives inside the parent struct.
 
-|Reftype|One-line description|
-|---|---|
-|[Inlary](/txt/exe/amc/reftype/Inlary.md)|Fixed-bounded inline array (`min`..`max` elements in the parent)|
-|[Tary](/txt/exe/amc/reftype/Tary.md)|Dynamic resizable array; one heap block, doubling growth, pointers invalidated on grow|
-|[Trie](/txt/exe/amc/reftype/Trie.md)|Values keyed by a dense integer in fixed 2^nbit-way nodes; grows a node at a time and never copies|
-|[Varlen](/txt/exe/amc/reftype/Varlen.md)|Variable-length array of fixed records appended to a parent — last field only|
-|[Opt](/txt/exe/amc/reftype/Opt.md)|Optional trailing struct occupying the rest of the allocated space|
+| Reftype                                  | One-line description |
+| ---------------------------------------- | -------------------- |
+| [Inlary](/txt/exe/amc/reftype/Inlary.md) | Fixed-bounded inline array (`min`..`max` elements in the parent) |
+| [Tary](/txt/exe/amc/reftype/Tary.md)     | Dynamic resizable array; one heap block, doubling growth, pointers invalidated on grow |
+| [Trie](/txt/exe/amc/reftype/Trie.md)     | Values keyed by a dense integer in fixed 2^nbit-way nodes; grows a node at a time and never copies |
+| [Varlen](/txt/exe/amc/reftype/Varlen.md) | Variable-length array of fixed records appended to a parent — last field only |
+| [Opt](/txt/exe/amc/reftype/Opt.md)       | Optional trailing struct occupying the rest of the allocated space |
 
 ### Cross-reference indexes
 <a href="#cross-reference-indexes"></a>
@@ -167,48 +167,48 @@ Indexes that maintain a relationship from one ctype to another.
 See [Cross-references (xref)](/txt/exe/amc/xref.md) for the
 relational model.
 
-|Reftype|One-line description|
-|---|---|
-|[Thash](/txt/exe/amc/reftype/Thash.md)|Hash index over Ptrary; linear or quadratic probing|
-|[Blkhash](/txt/exe/amc/reftype/Blkhash.md)|Block hash index for keys with a dense integer component|
-|[Atree](/txt/exe/amc/reftype/Atree.md)|AVL tree — ordered index with range queries|
-|[Bheap](/txt/exe/amc/reftype/Bheap.md)|Binary heap over Ptrary — min/max priority queue with O(log N) `Remove`, optionally with a sorted head|
-|[Ptrary](/txt/exe/amc/reftype/Ptrary.md)|Array of pointers; supports `unique` and `heaplike` membership tracking|
-|[Llist](/txt/exe/amc/reftype/Llist.md)|Doubly-linked list; circular, zero-terminated, or with-tail variants|
-|[ZSListMT](/txt/exe/amc/reftype/ZSListMT.md)|Lock-free single-producer/multi-consumer zero-terminated queue|
-|[Count](/txt/exe/amc/reftype/Count.md)|Cross-reference that only keeps a child count|
+| Reftype                                      | One-line description |
+| -------------------------------------------- | -------------------- |
+| [Thash](/txt/exe/amc/reftype/Thash.md)       | Hash index over Ptrary; linear or quadratic probing |
+| [Blkhash](/txt/exe/amc/reftype/Blkhash.md)   | Block hash index for keys with a dense integer component |
+| [Atree](/txt/exe/amc/reftype/Atree.md)       | AVL tree — ordered index with range queries |
+| [Bheap](/txt/exe/amc/reftype/Bheap.md)       | Binary heap over Ptrary — min/max priority queue with O(log N) `Remove`, optionally with a sorted head |
+| [Ptrary](/txt/exe/amc/reftype/Ptrary.md)     | Array of pointers; supports `unique` and `heaplike` membership tracking |
+| [Llist](/txt/exe/amc/reftype/Llist.md)       | Doubly-linked list; circular, zero-terminated, or with-tail variants |
+| [ZSListMT](/txt/exe/amc/reftype/ZSListMT.md) | Lock-free single-producer/multi-consumer zero-terminated queue |
+| [Count](/txt/exe/amc/reftype/Count.md)       | Cross-reference that only keeps a child count |
 
 ### References and pointers
 <a href="#references-and-pointers"></a>
 
-|Reftype|One-line description|
-|---|---|
-|[Ptr](/txt/exe/amc/reftype/Ptr.md)|Pointer set by a later xref insertion|
-|[Upptr](/txt/exe/amc/reftype/Upptr.md)|Pointer to a pre-existing record (up-tree)|
-|[Pkey](/txt/exe/amc/reftype/Pkey.md)|Primary-key reference — text key resolved to a record at load time|
-|[Base](/txt/exe/amc/reftype/Base.md)|Single-inheritance "is-a" base — incorporates parent fields|
+| Reftype                                | One-line description |
+| -------------------------------------- | -------------------- |
+| [Ptr](/txt/exe/amc/reftype/Ptr.md)     | Pointer set by a later xref insertion |
+| [Upptr](/txt/exe/amc/reftype/Upptr.md) | Pointer to a pre-existing record (up-tree) |
+| [Pkey](/txt/exe/amc/reftype/Pkey.md)   | Primary-key reference — text key resolved to a record at load time |
+| [Base](/txt/exe/amc/reftype/Base.md)   | Single-inheritance "is-a" base — incorporates parent fields |
 
 ### Value wrappers
 <a href="#value-wrappers"></a>
 
 Reftypes that wrap a plain value with extra behaviour.
 
-|Reftype|One-line description|
-|---|---|
-|[Val](/txt/exe/amc/reftype/Val.md)|Plain struct member — the simplest reftype|
-|[Alias](/txt/exe/amc/reftype/Alias.md)|Accessor over another field; no own storage|
-|[Bitfld](/txt/exe/amc/reftype/Bitfld.md)|Sub-byte field stored in the bits of another field|
-|[Smallstr](/txt/exe/amc/reftype/Smallstr.md)|Fixed-length padded or length-delimited string|
-|[Charset](/txt/exe/amc/reftype/Charset.md)|Set of characters, with `Match` accessor|
+| Reftype                                      | One-line description |
+| -------------------------------------------- | -------------------- |
+| [Val](/txt/exe/amc/reftype/Val.md)           | Plain struct member — the simplest reftype |
+| [Alias](/txt/exe/amc/reftype/Alias.md)       | Accessor over another field; no own storage |
+| [Bitfld](/txt/exe/amc/reftype/Bitfld.md)     | Sub-byte field stored in the bits of another field |
+| [Smallstr](/txt/exe/amc/reftype/Smallstr.md) | Fixed-length padded or length-delimited string |
+| [Charset](/txt/exe/amc/reftype/Charset.md)   | Set of characters, with `Match` accessor |
 
 ### Specialised values
 <a href="#specialised-values"></a>
 
-|Reftype|One-line description|
-|---|---|
-|[Hook](/txt/exe/amc/reftype/Hook.md)|Function pointer with up to 3 arities|
-|[Fbuf](/txt/exe/amc/reftype/Fbuf.md)|Byte buffer with epoll integration & message scanning|
-|[Regx](/txt/exe/amc/reftype/Regx.md)|Compiled regex; matches in-memory database records|
-|[RegxSql](/txt/exe/amc/reftype/RegxSql.md)|Pkey-style regex against a relational table (SQL form)|
-|[Exec](/txt/exe/amc/reftype/Exec.md)|Subprocess wrapper — exec/wait/kill on a child|
-|[Cppstack](/txt/exe/amc/reftype/Cppstack.md)|Stack-allocated pool — a name with no heap behind it|
+| Reftype                                      | One-line description |
+| -------------------------------------------- | -------------------- |
+| [Hook](/txt/exe/amc/reftype/Hook.md)         | Function pointer with up to 3 arities |
+| [Fbuf](/txt/exe/amc/reftype/Fbuf.md)         | Byte buffer with epoll integration & message scanning |
+| [Regx](/txt/exe/amc/reftype/Regx.md)         | Compiled regex; matches in-memory database records |
+| [RegxSql](/txt/exe/amc/reftype/RegxSql.md)   | Pkey-style regex against a relational table (SQL form) |
+| [Exec](/txt/exe/amc/reftype/Exec.md)         | Subprocess wrapper — exec/wait/kill on a child |
+| [Cppstack](/txt/exe/amc/reftype/Cppstack.md) | Stack-allocated pool — a name with no heap behind it |

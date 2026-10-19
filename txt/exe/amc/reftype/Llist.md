@@ -20,15 +20,15 @@ dmmeta.field  field:abt.FDb.zs_srcfile_read  arg:abt.FSrcfile  reftype:Llist  df
 Three orthogonal booleans in `dmmeta.listtype` produce eight
 named listtypes:
 
-| listtype | circular | haveprev | instail | shape                              |
-|----------|----------|----------|---------|------------------------------------|
+| listtype | circular | haveprev | instail | shape |
+| -------- | -------- | -------- | ------- | ----- |
 | `zs`     | N        | N        | Y       | Zero-terminated singly-linked queue (head→…→NULL, insert at tail) |
 | `zsl`    | N        | N        | N       | Zero-terminated singly-linked LIFO (head→…→NULL, push at head) |
 | `zd`     | N        | Y        | Y       | Zero-terminated doubly-linked queue |
 | `zdl`    | N        | Y        | N       | Zero-terminated doubly-linked LIFO |
 | `cs`     | Y        | N        | Y       | Circular singly-linked queue (tail→head) |
-| `csl`    | Y        | N        | N       | Circular singly-linked LIFO        |
-| `cd`     | Y        | Y        | Y       | Circular doubly-linked queue       |
+| `csl`    | Y        | N        | N       | Circular singly-linked LIFO |
+| `cd`     | Y        | Y        | Y       | Circular doubly-linked queue |
 | `cdl`    | Y        | Y        | N       | Circular doubly-linked LIFO (stack) |
 
 Reading the flags:
@@ -54,19 +54,19 @@ changed it into a circular doubly-linked queue.
 The list's own state goes into the **parent** ctype
 (see `tclass_Llist` in `cpp/amc/llist.cpp`):
 
-| Field (parent) | Type      | Always | Notes |
-|----------------|-----------|--------|-------|
-| `<name>_head`  | `T*`      | yes    | first element, NULL if empty |
-| `<name>_tail`  | `T*`      | when `dmmeta.llist.havetail:Y` | last element, kept in sync by Insert/Remove |
-| `<name>_n`     | `i32`     | when `dmmeta.llist.havecount:Y` | element count |
+| Field (parent) | Type  | Always                          | Notes |
+| -------------- | ----- | ------------------------------- | ----- |
+| `<name>_head`  | `T*`  | yes                             | first element, NULL if empty |
+| `<name>_tail`  | `T*`  | when `dmmeta.llist.havetail:Y`  | last element, kept in sync by Insert/Remove |
+| `<name>_n`     | `i32` | when `dmmeta.llist.havecount:Y` | element count |
 
 The link fields go into the **element** ctype (`field.p_arg`),
 named after the `xfname` (cross-reference field name):
 
-| Field (element)  | Type | Always       | Notes |
-|------------------|------|--------------|-------|
-| `<xfname>_next`  | `T*` | yes          | initialized to `(T*)-1` to mark "not in list"; NULL/head when in list |
-| `<xfname>_prev`  | `T*` | if `haveprev` | back link |
+| Field (element) | Type | Always        | Notes |
+| --------------- | ---- | ------------- | ----- |
+| `<xfname>_next` | `T*` | yes           | initialized to `(T*)-1` to mark "not in list"; NULL/head when in list |
+| `<xfname>_prev` | `T*` | if `haveprev` | back link |
 
 The sentinel `(T*)-1` in `next` distinguishes "not currently
 in this list" from "in the list at the tail" (where `next` is
@@ -105,27 +105,27 @@ Required:
 Source: `cpp/amc/llist.cpp`.  Some tfuncs are emitted
 conditionally — gated by `listtype.haveprev`, `havetail`, etc.
 
-| Tfunc                  | Generated function                                    | When emitted | Effect |
-|------------------------|-------------------------------------------------------|--------------|--------|
-| `Llist.Init`           | `<name>_Init(P&)` (macro)                             | always       | NULL out head/tail/n; mark every element's `next` as not-in-list (via the element ctype's own `Init`). |
-| `Llist.EmptyQ`         | `bool <name>_EmptyQ(P&)`                              | always       | `head == NULL`. |
-| `Llist.N`              | `i32 <name>_N(const P&)`                              | `havecount:Y`| Stored counter. |
-| `Llist.First`          | `T* <name>_First(P&)`                                 | always       | Pointer to head; NULL if empty. |
-| `Llist.Last`           | `T* <name>_Last(P&)`                                  | `havetail:Y` OR circular+`haveprev` | Pointer to last element; NULL if empty. |
-| `Llist.qLast`          | `T& <name>_qLast(P&)`                                 | always       | Reference to last — no bounds check. |
-| `Llist.Next`           | `T* <xfname>_Next(T& row)`                            | always       | Follow `next` link. |
-| `Llist.Prev`           | `T* <xfname>_Prev(T& row)`                            | `haveprev:Y` | Follow `prev` link. |
-| `Llist.InLlistQ`       | `bool <xfname>_InLlistQ(T& row)`                      | always       | `row.<xfname>_next != (T*)-1`. |
-| `Llist.Insert`         | `void <name>_Insert(P&, T& row)`                      | always       | Add `row`.  `instail:Y` appends; `instail:N` pushes at head.  No-op if already in list. |
-| `Llist.InsertBefore`   | `void <name>_InsertBefore(P&, T& row, T* before)`      | doubly-linked | Insert `row` ahead of `before`; a NULL `before` appends at the tail. |
-| `Llist.Remove`         | `void <name>_Remove(P&, T& row)`                      | always       | Remove `row` from the list. O(1) if `haveprev:Y`; otherwise O(n). No-op if not in list. |
-| `Llist.RemoveFirst`    | `T* <name>_RemoveFirst(P&)`                           | always       | Unlink and return head; NULL if empty. |
-| `Llist.RemoveAll`      | `void <name>_RemoveAll(P&)`                           | always       | Unlink every element (clear `next`/`prev`), reset head/tail/n. |
-| `Llist.RotateFirst`    | `T* <name>_RotateFirst(P&)`                           | circular only| Return head, then advance head to `head->next` — round-robin. |
-| `Llist.Cascdel`        | (private)                                             | `cascdel:Y` on the xref | Called by row's `Delete`; pops first, deletes it, repeats. |
-| `Llist.DestructiveFirst`| Reserved                                             | always       | Marker tfunc (no body) — reserved for atomic-pop variants. |
-| `Llist.curs`           | `<P>_<name>_curs` + `_Reset/_ValidQ/_Next/_Access`    | always       | Forward cursor used by `ind_beg`. |
-| `Llist.delcurs`        | `<P>_<name>_delcurs` + ...                            | `dmmeta.fcurs` | "Delete cursor" — safe to call `_Remove` on the current row inside the loop.  Opt-in, see [cursors](/txt/exe/amc/reftype.md#cursors). |
+| Tfunc                    | Generated function                                 | When emitted                        | Effect |
+| ------------------------ | -------------------------------------------------- | ----------------------------------- | ------ |
+| `Llist.Init`             | `<name>_Init(P&)` (macro)                          | always                              | NULL out head/tail/n; mark every element's `next` as not-in-list (via the element ctype's own `Init`). |
+| `Llist.EmptyQ`           | `bool <name>_EmptyQ(P&)`                           | always                              | `head == NULL`. |
+| `Llist.N`                | `i32 <name>_N(const P&)`                           | `havecount:Y`                       | Stored counter. |
+| `Llist.First`            | `T* <name>_First(P&)`                              | always                              | Pointer to head; NULL if empty. |
+| `Llist.Last`             | `T* <name>_Last(P&)`                               | `havetail:Y` OR circular+`haveprev` | Pointer to last element; NULL if empty. |
+| `Llist.qLast`            | `T& <name>_qLast(P&)`                              | always                              | Reference to last — no bounds check. |
+| `Llist.Next`             | `T* <xfname>_Next(T& row)`                         | always                              | Follow `next` link. |
+| `Llist.Prev`             | `T* <xfname>_Prev(T& row)`                         | `haveprev:Y`                        | Follow `prev` link. |
+| `Llist.InLlistQ`         | `bool <xfname>_InLlistQ(T& row)`                   | always                              | `row.<xfname>_next != (T*)-1`. |
+| `Llist.Insert`           | `void <name>_Insert(P&, T& row)`                   | always                              | Add `row`.  `instail:Y` appends; `instail:N` pushes at head.  No-op if already in list. |
+| `Llist.InsertBefore`     | `void <name>_InsertBefore(P&, T& row, T* before)`  | doubly-linked                       | Insert `row` ahead of `before`; a NULL `before` appends at the tail. |
+| `Llist.Remove`           | `void <name>_Remove(P&, T& row)`                   | always                              | Remove `row` from the list. O(1) if `haveprev:Y`; otherwise O(n). No-op if not in list. |
+| `Llist.RemoveFirst`      | `T* <name>_RemoveFirst(P&)`                        | always                              | Unlink and return head; NULL if empty. |
+| `Llist.RemoveAll`        | `void <name>_RemoveAll(P&)`                        | always                              | Unlink every element (clear `next`/`prev`), reset head/tail/n. |
+| `Llist.RotateFirst`      | `T* <name>_RotateFirst(P&)`                        | circular only                       | Return head, then advance head to `head->next` — round-robin. |
+| `Llist.Cascdel`          | (private)                                          | `cascdel:Y` on the xref             | Called by row's `Delete`; pops first, deletes it, repeats. |
+| `Llist.DestructiveFirst` | Reserved                                           | always                              | Marker tfunc (no body) — reserved for atomic-pop variants. |
+| `Llist.curs`             | `<P>_<name>_curs` + `_Reset/_ValidQ/_Next/_Access` | always                              | Forward cursor used by `ind_beg`. |
+| `Llist.delcurs`          | `<P>_<name>_delcurs` + ...                         | `dmmeta.fcurs`                      | "Delete cursor" — safe to call `_Remove` on the current row inside the loop.  Opt-in, see [cursors](/txt/exe/amc/reftype.md#cursors). |
 
 ### Memory model
 <a href="#memory-model"></a>

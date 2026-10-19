@@ -132,6 +132,22 @@ enum algo_FileFlagsEnum {                // algo.FileFlags.value
 enum { algo_FileFlagsEnum_N = 8 };
 
 
+// --- algo_FldtypeEnum
+
+enum algo_FldtypeEnum {            // algo.Fldtype.value
+     algo_Fldtype_fixed      = 0   // A scalar or array of arg: width bytes at offset, little-endian
+    ,algo_Fldtype_fixed_be   = 1   // A scalar of arg: width bytes at offset, big-endian
+    ,algo_Fldtype_rpascal    = 2   // An inline string of width bytes at offset, its length in the last byte
+    ,algo_Fldtype_rightpad   = 3   // An inline string of width bytes at offset, padded on the right with byte aux
+    ,algo_Fldtype_varlen     = 5   // Varlen area at offset, from the end field at width (0: its start) to the message end
+    ,algo_Fldtype_varlen2    = 6   // Varlen area at offset, from the end field at width (0: its start) to the end field at aux
+    ,algo_Fldtype_cppfunc    = 7   // A computed field, read by its getter, which a reader of the row knows by name
+    ,algo_Fldtype_leftpad    = 4   // An inline string of width bytes at offset, padded on the left with byte aux
+};
+
+enum { algo_FldtypeEnum_N = 8 };
+
+
 // --- algo_IOEvtFlagsEnum
 
 enum algo_IOEvtFlagsEnum {           // algo.IOEvtFlags.value
@@ -255,6 +271,7 @@ namespace algo { struct FailokQ; }
 namespace algo { struct FieldId; }
 namespace algo { struct Fildes; }
 namespace algo { struct FileFlags; }
+namespace algo { struct Fldtype; }
 namespace algo { struct I32Dec1; }
 namespace algo { struct I32Dec2; }
 namespace algo { struct I32Dec3; }
@@ -1653,6 +1670,68 @@ inline void          FileFlags_Init(algo::FileFlags& parent);
 void                 FileFlags_Print(algo::FileFlags row, algo::cstring& str) __attribute__((nothrow));
 // func:algo.FileFlags..GetAnon
 algo::strptr         FileFlags_GetAnon(algo::FileFlags &parent, i32 idx) __attribute__((nothrow));
+
+// --- algo.Fldtype
+#pragma pack(push,1)
+struct Fldtype { // algo.Fldtype: How a message field's bytes are laid out, and so how to extract it
+    u8   value;   //   0
+    // func:algo.Fldtype..EqOp
+    inline bool          operator ==(const algo::Fldtype &rhs) const __attribute__((nothrow));
+    // func:algo.Fldtype..NeOp
+    inline bool          operator !=(const algo::Fldtype &rhs) const __attribute__((nothrow));
+    // define enum comparison operator to avoid ambiguity
+    // func:algo.Fldtype..EqEnum
+    inline bool          operator ==(algo_FldtypeEnum rhs) const __attribute__((nothrow));
+    // func:algo.Fldtype..Ctor
+    inline               Fldtype() __attribute__((nothrow));
+    // func:algo.Fldtype..FieldwiseCtor
+    explicit inline               Fldtype(u8 in_value) __attribute__((nothrow));
+    // func:algo.Fldtype..EnumCtor
+    inline               Fldtype(algo_FldtypeEnum arg) __attribute__((nothrow));
+};
+#pragma pack(pop)
+// Get value of field as enum type
+// func:algo.Fldtype.value.GetEnum
+inline algo_FldtypeEnum value_GetEnum(const algo::Fldtype& parent) __attribute__((nothrow));
+// Set value of field from enum type.
+// func:algo.Fldtype.value.SetEnum
+inline void          value_SetEnum(algo::Fldtype& parent, algo_FldtypeEnum rhs) __attribute__((nothrow));
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+// func:algo.Fldtype.value.ToCstr
+const char*          value_ToCstr(const algo::Fldtype& parent) __attribute__((nothrow));
+// Convert value to a string. First, attempt conversion to a known string.
+// If no string matches, print value as a numeric value.
+// func:algo.Fldtype.value.Print
+void                 value_Print(const algo::Fldtype& parent, algo::cstring &lhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+// func:algo.Fldtype.value.SetStrptrMaybe
+bool                 value_SetStrptrMaybe(algo::Fldtype& parent, algo::strptr rhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+// func:algo.Fldtype.value.SetStrptr
+void                 value_SetStrptr(algo::Fldtype& parent, algo::strptr rhs, algo_FldtypeEnum dflt) __attribute__((nothrow));
+// Convert string to field. Return success value
+// func:algo.Fldtype.value.ReadStrptrMaybe
+bool                 value_ReadStrptrMaybe(algo::Fldtype& parent, algo::strptr rhs) __attribute__((nothrow));
+
+// Read fields of algo::Fldtype from an ascii string.
+// The format of the string is the format of the algo::Fldtype's only field
+// func:algo.Fldtype..ReadStrptrMaybe
+bool                 Fldtype_ReadStrptrMaybe(algo::Fldtype &parent, algo::strptr in_str) __attribute__((nothrow));
+// func:algo.Fldtype..Cmp
+inline i32           Fldtype_Cmp(algo::Fldtype lhs, algo::Fldtype rhs) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:algo.Fldtype..Init
+inline void          Fldtype_Init(algo::Fldtype& parent);
+// func:algo.Fldtype..Eq
+inline bool          Fldtype_Eq(algo::Fldtype lhs, algo::Fldtype rhs) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:algo.Fldtype.String  printfmt:Raw
+// func:algo.Fldtype..Print
+void                 Fldtype_Print(algo::Fldtype row, algo::cstring& str) __attribute__((nothrow));
 
 // --- algo.I32Dec1
 struct I32Dec1 { // algo.I32Dec1: signed i32, scale 1e1
@@ -6171,7 +6250,7 @@ void                 format_SetStrptr(algo::MsgFmt& parent, algo::strptr rhs, al
 
 // Invoke function by pointer
 // func:algo.MsgFmt.h_convert.Call
-inline void          h_convert_Call(algo::MsgFmt& parent, algo::MsgFmt& arg) __attribute__((nothrow));
+inline void          h_convert_Call(algo::MsgFmt& parent, algo::MsgFmt& arg);
 // Assign 0-argument hook with no context pointer
 // func:algo.MsgFmt.h_convert.Set0
 inline void          h_convert_Set0(algo::MsgFmt& parent, void (*fcn)() ) __attribute__((nothrow));
@@ -12137,6 +12216,7 @@ inline bool          Smallstr20_Update(algo::Smallstr20 &lhs, algo::Smallstr20& 
 void                 Smallstr20_Print(algo::Smallstr20& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- algo.Smallstr200
+#pragma pack(push,1)
 struct Smallstr200 { // algo.Smallstr200: inline string with length field
     enum { ch_max = 200 };
     u8 ch[200+1];
@@ -12162,6 +12242,7 @@ struct Smallstr200 { // algo.Smallstr200: inline string with length field
     // func:algo.Smallstr200..CopyCtor
     inline               Smallstr200(const algo::Smallstr200 &rhs) __attribute__((nothrow));
 };
+#pragma pack(pop)
 // Append character to string.
 // If there is no space for an extra character, do nothing.
 // func:algo.Smallstr200.ch.Add
@@ -15030,6 +15111,7 @@ inline algo::cstring &operator <<(algo::cstring &str, const algo::FailokQ &row);
 inline algo::cstring &operator <<(algo::cstring &str, const algo::FieldId &row);// cfmt:algo.FieldId.String
 inline algo::cstring &operator <<(algo::cstring &str, const algo::Fildes &row);// cfmt:algo.Fildes.String
 inline algo::cstring &operator <<(algo::cstring &str, const algo::FileFlags &row);// cfmt:algo.FileFlags.String
+inline algo::cstring &operator <<(algo::cstring &str, const algo::Fldtype &row);// cfmt:algo.Fldtype.String
 inline algo::cstring &operator <<(algo::cstring &str, const algo::I32Dec1 &row);// cfmt:algo.I32Dec1.String
 inline algo::cstring &operator <<(algo::cstring &str, const algo::I32Dec2 &row);// cfmt:algo.I32Dec2.String
 inline algo::cstring &operator <<(algo::cstring &str, const algo::I32Dec3 &row);// cfmt:algo.I32Dec3.String

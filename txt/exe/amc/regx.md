@@ -27,12 +27,12 @@ dmmeta.field   field:command.abt.target  arg:dev.Target  reftype:RegxSql  dflt:"
 
 Four regxtypes are listed in `amcdb.regxtype`:
 
-| `regxtype` | Wildcards / specials                                  | Use case                                      |
-|------------|-------------------------------------------------------|------------------------------------------------|
-| `Sql`      | `%` = any string, `_` = any char; escape with `\\`   | acr queries, pkey patterns, `-target:abt%`     |
-| `Acr`      | Full regex syntax with attribute matching (extended) | acr's `-where:key:value` clauses               |
-| `Shell`    | Shell-style globs (`*`, `?`, `[abc]`)                 | File-path matchers                             |
-| `""` (Normal) | POSIX-ish regex (`.`, `*`, `+`, `[]`, `^`, `$`)    | Free-form text scanning                        |
+| `regxtype`    | Wildcards / specials                                 | Use case |
+| ------------- | ---------------------------------------------------- | -------- |
+| `Sql`         | `%` = any string, `_` = any char; escape with `\\`   | acr queries, pkey patterns, `-target:abt%` |
+| `Acr`         | Full regex syntax with attribute matching (extended) | acr's `-where:key:value` clauses |
+| `Shell`       | Shell-style globs (`*`, `?`, `[abc]`)                | File-path matchers |
+| `""` (Normal) | POSIX-ish regex (`.`, `*`, `+`, `[]`, `^`, `$`)      | Free-form text scanning |
 
 amc generates the same C++ shape for all four — only the
 parser used at `_Init` / `_ReadStrptrMaybe` time differs.
@@ -42,12 +42,12 @@ encoded inside the compiled state.
 ### Ssim inputs
 <a href="#ssim-inputs"></a>
 
-| Record       | Role |
-|--------------|------|
+| Record                                                  | Role |
+| ------------------------------------------------------- | ---- |
 | `dmmeta.field` with `reftype:Regx` or `reftype:RegxSql` | Declares the field. |
 | `dmmeta.fregx field:<full> regxtype:<kind> partial:Y/N` | Required for every Regx field. |
-| `dmmeta.fregx.regxtype` | One of the four flavors. |
-| `dmmeta.fregx.partial`  | `Y` = match anywhere in the input; `N` = anchor to the whole input. |
+| `dmmeta.fregx.regxtype`                                 | One of the four flavors. |
+| `dmmeta.fregx.partial`                                  | `Y` = match anywhere in the input; `N` = anchor to the whole input. |
 
 [RegxSql](/txt/exe/amc/reftype/RegxSql.md) is shorthand for
 `reftype:Regx + regxtype:Sql` with a hard requirement that
@@ -164,8 +164,8 @@ dmmeta.field   field:foo.Cfg.namepat  arg:algo.Regx  reftype:Regx
 
 Match results vary based on the regxtype:
 
-| Pattern | Sql matches             | Acr matches             | Normal matches             | Shell matches            |
-|---------|-------------------------|-------------------------|----------------------------|--------------------------|
-| `abt%`  | starts-with abt         | starts-with abt + attr  | literal `abt%`             | starts-with abt          |
-| `abt*`  | literal `abt*`          | literal `abt*`          | `abt` followed by any 0+   | starts-with abt          |
-| `a.b`   | literal `a.b`           | (attribute notation)    | `a` + any + `b`            | literal `a.b`            |
+| Pattern | Sql matches     | Acr matches            | Normal matches           | Shell matches |
+| ------- | --------------- | ---------------------- | ------------------------ | ------------- |
+| `abt%`  | starts-with abt | starts-with abt + attr | literal `abt%`           | starts-with abt |
+| `abt*`  | literal `abt*`  | literal `abt*`         | `abt` followed by any 0+ | starts-with abt |
+| `a.b`   | literal `a.b`   | (attribute notation)   | `a` + any + `b`          | literal `a.b` |

@@ -38,11 +38,11 @@ amc just changes how it locates the element.
 ### Single-value vs array bitsets
 <a href="#single-value-vs-array-bitsets"></a>
 
-| Storage         | `_N` returns | `_qFind(i)` |
-|-----------------|--------------|-------------|
-| Single int (`Val u32` etc.) | 1            | the integer itself |
+| Storage                     | `_N` returns       | `_qFind(i)` |
+| --------------------------- | ------------------ | ----------- |
+| Single int (`Val u32` etc.) | 1                  | the integer itself |
 | `Inlary<N>` of int          | `N` (compile-time) | element `i` |
-| `Tary` of int               | `<name>_n`   | element `i` |
+| `Tary` of int               | `<name>_n`         | element `i` |
 
 For single-value bitsets, amc also emits a trivial `_N` and
 `_qFind` so the rest of the bit-access functions can be
@@ -68,51 +68,51 @@ Source: `cpp/amc/bitset.cpp`.
 #### Sizing
 <a href="#sizing"></a>
 
-| Tfunc                | Generated function                          | Effect |
-|----------------------|---------------------------------------------|--------|
-| `Bitset.N`           | `int <name>_N(P&)`                          | Element count.  For Val: 1. |
-| `Bitset.NBits`       | `int <name>_Nbits(P&)`                      | `_N() * elem_bits` — total capacity. |
-| `Bitset.Sup`         | `int <name>_Sup(P&)`                        | One past the highest set bit (i.e., enough to enumerate all 1s).  Useful for tight loops. |
+| Tfunc          | Generated function     | Effect |
+| -------------- | ---------------------- | ------ |
+| `Bitset.N`     | `int <name>_N(P&)`     | Element count.  For Val: 1. |
+| `Bitset.NBits` | `int <name>_Nbits(P&)` | `_N() * elem_bits` — total capacity. |
+| `Bitset.Sup`   | `int <name>_Sup(P&)`   | One past the highest set bit (i.e., enough to enumerate all 1s).  Useful for tight loops. |
 
 #### Bit-level get / set
 <a href="#bit-level-get-set"></a>
 
-| Tfunc                | Generated function                              | Effect |
-|----------------------|-------------------------------------------------|--------|
-| `Bitset.qGetBit`     | `bool <name>_qGetBit(P&, u32 bit_idx)`          | Unchecked get. |
-| `Bitset.GetBit`      | `bool <name>_GetBit(P&, u32 bit_idx)`           | Bounds-checked get; out-of-range returns false. |
-| `Bitset.qSetBit`     | `void <name>_qSetBit(P&, u32 bit_idx)`          | Unchecked set-to-1. |
-| `Bitset.SetBit`      | `void <name>_SetBit(P&, u32 bit_idx)`           | Bounds-checked set; out-of-range is a no-op (or auto-extends — see `ExpandBits`). |
-| `Bitset.qClearBit`   | `void <name>_qClearBit(P&, u32 bit_idx)`        | Unchecked set-to-0. |
-| `Bitset.ClearBit`    | `void <name>_ClearBit(P&, u32 bit_idx)`         | Bounds-checked clear. |
-| `Bitset.qSetBitVal`  | `void <name>_qSetBitVal(P&, u32 bit_idx, bool v)` | Conditional set; same shift+mask logic as qSetBit. |
-| `Bitset.qOrBitVal`   | `void <name>_qOrBitVal(P&, u32 bit_idx, bool v)` | OR a value in (sets if `v`, leaves alone otherwise). |
+| Tfunc               | Generated function                                | Effect |
+| ------------------- | ------------------------------------------------- | ------ |
+| `Bitset.qGetBit`    | `bool <name>_qGetBit(P&, u32 bit_idx)`            | Unchecked get. |
+| `Bitset.GetBit`     | `bool <name>_GetBit(P&, u32 bit_idx)`             | Bounds-checked get; out-of-range returns false. |
+| `Bitset.qSetBit`    | `void <name>_qSetBit(P&, u32 bit_idx)`            | Unchecked set-to-1. |
+| `Bitset.SetBit`     | `void <name>_SetBit(P&, u32 bit_idx)`             | Bounds-checked set; out-of-range is a no-op (or auto-extends — see `ExpandBits`). |
+| `Bitset.qClearBit`  | `void <name>_qClearBit(P&, u32 bit_idx)`          | Unchecked set-to-0. |
+| `Bitset.ClearBit`   | `void <name>_ClearBit(P&, u32 bit_idx)`           | Bounds-checked clear. |
+| `Bitset.qSetBitVal` | `void <name>_qSetBitVal(P&, u32 bit_idx, bool v)` | Conditional set; same shift+mask logic as qSetBit. |
+| `Bitset.qOrBitVal`  | `void <name>_qOrBitVal(P&, u32 bit_idx, bool v)`  | OR a value in (sets if `v`, leaves alone otherwise). |
 
 #### Whole-bitset ops
 <a href="#whole-bitset-ops"></a>
 
-| Tfunc                | Generated function                          | Effect |
-|----------------------|---------------------------------------------|--------|
-| `Bitset.BitsEmptyQ`  | `bool <name>_BitsEmptyQ(P&)`                | All bits are 0. |
-| `Bitset.Sum1s`       | `int <name>_Sum1s(P&)`                      | Population count (`__builtin_popcountll` per element). |
-| `Bitset.ClearBitsAll`| `void <name>_ClearBitsAll(P&)`              | Zero every element. |
-| `Bitset.ClearBits`   | `void <name>_ClearBits(P&, P& rhs)`         | `parent &= ~rhs` element-wise. |
-| `Bitset.OrBits`      | `void <name>_OrBits(P&, P& rhs)`            | `parent |= rhs` element-wise. |
+| Tfunc                 | Generated function                  | Effect                                                 |
+| --------------------- | ----------------------------------- | ------------------------------------------------------ |
+| `Bitset.BitsEmptyQ`   | `bool <name>_BitsEmptyQ(P&)`        | All bits are 0.                                        |
+| `Bitset.Sum1s`        | `int <name>_Sum1s(P&)`              | Population count (`__builtin_popcountll` per element). |
+| `Bitset.ClearBitsAll` | `void <name>_ClearBitsAll(P&)`      | Zero every element.                                    |
+| `Bitset.ClearBits`    | `void <name>_ClearBits(P&, P& rhs)` | `parent &= ~rhs` element-wise.                         |
+| `Bitset.OrBits`       | `void <name>_OrBits(P&, P& rhs)`    | `parent                                                | = rhs` element-wise. |
 
 #### Capacity management (Tary backings only)
 <a href="#capacity-management-tary-backings-only-"></a>
 
-| Tfunc                | Generated function                          | Effect |
-|----------------------|---------------------------------------------|--------|
-| `Bitset.ExpandBits`  | `void <name>_ExpandBits(P&, u32 bit_idx)`   | Grow the Tary so the indicated bit is in range; fills new elements with zeros. |
-| `Bitset.AllocBit`    | `int <name>_AllocBit(P&)`                   | Find the lowest 0 bit, set it, return its index.  Extends the array if no 0 bit exists. |
+| Tfunc               | Generated function                        | Effect |
+| ------------------- | ----------------------------------------- | ------ |
+| `Bitset.ExpandBits` | `void <name>_ExpandBits(P&, u32 bit_idx)` | Grow the Tary so the indicated bit is in range; fills new elements with zeros. |
+| `Bitset.AllocBit`   | `int <name>_AllocBit(P&)`                 | Find the lowest 0 bit, set it, return its index.  Extends the array if no 0 bit exists. |
 
 #### Iteration
 <a href="#iteration"></a>
 
-| Tfunc                | Generated function                          | Effect |
-|----------------------|---------------------------------------------|--------|
-| `Bitset.bitcurs`     | `<P>_<name>_bitcurs` cursor + `_Reset/_ValidQ/_Next/_Access` | Walk the 1-bits in order.  Uses `BitScanForward` on each non-zero word — skips runs of zeros without testing each bit. |
+| Tfunc            | Generated function                                           | Effect |
+| ---------------- | ------------------------------------------------------------ | ------ |
+| `Bitset.bitcurs` | `<P>_<name>_bitcurs` cursor + `_Reset/_ValidQ/_Next/_Access` | Walk the 1-bits in order.  Uses `BitScanForward` on each non-zero word — skips runs of zeros without testing each bit. |
 
 ### Pitfalls
 <a href="#pitfalls"></a>

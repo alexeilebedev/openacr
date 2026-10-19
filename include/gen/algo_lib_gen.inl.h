@@ -1173,11 +1173,6 @@ inline bool algo_lib::BashQuotesafeQ(u32 ch) {
     return ch_GetBit(_db.BashQuotesafe, ch);
 }
 
-// --- algo_lib.FDb.RegxSqlSpecial.Match
-inline bool algo_lib::RegxSqlSpecialQ(u32 ch) {
-    return ch_GetBit(_db.RegxSqlSpecial, ch);
-}
-
 // --- algo_lib.FDb.SsimBreakName.Match
 inline bool algo_lib::SsimBreakNameQ(u32 ch) {
     return ch_GetBit(_db.SsimBreakName, ch);

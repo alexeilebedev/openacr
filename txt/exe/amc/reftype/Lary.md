@@ -20,10 +20,10 @@ dmmeta.field  field:ssim2mysql.FDb.ctype  arg:ssim2mysql.FCtype  reftype:Lary  d
 Two storage fields are inserted into the parent ctype
 (see `tclass_Lary` in `cpp/amc/lary.cpp`):
 
-| Field            | C++ type    | Meaning                                          |
-|------------------|-------------|--------------------------------------------------|
-| `<name>_lary[36]`| `T*[36]`    | 36 level pointers — `lary[k]` points to a block of `2^k` elements |
-| `<name>_n`       | `i64`       | total number of elements across all levels       |
+| Field             | C++ type | Meaning |
+| ----------------- | -------- | ------- |
+| `<name>_lary[36]` | `T*[36]` | 36 level pointers — `lary[k]` points to a block of `2^k` elements |
+| `<name>_n`        | `i64`    | total number of elements across all levels |
 
 Level `k` holds at most `2^k` elements.  Level 0 has 1 slot,
 level 1 has 2 slots, …, level 35 has 2^35 slots, for a hard
@@ -95,33 +95,33 @@ hard-coded in amc.
 
 Lary's own tfuncs (declared in `cpp/amc/lary.cpp`):
 
-| Tfunc            | Generated function                              | Effect |
-|------------------|-------------------------------------------------|--------|
-| `Lary.Init`      | `<name>_Init(P&)` (macro)                       | Zero `_n` and `_lary[]`, preallocate first 4 levels. |
-| `Lary.Uninit`    | `<name>_Uninit(P&)` (macro)                     | Destruct each element, then free every non-NULL `lary[k]`. |
-| `Lary.AllocMem`  | `void* <name>_AllocMem(P&)`                     | Reserve one slot, return raw memory (no constructor). Returns NULL on OOM. |
-| `Lary.N`         | `i64 <name>_N(const P&)`                        | Element count. |
-| `Lary.EmptyQ`    | `bool <name>_EmptyQ(P&)`                        | `_n == 0`. |
-| `Lary.Find`      | `T* <name>_Find(P&, Rowid t)`                   | Bounded find; NULL if `t >= _n`.  Inline; one `BitScanReverse`. |
-| `Lary.qFind`     | `T& <name>_qFind(P&, Rowid t)`                  | "Quick" find — no bounds check. |
-| `Lary.Last`      | `T* <name>_Last(P&)`                            | Pointer to last element, or NULL if empty. |
-| `Lary.RemoveAll` | `void <name>_RemoveAll(P&)`                     | Destruct every element, set `_n=0`.  Keeps level blocks. |
-| `Lary.RemoveLast`| `void <name>_RemoveLast(P&)`                    | Destruct last element, decrement `_n`.  No-op if empty. |
-| `Lary.RowidFind` | Internal `ImrowPtr` helper for reflection       | Only emitted if `field.reflect` is set. |
-| `Lary.curs`      | `<P>_<name>_curs` + `_Reset/_ValidQ/_Next/_Access` | Forward cursor used by `ind_beg`. |
+| Tfunc             | Generated function                                 | Effect |
+| ----------------- | -------------------------------------------------- | ------ |
+| `Lary.Init`       | `<name>_Init(P&)` (macro)                          | Zero `_n` and `_lary[]`, preallocate first 4 levels. |
+| `Lary.Uninit`     | `<name>_Uninit(P&)` (macro)                        | Destruct each element, then free every non-NULL `lary[k]`. |
+| `Lary.AllocMem`   | `void* <name>_AllocMem(P&)`                        | Reserve one slot, return raw memory (no constructor). Returns NULL on OOM. |
+| `Lary.N`          | `i64 <name>_N(const P&)`                           | Element count. |
+| `Lary.EmptyQ`     | `bool <name>_EmptyQ(P&)`                           | `_n == 0`. |
+| `Lary.Find`       | `T* <name>_Find(P&, Rowid t)`                      | Bounded find; NULL if `t >= _n`.  Inline; one `BitScanReverse`. |
+| `Lary.qFind`      | `T& <name>_qFind(P&, Rowid t)`                     | "Quick" find — no bounds check. |
+| `Lary.Last`       | `T* <name>_Last(P&)`                               | Pointer to last element, or NULL if empty. |
+| `Lary.RemoveAll`  | `void <name>_RemoveAll(P&)`                        | Destruct every element, set `_n=0`.  Keeps level blocks. |
+| `Lary.RemoveLast` | `void <name>_RemoveLast(P&)`                       | Destruct last element, decrement `_n`.  No-op if empty. |
+| `Lary.RowidFind`  | Internal `ImrowPtr` helper for reflection          | Only emitted if `field.reflect` is set. |
+| `Lary.curs`       | `<P>_<name>_curs` + `_Reset/_ValidQ/_Next/_Access` | Forward cursor used by `ind_beg`. |
 
 Because the **Pool** tclass is also instantiated, the field
 additionally gets:
 
-| Tfunc                    | Generated function                                    | Effect |
-|--------------------------|-------------------------------------------------------|--------|
-| `Pool.Alloc`             | `T& <name>_Alloc()`                                   | Allocate one default-constructed element. Kills process on OOM. |
-| `Pool.AllocMaybe`        | `T* <name>_AllocMaybe()`                              | Same, returning NULL on OOM. |
-| `Pool.InsertMaybe`       | `T* <name>_InsertMaybe(const T& value)`               | Allocate + assign from value + XrefMaybe. |
-| `Pool.UpdateMaybe`       | `T* <name>_UpdateMaybe(const T& value)`               | Update existing row by pkey, or insert if missing. |
-| `Pool.AllocExtra`        | `T& <name>_AllocExtra()` (varlen elements)            | Variant for varlen element types. |
-| `Pool.AllocVarlen` / `Pool.AllocVarlenMaybe` | varlen element allocation             | See [Varlen](/txt/exe/amc/reftype/Varlen.md). |
-| `Pool.Delete`            | (omitted)                                             | Lary does **not** support `Delete`. |
+| Tfunc                                        | Generated function                         | Effect |
+| -------------------------------------------- | ------------------------------------------ | ------ |
+| `Pool.Alloc`                                 | `T& <name>_Alloc()`                        | Allocate one default-constructed element. Kills process on OOM. |
+| `Pool.AllocMaybe`                            | `T* <name>_AllocMaybe()`                   | Same, returning NULL on OOM. |
+| `Pool.InsertMaybe`                           | `T* <name>_InsertMaybe(const T& value)`    | Allocate + assign from value + XrefMaybe. |
+| `Pool.UpdateMaybe`                           | `T* <name>_UpdateMaybe(const T& value)`    | Update existing row by pkey, or insert if missing. |
+| `Pool.AllocExtra`                            | `T& <name>_AllocExtra()` (varlen elements) | Variant for varlen element types. |
+| `Pool.AllocVarlen` / `Pool.AllocVarlenMaybe` | varlen element allocation                  | See [Varlen](/txt/exe/amc/reftype/Varlen.md). |
+| `Pool.Delete`                                | (omitted)                                  | Lary does **not** support `Delete`. |
 
 Note the absence of `Delete`: an individual row cannot be
 removed from a Lary without invalidating cross-references to

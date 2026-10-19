@@ -49,6 +49,11 @@ export interface Amctest {
     comment: Comment;
 }
 
+export interface Benchgate {
+    benchgate: string;
+    comment: Comment;
+}
+
 export interface Benchprofile {
     benchprofile: string;
     shape: number; // Which generator shapes the offered rate
@@ -70,6 +75,7 @@ export interface Citest {
     sandbox: boolean; // Run test in sandbox
     timeout: number; // Max runtime budget for this citest, seconds (>= observed runtime doubled, floored at 10min)
     failfast: boolean; // A failure ends the run: remaining citests are skipped
+    gcov: boolean; // Run with its own profile dir (GCC_PROFILE_DIR) for coverage
     comment: Comment;
 }
 
@@ -78,6 +84,7 @@ export interface Comptest {
     target: string;
     testname: string;
     timeout: number;
+    cijob: string; // The cijob that runs this test outside memcheck; none = never
     memcheck: string; // The cijob that runs this test under valgrind memcheck; none = never
     coverage: boolean;
     stablefld: boolean; // Replace unstable fields with ***
@@ -131,6 +138,26 @@ export interface Tfilt {
 export interface Tifilt {
     comptest: string;
     ifilter: string; // Command to preprocess input
+    comment: Comment;
+}
+
+export interface Tlamodel {
+    tlamodel: string; // Path of the cfg under tla/, without .cfg
+    dir: string; // Directory under tla/ that holds the spec and its cfg
+    spec: string; // TLA+ module the cfg checks, a file in the same directory
+    expect: string; // Verdict TLC is expected to reach
+    timeout: number; // Seconds TLC may run before atla stops it
+    ci: boolean; // Run in the atla citest
+    comment: Comment;
+}
+
+export interface Tlastrategy {
+    tlastrategy: string; // How a run searches a model's states
+    comment: Comment;
+}
+
+export interface Tlaverdict {
+    tlaverdict: string; // How a TLC run ended
     comment: Comment;
 }
 
@@ -195,6 +222,15 @@ export const AtfdbSsimfile = {
       { field: "comment", type: "string", dflt: "", substr: null },
     ],
   },
+  // atfdb.Benchgate: What capture and cmp of a benchtest measure
+  "atfdb.benchgate": {
+    ssimfile: "atfdb.benchgate",
+    pkey: "benchgate",
+    fields: [
+      { field: "benchgate", type: "string", dflt: "", substr: null },
+      { field: "comment", type: "string", dflt: "", substr: null },
+    ],
+  },
   // atfdb.Benchprofile: Named traffic-pacing shape a publisher stage can offer at any pace
   "atfdb.benchprofile": {
     ssimfile: "atfdb.benchprofile",
@@ -228,6 +264,7 @@ export const AtfdbSsimfile = {
       { field: "sandbox", type: "boolean", dflt: "false", substr: null },
       { field: "timeout", type: "number", dflt: "600", substr: null },
       { field: "failfast", type: "boolean", dflt: "false", substr: null },
+      { field: "gcov", type: "boolean", dflt: "false", substr: null },
       { field: "comment", type: "string", dflt: "", substr: null },
     ],
   },
@@ -240,6 +277,7 @@ export const AtfdbSsimfile = {
       { field: "target", type: "string", dflt: "", substr: { srcfield: "comptest", expr: ".LL" } },
       { field: "testname", type: "string", dflt: "", substr: { srcfield: "comptest", expr: ".LR" } },
       { field: "timeout", type: "number", dflt: "10", substr: null },
+      { field: "cijob", type: "string", dflt: "compB", substr: null },
       { field: "memcheck", type: "string", dflt: "", substr: null },
       { field: "coverage", type: "boolean", dflt: "true", substr: null },
       { field: "stablefld", type: "boolean", dflt: "false", substr: null },
@@ -329,6 +367,38 @@ export const AtfdbSsimfile = {
     fields: [
       { field: "comptest", type: "string", dflt: "", substr: null },
       { field: "ifilter", type: "string", dflt: "", substr: null },
+      { field: "comment", type: "string", dflt: "", substr: null },
+    ],
+  },
+  // atfdb.Tlamodel: A TLA+ model atla checks: one TLC config and the spec it names
+  "atfdb.tlamodel": {
+    ssimfile: "atfdb.tlamodel",
+    pkey: "tlamodel",
+    fields: [
+      { field: "tlamodel", type: "string", dflt: "", substr: null },
+      { field: "dir", type: "string", dflt: "", substr: { srcfield: "tlamodel", expr: "/RL" } },
+      { field: "spec", type: "string", dflt: "", substr: null },
+      { field: "expect", type: "string", dflt: "pass", substr: null },
+      { field: "timeout", type: "number", dflt: "600", substr: null },
+      { field: "ci", type: "boolean", dflt: "false", substr: null },
+      { field: "comment", type: "string", dflt: "", substr: null },
+    ],
+  },
+  // atfdb.Tlastrategy: A way atla searches the states of a model
+  "atfdb.tlastrategy": {
+    ssimfile: "atfdb.tlastrategy",
+    pkey: "tlastrategy",
+    fields: [
+      { field: "tlastrategy", type: "string", dflt: "", substr: null },
+      { field: "comment", type: "string", dflt: "", substr: null },
+    ],
+  },
+  // atfdb.Tlaverdict: How a TLC run of a model ended
+  "atfdb.tlaverdict": {
+    ssimfile: "atfdb.tlaverdict",
+    pkey: "tlaverdict",
+    fields: [
+      { field: "tlaverdict", type: "string", dflt: "", substr: null },
       { field: "comment", type: "string", dflt: "", substr: null },
     ],
   },

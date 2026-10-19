@@ -295,8 +295,13 @@ void atf_unit::unittest_algo_StrptrPrintFmt() {
     }
     {
         cstring out;
-        algo::strptr_PrintRegxSql("abc", out);
-        vrfyeq_(out, "abc");
+        algo::strptr_PrintRegxAcr("a_b.c", out);
+        vrfyeq_(out, "a_b.c");
+    }
+    {
+        cstring out;
+        algo::strptr_PrintRegxAcr("a%(b|c)", out);
+        vrfyeq_(out, "a\\%\\(b\\|c\\)");
     }
     {
         cstring out;
@@ -683,4 +688,11 @@ void atf_unit::unittest_algo_CmdlineToArgv() {
     vrfyeq_(ArgvJoin("ls {}"), "ls|{|}");
     // quoted, the same character is data and not a word boundary
     vrfyeq_(ArgvJoin("ls \"{\""), "ls|{");
+    // a value quoted by strptr_PrintBash, as <cmd>_ToCmdline writes it, splits
+    // back into the value it was written from: '...' for a blank, $'...' for
+    // any other character bash would read
+    algo::strptr val[] = {"/home/u/vod+demo/hls", "/Users/me/My Show/hls", "it's", "a\\b", "x\ty", "{a}", ""};
+    for (int i = 0; i < int(sizeof(val)/sizeof(val[0])); i++) {
+        vrfyeq_(ArgvJoin(tempstr() << "samp_vod -dir:" << algo::strptr_ToBash(val[i]) << " -chan:c2"), tempstr() << "samp_vod|-dir:" << val[i] << "|-chan:c2");
+    }
 }

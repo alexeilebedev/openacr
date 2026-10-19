@@ -1,0 +1,4 @@
+# start bash cmd:"bash -c 'cd $tempdir && $$OLDPWD/$bindir/acr_compl -schema:$$OLDPWD/test/acr_compl.schema.ssim -data:$$OLDPWD/test/acr_compl.schema.ssim -line:\"atf_cmdline -dflower:ro\"'"
+# eof bash
+bash -> rose 
+# exit bash code:0

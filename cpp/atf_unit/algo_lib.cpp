@@ -1868,7 +1868,7 @@ void atf_unit::unittest_algo_lib_FileToString() {
     // check that FileToString can read /proc/cpuinfo
     // mac doesn't have these files.
     vrfyeq_(algo::FileToString("/proc/iomem")
-            ,SysEval("cat /proc/iomem",FailokQ(true),1024*1024*10));
+            ,SysEval("cat /proc/iomem",FailokQ(true)));
 #endif
 }
 
@@ -2409,22 +2409,31 @@ void atf_unit::unittest_algo_lib_AvlvsMap(){
 // --------------------------------------------------------------------------------
 
 #ifndef __CYGWIN__
+// Check that SleepMsec gives up roughly SEC seconds, trying up to 60 times
+// a second apart before failing.
+// A 10ms sleep on a CI runner that runs several jobs at once wakes up late:
+// macOS batches the timers of background processes, and a busy scheduler
+// runs the woken process late.  The delay is the scheduler's and does not
+// scale with SEC, so a bound proportional to SEC alone fails the short
+// sleeps while SleepMsec is correct.  The upper bound therefore adds 100ms
+// of absolute slack, which still catches a sleep off by a unit.
 static void CheckSleep(double sec) {
     bool success=false;
-    // try for up to 1 minute (in case of machine load)
+    double elapsed=0;
     for (int i=0; i<60 && !success; i++,sleep(1)) {
         algo::SchedTime c(algo::get_cycles());
         algo::SleepMsec(sec*1000.0);
         algo::SchedTime c2(algo::get_cycles());
-        double elapsed = algo::ElapsedSecs(c,c2);
-        //some servers only give you 10% accuracy in sleep
-        success = elapsed >= sec*0.5 && elapsed <= sec*1.5;
+        elapsed = algo::ElapsedSecs(c,c2);
+        success = elapsed >= sec*0.5 && elapsed <= sec*1.5 + 0.1;
         verblog("atf_unit.check_sleep"
                 <<Keyval("want",sec)
                 <<Keyval("elapsed",elapsed)
                 <<Keyval("success",success));
     }
-    vrfy(success,"SleepMsec test failed");
+    vrfy(success,tempstr()<<"SleepMsec test failed"
+         <<Keyval("want",sec)
+         <<Keyval("elapsed",elapsed));
 }
 #endif
 
@@ -2946,6 +2955,32 @@ void atf_unit::unittest_algo_lib_KillRecurse() {
 }
 // --------------------------------------------------------------------------------
 
+// A daemon inherits its signal mask from whoever started it, and a parent that
+// blocks SIGHUP would leave the hangup pending forever.  So the test blocks
+// SIGHUP, installs the handler, and raises the signal: the handler sets the
+// flag before raise returns only when SetupHangupSignal unblocked it.  The mask
+// comes back first, while the handler is still installed, so a hangup left
+// pending by a failing build reaches the handler and does not end the test.
+void atf_unit::unittest_algo_lib_SetupHangupSignal() {
+    sigset_t hup;
+    sigemptyset(&hup);
+    sigaddset(&hup, SIGHUP);
+    sigset_t mask;
+    (void)sigprocmask(SIG_BLOCK, &hup, &mask);
+    struct sigaction sigact;
+    (void)sigaction(SIGHUP, 0, &sigact);
+    bool hup_was = algo_lib::_db.hup;
+    algo_lib::_db.hup = false;
+    algo::SetupHangupSignal();
+    raise(SIGHUP);
+    bool heard = algo_lib::_db.hup;
+    (void)sigprocmask(SIG_SETMASK, &mask, 0);
+    (void)sigaction(SIGHUP, &sigact, 0);
+    algo_lib::_db.hup = hup_was;
+    vrfy_(heard);
+}
+// --------------------------------------------------------------------------------
+
 // check that all characters print from memptr, and get parsed
 // back as a string
 void atf_unit::unittest_algo_lib_PrintMemptr() {
@@ -3216,6 +3251,44 @@ static algo::tempstr ReadAllFd(algo::Fildes fd) {
     return out;
 }
 
+// A child started through a generated _Start reads a clean signal state, whatever
+// its parent blocked or ignored.  The test blocks every signal it can and starts
+// a child that reports the signals it has blocked and ignored; both are empty
+// only when the launch path reset them in the child.  On Linux the child reads
+// its whole mask and ignored set from /proc, every signal included.  macOS has
+// no /proc, and there the child reads them through perl's POSIX module, over
+// the 31 signals macOS has, leaving out SIGFPE, which perl ignores itself.  The parent's mask comes back before
+// anything is checked, so a failing run leaves the test runner as it found it.
+void atf_unit::unittest_algo_lib_ResetChildSignal() {
+#ifndef WIN32
+    sigset_t all;
+    sigfillset(&all);
+    sigset_t mask;
+    (void)sigprocmask(SIG_BLOCK, &all, &mask);
+    command::bash_proc bash;
+    // the reader is grep, which keeps the dispositions it inherits; gawk, for
+    // one, ignores SIGPIPE itself
+#ifdef __linux__
+    bash.cmd.c = "exec grep -E '^Sig(Blk|Ign):' /proc/self/status";
+    algo::strptr expect = "SigBlk:\t0000000000000000\nSigIgn:\t0000000000000000\n";
+#else
+    bash.cmd.c = "exec perl -MPOSIX -MConfig -e '"
+        "my @n = split q( ), $Config{sig_name}; my $old = POSIX::SigSet->new;"
+        " sigprocmask(SIG_BLOCK, POSIX::SigSet->new, $old); my (@blk, @ign);"
+        " for my $i (1..31) { push @blk, $n[$i] if $old->ismember($i); my $act = POSIX::SigAction->new;"
+        " push @ign, $n[$i] if $n[$i] ne q(FPE) && sigaction($i, undef, $act) && $act->handler eq q(IGNORE); }"
+        " print q(blocked:), join(q(,), @blk), q( ignored:), join(q(,), @ign), qq(\\n);'";
+    algo::strptr expect = "blocked: ignored:\n";
+#endif
+    bash.fstdout = "|";
+    bash_Start(bash);
+    tempstr out(ReadAllFd(bash.from_stdout));
+    bash_Wait(bash);
+    (void)sigprocmask(SIG_SETMASK, &mask, 0);
+    vrfyeq_(out, expect);
+#endif
+}
+
 // Write DATA into the child's stdin pipe and close it so the child sees EOF.
 static void PumpStdin(command::bash_proc &p, algo::strptr data) {
     algo::WriteFile(p.to_stdin, (u8*)data.elems, data.n_elems);
@@ -3421,7 +3494,9 @@ void atf_unit::unittest_algo_lib_ExecPipe() {
 // it, so an approximate comparison would pass for the very values the
 // kernel export exists to exclude.
 //
-// A host with no export has nothing to compare against, so the check is
+// The machine's own statement of the rate is GetCpuHzKernel's: the kernel's
+// tsc_freq_khz on x86, cntfrq_el0 on ARM.  A host with no export has nothing
+// to compare against, so the check is
 // announced as skipped rather than passing silently.  That host is exactly
 // where a process that needs the rate refuses to start unless it is stated, and
 // where the file source under /etc is exercised -- installing that file
@@ -3443,24 +3518,21 @@ void atf_unit::unittest_algo_lib_ExecPipe() {
 // flags line is the third answer, and it passes: that is every non-Linux
 // host, where nothing has been said against the counter.
 void atf_unit::unittest_algo_lib_RequireKernelCpuHz() {
-    i32 freq_khz = 0;
-    tempstr value(algo::FileToString("/sys/devices/system/cpu/cpu0/tsc_freq_khz", algo::FileFlags()));
-    algo::StringIter iter(value);
-    (void)TryParseI32(iter, freq_khz);
-    bool exported = freq_khz > 0;
+    double kernel_hz = algo_lib::GetCpuHzKernel();
+    bool exported = kernel_hz > 0;
     double orig_hz = algo_lib::_db.hz;
     prlog("atf_unit.kernel_cpu_hz"
           <<Keyval("exported",exported)
-          <<Keyval("kernel_hz",u64(double(freq_khz)*1e3))
+          <<Keyval("kernel_hz",u64(kernel_hz))
           <<Keyval("db_hz",u64(algo_lib::_db.hz)));
     if (exported) {
         algo_lib::RequireKernelCpuHz("/nonexistent/tscfreq_khz", algo_lib::dev_envvar_ATF_UNIT_TSCFREQKHZ);
-        vrfy_(algo_lib::_db.hz == double(freq_khz)*1e3);
+        vrfy_(algo_lib::_db.hz == kernel_hz);
     }
     setenv(algo_lib::dev_envvar_ATF_UNIT_TSCFREQKHZ,"2500000",1);
     algo_lib::RequireKernelCpuHz("/nonexistent/tscfreq_khz", algo_lib::dev_envvar_ATF_UNIT_TSCFREQKHZ);
     if (exported) {
-        vrfy_(algo_lib::_db.hz == double(freq_khz)*1e3);
+        vrfy_(algo_lib::_db.hz == kernel_hz);
     } else {
         vrfy_(algo_lib::_db.hz == 2500000.0*1e3);
     }
@@ -3583,4 +3655,60 @@ void atf_unit::unittest_algo_lib_PrlogDot() {
         retry.comment << "waiting";
     }ind_end;
     vrfy(!algo_lib::_db.dotline, "the verdict line left the dot line open");
+}
+
+// -----------------------------------------------------------------------------
+
+// fallocate reserves space the way Linux's call does on every platform: a
+// reservation past the end of a 64 MB file under FALLOC_FL_KEEP_SIZE allocates
+// the 1 MB it names and leaves the length alone, and a mode-0 call over a range
+// the file already covers leaves a longer file as long as it was.  On macOS the
+// call is algo_lib's shim over F_PREALLOCATE, whose length counts the new bytes
+// past the space the file already holds.
+void atf_unit::unittest_algo_lib_Fallocate() {
+    algo::strptr fname = "temp/atf_unit.fallocate";
+    off_t mb = 1 << 20;
+    DeleteFile(fname);
+    algo::Fildes fildes = algo::OpenFile(fname, algo_FileFlags_write);
+    struct stat st;
+    vrfy_(fallocate(fildes.value, 0, 0, 64 * mb) == 0);
+    vrfy_(fstat(fildes.value, &st) == 0);
+    vrfy(st.st_size == 64 * mb, tempstr() << "fallocate mode 0 did not extend the file; size:" << i64(st.st_size));
+    vrfy_(fallocate(fildes.value, FALLOC_FL_KEEP_SIZE, 64 * mb, mb) == 0);
+    vrfy_(fstat(fildes.value, &st) == 0);
+    vrfy(st.st_size == 64 * mb, tempstr() << "FALLOC_FL_KEEP_SIZE changed the length; size:" << i64(st.st_size));
+    vrfy(off_t(st.st_blocks) * 512 >= 65 * mb && off_t(st.st_blocks) * 512 < 72 * mb
+         , tempstr() << "a 1 MB reservation past 64 MB allocated the wrong amount; bytes:" << i64(off_t(st.st_blocks) * 512));
+    vrfy_(fallocate(fildes.value, 0, 0, mb) == 0);
+    vrfy_(fstat(fildes.value, &st) == 0);
+    vrfy(st.st_size == 64 * mb, tempstr() << "fallocate mode 0 shortened the file; size:" << i64(st.st_size));
+    close(fildes.value);
+    DeleteFile(fname);
+}
+
+// -----------------------------------------------------------------------------
+
+// Count one call of a hook.
+static void IohookCountCall(i32 &ncall) {
+    ncall++;
+}
+
+// A read hook on an empty regular file is called back at once.  A regular file
+// never blocks, so neither event queue waits on it: epoll refuses one, and
+// kqueue would fire a read only while the offset is short of the end, so a hook
+// on an empty file would never be called.
+void atf_unit::unittest_algo_lib_IohookRegularFile() {
+    algo::strptr fname = "temp/atf_unit.iohook_empty";
+    algo::SafeStringToFile("", fname);
+    algo_lib::FIohook iohook;
+    iohook.fildes = algo::OpenRead(fname);
+    i32 ncall = 0;
+    callback_Set1(iohook, ncall, IohookCountCall);
+    algo::IOEvtFlags flags;
+    read_Set(flags, true);
+    algo_lib::IohookAdd(iohook, flags);
+    vrfy(ncall == 1, tempstr() << "the hook on an empty file was not called back; ncall:" << ncall);
+    algo_lib::IohookRemove(iohook);
+    close(iohook.fildes.value);
+    DeleteFile(fname);
 }

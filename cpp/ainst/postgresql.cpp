@@ -28,7 +28,13 @@
 // because postgresql-common runs initdb from its own postinst otherwise.
 // libpq-dev carries no version suffix: it tracks the distribution's libpq5, and
 // cpp/ctxledger/pg.cpp includes a header that ships in neither versioned package.
+// On macOS the same server comes from Homebrew, as the mac image's postgresql@16
+// formula, so the install stops there with a line that names it.
 void ainst::extpkg_postgresql(ainst::FExtpkg &extpkg) {
+    AddStage(extpkg,"if [[ $DARWIN == Y ]]; then");
+    AddStage(extpkg,"    echo 'ainst.darwin  extpkg:postgresql  comment:\"macOS takes postgresql@16 from Homebrew: brew install postgresql@16, or the pkg update of the host\"' >&2");
+    AddStage(extpkg,"    exit 1");
+    AddStage(extpkg,"fi");
     AddStageFile(extpkg,"/etc/postgresql-common/createcluster.conf","create_main_cluster = false\n");
     AddPost(extpkg,"apt-get update");
     AddPost(extpkg,"DEBIAN_FRONTEND=noninteractive apt-get install -y -o Dpkg::Options::=--force-confdef"

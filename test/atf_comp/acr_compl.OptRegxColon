@@ -10,6 +10,7 @@ acr_compl -> bool
 acr_compl -> command.acr 
 acr_compl -> command.atf_cmdline 
 acr_compl -> dmmeta.Ctype 
+acr_compl -> dmmeta.Fcompldir 
 acr_compl -> dmmeta.Finsertwhen 
 acr_compl -> dmmeta.Ssimfile 
 acr_compl -> dmmeta.Substr 

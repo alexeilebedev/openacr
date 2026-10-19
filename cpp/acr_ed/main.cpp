@@ -144,7 +144,7 @@ static void Main_Vis() {
     // total output
     tempstr out;
     out << "#  Proposed change" << eol;
-    tempstr text(SysEval(cmd, FailokQ(false), 1024*1024));
+    tempstr text(SysEval(cmd, FailokQ(false)));
     ind_beg(Line_curs, line, text) {
         out << "# "<<line<<eol;
     }ind_end;

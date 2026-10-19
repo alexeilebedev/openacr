@@ -23,6 +23,18 @@
 #include "include/lib_git.h"
 #include "include/apm.h"
 
+// Record FILE as side SIDE of MERGEFILE, where SIDE is 0 for this tree, 1 for
+// the base and 2 for the incoming version, together with the file's mode, which
+// is zero when FILE does not exist.
+void apm::SetMergeSide(apm::FMergefile &mergefile, int side, algo::strptr file) {
+    int &mode = side == 0 ? mergefile.ours_mode : side == 1 ? mergefile.base_mode : mergefile.theirs_mode;
+    cstring &path = side == 0 ? mergefile.ours_file : side == 1 ? mergefile.base_file : mergefile.theirs_file;
+    path = file;
+    mode = GetFileMode(path);
+}
+
+// -----------------------------------------------------------------------------
+
 // Populate table MERGEFILE with up to 3 lists of files:
 // ours, base and theirs (0,1,2)
 // We record the path to each as OURS_FILE, BASE_FILE, or THEIRS_FILE
@@ -37,6 +49,10 @@
 // fails contributes no file rather than an error, and a file the child never
 // named is a file the merge leaves at the version it already had. The failure is
 // reported per directory and the caller decides what an incomplete table means.
+// The table is keyed by the path in this tree.  A file of the origin at a path
+// that a mapping fills (table pkgdest, which the caller resolves) is the
+// origin's copy of the mapping's source, so it is entered under the source's
+// path (MapOriginCopy).
 bool apm::CreateMergeFiles(algo::strptr regx_package, algo::strptr base_dir, algo::strptr theirs_dir) {
     bool ok=true;
     tempstr dirs[3];
@@ -65,15 +81,19 @@ bool apm::CreateMergeFiles(algo::strptr regx_package, algo::strptr base_dir, alg
         ind_beg(algo::FileLine_curs,line,apm.from_stdout) {
             //verblog("mergefiles: "<<dirs[i]<<": "<<line);
             dev::Gitfile gitfile;
-            if (Gitfile_ReadStrptrMaybe(gitfile,line)) {
-                apm::FMergefile &mergefile = ind_mergefile_GetOrCreate(gitfile.gitfile);
-                int &mode=(i==0 ? mergefile.ours_mode : i==1 ? mergefile.base_mode : mergefile.theirs_mode);
-                cstring &file = (i==0 ? mergefile.ours_file : i==1 ? mergefile.base_file : mergefile.theirs_file);
-                file = DirFileJoin(dirs[i],gitfile.gitfile);
-                mode=GetFileMode(file);
+            bool read = Gitfile_ReadStrptrMaybe(gitfile,line);
+            // a path that a mapping fills holds, in the origin, a file of
+            // this tree from another path, so it never pairs with this tree's
+            // own file at that path
+            bool mapped = i > 0 && ind_pkgdest_Find(gitfile.gitfile);
+            if (read && !mapped) {
+                SetMergeSide(ind_mergefile_GetOrCreate(gitfile.gitfile), i, DirFileJoin(dirs[i],gitfile.gitfile));
             }
         }ind_end;
         apm_Wait(apm);
+        if (i > 0) {
+            MapOriginCopy(i, dirs[i]);
+        }
         if (apm.status!=0) {
             ok=false;
             prerr("apm.pkgfile_read"
@@ -88,28 +108,43 @@ bool apm::CreateMergeFiles(algo::strptr regx_package, algo::strptr base_dir, alg
     return ok;
 }
 
+// Return what one side of a merge holds at PATH, whose file mode is MODE: a
+// symbolic link's target, a regular file's content, or nothing when the side
+// has no file.  The kind leads the value, so a link and a file whose content is
+// the same text still differ.
+static tempstr GetSideValue(int mode, algo::strptr path) {
+    tempstr ret;
+    if (S_ISLNK(mode)) {
+        ret << "link:" << algo::ReadLink(path);
+    } else if (mode != 0) {
+        ret << "file:" << FileToString(path);
+    }
+    return ret;
+}
+
 // Merge MERGEFILE when one of its sides is a symbolic link.  A link holds no
 // lines to merge: its value is its target, and git merge-file would read the
-// file the link points to.  So the side that differs from the base wins, and a
-// link that both sides changed, to different values, is a conflict that keeps
-// ours.  BASE_FILE and THEIRS_FILE are the copies in the two sandboxes.
+// file the link points to.  So each side's value is compared whole -- a link's
+// target, a regular file's content -- and the side that differs from the base
+// wins.  When both sides changed it, to different values, the merge is a
+// conflict that keeps ours.  BASE_FILE and THEIRS_FILE are the copies in the
+// two sandboxes.
 static void MergeLink(apm::FMergefile &mergefile, algo::strptr base_file, algo::strptr theirs_file) {
-    tempstr ours(S_ISLNK(mergefile.ours_mode) ? algo::ReadLink(mergefile.mergefile) : tempstr());
-    tempstr base(S_ISLNK(mergefile.base_mode) ? algo::ReadLink(base_file) : tempstr());
-    tempstr theirs(S_ISLNK(mergefile.theirs_mode) ? algo::ReadLink(theirs_file) : tempstr());
-    bool same_ours = mergefile.ours_mode == mergefile.base_mode && ours == base;
-    bool same_theirs = mergefile.theirs_mode == mergefile.base_mode && theirs == base;
-    bool agree = mergefile.ours_mode == mergefile.theirs_mode && ours == theirs;
+    tempstr ours(GetSideValue(mergefile.ours_mode, mergefile.mergefile));
+    tempstr base(GetSideValue(mergefile.base_mode, base_file));
+    tempstr theirs(GetSideValue(mergefile.theirs_mode, theirs_file));
+    bool same_ours = ours == base;
+    bool same_theirs = theirs == base;
     if (same_ours && !same_theirs) {
         apm::_db.script << "rm -f "<<strptr_ToBash(mergefile.mergefile) << eol;
         apm::_db.script << "cp -p -P "<<strptr_ToBash(theirs_file)<<" "<<strptr_ToBash(mergefile.mergefile) << eol;
         apm::_db.script << "git add -f "<<strptr_ToBash(mergefile.mergefile) << eol;
-    } else if (!same_ours && !same_theirs && !agree) {
+    } else if (!same_ours && !same_theirs && ours != theirs) {
         prerr("apm.linkconflict"
               <<Keyval("file",mergefile.mergefile)
-              <<Keyval("ours",ours)
-              <<Keyval("theirs",theirs)
-              <<Keyval("comment","both sides changed this link; ours is kept"));
+              <<Keyval("ours",S_ISLNK(mergefile.ours_mode) ? algo::ReadLink(mergefile.mergefile) : tempstr())
+              <<Keyval("theirs",S_ISLNK(mergefile.theirs_mode) ? algo::ReadLink(theirs_file) : tempstr())
+              <<Keyval("comment","both sides changed this file, a link on one side; ours is kept"));
     }
 }
 
@@ -130,8 +165,10 @@ static void MergeLink(apm::FMergefile &mergefile, algo::strptr base_file, algo::
 void apm::MergeFiles(apm::FPackage &package) {
     (void)package;
     ind_beg(_db_mergefile_curs,mergefile,_db) {
-        tempstr base_file=DirFileJoin(algo_lib::WtDir(_db.base_sandbox),mergefile.mergefile);
-        tempstr theirs_file=DirFileJoin(algo_lib::WtDir(_db.theirs_sandbox),mergefile.mergefile);
+        // the copies in the two sandboxes; a mapped file's copy sits at another
+        // path of the origin (MapOriginCopy)
+        algo::strptr base_file=mergefile.base_file;
+        algo::strptr theirs_file=mergefile.theirs_file;
         if (mergefile.base_mode == 0 && mergefile.ours_mode == 0 && mergefile.theirs_mode != 0) {
             // create parent directory if necessary
             tempstr dirname(GetDirName(mergefile.mergefile));
@@ -281,6 +318,12 @@ void apm::Main_Update() {
                 acrtxn << "acr.replace "<<pkgupstream << eol;
             }
 
+            // the origin holds each file the package maps at the mapped path
+            SetCarrier(&package);
+            ok = ResolvePkgfile(&package) == 0;
+            SetCarrier(NULL);
+        }
+        if (ok) {
             ok = CreateMergeFiles(package.package,algo_lib::WtDir(_db.base_sandbox),algo_lib::WtDir(_db.theirs_sandbox));
         }
         if (ok) {

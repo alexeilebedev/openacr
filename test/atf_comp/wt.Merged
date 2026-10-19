@@ -1,0 +1,48 @@
+# start wt-merged cmd:"test/wt-merged $bindir/wt"
+# eof wt-merged
+wt-merged -> Branch	Merged	Path
+wt-merged -> agent-a0123456789abcdef	Y	wt/agent-a0123456789abcdef
+wt-merged -> agent-afedcba9876543210	dirty	wt/agent-afedcba9876543210
+wt-merged -> axb	unmerged	wt/axb
+wt-merged -> busy	busy	wt/busy
+wt-merged -> dirty	dirty	wt/dirty
+wt-merged -> done	Y	wt/done
+wt-merged -> edited	dirty	wt/edited
+wt-merged -> fresh	unstarted	wt/fresh
+wt-merged -> live	unmerged	wt/live
+wt-merged -> team/done	Y	wt/team/done
+wt-merged -> wt.busy  worktree:busy  pid:sleeper  ppid:test  age:-  cmd:"sleep 60"
+wt-merged -> Branch	Merged	Path
+wt-merged -> done	busy	wt/done
+wt-merged -> wt.busy  worktree:done  pid:shell  ppid:test  age:-  cmd:-
+wt-merged -> Branch	Size	Merged	Path
+wt-merged -> Sandbox	Path
+wt-merged -> scratch	wt/scratch
+wt-merged -> Branch	Size	Merged	Path
+wt-merged -> wt.refuse  worktree:agent-a0123456789abcdef,agent-afedcba9876543210,axb,busy,dirty,done,edited,fresh,live,team/done  comment:"-del -b and -clean -b act on one worktree by name, or on several with -merged"
+wt-merged -> exit:1
+wt-merged -> wt.refuse  worktree:agent-a0123456789abcdef,agent-afedcba9876543210,axb,busy,dirty,done,edited,fresh,live,team/done  comment:"-del -b and -clean -b act on one worktree by name, or on several with -merged"
+wt-merged -> exit:1
+wt-merged -> 1
+wt-merged -> agent-afedcba9876543210
+wt-merged -> axb
+wt-merged -> busy
+wt-merged -> dirty
+wt-merged -> edited
+wt-merged -> fresh
+wt-merged -> scratch
+wt-merged -> team
+wt-merged -> 0
+wt-merged ->  M file
+wt-merged -> agent-a0123456789abcdef
+wt-merged -> agent-afedcba9876543210
+wt-merged -> axb
+wt-merged -> busy
+wt-merged -> dirty
+wt-merged -> done
+wt-merged -> edited
+wt-merged -> fresh
+wt-merged -> live
+wt-merged -> master
+wt-merged -> team/done
+# exit wt-merged code:0

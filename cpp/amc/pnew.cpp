@@ -259,6 +259,8 @@ void amc::GenPnew(amc::FNs& ns, amc::FPnew& pnew, amc::FCtype& ctype) {
     func.glob = true;
     AddRetval(func, Subst(R, "$Cpptype *"), "msg", "NULL");
     func.proto = Subst(R, "$Name_Fmt$Buftype()");
+    // a source that constructs the message this way needs the pnew row
+    amc::InsCppsym(amc::GetCppname(func), tempstr() << "dmmeta.pnew:" << pnew.pnew);
     strptr buftype = buftype_Get(pnew);
     Set(R, "$Bufarg", buftype == "Shm" ? strptr("SHM") : buftype == "Alloc" ? strptr("ALLOC") : strptr("BUF"));
     Ins(&R, func.comment, "Construct a new $Cpptype in the space provided by $Bufarg.");

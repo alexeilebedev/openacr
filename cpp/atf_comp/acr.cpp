@@ -27,13 +27,27 @@ void atf_comp::comptest_acr_BadInsert() {
     atf_comp::ProcWrite(proc, "dmmeta.ns  ns:ns1        nstype:lib      license:yy   comment:\"This record will not\"");
 }
 
-// A line the tuple parser rejects (unterminated quote) is reported with its
-// file:line, fails the run, and blocks the -write, so the file still holds
-// every line it held -- including the one that did not load.
+// Feed acr a file with a line the tuple parser rejects, and check that the line
+// fails the run and blocks the -write:
+// 1. Write a three-line file whose second line has an unterminated quote.
+// 2. Insert a record into the file with acr -insert -write.
+// 3. Check that acr reports the bad line with its file:line and exits nonzero.
+// 4. Check that the file still holds every line it held, the one that failed to
+//    load included.
 void atf_comp::comptest_acr_BadLine() {
     atf_comp::ProcStart("bash -c 'printf \"gendb.dispsig  dispsig:a.X  signature:1\\ngendb.dispsig  dispsig:b.Y  signature:\\042unterminated\\ngendb.dispsig  dispsig:c.Z  signature:3\\n\" > $tempdir/t.ssim"
                         "; echo gendb.dispsig  dispsig:d.W  signature:4 | $bindir/acr -insert -write -in:$tempdir/t.ssim %"
                         "; echo acr_exit:$?; cat $tempdir/t.ssim'");
+}
+
+// Run acr -version with its stdout closed, and check that acr exits nonzero.
+// A tool whose output was lost has failed its job, even though what it printed
+// was right.  The closed stdout makes the write fail with EBADF on every platform
+// and raises no signal, so the exit code is the only report of the loss.
+// -version prints before acr opens any file of its own, so descriptor 1 is still
+// closed when acr writes the line.
+void atf_comp::comptest_acr_OutputLost() {
+    atf_comp::ProcStart("bash -c '$bindir/acr -version >&-; echo acr_exit:$?'");
 }
 
 void atf_comp::comptest_acr_BadNs() {
@@ -43,12 +57,13 @@ void atf_comp::comptest_acr_BadNs() {
     atf_comp::ProcWrite(proc, "dmmeta.ctype ctype:x.Y");
 }
 
-// A cpbuf row naming a protobuf syntax that is not one of the two the codec
-// knows. cpbuf.syntax references the dmmeta.pbsyntax table, so the reference
-// check names the attribute and lists the syntax variants; a misspelling is
-// rejected here instead of silently selecting the proto2 wire shape.
-// The pbsyntax and ctype rows come in through -in so the suggestion does not
-// depend on the live database.
+// Insert a dmmeta.cpbuf row whose syntax is Proto3, a misspelling of a syntax the
+// codec knows, and check that acr -insert -check rejects the row, names the
+// attribute and lists proto2 and proto3 as the valid values.
+// cpbuf.syntax references the dmmeta.pbsyntax table, so the reference check
+// catches the misspelling before it silently selects the proto2 wire shape.  The
+// pbsyntax and ctype rows come in through -in, so the list of valid values stays
+// independent of the live database.
 void atf_comp::comptest_acr_BadPbufSyntax() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/acr -in:<(echo 'dmmeta.pbsyntax  pbsyntax:proto2  comment:\"\"' && echo 'dmmeta.pbsyntax  pbsyntax:proto3  comment:\"\"' && echo 'dmmeta.ctype  ctype:pbt.Msg  comment:\"\"') -insert -check");
     atf_comp::ProcWrite(proc, "dmmeta.cpbuf  ctype:pbt.Msg  syntax:Proto3");
@@ -103,32 +118,42 @@ void atf_comp::comptest_acr_DeleteReinsert() {
     atf_comp::ProcWrite(proc, "acr.insert dmmeta.ns  ns:amc  nstype:exe  license:GPL  comment:\"Algo Cross-Reference - ssimfile database & update tool\"");
 }
 
-// acr whose -in names a dataset directory it cannot search: the run must fail
-// naming the directory.
-// The directory exists, so acr selects dataset mode and reads each table on
-// demand, which leaves the failure reported one ssimfile at a time and the
-// directory itself never named. A run that reaches no table is worse: it
-// reports success over no data at all. A -check is that run -- it answers
-// records:0 n_err:0 for a dataset it could not open, so the integrity gate
-// passes having validated nothing.
-// The rule the probe applies is search (execute) permission, which is what
-// opening an ssimfile by name needs. A directory listing is never performed, so
-// the search-only mode is accepted alongside the readable one; both are
-// controls here. A symlink resolves to its target, so one pointing at a
-// searchable directory is accepted, and a dangling one names nothing and is
-// rejected by the same branch as a mistyped path.
-// The rejecting steps assert a nonzero exit rather than exit code 1: the exit
-// code counts diagnosed failures, and a query that reaches a table over an
-// unsearchable directory diagnoses both the directory and that table.
-// Every mode the test installs on the directory withholds write permission, so
-// a directory left in one of them cannot be removed by the next run's tempdir
-// wipe, and that run fails on a leftover it can neither read nor recreate. An
-// EXIT trap restores the mode, and a TERM trap reaches that EXIT trap when the
-// harness timeout kills the shell; the same pair guards the read-only directory
-// of atf_comp::DenyWriteCmd (cpp/atf_comp/proc.cpp). A mode-000 plain file,
-// such as the one acr.FileReadDeny leaves behind, needs no trap: unlinking it
-// asks for write permission on its parent only.
-// Like every chmod-deny fixture, this assumes an unprivileged runner: under
+// Point acr's -in at a dataset directory under several modes, and check that acr
+// fails naming the directory whenever it lacks search permission:
+// 1. Make dataset directory d with one ssimfile, a symlink dlink to d, and a
+//    symlink dangling to the missing path nowhere.
+// 2. Query through dlink, and check that the query succeeds.
+// 3. Install an EXIT trap that restores the mode of d, and a TERM trap that
+//    reaches it.
+// 4. Query d under mode 500 (readable) and mode 100 (search only), and check that
+//    both queries succeed.
+// 5. Query d under mode 400 (list only) and mode 000, and check that each query
+//    names the directory and exits nonzero.
+// 6. Run acr -check over d under mode 000, and check that it names the directory
+//    and exits nonzero.
+// 7. Restore mode 755, query through dangling, and check that the query exits
+//    nonzero.
+// The directory exists, so acr reads it in dataset mode and opens each table on
+// demand.  Without the probe of the directory, acr would report the failure one
+// ssimfile at a time and never name the directory.  A run that reaches no table
+// would report success over no data at all.  A -check is such a run.  It would
+// answer records:0 n_err:0 for a dataset it failed to open, so the integrity gate
+// would pass without validating a record.
+// The probe tests search (execute) permission, because opening an ssimfile by name
+// needs it.  acr never lists the directory, so it accepts the search-only mode
+// alongside the readable one.  A symlink resolves to its target.  acr rejects a
+// dangling one in the same branch as a mistyped path.
+// Steps 5 to 7 check for a nonzero exit, because the exit code counts diagnosed
+// failures.  A query that reaches a table over an unsearchable directory diagnoses
+// both the directory and that table.
+// Every mode the test sets on d withholds write permission.  A d left in one of
+// them would block the next run's tempdir wipe and fail that run on the leftover.
+// The EXIT trap restores the mode.  The TERM trap reaches the EXIT trap when the
+// harness timeout kills the shell.  The same pair guards the
+// read-only directory of atf_comp::DenyWriteCmd (cpp/atf_comp/proc.cpp).  A
+// mode-000 plain file, such as the one acr.FileReadDeny leaves behind, needs no
+// trap, because unlinking it asks for write permission on its parent only.
+// Like every chmod-deny fixture, the test assumes an unprivileged runner.  Under
 // CAP_DAC_OVERRIDE (a root container) the search succeeds and the golden
 // mismatches.
 void atf_comp::comptest_acr_DsetDirReadDeny() {
@@ -154,32 +179,40 @@ void atf_comp::comptest_acr_DsetDirReadDeny() {
                         " test $$? != 0 && echo dangling_symlink_failed'");
 }
 
-// acr in dataset mode over a directory holding one ssimfile it cannot read
-// (permissions): every read of that ssimfile must fail the run naming the
-// path. Read as an empty table instead, the file's rows are missing from the
-// answer, and an -insert -write then rewrites the file from the rows that did
-// load -- the inserted one alone, with every pre-existing row gone. So the
-// test pins the ssimfile byte-unchanged (cmp) after a query, a write, and an
-// editor session, and pins that the editor never launched. The two accepted
-// edges of the same rule are the controls: an ssimfile absent from the
-// dataset, and an empty one, both load as empty tables and exit 0.
-// -g is the other side effect a failed load must stand down from. The script
-// -g generates removes, renames and creates the source files the selected
-// dev.gitfile rows name, so a run that leaves those rows unwritten and still
-// runs the script moves the worktree away from the database. The script's own
-// `touch` line is the marker: it creates the inserted row's file when the
-// script runs. The denied read is an unreadable dev/gitfile.ssim, and it must
-// leave both the file and the worktree alone, so no marker appears.
-// The control is a clean load, which does run the script, and it doubles as the
-// probe of what a failing script does. That script stages the file it just
-// created; the tempdir is gitignored, so the `git add` is refused and the script
-// exits nonzero. acr must report that rather than exit 0 on a worktree the
-// script did not finish arranging. The step therefore asserts three things: the
-// marker (the script ran), a nonzero exit (the failure was reported), and the
-// acr.git_script diagnostic naming the script. It reads that diagnostic out of a
-// file rather than from the captured stream because git's own complaint goes to
-// the same stream with a wording that depends on the git version.
-// Like every chmod-deny fixture, this assumes an unprivileged runner: under
+// Load a dataset that holds unreadable ssimfiles, and check that every read of one
+// fails the run naming the path and leaves the file and the worktree alone:
+// 1. Make dataset d with one dispsig row, and keep a copy of its ssimfile.
+// 2. Query an empty ssimfile and an absent one, and check that each loads as an
+//    empty table and exits 0.
+// 3. Insert a dev.gitfile row with acr -insert -write -g.  Check that the script
+//    runs and creates the marker, and that acr exits 1 with the acr.git_script
+//    diagnostic.
+// 4. Keep a copy of dev/gitfile.ssim, and chmod 000 it and the dispsig ssimfile.
+// 5. Query dispsig, and check that the query names the path and exits 1.
+// 6. Insert a dispsig row with -insert -write, and check that the run exits 1.
+// 7. Edit dispsig with -e -write, and check that the run exits 1 and the editor
+//    never launches.
+// 8. Insert a dev.gitfile row with -g, and check that the run exits 1 and the
+//    script never runs.
+// 9. Restore both modes, and check with cmp that both ssimfiles are
+//    byte-unchanged.
+// Read as an empty table, an unreadable file's rows would be missing from the
+// answer.  An -insert -write would then rewrite the file from the rows that did
+// load, the inserted one alone, and drop every older row.  The empty and
+// the absent ssimfile of step 2 are the two accepted edges of the same rule.
+// -g is the other side effect that a failed load must stand down from.  The script
+// that -g generates removes, renames and creates the source files that the
+// selected dev.gitfile rows name.  A run that leaves those rows unwritten and
+// still runs the script moves the worktree away from the database.  The script's
+// own `touch` line is the marker, because it creates the inserted row's file when
+// the script runs.
+// Step 3 is the clean load, which runs the script and doubles as the probe of a
+// failing script.  The script stages the file it just created.  The tempdir is
+// gitignored, so git refuses the `git add` and the script exits nonzero.  acr
+// reports that failure on a worktree the script left half-arranged.  The step
+// reads the acr.git_script diagnostic from a file, because git's own complaint
+// goes to the captured stream in a wording that depends on the git version.
+// Like every chmod-deny fixture, the test assumes an unprivileged runner.  Under
 // CAP_DAC_OVERRIDE (a root container) the read succeeds and the golden
 // mismatches.
 void atf_comp::comptest_acr_DsetFileReadDeny() {
@@ -207,11 +240,11 @@ void atf_comp::comptest_acr_DsetFileReadDeny() {
                         " cmp d/dev/gitfile.ssim gitorig && echo gitfile_unchanged'");
 }
 
-// acr -e whose editor modifies records in two different ssimfiles: the edit
-// is written back, the report's n_file_mod carries the per-file count, and
-// the process exits 0 -- the exit code means success or failure only, never
-// the number of files modified. The editor is a cp command that replaces the
-// edit buffer with the two pre-edited records.
+// Run acr -e with an editor that changes records in two ssimfiles, and check that
+// acr writes the edit back, reports n_file_mod:2 and exits 0.
+// The exit code means success or failure only, never the number of files
+// modified.  The editor is a cp command that replaces the edit buffer with the two
+// edited records.
 void atf_comp::comptest_acr_EditFileModCount() {
     atf_comp::ProcStart("bash -c 'cd $tempdir && mkdir temp d d/dmmeta d/gendb"
                         " && printf \"gendb.dispsig  dispsig:xx.aa  signature:1\\n\" > d/gendb/dispsig.ssim"
@@ -220,22 +253,22 @@ void atf_comp::comptest_acr_EditFileModCount() {
                         " && EDITOR=\"cp edited.ssim\" $$OLDPWD/$bindir/acr -in:d -schema:$$OLDPWD/data %:xx% -e -print:N'");
 }
 
-// acr -e whose -in path cannot be loaded: the editor session is skipped and
-// the run exits nonzero. Without the gate, the editor opens over an empty
-// selection and the write-back then discards whatever the user typed into it.
-// The editor is a touch command whose marker file must not exist after the
-// run.
+// Run acr -e with a missing -in path, and check that acr skips the editor session
+// and exits nonzero.
+// Without the gate the editor would open over an empty selection.  The write-back
+// would then discard whatever the user typed into it.  The editor is a touch
+// command whose marker file the test expects to find absent after the run.
 void atf_comp::comptest_acr_EditFileReadFail() {
     atf_comp::ProcStart("bash -c 'cd $tempdir && mkdir temp"
                         " && EDITOR=\"touch editor_ran\" $$OLDPWD/$bindir/acr -in:missing -schema:$$OLDPWD/data ns:% -e -print:N;"
                         " rc=$$?; test ! -f editor_ran && echo editor_not_launched; exit $$rc'");
 }
 
-// acr -e whose write-back fails: the run exits nonzero with n_file_mod:0,
-// so a dropped write is distinguishable from a modifying edit -- only
-// failure exits nonzero. The editor inserts a record whose ssimfile write
-// is blocked by a file occupying the gendb directory path (the same
-// arrangement as the test/acr/writefail fixture).
+// Run acr -e with an editor that inserts a record whose ssimfile write fails, and
+// check that acr reports n_file_mod:0 and exits nonzero.
+// Only a failure exits nonzero, so a dropped write stays distinguishable from an
+// edit that modified files.  A file named gendb occupies the path of the gendb
+// directory and blocks the write, as in the test/acr/writefail fixture.
 void atf_comp::comptest_acr_EditFileWriteFail() {
     atf_comp::ProcStart("bash -c 'cd $tempdir && mkdir temp d && touch d/gendb"
                         " && printf \"gendb.dispsig  dispsig:xx.yy  signature:9\\n\" > edited.ssim"
@@ -256,55 +289,52 @@ void atf_comp::comptest_acr_FieldsComma() {
     atf_comp::ProcWrite(proc, "dmmeta.ns  ns:ns3         nstype:protocol  comment:\"comment 3\"");
 }
 
-// acr -insert -write of records landing in two different ssimfiles: the
-// report's n_file_mod must count each modified file -- it is the one
-// carrier of that count (amc's table write accumulates it into its own
-// files-modified count). The tempdir serves as an empty dataset; acr
-// creates the gendb/ and dmmeta/ directories under it on write.
+// Insert two records that land in two ssimfiles with acr -insert -write, and check
+// that the report's n_file_mod counts both files.
+// n_file_mod is the one carrier of that count.  amc's table write adds it to its
+// own count of modified files.  acr creates the gendb/ and dmmeta/ directories on
+// write under the tempdir, which serves as an empty dataset.
 void atf_comp::comptest_acr_FileModCount() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/acr -in:$tempdir -insert -write -print:N");
     atf_comp::ProcWrite(proc, "gendb.dispsig  dispsig:xx.yy  signature:9");
     atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:xx.Yy  comment:''");
 }
 
-// acr with an -in path that names neither an existing file nor a dataset
-// directory: the run must fail naming the path instead of loading nothing
-// and exiting 0 with n_select:0 -- a mistyped -in (or a wrong working
-// directory) would otherwise produce an answer computed over no data,
-// indistinguishable from a true empty result.
+// Run acr with an -in path that names neither a file nor a dataset directory, and
+// check that acr fails naming the path.
+// A run that loaded no data would exit 0 with n_select:0.  A mistyped -in, or a
+// wrong working directory, would then produce an answer over no data that looks
+// like a true empty result.
 void atf_comp::comptest_acr_FileReadFail() {
     atf_comp::ProcStart("$bindir/acr -in:test/acr/missing ns:%");
 }
 
-// acr with an -in file that exists but cannot be read (permissions): the
-// run must fail naming the path instead of answering from nothing --
-// reading an unreadable input as empty would pass the bad input off as a
-// true empty result. The open fails before any byte is read, so the seed
-// file is empty. The mode-000 file is left behind without a restore trap:
-// unlinking a file needs only write permission on the containing
-// directory, so the per-run tempdir wipe removes it regardless of its
-// mode -- unlike DenyWriteCmd's 0555 directory, which would block the
-// wipe and must be restored. Like every chmod-deny fixture, this assumes
-// an unprivileged runner: under CAP_DAC_OVERRIDE (a root container) the
+// Run acr with an -in file of mode 000, and check that acr fails naming the path.
+// Read as empty, an unreadable input would pass for a true empty result.  The open
+// fails before acr reads a byte, so the seed file is empty.  The test leaves the
+// mode-000 file behind without a restore trap, because unlinking a file needs
+// write permission on its directory only.  The per-run tempdir wipe therefore
+// removes it whatever its mode.  DenyWriteCmd's 0555 directory would block the
+// wipe, so its test restores the mode.  Like every chmod-deny fixture, this test
+// assumes an unprivileged runner.  Under CAP_DAC_OVERRIDE (a root container) the
 // read succeeds and the golden mismatches.
 void atf_comp::comptest_acr_FileReadDeny() {
     atf_comp::ProcStart("bash -c 'touch $tempdir/in.ssim && chmod 000 $tempdir/in.ssim"
                         " && $bindir/acr -in:$tempdir/in.ssim ns:%'");
 }
 
-// acr -insert -write whose ssimfile write fails: the run must fail naming
-// the path instead of exiting 0 with the record silently unwritten --
-// callers such as amc's table write trust acr's exit status to mean the
-// records are on disk. The dataset directory exists (the load is clean);
-// the write fails because the checked-in fixture holds a file named gendb,
-// and another named dev, where each ssimfile's parent directory would go.
-// The exit code counts diagnosed failures, so two refused writes exit 2.
-// A refused write must also stand -g down. The inserted dev.gitfile row is
-// what -g turns into a script, and running that script while the row is not
-// on disk moves the worktree away from the database: here it would create and
-// stage a file the dataset does not list, and for a deletion the script line
+// Insert a dispsig row and a dev.gitfile row with acr -insert -write -g into a
+// dataset whose ssimfile writes fail.  Check that acr names both paths, exits 2
+// and prints the git script for -g in place of running it.
+// Callers such as amc's table write trust acr's exit status to mean the records
+// are on disk.  The dataset directory test/acr/writefail exists, so the load is
+// clean.  The writes fail because the checked-in fixture holds a file named gendb
+// and another named dev, where each ssimfile's parent directory would go.  The
+// exit code counts diagnosed failures, so two refused writes exit 2.
+// -g turns the inserted dev.gitfile row into a script.  Running that script while
+// the row is off disk moves the worktree away from the database.  Here it would
+// create and stage a file the dataset leaves out.  For a deletion the script line
 // is git rm --force, which discards the file and any uncommitted work in it.
-// So the script is printed, and the printed script is what the golden pins.
 void atf_comp::comptest_acr_FileWriteFail() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/acr -in:test/acr/writefail -insert -write -g -print:N");
     atf_comp::ProcWrite(proc, "gendb.dispsig  dispsig:xx.yy  signature:9");
@@ -315,10 +345,16 @@ void atf_comp::comptest_acr_GitTrigger1() {
     atf_comp::ProcStart("$bindir/acr gitfile:cpp/acr/git.cpp -del -g");
 }
 
-// acr -g on a dev.gitfile rename whose destination directory does not exist.
-// An ssimfile renamed into a new namespace is the case: its rows move to
-// data/<newns>/, and no file has been there yet. The git script creates the
-// directory before git mv, so the file lands and the run exits 0.
+// Rename a dev.gitfile row into a directory that is still missing, and check that
+// acr -g moves the file there:
+// 1. Make a git repository in the tempdir, and stage a/x.txt in it.
+// 2. Make a dataset whose one dev.gitfile row names a/x.txt.
+// 3. Rename the row to b/c/x.txt with acr -rename -write -g.
+// 4. Check that acr exits 0, that b/c/x.txt holds the file, and that the row
+//    names b/c/x.txt.
+// An ssimfile renamed into a new namespace takes this path, because its rows move
+// to data/<newns>/, a directory that holds no file yet.  The git script creates
+// the directory before git mv.
 void atf_comp::comptest_acr_GitRenameNewDir() {
     atf_comp::ProcStart("bash -c 'cd $tempdir && git init -q . && mkdir -p d/dev a"
                         " && echo hello > a/x.txt && git add a/x.txt"
@@ -329,8 +365,8 @@ void atf_comp::comptest_acr_GitRenameNewDir() {
 
 void atf_comp::comptest_acr_Insert() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/acr -insert ns:ns%");
-    atf_comp::ProcWrite(proc, "dmmeta.ns  ns:ns1        nstype:exe      license:xx   comment:\"This record will be inserted\"");
-    atf_comp::ProcWrite(proc, "dmmeta.ns  ns:ns1        nstype:lib      license:yy   comment:\"This record will not\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ns  ns:ns1        nstype:exe      license:GPL   comment:\"This record will be inserted\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ns  ns:ns2        nstype:lib      license:GPL   comment:\"So will this one\"");
 }
 
 void atf_comp::comptest_acr_InsertDelete() {
@@ -348,21 +384,25 @@ void atf_comp::comptest_acr_Meta1() {
     atf_comp::ProcStart("$bindir/acr anonfld -meta -report:N");
 }
 
-// A dataset queried through -in carries no dmmeta rows of its own, so -meta
-// over it answers from the directory -schema names: the table's ctype and
-// fields print exactly as they do against the tree, whether the query named
-// the table or bound every table with %.  The % leg prints two counts of the
-// lines naming a ctype: dev.License, the matched row's ctype, on its dmmeta.ctype
-// and gendb.ctypelen rows (2), and dmmeta.Ctype, one of the tables the dataset
-// leaves empty, on those two and its dmmeta.cpptype row (3), since a % that
-// binds every table also selects the ctype of every empty one, which is acr's
-// rule for an empty match.
-// A query naming one table gets that table's ctype alone, since the tables
-// -meta binds to answer with are not ones the query left empty.  The
-// last leg runs -meta with -write against a copy of the schema: the schema rows
-// are read for answering only, so the write touches no file, the dataset keeps
-// its one file, and the copy of the schema stays identical to the original.
-// The counts lose their padding, which BSD wc adds and GNU wc does not.
+// Run acr -meta over a dataset given by -in, and check that it answers from the
+// directory that -schema names:
+// 1. Make dataset d with one dev.license row, and query license:% over it.
+// 2. Query license:% with -meta, and check that the ctype dev.License and its
+//    fields print as they do against the tree.
+// 3. Query % with -meta, and check that 2 lines name the ctype dev.License and 3
+//    name dmmeta.Ctype.
+// 4. Copy the schema's dmmeta, and run -meta -write with -schema naming the copy.
+// 5. Check that the run reports n_file_mod:0, that the dataset keeps its one file,
+//    and that the copy stays identical to the original.
+// A dataset given by -in carries no dmmeta rows of its own.  dev.License, the
+// matched row's ctype, appears on its dmmeta.ctype and gendb.ctypelen rows.
+// dmmeta.Ctype, one of the tables the dataset leaves empty, appears on those two
+// rows and on its dmmeta.cpptype row.  A % that binds every table also selects the
+// ctype of every empty one, which is acr's rule for an empty match.  A query that
+// names one table gets that table's ctype alone, because the query leaves none of
+// the tables that -meta binds to answer with empty.  -meta reads the schema rows
+// for answering only, so -write touches no file.  The test strips the padding from
+// the counts, which BSD wc adds and GNU wc omits.
 void atf_comp::comptest_acr_MetaDset() {
     atf_comp::ProcStart("bash -c 'cd $tempdir && mkdir -p d/dev"
                         " && printf \"dev.license  license:MIT  proprietary:N  copyleft:N  comment:\\\"\\\"\\n\" > d/dev/license.ssim"
@@ -389,6 +429,38 @@ void atf_comp::comptest_acr_NullTrunc() {
 
 void atf_comp::comptest_acr_QueryCtype() {
     atf_comp::ProcStart("$bindir/acr dmmeta.ctype:dmmeta.Ctype");
+}
+
+// Print a table whose rows refer to rows of the same table, and check that it
+// prints before every table that refers to it, though the dependent's name sorts
+// first:
+// 1. Copy dmmeta, and add two tables to the copy with acr -insert -write:
+//    dsmp.node, whose row names its parent node, and dsmp.grant, whose row names
+//    a node.
+// 2. Feed acr one grant and three nodes, dependents first, and print them all.
+// 3. Check that the nodes print first, sorted by key with a parent before its
+//    children, and that the grant prints after them.
+// The test feeds the rows dependents first, so the output order is acr's own.
+void atf_comp::comptest_acr_SelfRefOrder() {
+    atf_comp::FProc &setup = atf_comp::ProcStart("bash -c 'rm -rf $tempdir/s && mkdir -p $tempdir/s && cp -r data/dmmeta $tempdir/s/dmmeta"
+                                                 " && $bindir/acr -in:$tempdir/s -insert -write -print:N -report:N'");
+    atf_comp::ProcWrite(setup, "dmmeta.ns  ns:dsmp  nstype:ssimdb  license:GPL  comment:''");
+    atf_comp::ProcWrite(setup, "dmmeta.ctype  ctype:dsmp.Grant  comment:''");
+    atf_comp::ProcWrite(setup, "dmmeta.ctype  ctype:dsmp.Node  comment:''");
+    atf_comp::ProcWrite(setup, "dmmeta.field  field:dsmp.Grant.grant  arg:algo.cstring  reftype:Val  dflt:''  comment:''");
+    atf_comp::ProcWrite(setup, "dmmeta.field  field:dsmp.Grant.node  arg:dsmp.Node  reftype:Pkey  dflt:''  comment:''");
+    atf_comp::ProcWrite(setup, "dmmeta.field  field:dsmp.Node.node  arg:algo.cstring  reftype:Val  dflt:''  comment:''");
+    atf_comp::ProcWrite(setup, "dmmeta.field  field:dsmp.Node.parent  arg:dsmp.Node  reftype:Pkey  dflt:''  comment:''");
+    atf_comp::ProcWrite(setup, "dmmeta.ssimfile  ssimfile:dsmp.grant  ctype:dsmp.Grant");
+    atf_comp::ProcWrite(setup, "dmmeta.ssimfile  ssimfile:dsmp.node  ctype:dsmp.Node");
+    atf_comp::ProcWrite(setup, "dmmeta.ssimsort  ssimfile:dsmp.node  sortfld:dsmp.Node.node  comment:''");
+    atf_comp::ProcWriteEof(setup);
+    atf_comp::ProcWait(setup);
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/acr -in:- -schema:$tempdir/s % -report:N");
+    atf_comp::ProcWrite(proc, "dsmp.grant  grant:g1  node:a/b");
+    atf_comp::ProcWrite(proc, "dsmp.node  node:a/b  parent:a");
+    atf_comp::ProcWrite(proc, "dsmp.node  node:a  parent:''");
+    atf_comp::ProcWrite(proc, "dsmp.node  node:''  parent:''");
 }
 
 void atf_comp::comptest_acr_RenameCollision() {
@@ -461,9 +533,10 @@ void atf_comp::comptest_acr_Trunc() {
     atf_comp::ProcWrite(proc, "dev.timefmt timefmt:xyz");
 }
 
-// A parsed tuple naming a ctype acr does not know is reported, fails the
-// run, and blocks the -write; the blank and comment-only lines in the same
-// file stay accepted and draw no report.
+// Run acr % -write over a file that holds a blank line, a comment line and a tuple
+// of an unknown ctype.  Check that acr reports the unknown tuple, exits nonzero
+// and leaves the file as it was, and that the blank and comment lines draw no
+// report.
 void atf_comp::comptest_acr_UnknownCtype() {
     atf_comp::ProcStart("bash -c 'printf \"\\n# comment line\\ndmmeta.nss  nss:foo\\ndmmeta.ns  ns:zzz  nstype:exe  license:GPL\\n\" > $tempdir/t.ssim"
                         "; $bindir/acr % -write -in:$tempdir/t.ssim"

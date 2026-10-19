@@ -50,6 +50,20 @@ export enum MsgHeader_type_Enum {
    ams_SampMengSymbolrowMsg = 2013,
    ams_SampMengTextMsg = 2010,
    ams_SampMengUserrowMsg = 2014,
+   ams_SampPcapjoinMatchMsg = 2025,
+   ams_SampPcapjoinMissMsg = 2026,
+   ams_SampPcapjoinPairMsg = 2028,
+   ams_SampPcapjoinStateMsg = 2027,
+   ams_SampRpcAcctMsg = 2023,
+   ams_SampRpcReplyMsg = 2022,
+   ams_SampRpcReqMsg = 2021,
+   ams_SampVodChatMsg = 2031,
+   ams_SampVodClipMsg = 2030,
+   ams_SampVodPollCancelMsg = 2035,
+   ams_SampVodPollOpenMsg = 2033,
+   ams_SampVodPollResultMsg = 2034,
+   ams_SampVodRejectMsg = 2032,
+   ams_SampVodSegMsg = 2029,
    ams_ShmHbMsg = 3,
    ams_TerminateMsg = 352,
    ams_UdpFrame = 2,
@@ -205,8 +219,11 @@ export function SampMengSymbol_Encode(view: DataView, offset: number, parent: Sa
 export function SampMengSymbol_Decode(view: DataView, offset: number): SampMengSymbol {
     let parent = new SampMengSymbol;
     let _s_symbol = new Uint8Array(view.buffer,view.byteOffset+offset+0,8);
-    let _e_symbol = _s_symbol.indexOf(0);
-    parent.symbol = _g_text_decoder.decode(_e_symbol < 0 ? _s_symbol : _s_symbol.subarray(0,_e_symbol));
+    let _e_symbol = 8;
+    while (_e_symbol > 0 && _s_symbol[_e_symbol-1] === 0) {
+        _e_symbol--;
+    }
+    parent.symbol = _g_text_decoder.decode(_s_symbol.subarray(0,_e_symbol));
     return parent;
 }
 

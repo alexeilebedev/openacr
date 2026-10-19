@@ -147,21 +147,24 @@ enum doc_TableIdEnum {                        // doc.TableId.value
     ,doc_TableId_dev_readmefile        = 13   // dev.readmefile -> doc.FReadmefile
     ,doc_TableId_dmmeta_Ssimfile       = 14   // dmmeta.Ssimfile -> doc.FSsimfile
     ,doc_TableId_dmmeta_ssimfile       = 14   // dmmeta.ssimfile -> doc.FSsimfile
-    ,doc_TableId_dev_Targdep           = 15   // dev.Targdep -> doc.FTargdep
-    ,doc_TableId_dev_targdep           = 15   // dev.targdep -> doc.FTargdep
-    ,doc_TableId_dev_Targsrc           = 16   // dev.Targsrc -> doc.FTargsrc
-    ,doc_TableId_dev_targsrc           = 16   // dev.targsrc -> doc.FTargsrc
-    ,doc_TableId_dmmeta_Typefld        = 17   // dmmeta.Typefld -> doc.FTypefld
-    ,doc_TableId_dmmeta_typefld        = 17   // dmmeta.typefld -> doc.FTypefld
+    ,doc_TableId_dmmeta_Ssimreq        = 15   // dmmeta.Ssimreq -> doc.FSsimreq
+    ,doc_TableId_dmmeta_ssimreq        = 15   // dmmeta.ssimreq -> doc.FSsimreq
+    ,doc_TableId_dev_Targdep           = 16   // dev.Targdep -> doc.FTargdep
+    ,doc_TableId_dev_targdep           = 16   // dev.targdep -> doc.FTargdep
+    ,doc_TableId_dev_Targsrc           = 17   // dev.Targsrc -> doc.FTargsrc
+    ,doc_TableId_dev_targsrc           = 17   // dev.targsrc -> doc.FTargsrc
+    ,doc_TableId_dmmeta_Typefld        = 18   // dmmeta.Typefld -> doc.FTypefld
+    ,doc_TableId_dmmeta_typefld        = 18   // dmmeta.typefld -> doc.FTypefld
 };
 
-enum { doc_TableIdEnum_N = 36 };
+enum { doc_TableIdEnum_N = 38 };
 
 namespace doc { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
 namespace doc { // gen:ns_tclass_field
 } // gen:ns_tclass_field
 // gen:ns_fwddecl2
+namespace doc { struct FGistrec; }
 namespace gendb { struct Msg; }
 namespace gendb { struct Msgfield; }
 namespace doc { struct _db_readmefile_curs; }
@@ -201,6 +204,11 @@ namespace doc { struct _db_loose_curs; }
 namespace doc { struct _db_toolout_curs; }
 namespace doc { struct _db_zd_toolout_curs; }
 namespace doc { struct _db_sitechunk_curs; }
+namespace doc { struct _db_gist_curs; }
+namespace doc { struct _db_gistrec_curs; }
+namespace doc { struct _db_ssimreq_curs; }
+namespace doc { struct gistrec_zd_gist_curs; }
+namespace doc { struct gstatic_c_hook_curs; }
 namespace doc { struct msg_c_msgfield_curs; }
 namespace doc { struct run_ary_curs; }
 namespace doc { struct run_brk_curs; }
@@ -222,6 +230,7 @@ namespace doc { struct FDocpage; }
 namespace doc { struct FFconst; }
 namespace doc { struct FField; }
 namespace doc { struct FFinput; }
+namespace doc { struct FGist; }
 namespace doc { struct FGitfile; }
 namespace doc { struct FGstatic; }
 namespace doc { struct FHist; }
@@ -239,6 +248,7 @@ namespace doc { struct FSitechunk; }
 namespace doc { struct FSitepage; }
 namespace doc { struct FSpan; }
 namespace doc { struct FSsimfile; }
+namespace doc { struct FSsimreq; }
 namespace doc { struct FSubject; }
 namespace doc { struct FTargdep; }
 namespace doc { struct FTargsrc; }
@@ -532,6 +542,7 @@ inline void          FBlock_Init(doc::FBlock& parent);
 struct FComptest { // doc.FComptest
     algo::Smallstr50   comptest;    //
     i32                timeout;     //   10
+    algo::Smallstr50   cijob;       //   "compB"  The cijob that runs this test outside memcheck; none = never
     algo::Smallstr50   memcheck;    // The cijob that runs this test under valgrind memcheck; none = never
     bool               coverage;    //   true
     bool               stablefld;   //   false  Replace unstable fields with ***
@@ -568,6 +579,7 @@ inline void          FComptest_Init(doc::FComptest& parent);
 struct FCtype { // doc.FCtype
     algo::Smallstr100   ctype;               // Identifier. must be ns.typename
     algo::cstring       comment;             //
+    doc::FField*        c_base;              // The field of reftype Base, naming the ctype this one projects. optional pointer
     doc::FCtype*        ind_ctype_next;      // hash next
     u32                 ind_ctype_hashval;   // hash value
     // func:doc.FCtype..AssignOp
@@ -791,6 +803,17 @@ struct FDb { // doc.FDb
     doc::FToolout*       zd_toolout_tail;                    // pointer to last element
     doc::FSitechunk*     sitechunk_lary[36];                 // level array
     i64                  sitechunk_n;                        // number of elements in array
+    doc::FGist*          gist_lary[36];                      // level array
+    i64                  gist_n;                             // number of elements in array
+    doc::FGistrec*       gistrec_lary[36];                   // level array
+    i64                  gistrec_n;                          // number of elements in array
+    doc::FGistrec**      ind_gistrec_buckets_elems;          // pointer to bucket array
+    i32                  ind_gistrec_buckets_n;              // number of elements in bucket array
+    i32                  ind_gistrec_n;                      // number of elements in the hash table
+    bool                 dir;                                //   false  The pane lists the other documents of the directory
+    doc::FSsimreq*       ssimreq_lary[36];                   // level array
+    i64                  ssimreq_n;                          // number of elements in array
+    algo::cstring        gistcmd;                            // Command line that found the functions in gist
     doc::trace           trace;                              //
 };
 // Read argc,argv into the fields of doc.FDb.cmdline (and any base command line)
@@ -2785,6 +2808,146 @@ inline doc::FSitechunk& sitechunk_qFind(u64 t) __attribute__((nothrow, pure));
 // func:doc.FDb.sitechunk.XrefMaybe
 bool                 sitechunk_XrefMaybe(doc::FSitechunk &row);
 
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:doc.FDb.gist.Alloc
+doc::FGist&          gist_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:doc.FDb.gist.AllocMaybe
+doc::FGist*          gist_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+// func:doc.FDb.gist.AllocMem
+void*                gist_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:doc.FDb.gist.EmptyQ
+inline bool          gist_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+// func:doc.FDb.gist.Find
+inline doc::FGist*   gist_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+// func:doc.FDb.gist.Last
+inline doc::FGist*   gist_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+// func:doc.FDb.gist.N
+inline i64           gist_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+// func:doc.FDb.gist.RemoveAll
+void                 gist_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:doc.FDb.gist.RemoveLast
+void                 gist_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:doc.FDb.gist.qFind
+inline doc::FGist&   gist_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:doc.FDb.gist.XrefMaybe
+bool                 gist_XrefMaybe(doc::FGist &row);
+
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:doc.FDb.gistrec.Alloc
+doc::FGistrec&       gistrec_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:doc.FDb.gistrec.AllocMaybe
+doc::FGistrec*       gistrec_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+// func:doc.FDb.gistrec.AllocMem
+void*                gistrec_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:doc.FDb.gistrec.EmptyQ
+inline bool          gistrec_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+// func:doc.FDb.gistrec.Find
+inline doc::FGistrec* gistrec_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+// func:doc.FDb.gistrec.Last
+inline doc::FGistrec* gistrec_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+// func:doc.FDb.gistrec.N
+inline i64           gistrec_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+// func:doc.FDb.gistrec.RemoveAll
+void                 gistrec_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:doc.FDb.gistrec.RemoveLast
+void                 gistrec_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:doc.FDb.gistrec.qFind
+inline doc::FGistrec& gistrec_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:doc.FDb.gistrec.XrefMaybe
+bool                 gistrec_XrefMaybe(doc::FGistrec &row);
+
+// Return true if hash is empty
+// func:doc.FDb.ind_gistrec.EmptyQ
+inline bool          ind_gistrec_EmptyQ() __attribute__((nothrow));
+// Find row by key. Return NULL if not found.
+// func:doc.FDb.ind_gistrec.Find
+doc::FGistrec*       ind_gistrec_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:doc.FDb.ind_gistrec.FindX
+doc::FGistrec&       ind_gistrec_FindX(const algo::strptr& key);
+// Find row by key. If not found, create and x-reference a new row with with this key.
+// func:doc.FDb.ind_gistrec.GetOrCreate
+doc::FGistrec&       ind_gistrec_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
+// Return number of items in the hash
+// func:doc.FDb.ind_gistrec.N
+inline i32           ind_gistrec_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:doc.FDb.ind_gistrec.InsertMaybe
+bool                 ind_gistrec_InsertMaybe(doc::FGistrec& row) __attribute__((nothrow));
+// Remove reference to element from hash index. If element is not in hash, do nothing
+// func:doc.FDb.ind_gistrec.Remove
+void                 ind_gistrec_Remove(doc::FGistrec& row) __attribute__((nothrow));
+// Reserve enough room in the hash for N more elements. Return success code.
+// func:doc.FDb.ind_gistrec.Reserve
+void                 ind_gistrec_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:doc.FDb.ind_gistrec.AbsReserve
+void                 ind_gistrec_AbsReserve(int n) __attribute__((nothrow));
+
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:doc.FDb.ssimreq.Alloc
+doc::FSsimreq&       ssimreq_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:doc.FDb.ssimreq.AllocMaybe
+doc::FSsimreq*       ssimreq_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:doc.FDb.ssimreq.InsertMaybe
+doc::FSsimreq*       ssimreq_InsertMaybe(const dmmeta::Ssimreq &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+// func:doc.FDb.ssimreq.AllocMem
+void*                ssimreq_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:doc.FDb.ssimreq.EmptyQ
+inline bool          ssimreq_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+// func:doc.FDb.ssimreq.Find
+inline doc::FSsimreq* ssimreq_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+// func:doc.FDb.ssimreq.Last
+inline doc::FSsimreq* ssimreq_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+// func:doc.FDb.ssimreq.N
+inline i64           ssimreq_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+// func:doc.FDb.ssimreq.RemoveAll
+void                 ssimreq_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:doc.FDb.ssimreq.RemoveLast
+void                 ssimreq_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:doc.FDb.ssimreq.qFind
+inline doc::FSsimreq& ssimreq_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:doc.FDb.ssimreq.XrefMaybe
+bool                 ssimreq_XrefMaybe(doc::FSsimreq &row);
+
 // cursor points to valid item
 // func:doc.FDb.readmefile_curs.Reset
 inline void          _db_readmefile_curs_Reset(_db_readmefile_curs &curs, doc::FDb &parent) __attribute__((nothrow));
@@ -3226,6 +3389,42 @@ inline void          _db_sitechunk_curs_Next(_db_sitechunk_curs &curs) __attribu
 // item access
 // func:doc.FDb.sitechunk_curs.Access
 inline doc::FSitechunk& _db_sitechunk_curs_Access(_db_sitechunk_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:doc.FDb.gist_curs.Reset
+inline void          _db_gist_curs_Reset(_db_gist_curs &curs, doc::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:doc.FDb.gist_curs.ValidQ
+inline bool          _db_gist_curs_ValidQ(_db_gist_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:doc.FDb.gist_curs.Next
+inline void          _db_gist_curs_Next(_db_gist_curs &curs) __attribute__((nothrow));
+// item access
+// func:doc.FDb.gist_curs.Access
+inline doc::FGist&   _db_gist_curs_Access(_db_gist_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:doc.FDb.gistrec_curs.Reset
+inline void          _db_gistrec_curs_Reset(_db_gistrec_curs &curs, doc::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:doc.FDb.gistrec_curs.ValidQ
+inline bool          _db_gistrec_curs_ValidQ(_db_gistrec_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:doc.FDb.gistrec_curs.Next
+inline void          _db_gistrec_curs_Next(_db_gistrec_curs &curs) __attribute__((nothrow));
+// item access
+// func:doc.FDb.gistrec_curs.Access
+inline doc::FGistrec& _db_gistrec_curs_Access(_db_gistrec_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:doc.FDb.ssimreq_curs.Reset
+inline void          _db_ssimreq_curs_Reset(_db_ssimreq_curs &curs, doc::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:doc.FDb.ssimreq_curs.ValidQ
+inline bool          _db_ssimreq_curs_ValidQ(_db_ssimreq_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:doc.FDb.ssimreq_curs.Next
+inline void          _db_ssimreq_curs_Next(_db_ssimreq_curs &curs) __attribute__((nothrow));
+// item access
+// func:doc.FDb.ssimreq_curs.Access
+inline doc::FSsimreq& _db_ssimreq_curs_Access(_db_ssimreq_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:doc.FDb..Init
 void                 FDb_Init();
@@ -3320,6 +3519,7 @@ struct FDocpage { // doc.FDocpage
     bool                     word;                  //   false  A location names this page by this word and a colon
     bool                     bare;                  //   false  A bare key naming this page addresses it
     bool                     bytable;               //   false  A pattern handed to this word is the query over the table its name expands to
+    bool                     view;                  //   false  The page is a view of the records its word is handed
     algo::cstring            comment;               //
     doc::docpage_step_hook   step;                  //   NULL  Pointer to a function
     // reftype Hook of doc.FDocpage.step prohibits copy
@@ -3347,7 +3547,7 @@ void                 docpage_CopyIn(doc::FDocpage &row, dev::Docpage &in) __attr
 
 // Invoke function by pointer
 // func:doc.FDocpage.step.Call
-inline void          step_Call(doc::FDocpage& parent) __attribute__((nothrow));
+inline void          step_Call(doc::FDocpage& parent);
 
 // Set all fields to initial values.
 // func:doc.FDocpage..Init
@@ -3388,18 +3588,21 @@ algo::strptr         name_Get(doc::FFconst& parent) __attribute__((__warn_unused
 // create: doc.FDb.field (Lary)
 // global access: field (Lary, by rowid)
 // global access: ind_field (Thash, hash field field)
+// access: doc.FCtype.c_base (Ptr)
+// access: doc.FGstatic.c_hook (Ptrary)
 struct FField { // doc.FField
-    doc::FField*        ind_field_next;      // hash next
-    u32                 ind_field_hashval;   // hash value
-    algo::Smallstr150   field;               // Primary key, as ctype.name
-    algo::Smallstr100   arg;                 // Type of field
-    algo::Smallstr50    reftype;             //   "Val"  Type constructor
-    algo::CppExpr       dflt;                // Default value (c++ expression)
-    algo::cstring       comment;             //
+    doc::FField*        ind_field_next;          // hash next
+    u32                 ind_field_hashval;       // hash value
+    algo::Smallstr150   field;                   // Primary key, as ctype.name
+    algo::Smallstr100   arg;                     // Type of field
+    algo::Smallstr50    reftype;                 //   "Val"  Type constructor
+    algo::CppExpr       dflt;                    // Default value (c++ expression)
+    algo::cstring       comment;                 //
+    bool                gstatic_c_hook_in_ary;   //   false  membership flag
     // func:doc.FField..AssignOp
-    inline doc::FField&  operator =(const doc::FField &rhs) = delete;
+    doc::FField&         operator =(const doc::FField &rhs) = delete;
     // func:doc.FField..CopyCtor
-    inline               FField(const doc::FField &rhs) = delete;
+    FField(const doc::FField &rhs) = delete;
 private:
     // func:doc.FField..Ctor
     inline               FField() __attribute__((nothrow));
@@ -3462,6 +3665,124 @@ algo::strptr         ns_Get(doc::FFinput& parent) __attribute__((__warn_unused_r
 // func:doc.FFinput..Init
 inline void          FFinput_Init(doc::FFinput& parent);
 
+// --- doc.FGist
+// create: doc.FDb.gist (Lary)
+// global access: gist (Lary, by rowid)
+// access: doc.FGistrec.zd_gist (Llist)
+struct FGist { // doc.FGist: One function a gstatic record stands for, as src_func reported it
+    algo::cstring    gist;                   // The function, target.name
+    algo::cstring    src;                    // File the function lives in
+    u32              line;                   //   0  Line the prototype is on
+    doc::FGistrec*   p_gistrec;              // reference to parent row
+    u32              endline;                //   0  Last line of the body
+    doc::FGist*      gistrec_zd_gist_next;   // zslist link; -1 means not-in-list
+    doc::FGist*      gistrec_zd_gist_prev;   // previous element
+    // func:doc.FGist..AssignOp
+    inline doc::FGist&   operator =(const doc::FGist &rhs) = delete;
+    // func:doc.FGist..CopyCtor
+    inline               FGist(const doc::FGist &rhs) = delete;
+private:
+    // func:doc.FGist..Ctor
+    inline               FGist() __attribute__((nothrow));
+    // func:doc.FGist..Dtor
+    inline               ~FGist() __attribute__((nothrow));
+    friend doc::FGist&          gist_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend doc::FGist*          gist_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 gist_RemoveAll() __attribute__((nothrow));
+    friend void                 gist_RemoveLast() __attribute__((nothrow));
+};
+// Set all fields to initial values.
+// func:doc.FGist..Init
+inline void          FGist_Init(doc::FGist& parent);
+// func:doc.FGist..Uninit
+void                 FGist_Uninit(doc::FGist& parent) __attribute__((nothrow));
+
+// --- doc.FGistrec
+// create: doc.FDb.gistrec (Lary)
+// global access: gistrec (Lary, by rowid)
+// global access: ind_gistrec (Thash, hash field gistrec)
+// access: doc.FGist.p_gistrec (Upptr)
+struct FGistrec { // doc.FGistrec: One record of a gist page and the functions it stands for
+    doc::FGistrec*   ind_gistrec_next;      // hash next
+    u32              ind_gistrec_hashval;   // hash value
+    algo::cstring    gistrec;               // Key of the record, table:key
+    doc::FGist*      zd_gist_head;          // zero-terminated doubly linked list
+    i32              zd_gist_n;             // zero-terminated doubly linked list
+    doc::FGist*      zd_gist_tail;          // pointer to last element
+    // reftype Llist of doc.FGistrec.zd_gist prohibits copy
+    // func:doc.FGistrec..AssignOp
+    inline doc::FGistrec& operator =(const doc::FGistrec &rhs) = delete;
+    // reftype Llist of doc.FGistrec.zd_gist prohibits copy
+    // func:doc.FGistrec..CopyCtor
+    inline               FGistrec(const doc::FGistrec &rhs) = delete;
+private:
+    // func:doc.FGistrec..Ctor
+    inline               FGistrec() __attribute__((nothrow));
+    // func:doc.FGistrec..Dtor
+    inline               ~FGistrec() __attribute__((nothrow));
+    friend doc::FGistrec&       gistrec_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend doc::FGistrec*       gistrec_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 gistrec_RemoveAll() __attribute__((nothrow));
+    friend void                 gistrec_RemoveLast() __attribute__((nothrow));
+};
+// Return true if index is empty
+// func:doc.FGistrec.zd_gist.EmptyQ
+inline bool          zd_gist_EmptyQ(doc::FGistrec& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+// If index empty, return NULL. Otherwise return pointer to first element in index
+// func:doc.FGistrec.zd_gist.First
+inline doc::FGist*   zd_gist_First(doc::FGistrec& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return true if row is in the linked list, false otherwise
+// func:doc.FGistrec.zd_gist.InLlistQ
+inline bool          gistrec_zd_gist_InLlistQ(doc::FGist& row) __attribute__((__warn_unused_result__, nothrow));
+// Insert row into linked list. If row is already in linked list, do nothing.
+// func:doc.FGistrec.zd_gist.Insert
+void                 zd_gist_Insert(doc::FGistrec& parent, doc::FGist& row) __attribute__((nothrow));
+// If index empty, return NULL. Otherwise return pointer to last element in index
+// func:doc.FGistrec.zd_gist.Last
+inline doc::FGist*   zd_gist_Last(doc::FGistrec& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return number of items in the linked list
+// func:doc.FGistrec.zd_gist.N
+inline i32           zd_gist_N(const doc::FGistrec& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to next element in the list
+// func:doc.FGistrec.zd_gist.Next
+inline doc::FGist*   gistrec_zd_gist_Next(doc::FGist &row) __attribute__((__warn_unused_result__, nothrow));
+// Return pointer to previous element in the list
+// func:doc.FGistrec.zd_gist.Prev
+inline doc::FGist*   gistrec_zd_gist_Prev(doc::FGist &row) __attribute__((__warn_unused_result__, nothrow));
+// Remove element from index. If element is not in index, do nothing.
+// func:doc.FGistrec.zd_gist.Remove
+void                 zd_gist_Remove(doc::FGistrec& parent, doc::FGist& row) __attribute__((nothrow));
+// Empty the index. (The rows are not deleted)
+// func:doc.FGistrec.zd_gist.RemoveAll
+void                 zd_gist_RemoveAll(doc::FGistrec& parent) __attribute__((nothrow));
+// If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
+// func:doc.FGistrec.zd_gist.RemoveFirst
+doc::FGist*          zd_gist_RemoveFirst(doc::FGistrec& parent) __attribute__((nothrow));
+// Return reference to last element in the index. No bounds checking.
+// func:doc.FGistrec.zd_gist.qLast
+inline doc::FGist&   zd_gist_qLast(doc::FGistrec& parent) __attribute__((__warn_unused_result__, nothrow));
+// Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
+// func:doc.FGistrec.zd_gist.InsertBefore
+void                 zd_gist_InsertBefore(doc::FGistrec& parent, doc::FGist& row, doc::FGist* before) __attribute__((nothrow));
+
+// Set all fields to initial values.
+// func:doc.FGistrec..Init
+inline void          FGistrec_Init(doc::FGistrec& parent);
+// cursor points to valid item
+// func:doc.FGistrec.zd_gist_curs.Reset
+inline void          gistrec_zd_gist_curs_Reset(gistrec_zd_gist_curs &curs, doc::FGistrec &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:doc.FGistrec.zd_gist_curs.ValidQ
+inline bool          gistrec_zd_gist_curs_ValidQ(gistrec_zd_gist_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:doc.FGistrec.zd_gist_curs.Next
+inline void          gistrec_zd_gist_curs_Next(gistrec_zd_gist_curs &curs) __attribute__((nothrow));
+// item access
+// func:doc.FGistrec.zd_gist_curs.Access
+inline doc::FGist&   gistrec_zd_gist_curs_Access(gistrec_zd_gist_curs &curs) __attribute__((nothrow));
+// func:doc.FGistrec..Uninit
+void                 FGistrec_Uninit(doc::FGistrec& parent) __attribute__((nothrow));
+
 // --- doc.FGitfile
 // create: doc.FDb.gitfile (Lary)
 // global access: gitfile (Lary, by rowid)
@@ -3503,12 +3824,18 @@ void                 FGitfile_Uninit(doc::FGitfile& parent) __attribute__((nothr
 // --- doc.FGstatic
 // create: doc.FDb.gstatic (Lary)
 // global access: gstatic (Lary, by rowid)
+// access: doc.FSsimfile.p_gstatic (Ptr)
 struct FGstatic { // doc.FGstatic
-    algo::Smallstr150   field;     //
-    algo::cstring       comment;   //
+    algo::Smallstr150   field;          //
+    algo::cstring       comment;        //
+    doc::FField**       c_hook_elems;   // array of pointers
+    u64                 c_hook_n;       // current size
+    u64                 c_hook_max;     // capacity of allocated array
 private:
     // func:doc.FGstatic..Ctor
     inline               FGstatic() __attribute__((nothrow));
+    // func:doc.FGstatic..Dtor
+    inline               ~FGstatic() __attribute__((nothrow));
     friend doc::FGstatic&       gstatic_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend doc::FGstatic*       gstatic_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 gstatic_RemoveAll() __attribute__((nothrow));
@@ -3524,6 +3851,62 @@ void                 gstatic_CopyIn(doc::FGstatic &row, dmmeta::Gstatic &in) __a
 // func:doc.FGstatic.ns.Get
 algo::strptr         ns_Get(doc::FGstatic& parent) __attribute__((__warn_unused_result__, nothrow));
 
+// Return true if index is empty
+// func:doc.FGstatic.c_hook.EmptyQ
+inline bool          c_hook_EmptyQ(doc::FGstatic& parent) __attribute__((nothrow));
+// Look up row by row id. Return NULL if out of range
+// func:doc.FGstatic.c_hook.Find
+inline doc::FField*  c_hook_Find(doc::FGstatic& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
+// Return array of pointers
+// func:doc.FGstatic.c_hook.Getary
+inline algo::aryptr<doc::FField*> c_hook_Getary(doc::FGstatic& parent) __attribute__((nothrow));
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
+// func:doc.FGstatic.c_hook.Insert
+void                 c_hook_Insert(doc::FGstatic& parent, doc::FField& row) __attribute__((nothrow));
+// Insert pointer to row in array.
+// If row is already in the array, do nothing.
+// Return value: whether element was inserted into array.
+// func:doc.FGstatic.c_hook.InsertMaybe
+bool                 c_hook_InsertMaybe(doc::FGstatic& parent, doc::FField& row) __attribute__((nothrow));
+// Return number of items in the pointer array
+// func:doc.FGstatic.c_hook.N
+inline i64           c_hook_N(const doc::FGstatic& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+// Find element using linear scan. If element is in array, remove, otherwise do nothing
+// func:doc.FGstatic.c_hook.Remove
+void                 c_hook_Remove(doc::FGstatic& parent, doc::FField& row) __attribute__((nothrow));
+// Empty the index. (The rows are not deleted)
+// func:doc.FGstatic.c_hook.RemoveAll
+inline void          c_hook_RemoveAll(doc::FGstatic& parent) __attribute__((nothrow));
+// Reserve space in index for N more elements;
+// func:doc.FGstatic.c_hook.Reserve
+void                 c_hook_Reserve(doc::FGstatic& parent, u64 n) __attribute__((nothrow));
+// Return reference without bounds checking
+// func:doc.FGstatic.c_hook.qFind
+inline doc::FField&  c_hook_qFind(doc::FGstatic& parent, u64 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+// func:doc.FGstatic.c_hook.InAryQ
+inline bool          gstatic_c_hook_InAryQ(doc::FField& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+// func:doc.FGstatic.c_hook.qLast
+inline doc::FField&  c_hook_qLast(doc::FGstatic& parent) __attribute__((nothrow));
+
+// func:doc.FGstatic.c_hook_curs.Reset
+inline void          gstatic_c_hook_curs_Reset(gstatic_c_hook_curs &curs, doc::FGstatic &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:doc.FGstatic.c_hook_curs.ValidQ
+inline bool          gstatic_c_hook_curs_ValidQ(gstatic_c_hook_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:doc.FGstatic.c_hook_curs.Next
+inline void          gstatic_c_hook_curs_Next(gstatic_c_hook_curs &curs) __attribute__((nothrow));
+// item access
+// func:doc.FGstatic.c_hook_curs.Access
+inline doc::FField&  gstatic_c_hook_curs_Access(gstatic_c_hook_curs &curs) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:doc.FGstatic..Init
+inline void          FGstatic_Init(doc::FGstatic& parent);
+// func:doc.FGstatic..Uninit
+void                 FGstatic_Uninit(doc::FGstatic& parent) __attribute__((nothrow));
 
 // --- doc.FHist
 // create: doc.FDb.hist (Lary)
@@ -3692,14 +4075,11 @@ void                 FMsg_Uninit(doc::FMsg& parent) __attribute__((nothrow));
 // access: doc.FMsg.c_msgfield (Ptrary)
 struct FMsgfield { // doc.FMsgfield
     algo::Smallstr100   msgfield;                //
-    i32                 offset;                  //   0  Absolute byte offset in the message
-    algo::Smallstr100   arg;                     // Leaf scalar ctype (u8..u64, char, bool, f32, f64)
-    i32                 width;                   //   0  Byte width; for a char array the array length
-    bool                bigend;                  //   false  Field is big-endian
-    bool                varlen;                  //   false  Varlen tail: extends to the end of the message
-    algo::Smallstr50    strtype;                 // Inline-string format (dmmeta.strtype): rpascal, leftpad, rightpad; empty when the field is not an inline string
-    algo::Smallstr10    pad;                     // Padding character of a padded inline string, as a byte value; empty when it has none
-    algo::cstring       comment;                 //
+    algo::Fldtype       fldtype;                 // How the field is laid out; it says what offset, width and aux mean
+    algo::Smallstr100   arg;                     // Scalar ctype (u8..u64, char, bool, f32, f64), or a varlen's element ctype
+    i32                 offset;                  //   0  Byte offset in the message
+    i32                 width;                   //   0  Byte width; for a varlen the offset of the end field it starts at, 0 for none
+    i32                 aux;                     //   0  rightpad: the pad byte; varlen2: the offset of the end field it ends at
     bool                msg_c_msgfield_in_ary;   //   false  membership flag
     // func:doc.FMsgfield..AssignOp
     doc::FMsgfield&      operator =(const doc::FMsgfield &rhs) = delete;
@@ -3730,7 +4110,7 @@ algo::strptr         name_Get(doc::FMsgfield& parent) __attribute__((__warn_unus
 
 // Set all fields to initial values.
 // func:doc.FMsgfield..Init
-void                 FMsgfield_Init(doc::FMsgfield& parent);
+inline void          FMsgfield_Init(doc::FMsgfield& parent);
 // func:doc.FMsgfield..Uninit
 void                 FMsgfield_Uninit(doc::FMsgfield& parent) __attribute__((nothrow));
 
@@ -3849,14 +4229,16 @@ struct FReadmefile { // doc.FReadmefile
     algo::Smallstr200   gitfile;                  //
     bool                inl;                      //   false
     bool                sandbox;                  //   false
+    bool                tut;                      //   false  A tutorial: abt_md evaluates its commands only under -tut
     algo::Smallstr100   filter;                   //
     bool                publish;                  //   false  Carry this page into the generated documentation list
+    bool                narrow;                   //   false  Every table row fits 120 characters; abt_md -check refuses a wider one
     algo::cstring       comment;                  //
     bool                c_match_in_ary;           //   false  membership flag
     // func:doc.FReadmefile..AssignOp
-    inline doc::FReadmefile& operator =(const doc::FReadmefile &rhs) = delete;
+    doc::FReadmefile&    operator =(const doc::FReadmefile &rhs) = delete;
     // func:doc.FReadmefile..CopyCtor
-    inline               FReadmefile(const doc::FReadmefile &rhs) = delete;
+    FReadmefile(const doc::FReadmefile &rhs) = delete;
 private:
     // func:doc.FReadmefile..Ctor
     inline               FReadmefile() __attribute__((nothrow));
@@ -4204,6 +4586,7 @@ struct FSsimfile { // doc.FSsimfile
     u32                 ind_ssimfile_ctype_hashval;   // hash value
     algo::Smallstr50    ssimfile;                     //
     algo::Smallstr100   ctype;                        //
+    doc::FGstatic*      p_gstatic;                    // The gstatic binding each row of this table to functions, if any. optional pointer
     // func:doc.FSsimfile..AssignOp
     inline doc::FSsimfile& operator =(const doc::FSsimfile &rhs) = delete;
     // func:doc.FSsimfile..CopyCtor
@@ -4239,6 +4622,49 @@ algo::strptr         name_Get(doc::FSsimfile& parent) __attribute__((__warn_unus
 inline void          FSsimfile_Init(doc::FSsimfile& parent);
 // func:doc.FSsimfile..Uninit
 void                 FSsimfile_Uninit(doc::FSsimfile& parent) __attribute__((nothrow));
+
+// --- doc.FSsimreq
+// create: doc.FDb.ssimreq (Lary)
+// global access: ssimreq (Lary, by rowid)
+struct FSsimreq { // doc.FSsimreq
+    algo::Smallstr100   ssimreq;    //
+    algo::Smallstr100   parent;     //
+    bool                reqchild;   //   false
+    bool                bidir;      //   false
+    algo::cstring       comment;    //
+private:
+    // func:doc.FSsimreq..Ctor
+    inline               FSsimreq() __attribute__((nothrow));
+    friend doc::FSsimreq&       ssimreq_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend doc::FSsimreq*       ssimreq_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 ssimreq_RemoveAll() __attribute__((nothrow));
+    friend void                 ssimreq_RemoveLast() __attribute__((nothrow));
+};
+// Copy fields out of row
+// func:doc.FSsimreq.base.CopyOut
+void                 ssimreq_CopyOut(doc::FSsimreq &row, dmmeta::Ssimreq &out) __attribute__((nothrow));
+// Copy fields in to row
+// func:doc.FSsimreq.base.CopyIn
+void                 ssimreq_CopyIn(doc::FSsimreq &row, dmmeta::Ssimreq &in) __attribute__((nothrow));
+
+// func:doc.FSsimreq.parent_field.Get
+algo::strptr         parent_field_Get(doc::FSsimreq& parent) __attribute__((__warn_unused_result__, nothrow));
+
+// func:doc.FSsimreq.parent_ctype.Get
+algo::strptr         parent_ctype_Get(doc::FSsimreq& parent) __attribute__((__warn_unused_result__, nothrow));
+
+// func:doc.FSsimreq.value.Get
+algo::strptr         value_Get(doc::FSsimreq& parent) __attribute__((__warn_unused_result__, nothrow));
+
+// func:doc.FSsimreq.child_ssimfile.Get
+algo::strptr         child_ssimfile_Get(doc::FSsimreq& parent) __attribute__((__warn_unused_result__, nothrow));
+
+// func:doc.FSsimreq.child_key.Get
+algo::strptr         child_key_Get(doc::FSsimreq& parent) __attribute__((__warn_unused_result__, nothrow));
+
+// Set all fields to initial values.
+// func:doc.FSsimreq..Init
+void                 FSsimreq_Init(doc::FSsimreq& parent);
 
 // --- doc.FSubject
 // create: doc.FDb.subject (Lary)
@@ -5000,6 +5426,48 @@ struct _db_sitechunk_curs {// cursor
 };
 
 
+struct _db_gist_curs {// cursor
+    typedef doc::FGist ChildType;
+    doc::FDb *parent;
+    i64 index;
+    _db_gist_curs(){ parent=NULL; index=0; }
+};
+
+
+struct _db_gistrec_curs {// cursor
+    typedef doc::FGistrec ChildType;
+    doc::FDb *parent;
+    i64 index;
+    _db_gistrec_curs(){ parent=NULL; index=0; }
+};
+
+
+struct _db_ssimreq_curs {// cursor
+    typedef doc::FSsimreq ChildType;
+    doc::FDb *parent;
+    i64 index;
+    _db_ssimreq_curs(){ parent=NULL; index=0; }
+};
+
+
+struct gistrec_zd_gist_curs {// fcurs:doc.FGistrec.zd_gist/curs
+    typedef doc::FGist ChildType;
+    doc::FGist* row;
+    gistrec_zd_gist_curs() {
+        row = NULL;
+    }
+};
+
+
+struct gstatic_c_hook_curs {// fcurs:doc.FGstatic.c_hook/curs
+    typedef doc::FField ChildType;
+    doc::FField** elems;
+    u64 n_elems;
+    u64 index;
+    gstatic_c_hook_curs() { elems=NULL; n_elems=0; index=0; }
+};
+
+
 struct msg_c_msgfield_curs {// fcurs:doc.FMsg.c_msgfield/curs
     typedef doc::FMsgfield ChildType;
     doc::FMsgfield** elems;
@@ -5069,6 +5537,10 @@ void                 docpage_query();
 // func:doc...docpage_msg
 // this function is 'extrn' and implemented by user
 void                 docpage_msg();
+// User-implemented function from gstatic:doc.FDb.docpage
+// func:doc...docpage_gist
+// this function is 'extrn' and implemented by user
+void                 docpage_gist();
 // func:doc...StaticCheck
 void                 StaticCheck();
 } // gen:ns_func

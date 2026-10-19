@@ -1657,6 +1657,70 @@ inline  algo::FileFlags::FileFlags(algo_FileFlagsEnum arg) {
     this->value = u32(arg);
 }
 
+// --- algo.Fldtype.value.GetEnum
+// Get value of field as enum type
+inline algo_FldtypeEnum algo::value_GetEnum(const algo::Fldtype& parent) {
+    return algo_FldtypeEnum(parent.value);
+}
+
+// --- algo.Fldtype.value.SetEnum
+// Set value of field from enum type.
+inline void algo::value_SetEnum(algo::Fldtype& parent, algo_FldtypeEnum rhs) {
+    parent.value = u8(rhs);
+}
+
+// --- algo.Fldtype..EqOp
+inline bool algo::Fldtype::operator ==(const algo::Fldtype &rhs) const {
+    return algo::Fldtype_Eq(const_cast<algo::Fldtype&>(*this),const_cast<algo::Fldtype&>(rhs));
+}
+
+// --- algo.Fldtype..NeOp
+inline bool algo::Fldtype::operator !=(const algo::Fldtype &rhs) const {
+    return !algo::Fldtype_Eq(const_cast<algo::Fldtype&>(*this),const_cast<algo::Fldtype&>(rhs));
+}
+
+// --- algo.Fldtype..Cmp
+inline i32 algo::Fldtype_Cmp(algo::Fldtype lhs, algo::Fldtype rhs) {
+    i32 retval = 0;
+    retval = u8_Cmp(lhs.value, rhs.value);
+    return retval;
+}
+
+// --- algo.Fldtype..Init
+// Set all fields to initial values.
+inline void algo::Fldtype_Init(algo::Fldtype& parent) {
+    parent.value = u8(0);
+}
+
+// --- algo.Fldtype..Eq
+inline bool algo::Fldtype_Eq(algo::Fldtype lhs, algo::Fldtype rhs) {
+    bool retval = true;
+    retval = u8_Eq(lhs.value, rhs.value);
+    return retval;
+}
+
+// --- algo.Fldtype..EqEnum
+// define enum comparison operator to avoid ambiguity
+inline bool algo::Fldtype::operator ==(algo_FldtypeEnum rhs) const {
+    return algo_FldtypeEnum(value) == rhs;
+}
+
+// --- algo.Fldtype..Ctor
+inline  algo::Fldtype::Fldtype() {
+    algo::Fldtype_Init(*this);
+}
+
+// --- algo.Fldtype..FieldwiseCtor
+inline  algo::Fldtype::Fldtype(u8 in_value)
+    : value(in_value)
+ {
+}
+
+// --- algo.Fldtype..EnumCtor
+inline  algo::Fldtype::Fldtype(algo_FldtypeEnum arg) {
+    this->value = u8(arg);
+}
+
 // --- algo.I32Dec1.value.qSetDouble
 // Set value of field value.
 // The value is rounded to the nearest integer.
@@ -21213,6 +21277,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const algo::Fildes &
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const algo::FileFlags &row) {// cfmt:algo.FileFlags.String
     algo::FileFlags_Print(const_cast<algo::FileFlags&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const algo::Fldtype &row) {// cfmt:algo.Fldtype.String
+    algo::Fldtype_Print(const_cast<algo::Fldtype&>(row), str);
     return str;
 }
 

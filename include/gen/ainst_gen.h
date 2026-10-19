@@ -36,14 +36,16 @@ enum { ainst_FieldIdEnum_N = 1 };
 
 // --- ainst_TableIdEnum
 
-enum ainst_TableIdEnum {                 // ainst.TableId.value
-     ainst_TableId_dev_Extpkgsrc   = 0   // dev.Extpkgsrc -> ainst.FExtpkgsrc
-    ,ainst_TableId_dev_extpkgsrc   = 0   // dev.extpkgsrc -> ainst.FExtpkgsrc
-    ,ainst_TableId_dev_Extpkgver   = 1   // dev.Extpkgver -> ainst.FExtpkgver
-    ,ainst_TableId_dev_extpkgver   = 1   // dev.extpkgver -> ainst.FExtpkgver
+enum ainst_TableIdEnum {                    // ainst.TableId.value
+     ainst_TableId_dev_Extpkgnoarch   = 0   // dev.Extpkgnoarch -> ainst.FExtpkgnoarch
+    ,ainst_TableId_dev_extpkgnoarch   = 0   // dev.extpkgnoarch -> ainst.FExtpkgnoarch
+    ,ainst_TableId_dev_Extpkgsrc      = 1   // dev.Extpkgsrc -> ainst.FExtpkgsrc
+    ,ainst_TableId_dev_extpkgsrc      = 1   // dev.extpkgsrc -> ainst.FExtpkgsrc
+    ,ainst_TableId_dev_Extpkgver      = 2   // dev.Extpkgver -> ainst.FExtpkgver
+    ,ainst_TableId_dev_extpkgver      = 2   // dev.extpkgver -> ainst.FExtpkgver
 };
 
-enum { ainst_TableIdEnum_N = 4 };
+enum { ainst_TableIdEnum_N = 6 };
 
 namespace ainst { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
@@ -52,6 +54,7 @@ namespace ainst { // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace dev { struct Extpkg; }
 namespace ainst { struct FExtpkg; }
+namespace dev { struct Extpkgnoarch; }
 namespace dev { struct Extpkgsrc; }
 namespace dev { struct Extpkgver; }
 namespace dev { struct Upstreamtype; }
@@ -60,9 +63,12 @@ namespace ainst { struct _db_extpkgsrc_curs; }
 namespace ainst { struct _db_zd_sel_extpkg_curs; }
 namespace ainst { struct _db_extpkgver_curs; }
 namespace ainst { struct _db_upstreamtype_curs; }
+namespace ainst { struct _db_extpkgnoarch_curs; }
 namespace ainst { struct extpkg_zd_extpkgsrc_curs; }
+namespace ainst { struct extpkg_zd_extpkgnoarch_curs; }
 namespace ainst { struct trace; }
 namespace ainst { struct FDb; }
+namespace ainst { struct FExtpkgnoarch; }
 namespace ainst { struct FExtpkgsrc; }
 namespace ainst { struct FExtpkgver; }
 namespace ainst { struct FUpstreamtype; }
@@ -98,9 +104,6 @@ struct FDb { // ainst.FDb
     i32                      ind_extpkg_n;                     // number of elements in the hash table
     ainst::FExtpkgsrc*       extpkgsrc_lary[36];               // level array
     i64                      extpkgsrc_n;                      // number of elements in array
-    ainst::FExtpkgsrc**      ind_extpkgsrc_buckets_elems;      // pointer to bucket array
-    i32                      ind_extpkgsrc_buckets_n;          // number of elements in bucket array
-    i32                      ind_extpkgsrc_n;                  // number of elements in the hash table
     ainst::FExtpkg*          zd_sel_extpkg_head;               // zero-terminated doubly linked list
     i32                      zd_sel_extpkg_n;                  // zero-terminated doubly linked list
     ainst::FExtpkg*          zd_sel_extpkg_tail;               // pointer to last element
@@ -114,6 +117,8 @@ struct FDb { // ainst.FDb
     ainst::FUpstreamtype**   ind_upstreamtype_buckets_elems;   // pointer to bucket array
     i32                      ind_upstreamtype_buckets_n;       // number of elements in bucket array
     i32                      ind_upstreamtype_n;               // number of elements in the hash table
+    ainst::FExtpkgnoarch*    extpkgnoarch_lary[36];            // level array
+    i64                      extpkgnoarch_n;                   // number of elements in array
     ainst::trace             trace;                            //
 };
 // Read argc,argv into the fields of ainst.FDb.cmdline (and any base command line)
@@ -267,34 +272,6 @@ inline ainst::FExtpkgsrc& extpkgsrc_qFind(u64 t) __attribute__((nothrow, pure));
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:ainst.FDb.extpkgsrc.XrefMaybe
 bool                 extpkgsrc_XrefMaybe(ainst::FExtpkgsrc &row);
-
-// Return true if hash is empty
-// func:ainst.FDb.ind_extpkgsrc.EmptyQ
-inline bool          ind_extpkgsrc_EmptyQ() __attribute__((nothrow));
-// Find row by key. Return NULL if not found.
-// func:ainst.FDb.ind_extpkgsrc.Find
-ainst::FExtpkgsrc*   ind_extpkgsrc_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
-// Look up row by key and return reference. Throw exception if not found
-// func:ainst.FDb.ind_extpkgsrc.FindX
-ainst::FExtpkgsrc&   ind_extpkgsrc_FindX(const algo::strptr& key);
-// Find row by key. If not found, create and x-reference a new row with with this key.
-// func:ainst.FDb.ind_extpkgsrc.GetOrCreate
-ainst::FExtpkgsrc*   ind_extpkgsrc_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
-// Return number of items in the hash
-// func:ainst.FDb.ind_extpkgsrc.N
-inline i32           ind_extpkgsrc_N() __attribute__((__warn_unused_result__, nothrow, pure));
-// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-// func:ainst.FDb.ind_extpkgsrc.InsertMaybe
-bool                 ind_extpkgsrc_InsertMaybe(ainst::FExtpkgsrc& row) __attribute__((nothrow));
-// Remove reference to element from hash index. If element is not in hash, do nothing
-// func:ainst.FDb.ind_extpkgsrc.Remove
-void                 ind_extpkgsrc_Remove(ainst::FExtpkgsrc& row) __attribute__((nothrow));
-// Reserve enough room in the hash for N more elements. Return success code.
-// func:ainst.FDb.ind_extpkgsrc.Reserve
-void                 ind_extpkgsrc_Reserve(int n) __attribute__((nothrow));
-// Reserve enough room for exacty N elements. Return success code.
-// func:ainst.FDb.ind_extpkgsrc.AbsReserve
-void                 ind_extpkgsrc_AbsReserve(int n) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:ainst.FDb.zd_sel_extpkg.EmptyQ
@@ -472,6 +449,46 @@ void                 ind_upstreamtype_Reserve(int n) __attribute__((nothrow));
 // func:ainst.FDb.ind_upstreamtype.AbsReserve
 void                 ind_upstreamtype_AbsReserve(int n) __attribute__((nothrow));
 
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:ainst.FDb.extpkgnoarch.Alloc
+ainst::FExtpkgnoarch& extpkgnoarch_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:ainst.FDb.extpkgnoarch.AllocMaybe
+ainst::FExtpkgnoarch* extpkgnoarch_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:ainst.FDb.extpkgnoarch.InsertMaybe
+ainst::FExtpkgnoarch* extpkgnoarch_InsertMaybe(const dev::Extpkgnoarch &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+// func:ainst.FDb.extpkgnoarch.AllocMem
+void*                extpkgnoarch_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:ainst.FDb.extpkgnoarch.EmptyQ
+inline bool          extpkgnoarch_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+// func:ainst.FDb.extpkgnoarch.Find
+inline ainst::FExtpkgnoarch* extpkgnoarch_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+// func:ainst.FDb.extpkgnoarch.Last
+inline ainst::FExtpkgnoarch* extpkgnoarch_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+// func:ainst.FDb.extpkgnoarch.N
+inline i64           extpkgnoarch_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+// func:ainst.FDb.extpkgnoarch.RemoveAll
+void                 extpkgnoarch_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:ainst.FDb.extpkgnoarch.RemoveLast
+void                 extpkgnoarch_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:ainst.FDb.extpkgnoarch.qFind
+inline ainst::FExtpkgnoarch& extpkgnoarch_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:ainst.FDb.extpkgnoarch.XrefMaybe
+bool                 extpkgnoarch_XrefMaybe(ainst::FExtpkgnoarch &row);
+
 // cursor points to valid item
 // func:ainst.FDb.extpkg_curs.Reset
 inline void          _db_extpkg_curs_Reset(_db_extpkg_curs &curs, ainst::FDb &parent) __attribute__((nothrow));
@@ -532,6 +549,18 @@ inline void          _db_upstreamtype_curs_Next(_db_upstreamtype_curs &curs) __a
 // item access
 // func:ainst.FDb.upstreamtype_curs.Access
 inline ainst::FUpstreamtype& _db_upstreamtype_curs_Access(_db_upstreamtype_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:ainst.FDb.extpkgnoarch_curs.Reset
+inline void          _db_extpkgnoarch_curs_Reset(_db_extpkgnoarch_curs &curs, ainst::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:ainst.FDb.extpkgnoarch_curs.ValidQ
+inline bool          _db_extpkgnoarch_curs_ValidQ(_db_extpkgnoarch_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:ainst.FDb.extpkgnoarch_curs.Next
+inline void          _db_extpkgnoarch_curs_Next(_db_extpkgnoarch_curs &curs) __attribute__((nothrow));
+// item access
+// func:ainst.FDb.extpkgnoarch_curs.Access
+inline ainst::FExtpkgnoarch& _db_extpkgnoarch_curs_Access(_db_extpkgnoarch_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:ainst.FDb..Init
 void                 FDb_Init();
@@ -546,29 +575,33 @@ void                 FDb_Uninit() __attribute__((nothrow));
 // access: ainst.FExtpkg.step (Hook)
 // access: ainst.FUpstreamtype.step (Hook)
 struct FExtpkg { // ainst.FExtpkg
-    ainst::FExtpkg*           ind_extpkg_next;      // hash next
-    u32                       ind_extpkg_hashval;   // hash value
-    ainst::FExtpkg*           zd_sel_extpkg_next;   // zslist link; -1 means not-in-list
-    ainst::FExtpkg*           zd_sel_extpkg_prev;   // previous element
-    algo::Smallstr50          extpkg;               //
-    algo::cstring             probe;                //   ""  shell command that exits 0 on a host holding the package; empty means a host cannot be checked for it
-    algo::cstring             comment;              //
-    ainst::FExtpkgsrc*        zd_extpkgsrc_head;    // zero-terminated doubly linked list
-    i32                       zd_extpkgsrc_n;       // zero-terminated doubly linked list
-    ainst::FExtpkgsrc*        zd_extpkgsrc_tail;    // pointer to last element
-    ainst::extpkg_step_hook   step;                 //   NULL  Pointer to a function
-    algo::cstring             stage;                // Lines that place files under the staging root; the rpm packages what they leave there
-    algo::cstring             post;                 // Lines that act on the live system; the rpm carries them as its %post
-    ainst::FExtpkgver*        c_extpkgver;          // The release this package is pinned to, read at startup rather than compiled in. optional pointer
-    algo::cstring             newver;               // The release the upstream reader found, empty when it found none
+    ainst::FExtpkg*           ind_extpkg_next;        // hash next
+    u32                       ind_extpkg_hashval;     // hash value
+    ainst::FExtpkg*           zd_sel_extpkg_next;     // zslist link; -1 means not-in-list
+    ainst::FExtpkg*           zd_sel_extpkg_prev;     // previous element
+    algo::Smallstr50          extpkg;                 //
+    algo::cstring             comment;                //
+    ainst::FExtpkgsrc*        zd_extpkgsrc_head;      // zero-terminated doubly linked list
+    i32                       zd_extpkgsrc_n;         // zero-terminated doubly linked list
+    ainst::FExtpkgsrc*        zd_extpkgsrc_tail;      // pointer to last element
+    ainst::extpkg_step_hook   step;                   //   NULL  Pointer to a function
+    algo::cstring             stage;                  // Lines that place files under the staging root; the rpm packages what they leave there
+    algo::cstring             post;                   // Lines that act on the live system; the rpm carries them as its %post
+    ainst::FExtpkgver*        c_extpkgver;            // The release this package is pinned to, read at startup rather than compiled in. optional pointer
+    algo::cstring             newver;                 // The release the upstream reader found, empty when it found none
+    ainst::FExtpkgnoarch*     zd_extpkgnoarch_head;   // zero-terminated doubly linked list
+    i32                       zd_extpkgnoarch_n;      // zero-terminated doubly linked list
+    ainst::FExtpkgnoarch*     zd_extpkgnoarch_tail;   // pointer to last element
     // reftype Llist of ainst.FExtpkg.zd_extpkgsrc prohibits copy
     // reftype Hook of ainst.FExtpkg.step prohibits copy
     // x-reference on ainst.FExtpkg.c_extpkgver prevents copy
+    // reftype Llist of ainst.FExtpkg.zd_extpkgnoarch prohibits copy
     // func:ainst.FExtpkg..AssignOp
     ainst::FExtpkg&      operator =(const ainst::FExtpkg &rhs) = delete;
     // reftype Llist of ainst.FExtpkg.zd_extpkgsrc prohibits copy
     // reftype Hook of ainst.FExtpkg.step prohibits copy
     // x-reference on ainst.FExtpkg.c_extpkgver prevents copy
+    // reftype Llist of ainst.FExtpkg.zd_extpkgnoarch prohibits copy
     // func:ainst.FExtpkg..CopyCtor
     FExtpkg(const ainst::FExtpkg &rhs) = delete;
 private:
@@ -630,7 +663,7 @@ void                 zd_extpkgsrc_InsertBefore(ainst::FExtpkg& parent, ainst::FE
 
 // Invoke function by pointer
 // func:ainst.FExtpkg.step.Call
-inline void          step_Call(ainst::FExtpkg& parent, ainst::FExtpkg& arg) __attribute__((nothrow));
+inline void          step_Call(ainst::FExtpkg& parent, ainst::FExtpkg& arg);
 
 // Insert row into pointer index. Return final membership status.
 // func:ainst.FExtpkg.c_extpkgver.InsertMaybe
@@ -638,6 +671,46 @@ inline bool          c_extpkgver_InsertMaybe(ainst::FExtpkg& parent, ainst::FExt
 // Remove element from index. If element is not in index, do nothing.
 // func:ainst.FExtpkg.c_extpkgver.Remove
 inline void          c_extpkgver_Remove(ainst::FExtpkg& parent, ainst::FExtpkgver& row) __attribute__((nothrow));
+
+// Return true if index is empty
+// func:ainst.FExtpkg.zd_extpkgnoarch.EmptyQ
+inline bool          zd_extpkgnoarch_EmptyQ(ainst::FExtpkg& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+// If index empty, return NULL. Otherwise return pointer to first element in index
+// func:ainst.FExtpkg.zd_extpkgnoarch.First
+inline ainst::FExtpkgnoarch* zd_extpkgnoarch_First(ainst::FExtpkg& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return true if row is in the linked list, false otherwise
+// func:ainst.FExtpkg.zd_extpkgnoarch.InLlistQ
+inline bool          extpkg_zd_extpkgnoarch_InLlistQ(ainst::FExtpkgnoarch& row) __attribute__((__warn_unused_result__, nothrow));
+// Insert row into linked list. If row is already in linked list, do nothing.
+// func:ainst.FExtpkg.zd_extpkgnoarch.Insert
+void                 zd_extpkgnoarch_Insert(ainst::FExtpkg& parent, ainst::FExtpkgnoarch& row) __attribute__((nothrow));
+// If index empty, return NULL. Otherwise return pointer to last element in index
+// func:ainst.FExtpkg.zd_extpkgnoarch.Last
+inline ainst::FExtpkgnoarch* zd_extpkgnoarch_Last(ainst::FExtpkg& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return number of items in the linked list
+// func:ainst.FExtpkg.zd_extpkgnoarch.N
+inline i32           zd_extpkgnoarch_N(const ainst::FExtpkg& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to next element in the list
+// func:ainst.FExtpkg.zd_extpkgnoarch.Next
+inline ainst::FExtpkgnoarch* extpkg_zd_extpkgnoarch_Next(ainst::FExtpkgnoarch &row) __attribute__((__warn_unused_result__, nothrow));
+// Return pointer to previous element in the list
+// func:ainst.FExtpkg.zd_extpkgnoarch.Prev
+inline ainst::FExtpkgnoarch* extpkg_zd_extpkgnoarch_Prev(ainst::FExtpkgnoarch &row) __attribute__((__warn_unused_result__, nothrow));
+// Remove element from index. If element is not in index, do nothing.
+// func:ainst.FExtpkg.zd_extpkgnoarch.Remove
+void                 zd_extpkgnoarch_Remove(ainst::FExtpkg& parent, ainst::FExtpkgnoarch& row) __attribute__((nothrow));
+// Empty the index. (The rows are not deleted)
+// func:ainst.FExtpkg.zd_extpkgnoarch.RemoveAll
+void                 zd_extpkgnoarch_RemoveAll(ainst::FExtpkg& parent) __attribute__((nothrow));
+// If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
+// func:ainst.FExtpkg.zd_extpkgnoarch.RemoveFirst
+ainst::FExtpkgnoarch* zd_extpkgnoarch_RemoveFirst(ainst::FExtpkg& parent) __attribute__((nothrow));
+// Return reference to last element in the index. No bounds checking.
+// func:ainst.FExtpkg.zd_extpkgnoarch.qLast
+inline ainst::FExtpkgnoarch& zd_extpkgnoarch_qLast(ainst::FExtpkg& parent) __attribute__((__warn_unused_result__, nothrow));
+// Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
+// func:ainst.FExtpkg.zd_extpkgnoarch.InsertBefore
+void                 zd_extpkgnoarch_InsertBefore(ainst::FExtpkg& parent, ainst::FExtpkgnoarch& row, ainst::FExtpkgnoarch* before) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:ainst.FExtpkg..Init
@@ -654,17 +727,68 @@ inline void          extpkg_zd_extpkgsrc_curs_Next(extpkg_zd_extpkgsrc_curs &cur
 // item access
 // func:ainst.FExtpkg.zd_extpkgsrc_curs.Access
 inline ainst::FExtpkgsrc& extpkg_zd_extpkgsrc_curs_Access(extpkg_zd_extpkgsrc_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:ainst.FExtpkg.zd_extpkgnoarch_curs.Reset
+inline void          extpkg_zd_extpkgnoarch_curs_Reset(extpkg_zd_extpkgnoarch_curs &curs, ainst::FExtpkg &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:ainst.FExtpkg.zd_extpkgnoarch_curs.ValidQ
+inline bool          extpkg_zd_extpkgnoarch_curs_ValidQ(extpkg_zd_extpkgnoarch_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:ainst.FExtpkg.zd_extpkgnoarch_curs.Next
+inline void          extpkg_zd_extpkgnoarch_curs_Next(extpkg_zd_extpkgnoarch_curs &curs) __attribute__((nothrow));
+// item access
+// func:ainst.FExtpkg.zd_extpkgnoarch_curs.Access
+inline ainst::FExtpkgnoarch& extpkg_zd_extpkgnoarch_curs_Access(extpkg_zd_extpkgnoarch_curs &curs) __attribute__((nothrow));
 // func:ainst.FExtpkg..Uninit
 void                 FExtpkg_Uninit(ainst::FExtpkg& parent) __attribute__((nothrow));
+
+// --- ainst.FExtpkgnoarch
+// create: ainst.FDb.extpkgnoarch (Lary)
+// global access: extpkgnoarch (Lary, by rowid)
+// access: ainst.FExtpkg.zd_extpkgnoarch (Llist)
+struct FExtpkgnoarch { // ainst.FExtpkgnoarch
+    ainst::FExtpkgnoarch*   extpkg_zd_extpkgnoarch_next;   // zslist link; -1 means not-in-list
+    ainst::FExtpkgnoarch*   extpkg_zd_extpkgnoarch_prev;   // previous element
+    algo::Smallstr50        extpkgnoarch;                  //
+    algo::cstring           comment;                       //
+    // func:ainst.FExtpkgnoarch..AssignOp
+    inline ainst::FExtpkgnoarch& operator =(const ainst::FExtpkgnoarch &rhs) = delete;
+    // func:ainst.FExtpkgnoarch..CopyCtor
+    inline               FExtpkgnoarch(const ainst::FExtpkgnoarch &rhs) = delete;
+private:
+    // func:ainst.FExtpkgnoarch..Ctor
+    inline               FExtpkgnoarch() __attribute__((nothrow));
+    // func:ainst.FExtpkgnoarch..Dtor
+    inline               ~FExtpkgnoarch() __attribute__((nothrow));
+    friend ainst::FExtpkgnoarch& extpkgnoarch_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend ainst::FExtpkgnoarch* extpkgnoarch_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 extpkgnoarch_RemoveAll() __attribute__((nothrow));
+    friend void                 extpkgnoarch_RemoveLast() __attribute__((nothrow));
+};
+// Copy fields out of row
+// func:ainst.FExtpkgnoarch.base.CopyOut
+void                 extpkgnoarch_CopyOut(ainst::FExtpkgnoarch &row, dev::Extpkgnoarch &out) __attribute__((nothrow));
+// Copy fields in to row
+// func:ainst.FExtpkgnoarch.base.CopyIn
+void                 extpkgnoarch_CopyIn(ainst::FExtpkgnoarch &row, dev::Extpkgnoarch &in) __attribute__((nothrow));
+
+// func:ainst.FExtpkgnoarch.extpkg.Get
+algo::strptr         extpkg_Get(ainst::FExtpkgnoarch& parent) __attribute__((__warn_unused_result__, nothrow));
+
+// func:ainst.FExtpkgnoarch.arch.Get
+algo::strptr         arch_Get(ainst::FExtpkgnoarch& parent) __attribute__((__warn_unused_result__, nothrow));
+
+// Set all fields to initial values.
+// func:ainst.FExtpkgnoarch..Init
+inline void          FExtpkgnoarch_Init(ainst::FExtpkgnoarch& parent);
+// func:ainst.FExtpkgnoarch..Uninit
+void                 FExtpkgnoarch_Uninit(ainst::FExtpkgnoarch& parent) __attribute__((nothrow));
 
 // --- ainst.FExtpkgsrc
 // create: ainst.FDb.extpkgsrc (Lary)
 // global access: extpkgsrc (Lary, by rowid)
-// global access: ind_extpkgsrc (Thash, hash field extpkgsrc)
 // access: ainst.FExtpkg.zd_extpkgsrc (Llist)
 struct FExtpkgsrc { // ainst.FExtpkgsrc
-    ainst::FExtpkgsrc*   ind_extpkgsrc_next;         // hash next
-    u32                  ind_extpkgsrc_hashval;      // hash value
     ainst::FExtpkgsrc*   extpkg_zd_extpkgsrc_next;   // zslist link; -1 means not-in-list
     ainst::FExtpkgsrc*   extpkg_zd_extpkgsrc_prev;   // previous element
     algo::Smallstr50     extpkgsrc;                  //
@@ -697,6 +821,9 @@ algo::strptr         extpkg_Get(ainst::FExtpkgsrc& parent) __attribute__((__warn
 
 // func:ainst.FExtpkgsrc.name.Get
 algo::strptr         name_Get(ainst::FExtpkgsrc& parent) __attribute__((__warn_unused_result__, nothrow));
+
+// func:ainst.FExtpkgsrc.arch.Get
+algo::strptr         arch_Get(ainst::FExtpkgsrc& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:ainst.FExtpkgsrc..Init
@@ -778,7 +905,7 @@ void                 upstreamtype_CopyIn(ainst::FUpstreamtype &row, dev::Upstrea
 
 // Invoke function by pointer
 // func:ainst.FUpstreamtype.step.Call
-inline void          step_Call(ainst::FUpstreamtype& parent, ainst::FExtpkg& arg) __attribute__((nothrow));
+inline void          step_Call(ainst::FUpstreamtype& parent, ainst::FExtpkg& arg);
 
 // Set all fields to initial values.
 // func:ainst.FUpstreamtype..Init
@@ -933,10 +1060,27 @@ struct _db_upstreamtype_curs {// cursor
 };
 
 
+struct _db_extpkgnoarch_curs {// cursor
+    typedef ainst::FExtpkgnoarch ChildType;
+    ainst::FDb *parent;
+    i64 index;
+    _db_extpkgnoarch_curs(){ parent=NULL; index=0; }
+};
+
+
 struct extpkg_zd_extpkgsrc_curs {// fcurs:ainst.FExtpkg.zd_extpkgsrc/curs
     typedef ainst::FExtpkgsrc ChildType;
     ainst::FExtpkgsrc* row;
     extpkg_zd_extpkgsrc_curs() {
+        row = NULL;
+    }
+};
+
+
+struct extpkg_zd_extpkgnoarch_curs {// fcurs:ainst.FExtpkg.zd_extpkgnoarch/curs
+    typedef ainst::FExtpkgnoarch ChildType;
+    ainst::FExtpkgnoarch* row;
+    extpkg_zd_extpkgnoarch_curs() {
         row = NULL;
     }
 };
@@ -980,6 +1124,14 @@ void                 extpkg_go(ainst::FExtpkg&);
 // this function is 'extrn' and implemented by user
 void                 extpkg_grpcurl(ainst::FExtpkg&);
 // User-implemented function from gstatic:ainst.FDb.extpkg
+// func:ainst...extpkg_java
+// this function is 'extrn' and implemented by user
+void                 extpkg_java(ainst::FExtpkg&);
+// User-implemented function from gstatic:ainst.FDb.extpkg
+// func:ainst...extpkg_jq
+// this function is 'extrn' and implemented by user
+void                 extpkg_jq(ainst::FExtpkg&);
+// User-implemented function from gstatic:ainst.FDb.extpkg
 // func:ainst...extpkg_kafka
 // this function is 'extrn' and implemented by user
 void                 extpkg_kafka(ainst::FExtpkg&);
@@ -1016,6 +1168,10 @@ void                 extpkg_mc(ainst::FExtpkg&);
 // this function is 'extrn' and implemented by user
 void                 extpkg_minio(ainst::FExtpkg&);
 // User-implemented function from gstatic:ainst.FDb.extpkg
+// func:ainst...extpkg_mosquitto
+// this function is 'extrn' and implemented by user
+void                 extpkg_mosquitto(ainst::FExtpkg&);
+// User-implemented function from gstatic:ainst.FDb.extpkg
 // func:ainst...extpkg_nats
 // this function is 'extrn' and implemented by user
 void                 extpkg_nats(ainst::FExtpkg&);
@@ -1040,13 +1196,33 @@ void                 extpkg_oauth2_proxy(ainst::FExtpkg&);
 // this function is 'extrn' and implemented by user
 void                 extpkg_ofed(ainst::FExtpkg&);
 // User-implemented function from gstatic:ainst.FDb.extpkg
+// func:ainst...extpkg_ofed_kernel
+// this function is 'extrn' and implemented by user
+void                 extpkg_ofed_kernel(ainst::FExtpkg&);
+// User-implemented function from gstatic:ainst.FDb.extpkg
+// func:ainst...extpkg_osv_scanner
+// this function is 'extrn' and implemented by user
+void                 extpkg_osv_scanner(ainst::FExtpkg&);
+// User-implemented function from gstatic:ainst.FDb.extpkg
+// func:ainst...extpkg_pnpm
+// this function is 'extrn' and implemented by user
+void                 extpkg_pnpm(ainst::FExtpkg&);
+// User-implemented function from gstatic:ainst.FDb.extpkg
 // func:ainst...extpkg_postgresql
 // this function is 'extrn' and implemented by user
 void                 extpkg_postgresql(ainst::FExtpkg&);
 // User-implemented function from gstatic:ainst.FDb.extpkg
+// func:ainst...extpkg_redis
+// this function is 'extrn' and implemented by user
+void                 extpkg_redis(ainst::FExtpkg&);
+// User-implemented function from gstatic:ainst.FDb.extpkg
 // func:ainst...extpkg_redpanda
 // this function is 'extrn' and implemented by user
 void                 extpkg_redpanda(ainst::FExtpkg&);
+// User-implemented function from gstatic:ainst.FDb.extpkg
+// func:ainst...extpkg_rsync
+// this function is 'extrn' and implemented by user
+void                 extpkg_rsync(ainst::FExtpkg&);
 // User-implemented function from gstatic:ainst.FDb.extpkg
 // func:ainst...extpkg_rust
 // this function is 'extrn' and implemented by user
@@ -1067,6 +1243,10 @@ void                 extpkg_spdk(ainst::FExtpkg&);
 // func:ainst...extpkg_ssm_plugin
 // this function is 'extrn' and implemented by user
 void                 extpkg_ssm_plugin(ainst::FExtpkg&);
+// User-implemented function from gstatic:ainst.FDb.extpkg
+// func:ainst...extpkg_tla
+// this function is 'extrn' and implemented by user
+void                 extpkg_tla(ainst::FExtpkg&);
 // User-implemented function from gstatic:ainst.FDb.extpkg
 // func:ainst...extpkg_tsc_freq_khz
 // this function is 'extrn' and implemented by user

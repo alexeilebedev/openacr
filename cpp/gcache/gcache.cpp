@@ -32,7 +32,7 @@ static bool Flock(Fildes fd, int flags) {
 
 static void ShowStats(algo::strptr dir) {
     prlog("cache directory: " <<dir);
-    prlog("# files: "<<SysEval(tempstr()<<"find "<<dir<<" -type f | wc -l",FailokQ(true),1024));
+    prlog("# files: "<<SysEval(tempstr()<<"find "<<dir<<" -type f | wc -l",FailokQ(true)));
     SysCmd(tempstr()<<"du -sh "<<dir);
 }
 //------------------------------------------------------------------------------
@@ -75,11 +75,13 @@ void gcache::ManageCacheDir() {
             // read is chmod's, through xargs, rather than find's: a directory
             // another user made under a restrictive umask cannot be entered,
             // and it holds nothing of this user's to set, so find's failure to
-            // descend into it is not a failure of this step.
+            // descend into it is not a failure of this step.  -H follows a -dir
+            // that is a link to the cache, as /tmp/gcache is on a host that keeps
+            // the cache where a reboot does not empty it.
             tempstr dir = algo::strptr_ToBash(_db.cmdline.dir);
             tempstr mode_cmd;
-            mode_cmd << "find " << dir << " -user $(id -u) -type d -print0 2>/dev/null | xargs -0 -r chmod 2775"
-                     << " && find " << dir << " -user $(id -u) ! -type d -print0 2>/dev/null | xargs -0 -r chmod 0775";
+            mode_cmd << "find -H " << dir << " -user $(id -u) -type d -print0 2>/dev/null | xargs -0 -r chmod 2775"
+                     << " && find -H " << dir << " -user $(id -u) ! -type d -print0 2>/dev/null | xargs -0 -r chmod 0775";
             ok = SysCmd(mode_cmd) == 0;
             if (!ok) {
                 prerr("gcache.error"
@@ -155,6 +157,16 @@ void gcache::RemoveOldFilesRecurse(strptr dir, algo::UnTime del_thresh, algo::Un
 
 // -----------------------------------------------------------------------------
 
+// Make the file at PATH in the cache group-writable, whatever the umask.  Several
+// users can share one cache, and a file's time is what the cleanup reads.  Only
+// a user who may write a file can refresh its time, so an entry another user
+// wrote and uses would otherwise age as if nobody had used it.
+static void ShareFile(strptr path) {
+    (void)chmod(Zeroterm(tempstr(path)), 0664);
+}
+
+// -----------------------------------------------------------------------------
+
 // Remove log entries older than THRESH
 void gcache::CleanLog(algo::UnTime thresh) {
     algo_lib::FFildes out;
@@ -203,6 +215,8 @@ void gcache::CleanLog(algo::UnTime thresh) {
         // worth a line, since the same directory holds every entry.
         algo::PrerrFileFail("gcache.warning",_db.logfname,"log file could not be rewritten; the old log stands");
         DeleteFile(temp);
+    } else {
+        ShareFile(_db.logfname);
     }
 }
 
@@ -241,6 +255,7 @@ void gcache::Clean() {
         bool requested = _db.cmdline.clean || _db.cmdline.gc;
         if (requested || algo::ModTime(gctime_file) < gc_thresh) {
             (void)close(OpenWrite(gctime_file).value);// update gc.time modification time
+            ShareFile(gctime_file);
             CleanLog(log_thresh);
             RemoveOldFilesRecurse(_db.dir,file_thresh,log_thresh);
             EvictToBudget();
@@ -350,7 +365,9 @@ static void FilesToBlob(strptr o_fname, strptr gcno_fname, const strptr &cache_f
         // the byte budget evicts in oldest-last-use order. So a publish that left
         // an existing entry's time alone would offer the cleanup an entry that
         // looks a week older than the build that wrote it.
-        algo::SaveFileFresh(blob, cache_fname, "gcache.warning", "cache entry could not be published", 0644);
+        if (algo::SaveFileFresh(blob, cache_fname, "gcache.warning", "cache entry could not be published", 0644)) {
+            ShareFile(cache_fname);
+        }
     }
 }
 
@@ -494,23 +511,6 @@ static bool CoverageQ() {
 
 //------------------------------------------------------------------------------
 
-// True when the compiler on the command line is clang, read from the macros
-// the compiler predefines.  macOS installs clang under the name g++, so the
-// name of the binary says nothing.  The answer is wanted only where the two
-// compilers need different words for the same thing, and asking costs one run
-// of the compiler.
-static bool ClangQ() {
-    bool ret = false;
-    if (cmd_N(gcache::_db.cmdline) >= 1) {
-        tempstr probe;
-        probe << algo::strptr_ToBash(cmd_qFind(gcache::_db.cmdline, 0)) << " -dM -E -x c++ /dev/null 2>/dev/null";
-        ret = algo::FindStr(algo::SysEval(probe, algo::FailokQ(true), 1024*1024), "__clang__") != -1;
-    }
-    return ret;
-}
-
-//------------------------------------------------------------------------------
-
 // Process command line
 void gcache::ProcessCommandLine() {
     bool is_target(false);
@@ -632,15 +632,89 @@ static tempstr Sha1(strptr str1, strptr str2) {
 
 //------------------------------------------------------------------------------
 
-// Compose cached file name from sha1 hash
+// Compose cached file name from sha1 hash, making the two directories above it.
+// A directory this process makes is set to 2775 at once, whatever the umask, so
+// another user sharing the cache can store an entry in it before this user's
+// next -install sets the mode over the files it owns.
 tempstr gcache::CachedFile(strptr sha1) {
     tempstr out;
     out = DirFileJoin(_db.dir,ch_FirstN(sha1,2));
-    mkdir(Zeroterm(out), 0775);
+    if (mkdir(Zeroterm(out), 0775) == 0) {
+        (void)chmod(Zeroterm(out), 02775);
+    }
     out = DirFileJoin(out,ch_GetRegion(sha1,2,2));
-    mkdir(Zeroterm(out), 0775);
+    if (mkdir(Zeroterm(out), 0775) == 0) {
+        (void)chmod(Zeroterm(out), 02775);
+    }
     out = DirFileJoin(out,sha1);
     return out;
+}
+
+//------------------------------------------------------------------------------
+
+// The program the compile command names: the word itself when it holds a slash,
+// else the first executable of that name on PATH, with links resolved.  Empty
+// when there is none.
+static tempstr CompilerPath() {
+    tempstr ret;
+    strptr name = cmd_qFind(gcache::_db.cmdline, 0);
+    if (algo::FindChar(name, '/') != -1) {
+        ret = name;
+    } else {
+        const char *path = getenv("PATH");
+        ind_beg(algo::Sep_curs, dir, path ? path : "", ':') if (ret == "") {
+            tempstr cand = algo::DirFileJoin(dir, name);
+            if (access(Zeroterm(cand), X_OK) == 0) {
+                ret = cand;
+            }
+        }ind_end;
+    }
+    char resolved[PATH_MAX];
+    if (ret != "" && realpath(Zeroterm(ret), resolved)) {
+        ret = resolved;
+    }
+    return ret;
+}
+
+// Return true when the compiler on the command line is clang, read from the
+// macros it predefines.  macOS installs clang under the name g++, so the name of
+// the binary says nothing.  Asking costs one run of the compiler, about as long
+// as a small compile, so the answer is kept in the cache under the name the
+// command line gives the compiler and the path, size and modification time of
+// the program it resolves to.  The name is part of the key because a wrapper such
+// as ccache, linked under several names, runs the compiler its name selects.  A probe that fails keeps nothing, and the
+// next miss asks again.  Each read of the answer refreshes its time,
+// so the cleanup keeps it while builds use that compiler.
+static bool ProbeClang() {
+    bool ret = false;
+    if (cmd_N(gcache::_db.cmdline) >= 1) {
+        tempstr compiler = CompilerPath();
+        struct stat st;
+        bool known = compiler != "" && stat(Zeroterm(compiler), &st) == 0;
+        tempstr memo;
+        if (known) {
+            memo = gcache::CachedFile(Sha1(tempstr() << "compiler " << cmd_qFind(gcache::_db.cmdline, 0) << " " << compiler
+                                           << " " << st.st_size << " " << st.st_mtime, ""));
+        }
+        tempstr answer = known ? tempstr() << algo::FileToString(memo, algo::FileFlags()) : tempstr();
+        if (answer == "clang" || answer == "gcc") {
+            ret = answer == "clang";
+            (void)utimensat(AT_FDCWD,Zeroterm(memo),NULL,0);
+        } else {
+            tempstr probe;
+            probe << algo::strptr_ToBash(cmd_qFind(gcache::_db.cmdline, 0)) << " -dM -E -x c++ /dev/null 2>/dev/null";
+            tempstr macros = algo::SysEval(probe, algo::FailokQ(true), 1024*1024);
+            ret = algo::FindStr(macros, "__clang__") != -1;
+            // every C++ compiler predefines __cplusplus, so a probe whose output
+            // lacks it never ran the compiler, and its answer is not kept
+            if (known && algo::FindStr(macros, "__cplusplus") != -1) {
+                if (algo::SafeStringToFile(ret ? "clang" : "gcc", memo)) {
+                    ShareFile(memo);
+                }
+            }
+        }
+    }
+    return ret;
 }
 
 //------------------------------------------------------------------------------
@@ -704,6 +778,7 @@ void gcache::Log() {
     if (ch_N(_db.dir) && cmd_N(_db.cmdline) > 0 && _db.cached != "") {
         algo_lib::FFildes logfile;
         logfile.fd=OpenWrite(DirFileJoin(_db.dir,"log.ssim"),algo_FileFlags_append);
+        ShareFile(DirFileJoin(_db.dir,"log.ssim"));
         tempstr out;
         out<<_db.report<<eol;
         WriteFile(logfile.fd, (u8*)out.ch_elems, out.ch_n);
@@ -768,7 +843,8 @@ void gcache::Report() {
 // Rewrite _db.preproc_file so that the compile which follows reads the
 // precompiled header instead of the text it was built from.  A header that
 // does not build leaves the file as it was: it is an optimization, and the
-// compile proceeds without it.
+// compile proceeds without it.  The compile reads the header through gcc's
+// pch_preprocess pragma, which clang ignores, so it runs only under gcc.
 void gcache::Pch() {
     FHeader &root = header_Alloc(); // entire preproc_file
     FHeader *cur = &root;
@@ -841,15 +917,15 @@ void gcache::Pch() {
         cstring tmp    = tempstr() << base << ".tmp.gch";
         cstring lock   = tempstr() << base << ".lock";
         _db.lockfd.fd  = OpenWrite(lock);
+        ShareFile(lock);
         // First try to acquire exclusive lock, build gch if does not exist.
         bool build = (!FileQ(gch) || _db.cmdline.force) && Flock(_db.lockfd.fd,LOCK_EX|LOCK_NB);
         if (build) {
             StringToFile(text,h);
             // The text is preprocessed, line markers included.  gcc reads it as
             // such only under -fpreprocessed; without the flag every marker is
-            // a GCC extension, and -Wpedantic -Werror fails the header.  clang
-            // refuses the flag, and reads the markers in a header unasked.
-            int rc = RunCmd(MakeCmd(h,tmp,ClangQ() ? "" : "-fpreprocessed"));
+            // a GCC extension, and -Wpedantic -Werror fails the header.
+            int rc = RunCmd(MakeCmd(h,tmp,"-fpreprocessed"));
             DeleteFile(h);
             if (rc) {
                 // A precompiled header is an optimization, so failing to build
@@ -871,6 +947,8 @@ void gcache::Pch() {
                       <<Keyval("from",tmp)
                       <<Keyval("to",gch)
                       <<Keyval("comment",tempstr()<<"rename FROM->TO failed: "<<strerror(errno)));
+            } else {
+                ShareFile(gch);
             }
             Flock(_db.lockfd.fd,LOCK_UN);
         }
@@ -977,10 +1055,37 @@ void gcache::Main() {
             if (hit) {
                 _db.report.hit=true; // cache hit
             } else {
-                Pch();
-                int compile_rc = RunCmd(MakeCmd(_db.preproc_file));
+                // gcc compiles the preprocessed text, which also lets a marked
+                // header be precompiled.  clang compiles an object from the
+                // source: its warnings depend on where a name came from, and a
+                // .ii has lost that.  A local named stdout shadows nothing in the
+                // source, since the macro comes from a system header, and in the
+                // .ii it is __stdoutp shadowing a global, which -Wshadow -Werror
+                // fails.  A header clang precompiles still comes from the .ii,
+                // which is what writes its coverage notes, with clang's warning
+                // that the include flags went unused silenced.  The entry is
+                // keyed by the preprocessed text either way.
+                bool clang = ProbeClang();
+                bool from_source = clang && !EndsWithQ(_db.target, ".gch");
+                if (!clang) {
+                    Pch();
+                }
+                int compile_rc = RunCmd(from_source ? MakeCmd()
+                                        : MakeCmd(_db.preproc_file, "", clang ? "-Wno-unused-command-line-argument" : ""));
                 algo_lib::_db.exit_code += compile_rc;
-                if (!compile_rc && coverage) {
+                // A compile from the source reads the files again, after the
+                // text the key names was taken: an edit saved in between leaves
+                // an object of other text, which published under this key would
+                // be a silent hit for every later build of the old text.  So the
+                // source is preprocessed once more, and the object is published
+                // only when the text is unchanged.  The compile itself stands.
+                bool stale = !compile_rc && from_source
+                    && (RunCmd(preproc_cmd) != 0 || FileToString(_db.preproc_file) != _db.preproc_text);
+                if (stale) {
+                    prerr("gcache.warning"
+                          <<Keyval("o_file",_db.target)
+                          <<Keyval("comment","cache entry not published: the source changed while it compiled"));
+                } else if (!compile_rc && coverage) {
                     FilesToBlob(_db.target, gcno_target, _db.cached);
                 } else if (!compile_rc) {
                     // the object the compile wrote gets a handle of its own: the
@@ -1011,6 +1116,8 @@ void gcache::Main() {
                                   <<Keyval("from",_db.target)
                                   <<Keyval("to",_db.cached)
                                   <<Keyval("comment","cache entry could not be published"));
+                        } else {
+                            ShareFile(_db.cached);
                         }
                     }
                 }

@@ -1,4 +1,5 @@
 dmmeta.csize  ctype:HANDLE  size:8  alignment:8  comment:""
+dmmeta.csize  ctype:PyObject  size:16  alignment:8  comment:"ob_refcnt and ob_type: CPython built without free threading"
 dmmeta.csize  ctype:algo.Alloc  size:24  alignment:8  comment:"Allocator struct"
 dmmeta.csize  ctype:algo.ImdbGetTraceFcn  size:8  alignment:8  comment:""
 dmmeta.csize  ctype:algo.ImdbInsertStrptrMaybeFcn  size:8  alignment:8  comment:""

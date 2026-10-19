@@ -31,10 +31,10 @@ parent record into the `ins` index; a condition with no `fcond` record is not
 reported at all.
 
 | condition | meaning |
-|---|---|
-| `ready` | An input buffer potentially holds a message to read; an output buffer holds data to write out. |
-| `eof` | The buffer reached end of life and will never carry another message. |
-| `space` | A congested output buffer drained past its low-water mark (see [Producer backpressure](#producer-backpressure)).  Output buffers only. |
+| --------- | ------- |
+| `ready`   | An input buffer potentially holds a message to read; an output buffer holds data to write out. |
+| `eof`     | The buffer reached end of life and will never carry another message. |
+| `space`   | A congested output buffer drained past its low-water mark (see [Producer backpressure](#producer-backpressure)).  Output buffers only. |
 
 `rem:Y` on the `ready` record means the buffer also takes the parent record
 back off the index when the condition stops holding — the socket returns

@@ -33,14 +33,14 @@ for the scheduler-side picture; this page is the iohook side.
 
 `algo_lib::FIohook` is a small ctype, ~32 bytes:
 
-| Field        | Type              | Meaning                                              |
-|--------------|-------------------|------------------------------------------------------|
-| `callback`   | `Hook`            | User-supplied callback fired on event readiness.     |
-| `fildes`     | `algo::Fildes`    | The file descriptor.  Closed at destruction unless `nodelete:Y`. |
-| `evt_flags`  | `algo::IOEvtFlags`| What the fd is subscribed to: `read`, `write`.       |
-| `flags`      | `algo::IOEvtFlags`| What fired *this* call: `read`, `write`, `eof`, `err`. |
-| `in_epoll`   | `bool`            | Currently registered with epoll/kqueue.              |
-| `nodelete`   | `bool`            | Don't `close(fd)` when the FIohook is destroyed.     |
+| Field       | Type               | Meaning |
+| ----------- | ------------------ | ------- |
+| `callback`  | `Hook`             | User-supplied callback fired on event readiness. |
+| `fildes`    | `algo::Fildes`     | The file descriptor.  Closed at destruction unless `nodelete:Y`. |
+| `evt_flags` | `algo::IOEvtFlags` | What the fd is subscribed to: `read`, `write`. |
+| `flags`     | `algo::IOEvtFlags` | What fired *this* call: `read`, `write`, `eof`, `err`. |
+| `in_epoll`  | `bool`             | Currently registered with epoll/kqueue. |
+| `nodelete`  | `bool`             | Don't `close(fd)` when the FIohook is destroyed. |
 
 Embed an `FIohook` field in any ctype that owns an fd
 (`reftype:Val arg:algo_lib.FIohook`).  Once you call
@@ -171,12 +171,12 @@ again.
 Iohook abstracts the platform's event mechanism (see
 `cpp/lib/algo/iohook.cpp`):
 
-| Platform           | Mechanism            | Notes                                            |
-|--------------------|----------------------|--------------------------------------------------|
-| Linux              | `epoll_pwait2`/`epoll_wait` | `epoll_pwait2` used when available (sub-ms sleep precision). |
-| FreeBSD / macOS    | `kqueue` + `kevent`  | Edge-clear (`EV_CLEAR`) gives the same semantics as `EPOLLET`. |
-| Cygwin             | Immediate callback   | No kernel event queue; `IohookAdd` invokes the callback directly. |
-| Windows            | Immediate callback   | Same as Cygwin; full event support is a TODO.    |
+| Platform        | Mechanism                   | Notes |
+| --------------- | --------------------------- | ----- |
+| Linux           | `epoll_pwait2`/`epoll_wait` | `epoll_pwait2` used when available (sub-ms sleep precision). |
+| FreeBSD / macOS | `kqueue` + `kevent`         | Edge-clear (`EV_CLEAR`) gives the same semantics as `EPOLLET`. |
+| Cygwin          | Immediate callback          | No kernel event queue; `IohookAdd` invokes the callback directly. |
+| Windows         | Immediate callback          | Same as Cygwin; full event support is a TODO. |
 
 On Linux, a regular file (not a pipe/socket/eventfd) cannot be
 added to epoll — the kernel returns `EPERM`.  `IohookAdd`

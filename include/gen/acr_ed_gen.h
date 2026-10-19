@@ -153,8 +153,12 @@ namespace acr_ed { // hook_fcn_typedef
     typedef void (*edaction_step_hook)(); // hook:acr_ed.FEdaction.step
 } // hook_decl
 namespace acr_ed { // gen:ns_gsymbol
-    extern const char* atfdb_cijob_comp; // "comp"
-    extern const char* atfdb_cijob_coverage; // "coverage"
+    extern const char* atfdb_cijob_compA; // "compA"
+    extern const char* atfdb_cijob_compB; // "compB"
+    extern const char* atfdb_cijob_coverageA; // "coverageA"
+    extern const char* atfdb_cijob_coverageB; // "coverageB"
+    extern const char* atfdb_cijob_covfinal; // "covfinal"
+    extern const char* atfdb_cijob_depscan; // "depscan"
     extern const char* atfdb_cijob_memcheckA; // "memcheckA"
     extern const char* atfdb_cijob_memcheckB; // "memcheckB"
     extern const char* atfdb_cijob_memcheckC; // "memcheckC"
@@ -266,10 +270,10 @@ private:
     friend void                 cstr_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:acr_ed.FCstr.msghdr.CopyOut
+// func:acr_ed.FCstr.base.CopyOut
 void                 cstr_CopyOut(acr_ed::FCstr &row, dmmeta::Cstr &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:acr_ed.FCstr.msghdr.CopyIn
+// func:acr_ed.FCstr.base.CopyIn
 void                 cstr_CopyIn(acr_ed::FCstr &row, dmmeta::Cstr &in) __attribute__((nothrow));
 
 // Set all fields to initial values.
@@ -332,10 +336,10 @@ private:
     friend void                 ctype_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:acr_ed.FCtype.msghdr.CopyOut
+// func:acr_ed.FCtype.base.CopyOut
 void                 ctype_CopyOut(acr_ed::FCtype &row, dmmeta::Ctype &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:acr_ed.FCtype.msghdr.CopyIn
+// func:acr_ed.FCtype.base.CopyIn
 void                 ctype_CopyIn(acr_ed::FCtype &row, dmmeta::Ctype &in) __attribute__((nothrow));
 
 // func:acr_ed.FCtype.ns.Get
@@ -522,7 +526,7 @@ algo::strptr         name_Get(acr_ed::FEdaction& parent) __attribute__((__warn_u
 
 // Invoke function by pointer
 // func:acr_ed.FEdaction.step.Call
-inline void          step_Call(acr_ed::FEdaction& parent) __attribute__((nothrow));
+inline void          step_Call(acr_ed::FEdaction& parent);
 
 // Set all fields to initial values.
 // func:acr_ed.FEdaction..Init
@@ -2066,10 +2070,10 @@ private:
     friend void                 field_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:acr_ed.FField.msghdr.CopyOut
+// func:acr_ed.FField.base.CopyOut
 void                 field_CopyOut(acr_ed::FField &row, dmmeta::Field &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:acr_ed.FField.msghdr.CopyIn
+// func:acr_ed.FField.base.CopyIn
 void                 field_CopyIn(acr_ed::FField &row, dmmeta::Field &in) __attribute__((nothrow));
 
 // func:acr_ed.FField.ctype.Get
@@ -2169,10 +2173,10 @@ private:
     friend void                 listtype_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:acr_ed.FListtype.msghdr.CopyOut
+// func:acr_ed.FListtype.base.CopyOut
 void                 listtype_CopyOut(acr_ed::FListtype &row, dmmeta::Listtype &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:acr_ed.FListtype.msghdr.CopyIn
+// func:acr_ed.FListtype.base.CopyIn
 void                 listtype_CopyIn(acr_ed::FListtype &row, dmmeta::Listtype &in) __attribute__((nothrow));
 
 // Set all fields to initial values.
@@ -2237,10 +2241,10 @@ private:
     friend void                 ns_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:acr_ed.FNs.msghdr.CopyOut
+// func:acr_ed.FNs.base.CopyOut
 void                 ns_CopyOut(acr_ed::FNs &row, dmmeta::Ns &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:acr_ed.FNs.msghdr.CopyIn
+// func:acr_ed.FNs.base.CopyIn
 void                 ns_CopyIn(acr_ed::FNs &row, dmmeta::Ns &in) __attribute__((nothrow));
 
 // Set all fields to initial values.
@@ -2414,10 +2418,10 @@ private:
     friend void                 ssimfile_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:acr_ed.FSsimfile.msghdr.CopyOut
+// func:acr_ed.FSsimfile.base.CopyOut
 void                 ssimfile_CopyOut(acr_ed::FSsimfile &row, dmmeta::Ssimfile &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:acr_ed.FSsimfile.msghdr.CopyIn
+// func:acr_ed.FSsimfile.base.CopyIn
 void                 ssimfile_CopyIn(acr_ed::FSsimfile &row, dmmeta::Ssimfile &in) __attribute__((nothrow));
 
 // func:acr_ed.FSsimfile.ssimns.Get

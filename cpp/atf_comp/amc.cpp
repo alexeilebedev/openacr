@@ -41,9 +41,8 @@
 #include "include/algo.h"
 #include "include/atf_comp.h"
 
-// A field of reftype Ptrary without its dmmeta.ptrary record is an input
-// error: amc reports amc.missing_ptrary and exits nonzero without writing
-// any output.
+// Give amc a field of reftype Ptrary without its dmmeta.ptrary record, and check
+// that amc reports amc.missing_ptrary, modifies no file and exits nonzero.
 void atf_comp::comptest_amc_MissingPtrary() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -60,19 +59,23 @@ void atf_comp::comptest_amc_MissingPtrary() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// The universe is the schema closure the live tree declares as amc's own
-// input, dumped by acr_in and read from stdin. Every other test in this file
-// gives amc a fixture holding a handful of ctypes, which reaches only the
-// generator modules those shapes need; this one generates every namespace the
-// tree defines, and the empty -out_dir: keeps the run from writing any of it.
+// Dump with acr_in the schema closure that the live tree declares as amc's own
+// input, feed it to amc on stdin, and check that amc generates every namespace the
+// tree defines without error.
+// Every other test in this file gives amc a fixture of a handful of ctypes.  Such a
+// fixture reaches only the generator modules that its ctypes need.  The empty
+// -out_dir: keeps this run from writing the code it generates.
+// NOTE: the test runs with memcheck:none because amc over the whole schema
+// closure is too slow under valgrind.
 void atf_comp::comptest_amc_SchemaClosure() {
     atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N < <($bindir/acr_in amc -data)");
 }
 
-// A big-endian u16 field in a universe lacking the u16 csize row: the
-// type's width is unknown, not unsupported, so the diagnostic names the
-// missing dmmeta.csize row instead of prescribing a width change for a
-// type whose width is already right.
+// Give amc a big-endian u16 field in a universe without the u16 csize row, and
+// check that amc.bigend_size names the missing dmmeta.csize row.
+// The type's width is unknown here, and u16 itself supports big-endian storage.  A
+// diagnostic that prescribed a width change would send the user to fix a width that
+// is already right.
 void atf_comp::comptest_amc_BadBigendNosize() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:''");
@@ -85,9 +88,10 @@ void atf_comp::comptest_amc_BadBigendNosize() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// A big-endian field of reftype Inlary on a ctype with a fieldwise
-// constructor: the rejection reports and generation continues to the end
-// of the run, accumulating any further schema errors into the exit code.
+// Give amc a big-endian field of reftype Inlary on a ctype with a fieldwise
+// constructor, and check that amc reports amc.bad_bigend and exits nonzero.
+// amc reports the rejection and continues generating to the end of the run.  Each
+// further schema error adds to the exit code.
 void atf_comp::comptest_amc_BadBigendReftype() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -105,10 +109,11 @@ void atf_comp::comptest_amc_BadBigendReftype() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// A big-endian u32 field whose bltin row withholds bigendok: the width has
-// a byteswap primitive, but the type is not one the schema allows stored
-// byteswapped, and the Val accessors would swap it anyway.  The check that
-// reads the flag is separate from the width check, so it needs its own pin.
+// Give amc a big-endian u32 field whose bltin row sets bigendok:N, and check that
+// amc reports amc.bigend_deadend.
+// The u32 width has a byteswap primitive.  The bltin row still forbids storing u32
+// byteswapped, and the Val accessors would swap it anyway.  The check that reads
+// the flag runs apart from the width check, so it needs its own pin.
 void atf_comp::comptest_amc_BadBigendDeadend() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -122,10 +127,11 @@ void atf_comp::comptest_amc_BadBigendDeadend() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// A big-endian u128 field whose bltin row claims bigendok: byteswap
-// primitives exist for 16, 32, and 64 bits only, so the Val accessors would
-// call a nonexistent be128toh/htobe128. The width check rejects the field
-// independently of the bltin claim.
+// Give amc a big-endian u128 field whose bltin row claims bigendok, and check that
+// amc reports amc.bigend_width.
+// Byteswap primitives exist for 16, 32 and 64 bits.  The Val accessors would call
+// be128toh and htobe128, which do not exist.  The width check rejects the field
+// whatever the bltin row claims.
 void atf_comp::comptest_amc_BadBigendU128() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -139,12 +145,14 @@ void atf_comp::comptest_amc_BadBigendU128() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// Reftype Bitfld and the dmmeta.bitfld record imply each other, and the
-// universe holds one field for each of the four combinations.  A Bitfld
-// field without the record carries no bit offset or width, and a record on
-// a field of another reftype gets a full-width member the ctype's own
-// compare, print and read walks pass over.  Both are reported in one run;
-// the correctly paired field and the plain Val fields draw nothing.
+// Give amc one field for each of the four ways to pair reftype Bitfld with a
+// dmmeta.bitfld record, and check that amc reports amc.missing_record for both
+// mismatched fields in one run.
+// Reftype Bitfld and the dmmeta.bitfld record imply each other.  A Bitfld field
+// without the record (flag) carries no bit offset or width.  A record on a field of
+// another reftype (notbitfld) gets a full-width member, which the ctype's own
+// compare, print and read walks pass over.  The correctly paired field (good) and
+// the plain Val fields draw no report.
 void atf_comp::comptest_amc_BadBitfldReftype() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -161,8 +169,10 @@ void atf_comp::comptest_amc_BadBitfldReftype() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// A bitset over a 9-byte (72-bit) Smallstr element: not an unsigned integer
-// builtin, so no exact bit index/shift split exists.
+// Give amc a bitset over a 9-byte (72-bit) Smallstr element, and check that amc
+// reports amc.bitset_elem.
+// The element is no unsigned integer builtin, so it has no exact bit index/shift
+// split.
 void atf_comp::comptest_amc_BadBitsetElem() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -180,8 +190,9 @@ void atf_comp::comptest_amc_BadBitsetElem() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// A bitset over an i8 element: a signed element compiles but sign-extends on
-// read, so bit queries such as Sup return wrong values at runtime.
+// Give amc a bitset over an i8 element, and check that amc reports amc.bitset_elem.
+// A signed element compiles and sign-extends on read, so bit queries such as Sup
+// return wrong values at run time.
 void atf_comp::comptest_amc_BadBitsetSigned() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -195,9 +206,10 @@ void atf_comp::comptest_amc_BadBitsetSigned() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// A bitset over a u32 element whose csize row is missing from the universe:
-// the element type is fine; only its width is unknown. The diagnostic names
-// the missing csize row rather than prescribing a different element type.
+// Give amc a bitset over a u32 element in a universe without the u32 csize row, and
+// check that amc.bitset_elem_size names the missing csize row.
+// The u32 element type is valid.  amc lacks only its width.  A diagnostic that
+// prescribed a different element type would send the user to replace a valid type.
 void atf_comp::comptest_amc_BadBitsetNosize() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -209,15 +221,16 @@ void atf_comp::comptest_amc_BadBitsetNosize() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// Bitset elements whose csize row states a width other than the one the
-// element type's own name states: the name passes the unsigned-builtin check
-// in each case, while the accessors are generated from the csize row. A u32
-// of 3 bytes is 24 bits, which the FloorLog2 index split truncates; a u128 of
-// 32 bytes is 256 bits, past the widest bit-scan helper; a u16 of 8 bytes is
-// 64 bits, a width the accessors can index perfectly well but not the width
-// of the member the struct declares, so the shifts run off its end. The u64
-// and u8 elements of the same universe, whose csize rows agree with their
-// names, draw nothing and stand as the controls.
+// Give amc five bitsets, three of them over elements whose csize row states a width
+// other than the width in the type's name.  Check that amc reports
+// amc.bitset_elem_width for each of the three, and that the two controls draw no
+// report.
+// Each type name passes the unsigned-builtin check, while amc generates the
+// accessors from the csize row.  A u32 of 3 bytes is 24 bits, which the FloorLog2
+// index split truncates.  A u128 of 32 bytes is 256 bits, past the widest bit-scan
+// helper.  A u16 of 8 bytes is 64 bits.  The accessors index that width well.  The
+// struct declares a 16-bit member, though, so the shifts run off its end.  The u64
+// and u8 elements are the controls, because their csize rows agree with their names.
 void atf_comp::comptest_amc_BadBitsetWidth() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:8  alignment:8  comment:''");
@@ -238,14 +251,14 @@ void atf_comp::comptest_amc_BadBitsetWidth() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// Fixed-inlary field defaults that name the record by the Init parameter
-// name in a shape the copy-constructor inliner's rewrite does not cover.
-// One field names it bare (sizeof parent), which inlining would leak into
-// the member copy constructor as an undeclared identifier. The other reaches
-// it through a member operator (gcfg.parent.n), where the name belongs to
-// another record and the member-access rewrite would take the operator with
-// it, turning the default into a different expression that still compiles.
-// Both are reported and the run exits nonzero.
+// Give amc two fixed-inlary field defaults that name the record by the Init
+// parameter name, in shapes outside what the copy-constructor inliner rewrites.
+// Check that amc reports amc.copyctor_init for both and exits nonzero.
+// One default names the record bare (sizeof parent).  Inlining would leak that name
+// into the member copy constructor as an undeclared identifier.  The other reaches
+// the name through a member operator (gcfg.parent.n), where the name belongs to
+// another record.  The member-access rewrite would take the operator with it, and
+// turn the default into a different expression that still compiles.
 void atf_comp::comptest_amc_BadCopyctorInit() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -263,25 +276,25 @@ void atf_comp::comptest_amc_BadCopyctorInit() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// The shapes the copy-constructor inliner does cover, pinned through the
-// emitted constructor body. A variable inlary's Init macro carries the two
-// shapes the generators emit -- member access on the record, and the record
-// passed to a function by reference -- and both are retargeted to *this. A
-// fixed inlary's default is arbitrary user text: a default naming the record
-// as *this arrives at the inliner spelled as the Init parameter and returns
-// to *this, a default naming no record at all is copied verbatim, and so is
-// one naming a longer identifier that merely ends with the parameter name
-// (gparent.n), which is a different name and not a reference to the record.
-// The remaining defaults carry the parameter name where it is not an
-// identifier at all: inside a string literal, inside a block comment, and
-// inside a raw string literal whose payload carries the quote that ends an
-// ordinary one. Each is content rather than code, so each is copied into the
-// constructor verbatim and none is reported. A character literal holding a
-// quote is followed by a reference to the record, since a default whose
-// literal is its last content pins nothing: the scan would read the quote as
-// opening a string literal, run out of text and emit the same body. With the
-// reference behind it, that misreading loses the reference and leaves the
-// parameter name in the constructor, where it is undeclared.
+// Give amc inlary fields in each shape that the copy-constructor inliner covers,
+// print algo_lib.Rec..CopyCtor, and check that the constructor body retargets each
+// reference to the record to *this and copies the rest of each default verbatim.
+// A variable inlary's Init macro carries the two shapes that the generators emit:
+// member access on the record, and the record passed to a function by reference.
+// The inliner retargets both to *this.  A fixed inlary's default is arbitrary user
+// text.  A default that names the record as *this (size) reaches the inliner
+// spelled as the Init parameter, and returns to *this.  The inliner copies verbatim
+// a default that names no record (lit).  It also copies gparent.n verbatim (fix),
+// because a longer identifier that merely ends with the parameter name is a
+// different name.
+// The str, note and raw defaults carry the parameter name inside a string literal,
+// a block comment, and a raw string literal whose payload holds the quote that ends
+// an ordinary one.  Each is content, so the inliner copies each verbatim and amc
+// reports none.  The chr default puts a reference to the record after a character
+// literal that holds a quote.  A scan that read that quote as opening a string
+// literal would lose the reference, and leave the undeclared parameter name in the
+// constructor.  With the literal last, the same misreading would run out of text
+// and emit the same body, so the test puts the reference behind it.
 void atf_comp::comptest_amc_CopyctorInit() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N algo_lib.Rec..CopyCtor < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -309,40 +322,43 @@ void atf_comp::comptest_amc_CopyctorInit() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// Which bitfield reads bound the value by the field's store, over one universe
-// holding a field per combination of arg type and width. A read parses into a
-// temporary of the field's arg type and the Bitfld setter masks the store, so a
-// value the bits cannot hold is stored truncated unless the reader refuses it
-// first. The refusal is emitted for a field that carries a symbolic constant,
-// whose reader tries the symbol and falls back to the arg type, and each end of
-// the arg type's range draws a term there exactly when the field's bits do not
-// reach that end. At the high end narrow (u32 in 3 bits) and qos (a u32 wrapped
-// in one field, in 4 bits) draw a bound, while full (u8 in 8 bits), signed_full
-// (i8 in 8 bits) and flag (bool in 1 bit) span their whole arg type and draw
-// none. At the low end a store that drops the arg type's sign bit reads a
-// negative back as a positive number: sig (an i32 wrapped in one field, in 4
-// bits) refuses a negative on top of its high-end bound, and sig_edge (an i8
-// wrapper in 7 bits), whose bits hold every positive value its arg type holds,
-// refuses one with no high-end bound at all, while sig_full (the same wrapper in
-// 8 bits) keeps the sign and draws neither term. plain is narrow again with no
-// symbolic constant on it, and its reader carries no term at all: three bits
-// take a "9" as 1 and the read reports success. An fdec field carries its bound
-// inside the loops its reader parses with: dec scales two decimal places into 12
-// bits, so the digit loop takes a digit only while the value it is building still
-// fits 4095 -- the field's own store, not the u64 the digits accumulate into --
-// and the loop filling the decimal places a short text leaves out tests the same
-// bound. The finished magnitude is tested against nothing, every digit that went
-// into it having been bounded already. One combination never reaches a reader, rejected at generation
-// time: a width past the arg type. A narrower width over a signed arg type is
-// rejected too, but only in a universe that carries the amcdb.bltin table, and
-// this fixture carries none. Signedness has two sources: the range machinery
-// reads it from the type's name, so i8 and i32 are signed here, while the size
-// pass reads the type's amcdb.bltin row and finds none, so its
-// amc.bitfield_signed_narrow never fires. That is why sig and sig_edge reach a
-// reader in this golden -- adding the table makes amc report both of them and
-// generate nothing at all. The name-based source is the deliberate one: a
-// signed integer named by a universe that lacks the type's amcdb.bltin row
-// still gets signed range checks, and this fixture is that universe.
+// Give amc one Bitfld field per combination of arg type and width, print each
+// field's ReadStrptrMaybe, and check which readers bound the value by the field's
+// store.
+// A read parses into a temporary of the field's arg type, and the Bitfld setter
+// masks the store.  So the store truncates a value too wide for the bits, unless
+// the reader refuses it first.  The reader of a field with a symbolic constant
+// tries the symbol and falls back to the arg type.  amc emits the refusal there,
+// with a term for each end of the arg type's range that the field's bits fall
+// short of.
+// At the high end narrow (u32 in 3 bits) and qos (a u32 wrapped in one field, in 4
+// bits) draw a bound.  full (u8 in 8 bits), signed_full (i8 in 8 bits) and flag
+// (bool in 1 bit) span their whole arg type and draw none.
+// At the low end a store that drops the arg type's sign bit reads a negative back
+// as a positive number.  sig (an i32 wrapped in one field, in 4 bits) refuses a
+// negative on top of its high-end bound.  The bits of sig_edge (an i8 wrapper in 7
+// bits) hold every positive value of its arg type, so it refuses a negative with
+// no high-end bound.  sig_full (the same wrapper in 8 bits) keeps the sign and
+// draws neither term.
+// plain is narrow again with no symbolic constant, and its reader carries no term.
+// Its three bits take a "9" as 1, and the read reports success.
+// An fdec field carries its bound inside the loops that its reader parses with.
+// dec scales two decimal places into 12 bits.  So the digit loop takes a digit
+// only while the value it builds still fits 4095, the bound of the field's own
+// store.  The u64 that the digits accumulate into is wider.  The loop that fills
+// the decimal places a short text leaves out tests the same bound.  The reader
+// leaves the finished magnitude untested, because it bounded every digit that went
+// into it.
+// amc rejects one combination at generation time, a width past the arg type, so
+// it never reaches a reader.  amc also rejects a narrower width over a signed arg
+// type, in a universe that carries the amcdb.bltin table.  This fixture carries
+// none.  Signedness has two sources.  The range machinery reads it from the type's
+// name, so i8 and i32 are signed here.  The size pass reads the type's amcdb.bltin
+// row and finds none, so its amc.bitfield_signed_narrow never fires.  That is why
+// sig and sig_edge reach a reader in this golden.  With the table, amc reports
+// both of them and generates no code.  The name-based source is deliberate.  A
+// universe without a signed integer's amcdb.bltin row still gives it signed range
+// checks, and this fixture is that universe.
 void atf_comp::comptest_amc_BitfldReadRange() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N 'algo_lib.Rec.(narrow|full|signed_full|flag|qos|sig|sig_edge|sig_full|dec|plain).ReadStrptrMaybe' < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -394,10 +410,11 @@ void atf_comp::comptest_amc_BitfldReadRange() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// A cascdel Ptrary whose row ctype has no instance pool: with nothing to
-// delete a row from, DeleteExpr would be empty and the Cascdel loop would
-// spin forever. Pins the existing rejection (amc.nopool on the xref, then
-// the cascdel pool vrfy) so the loop stays unreachable.
+// Give amc a cascdel Ptrary whose row ctype has no instance pool, and check that amc
+// reports amc.nopool on the xref and then the cascdel pool vrfy error.
+// With no pool to delete a row from, DeleteExpr would be empty.  The Cascdel loop
+// would then spin forever.  The test pins the existing rejection, so the loop stays
+// unreachable.
 void atf_comp::comptest_amc_BadCascdelNopool() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -416,10 +433,10 @@ void atf_comp::comptest_amc_BadCascdelNopool() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// A cascdel unique:Y Ptrary whose field has no dmmeta.xref record: the
-// generated Cascdel deletes the last row until the array is empty, and only
-// an xref makes the row's delete unlink it, so the loop would never
-// terminate.
+// Give amc a cascdel unique:Y Ptrary whose field has no dmmeta.xref record, and
+// check that amc reports amc.cascdel_xref.
+// The generated Cascdel deletes the last row until the array is empty.  Only an
+// xref makes the row's delete unlink it, so without one the loop would never end.
 void atf_comp::comptest_amc_BadCascdelXref() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -438,8 +455,10 @@ void atf_comp::comptest_amc_BadCascdelXref() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// A buffer condition on a global (FDb) fbuf: the record that enters the list
-// is the buffer's parent row, and a global has no row to enter it with.
+// Give amc a buffer condition on a global (FDb) fbuf, and check that amc reports
+// amc.fcond_arg.
+// The record that enters the list is the buffer's parent row.  A global has no row
+// to enter it with.
 void atf_comp::comptest_amc_BadFbufCondGlobal() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -467,17 +486,16 @@ void atf_comp::comptest_amc_BadFbufCondGlobal() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// A print:Y cfmt whose (strfmt, printfmt) pair has no print path would ship a
-// Print function with an empty body, so it is rejected and the diagnostic
-// names both attributes. Two ctypes are rejected, one per axis: the Tuple
-// strfmt, for which no print path exists under any printfmt, and the
-// CompactSep printfmt under the String strfmt, which the String arm does not
-// handle. The controls are the whole rest of the table and draw no
-// diagnostic: String with Tuple, Auto, Raw, Sep and Bitset; Argv and Json,
-// which take any printfmt because neither reads one; the Extern printfmt,
-// which hands the body to the user even under the Tuple strfmt; and a print:N
-// cfmt carrying the rejected printfmt, which generates no print function at
-// all.
+// Give amc cfmts across the strfmt and printfmt pairs, and check that amc reports
+// amc.badcfmt, naming both attributes, for each print:Y pair with no print path.
+// Such a cfmt would ship a Print function with an empty body.  amc rejects one
+// ctype per axis.  Sample has the Tuple strfmt, which has no print path under any
+// printfmt.  Compact has the CompactSep printfmt under the String strfmt, and the
+// String arm leaves that printfmt unhandled.  The rest of the table are controls
+// that draw no diagnostic: String with Tuple, Auto, Raw, Sep and Bitset; Argv and
+// Json, which take any printfmt because neither reads one; the Extern printfmt,
+// which hands the body to the user even under the Tuple strfmt; and a print:N cfmt
+// (Quiet) that carries the rejected printfmt and generates no print function.
 void atf_comp::comptest_amc_BadCfmtPrint() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -526,20 +544,20 @@ void atf_comp::comptest_amc_BadCfmtPrint() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// A read:Y cfmt whose (strfmt, printfmt) pair has no read path would ship a
-// ReadStrptrMaybe with an empty body. Such a reader returns success for every
-// input and leaves the destination holding whatever it held before the call,
-// so no caller can tell a parsed value from an unparsed one. The read emitter
-// rejects the cfmt instead and names both attributes. The fixture is the whole
-// table the emitter decides. Rejected on one axis: the CompactSep printfmt
-// under the String strfmt, the one printfmt the String arm has no reader for.
-// The controls are the rest of the table and draw no diagnostic: String with
-// Tuple, Auto, Raw, Sep, Bitset and Extern, Auto reading as a tuple the way
-// the print side prints one; the Tuple strfmt, whose reader consumes an
-// already-parsed tuple and so is chosen without consulting the printfmt, which
-// is why it accepts CompactSep and still hands Extern to the user; the Json
-// strfmt, for which the read emitter draws nothing at all; and a read:N cfmt
-// carrying the rejected printfmt, which generates no read function to be empty.
+// Give amc read:Y cfmts across the whole table of strfmt and printfmt pairs that
+// the read emitter decides, and check that amc reports amc.badcfmt, naming both
+// attributes, for the one pair with no read path.
+// Such a cfmt would ship a ReadStrptrMaybe with an empty body.  That reader returns
+// success for every input, and leaves the destination holding its old value.  A
+// caller then has no way to tell a parsed value from an unparsed one.  The rejected
+// pair is the CompactSep printfmt under the String strfmt (RCompact), the one
+// printfmt that the String arm has no reader for.  The rest of the table are
+// controls that draw no diagnostic: String with Tuple, Auto, Raw, Sep, Bitset and
+// Extern, where Auto reads a tuple the way the print side prints one; the Tuple
+// strfmt, whose reader consumes an already-parsed tuple and ignores the printfmt,
+// so it accepts CompactSep and still hands Extern to the user; the Json strfmt,
+// which the read emitter passes over; and a read:N cfmt (RQuiet) that carries the
+// rejected printfmt and generates no read function.
 void atf_comp::comptest_amc_BadCfmtRead() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -586,14 +604,16 @@ void atf_comp::comptest_amc_BadCfmtRead() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// A String cfmt asking for printfmt:CompactSep: the printfmt table declares
-// the value, but amc generates neither a printer nor a reader for it, so the
-// request would ship an empty print body and an empty read body. Both emitters
-// reject it, each naming the cfmt, the strfmt and the offending printfmt, and
-// the run still reaches its exit with a nonzero code. The two diagnostics of
-// one cfmt are what this golden pins; the wider table each emitter decides is
-// pinned by BadCfmtPrint and BadCfmtRead. The Sep ctype beside it is the
-// control: the printfmt amc does generate draws no diagnostic on either side.
+// Give amc a String cfmt with printfmt:CompactSep, and check that the print and the
+// read emitter each report amc.badcfmt and that the run reaches its exit with a
+// nonzero code.
+// The printfmt table declares the value.  amc generates neither a printer nor a
+// reader for it, so the request would ship an empty print body and an empty read
+// body.  Each diagnostic names the cfmt, the strfmt and the offending printfmt.
+// This golden pins the two diagnostics of one cfmt.  BadCfmtPrint and BadCfmtRead
+// pin the wider table that each emitter decides.  The Sep ctype (Ok) beside it is
+// the control, and draws no diagnostic on either side because amc generates its
+// printfmt.
 void atf_comp::comptest_amc_BadCompactSep() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -612,22 +632,25 @@ void atf_comp::comptest_amc_BadCompactSep() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// The field-aware command-line reader is assembled from companion functions,
-// and each companion is emitted under a gate of its own: the reader and NArgs
-// come from a read cfmt with strfmt:Argv, ReadFieldMaybe and GetAnon from a read
-// cfmt whose printfmt is neither Raw nor Extern, and the namespace-level ReadArgv
-// is a call to the cmdline ctype's reader. The fixture is the table of shapes
-// those gates decide. Accepted, drawing no diagnostic: command.good (Argv read:Y
-// printfmt Auto over a base that supplies both companions), command.goodnobase
-// (no basecmdline, so no base companion is called), command.goodraw (its Argv
-// cfmt is Raw, but a second read cfmt supplies ReadFieldMaybe and GetAnon for its
-// anonfld), and namespace okapp over command.good. Rejected: command.raw and
-// command.xtern, whose only read cfmt is Raw or Extern, so the store and the
-// positional lookup are missing; command.basenoread and command.baseraw, whose
-// base is missing NArgs or the store; algo_lib.CmdlineRaw, which is a base and a
-// broken reader at once; and namespaces noreadapp and gnuapp, whose cmdline ctype
-// yields no reader at all -- one because its Argv cfmt is read:N, the other
-// because ArgvGnu generates no reader however it is spelled.
+// Give amc the table of command-line shapes that the reader's gates decide, and
+// check that amc reports amc.badargvread for each rejected shape, naming the reader
+// and the companion that it lacks.
+// amc assembles the field-aware command-line reader from companion functions, and
+// emits each companion under its own gate.  A read cfmt with strfmt:Argv yields the
+// reader and NArgs.  A read cfmt whose printfmt is neither Raw nor Extern yields
+// ReadFieldMaybe and GetAnon.  The namespace-level ReadArgv calls the cmdline
+// ctype's reader.
+// These shapes draw no diagnostic: command.good (Argv read:Y printfmt Auto over a
+// base that supplies both companions); command.goodnobase (no basecmdline, so the
+// reader calls no base companion); command.goodraw (its Argv cfmt is Raw, and a
+// second read cfmt supplies ReadFieldMaybe and GetAnon for its anonfld); and
+// namespace okapp over command.good.
+// amc rejects the rest: command.raw and command.xtern, whose only read cfmt is Raw
+// or Extern, so they lack the store and the positional lookup; command.basenoread
+// and command.baseraw, whose base lacks NArgs or the store; algo_lib.CmdlineRaw,
+// which is a base and a broken reader at once; and namespaces noreadapp and gnuapp,
+// whose cmdline ctype yields no reader.  The Argv cfmt behind noreadapp is read:N.
+// ArgvGnu, behind gnuapp, generates no reader however it is spelled.
 void atf_comp::comptest_amc_BadArgvRead() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -712,20 +735,22 @@ void atf_comp::comptest_amc_BadArgvRead() {
     atf_comp::ProcWriteEof(proc);
 }
 
+// Give amc Bytebuf, Linebuf and Msgbuf fields over elements of several widths and
+// comparison sources, and check that amc reports amc.fbuf_elem for each buffer
+// whose element breaks the way the buffer measures or scans a message.
 // A Bytebuf or Linebuf measures its message in bytes and hands it back as an
-// element count, so a wider element makes the returned message run past the
-// data. The element's width comes from the declared csize of a bltin and from
-// the emitted struct body of a generated ctype, so the fixture crosses both
-// buffer types with both width sources: the rejected rows are a byte buffer of
-// u16, of u64, of an eight-byte generated struct and of an extern struct of
-// unknown width, and a line buffer of u32; the accepted controls are both
-// buffer types over a one-byte bltin and over a one-byte generated struct, and
-// a Msgbuf, which carries its length in the message header, over the
-// eight-byte struct.
-// A one-byte element is not enough for a Linebuf, whose generated ScanMsg finds
-// the end of the message by comparing each element with the delimiter, so the
-// same fixture crosses the sources of an operator == with the shapes that emit
-// no comparison at all:
+// element count.  A wider element makes the returned message run past the data.
+// amc takes the element's width from the declared csize of a bltin, and from the
+// emitted struct body of a generated ctype.  The fixture crosses both buffer types
+// with both width sources.  amc rejects a byte buffer of u16, of u64, of an
+// eight-byte generated struct and of an extern struct of unknown width, and a line
+// buffer of u32.  The accepted controls are both buffer types over a one-byte bltin
+// and over a one-byte generated struct, and a Msgbuf over the eight-byte struct.  A
+// Msgbuf carries its length in the message header.
+// A Linebuf needs more than a one-byte element.  Its generated ScanMsg finds the
+// end of the message by comparing each element with the delimiter.  So the same
+// fixture crosses the sources of an operator == with the shapes that emit no
+// comparison:
 //
 //   Linebuf element                    | ScanMsg      | accepted
 //
@@ -737,8 +762,8 @@ void atf_comp::comptest_amc_BadArgvRead() {
 //   struct, no ccmp                    | ffunc extrn:Y| yes
 //   struct, no ccmp, out direction     | not emitted  | yes
 //
-// The Bytebuf over the same ccmp-less struct stays accepted throughout: it
-// returns every available byte and compares nothing.
+// The Bytebuf over the same ccmp-less struct stays accepted throughout, because it
+// returns every available byte and compares no element.
 void atf_comp::comptest_amc_BadFbufElem() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:i8  likeu64:Y  bigendok:N  issigned:Y  comment:''");
@@ -819,18 +844,21 @@ void atf_comp::comptest_amc_BadFbufElem() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// The element of a Varlen or an Opt field is addressed in place inside the
-// message that carries it: the message allocates nothing for it, and destroying
-// the message ends no lifetime of its own. An element type that owns a
-// destructor would therefore be constructed and never destroyed, which leaks
-// whatever the element holds, so the schema is refused at generation time.
-// Whether an element type owns a destructor is not a property of the field. It
-// is a property of the ctype, computed for the whole ctype graph by the pass
-// that also decides whether a value is plain data, so this check reads a flag a
-// different pass fills in. Run before that pass, it reads the flag's initial
-// value, finds every element type destructor-free, and passes a schema it was
-// written to refuse. That is why the fixture carries the accepted rows next to
-// the refused ones: a check that has gone quiet reports nothing on either.
+// Give amc Varlen, Opt and Val fields over an element type with a destructor and
+// over a plain one, and check that amc reports amc.opt_dtor for the Varlen and the
+// Opt field over the element with a destructor.
+// A Varlen or an Opt field addresses its element in place inside the message that
+// carries it.  The message allocates no storage for the element, and destroying
+// the message ends no lifetime of the element's own.  The program would construct
+// an element whose type owns a destructor and never destroy it, which leaks
+// whatever the element holds.  So amc refuses the schema at generation time.
+// The ctype decides whether an element type owns a destructor.  The pass that also
+// decides whether a value is plain data computes this flag for the whole ctype
+// graph, so this check reads a flag that a different pass fills in.  Run before
+// that pass, the check would read the flag's initial value, find every element
+// type destructor-free, and pass a schema that it exists to refuse.  So the
+// fixture carries the accepted rows next to the refused ones.  A check that has
+// gone quiet treats both kinds alike.
 //
 //   field reftype | element type       | accepted
 //
@@ -840,11 +868,11 @@ void atf_comp::comptest_amc_BadFbufElem() {
 //   Opt           | plain data         | yes
 //   Val           | has destructor     | yes
 //
-// The element that owns a destructor is an extern ctype declared plaindata:N,
-// which is the shortest way to say that destroying it does something; the plain
-// element is a packed ctype of one integer field. The Val row is the control on
-// the rule's other edge: that reftype gives its member a lifetime of its own, so
-// the destructor is called and the element type is unconstrained.
+// The element that owns a destructor is an extern ctype declared plaindata:N, the
+// shortest way to say that destroying it does something.  The plain element is a
+// packed ctype of one integer field.  The Val row is the control on the rule's
+// other edge.  That reftype gives its member a lifetime of its own, so the member's
+// destructor runs and the element type is unconstrained.
 void atf_comp::comptest_amc_BadOptDtor() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:i8  likeu64:Y  bigendok:N  issigned:Y  comment:''");
@@ -892,21 +920,21 @@ void atf_comp::comptest_amc_BadOptDtor() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// A condition's ins index is inserted into by name, one row at a time, so the
-// index has to be one a single row can be put into and taken out of. A hash is
-// the tempting mistake: it holds the same rows and its name reads like a list's,
-// but it offers InsertMaybe rather than Insert, so the emitted call does not
-// compile. The rule states the requirement positively -- an Llist or a Bheap --
-// which refuses in one test every other shape a field can have: a pool and a
-// pointer array, which have no single-row remove; a count, which keeps a tally
-// and hands no row back; and a tree or a sorted list, whose insert takes more
-// than the row.
-// The fixture's universe therefore carries an FDb index of each of those
-// reftypes, and its rejected row names the hash. Only that one is named per
-// run: the fcond rules are vrfy checks, so the first violation ends the run, and
-// a fixture crossing every reftype would report the same single line. The
-// accepted control is a condition on the sibling buffer naming an Llist of the
-// watched ctype, which draws no diagnostic.
+// Give amc a universe with an FDb index of each reftype and a condition whose ins
+// index is a hash, and check that amc reports amc.fcond_ins for the hash.
+// A condition inserts into its ins index by name, one row at a time.  So the index
+// must let a single row in and out.  A hash is the tempting mistake, because it
+// holds the same rows and its name reads like a list's.  It offers InsertMaybe in
+// place of Insert, so the emitted call fails to compile.  The rule states the
+// requirement positively, as an Llist or a Bheap.  That one rule refuses every
+// other shape a field can have: a pool and a pointer array, which lack a
+// single-row remove; a count, which keeps a tally and hands no row back; and a
+// tree or a sorted list, whose insert takes more than the row.
+// The fcond rules are vrfy checks, so the first violation ends the run.  Each run
+// therefore names one rejected row, and a fixture crossing every reftype would
+// report the same single line.  The accepted control is a condition on the
+// sibling buffer that names an Llist of the watched ctype, and it draws no
+// diagnostic.
 void atf_comp::comptest_amc_BadFcondIns() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -1002,8 +1030,10 @@ void atf_comp::comptest_amc_BadFcondIns() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// A TimeHookOnce fstep on an Llist field: the step reads the expiration time
-// from the first row's sort field, which only a Bheap step field provides.
+// Give amc a TimeHookOnce fstep on an Llist field, and check that amc reports
+// amc.fstep_bheap.
+// The step reads the expiration time from the first row's sort field, and only a
+// Bheap step field provides one.
 void atf_comp::comptest_amc_BadFstepBheap() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -1025,8 +1055,10 @@ void atf_comp::comptest_amc_BadFstepBheap() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// A TimeHookRecur fstep on an Upptr field: the time hook is armed from the
-// index's first row, which only an Llist or Bheap step field provides.
+// Give amc a TimeHookRecur fstep on an Upptr field, and check that amc reports
+// amc.fstep_first.
+// The generated code arms the time hook from the index's first row, and only an
+// Llist or Bheap step field provides one.
 void atf_comp::comptest_amc_BadFstepFirst() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -1043,9 +1075,10 @@ void atf_comp::comptest_amc_BadFstepFirst() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// A TimeHookRecur fstep on an Atree field: the hook is armed by FirstChanged
-// calls, which only the Llist and Bheap generators emit -- an Atree step
-// would compile and never fire.
+// Give amc a TimeHookRecur fstep on an Atree field, and check that amc reports
+// amc.fstep_first.
+// FirstChanged calls arm the hook, and only the Llist and Bheap generators emit
+// them.  An Atree step would compile and never fire.
 void atf_comp::comptest_amc_BadFstepAtree() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -1065,9 +1098,11 @@ void atf_comp::comptest_amc_BadFstepAtree() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// An fstep on a fixed Inlary field: the step's loop condition tests the
-// index with EmptyQ, which generates only for a variable Inlary -- a fixed
-// one always holds max elements and offers no emptiness test.
+// Give amc an fstep on a fixed Inlary field, and check that amc reports
+// amc.fstep_reftype.
+// The step's loop condition tests the index with EmptyQ, which amc generates for a
+// variable Inlary alone.  A fixed Inlary always holds max elements and offers no
+// emptiness test.
 void atf_comp::comptest_amc_BadFstepInlary() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -1082,8 +1117,10 @@ void atf_comp::comptest_amc_BadFstepInlary() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// An InlineRecur fstep with fdelay scale:Y on a Val field: the scaled delay
-// divides by the step index's row count, which a Val field does not have.
+// Give amc an InlineRecur fstep with fdelay scale:Y on a Val field, and check that
+// amc reports amc.fstep_scale.
+// The scaled delay divides by the step index's row count, and a Val field has no
+// row count.
 void atf_comp::comptest_amc_BadFstepScale() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -1098,9 +1135,10 @@ void atf_comp::comptest_amc_BadFstepScale() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// A Callback fstep on a ZSListMT field: the list is concurrent and has no
-// EmptyQ, so the step's loop condition tests DestructiveFirst, which only
-// the Inline and InlineRecur call shapes embed.
+// Give amc a Callback fstep on a ZSListMT field, and check that amc reports
+// amc.fstep_zslistmt.
+// The list is concurrent and has no EmptyQ, so the step's loop condition tests
+// DestructiveFirst.  Only the Inline and InlineRecur call shapes embed that test.
 void atf_comp::comptest_amc_BadFstepZslistmt() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -1118,9 +1156,10 @@ void atf_comp::comptest_amc_BadFstepZslistmt() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// An fdelay row on an Inline fstep: the delay between invocations is read
-// only by the InlineRecur and TimeHookRecur call shapes, so on any other
-// steptype the row configures nothing.
+// Give amc an fdelay row on an Inline fstep, and check that amc reports
+// amc.fstep_fdelay.
+// Only the InlineRecur and TimeHookRecur call shapes read the delay between
+// invocations.  On any other steptype the row would go unused.
 void atf_comp::comptest_amc_BadFstepFdelay() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -1135,9 +1174,11 @@ void atf_comp::comptest_amc_BadFstepFdelay() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// An fstep on an Lpool field: the step's loop condition tests the field
-// for pending work, and a memory pool offers no emptiness test, so the
-// generated condition would call an EmptyQ that does not exist.
+// Give amc an fstep on an Lpool field, and check that amc reports
+// amc.fstep_reftype.
+// The step's loop condition tests the field for pending work.  A memory pool
+// offers no emptiness test, so the generated condition would call an EmptyQ that
+// does not exist.
 void atf_comp::comptest_amc_BadFstepReftype() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -1153,9 +1194,9 @@ void atf_comp::comptest_amc_BadFstepReftype() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// InlineRecur fsteps with fdelay scale:Y on a Blkhash and on a Lary field:
-// both reftypes generate the N function the scaled delay divides by, so the
-// schema generates cleanly.
+// Give amc InlineRecur fsteps with fdelay scale:Y on a Blkhash and on a Lary field,
+// and check that amc generates the schema without a diagnostic.
+// Both reftypes generate the N function that the scaled delay divides by.
 void atf_comp::comptest_amc_FstepScaleBlkhash() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -1187,8 +1228,10 @@ void atf_comp::comptest_amc_FstepScaleBlkhash() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// An fstep on a field of a non-global ctype: the generated step would read
-// the field through the namespace global, a member FDb does not have.
+// Give amc an fstep on a field of a non-global ctype, and check that amc reports
+// amc.fstep_global.
+// The generated step would read the field through the namespace global, and the
+// FDb has no such member.
 void atf_comp::comptest_amc_BadFstepGlobal() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -1204,9 +1247,9 @@ void atf_comp::comptest_amc_BadFstepGlobal() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// An executable steps a library's list: an Alias field on its FDb names the
-// list, and the fstep on the alias is generated in the executable, whose
-// Steps() is printed here.
+// Give an executable an Alias field on its FDb that names a library's list, with an
+// fstep on the alias.  Print the executable's Steps(), and check that amc generates
+// the alias step in the executable and calls it there.
 void atf_comp::comptest_amc_FstepAlias() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N yyy.FDb._db.Steps < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -1240,9 +1283,9 @@ void atf_comp::comptest_amc_FstepAlias() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// An alias step on a list that has a step of its own overrides that step: the
-// executable's Steps(), printed here, calls the alias step in the library
-// step's slot and never the library's.
+// Give an executable an alias step on a library list that has a step of its own.
+// Print the executable's Steps(), and check that it calls the alias step in the
+// library step's slot and never the library's step.
 void atf_comp::comptest_amc_FstepAliasOverride() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N yyy.FDb._db.Steps < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -1277,9 +1320,10 @@ void atf_comp::comptest_amc_FstepAliasOverride() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// An alias step whose band differs from the step it overrides: the override
-// runs in the library step's slot, so a band of its own would decide nothing
-// about its position and would still change how its wrapper is generated.
+// Give an executable an alias step whose band (idle) differs from the band of the
+// step it overrides, and check that amc reports amc.fstep_alias_band.
+// The override runs in the library step's slot.  A band of its own would have no
+// say in its position, and would still change how amc generates its wrapper.
 void atf_comp::comptest_amc_BadFstepAliasBand() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N yyy.FDb._db.Steps < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -1314,8 +1358,10 @@ void atf_comp::comptest_amc_BadFstepAliasBand() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// An alias step with a TimeHook steptype: the time hook is armed by the
-// list's FirstChanged, which is generated in the list's own namespace.
+// Give an executable an alias step of steptype TimeHookRecur, and check that amc
+// reports amc.fstep_alias_steptype.
+// The list's FirstChanged arms the time hook, and amc generates FirstChanged in the
+// list's own namespace.
 void atf_comp::comptest_amc_BadFstepAliasSteptype() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -1347,8 +1393,9 @@ void atf_comp::comptest_amc_BadFstepAliasSteptype() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// Two alias steps on one list inside one executable's closure: they share the
-// process's main loop and would race for the list's rows.
+// Give one executable's closure two alias steps on one list, one in the executable
+// and one in a library it links, and check that amc reports amc.fstep_alias_rival.
+// The two steps share the process's main loop and would race for the list's rows.
 void atf_comp::comptest_amc_BadFstepAliasRival() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -1393,8 +1440,10 @@ void atf_comp::comptest_amc_BadFstepAliasRival() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// An alias step overriding a list whose own step is a time hook: that step
-// runs from the time hook, never from Steps(), so nothing could replace it.
+// Give an executable an alias step on a list whose own step is a TimeHookRecur,
+// and check that amc reports amc.fstep_alias_timehook.
+// The list's own step runs from the time hook and never from Steps(), so the alias
+// step would find no slot in Steps() to take over.
 void atf_comp::comptest_amc_BadFstepAliasTimehook() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -1427,8 +1476,9 @@ void atf_comp::comptest_amc_BadFstepAliasTimehook() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// An alias step naming a field of a non-global ctype, which is no list of
-// another namespace's FDb.
+// Give an executable an alias step that names a field of a non-global ctype, and
+// check that amc reports amc.fstep_alias_list.
+// Such a field is no list of another namespace's FDb.
 void atf_comp::comptest_amc_BadFstepAliasList() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -1459,10 +1509,12 @@ void atf_comp::comptest_amc_BadFstepAliasList() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// Steps run band by band: the executable's input step, then the work band,
-// where the executable's own step precedes the library's because namespaces
-// run in dependency order within a band, then the executable's output step,
-// then its idle step.
+// Give an executable steps in the input, work, output and idle bands, and a library
+// step in the work band.  Print the executable's Steps(), and check that it calls
+// the steps band by band: the input step, the work band, the output step and then
+// the idle step.
+// Namespaces run in dependency order within a band, so the executable's own work
+// step precedes the library's.
 void atf_comp::comptest_amc_FstepBand() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N yyy.FDb._db.Steps < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -1513,7 +1565,8 @@ void atf_comp::comptest_amc_FstepBand() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// An idle-band time hook step arms its hook on the idle heap of algo_lib.
+// Give an executable a TimeHookRecur step in the idle band, print the list's
+// FirstChanged, and check that it arms the hook on the idle heap of algo_lib.
 void atf_comp::comptest_amc_FstepTimehookIdle() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N yyy.FDb.zd_bg.FirstChanged < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -1551,7 +1604,8 @@ void atf_comp::comptest_amc_FstepTimehookIdle() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// A time hook step in a band with no algo_lib heap is refused.
+// Give an executable a TimeHookRecur step in the output band, which has no algo_lib
+// heap, and check that amc refuses it with amc.fstep_timehook_band.
 void atf_comp::comptest_amc_BadFstepTimehookBand() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -1589,9 +1643,10 @@ void atf_comp::comptest_amc_BadFstepTimehookBand() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// An idle step with rate 2/3: each pass earns two thirds of a call, the credit
-// is capped at 4, which loses none of it, and the step also runs in a pass that
-// has time to give up.
+// Give an executable an idle step with fsteprate 2/3, print the step's Call, and
+// check that each pass earns two thirds of a call, that the credit caps at 4, and
+// that the step also runs in a pass that has time to give up.
+// The cap at 4 loses none of the credit.
 void atf_comp::comptest_amc_FstepRate() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N yyy.FDb.zd_bg.Call < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -1638,7 +1693,8 @@ void atf_comp::comptest_amc_FstepRate() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// An idle step with no fsteprate row runs at the idle band's default rate, 1/8.
+// Give an executable an idle step with no fsteprate row, print the step's Call, and
+// check that the step runs at the idle band's default rate, 1/8.
 void atf_comp::comptest_amc_FstepIdleRate() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N yyy.FDb.zd_bg.Call < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -1684,7 +1740,9 @@ void atf_comp::comptest_amc_FstepIdleRate() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// A rate on an InlineRecur step, which keeps its own clock.
+// Give an executable an InlineRecur step with an fsteprate row, and check that amc
+// reports amc.fstep_rate_steptype.
+// An InlineRecur step keeps its own clock.
 void atf_comp::comptest_amc_BadFstepRateSteptype() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -1729,7 +1787,9 @@ void atf_comp::comptest_amc_BadFstepRateSteptype() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// A rate of zero calls, which would never run the step.
+// Give an executable a step with an fsteprate of zero calls, and check that amc
+// reports amc.fstep_rate_zero.
+// A rate of zero calls would never run the step.
 void atf_comp::comptest_amc_BadFstepRateZero() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -1773,10 +1833,11 @@ void atf_comp::comptest_amc_BadFstepRateZero() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// A dispatch filter over a message field that has its own Print function
-// (an fconst field): the filter's regx match prints the field through that
-// function, passing the message as the parent argument. Pins the emitted
-// Match body, including the well-formed Print call.
+// Give amc a dispatch filter over a message field that has its own Print function
+// (an fconst field), print the filter's MatchEv, and check that the regx match
+// prints the field through that function with the message as the parent argument.
+// The golden pins the whole emitted Match body, including the well-formed Print
+// call.
 void atf_comp::comptest_amc_DispfilterFieldPrint() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N algo_lib.DispFilter..MatchEv < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -1798,14 +1859,16 @@ void atf_comp::comptest_amc_DispfilterFieldPrint() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// A dispatch filter declared match_all:Y, whose two messages between them cover
-// every shape the rule has to place. Ev carries both filter fields, so its Match
-// body reads the message: the equality and the range tests take the big-endian
-// field through its Get function, and the regx match prints the message's own
-// field through its fconst Print function before matching. Ev2 carries neither,
-// so every filter field of Ev's turns into a present test that refuses the
-// message, which is what match_all means. Ev2's own field is the control on the
-// other side, and Ev's present tests for it are the same refusal in reverse.
+// Give amc a dispatch filter declared match_all:Y over two messages that between
+// them cover every shape the rule has to place.  Print the filter's Match
+// functions, and check how each one reads or refuses its message.
+// Ev carries both filter fields, so its Match body reads the message.  The
+// equality and the range tests take the big-endian field through its Get function.
+// The regx match prints the message's own field through its fconst Print function
+// before matching.  Ev2 carries neither field.  So each of Ev's filter fields turns
+// into a present test that refuses the message, which is what match_all means.
+// Ev2's own field is the control on the other side.  Ev's present tests for it are
+// the same refusal in reverse.
 void atf_comp::comptest_amc_DispfilterMatchAll() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N 'algo_lib.DispFilter..Match%' < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -1833,88 +1896,102 @@ void atf_comp::comptest_amc_DispfilterMatchAll() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// A gconst value table whose fourth and fifth lines are not tuples: each
-// carries an unterminated quoted value. The reader keeps what it read before
-// the quote ran out and jumps to end of line, so the truncated value would
-// read back as a constant name the table never wrote, with every attribute
-// past the bad quote -- the comment among them -- dropped. Both lines are
-// reported with the file, the line number and the line's text, none of which
-// the tuple reader itself supplies. The query prints the resulting enum, so
-// the controls are pinned too: a blank line and a comment line draw no
-// diagnostic, the two well-formed rows still emit, and the auto-numbering
-// consumes no index for a line that produced no constant.
+// Run amc over test/amc/bad_gconst_badline, whose gconst value table has a fourth
+// and a fifth line that are no tuples, and print algo_lib.ColorId.  Check that amc
+// reports amc.bad_gconst for both lines with the file, the line number and the
+// line's text.
+// Each bad line carries an unterminated quoted value.  The reader keeps what it
+// read before the quote ran out and jumps to end of line.  The truncated value
+// would then read back as a constant name the table never wrote, and every
+// attribute past the bad quote would drop, the comment among them.  The tuple
+// reader itself supplies none of the file, the line number or the line's text.
+// The printed enum pins the controls too: a blank line and a comment line draw no
+// diagnostic; the two well-formed rows still emit; and the auto-numbering counts
+// only the lines that produced a constant.
 void atf_comp::comptest_amc_BadGconstBadline() {
     atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_gconst_badline -out_dir: -report:N algo_lib.ColorId");
 }
 
-// A gconst value table in which the same name appears twice: the second row
-// would silently vanish from the enum while still consuming a numbering
-// index, gapping the numbering on a clean exit.
+// Run amc over test/amc/bad_gconst_dup, whose gconst value table holds one name
+// twice, and check that amc reports amc.gconst_dup.
+// The second row would silently vanish from the enum and still take a numbering
+// index.  The numbering would then have a gap on a clean exit.
 void atf_comp::comptest_amc_BadGconstDup() {
     atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_gconst_dup -out_dir: -report:N zzz");
 }
 
-// A gconst value table containing a line with a head but no attribute: the
-// line creates no constant, yet auto-numbering would consume an index for
-// it, silently renumbering every constant that follows.
+// Run amc over test/amc/bad_gconst_headonly, whose gconst value table has a line
+// with a head and no attribute, and check that amc reports amc.gconst_headonly.
+// The line creates no constant, yet auto-numbering would take an index for it.
+// That would silently renumber every constant that follows.
 void atf_comp::comptest_amc_BadGconstHeadonly() {
     atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_gconst_headonly -out_dir: -report:N zzz");
 }
 
-// A gconst whose idfld names an existing field of a ctype other than the
-// namefld's: the field is absent from the value table's rows, so every
-// fconst value would come out empty.
+// Run amc over test/amc/bad_gconst_ctype, whose gconst idfld names an existing
+// field of a ctype other than the namefld's, and check that amc reports
+// amc.gconst_idfld.
+// The value table's rows lack that field, so every fconst value would come out
+// empty.
 void atf_comp::comptest_amc_BadGconstCtype() {
     atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_gconst_ctype -out_dir: -report:N zzz");
 }
 
-// A gconst whose idfld names no existing field: the id column must not
-// silently fall back to the name column.
+// Run amc over test/amc/bad_gconst_idfld, whose gconst idfld names a field that
+// does not exist, and check that amc reports amc.gconst_idfld.
+// The report keeps the id column from silently falling back to the name column.
 void atf_comp::comptest_amc_BadGconstIdfld() {
     atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_gconst_idfld -out_dir: -report:N zzz");
 }
 
-// Two gconsts with a bad idfld, the first on a char-typed field: the run
-// reports both and exits, instead of processing the known-bad row and
-// aborting the scan on a context-free char-parse failure.
+// Run amc over test/amc/bad_gconst_ctype_char, with two gconsts whose idfld is bad,
+// the first on a char-typed field.  Check that amc reports amc.gconst_idfld for
+// both and exits.
+// A run that went on to process the known-bad row would abort the scan on a
+// char-parse failure that names no context.
 void atf_comp::comptest_amc_BadGconstCtypeChar() {
     atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_gconst_ctype_char -out_dir: -report:N zzz");
 }
 
-// A char-typed gconst whose value table holds multi-character values: each
-// offending row is reported with its gconst, name and value, and the scan
-// continues to the end of the table.  The query prints the resulting enum,
-// so the table's one valid row is pinned too: it survives the skipped
-// neighbors and emits as a single-quoted character constant.
+// Run amc over test/amc/bad_gconst_char, whose char-typed gconst has a value table
+// with multi-character values, and print algo_lib.ColorId.  Check that amc reports
+// amc.gconst_char for each offending row with its gconst, name and value, and
+// scans on to the end of the table.
+// The printed enum pins the table's one valid row too.  The row survives its
+// skipped neighbors and emits as a single-quoted character constant.
 void atf_comp::comptest_amc_BadGconstChar() {
     atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_gconst_char -out_dir: -report:N algo_lib.ColorId");
 }
 
-// A gconst over a value table that exists only inside the fixture universe:
-// the values side-load from the -in_dir root, not from data/ under the CWD,
-// and no amc.sideload notice appears for a directory universe.
+// Run amc over test/amc/gconst_indir, whose gconst value table exists only inside
+// that directory.  Check that amc side-loads the values from the -in_dir root and
+// prints no amc.sideload notice for a directory universe.
+// data/ under the CWD lacks the table, so only the -in_dir root can supply it.
 void atf_comp::comptest_amc_GconstIndir() {
     atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/gconst_indir -out_dir: -report:N zzz");
 }
 
-// A gconst whose value table is absent from the -in_dir root: the table's rows
-// are the enum's constants, so loading it as zero rows would compile an empty
-// enum and exit 0. The run reports the file and exits nonzero.
+// Run amc over test/amc/gconst_missing, whose -in_dir root lacks the gconst's value
+// table, and check that amc reports amc.load with the file and exits nonzero.
+// The table's rows are the enum's constants.  Loading the table as zero rows would
+// compile an empty enum and exit 0.
 void atf_comp::comptest_amc_GconstLoadFail() {
     atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/gconst_missing -out_dir: -report:N zzz");
 }
 
-// A gconst and a gstatic whose table has no name at all: the ctype the rows
-// would come from reaches no ssimfile, so there is no file to look for. This is
-// the other way a table can be absent, and it is reported apart from a named
-// file that cannot be read, because the reader can say nothing about a file it
-// was never given -- amc.GconstLoadFail and amc.GstaticLoadFail are that case,
-// and their ctypes reach a ssimfile of their own and through a base
-// respectively, which is what makes them the controls for this one.
-// A ctype reaches no ssimfile two ways, and the fixture holds both for each
-// consumer: it declares no base at all, or a base that owns no ssimfile either.
-// Both name the offending gconst or gstatic field and let the run continue, so
-// one run reports all four rows rather than ending at the first.
+// Give amc a gconst and a gstatic over each of two ctypes that reach no ssimfile,
+// and check that amc reports amc.gconst_nossimfile and amc.gstatic_nossimfile for
+// all four rows in one run.
+// The ctype that the rows would come from reaches no ssimfile, so amc has no file
+// to look for.  This is the other way a table can be absent.  amc reports it apart
+// from a named file that fails to read, because a reader that was never given a
+// file has no file to report.  amc.GconstLoadFail and amc.GstaticLoadFail cover
+// the named file.  Their ctypes reach a ssimfile, one of its own and one through a
+// base, which makes them the controls for this test.
+// A ctype reaches no ssimfile in two ways, and the fixture holds both for each
+// consumer.  Free declares no base, and Derived has a base that owns no ssimfile
+// either.  Each report names the offending gconst or gstatic field and lets the
+// run continue, so one run reports all four rows.
 void atf_comp::comptest_amc_SideloadNossimfile() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:i8  likeu64:Y  bigendok:N  issigned:Y  comment:\"8-bit   signed integer\"");
@@ -1957,51 +2034,54 @@ void atf_comp::comptest_amc_SideloadNossimfile() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// A gstatic field whose table file is absent from the -in_dir root: the
-// rows would become the compiled-in registry, so loading the table as
-// zero rows would silently drop every entry. The run reports the file
-// and exits nonzero.
+// Run amc over test/amc/gstatic_missing, whose -in_dir root lacks the table file of
+// a gstatic field, and check that amc reports amc.load with the file and exits
+// nonzero.
+// The rows would become the compiled-in registry.  Loading the table as zero rows
+// would silently drop every entry.
 void atf_comp::comptest_amc_GstaticLoadFail() {
     atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/gstatic_missing -out_dir: -report:N zzz");
 }
 
-// A gstatic table whose second line is not a tuple: an unterminated quoted
-// value. The line would silently drop out of the compiled-in registry, so the
-// run reports it and exits nonzero. The diagnostic names the field that was
-// reading, the file, the line number and the line's text, none of which the
-// tuple reader itself supplies. The query prints the loader the table compiles
-// into, so the two well-formed lines around the bad one are pinned as well: they
-// come back as the loader's own rows, which is how a run that abandoned the
-// table at the first bad line would show itself. The universe also carries an
-// fconst whose value is a character literal, so an earlier pass has left a
-// bad-number tag naming that valid value in algo_lib's shared error buffer: a
-// message taken from there would name the fconst instead of the file that is
-// actually malformed.
+// Run amc over test/amc/gstatic_badline, whose gstatic table has a second line with
+// an unterminated quoted value, and print algo_lib.FDb.color.LoadStatic.  Check
+// that amc reports amc.bad_gstatic with the field that was reading, the file, the
+// line number and the line's text, and exits nonzero.
+// The bad line would silently drop out of the compiled-in registry.  The tuple
+// reader itself supplies none of the file, the line number or the line's text.
+// The printed loader pins the two well-formed lines around the bad one as well.
+// They come back as the loader's own rows, and a run that abandoned the table at
+// the first bad line would show there.  The universe also carries an fconst whose
+// value is a character literal.  So an earlier pass leaves a bad-number tag that
+// names that valid value in algo_lib's shared error buffer.  A message taken from
+// that buffer would name the fconst, and miss the file that is malformed.
 void atf_comp::comptest_amc_GstaticBadLine() {
     atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/gstatic_badline -out_dir: -report:N algo_lib.FDb.color.LoadStatic");
 }
 
-// A gsymbol table whose fourth and fifth lines are not tuples: each carries an
-// unterminated quoted value. The truncated text would become a symbol name and
-// value the table never wrote, so every reference to the intended symbol fails
-// to link. Both lines are reported with the file, the line number and the
-// line's text, and the run exits nonzero.
+// Run amc over test/amc/gsymbol_badline, whose gsymbol table has a fourth and a
+// fifth line that are no tuples, each with an unterminated quoted value.  Check
+// that amc reports amc.bad_gsymbol for both lines with the file, the line number
+// and the line's text, and exits nonzero.
+// The truncated text would become a symbol name and value the table never wrote.
+// Every reference to the intended symbol would then fail to link.
 void atf_comp::comptest_amc_GsymbolBadline() {
     atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/gsymbol_badline -out_dir: -report:N zzz");
 }
 
-// A gsymbol whose table is absent from the -in_dir root: the table's rows are
-// the symbols the namespace exports, so emitting an empty symbol block and
-// exiting 0 would leave every reference to them unresolved at link time. The
-// run reports the file and exits nonzero.
+// Run amc over test/amc/gsymbol_missing, whose -in_dir root lacks a gsymbol's
+// table, and check that amc reports amc.load with the file and exits nonzero.
+// The table's rows are the symbols that the namespace exports.  An empty symbol
+// block and exit 0 would leave every reference to them unresolved at link time.
 void atf_comp::comptest_amc_GsymbolLoadFail() {
     atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/gsymbol_missing -out_dir: -report:N zzz");
 }
 
-// A gsymbol in a single-file universe: with no directory root the symbol
-// table side-loads from the default data/ root of the current directory,
-// which may belong to a different universe than the -in_dir schema; the
-// amc.sideload notice names the fallback root and the file read from it.
+// Give amc a gsymbol in a single-file universe, and check that the amc.sideload
+// notice names the fallback root and the file that amc reads from it.
+// With no directory root, the symbol table side-loads from the default data/ root
+// of the current directory.  That root may belong to a different universe than
+// the -in_dir schema.
 void atf_comp::comptest_amc_GsymbolSideload() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -2018,9 +2098,10 @@ void atf_comp::comptest_amc_GsymbolSideload() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// An Llist field without its dmmeta.llist record: reported per field, then
-// the run stops at the reftype gate, since later gen phases dereference the
-// per-reftype records this phase found missing.
+// Give amc an Llist field without its dmmeta.llist record, and check that amc
+// reports amc.missing_record for the field and then stops at the reftype gate.
+// Later gen phases dereference the per-reftype records that this phase found
+// missing.
 void atf_comp::comptest_amc_MissingLlist() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -2035,9 +2116,10 @@ void atf_comp::comptest_amc_MissingLlist() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// A ccmp on a global ctype: there is exactly one instance, and the generated
-// Cmp/Lt bodies would silently compare the singleton with itself (a global
-// field's Get accessor takes no parent argument).
+// Give amc a ccmp on a global ctype, and check that amc reports amc.ccmp_global.
+// A global ctype has exactly one instance.  A global field's Get accessor takes no
+// parent argument, so the generated Cmp/Lt bodies would silently compare the
+// singleton with itself.
 void atf_comp::comptest_amc_BadCcmpGlobal() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -2054,8 +2136,9 @@ void atf_comp::comptest_amc_BadCcmpGlobal() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// A chash on a global ctype: same rule as ccmp -- the generated Hash body
-// would silently hash the singleton's own fields whatever argument is passed.
+// Give amc a chash on a global ctype, and check that amc reports amc.chash_global.
+// The rule is the one for ccmp.  The generated Hash body would silently hash the
+// singleton's own fields, whatever argument the caller passes.
 void atf_comp::comptest_amc_BadChashGlobal() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -2071,9 +2154,11 @@ void atf_comp::comptest_amc_BadChashGlobal() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// An fcmp on a global ctype's field: same rule as ccmp, one level down --
-// both operands of the generated Cmp/Lt body would collapse to the
-// singleton's value and the function would compare the field with itself.
+// Give amc an fcmp on a global ctype's field, and check that amc reports
+// amc.fcmp_global.
+// The rule is the one for ccmp, one level down.  Both operands of the generated
+// Cmp/Lt body would collapse to the singleton's value, and the function would
+// compare the field with itself.
 void atf_comp::comptest_amc_BadFcmpGlobal() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -2090,10 +2175,11 @@ void atf_comp::comptest_amc_BadFcmpGlobal() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// A ctype with both a Tpool and a Global instance, hashed by an FDb Thash:
-// the pooled rows would reach field accessors that take no parent and read
-// the global, so the hash would compare the singleton with itself. The
-// Global instance must be the ctype's only instance.
+// Give amc a ctype with both a Tpool and a Global instance, hashed by an FDb Thash,
+// and check that amc reports amc.global_inst.
+// The pooled rows would reach field accessors that take no parent and read the
+// global.  The hash would then compare the singleton with itself.  So the Global
+// instance must be the ctype's only instance.
 void atf_comp::comptest_amc_BadGlobalInst() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -2115,9 +2201,10 @@ void atf_comp::comptest_amc_BadGlobalInst() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// A minmax:Y ccmp on a non-builtin ctype without genop:Y order:Y: the
-// Min/Max functions compare with a raw <, which no generated or native
-// operator provides.
+// Give amc a minmax:Y ccmp on a non-builtin ctype without genop:Y order:Y, and
+// check that amc reports amc.ccmp_minmax.
+// The Min/Max functions compare with a raw <, and neither a generated nor a native
+// operator provides one.
 void atf_comp::comptest_amc_BadMinmax() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -2132,10 +2219,10 @@ void atf_comp::comptest_amc_BadMinmax() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// minmax:Y ccmp on a builtin (native operator <) and on an extrn:Y ctype
-// (user-defined comparison), neither with order:Y genop:Y: both provide the
-// operator < the Min/Max bodies compare with, so the schema generates
-// cleanly.
+// Give amc a minmax:Y ccmp on a builtin and on an extrn:Y ctype, neither with
+// order:Y genop:Y, and check that amc generates the schema without a diagnostic.
+// The builtin has a native operator <, and the extrn:Y ctype has a user-defined
+// comparison.  Both provide the operator < that the Min/Max bodies compare with.
 void atf_comp::comptest_amc_MinmaxNative() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -2151,9 +2238,11 @@ void atf_comp::comptest_amc_MinmaxNative() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// The ctype-named GetScale convenience exists only for a ctype with a
-// single fdec field; with two fdec fields the definitions would collide.
-// Pins that the one-fdec ctype keeps it and the two-fdec ctype has none.
+// Give amc a ctype with one fdec field and a ctype with two, print each field's
+// GetScale, and check that the one-fdec ctype keeps the ctype-named GetScale and
+// the two-fdec ctype has none.
+// amc emits the ctype-named GetScale convenience for a ctype with a single fdec
+// field, because two fdec fields would give colliding definitions.
 void atf_comp::comptest_amc_FdecGetScale() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N 'algo_lib.Price.value.GetScale|algo_lib.Quote.bid.GetScale|algo_lib.Quote.ask.GetScale' < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -2172,22 +2261,23 @@ void atf_comp::comptest_amc_FdecGetScale() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// A query match in a namespace with no dmmeta.nscpp row reports
-// amc.query_nocpp and counts toward the run's exit code, because the namespace
-// emits no C++ and the query has nothing to print for that record.
-// The first invocation matches two ctypes at once, one in a namespace that has
-// the row (algo_lib.CppWidget) and one in a namespace that does not
-// (ncns.Widget): the ncns match is reported, the algo_lib match still generates
-// and prints its struct, and the run exits 1 for the one report.
-// The second invocation queries testdb, an ssimdb namespace projected to
-// TypeScript alone, under the default key, so both query walkers run: the two
-// ctypes and the seven generated funcs each draw a report and the run exits 9.
-// The third and fourth invocations discard stderr. Query mode's stdout carries
-// the generated C++ and nothing else, so a consumer that wants code alone drops
-// stderr, and for a query wholly inside a nocpp namespace its stdout is empty.
-// The fourth query spans a nocpp namespace and a code-generating one, the case
-// that tells the two streams apart: its stdout holds the generated function and
-// none of the nine reports the same run writes to stderr.
+// Query amc for records in namespaces that have no dmmeta.nscpp row, and check that
+// each such match reports amc.query_nocpp and counts toward the run's exit code:
+// 1. Query two ctypes at once, algo_lib.CppWidget in a namespace with the row and
+//    ncns.Widget in a namespace without it.  Check that amc reports the ncns match,
+//    still prints the algo_lib struct, and exits 1 for the one report.
+// 2. Query testdb.%, an ssimdb namespace projected to TypeScript alone, under the
+//    default key, so both query walkers run.  Check that the two ctypes and the
+//    seven generated funcs each draw a report and that the run exits 9.
+// 3. Repeat the testdb.% query with stderr discarded, and check that stdout is
+//    empty.
+// 4. Query testdb.% and algo_lib.trace..Ctor together with stderr discarded, and
+//    check that stdout holds the generated function and none of the nine reports
+//    that the same run writes to stderr.
+// A namespace without the row emits no C++, so the query has no code to print for
+// its record.  Query mode's stdout carries the generated C++ alone, so a consumer
+// that wants code alone drops stderr.  The fourth query spans a nocpp namespace and
+// a code-generating one, the case that tells the two streams apart.
 void atf_comp::comptest_amc_QueryNocpp() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N 'ctype:algo_lib.CppWidget|ncns.Widget' < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.nstype  nstype:none  comment:''");
@@ -2267,19 +2357,20 @@ void atf_comp::comptest_amc_QueryNocpp() {
     atf_comp::ProcWriteEof(proc4);
 }
 
-// An fdec on a bitfld field of a global ctype: the value is reached through
-// the field's Get/Set accessors, which for a global parent take no parent
-// argument. Pins the emitted GetDouble/qSetDouble bodies.
-// The second field is ten bits wide inside a u32 word, and pins the range
-// the emitters bound it by. A bitfld setter masks the store to the declared
-// width, so the magnitude the field holds is 1023 and not the 4294967295 its
-// arg would suggest: SetDoubleMaybe compares against 1023 and the decimal
-// reader carries that magnitude split by ten, 102 and 3.
-// Each of the three stores casts the value to the field's own type on the
-// way in, so the setter is handed exactly the type it declares. The double
-// the double setters compute and the u64 magnitude the reader accumulates
-// are neither of them that type, and an arg naming a ctype that stands for
-// an integer builtin is not that type either.
+// Give amc an fdec on two bitfld fields of a global ctype.  Print decfrac's
+// GetDouble and qSetDouble and decnarrow's SetDoubleMaybe and ReadStrptrMaybe, and
+// check that each body reaches the value through the field's accessors and bounds
+// it by the field's width.
+// The Get/Set accessors of a field with a global parent take no parent argument.
+// decnarrow is ten bits wide inside a u32 word, and pins the range that the
+// emitters bound it by.  A bitfld setter masks the store to the declared width.  So
+// the field holds at most 1023, below the 4294967295 that its arg would suggest.
+// SetDoubleMaybe compares against 1023, and the decimal reader carries that
+// magnitude split by ten, 102 and 3.
+// Each of the three stores casts the value to the field's own type on the way in,
+// so the setter receives exactly the type it declares.  The double that the double
+// setters compute is a different type.  So is the u64 magnitude that the reader
+// accumulates, and so is an arg that names a ctype standing for an integer builtin.
 void atf_comp::comptest_amc_FdecGlobalBitfld() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N 'algo_lib.FDb.decfrac.GetDouble|algo_lib.FDb.decfrac.qSetDouble|algo_lib.FDb.decnarrow.SetDoubleMaybe|algo_lib.FDb.decnarrow.ReadStrptrMaybe' < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -2299,60 +2390,59 @@ void atf_comp::comptest_amc_FdecGlobalBitfld() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// A decimal scale amc cannot generate consistent arithmetic for. Zero places
-// -- the nplace default, so what a forgotten attr leaves behind -- emits a
-// reader that accumulates no digit at all; eighteen places outrun the powers
-// of ten the double accessors substitute, so they and the string accessors
-// would disagree about the scale; thirty-one places outrun the printer's
-// scratch buffer; twelve places on an i32 field outrun the field's own arg,
-// which the emitted GetScale returns the scale as, and the diagnostic states
-// the narrower range that arg allows. A u8 arg is the narrowest range the
-// rule admits from the arg side: two places fit its 255 and three do not, and
-// the diagnostic states that bound.
-// The fixture also holds one field per arg that carries no numeric range at
-// all -- bool, char, u128, float, double, pad_byte, and a plain struct ctype
-// -- and each is reported as an unusable arg. The char field's count is zero
-// as well, and it is still examined against the powers-of-ten limit, so that
-// field draws both diagnostics in one run.
-// The remaining fields cover the other way a field's range is fixed. A
-// Bitfld field stores into a slice of another field's word, and its setter
-// masks the store, so the width and not the arg is what bounds the count: a
-// ten-bit slice of a u32 takes three places and rejects four, a forty-bit
-// slice of a u64 takes twelve and rejects thirteen, and a three-bit slice
-// holds no decimal place at all, which the diagnostic states rather than
-// naming an empty range. A signed arg cannot be sliced narrower than its own
-// type at all: the ten-bit i32 field draws the bitfield diagnostic that
-// refuses it, since such a field does not sign-extend on read. That refusal
-// follows the type the arg stands for rather than the arg's own name, so a
-// ten-bit slice of a ctype whose single Val field is an i32 draws it too, and
-// a seven-bit slice of an i8 draws it at the narrowest signed arg there is.
-// A slice whose arg carries no numeric range takes no bound from its width:
-// the four-bit char field is reported as an unusable arg, and its count is
-// then held against the powers-of-ten limit alone.
-// The controls draw no diagnostic: the one-place and seventeen-place i64
-// fields sit at the bottom and the top of the supported range, each of the
-// eight integer builtins carries a count its own range allows, so no width
-// and neither sign is left untested, and a slice as wide as its arg takes
-// what the arg takes at both signs -- u32 and i32 at thirty-two bits each
-// take nine places, a u64 at sixty-four takes seventeen, and an i8 at eight
-// takes the two places its 127 allows.
-// An arg standing for the builtin through another ctype stores that ctype,
-// while every quantity the emitted functions compute is a number of the
-// builtin, so the value crosses between the two at each end: out of the
-// wrapper through the operator dmmeta.fcast generates, and into it through
-// the fieldwise constructor a dmmeta.cpptype row asking for a constructor
-// provides. The fixture carries one arg per combination of the two.
-// DecPlaceCast carries both and is accepted, and the query pins its emitted
-// functions, so what an accepted wrapper compiles to is part of what this
-// test compares rather than something no golden looks at. DecPlaceFcast
-// carries the operator alone, DecPlaceCtor the constructor alone, and
-// DecPlaceWrap neither, and each is reported naming what is missing.
-// DecPlaceChain stands for the builtin two ctypes deep, where the
-// constructor takes the inner ctype rather than the builtin, and is reported
-// as standing for the builtin only through another ctype. The same rule
-// reaches a Bitfld arg: the ten-bit slice of a wrapped u32 carries both
-// conversions and draws its count diagnostic alone, while the wrapped i32
-// slice carries neither and draws the conversion diagnostic beside its own.
+// Give amc one fdec field per decimal-place count, arg and bitfld width that the
+// rule decides, and print algo_lib.DecPlaceCast.value.%.  Check that amc reports
+// each count, arg and conversion that it has no consistent arithmetic for, and
+// that the controls draw no diagnostic.
+// Zero places is the nplace default, which a forgotten attr leaves behind.  It
+// emits a reader that accumulates no digit.  A count of -1 draws the same report.
+// Eighteen places outrun the powers of ten that the double accessors substitute,
+// so they and the string accessors would disagree about the scale.  Thirty-one
+// places outrun the printer's scratch buffer.  Twelve places on an i32 field
+// outrun the field's own arg, which the emitted GetScale returns the scale as.
+// That diagnostic states the narrower range that the arg allows.  A u8 arg is the
+// narrowest range that the rule admits from the arg side.  Two places fit its 255,
+// three exceed it, and the diagnostic states that bound.
+// The fixture also holds one field per arg with no numeric range: bool, char,
+// u128, float, double, pad_byte and a plain struct ctype.  amc reports each as an
+// unusable arg.  The char field's count is zero as well, and amc still checks it
+// against the powers-of-ten limit, so that field draws both diagnostics in one run.
+// The remaining fields cover the other way to fix a field's range.  A Bitfld field
+// stores into a slice of another field's word, and its setter masks the store.  So
+// the width bounds the count, and the arg plays no part.  A ten-bit slice of a u32
+// takes three places and rejects four.  A forty-bit slice of a u64 takes twelve and
+// rejects thirteen.  A three-bit slice holds no decimal place, and the diagnostic
+// states exactly that.
+// amc refuses a slice of a signed arg narrower than its own type, because such a
+// field does not sign-extend on read.  The ten-bit i32 field draws the bitfield
+// diagnostic that refuses it.  The refusal follows the type that the arg stands
+// for, so a ten-bit slice of a ctype whose single Val field is an i32 draws it too.
+// A seven-bit slice of an i8 draws it at the narrowest signed arg there is.  A
+// slice whose arg has no numeric range takes no bound from its width.  amc reports
+// the four-bit char field as an unusable arg, and then holds its count against the
+// powers-of-ten limit alone.
+// The controls draw no diagnostic: the one-place and seventeen-place i64 fields
+// sit at the bottom and the top of the supported range; each of the eight integer
+// builtins carries a count its own range allows, which covers every width and both
+// signs; and a slice as wide as its arg takes what the arg takes at both signs.
+// u32 and i32 at thirty-two bits each take nine places; a u64 at sixty-four bits
+// takes seventeen; and an i8 at eight bits takes the two places its 127 allows.
+// An arg that stands for the builtin through another ctype stores that ctype.
+// Every quantity the emitted functions compute is a number of the builtin, so the
+// value crosses between the two at each end.  It leaves the wrapper through the
+// operator that dmmeta.fcast generates.  It enters the wrapper through the
+// fieldwise constructor that a dmmeta.cpptype row asking for a constructor
+// provides.  The fixture carries one arg per combination of the two.
+// DecPlaceCast carries both, and amc accepts it.  The query pins its emitted
+// functions, so the golden compares what an accepted wrapper compiles to.
+// DecPlaceFcast carries the operator alone, DecPlaceCtor the constructor alone,
+// and DecPlaceWrap neither.  amc reports each of the three, naming what is
+// missing.  DecPlaceChain stands for the builtin two ctypes deep, where the
+// constructor takes the inner ctype in place of the builtin.  amc reports it as
+// standing for the builtin only through another ctype.  The same rule reaches a
+// Bitfld arg.  The ten-bit slice of a wrapped u32 carries both conversions and
+// draws its count diagnostic alone.  The wrapped i32 slice carries neither, and
+// draws the conversion diagnostic beside its own.
 void atf_comp::comptest_amc_BadFdecNplace() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N 'algo_lib.DecPlaceCast.value.%' < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:i8  likeu64:Y  bigendok:N  issigned:Y  comment:\"8-bit   signed integer\"");
@@ -2557,14 +2647,15 @@ void atf_comp::comptest_amc_BadFdecNplace() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// A Bitfld field whose declared width is zero, carrying a decimal count. The
-// width is reported as out of bounds. The decimal range takes no bound from
-// such a width: a bound computed from it would state that the field holds no
-// decimal place at all, so the count draws no diagnostic of its own. The
-// bitfield accessors refuse the width once generation reaches the field, and
-// the run ends there -- which is why the width error follows the bounds
-// report, and why a fixture reaches the decimal rule with one bad width at
-// most. The negative width has a fixture of its own.
+// Give amc a Bitfld field with a declared width of zero and a decimal count, and
+// check that amc reports the width as out of bounds and that the count draws no
+// diagnostic of its own.
+// The decimal range takes no bound from such a width.  A bound computed from it
+// would state that the field holds no decimal place.  The bitfield accessors
+// refuse the width once generation reaches the field, and the run ends there.
+// That is why the width error follows the bounds report.  It is also why a fixture
+// reaches the decimal rule with one bad width at most.  BadFdecBitwidthNeg covers
+// the negative width.
 void atf_comp::comptest_amc_BadFdecBitwidth() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:i8  likeu64:Y  bigendok:N  issigned:Y  comment:\"8-bit   signed integer\"");
@@ -2595,16 +2686,16 @@ void atf_comp::comptest_amc_BadFdecBitwidth() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// The zero-width fixture's counterpart on the other side of the same rule: a
-// Bitfld field whose declared width is negative, carrying a decimal count.
-// The width is reported as out of bounds and the decimal range takes no bound
-// from it, so the count draws no diagnostic of its own. The magnitude is
-// sixty-four rather than one because the rule is checked through its output:
-// a bound built from a negative width shifts by a negative count, and a
-// compiler that takes the count modulo sixty-four then computes a bound of
-// zero from this width and reports the field as holding no decimal place. A
-// run that keeps the width out of the shift prints two rows; one that lets it
-// in prints three.
+// Give amc a Bitfld field with a declared width of -64 and a decimal count, and
+// check that amc reports the width as out of bounds and that the count draws no
+// diagnostic of its own.
+// This is the zero-width fixture's counterpart on the other side of the same rule.
+// The decimal range takes no bound from a negative width.  The magnitude is
+// sixty-four, because the test checks the rule through its output.  A bound built
+// from a negative width shifts by a negative count.  A compiler that takes the
+// count modulo sixty-four then computes a bound of zero from this width, and
+// reports the field as holding no decimal place.  A run that keeps the width out
+// of the shift prints two rows.  A run that lets it in prints three.
 void atf_comp::comptest_amc_BadFdecBitwidthNeg() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:i8  likeu64:Y  bigendok:N  issigned:Y  comment:\"8-bit   signed integer\"");
@@ -2635,9 +2726,9 @@ void atf_comp::comptest_amc_BadFdecBitwidthNeg() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// A Tuple-printfmt String cfmt on a global ctype: field values are reached
-// through the print function's row argument, including the cursor walk of an
-// array field. Pins the emitted Print body.
+// Give a global ctype a String cfmt with printfmt Tuple, print the emitted Print
+// body, and check that it reaches field values through the row argument, including
+// the cursor walk of an array field.
 void atf_comp::comptest_amc_PrintGlobalTuple() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N algo_lib.FDb.%Print% < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -2652,11 +2743,13 @@ void atf_comp::comptest_amc_PrintGlobalTuple() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// A read:Y Tuple cfmt on a global ctype: the ReadFieldMaybe dispatcher
-// keeps the ctype-name prefix its callers link against and passes no
-// parent to the field readers, which -- like every field-level function
-// of a global -- take no parent argument; the Set-backed reader assigns
-// through the collapsed Set accessor.
+// Give a global ctype a read:Y Tuple cfmt, and print its ReadFieldMaybe, its
+// ReadStrptrMaybe and the maxjobs field reader.  Check that the ReadFieldMaybe
+// dispatcher keeps the ctype-name prefix its callers link against and passes no
+// parent to the field readers, and that the Set-backed reader assigns through the
+// collapsed Set accessor.
+// Like every field-level function of a global, the field readers take no parent
+// argument.
 void atf_comp::comptest_amc_ReadGlobalTuple() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N 'algo_lib.FDb.maxjobs.ReadStrptrMaybe|algo_lib.FDb..ReadFieldMaybe|algo_lib.FDb..ReadStrptrMaybe' < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -2672,13 +2765,14 @@ void atf_comp::comptest_amc_ReadGlobalTuple() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// An ArgvGnu cfmt: the gnu form of the same emission matrix ArgvGlobal pins
-// for Argv. A one-character field name takes a single dash, longer names take
-// two, PrintArgv separates the name from its value with a space where Argv
-// writes a colon, ToArgv appends the value as its own argv token, and an array
-// field repeats the name once per element. args[0] is the bare command name,
-// no bin/ prefix: an ArgvGnu command is external and resolves on PATH, which
-// atf_unit ExecToArgvSyntax asserts against the real bash command.
+// Give amc an ArgvGnu cfmt, print its PrintArgv and ToArgv, and check that they
+// emit the gnu form of the matrix that ArgvGlobal pins for Argv: a one-character
+// field name takes a single dash and a longer name takes two; PrintArgv separates
+// the name from its value with a space where Argv writes a colon; ToArgv appends
+// the value as its own argv token; an array field repeats the name once per
+// element; and args[0] is the bare command name, with no bin/ prefix.
+// An ArgvGnu command is external and resolves on PATH.  atf_unit ExecToArgvSyntax
+// asserts that against the real bash command.
 void atf_comp::comptest_amc_ArgvGnu() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N 'algo_lib.Gnu..PrintArgv|algo_lib.Gnu..ToArgv' < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -2695,11 +2789,11 @@ void atf_comp::comptest_amc_ArgvGnu() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// An Argv cfmt on a global ctype and on a regular one: the value of a field
-// with its own Print function (an fconst field) prints through that
-// function, whose parent argument collapses for the global and is the row
-// itself -- no const_cast -- for the regular ctype. Pins the PrintArgv and
-// ToArgv bodies of both.
+// Give a global ctype and a regular one an Argv cfmt, print the PrintArgv and
+// ToArgv bodies of both, and check that the value of a field with its own Print
+// function (an fconst field) prints through that function.
+// That function's parent argument collapses for the global.  For the regular ctype
+// the argument is the row itself, with no const_cast.
 void atf_comp::comptest_amc_ArgvGlobal() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N 'algo_lib.FDb..PrintArgv|algo_lib.FDb..ToArgv|algo_lib.Cmd..PrintArgv|algo_lib.Cmd..ToArgv' < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -2723,15 +2817,16 @@ void atf_comp::comptest_amc_ArgvGlobal() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// Which field of a command ctype becomes a command-line token, and how its
-// value is reached. Tokens: a plain Val, a Val cloned in from a Base, an
-// fconst Val and a Smallstr through their own Print functions, a Tary through
-// a cursor walk, a big-endian Val and a bitfield through their Get accessors.
-// No token: the Global anchor and the Base anchor, which name no member of
-// their own; the source word a bitfield lives in, whose bits print
+// Give amc command ctypes with fields of many shapes, and print the PrintArgv
+// bodies of FDb, Cmd and Flags and the ToArgv bodies of Cmd and Flags.  Check which
+// fields become command-line tokens and how each token reaches its value.
+// These fields become tokens: a plain Val; a Val cloned in from a Base; an fconst
+// Val and a Smallstr, through their own Print functions; a Tary, through a cursor
+// walk; and a big-endian Val and a bitfield, through their Get accessors.
+// The rest become no token: the Global anchor and the Base anchor, which name no
+// member of their own; the source word that a bitfield lives in, whose bits print
 // individually outside Raw form; and a Ptr, whose address has no command-line
-// spelling ReadArgv could take back. Pins the PrintArgv bodies of all three
-// ctypes and the ToArgv bodies of the two that carry the interesting fields.
+// spelling that ReadArgv could take back.
 void atf_comp::comptest_amc_ArgvField() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N 'algo_lib.FDb..PrintArgv|algo_lib.Cmd..PrintArgv|algo_lib.Cmd..ToArgv|algo_lib.Flags..PrintArgv|algo_lib.Flags..ToArgv' < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -2781,10 +2876,13 @@ void atf_comp::comptest_amc_ArgvField() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// An fconst on a global ctype's field: the fconst accessors take no parent
-// argument, so the calls between them pass none. Pins ToCstr's GetEnum
-// switch, Print's ToCstr call, SetStrptrMaybe's SetEnum calls (short and
-// beyond-8-byte names), and -- via a bitfld member -- GetEnum's Get call.
+// Give fconsts to two fields of a global ctype, print state's ToCstr, Print and
+// SetStrptrMaybe and the bitfld mode's GetEnum, and check that the calls between
+// the fconst accessors pass no parent.
+// The fconst accessors of a global take no parent argument.  The golden pins
+// ToCstr's GetEnum switch, Print's ToCstr call, SetStrptrMaybe's SetEnum calls for
+// short names and for names beyond 8 bytes, and, through the bitfld member,
+// GetEnum's Get call.
 void atf_comp::comptest_amc_FconstGlobal() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N 'algo_lib.FDb.state.ToCstr|algo_lib.FDb.state.Print|algo_lib.FDb.state.SetStrptrMaybe|algo_lib.FDb.mode.GetEnum' < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -2804,11 +2902,12 @@ void atf_comp::comptest_amc_FconstGlobal() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// The universe read from stdin (-in_dir:-), which is how a caller composes
-// one -- an acr_in dump plus extra rows -- without a temp file.  The query
-// prints a function that can only come from the piped rows, and "-" names no
-// directory, so side table data loads from the default root and the run says
-// so.
+// Pipe a universe to amc on stdin (-in_dir:-), query a function that only the piped
+// rows define, and check that amc prints it.
+// A caller composes a universe this way, as an acr_in dump plus extra rows, without
+// a temp file.  "-" names no directory, so side table data would load from the
+// default root.  This universe has no side table to load, so the run prints no
+// amc.sideload notice.
 void atf_comp::comptest_amc_StdinUniverse() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N algo_lib.Price.value.GetScale < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -2827,10 +2926,11 @@ void atf_comp::comptest_amc_StdinUniverse() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// A numstr on a global ctype's field: the numstr accessors take no parent
-// argument, so Geti64 and GetnumDflt call Getnum bare. Pins both Geti64
-// arms (the u64 numtype's overflow-checked arm and the plain arm, via an
-// unsigned and a signed field) and GetnumDflt's body.
+// Give a global ctype an unsigned and a signed numstr field, print each field's
+// Geti64 and GetnumDflt, and check that they call Getnum bare.
+// The numstr accessors of a global take no parent argument.  The golden pins both
+// Geti64 arms, the overflow-checked arm of the u64 numtype and the plain arm, and
+// GetnumDflt's body.
 void atf_comp::comptest_amc_NumstrGlobal() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N 'algo_lib.FDb.gnumstr.Geti64|algo_lib.FDb.gnumstr.GetnumDflt|algo_lib.FDb.gnumsigned.Geti64|algo_lib.FDb.gnumsigned.GetnumDflt' < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -2847,9 +2947,11 @@ void atf_comp::comptest_amc_NumstrGlobal() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// A pmask on a global ctype: the pmask's bitset accessors take no parent
-// argument, so the member accessors and the print filter call them bare.
-// Pins one member's PresentQ/SetPresent/Set bodies and the filtered Print.
+// Give a global ctype a pmask, print one member's accessors and the filtered Print,
+// and check that the member accessors and the print filter call the pmask's bitset
+// accessors bare.
+// The pmask's bitset accessors take no parent argument.  The golden pins the
+// member's PresentQ, SetPresent and Set bodies and the filtered Print.
 void atf_comp::comptest_amc_PmaskGlobal() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N 'algo_lib.FDb.maxjobs.%|algo_lib.FDb..Print' < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -2865,12 +2967,14 @@ void atf_comp::comptest_amc_PmaskGlobal() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// A Bitfld field in a kafka codec: the field has no direct member, so raw
-// parent.<name> access is uncompilable. Encode reads through the Get
-// accessor (FieldvalExpr); decode lands in a temporary stored through the
-// Set accessor (NoDirectMemberQ -- deliberately narrower than
-// AssignViaSetQ, since this codec's presence bits follow the wire's null
-// flag and a pmask Set would mark a null field present).
+// Give a kafka codec a Bitfld field, print its KafkaEncode and KafkaDecode, and
+// check that encode reads the field through the Get accessor and decode stores a
+// temporary through the Set accessor.
+// The field has no direct member, so raw parent.<name> access fails to compile.
+// Encode takes the Get accessor from FieldvalExpr.  Decode picks the Set accessor
+// by NoDirectMemberQ, which is deliberately narrower than AssignViaSetQ.  This
+// codec's presence bits follow the wire's null flag, and a pmask Set would mark a
+// null field present.
 void atf_comp::comptest_amc_KafkaBitfld() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N 'ktst.Rec..KafkaEncode|ktst.Rec..KafkaDecode' < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -2889,11 +2993,12 @@ void atf_comp::comptest_amc_KafkaBitfld() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// A kafka nullable array on a ctype whose pmask field is not named "pmask":
-// the presence accessors derive their names from the pmask field
-// (val_FieldMaskQ / val_SetFieldMask here), and the encoder's presence
-// checks must use the same derived name the decoder's set side does.
-// Pins the KafkaEncode presence checks and the KafkaDecode present-mark.
+// Give a kafka nullable array to a ctype whose pmask field is named field_mask, and
+// print KafkaEncode, KafkaDecode and the presence accessors.  Check that the
+// encoder's presence checks use the same derived name as the decoder's set side.
+// The presence accessors derive their names from the pmask field, here
+// val_FieldMaskQ and val_SetFieldMask.  The golden pins the KafkaEncode presence
+// checks and the KafkaDecode present-mark.
 void atf_comp::comptest_amc_KafkaPmaskName() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N 'ktst.Rec..KafkaEncode|ktst.Rec..KafkaDecode|ktst.Rec.val.FieldMaskQ|ktst.Rec.val.SetFieldMask' < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -2913,14 +3018,14 @@ void atf_comp::comptest_amc_KafkaPmaskName() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// An optional fpbuf field on a ctype whose pmask field is not named "pmask":
-// same derived-name rule as KafkaPmaskName, and both sides of the protobuf
-// codec have to spell the name the pmask field derives. The encoder's presence
-// guard reads val_FieldMaskQ; the decoder stores the plain Val field into its
-// own member and marks presence with val_SetFieldMask, which is the same
-// update the field's own Set carries.
-// Pins the PbufEncode guard, the PbufDecode present-mark, the Set, and the
-// accessors.
+// Give an optional fpbuf field to a ctype whose pmask field is named field_mask,
+// and print PbufEncode, PbufDecode, the field's Set and the presence accessors.
+// Check that both sides of the protobuf codec spell the name that the pmask field
+// derives.
+// The derived-name rule is the one of KafkaPmaskName.  The encoder's presence guard
+// reads val_FieldMaskQ.  The decoder stores the plain Val field into its own member
+// and marks presence with val_SetFieldMask, the same update that the field's own
+// Set carries.
 void atf_comp::comptest_amc_PbufPmaskName() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N 'pbt.Msg..PbufEncode|pbt.Msg..PbufDecode|pbt.Msg.val.Set|pbt.Msg.val.FieldMaskQ|pbt.Msg.val.SetFieldMask' < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -2939,13 +3044,13 @@ void atf_comp::comptest_amc_PbufPmaskName() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// A bitfld carrying an fpbuf, on a ctype with a pmask: the field's value
-// lives inside its source field, not in a member of its own, so the encoder
-// reads it through the Get accessor and the decoder stores a temporary through
-// the Set accessor. The temporary starts empty, the varint decoder replacing
-// whatever it is handed. That Set writes the slice of the source word and
-// leaves the pmask alone, so the decoder marks presence itself.
-// Pins the accessor-routed PbufEncode and PbufDecode, and the Set body.
+// Give a bitfld an fpbuf on a ctype with a pmask, print PbufEncode, PbufDecode and
+// the field's Set, and check that the encoder reads the field through the Get
+// accessor and the decoder stores a temporary through the Set accessor.
+// The field's value lives inside its source field, with no member of its own.  The
+// temporary starts empty, because the varint decoder replaces whatever it
+// receives.  That Set writes the slice of the source word and leaves the pmask
+// alone, so the decoder marks presence itself.
 void atf_comp::comptest_amc_PbufBitfld() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N 'pbt.Msg..PbufEncode|pbt.Msg..PbufDecode|pbt.Msg.val.Set' < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -2966,11 +3071,13 @@ void atf_comp::comptest_amc_PbufBitfld() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// A bitfld carrying an fpbuf on a proto3 ctype with no pmask: presence is
-// implicit, so the encode guard is the pbtype's default-value check, and that
-// check must read the field through its Get accessor -- a bitfield has no
-// member of its own to compare against zero. Pins the guard, and the Set body
-// storing straight into the source word since no presence bit follows.
+// Give a bitfld an fpbuf on a proto3 ctype with no pmask, print PbufEncode,
+// PbufDecode and the field's Set, and check that the encode guard reads the field
+// through its Get accessor.
+// Presence is implicit, so the encode guard is the pbtype's default-value check.
+// A bitfield has no member of its own to compare against zero.  The golden also
+// pins the Set body, which stores straight into the source word because no
+// presence bit follows.
 void atf_comp::comptest_amc_PbufBitfldNondflt() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N 'pbt.Msg..PbufEncode|pbt.Msg..PbufDecode|pbt.Msg.val.Set' < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -2989,10 +3096,11 @@ void atf_comp::comptest_amc_PbufBitfldNondflt() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// A repeated fpbuf field that is a pmask member: the decoder must mark the
-// field present when elements arrive, or the print filter that consults the
-// same bit drops the decoded elements. Pins the SetPresent call in both the
-// packed and the one-element-per-tag decode branch, and the filtered Print.
+// Give amc a repeated fpbuf field that is a pmask member, print PbufDecode and the
+// filtered Print, and check that the decoder calls SetPresent in both the packed
+// and the one-element-per-tag decode branch.
+// The print filter consults the same bit.  A decoder that left the bit clear when
+// elements arrive would make the filter drop the decoded elements.
 void atf_comp::comptest_amc_PbufRepeatedPmask() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N 'pbt.Msg..PbufDecode|pbt.Msg..Print' < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -3013,20 +3121,21 @@ void atf_comp::comptest_amc_PbufRepeatedPmask() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// Every decode store path in one run: one message carrying each singular
-// shape, one carrying the repeated controls. A singular field decodes into its
-// own member, and under pb_type message that member already holds the earlier
-// occurrence, so the nested decoder merges into it -- pbt.Msg.bare and .sub.
-// A pmask member decodes in place too and is marked present afterwards (.opt,
-// .sub): its own Set would have marked it, but storing through that Set would
-// copy the value out and back on every occurrence of the field number. The
-// shapes with no member to decode into do pay for a temporary -- .slice
-// through the bitfld accessors, .netval through the byte-swapping pair -- and
-// so does .cond, whose Set moves the record between fcond lists. Of the eight,
-// only .computed seeds its temporary from the field's current value, being the
-// one that is both accessor-routed and a message: Get is then the only way for
-// the merge to see what the earlier occurrence set. pbt.Rep appends through
-// Alloc in every branch.
+// Give amc one message with each singular decode store shape and one with the
+// repeated controls, print both PbufDecode bodies, and check the store path that
+// each field takes.
+// A singular field decodes into its own member.  Under pb_type message that member
+// already holds the earlier occurrence, so the nested decoder merges into it
+// (pbt.Msg.bare and .sub).  A pmask member decodes in place too, and the decoder
+// marks it present afterwards (.opt, .sub).  Its own Set would mark it as well.
+// Storing through that Set would copy the value out and back on every occurrence
+// of the field number.
+// The shapes with no member to decode into pay for a temporary: .slice through the
+// bitfld accessors, and .netval through the byte-swapping pair.  So does .cond,
+// whose Set moves the record between fcond lists.  Of the eight, only .computed
+// seeds its temporary from the field's current value, because it alone is both
+// accessor-routed and a message.  Get is then the merge's only way to see what the
+// earlier occurrence set.  pbt.Rep appends through Alloc in every branch.
 void atf_comp::comptest_amc_PbufStore() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N 'pbt.Msg..PbufDecode|pbt.Rep..PbufDecode' < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -3093,9 +3202,9 @@ void atf_comp::comptest_amc_PbufStore() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// An Opt field on a global ctype: rejected as amc.infinity_pool, and the
-// Print body emitted alongside the error must not contain a bare (void);
-// statement for the absent parent argument.
+// Give a global ctype an Opt field, print the field's Print, and check that amc
+// rejects the field as amc.infinity_pool and that the Print body emitted beside
+// the error holds no bare (void); statement for the absent parent argument.
 void atf_comp::comptest_amc_OptGlobalPrint() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N algo_lib.FDb.tail.Print < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -3111,9 +3220,10 @@ void atf_comp::comptest_amc_OptGlobalPrint() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// A base-1 numstr and a base-37 one: neither base has a digit encoding
-// (unary needs one digit per unit of value; 37..94 has no character map),
-// so amc rejects both fields, naming each.
+// Give amc a base-1 numstr and a base-37 one, and check that amc reports
+// amc.bad_numstr for both fields, naming each.
+// Neither base has a digit encoding.  Unary needs one digit per unit of value, and
+// bases 37..94 have no character map.
 void atf_comp::comptest_amc_BadNumstrBase() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -3132,11 +3242,12 @@ void atf_comp::comptest_amc_BadNumstrBase() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// A numstr min_len wider than the string itself, one wider than
-// SetnumMaybe's 64-character pad budget, and a signed one equal to the
-// string length: the sign then has no slot, so every negative value would
-// fail at runtime. None of these width contracts can be honored, so amc
-// rejects all three fields.
+// Give amc three numstr fields whose min_len breaks a width contract, and check
+// that amc reports amc.bad_numstr for all three.
+// LnumStr9_U32's min_len is wider than the string itself.  LspaceStr100_U64's is
+// wider than SetnumMaybe's 64-character pad budget.  The signed LspaceStr6_I32's
+// equals the string length, which leaves the sign no slot, so every negative value
+// would fail at run time.  amc has no way to honor any of these width contracts.
 void atf_comp::comptest_amc_BadNumstrMinlen() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -3159,40 +3270,42 @@ void atf_comp::comptest_amc_BadNumstrMinlen() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// A numtype that does not stand for an integer bltin. The fixture holds one
-// field per such numtype: double and float carry no integer range, u128 is
-// wider than the range amc represents, pad_byte is no number at all, and a
-// plain struct ctype stands for no bltin whatever. Each falls back on the
-// widest signed bounds, which admit every value and make the sign tests fire
-// even for an unsigned numtype, so a range comparison built from one would
-// never reject. One fdec field trips the same check from the other side.
-// The rest of the fields exercise the agreement between a ctype name and its
-// numtype, which amc enforces so that a name cannot lie about the range its
-// string holds. LnumStr6_I32 says I32 over a u32 numtype and LnumStr9_U64
-// says U64 over the same one: a name is rejected for lying about the sign
-// and for lying about the width alike. LnumStr4_I16 says I16 over
-// algo_lib.U32Val, a ctype whose single Val field holds a u32, and the
-// numtype is judged by the u32 it stands for, so the lie is caught through
-// the wrapper. The controls draw no diagnostic from the same run:
-// LnumStr7_U32 states a truthful token over a bare u32, LnumStr6_U32 states
-// one over the wrapper, LnumStrPlain carries no token to judge, and
+// Give amc numstr fields over numtypes that stand for no integer bltin, over names
+// that disagree with their numtype, and over wrappers with each combination of
+// conversions, and print LnumStr6_U32's Getnum and Geti64.  Check that amc reports
+// each bad numtype, each lying name and each missing conversion, and that the
+// controls draw no diagnostic.
+// The fixture holds one field per numtype that stands for no integer bltin: double
+// and float carry no integer range; u128 is wider than the range amc represents;
+// pad_byte is no number; and a plain struct ctype stands for no bltin.  Each falls
+// back on the widest signed bounds, which admit every value and make the sign
+// tests fire even for an unsigned numtype.  A range comparison built from those
+// bounds would never reject.  One fdec field trips the same check from the other
+// side.
+// The next fields exercise the agreement between a ctype name and its numtype.  amc
+// enforces it so that a name never lies about the range its string holds.
+// LnumStr6_I32 says I32 over a u32 numtype, and LnumStr9_U64 says U64 over the
+// same one.  amc rejects a name that lies about the sign and one that lies about
+// the width alike.  LnumStr4_I16 says I16 over algo_lib.U32Cast, a ctype whose
+// single Val field holds a u32.  amc judges the numtype by the u32 it stands for,
+// so it catches the lie through the wrapper.  The controls draw no diagnostic from
+// the same run: LnumStr7_U32 states a truthful token over a bare u32; LnumStr6_U32
+// states one over the wrapper; LnumStrPlain carries no token to judge; and
 // LnumStr7_I8 carries a false one under strict:N, which asks for no check.
-// A numtype standing for the builtin through another ctype has to move a
-// value both ways: Getnum constructs the numtype from the digits it parsed,
-// and Geti64 reads that result as an i64. The constructor comes from a
-// dmmeta.cpptype row asking for one and the read from the operator
-// dmmeta.fcast generates, and the fixture carries one numtype per
-// combination of the two. LnumStr6_U32 names a wrapper carrying both and is
-// accepted, and the query pins its Getnum and Geti64, which are the two
-// statements the conversions have to satisfy. LnumStr8_U32 names one with
-// the operator alone, LnumStr10_U32 one with the constructor alone, and
-// LnumStr5_U32 one with neither, and each is reported naming what is
-// missing. LnumStr11_U32 names a wrapper two ctypes above the builtin, whose
-// constructor takes the inner wrapper rather than the builtin, and is
-// reported as standing for the builtin only through another ctype. The bare
-// builtins are the accepted edge of the same rule, and all eight are present
-// with a truthful name token, so neither sign nor any width is left
-// untested.
+// A numtype that stands for the builtin through another ctype moves a value both
+// ways.  Getnum constructs the numtype from the digits it parsed, and Geti64 reads
+// that result as an i64.  The constructor comes from a dmmeta.cpptype row asking
+// for one.  The read comes from the operator that dmmeta.fcast generates.  The
+// fixture carries one numtype per combination of the two.  LnumStr6_U32 names a
+// wrapper with both, and amc accepts it.  The query pins its Getnum and Geti64, the
+// two statements that the conversions have to satisfy.  LnumStr8_U32 names a
+// wrapper with the operator alone, LnumStr10_U32 one with the constructor alone,
+// and LnumStr5_U32 one with neither.  amc reports each, naming what is missing.
+// LnumStr11_U32 names a wrapper two ctypes above the builtin, whose constructor
+// takes the inner wrapper in place of the builtin.  amc reports it as standing for
+// the builtin only through another ctype.  The bare builtins are the accepted edge
+// of the same rule.  All eight are present with a truthful name token, so the test
+// covers both signs and every width.
 void atf_comp::comptest_amc_BadNumstrNumtype() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N 'algo_lib.LnumStr6_U32.ch.Getnum|algo_lib.LnumStr6_U32.ch.Geti64' < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -3328,38 +3441,40 @@ void atf_comp::comptest_amc_BadNumstrNumtype() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// Pads that read back as digits. A left-pad that is a nonzero digit of the
-// base strips leading value digits on read: '!' is digit 1 in base 95, 'c'
-// is a digit in base 36, '5' is a digit in base 10. A right-pad that is any
-// digit of the base divides the stored value by a power of the base: NUL in
-// base 256, ' ' in base 95, 'A' in base 36, '7' in base 10. The pad is a C++
-// character literal, so its escaped spellings are judged by the byte they
-// denote: a base-16 right-pad '\x30' is the digit zero and is rejected,
-// while a base-95 left-pad '\0' is no digit of that base and passes. Only
-// the zero digit is a safe left-pad and no digit is a safe right-pad, so amc
-// rejects eight of the nine numstr fields. Four more fields carry no numstr
-// row at all and meet the plain smallstr right-pad check, which refuses any
-// pad character that can be confused with a number and reads an escaped pad
-// by its denoted byte just the same: the digit '3' and the escaped digit
-// '\x30' are refused, while the escaped 'A' and the escaped NUL are no part
-// of any number and pass.
-// The sign character is the other pad a signed numstr cannot read back. A
-// left pad is stripped from the end the sign is written to, so a signed
-// base-10 field padded with '-' loses the sign of every negative value and
-// is rejected. The three neighbours of that case are the controls and draw
-// nothing: the same '-' pad on an unsigned field, which writes no sign; the
-// same '-' pad on the right, stripped from the end the sign is not at; and
-// '+' on the left of a signed field, which is not the character the reader
-// takes for a sign. A signed field left-padded with the zero digit is the
-// fourth control -- leading zeros carry no value, so they strip safely.
-// The NUL pad, which a signed numstr may not use either, shows that a pad is
-// judged by the byte it denotes and not by the spelling it was written as.
-// The three spellings of that one pad -- the bare 0, the empty pad value amc
-// fills in as 0, and the escaped '\0' -- are all rejected on a signed field,
-// on the left and on the right alike, while the same empty pad on an unsigned
-// field passes at either end. The two rpascal fields are the controls for the
-// strtype dimension: such a string carries its own length and strips no pad,
-// so neither the NUL pad on a signed field nor a digit pad draws anything.
+// Give amc numstr and smallstr fields whose pads cover the digits of each base, the
+// sign character and the NUL pad, and check that amc rejects each pad that reads
+// back as part of a number and passes each control.
+// A left-pad that is a nonzero digit of the base strips leading value digits on
+// read: '!' is digit 1 in base 95; 'c' is a digit in base 36; and '5' is a digit
+// in base 10.  A right-pad that is any digit of the base divides the stored value
+// by a power of the base: NUL in base 256, ' ' in base 95, 'A' in base 36 and '7'
+// in base 10.  The pad is a C++ character literal, so amc judges an escaped
+// spelling by the byte it denotes.  A base-16 right-pad '\x30' is the digit zero
+// and draws a rejection.  A base-95 left-pad '\0' is no digit of that base and
+// passes.  Only the zero digit is a safe left-pad, and no digit is a safe
+// right-pad, so amc rejects eight of these nine numstr fields.
+// Four more fields carry no numstr row and meet the plain smallstr right-pad check
+// (amc.invalidpad).  That check refuses any pad character that a reader could take
+// for part of a number, and it too reads an escaped pad by its denoted byte.  It
+// refuses the digit '3' and the escaped digit '\x30'.  The escaped 'A' and the
+// escaped NUL belong to no number and pass.
+// The sign character is the other pad that a signed numstr is unable to read back.
+// The reader strips a left pad from the end that holds the sign.  So a signed
+// base-10 field padded with '-' loses the sign of every negative value, and amc
+// rejects it.  Its three neighbors are controls that draw no diagnostic: the same
+// '-' pad on an unsigned field, which writes no sign; the same '-' pad on the
+// right, stripped from the end away from the sign; and '+' on the left of a signed
+// field, a character the reader never takes for a sign.  A signed field
+// left-padded with the zero digit is the fourth control, because leading zeros
+// carry no value and strip safely.
+// A signed numstr may not use the NUL pad either, and that case shows again that
+// amc judges a pad by the byte it denotes.  amc rejects all three spellings of
+// that one pad on a signed field: the bare 0, the empty pad value that amc fills
+// in as 0, and the escaped '\0'.  It rejects them on the left and on the right
+// alike.  The same empty pad on an unsigned field passes at either end.  The two
+// rpascal fields are the controls for the strtype dimension.  Such a string
+// carries its own length and strips no pad, so neither the NUL pad on a signed
+// field nor a digit pad draws a diagnostic.
 void atf_comp::comptest_amc_BadNumstrPad() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -3470,14 +3585,15 @@ void atf_comp::comptest_amc_BadNumstrPad() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// An rpascal string longer than its length byte can count. The length of an
-// rpascal string is stored in one byte, so 255 is the longest one whose
-// length is representable, and amc rejects a longer one. Two such fields
-// appear in the fixture and the run exits with 2: each diagnostic raises the
-// error count, so a later one cannot discard what an earlier one reported.
-// The controls draw no diagnostic: a 255-character rpascal string is the
-// longest accepted one, and a 300-character right-padded string carries no
-// length byte, so the bound is the rpascal strtype's alone.
+// Give amc rpascal strings of 255, 256 and 300 characters and a 300-character
+// right-padded string, and check that amc reports smallstr.toobig for the two long
+// rpascal strings and exits with 2.
+// An rpascal string stores its length in one byte, so 255 is the longest one whose
+// length that byte can hold.  Each diagnostic raises the error count, so a later
+// one never discards what an earlier one reported.  The controls draw no
+// diagnostic.  A 255-character rpascal string is the longest accepted one.  A
+// 300-character right-padded string carries no length byte, so the bound belongs
+// to the rpascal strtype alone.
 void atf_comp::comptest_amc_BadSmallstrToobig() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -3500,12 +3616,13 @@ void atf_comp::comptest_amc_BadSmallstrToobig() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// A signed base-95 numstr and a signed base-256 one: '-' is a digit in
-// both bases, so a stored digit string is indistinguishable from a signed
-// one, and amc rejects both fields. Both fields left-pad with ' ', which is
-// digit 0 in base 95 and digit 32 in base 256, so the base-256 field draws
-// a second rejection from the pad check: a left-pad that is a nonzero digit
-// of the base strips leading value digits on read.
+// Give amc a signed base-95 numstr and a signed base-256 one, and check that amc
+// rejects both fields with amc.bad_numstr.
+// '-' is a digit in both bases, so a stored digit string looks the same as a
+// signed one.  Both fields left-pad with ' ', which is digit 0 in base 95 and
+// digit 32 in base 256.  So the base-256 field draws a second rejection from the
+// pad check, because a left-pad that is a nonzero digit of the base strips leading
+// value digits on read.
 void atf_comp::comptest_amc_BadNumstrSignedBase() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -3525,10 +3642,13 @@ void atf_comp::comptest_amc_BadNumstrSignedBase() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// One cpbuf ctype with every illegal field number in one run: a duplicate
-// within the ctype (two identical decoder case labels: uncompilable),
-// number 0 (wire tag 0, reserved as illegal by the protobuf format), and
-// 2^29 (overflows the (number<<3)|wire_type tag, aliasing another field).
+// Give one cpbuf ctype every illegal field number, and check that amc reports
+// amc.pbuf_field_number for each in one run.
+// A duplicate within the ctype gives two identical decoder case labels, which fail
+// to compile.  Number 0 is wire tag 0, which the protobuf format reserves as
+// illegal.  2^29 overflows the (number<<3)|wire_type tag and aliases another
+// field.  Protobuf reserves 19000..19999 for its own implementation, so amc
+// rejects both ends of that range and accepts 18999 and 20000 beside it.
 void atf_comp::comptest_amc_BadPbufFieldNumber() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -3559,13 +3679,13 @@ void atf_comp::comptest_amc_BadPbufFieldNumber() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// One cpbuf ctype with every arg/reftype shape the pbuf codec cannot
-// compile against, rejected in one run: pb_type string on a u32 (the
-// lib_pb codec accepts only the pbtype's argtype), pb_type message on a
-// non-cpbuf arg, an Inlary field (no wire mapping), and pb_type enum on
-// args without the fconst-carrying i32 value shape (one with no value
-// field at all, one whose value field is u8 -- the lib_pb varint codec
-// binds i32).
+// Give one cpbuf ctype every arg and reftype shape that the pbuf codec fails to
+// compile against, and check that amc rejects each in one run.
+// The lib_pb codec accepts only the pbtype's argtype, so pb_type string on a u32
+// fails.  pb_type message needs a cpbuf arg.  An Inlary field has no wire mapping.
+// pb_type enum needs an arg with the fconst-carrying i32 value shape.  One enum
+// arg has no value field, and the other's value field is u8.  The lib_pb varint
+// codec binds i32.
 void atf_comp::comptest_amc_BadPbufArg() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -3595,12 +3715,13 @@ void atf_comp::comptest_amc_BadPbufArg() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// Two fpbuf rows asking for packed encoding where the protobuf format has
-// none: on a singular field, and on a repeated field of a length-delimited
-// pb_type. The emitter reads packed only in the repeated non-length-delimited
-// branch, so both rows would be silently ignored and the author would get the
-// ordinary encoding. The third row, packed on a repeated varint field, is the
-// legal shape and is not reported.
+// Give amc three fpbuf rows that ask for packed encoding, and check that amc
+// reports amc.pbuf_packed for the two where the protobuf format has none.
+// One of the two is on a singular field, and the other is on a repeated field of a
+// length-delimited pb_type.  The emitter reads packed only in the repeated
+// non-length-delimited branch.  It would silently ignore both rows, and the author
+// would get the ordinary encoding.  The third row, packed on a repeated varint
+// field, is the legal shape and draws no report.
 void atf_comp::comptest_amc_BadPbufPacked() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -3627,10 +3748,13 @@ void atf_comp::comptest_amc_BadPbufPacked() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// Two fpbuf rows that would generate no wire code at all, rejected rather
-// than left silently dead: one on a field of a ctype with no cpbuf row (no
-// codec is generated without one), one on a Base field (emission never
-// writes a base's fields to the wire).
+// Give amc two fpbuf rows that would generate no wire code and a cpbuf ctype that
+// inherits a base, and check that amc reports each of the three.
+// One fpbuf row is on a field of a ctype with no cpbuf row, and amc generates no
+// codec without one (amc.pbuf_ctype).  The other is on a Base field, and emission
+// never writes a base's fields to the wire (amc.pbuf_reftype).  pbt.Msg2 is a
+// cpbuf ctype with a Base field, so the base's fields would be absent from its
+// message (amc.pbuf_base).  Each report keeps a row from sitting silently dead.
 void atf_comp::comptest_amc_BadPbufNoCodec() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -3659,14 +3783,15 @@ void atf_comp::comptest_amc_BadPbufNoCodec() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// The syntax dimension of cpbuf, over four ctypes in one run. cpbuf.syntax
-// names a row of dmmeta.pbsyntax, the table that says whether the syntax has
-// implicit presence, and a value with no row is rejected: acr -check catches
-// the spelling when the row goes through the database, but amc reads a schema
-// out of -in_dir too. A misspelling and an empty value are both reported. The
-// two accepted values stand as controls, and the report shows what each one
-// emits: proto2 writes the scalar unconditionally, proto3 guards it with the
-// default-value test.
+// Give amc four cpbuf ctypes, two with a valid syntax, one misspelled and one empty,
+// and print their PbufEncode.  Check that amc reports amc.pbuf_syntax for the
+// misspelling and the empty value, and that the two controls show what each
+// accepted syntax emits.
+// cpbuf.syntax names a row of dmmeta.pbsyntax, the table that says whether the
+// syntax has implicit presence.  acr -check catches the spelling when the row goes
+// through the database.  amc also reads a schema out of -in_dir, so it rejects a
+// value with no row itself.  proto2 writes the scalar unconditionally, and proto3
+// guards it with the default-value test.
 void atf_comp::comptest_amc_BadPbufSyntax() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N 'pbt.Proto%..PbufEncode' < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -3695,15 +3820,16 @@ void atf_comp::comptest_amc_BadPbufSyntax() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// The presence dimension of a oneof, over four ctypes in one run. A oneof is
-// a union, and the encoder writes at most one variant only because a store
-// into one variant clears the presence bits of its siblings on the same
-// pmask. Three shapes break that and are rejected: variants with no pmask at
-// all (each guarded by the proto3 default-value test, so every nonzero
-// variant goes on the wire), variants split across two pmasks (a store
-// clears siblings only on the mask it writes), and a pmask whose explicit
-// member list covers one variant and not the other. The first ctype is the
-// control, with both variants on one pmask, and it draws no diagnostic.
+// Give amc four ctypes that each declare a oneof, and check that amc reports
+// amc.pbuf_oneof for the three whose variants share no single pmask.
+// A oneof is a union.  The encoder writes at most one variant only because a store
+// into one variant clears the presence bits of its siblings on the same pmask.
+// Three shapes break that.  NoMask's variants have no pmask, so the proto3
+// default-value test guards each, and every nonzero variant goes on the wire.
+// Split's variants sit on two pmasks, and a store clears siblings only on the mask
+// it writes.  Half's pmask has an explicit member list that covers one variant and
+// leaves out the other.  The first ctype, pbt.Msg, is the control, with both
+// variants on one pmask, and it draws no diagnostic.
 void atf_comp::comptest_amc_BadPbufOneof() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -3761,15 +3887,17 @@ void atf_comp::comptest_amc_BadPbufOneof() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// The whole store dimension of one cpbuf ctype in one run: the decoder of a
-// singular field with no member of its own stores through the field's
-// generated Set, so a shape that has a Get and no Set emits a call to a
-// function amc never writes. Three such rows are rejected -- a cppfunc with
-// set:N, a substr, a falias -- and the shapes that do have a Set stand
-// alongside them as controls drawing no diagnostic: an fbigend field, a
-// bitfld, a cppfunc with set:Y, and a plain Val field stored in place. The
-// second ctype carries the repeated controls, where the decoder appends
-// through Alloc and a fldfunc element type needs no Set at all.
+// Give one cpbuf ctype each singular store shape and another the repeated
+// controls, and check that amc reports amc.pbuf_store for the three shapes with a
+// Get and no Set.
+// The decoder of a singular field with no member of its own stores through the
+// field's generated Set.  A shape that has a Get and no Set would emit a call to a
+// function amc never writes.  The three rejected rows are a cppfunc with set:N, a
+// substr and a falias.  The shapes that have a Set stand beside them as controls
+// that draw no diagnostic: an fbigend field, a bitfld, a cppfunc with set:Y, and a
+// plain Val field stored in place.  The second ctype carries the repeated
+// controls.  There the decoder appends through Alloc, and a fldfunc element type
+// needs no Set.
 void atf_comp::comptest_amc_BadPbufStore() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -3827,10 +3955,11 @@ void atf_comp::comptest_amc_BadPbufStore() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// An fpbuf field whose pb_type has no amcdb.pbtype row: without the table's
-// wire type and codec binding the encoder would write the field tag with no
-// payload and the decoder case would consume the tag but not the value, so
-// amc rejects the field.
+// Give an fpbuf field a pb_type with no amcdb.pbtype row, and check that amc
+// reports amc.pbuf_type.
+// The table supplies the wire type and the codec binding.  Without them the
+// encoder would write the field tag with no payload, and the decoder case would
+// consume the tag and leave the value unread.
 void atf_comp::comptest_amc_BadPbufType() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -3847,8 +3976,8 @@ void atf_comp::comptest_amc_BadPbufType() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// A u8 pmask covering nine member fields: nine presence bits cannot fit in
-// the pmask field's eight bits.
+// Give a u8 pmask nine member fields, and check that amc reports amc.pmask_width.
+// Nine presence bits overflow the pmask field's eight bits.
 void atf_comp::comptest_amc_BadPmaskWidth() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -3871,20 +4000,20 @@ void atf_comp::comptest_amc_BadPmaskWidth() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// Explicit pmaskfld_member rows naming, one per row, every field the
-// membership rule excludes: a field of another ctype, the Global anchor, the
-// pmask word itself, a length field, a type field, and a Base field. None of
-// them has a presence bit the pmask's parent struct could back, so amc
-// rejects each row by name. Auto-populated members satisfy the rule by
-// construction; an explicit row must pass the same validation, and one row
-// per exclusion cause keeps every arm of the rule load-bearing. The type
-// field and the Base field cannot both sit on one ctype -- a type field is
-// declared on the base, a Base field is the deriving ctype's first field --
-// so Hdr and Msg carry those two, each with its own pmask.
-// The width check counts a rejected row's bit like any other: the membership
-// rule reports a row and leaves it on the pmask. This fixture declares the
-// pmask a u32 and puts five member rows on it, so the count stays far inside
-// the width and the golden carries the membership diagnostics alone.
+// Give amc explicit pmaskfld_member rows, one per field kind that the membership
+// rule excludes, and check that amc reports amc.pmask_member for each row by name.
+// The excluded fields are a field of another ctype, the Global anchor, the pmask
+// word itself, a length field, a type field and a Base field.  None of them has a
+// presence bit that the pmask's parent struct could back.  Auto-populated members
+// satisfy the rule by construction.  An explicit row must pass the same
+// validation, and one row per exclusion cause keeps every arm of the rule
+// load-bearing.  A type field and a Base field never sit on one ctype.  The base
+// declares the type field, and the deriving ctype declares the Base field as its
+// first field.  So Hdr and Msg carry those two, each with its own pmask.
+// The width check counts a rejected row's bit like any other, because the
+// membership rule reports a row and leaves it on the pmask.  This fixture declares
+// the pmask a u32 and puts five member rows on it.  The count then stays far inside
+// the width, and the golden carries the membership diagnostics alone.
 void atf_comp::comptest_amc_BadPmaskMember() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -3921,20 +4050,22 @@ void atf_comp::comptest_amc_BadPmaskMember() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// Two ctypes containing each other by value, and one containing itself: no
-// finite layout exists, so no struct's size can be computed.
-// Each cycle also carries a decimal field, which asks for the arg's numeric
-// range before the size computation runs. The range is resolved by walking
-// the chain of ctypes whose single Val field names the next one, and that
-// walk is what a cycle would send around forever, so the fixture holds the
-// two shapes a cycle can take -- a ctype naming itself and a pair naming each
-// other. Each field is reported as an arg carrying no numeric range, and the
-// run reaches the size computation and ends at the circular definition.
+// Give amc two ctypes that contain each other by value, one that contains itself,
+// and two bitfields over those cycles.  Check that amc reports each decimal
+// field's arg as amc.bad_numtype and ends the run at the circular definition.
+// No finite layout exists for such a cycle, so no struct in it has a size.
+// Each cycle also carries a decimal field, which asks for the arg's numeric range
+// before the size computation runs.  amc resolves the range by walking the chain of
+// ctypes whose single Val field names the next one.  A cycle would send that walk
+// around forever.  So the fixture holds the two shapes a cycle can take, a ctype
+// naming itself and a pair naming each other.  amc reports each decimal field as
+// an arg with no numeric range, then reaches the size computation and ends at the
+// circular definition.
 // A bitfield asks the same walk two further questions, and the fixture puts a
-// cycle in front of each: the type its accessors hand back, which the
-// bitfield's own arg names, and the type its mask operations run on, which
-// its source field's arg names. Neither question turns the cycle into an
-// internal error; the run still ends at the circular definition.
+// cycle in front of each.  One is the type that its accessors hand back, which the
+// bitfield's own arg names.  The other is the type that its mask operations run
+// on, which its source field's arg names.  Neither question turns the cycle into
+// an internal error.  The run still ends at the circular definition.
 void atf_comp::comptest_amc_BadSizeCycle() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -3961,8 +4092,9 @@ void atf_comp::comptest_amc_BadSizeCycle() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// An Inlary of 65537 elements, each itself a 65536-byte fixed Inlary: the
-// total byte size exceeds the i32 range amc computes sizes in.
+// Give amc an Inlary of 65537 elements, each a 65536-byte fixed Inlary, and check
+// that amc reports amc.size_overflow.
+// The total byte size exceeds the i32 range that amc computes sizes in.
 void atf_comp::comptest_amc_BadSizeOverflow() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -3979,30 +4111,29 @@ void atf_comp::comptest_amc_BadSizeOverflow() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// A fixed field after a Varlen field: the varlen data begins at the end of
-// the struct, so writes through the varlen accessors would clobber the
-// trailing fixed member. The schema is rejected with a nonzero exit, the
-// offender attributed to the varlen field it follows.
+// Give amc one fixed field of each shape after a Varlen field, and check that amc
+// reports amc.varlen_last for each field that declares a member of its own,
+// attributes it to the varlen field it follows, and exits nonzero.
+// The varlen data begins at the end of the struct.  Writes through the varlen
+// accessors would clobber a trailing fixed member.
 //
-// Only a field that declares a member of its own can be clobbered, so the
-// fixture places one field of each shape after the varlen field and the
-// golden is the resulting accept/reject table. Reported: a Val and a Ptr,
-// which declare members directly, and a ZSListMT, whose read-side and
-// write-side list heads are two more members of the parent. Not reported:
-// a Bitfld, which re-slices the word of a field declared before the varlen
-// data; the three fldfunc kinds, whose value is computed rather than stored
-// -- a cppfunc, a falias and a substr; Malloc, Global and Cppstack, whose
-// generators put no member in the struct at all; and an Opt, which draws a
-// comment line where its optional trailing element would sit. Count and Exec are
-// the intermediate case -- the declared field draws nothing, while the Val
-// children amc generates from it are reported in their own right, which is
-// why cnt_n and the child_* rows appear and cnt and child do not.
+// Only a field that declares a member of its own has storage to clobber, so the
+// golden is an accept/reject table.  amc reports a Val and a Ptr, which declare
+// members directly, and a ZSListMT, whose read-side and write-side list heads are
+// two more members of the parent.  amc passes over the rest: a Bitfld, which
+// re-slices the word of a field declared before the varlen data; the three
+// fldfunc kinds, a cppfunc, a falias and a substr, whose value amc computes and
+// never stores; Malloc, Global and Cppstack, whose generators put no member in the
+// struct; and an Opt, which draws a comment line where its optional trailing
+// element would sit.  Count and Exec are the intermediate case.  The declared
+// field draws no report, and amc reports the Val children it generates from it in
+// their own right.  That is why cnt_n and the child_* rows appear, and cnt and
+// child do not.
 //
-// The Opt is the one field here that a second rule answers as well: it
-// claims the end of the fixed portion that the varlen data already claims,
-// so the golden carries its amc.trail_overlay row, and the absence of an
-// amc.varlen_last row beside it is what pins the Opt as declaring no
-// storage.
+// The Opt is the one field here that a second rule answers as well.  It claims the
+// end of the fixed portion that the varlen data already claims, so the golden
+// carries its amc.trail_overlay row.  The absence of an amc.varlen_last row beside
+// it pins the Opt as declaring no storage.
 void atf_comp::comptest_amc_BadVarlenLast() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -4037,27 +4168,28 @@ void atf_comp::comptest_amc_BadVarlenLast() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// Fields that begin at the end of the fixed portion: varlen data and an
-// optional trailing element both start there, and the generated accessors
-// would overlay one on the other. Only varlen fields carry the end offset
-// that lets one begin where another ends, so a ctype may claim that address
-// once, and each further claim is rejected with a nonzero exit.
-// The fixture pins the rule over the pairs a ctype can declare. Rejected:
-// Varlen with Opt in both declaration orders, one ctype each, and a ctype
-// with two Opt fields, whose getters would otherwise return the same address
-// twice. A fourth ctype declares an Opt ahead of two varlen fields and draws
-// one row, not two: the first varlen field is the one that begins at the
-// disputed address, and the second begins where the first ends, so a single
-// overlay is reported once however many varlen fields trail it.
-// Each rejected ctype draws exactly one diagnostic -- the order of a
-// Varlen and an Opt matters to the separate rule that fixed fields may not
-// follow a varlen field, and reporting the Opt there would state the same
-// overlay twice. The controls draw none: a ctype with one Opt, a ctype with
-// one Varlen, a ctype with two Varlen fields -- the accepting arm of the
-// rule, the second beginning where the first ends -- and a ctype with
-// neither. The two-Varlen control carries no pool instance, since a pool arg
-// with more than one varlen field is refused by the pool generator, whose
-// diagnostic would then arrive alongside the ones this test is about.
+// Give amc ctypes that pair Varlen and Opt fields in each way a ctype can declare
+// them, and check that amc reports amc.trail_overlay once per rejected ctype and
+// exits nonzero.
+// Varlen data and an optional trailing element both begin at the end of the fixed
+// portion, and the generated accessors would overlay one on the other.  Only
+// varlen fields carry the end offset that lets one begin where another ends.  So
+// a ctype may claim that address once, and amc rejects each further claim.
+// amc rejects Varlen with Opt in both declaration orders, one ctype each.  It also
+// rejects a ctype with two Opt fields, whose getters would return the same address
+// twice.  A fourth ctype declares an Opt ahead of two varlen fields and draws one
+// row.  The first varlen field begins at the disputed address, and the second
+// begins where the first ends.  So amc reports a single overlay once, however many
+// varlen fields trail it.
+// Each rejected ctype draws exactly one diagnostic.  The order of a Varlen and an
+// Opt matters to the separate rule that fixed fields may not follow a varlen
+// field.  Reporting the Opt there would state the same overlay twice.  The
+// controls draw no diagnostic: a ctype with one Opt; a ctype with one Varlen; a
+// ctype with two Varlen fields, the accepting arm of the rule, where the second
+// begins where the first ends; and a ctype with neither.  The two-Varlen control
+// carries no pool instance.  The pool generator refuses a pool arg with more than
+// one varlen field, and its diagnostic would arrive beside the ones this test is
+// about.
 void atf_comp::comptest_amc_BadVarlenOpt() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -4107,9 +4239,10 @@ void atf_comp::comptest_amc_BadVarlenOpt() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// A non-varlen pool instance of a varlen ctype: the pool allocates fixed-size
-// records, so the trailing varlen data has nowhere to live. The offending
-// instance is reported and the schema is rejected with a nonzero exit.
+// Give a varlen ctype a non-varlen pool instance, and check that amc reports the
+// instance as amc.infinity_pool and exits nonzero.
+// The pool allocates fixed-size records, so the trailing varlen data has nowhere
+// to live.
 void atf_comp::comptest_amc_BadInfinityPool() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -4124,10 +4257,11 @@ void atf_comp::comptest_amc_BadInfinityPool() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// A pool arg with a varlen field but no lenfld: the element count is an
-// extern user function, and Delete computes the total length from it. The
-// query prints the generated Delete; the length statement must be
-// well-formed (no stray semicolon inside the length expression).
+// Give amc a pool arg with a varlen field and no lenfld, print the pool's Delete,
+// and check that its length statement is well-formed, with no stray semicolon
+// inside the length expression.
+// The element count is an extern user function, and Delete computes the total
+// length from it.
 void atf_comp::comptest_amc_PoolVarlenExtern() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N algo_lib.FDb.blob.Delete < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -4142,9 +4276,10 @@ void atf_comp::comptest_amc_PoolVarlenExtern() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// A pooled ctype whose fixed size plus lenfld extra is not a multiple of the
-// lenfld scale: pool alloc stores len = (size + extra) / scale, which
-// truncates, and the reader reconstructs less than was allocated.
+// Give amc a pooled ctype whose fixed size plus lenfld extra is no multiple of the
+// lenfld scale, and check that amc reports amc.lenfld_scale.
+// Pool alloc stores len = (size + extra) / scale, which truncates.  The reader then
+// reconstructs less than the pool allocated.
 void atf_comp::comptest_amc_BadLenfldScale() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -4160,10 +4295,11 @@ void atf_comp::comptest_amc_BadLenfldScale() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// A pool-less message ctype whose fixed size is not a multiple of the lenfld
-// scale: the message constructor and the field default store the same
-// truncating length word pool alloc would, so the divisibility check must
-// cover message ctypes, not only pooled ones.
+// Give amc a pool-less message ctype whose fixed size is no multiple of the lenfld
+// scale, and check that amc reports amc.lenfld_scale.
+// The message constructor and the field default store the same truncating length
+// word that pool alloc would.  So the divisibility check must cover message ctypes
+// as well as pooled ones.
 void atf_comp::comptest_amc_BadLenfldMsgtype() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -4179,11 +4315,12 @@ void atf_comp::comptest_amc_BadLenfldMsgtype() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// A fixed-only ctype whose only length store is its Fmt* constructor (a pnew
-// row, no msgtype, no pool instance): the constructor's runtime total is
-// always the fixed size, so an indivisible size + extra stores the same
-// truncating length word pool alloc would, and the divisibility check must
-// cover pnew carriers too.
+// Give amc a fixed-only ctype whose only length store is its Fmt* constructor (a
+// pnew row, no msgtype, no pool instance), and check that amc reports
+// amc.lenfld_scale.
+// The constructor's run-time total is always the fixed size.  So an indivisible
+// size + extra stores the same truncating length word that pool alloc would, and
+// the divisibility check must cover pnew carriers too.
 void atf_comp::comptest_amc_BadLenfldPnew() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -4199,14 +4336,16 @@ void atf_comp::comptest_amc_BadLenfldPnew() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// Three lenflds with scale:0 on ctypes whose Opt fields consume the length
-// expression: every offender is reported in one run through the accumulate
-// path, not a single throw at the first length-expression consumer. MsgC adds
-// the pooled shape with a u64 length word, the one that reaches the pool
-// InsertMaybe raw-word bound -- that bound divides by the scale, and it is
-// emitted a whole gen step before gen_check_lenfld reports the scale, so
-// without its own scale test the run would die on SIGFPE with no diagnostic
-// at all. The cloned base field (FMsgC.len) reports the row a second time.
+// Give amc three lenflds with scale:0 on ctypes whose Opt fields consume the length
+// expression, and check that amc reports amc.lenfld_scale for every offender in
+// one run.
+// The reports go through the accumulate path, so the run continues past the first
+// length-expression consumer, where a throw would stop it.  MsgC adds the pooled
+// shape with a u64 length word, the one that reaches the pool InsertMaybe raw-word
+// bound.  That bound divides by the scale, and amc emits it a whole gen step before
+// gen_check_lenfld reports the scale.  Without its own scale test the run would
+// die on SIGFPE with no diagnostic.  The cloned base field (FMsgC.len) reports the
+// row a second time.
 void atf_comp::comptest_amc_BadLenfldZeroScale() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -4234,15 +4373,15 @@ void atf_comp::comptest_amc_BadLenfldZeroScale() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// The declared-type dimension of the length field, one ctype per case. A
-// length word needs a numeric range: GetMinMax resolves one for the
-// fixed-width integers u8 through i64 and for nothing else, and every range
-// check built from the widest-signed fallback runs vacuously (the TS encoder's
-// range guard is omitted outright). So u128 is refused for having no
-// arithmetic amc can do, bool for holding no magnitude, and char for having
-// the compiler's choice of signedness -- three rejections in one run. MsgOk
-// carries the same shape over a u16 word and draws nothing, which is what
-// makes the three above a rejection of the type rather than of the shape.
+// Give amc four message ctypes whose length field is u128, bool, char and u16, and
+// check that amc reports amc.lenfld_type for the first three in one run.
+// A length word needs a numeric range.  GetMinMax resolves one for the fixed-width
+// integers u8 through i64 alone.  Every range check built from the widest-signed
+// fallback runs vacuously, and the TS encoder omits its range guard outright.  So
+// amc refuses u128, which has no arithmetic amc can do; bool, which holds no
+// magnitude; and char, whose signedness is the compiler's choice.  MsgOk carries
+// the same shape over a u16 word and draws no report.  That control shows that amc
+// rejects the other three for their type and accepts the shape.
 void atf_comp::comptest_amc_BadLenfldType() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -4273,18 +4412,20 @@ void atf_comp::comptest_amc_BadLenfldType() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// A u8 lenfld (scale 4) on a pooled + pnew ctype: every store of a runtime
-// total guards the length field's storable range, not just scale
-// divisibility -- a total beyond the range would wrap mod 2^N through the
-// word's own type, framing a shorter message than was written. The pool's
-// AllocExtraMaybe bounds the caller's addon (range minus the fixed portion,
-// as a compile-time ssizeof expression) and the Fmt* constructor refuses
-// the total (NULL), mirroring the TS encoder's RangeError guard.
-// MsgW is the same shape with a wide length field (u32, scale 1): its range
-// covers every frame length, so no lenfld test is emitted, and what remains
-// is the frame length domain itself. Its buffer is an Alloc, whose size
-// argument is an int, so the emitted bound is the i32 maximum and the totals
-// it accepts are exactly those the allocator can be asked for.
+// Give a pooled pnew ctype a u8 lenfld with scale 4, and a second ctype a u32
+// lenfld with scale 1.  Print the pool's AllocExtraMaybe and both Fmt*
+// constructors, and check that every store of a run-time total guards the length
+// field's storable range as well as scale divisibility.
+// A total beyond the range would wrap mod 2^N through the word's own type, and
+// frame a shorter message than the writer wrote.  The pool's AllocExtraMaybe
+// bounds the caller's addon by the range minus the fixed portion, as a
+// compile-time ssizeof expression.  The Fmt* constructor refuses the total with
+// NULL, as the TS encoder's RangeError guard does.
+// MsgW is the same shape with a wide length field (u32, scale 1).  Its range
+// covers every frame length, so amc emits no lenfld test, and the frame length
+// domain itself remains.  Its buffer is an Alloc, whose size argument is an int.
+// So the emitted bound is the i32 maximum, and the totals it accepts are exactly
+// those that a caller can ask the allocator for.
 void atf_comp::comptest_amc_LenfldNarrow() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N '%msgn.AllocExtraMaybe|%MsgN_FmtByteAry|%MsgW_FmtAlloc' < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -4310,14 +4451,16 @@ void atf_comp::comptest_amc_LenfldNarrow() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// Two TypeScript ctypes sharing one u32 lenfld shape, differing only in whether
-// the frame length is a compile-time constant. MsgFix is fixed-size, so the
-// emitted `length` is a literal and gen_check_lenfld has already proven it
-// storable: the encoder carries no range guard at all. MsgVar owns a varlen
-// tail, so its length is a runtime sum and the guard stays. The test writes
-// real output (amc runs from the checkout root with -out_dir under the test's
-// tempdir, so the derived-table acr child writes into that tempdir too) and
-// pins both emitted TypeScript encoders.
+// Generate TypeScript for two ctypes that share one u32 lenfld shape and differ in
+// whether the frame length is a compile-time constant, and check that only the
+// variable one's encoder carries a range guard:
+// 1. Make the output directories under the test's tempdir.
+// 2. Run amc from the checkout root with -out_dir under the tempdir, so the
+//    derived-table acr child writes into that tempdir too.
+// 3. Print both emitted TypeScript encoders from ts/gen/algo_lib_gen.ts.
+// MsgFix is fixed-size, so the emitted `length` is a literal, and gen_check_lenfld
+// has already proven it storable.  Its encoder carries no range guard.  MsgVar
+// owns a varlen tail, so its length is a run-time sum and the guard stays.
 void atf_comp::comptest_amc_JsFixedFrame() {
     atf_comp::FProc &proc = atf_comp::ProcStart("bash -c 'mkdir -p $tempdir/o/ts/gen $tempdir/o/include/gen $tempdir/o/cpp/gen $tempdir/o/data"
                                                 " && $bindir/amc -in_dir:- -out_dir:$tempdir/o -report:N < <(cat test/amc/bootstrap.ssim -)"
@@ -4342,41 +4485,41 @@ void atf_comp::comptest_amc_JsFixedFrame() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// Varlen pools with InsertMaybe: the addon count of an untrusted source
-// struct is computed in i64 domain. A multiply in the length word's own
-// type would wrap a huge corrupt stored value mod 2^N into a small
-// positive count that passes the negative-addon guard and reads past the
-// source message; the widened arithmetic keeps the true total visible,
-// and totals outside [fixed size, i32 max] return NULL. That widening is
-// itself exact only while the word's range fits u32. Beyond it the i64
-// expansion can overflow -- with scale > 1 in the multiply, and even at
-// scale 1 in the extra adjustment after the wrap -- undefined behavior an
-// optimizer may exploit to elide the range test -- so a wider word is
-// first bounded by the largest value whose expanded total fits the i32
+// Give amc one varlen pool with InsertMaybe per cell of the addon-count rule,
+// print each pool's InsertMaybe and AllocExtraMaybe, and check that InsertMaybe
+// computes the addon count of an untrusted source struct in the i64 domain and
+// bounds it.
+// A multiply in the length word's own type would wrap a huge corrupt stored value
+// mod 2^N into a small positive count.  That count would pass the negative-addon
+// guard and read past the source message.  The widened arithmetic keeps the true
+// total visible, and totals outside [fixed size, i32 max] return NULL.  The
+// widening itself stays exact only while the word's range fits u32.  Beyond that
+// the i64 expansion can overflow, with scale > 1 in the multiply, and even at
+// scale 1 in the extra adjustment after the wrap.  The overflow is undefined
+// behavior, which an optimizer may exploit to elide the range test.  So amc first
+// bounds a wider word by the largest value whose expanded total fits the i32
 // frame-length domain, a generation-time constant.
 //
-// The fixture is the rule's table, one pool ctype per cell. Which arm
-// applies turns on the word's largest storable value, so the accepted
-// edges sit either side of u32's max: MsgU32 (u32, scale 4), MsgI32
-// (i32) and MsgBit32 (u64 word masked to 32 bits by its Bitfld width)
-// draw no bound, while MsgBit33 (masked to 33 bits), MsgU64 (u64,
-// scale 2) and MsgI64 (i64, scale 8) do. A signed word is the cell
-// where the bound rather than the addon test rejects a negative stored
-// length, through the u64 conversion in the emitted test. The bound's
-// constant follows scale and extra: MsgNeg carries extra -2 and MsgPos
-// extra 4, each shifting the constant by the reader formula.
+// The fixture is the rule's table, one pool ctype per cell.  The arm that applies
+// turns on the word's largest storable value, so the accepted edges sit either
+// side of u32's max.  MsgU32 (u32, scale 4), MsgI32 (i32) and MsgBit32 (a u64 word
+// masked to 32 bits by its Bitfld width) draw no bound.  MsgBit33 (masked to 33
+// bits), MsgU64 (u64, scale 2) and MsgI64 (i64, scale 8) draw one.  A signed word
+// is the cell where the bound, through the u64 conversion in the emitted test,
+// rejects a negative stored length ahead of the addon test.  The bound's constant
+// follows scale and extra.  MsgNeg carries extra -2 and MsgPos extra 4, and the
+// reader formula shifts the constant for each.
 //
-// InsertMaybe reaches the allocation through the die-on-fail AllocExtra,
-// so a count AllocExtraMaybe would refuse kills the process instead of
-// returning NULL, and the two accept exactly the same counts. Both
-// functions are therefore printed for every pool in the fixture, and a
-// term emitted into one and not the other shows up as a diff here. Two
-// cells of the table make that agreement worth pinning: the bound's
-// constant is the row type's, not the base type's, which msg6 and msg5
-// show as block pools whose row carries a buffer member the base does
-// not; and a word storing totals past i32 max leaves the length field
-// with no bound to give, so every such pool bounds the count by the i32
-// a frame length is read back through instead.
+// InsertMaybe reaches the allocation through the die-on-fail AllocExtra.  So a
+// count that AllocExtraMaybe would refuse kills the process, where AllocExtraMaybe
+// would return NULL.  The two functions accept exactly the same counts.  The test
+// therefore prints both for every pool, and a term emitted into one and missing
+// from the other shows up as a diff.  Two cells of the table make that agreement
+// worth pinning.  The bound's constant comes from the row type, and msg6 and msg5
+// show it as block pools whose row carries a buffer member that the base lacks.  A
+// word that stores totals past i32 max leaves the length field with no bound to
+// give.  So every such pool bounds the count by the i32 that a frame length is
+// read back through.
 void atf_comp::comptest_amc_PoolInsertScale() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N 'algo_lib.FDb.msg%.(InsertMaybe|AllocExtraMaybe)' < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -4473,12 +4616,13 @@ void atf_comp::comptest_amc_PoolInsertScale() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// Two Bitfld lenflds whose stores mask to the declared width: MsgWidth
-// (width 4, u32 source word, msgtype store, fixed size 20) can store at
-// most 15, so the minimum frame's length word is unstorable; MsgExtra
-// (width 6, extra:252) can store at most 63, so no frame length is
-// representable at all. Both range checks must bound by the width-limited
-// max, not the source word's full range, and report in one run.
+// Give amc two Bitfld lenflds whose stores mask to the declared width, and check
+// that amc reports amc.lenfld_extra for both in one run, bounded by the
+// width-limited max.
+// MsgWidth (width 4, u32 source word, msgtype store, fixed size 20) stores at most
+// 15, so the minimum frame's length word is unstorable.  MsgExtra (width 6,
+// extra:252) stores at most 63, so no frame length is representable.  A check that
+// bounded by the source word's full range would pass both.
 void atf_comp::comptest_amc_BadLenfldBitfld() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -4504,11 +4648,11 @@ void atf_comp::comptest_amc_BadLenfldBitfld() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// A u8 lenfld with extra:256: every value the type can hold maps to a
-// negative frame length, so no frame at all is representable. Left
-// unrejected, the TS encoder's range-guard bound maxval*scale - extra
-// wraps in u64 and the emitted guard never fires; the schema must be
-// refused at generation time instead.
+// Give amc a u8 lenfld with extra:256, and check that amc refuses the schema at
+// generation time with amc.lenfld_extra.
+// Every value the type can hold maps to a negative frame length, so no frame is
+// representable.  Left unrejected, the TS encoder's range-guard bound
+// maxval*scale - extra wraps in u64, and the emitted guard never fires.
 void atf_comp::comptest_amc_BadLenfldExtra() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -4524,13 +4668,13 @@ void atf_comp::comptest_amc_BadLenfldExtra() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// Two packed TypeScript ctypes whose fixed size plus lenfld extra falls outside
-// the length field's range, with no msgtype and no C++ alloc instance: the
-// generated TypeScript Encode is their only store site. MsgLow (u32 lenfld,
-// extra:-8, fixed size 4) would wrap the minimal frame's stored length
-// through setUint32; MsgHigh (u8 lenfld, extra:255, fixed size 4) would get
-// a range guard that throws on every encode. Both offenders are rejected in
-// one run.
+// Give amc two packed TypeScript ctypes whose fixed size plus lenfld extra falls
+// outside the length field's range, with no msgtype and no C++ alloc instance, and
+// check that amc rejects both in one run.
+// The generated TypeScript Encode is their only store site.  MsgLow (u32 lenfld,
+// extra:-8, fixed size 4) would wrap the minimal frame's stored length through
+// setUint32.  MsgHigh (u8 lenfld, extra:255, fixed size 4) would get a range guard
+// that throws on every encode.
 void atf_comp::comptest_amc_BadLenfldTs() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -4554,49 +4698,48 @@ void atf_comp::comptest_amc_BadLenfldTs() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// The wire-form dimension of a packed TypeScript ctype's fields: a field the
-// TypeScript codec can neither encode nor decode is refused, and every
-// offender is named in one run. MsgBad carries three -- an inlary of char and
-// an inlary of a cstr ctype, both of which the class projects as `string`
-// with no byte-copy form, and a Smallstr, a storage reftype the codec maps
-// nowhere -- so the walk cannot be stopping at the first. MsgBadOpt adds the
-// fourth, an Opt of the same cstr ctype, which is the same byte-copy rule
-// read on the other reftype that uses it. MsgBadInlary adds the fifth, an
-// inlary of u8 with min:0 max:8: the class projects as a byte array, but a
-// variable inline array stores a live element count after its elements, so
-// its width is not max elements and the count has no member to carry it.
-// MsgBadVal adds the sixth, a Val of a ctype that declares a Varlen: the
-// nested codec appends a tail past the width the outer walk steps over.
-// MsgBadValOpt adds the seventh, the same rule read on a nested Opt tail.
-// MsgBadVarlen adds the eighth, a Varlen of the cstr ctype, whose member
-// projects as a string while its tail is a run of records rather than text.
-// MsgTagged closes the list with the ninth and tenth, two inline arrays of
-// char on a ctype that carries a length word and nothing else.
+// Give amc packed TypeScript ctypes with fields of each wire form, run it with
+// -out_dir:$tempdir, and check that amc names in one run every field that the
+// TypeScript codec is unable to encode or decode, before it writes any file.
+// MsgBad carries three such fields, which shows that the walk goes on past the
+// first: an inlary of char and an inlary of a cstr ctype, both of which the class
+// projects as `string` with no byte-copy form; and a Smallstr, a storage reftype
+// that the codec maps nowhere.  MsgBadOpt adds the fourth, an Opt of the same cstr
+// ctype, which reads the same byte-copy rule on the other reftype that uses it.
+// MsgBadInlary adds the fifth, an inlary of u8 with min:0 max:8.  Its class
+// projects as a byte array.  A variable inline array, though, stores a live
+// element count after its elements.  So its width differs from max elements, and
+// the count has no member to carry it.  MsgBadVal adds the sixth, a Val of a ctype
+// that declares a Varlen.  The nested codec appends a tail past the width that the
+// outer walk steps over.  MsgBadValOpt adds the seventh, the same rule read on a
+// nested Opt tail.  MsgBadVarlen adds the eighth, a Varlen of the cstr ctype.  Its
+// member projects as a string, while its tail is a run of records.  MsgTagged
+// closes the list with the ninth and tenth, two inline arrays of char on a ctype
+// whose only other field is a length word.
 //
-// MsgNolen and MsgNolenOpt read the other dimension, the ctype's own: each
-// declares a tail -- two Varlen fields, and an Opt -- with no length field to
-// frame it, and each draws amc.ts_lenfld. MsgFixed is that rule's control,
-// a packed TypeScript ctype with no tail and no length field, and it draws
-// nothing.
+// MsgNolen and MsgNolenOpt read the other dimension, the ctype's own.  MsgNolen
+// declares two Varlen fields and MsgNolenOpt an Opt, each with no length field to
+// frame the tail.  Each draws amc.ts_lenfld.  MsgFixed is that rule's control, a
+// packed TypeScript ctype with no tail and no length field, and it draws no
+// report.
 //
-// The rest of the fixture is the accepted side of that table and draws
-// nothing: MsgOk carries a Base, a lenfld, a plain Val, a Bitfld, a Val of the
-// cstr ctype (a fixed-length string does have a wire form), a Val of a
-// tail-free ctype, an inlary of u8, and the three accepted Varlen args -- char
-// for the text tail, u8 and a plain ctype for the byte tail; MsgOpt carries an
-// Opt whose arg maps to a byte array.
-// The two remaining ctypes fix the check's scope: MsgUnpacked and MsgNojs both
+// The rest of the fixture is the accepted side of that table and draws no report.
+// MsgOk carries a Base, a lenfld, a plain Val, a Bitfld, a Val of the cstr ctype (a
+// fixed-length string does have a wire form), a Val of a tail-free ctype, an
+// inlary of u8, and the three accepted Varlen args: char for the text tail, and u8
+// and a plain ctype for the byte tail.  MsgOpt carries an Opt whose arg maps to a
+// byte array.
+// The two remaining ctypes fix the check's scope.  MsgUnpacked and MsgNojs both
 // carry the offending inlary of char, and neither draws a wire refusal.
-// MsgUnpacked has no pack row, so it is projected as a type alone, where the
-// inlary of char is a string; MsgNojs has no ctypelang row and is projected
+// MsgUnpacked has no pack row, so amc projects it as a type alone, where the
+// inlary of char is a string.  MsgNojs has no ctypelang row, and amc projects it
 // nowhere.
 //
-// The run writes into $tempdir, which holds none of the gen directories amc
-// writes to, so a generated file would report amc.outfile_write naming the
-// path it could not create. No such line appears, and that absence is the
-// assertion this run makes about ordering: check_ts sits ahead of every
-// emitting gen, so a refused schema is refused before the first write and no
-// decoder is emitted for the fields it accepted either.
+// $tempdir holds none of the gen directories that amc writes to.  So a generated
+// file would report amc.outfile_write, naming the path that amc failed to create.
+// The absence of that line is the assertion this run makes about ordering.
+// check_ts sits ahead of every emitting gen.  So amc refuses the schema before the
+// first write, and emits no decoder for the fields it accepted either.
 void atf_comp::comptest_amc_BadTsWire() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir:$tempdir -report:N < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -4722,23 +4865,23 @@ void atf_comp::comptest_amc_BadTsWire() {
 
 // -----------------------------------------------------------------------------
 
-// Feed amc three projected ctypes that no codec can write correctly, and check
-// that each is refused by name and the run exits with one error per refusal.
+// Give amc three projected ctypes that no codec can write correctly, and check
+// that amc refuses each by name and exits with one error per refusal.
 //
-// Msg, packed and projected into Rust, Go and Python, has a pointer member with
-// no wire form: amc.proj_wire.  The language emitters run after the checks and
-// walk the same fields, and the Python one, handed the pointer, takes the
-// process down with SIGSEGV.  The exit code is the assertion that no emitter
-// ran: three refusals exit 3, and a crash in any emitter exits 139.
+// Msg, packed and projected into Rust, Go and Python, has a pointer member with no
+// wire form, and draws amc.proj_wire.  The language emitters run after the checks
+// and walk the same fields.  The Python emitter, handed the pointer, takes the
+// process down with SIGSEGV.  The exit code is the assertion that no emitter ran.
+// Three refusals exit 3, and a crash in any emitter exits 139.
 //
 // Lenmsg is a message whose length field is a bitfield of a header word, as in
-// amc.LenfldBitfld.  Every codec stores the frame length at the length field's
-// own slot, and a bitfield owns none, so a codec would write the length over the
-// next member: amc.proj_lenfld.
+// amc.LenfldBitfld.  Every codec stores the frame length at the length field's own
+// slot.  A bitfield owns none, so a codec would write the length over the next
+// member, and amc reports amc.proj_lenfld.
 //
-// Dflt carries two nested members with defaults of their own.  Wrap wraps one
-// u64, so its -1 is stated on that scalar and admitted.  Pair holds two scalars,
-// so its default has nothing to land on: amc.proj_dflt.
+// Dflt carries two nested members with defaults of their own.  Wrap wraps one u64,
+// so its -1 lands on that scalar and amc admits it.  Pair holds two scalars, so its
+// default has no single scalar to land on, and amc reports amc.proj_dflt.
 void atf_comp::comptest_amc_BadProj() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir:$tempdir -report:N < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:''");
@@ -4782,13 +4925,13 @@ void atf_comp::comptest_amc_BadProj() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// Two store-carrying ctypes whose fixed size plus lenfld extra falls outside
-// the length field's range. MsgLow (u32 lenfld, extra:-8, fixed size 4): the
-// minimum frame's stored length goes negative and wraps through the unsigned
-// store, framing gigabytes from a 4-byte message. MsgHigh (u8 lenfld,
-// extra:255, fixed size 4): the stored value 259 exceeds the type's max, so
-// the emitted range guard bound falls below the fixed size and every encode
-// throws at first use. Both offenders are rejected in one run.
+// Give amc two store-carrying ctypes whose fixed size plus lenfld extra falls
+// outside the length field's range, and check that amc rejects both in one run.
+// MsgLow (u32 lenfld, extra:-8, fixed size 4) stores a negative length for the
+// minimum frame.  The value wraps through the unsigned store and frames gigabytes
+// from a 4-byte message.  MsgHigh (u8 lenfld, extra:255, fixed size 4) stores 259,
+// past the type's max.  The emitted range guard bound then falls below the fixed
+// size, and every encode throws at first use.
 void atf_comp::comptest_amc_BadLenfldMinFrame() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -4810,14 +4953,15 @@ void atf_comp::comptest_amc_BadLenfldMinFrame() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// Two packed TypeScript ctypes whose lenfld sits on a Bitfld field over a raw
-// header word, with no msgtype and no C++ alloc instance -- header-like
-// framing for an external payload. The TS fixed walk writes the source word
-// raw from the parent and emits no store for a Bitfld lenfld, so per the
-// no-store-site doctrine the length words arrive from outside and the
-// schemas stay legal: MsgIndiv (size 4, scale:8) is indivisible and MsgRange
-// (u8 lenfld, extra:252, size 4) has an unstorable minimum frame, yet amc
+// Give amc two packed TypeScript ctypes whose lenfld sits on a Bitfld field over a
+// raw header word, with no msgtype and no C++ alloc instance, and check that amc
 // accepts both with exit code 0.
+// This is header-like framing for an external payload.  The TS fixed walk writes
+// the source word raw from the parent, and emits no store for a Bitfld lenfld.  So
+// under the no-store-site doctrine the length words arrive from outside, and the
+// schemas stay legal.  MsgIndiv (size 4, scale:8) is indivisible, and MsgRange (u8
+// lenfld, extra:252, size 4) has an unstorable minimum frame.  amc still accepts
+// both.
 void atf_comp::comptest_amc_LenfldBitfld() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -4842,12 +4986,13 @@ void atf_comp::comptest_amc_LenfldBitfld() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// A packed message based on a private header ctype that has no dmmeta.pack
-// row -- the state an author lands in after repointing a message's base from
-// ams.MsgHeader to a freshly created header; the namespace is itself pack:Y,
-// so the unpacked header also draws the namespace-level error. Pins both
-// rejections (amc.back_pack, amc.what_the_pack), each followed by the bare
-// dmmeta.pack row the message tells the author to insert.
+// Give amc a packed message based on a private header ctype with no dmmeta.pack
+// row, and check that amc reports amc.back_pack and amc.what_the_pack, each
+// followed by the bare dmmeta.pack row that the message tells the author to
+// insert.
+// An author lands in this state after repointing a message's base from
+// ams.MsgHeader to a freshly created header.  The namespace is itself pack:Y, so
+// the unpacked header also draws the namespace-level error.
 void atf_comp::comptest_amc_MissingPack() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -4870,9 +5015,11 @@ void atf_comp::comptest_amc_MissingPack() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// A pmask field of 536870913 bytes: its bit count exceeds i32, which the
-// struct size cap (i32 with alignment headroom) permits. The bit-width
-// bookkeeping must not wrap; the schema is legal and generates cleanly.
+// Give amc a pmask field of 536870913 bytes, and check that amc generates the
+// schema without a diagnostic.
+// The field's bit count exceeds i32, and the struct size cap (i32 with alignment
+// headroom) permits that.  The schema is legal, so the bit-width bookkeeping must
+// hold the count without wrapping.
 void atf_comp::comptest_amc_PmaskGiantField() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -4896,9 +5043,11 @@ void atf_comp::comptest_amc_PmaskGiantField() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// csize rows with alignment 32 (beyond the headroom the struct size cap
-// reserves for RoundUp) and alignment 6 (not a power of two, so the rounding
-// mask miscomputes): both must be rejected, not silently accepted.
+// Give amc csize rows with alignment 32 and alignment 6, and check that amc
+// reports amc.invalid_size for both.
+// Alignment 32 exceeds the headroom that the struct size cap reserves for RoundUp.
+// Alignment 6 is no power of two, so the rounding mask miscomputes.  Silent
+// acceptance of either would ship a wrong layout.
 void atf_comp::comptest_amc_BadCsizeAlignment() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -4913,9 +5062,11 @@ void atf_comp::comptest_amc_BadCsizeAlignment() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// A variable char/u8 inlary with min>0: the string read copies the input
-// and sets the count to its length, which a short input puts below min.
-// The shape is rejected until someone defines floor semantics for it.
+// Give amc a variable char inlary and a variable u8 inlary with min>0, and check
+// that amc reports amc.bad_inlary_min for both.
+// The string read copies the input and sets the count to its length, and a short
+// input puts that count below min.  amc rejects the shape until someone defines
+// floor semantics for it.
 void atf_comp::comptest_amc_BadInlaryMin() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -4931,9 +5082,11 @@ void atf_comp::comptest_amc_BadInlaryMin() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// An inlary with min>max: Init preallocates min elements against a
-// capacity of max, so the first record constructed would die at runtime.
-// amc rejects the shape instead of shipping the trap.
+// Give amc an inlary with min>max, and check that amc reports
+// amc.bad_inlary_minmax.
+// Init preallocates min elements against a capacity of max, so the first record
+// constructed would die at run time.  The rejection keeps that trap out of the
+// generated code.
 void atf_comp::comptest_amc_BadInlaryMinmax() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -4947,9 +5100,11 @@ void atf_comp::comptest_amc_BadInlaryMinmax() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// A variable inlary with fnoremove: Setary, the separated-string read, and
-// Uninit all empty the array through RemoveAll, which fnoremove suppresses,
-// so the generated code would call a function that is never emitted.
+// Give amc a variable inlary with fnoremove, and check that amc reports
+// amc.bad_inlary_fnoremove.
+// Setary, the separated-string read and Uninit all empty the array through
+// RemoveAll, which fnoremove suppresses.  The generated code would then call a
+// function that amc never emits.
 void atf_comp::comptest_amc_BadInlaryFnoremove() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -4964,12 +5119,14 @@ void atf_comp::comptest_amc_BadInlaryFnoremove() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// A Json cfmt over fields no FmtJson branch covers. Two causes: a reftype the
-// walk has no branch for -- a raw Smallstr field, shown both as a ctype's
-// single datafld and among several -- and a field type carrying neither a Json
-// cfmt nor a String print, so no expression exists to produce its node, shown
-// singular and repeated. Every offender is rejected in one run through the
-// accumulate path.
+// Give amc Json cfmts over fields that no FmtJson branch covers, and check that amc
+// reports amc.badjsonfld for every offender in one run, through the accumulate
+// path.
+// The first cause is a reftype that the walk has no branch for, a raw Smallstr
+// field.  The fixture shows it both as a ctype's single datafld and among several.
+// The second cause is a field type with neither a Json cfmt nor a String print,
+// which leaves no expression to produce its node.  The fixture shows it singular
+// and repeated.
 void atf_comp::comptest_amc_BadJsonFld() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -5007,29 +5164,29 @@ void atf_comp::comptest_amc_BadJsonFld() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// How each field of a Json cfmt reaches its node. A field whose type carries
-// its own Json cfmt gets that type's FmtJson; a field whose type carries only
-// a String cfmt prints into a string node instead. A repeated field becomes an
-// array node holding one element node per element, by the same two rules.
-// A ctype with one data field prints as that field's node, with no object
-// wrapper, and the same rules pick the node there: the field type's FmtJson,
-// or a string node its Print writes into, and for a repeated field an array
+// Give amc Json cfmts over fields of each kind, print every algo_lib FmtJson, and
+// check how each field reaches its node.
+// A field whose type carries its own Json cfmt gets that type's FmtJson.  A field
+// whose type carries only a String cfmt prints into a string node.  A repeated
+// field becomes an array node holding one element node per element, by the same
+// two rules.  A ctype with one data field prints as that field's node, with no
+// object wrapper.  The same rules pick the node there: the field type's FmtJson,
+// or a string node that its Print writes into, and for a repeated field an array
 // node holding one element node per element.
-// One ctype is the case where the two field selectors used to disagree: its
-// only data field is a Val, so the object wrapper is elided and no object node
-// exists, and its other field is a repeated fldfunc, which the array branch
-// would have emitted an array node into.
-// The remaining ctypes carry a print filter, which prints a field only when
-// its bit is set. PmFilter shows the three member forms each inside a test of
-// their bit, and its presence mask is a data field itself, which by itself
-// keeps the ctype from inlining. PmInlJson and PmInlPrint are the shapes where
-// the mask is a bitfield of the one data field: that field carries a bit, so
-// it is not inlined and prints as an object member under its test -- the first
-// through its type's FmtJson, the second through its type's Print. PmInlJson
-// carries a second bitfield on the mask, and a bitfield prints nothing, so no
-// test is opened around it. PmInlFree keeps the same shape but names its
-// member explicitly, leaving the data field off the mask, and that field
-// inlines as it would with no filter at all.
+// Computed is the case where the two field selectors could disagree.  Its only
+// data field is a Val, so amc elides the object wrapper and no object node exists.
+// Its other field is a repeated fldfunc, which the array branch would emit an
+// array node into.
+// The remaining ctypes carry a print filter, which prints a field only when its
+// bit is set.  PmFilter shows the three member forms, each inside a test of its
+// bit.  Its presence mask is a data field itself, which alone keeps the ctype from
+// inlining.  In PmInlJson and PmInlPrint the mask is a bitfield of the one data
+// field.  That field carries a bit, so amc keeps it from inlining and prints it as
+// an object member under its test, the first through its type's FmtJson and the
+// second through its type's Print.  PmInlJson carries a second bitfield on the
+// mask.  A bitfield prints no node, so amc opens no test around it.  PmInlFree
+// keeps the same shape and names its member explicitly, which leaves the data
+// field off the mask.  That field inlines as it would with no filter.
 void atf_comp::comptest_amc_JsonFld() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N algo_lib.%.FmtJson < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -5103,11 +5260,12 @@ void atf_comp::comptest_amc_JsonFld() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// A Json cfmt on a base-derived ctype and on a bitfield-carrying ctype:
-// neither the Base field nor the Bitfld field prints — the base's cloned
-// fields print as members of the object, and the bitfield's bits travel
-// inside the printed source word — so both schemas generate cleanly.
-// Pins both emitted FmtJson bodies.
+// Give amc a Json cfmt on a base-derived ctype and on a bitfield-carrying ctype,
+// print both FmtJson bodies, and check that amc generates both schemas without a
+// diagnostic.
+// Neither the Base field nor the Bitfld field prints.  The base's cloned fields
+// print as members of the object, and the bitfield's bits travel inside the
+// printed source word.
 void atf_comp::comptest_amc_JsonBaseBitfld() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N %.FmtJson < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -5129,24 +5287,25 @@ void atf_comp::comptest_amc_JsonBaseBitfld() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// A Json cfmt over the whole rendering table: a field renders through the
-// Json cfmt of its type when the type has one, and otherwise as a string
-// holding what its Print writes; an array field renders as a JSON array
-// whose elements render the same two ways; and a record standing on a single
-// data field renders as that field's own node, so an array there is the
-// record's array and a value there is the record's value. AryPlain, AryElem,
-// ValPlain and ValElem are the four single-field cells, Rec the two array
-// cells as members of an object beside a plain value.
-// RecName is the naming control, and every one of its fields is named for a
-// local the walk declares. A local named after a field takes that name through
-// one role suffix -- "_node" for the node standing for the field, "_ary" for
-// its element span -- and the record's own node is named objnode, which no
-// suffix produces. So the field named "objnode" reaches for the record's node,
-// the field named "x_field" reaches for the node of the field named "x", and
-// the field named "y_ary" reaches for the element span of the field named "y",
-// and the emitted body declares each of them once. The field named "object"
-// pins the same rule from the other side: the record's node no longer answers
-// to that name, so a field may.
+// Give amc Json cfmts over the whole rendering table, print every FmtJson, and
+// check how each field renders and that no field name collides with a local of
+// the walk.
+// A field renders through the Json cfmt of its type when the type has one.
+// Otherwise it renders as a string that holds what its Print writes.  An array
+// field renders as a JSON array whose elements render the same two ways.  A record
+// that stands on a single data field renders as that field's own node.  So an
+// array there is the record's array, and a value there is the record's value.
+// AryPlain, AryElem, ValPlain and ValElem are the four single-field cells.  Rec
+// holds the two array cells as members of an object beside a plain value.
+// RecName is the naming control, and each of its fields bears the name of a local
+// that the walk declares.  A local named after a field takes that name through one
+// role suffix: "_node" for the node that stands for the field, and "_ary" for its
+// element span.  The record's own node is named objnode, which no suffix
+// produces.  So the field named "objnode" reaches for the record's node, the field
+// named "x_field" for the node of the field named "x", and the field named "y_ary"
+// for the element span of the field named "y".  The emitted body declares each of
+// them once.  The field named "object" pins the same rule from the other side.
+// The record's node goes by objnode, so a field may take the name "object".
 void atf_comp::comptest_amc_JsonAry() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N %.FmtJson < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -5195,21 +5354,23 @@ void atf_comp::comptest_amc_JsonAry() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// A Json cfmt on a global (FDb) ctype: the Global anchor field is the
-// singleton instance itself and carries no data, so — like Base and Bitfld —
-// it passes the field check without printing, and the object holds the
-// ctype's data fields. Anchor, Derived and Presence carry that to the
-// degenerate end: their one and only data field carries nothing of its own (a
-// Global, a Base, a presence mask), so the walk emits no member at all and
-// each must still return an empty object rather than a null node. One ctype
-// per cause keeps every arm of that rule load-bearing.
+// Give amc Json cfmts on global ctypes and on ctypes whose one data field carries
+// no data, print every FmtJson, and check that each body holds the ctype's data
+// fields and calls a global's accessors with no parent.
+// The Global anchor field is the singleton instance itself and carries no data.
+// Like Base and Bitfld, it passes the field check without printing, and the object
+// holds the ctype's data fields.  Anchor, Derived and Presence carry that to the
+// degenerate end.  Their one data field carries no data of its own: a Global, a
+// Base and a presence mask.  So the walk emits no member, and each must still
+// return an empty object and never a null node.  One ctype per cause keeps every
+// arm of that rule load-bearing.
 // The FDb ctype also carries the repeated fields, which reach their elements
-// through the field's own Getary. A global's accessors take no parent
-// argument, so those calls are emitted with none: a Tary whose element type
-// prints as a string, a Tary whose element type has a Json cfmt of its own,
-// and an Inlary. GlobAry is a second global ctype whose only data beside the
-// anchor is one Tary, which keeps the collapse pinned apart from FDb's other
-// members. Pins every emitted FmtJson body in the fixture.
+// through the field's own Getary.  A global's accessors take no parent argument,
+// so amc emits those calls with none.  The repeated fields are a Tary whose
+// element type prints as a string, a Tary whose element type has a Json cfmt of
+// its own, and an Inlary.  GlobAry is a second global ctype whose only data beside
+// the anchor is one Tary, which keeps the collapse pinned apart from FDb's other
+// members.  The golden pins every emitted FmtJson body in the fixture.
 void atf_comp::comptest_amc_JsonGlobal() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N %.FmtJson < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -5247,11 +5408,12 @@ void atf_comp::comptest_amc_JsonGlobal() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// A single-file universe with a Ptrary, an fcurs request for its cursor, and
-// no amcdb.tcurs rows: the request makes the cursor generator run, and the
-// generator reports the missing tcurs row as a generation error and keeps
-// generating. check_fcurs flags the same request first (bad_fcurs),
-// so the run accumulates both errors and exits with their count.
+// Give a single-file universe a Ptrary, an fcurs request for its cursor and no
+// amcdb.tcurs rows, and check that amc reports amc.bad_fcurs and then
+// amc.missing_tcurs and exits with their count.
+// The request makes the cursor generator run.  The generator reports the missing
+// tcurs row as a generation error and keeps generating.  check_fcurs flags the
+// same request first, so the run accumulates both errors.
 void atf_comp::comptest_amc_BadMissingTcurs() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -5269,10 +5431,12 @@ void atf_comp::comptest_amc_BadMissingTcurs() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// A single-file universe with a bitset field and no amcdb.tcurs rows: the
-// tcurs row is the only carrier of the dflt flag, so amc cannot know the
-// bitcurs cursor is request-only. Without a dmmeta.fcurs request the cursor
-// must not be emitted; the NBits witness proves generation itself ran.
+// Give a single-file universe a bitset field and no amcdb.tcurs rows, print the
+// bitset's NBits and bitcurs functions, and check that amc emits NBits and no
+// bitcurs cursor.
+// The tcurs row is the only carrier of the dflt flag, so amc has no way to know
+// that the bitcurs cursor is request-only.  Without a dmmeta.fcurs request the
+// cursor stays unemitted.  The NBits witness proves that generation itself ran.
 void atf_comp::comptest_amc_CursUnrequested() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N 'algo_lib.TestBitset.bits.NBits|algo_lib.TestBitset.bits_bitcurs.%' < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -5286,17 +5450,17 @@ void atf_comp::comptest_amc_CursUnrequested() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// A field default naming the containing instance retargets to the emitting
-// context's instance name, in both spellings C++ gives that instance. The
-// object spelling *this becomes the instance itself (Msg Init assigns
-// ssizeof(parent)), and the pointer spelling this becomes its address,
-// parenthesized, so that the member access in this->pad binds to the whole
-// address expression rather than to the member (Ptr Init assigns
-// (&parent)->pad). An identifier that merely starts with the same characters
-// (*thisvalue) is not an instance reference and survives verbatim. Rec's default
-// carries the object spelling next to that longer identifier and Ptr's carries
-// the pointer spelling next to it, so each pins that one expression keeps the
-// longer identifier while its real reference is retargeted.
+// Give amc field defaults that name the containing instance, print the Init of
+// Rec, Msg and Ptr, and check that each reference retargets to the emitting
+// context's instance name, in both spellings that C++ gives that instance.
+// The object spelling *this becomes the instance itself, so Msg Init assigns
+// ssizeof(parent).  The pointer spelling this becomes its address, parenthesized,
+// so that the member access in this->pad binds to the whole address expression.
+// Ptr Init assigns (&parent)->pad.  An identifier that merely starts with the same
+// characters (*thisvalue) refers to no instance and survives verbatim.  Rec's
+// default carries the object spelling next to that longer identifier, and Ptr's
+// carries the pointer spelling next to it.  So each pins that one expression keeps
+// the longer identifier while amc retargets its real reference.
 void atf_comp::comptest_amc_DfltRetarget() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N '(algo_lib.Rec..Init|algo_lib.Msg..Init|algo_lib.Ptr..Init)' < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -5316,13 +5480,13 @@ void atf_comp::comptest_amc_DfltRetarget() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// amc run from a directory with no bin/acr (outside a checkout): the acr
-// subprocess that rewrites the ctypelen/dispsig/tracefld/tracerec/userfunc
-// tables cannot start, and the run must fail instead of exiting 0 with the
-// tables silently unwritten. The command cds into the test's tempdir so
-// the relative bin/acr path resolves nowhere; out's gen directories are
-// created up front so the output-file writes succeed and only the acr
-// failure is under test.
+// Run amc from a directory with no bin/acr, as outside a checkout, and check that
+// amc reports amc.table_write and fails.
+// The acr subprocess that rewrites the ctypelen, dispsig, tracefld, tracerec and
+// userfunc tables fails to start.  A run that exited 0 would leave those tables
+// silently unwritten.  The command cds into the test's tempdir, so the relative
+// bin/acr path resolves nowhere.  It creates out's gen directories up front, so
+// the output-file writes succeed and only the acr failure is under test.
 void atf_comp::comptest_amc_TableWriteAcrFail() {
     atf_comp::FProc &proc = atf_comp::ProcStart("bash -c 'cd $tempdir && mkdir -p out/cpp/gen out/include/gen && $$OLDPWD/$bindir/amc -in_dir:- -out_dir:out -report:N < <(cat $$OLDPWD/test/amc/bootstrap.ssim -)'");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -5337,9 +5501,11 @@ void atf_comp::comptest_amc_TableWriteAcrFail() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// amc pointed at an -out_dir that is a regular file: amc cannot create the gen
-// directories under it, so every output-file write fails, and the run must fail
-// naming each path instead of exiting 0 with the generated code silently missing.
+// Point amc at an -out_dir that is a regular file, and check that amc reports
+// amc.outfile_write naming each path and fails.
+// amc is unable to create the gen directories under a file, so every output-file
+// write fails.  A run that exited 0 would leave the generated code silently
+// missing.
 void atf_comp::comptest_amc_OutfileWriteFail() {
     atf_comp::FProc &proc = atf_comp::ProcStart("bash -c 'cd $tempdir && touch out && $$OLDPWD/$bindir/amc -in_dir:- -out_dir:out -report:N < <(cat $$OLDPWD/test/amc/bootstrap.ssim -)'");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -5354,39 +5520,40 @@ void atf_comp::comptest_amc_OutfileWriteFail() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// amc -e whose acr -e child fails (exit 1, here via an editor that fails):
-// the run must fail loudly before regenerating anything, instead of reading
-// the nonzero exit as an edit that modified files and regenerating on top of
-// a schema that never changed. The failure is reported and the phases that
-// would read the input set are skipped, so the run ends through its own exit
-// path and its report names the files it did not write. The command cds into the test's tempdir and
-// symlinks bin and data from the checkout, so amc's relative bin/acr spawn
-// and acr's data load both resolve while every write stays in the tempdir.
+// Run amc -e with EDITOR=false, so that its acr -e child exits 1, and check that
+// amc reports amc.edit and fails loudly before regenerating anything.
+// A run that read the nonzero exit as an edit that modified files would regenerate
+// on top of a schema that never changed.  amc skips the phases that would read the
+// input set, and the run ends through its own exit path.  The command cds into the
+// test's tempdir and symlinks bin and data from the checkout.  amc's relative
+// bin/acr spawn and acr's data load then both resolve, while every write stays in
+// the tempdir.
 void atf_comp::comptest_amc_EditFail() {
     atf_comp::ProcStart("bash -c 'cd $tempdir && ln -s $$OLDPWD/bin bin && ln -s $$OLDPWD/data data && mkdir temp"
                         " && EDITOR=false $$OLDPWD/$bindir/amc ctype:amc.FGen -e'");
 }
 
-// A FAST template whose presence mask is a field named nullable, not pmask.
-// The presence accessors amc generates are named after the pmask row -- the
-// row's field name prefixes the whole-word bitset accessors and its funcname
-// spells the per-field ones -- so a codec that spells those names itself
-// works only for a mask that happens to be called pmask. The first run pins
-// the emitted encoder and decoder: the message's own presence reads through
-// Value_NullableQ and writes through nullable_qSetBitVal, while the state
-// record's two masks, named assigned and present, keep the accessors those
-// names generate.
-// The FAST codec qualifies each field's previous value through two pmasks of
-// the namespace's FastState record, told apart by name; the second run gives
-// the presence one another name, which leaves the codec with no accessor to
-// call, and pins the diagnostic and the nonzero exit that replace the
-// silently unnamed accessor. The row that is missing belongs to the
-// namespace, so that universe also pins how often it is charged: two
-// templates of the namespace need it, each through an encoder and a decoder,
-// and it is reported once with exit code 1. The universe's other two
-// namespaces draw nothing -- one holds no cfast ctype at all, the other holds
-// one encoded as a type, which is coded inline by whichever message holds it
-// and needs no state pmask of its own.
+// Give a FAST template a presence mask named nullable, and check that the codec
+// calls the presence accessors that the pmask rows generate:
+// 1. Print Msg's FastEncode and FastDecode.  Check that the message's own presence
+//    reads through Value_NullableQ and writes through nullable_qSetBitVal, and
+//    that the state record's two masks, named assigned and present, keep the
+//    accessors those names generate.
+// 2. Rename the FastState presence mask to seen, and add a second template and a
+//    namespace zz with a type-encoded cfast.  Check that amc reports
+//    amc.fast_state once and exits 1.
+// amc names the presence accessors after the pmask row.  The row's field name
+// prefixes the whole-word bitset accessors, and its funcname spells the per-field
+// ones.  A codec that spelled those names itself would work only for a mask named
+// pmask.  The FAST codec qualifies each field's previous value through two pmasks
+// of the namespace's FastState record, which it tells apart by name.  With the
+// presence mask renamed, the codec has no accessor to call, and the diagnostic
+// and the nonzero exit replace a silently unnamed accessor.  The missing row
+// belongs to the namespace, so step 2 also pins how often amc charges it.  Two
+// templates of the namespace need it, each through an encoder and a decoder, and
+// amc reports it once.  The universe's other two namespaces draw no report.  One
+// holds no cfast ctype.  The other (zz) holds one encoded as a type, which its
+// holder codes inline and which needs no state pmask of its own.
 void atf_comp::comptest_amc_FastPmaskName() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N 'algo_lib.Msg..Fast%' < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -5445,15 +5612,16 @@ void atf_comp::comptest_amc_FastPmaskName() {
     atf_comp::ProcWriteEof(proc2);
 }
 
-// Which argv accessors each of the two argv strfmts generates. The universe
-// holds one ctype per strfmt over the same three fields, and both cfmts ask
-// for print and read alike, so the only thing that varies between them is the
-// strfmt in the cfmt key. Argv gets the whole surface: the two printers, the
-// ToCmdline convenience that prefixes bin/ and inherits the verbosity flags,
-// the NArgs token-count table, and the ReadArgv parser the namespace ReadArgv
-// delegates to. ArgvGnu gets the two printers and nothing else, so its read:Y
-// buys no command-line reader; the prototypes are printed rather than the
-// bodies, since what is under test is which functions exist.
+// Give amc one ctype per argv strfmt over the same three fields, print the
+// prototypes of their argv accessors, and check which accessors each strfmt
+// generates.
+// Both cfmts ask for print and read alike, so the strfmt in the cfmt key is the
+// only difference between them.  Argv gets the whole surface: the two printers;
+// the ToCmdline convenience, which prefixes bin/ and inherits the verbosity flags;
+// the NArgs token-count table; and the ReadArgv parser that the namespace ReadArgv
+// delegates to.  ArgvGnu gets the two printers alone, so its read:Y buys no
+// command-line reader.  The test prints the prototypes alone, because what is
+// under test is which functions exist.
 void atf_comp::comptest_amc_ArgvAccessor() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N -proto -showcomment:N 'algo_lib.Amc..%Argv%|algo_lib.Amc..ToCmdline|algo_lib.Amc..NArgs|algo_lib.Gnu..%Argv%|algo_lib.Gnu..ToCmdline|algo_lib.Gnu..NArgs' < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -5476,34 +5644,37 @@ void atf_comp::comptest_amc_ArgvAccessor() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// An fconst whose own value the field's store cannot hold. The symbol reaches
-// the field through the generated Set, which for a bitfield masks the store, so
-// the value the schema names is not the value the field ends up holding and no
-// accessor can map it back to the symbol; amc rejects each such row by name and
-// states the range the store does hold. The rejected values walk the stores: a
-// value past the bits (2000 in ten bits), past the arg type (300 in a u8), past
-// a signed arg type's maximum (2147483648 in an i32), a negative on an unsigned
-// store, and a negative on bits that drop a signed arg type's sign.
-// The value is a C++ integer literal, and amc reads it the way the compiler
-// will: 0377 is octal 255 and fits a u8 store, 0400 is 256 and does not, a
-// u/U/l/L suffix belongs to the literal's type rather than to its number, and a
-// leading plus or minus is the number's sign. Sign and magnitude are carried
-// apart, so an unsigned 64-bit store holds 0xffffffffffffffff while an i32
-// store rejects -0x80000001, one past its minimum. A magnitude that outruns 64
-// bits -- 0x10000000000000001, or twenty-three decimal digits -- fits no store
-// and is reported against the widest one.
-// The controls that draw nothing are the values at each store's own edges (the
-// u32, u8 and u64 maxima, the i32 minimum in decimal and in hex, 1023 in ten
-// bits, 127 in seven, -128 in eight in decimal and in hex), and every spelling
-// that is not one whole integer literal and so carries no number to compare: a
+// Give amc fconsts across stores of each width and sign, spelled in each form of a
+// C++ integer literal, and check that amc reports amc.fconst_range by name for
+// each value that the field's store fails to hold, stating the range that the
+// store holds.
+// The symbol reaches the field through the generated Set, which for a bitfield
+// masks the store.  So the field would end up holding a value other than the one
+// the schema names, and no accessor could map it back to the symbol.  The rejected
+// values walk the stores: a value past the bits (2000 in ten bits); past the arg
+// type (300 in a u8); past a signed arg type's maximum (2147483648 in an i32); a
+// negative on an unsigned store; and a negative on bits that drop a signed arg
+// type's sign.
+// The value is a C++ integer literal, and amc reads it the way the compiler will.
+// 0377 is octal 255 and fits a u8 store, while 0400 is 256 and exceeds it.  A
+// u/U/l/L suffix names the literal's type and leaves its number unchanged.  A
+// leading plus or minus is the number's sign.  amc carries sign and magnitude
+// apart, so an unsigned 64-bit store holds 0xffffffffffffffff, while an i32 store
+// rejects -0x80000001, one past its minimum.  A magnitude that outruns 64 bits,
+// 0x10000000000000001 or twenty-three decimal digits, fits no store, and amc
+// reports it against the widest one.
+// The controls draw no report.  They are the values at each store's own edges: the
+// u32, u8 and u64 maxima; the i32 minimum in decimal and in hex; 1023 in ten bits;
+// 127 in seven; and -128 in eight, in decimal and in hex.  They also include every
+// spelling that is no whole integer literal and so carries no number to compare: a
 // shift expression, an arithmetic one, digits with trailing text, a character
 // literal, a name only the compiler resolves, and a binary literal, a spelling
-// amc does not read. A string field's value is a string however it is spelled,
-// so the string field carries one control reading csv and one reading 99999,
-// and neither is bounded: the field's arg is a character array, which resolves
-// to no integer type and so has no range to compare with. The mask of a flag on
-// the top bit of a signed word is likewise unbounded, being a bitfield's mask
-// rather than a value of the word.
+// that amc leaves unread.  A string field's value is a string however it is
+// spelled.  So the string field carries one control reading csv and one reading
+// 99999, and amc bounds neither.  The field's arg is a character array, which
+// resolves to no integer type and has no range to compare with.  The mask of a
+// flag on the top bit of a signed word is unbounded as well, because it is a
+// bitfield's mask and no value of the word.
 void atf_comp::comptest_amc_BadFconstRange() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:''");
@@ -5575,23 +5746,24 @@ void atf_comp::comptest_amc_BadFconstRange() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// The declared bitfield widths an fconst's store range is computed from, over
-// one universe holding a field per width. A bitfield's Set masks the store to
-// the declared width, so the range an fconst value is checked against is built
-// by shifting a u64 by that width -- and the width is a signed schema argument
-// that a run reaches before the accessors refuse it, so it arrives here holding
-// whatever the schema wrote. The widths from one to sixty-three are the ones
-// that name bits inside the word: each of those fields carries the widest value
-// its bits hold, which draws nothing, next to the value one past it, which is
-// reported. A width of sixty-four spans the arg type and masks nothing, so the
-// arg type's own maximum draws nothing. The three widths outside the range --
-// negative, zero, and sixty-five bits of a u128 source field -- are reported as
-// out of bounds naming the field, and the value 1 that sits on each of them
-// draws no range complaint of its own: a width that names no bits bounds
-// nothing. A run that computes a bound from one of them instead reports 1 as a
-// value the field cannot hold, which the field's arg type holds perfectly well.
-// The bitfield accessors end the run at the first width they refuse, which is
-// the last line of the golden.
+// Give amc one bitfield per declared width, each with fconsts at and past its
+// edge, and check that amc bounds each fconst by its field's width, reports the
+// widths out of bounds, and ends the run at the first width the accessors refuse.
+// A bitfield's Set masks the store to the declared width.  So amc builds the range
+// that it checks an fconst value against by shifting a u64 by that width.  The
+// width is a signed schema argument, and a run reaches this check before the
+// accessors refuse the width.  So the width arrives holding whatever the schema
+// wrote.  The widths from one to sixty-three name bits inside the word.  Each of
+// those fields carries the widest value its bits hold, which draws no report,
+// next to a value past it, which draws one.  A width of sixty-four spans the arg
+// type and masks no bit, so the arg type's own maximum draws no report.  amc
+// reports the three widths outside the range, negative, zero, and sixty-five bits
+// of a u128 source field, as out of bounds, naming the field.  The value 1 on each
+// of them draws no range complaint of its own, because a width that names no bits
+// bounds no value.  A run that computed a bound from one of them would report 1 as
+// a value the field fails to hold, though the field's arg type holds it well.  The
+// bitfield accessors end the run at the first width they refuse, which is the last
+// line of the golden.
 void atf_comp::comptest_amc_FconstBitfldWidth() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
     atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:i8  likeu64:Y  bigendok:N  issigned:Y  comment:\"8-bit   signed integer\"");

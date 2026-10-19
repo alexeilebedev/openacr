@@ -45,19 +45,30 @@ void atf_comp::comptest_acr_ed_CreateTarget() {
     atf_comp::ProcStart("$bindir/acr_ed -create -target xyz");
 }
 
-// A field delete drops the schema row and then rewrites the ssimfile that held
-// the field's values.  A field on an in-memory ctype has no such file, so the
-// second invocation emits the delete alone.
+// Delete a field of a ssimfile's ctype and a field of an in-memory ctype, and check
+// that only the first delete rewrites a ssimfile:
+// 1. Delete dmmeta.Ns.license, and check that acr_ed drops the schema row and then
+//    rewrites the ssimfile that held the field's values.
+// 2. Delete amc.FNs.p_license, and check that acr_ed emits the delete alone.
+// A field on an in-memory ctype has no ssimfile that holds its values.
 void atf_comp::comptest_acr_ed_DelField() {
     atf_comp::ProcStart("bash -c '$bindir/acr_ed -del -field dmmeta.Ns.license"
                         " && $bindir/acr_ed -del -field amc.FNs.p_license'");
 }
 
-// A field rename resolves a bare new name against the field's own ctype, and
-// refuses the two spellings that cannot mean what they look like: a query
-// prefix, and a new ctype whose old rows would keep a column no field claims.
-// Between two in-memory ctypes there is no such column, so the move goes
-// through.
+// Rename a field with four spellings of the new name, and check which ones acr_ed
+// accepts:
+// 1. Rename dmmeta.Ns.license to the bare name licence, and check that acr_ed
+//    resolves it against the field's own ctype.
+// 2. Rename it to field:dmmeta.Ns.licence, and check that acr_ed refuses the query
+//    prefix.
+// 3. Rename it to dmmeta.Ctype.license, and check that acr_ed refuses the move to a
+//    new ctype.
+// 4. Rename amc.FNs.p_license to amc.FCtype.p_license, and check that the move goes
+//    through.
+// The two refused spellings mean something other than what they look like.  After
+// the move in step 3 the old rows would keep a column that no field claims.  Two
+// in-memory ctypes have no such column, so the move in step 4 goes through.
 void atf_comp::comptest_acr_ed_RenameField() {
     atf_comp::ProcStart("bash -c '$bindir/acr_ed -field dmmeta.Ns.license -rename licence"
                         " ; $bindir/acr_ed -field dmmeta.Ns.license -rename field:dmmeta.Ns.licence"

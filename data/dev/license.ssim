@@ -6,6 +6,7 @@ dev.license  license:GPL-FOSS  proprietary:N  copyleft:N  comment:"GPL with the 
 dev.license  license:GPL-RLE  proprietary:N  copyleft:N  comment:"GPL with the GCC Runtime Library Exception"
 dev.license  license:LGPL  proprietary:N  copyleft:N  comment:"GNU Lesser General Public License"
 dev.license  license:MIT  proprietary:N  copyleft:N  comment:"MIT license, or a license of the same terms (curl, X11)"
+dev.license  license:PSF  proprietary:N  copyleft:N  comment:"Python Software Foundation License"
 dev.license  license:PostgreSQL  proprietary:N  copyleft:N  comment:"PostgreSQL license"
 dev.license  license:PublicDomain  proprietary:N  copyleft:N  comment:"Public domain"
 dev.license  license:Zlib  proprietary:N  copyleft:N  comment:"zlib license"

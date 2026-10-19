@@ -3,14 +3,6 @@
 // close and are not, and the braces that nest no C++ at all.
 namespace one { // update-hdr
 void Old1();
-struct Keep {
-    int a;
-};
-inline void Branch(bool c) {
-    if (c) {
-    } else {
-    }
-}
 }
 
 namespace two { // update-hdr
@@ -38,7 +30,7 @@ namespace six { // update-hdr
 const char *open_brace = "{";
 const char close_brace = '}';
 const char *escaped_quote = "\"}";
-inline long long Billion() { return 1'000'000'000; }
+const long long billion = 1'000'000'000; const char billion_close = '}';
 void Old6();
 }
 
@@ -55,9 +47,7 @@ void Old8();
 }
 
 namespace nine { // update-hdr
-inline void Encoded() {
-    const wchar_t inner_close = L'}';
-}
+const char *before_close = "x"; const char16_t after_close = u'}';
 void Old9();
 }
 
@@ -76,9 +66,7 @@ void Old12();
 }}
 
 namespace thirteen { // update-hdr
-namespace body { // opened by the body, so its brace is not the section's
-void Old13();
-}
+void Old13(); // a brace in a comment after code opens nothing: {
 }
 
 namespace fourteen { // update-hdr

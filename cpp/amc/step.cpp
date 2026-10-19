@@ -310,9 +310,9 @@ void amc::tfunc_Step_UpdateCycles() {
     amc::FField &field = *amc::_db.genctx.p_field;
     amc::FFstep &fstep = *field.c_fstep;
     amc::FFunc& func = amc::CreateCurFunc();
-    // an executable's Steps() calls a library's steps, so a library's are public
-    bool exe = amc::ExeQ(*field.p_ctype->p_ns);
-    func.priv        = !amc::ExternStepQ(fstep) && exe;
+    // an image's Steps() calls a library's steps, so a library's are public
+    bool image = amc::ImageQ(*field.p_ctype->p_ns);
+    func.priv        = !amc::ExternStepQ(fstep) && image;
     func.inl = amc::DirectStepQ(fstep) && !amc::ExternStepQ(fstep);
     Ins(&R, func.comment, "Update cycles count from previous clock capture");
     Ins(&R, func.ret     , "void",false);
@@ -412,7 +412,7 @@ void amc::tfunc_Step_Call() {
     // an alias step tests another namespace's list, whose header a library's
     // inline header may not see, so its call wrapper stays out of line
     call.inl = amc::DirectStepQ(fstep) && !ListAliasQ(field);
-    call.priv = !amc::ExternStepQ(fstep) && amc::ExeQ(*field.p_ctype->p_ns);
+    call.priv = !amc::ExternStepQ(fstep) && amc::ImageQ(*field.p_ctype->p_ns);
     Set(R, "$LoopCond", GetStepCond(field));
 
     if (fstep.steptype == dmmeta_Steptype_steptype_InlineRecur) {

@@ -52,8 +52,8 @@ static void RunScript(algo::strptr script) {
 
 // Select the installations, then do the one thing the command line asked for.
 // The actions share their whole body: each is the same generated script,
-// printed whole or as its function library alone, run, or run under a
-// buildroot and packaged.
+// printed whole or as its function library alone, run, run under a buildroot
+// and packaged, or staged under scratch roots to see which packages still build.
 void ainst::Main() {
     SelectExtpkg();
     tempstr script;
@@ -61,6 +61,8 @@ void ainst::Main() {
         ainst::UpdateExtpkg();
     } else if (ainst::_db.cmdline.rpm) {
         ainst::WriteRpmScript(script);
+    } else if (ainst::_db.cmdline.check) {
+        ainst::WriteCheckScript(script);
     } else if (ainst::_db.cmdline.lib) {
         ainst::WriteFunc(script);
     } else {
@@ -70,7 +72,7 @@ void ainst::Main() {
         // UpdateExtpkg has already said what moved
     } else if (ainst::_db.cmdline.script || ainst::_db.cmdline.lib) {
         prlog_(script);
-    } else if (ainst::_db.cmdline.install || ainst::_db.cmdline.rpm) {
+    } else if (ainst::_db.cmdline.install || ainst::_db.cmdline.rpm || ainst::_db.cmdline.check) {
         RunScript(script);
     } else {
         ind_beg(ainst::_db_zd_sel_extpkg_curs,extpkg,ainst::_db) {

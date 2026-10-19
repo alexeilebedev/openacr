@@ -25,7 +25,7 @@
 
 // Install the aws session-manager-plugin, which "aws ssm start-session" drives.
 void ainst::extpkg_ssm_plugin(ainst::FExtpkg &extpkg) {
-    AddStage(extpkg,"extpkg=$(mktemp -d)");
+    AddStage(extpkg,"extpkg=$(ainst_tmpdir)");
     AddStage(extpkg,tempstr()<<"dpkg-deb -x "<<GetExtpkgsrcVar(extpkg,"deb")<<" \"$extpkg\"");
     AddStage(extpkg,"ainst_install 755 \"$extpkg/usr/local/sessionmanagerplugin/bin/session-manager-plugin\" /usr/local/bin/session-manager-plugin");
 }

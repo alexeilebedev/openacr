@@ -29,7 +29,11 @@
 // -SNAPSHOT -- so a tree at apache-iceberg-1.11.0 builds itself as
 // 1.12.0-SNAPSHOT, which is neither the release nor a name this can predict.
 // The apache source release carries version.txt for that reason, and so does
-// this.
+// this.  Gradle builds only the two outputs installed below: a whole-tree build
+// also format-checks and tests every module, and opens more files than a
+// container build allows.  The build writes git.properties into its jars from
+// the .git directory of a checkout, and a tarball has none, so that task is
+// skipped.
 void ainst::extpkg_kafka_connectors(ainst::FExtpkg &extpkg) {
     AddStage(extpkg,"aiven=$(ainst_root /opt/kafka/plugins/aiven-kafka-connect-s3)");
     AddStage(extpkg,"confl=$(ainst_root /opt/kafka/plugins/confluent-kafka-connect-s3)");
@@ -42,10 +46,10 @@ void ainst::extpkg_kafka_connectors(ainst::FExtpkg &extpkg) {
     AddStage(extpkg,tempstr()<<"unzip -oq "<<GetExtpkgsrcVar(extpkg,"confluent_source")<<" -d \"$confl\"");
     AddStage(extpkg,tempstr()<<"ice=$(ainst_unpack "<<GetExtpkgsrcVar(extpkg,"iceberg")<<")/iceberg-apache-iceberg-1.11.0");
     AddStage(extpkg,"echo 1.11.0 > \"$ice/version.txt\"");
-    AddStage(extpkg,"(cd \"$ice\" && ./gradlew build -x test -x integrationTest)");
+    AddStage(extpkg,"(cd \"$ice\" && ./gradlew :iceberg-kafka-connect:iceberg-kafka-connect-runtime:distZip -x generateGitProperties)");
     AddStage(extpkg,"unzip -oq \"$ice/kafka-connect/kafka-connect-runtime/build/distributions"
              "/iceberg-kafka-connect-runtime-1.11.0.zip\" -d \"$(ainst_root /opt/kafka/plugins/iceberg)\"");
-    AddStage(extpkg,"(cd \"$ice\" && ./gradlew :iceberg-open-api:shadowJar)");
+    AddStage(extpkg,"(cd \"$ice\" && ./gradlew :iceberg-open-api:shadowJar -x generateGitProperties)");
     AddStage(extpkg,"cp \"$ice\"/open-api/build/libs/iceberg-open-api-test-fixtures-runtime-*.jar"
              " \"$(ainst_root /opt/kafka/plugins/iceberg)\"");
     AddStage(extpkg,"find \"$(ainst_root /opt/kafka/plugins)\" -type d -exec chmod 755 {} \\;");

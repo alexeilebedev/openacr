@@ -59,7 +59,7 @@ static u32 Find_Pid(algo_lib::Replscope &R) {
     u32 pid = mdbg::_db.cmdline.pid;
     if (pid==0) {
         tempstr pid_str;
-        pid_str << Trimmed(SysEval(Subst(R, "pidof $tgtfname"), FailokQ(true), 1024));
+        pid_str << Trimmed(SysEval(Subst(R, "pidof $tgtfname"), FailokQ(true)));
         algo::StringIter iter(pid_str);
         if (!TryParseU32(iter, pid)) { // if pid is a valid value
             prlog(Subst(R, "Could not find the pid of the process:$tgtfname to attach!"));
@@ -363,7 +363,7 @@ void mdbg::Main() {
                     args_Alloc(_db.cmdline) = Subst(R,arg);
                 }ind_end;
                 if (ch_N(dbgtarget.buildcmd) && buildtarget == _db.cmdline.target) {
-                    buildtarget = Trimmed(SysEval(dbgtarget.buildcmd, FailokQ(true), 10240));
+                    buildtarget = Trimmed(SysEval(dbgtarget.buildcmd, FailokQ(true)));
                 }
             }
         }ind_end;

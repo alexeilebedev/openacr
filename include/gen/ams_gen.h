@@ -105,6 +105,47 @@ enum ams_FieldIdEnum {    // ams.FieldId.value
     ,ams_FieldId_qty
     ,ams_FieldId_ioc
     ,ams_FieldId_buy
+    ,ams_FieldId_client
+    ,ams_FieldId_gateway
+    ,ams_FieldId_request_id
+    ,ams_FieldId_t1
+    ,ams_FieldId_t2
+    ,ams_FieldId_t3
+    ,ams_FieldId_t4
+    ,ams_FieldId_rtt_ns
+    ,ams_FieldId_svc_ns
+    ,ams_FieldId_offset_ns
+    ,ams_FieldId_opened
+    ,ams_FieldId_stream
+    ,ams_FieldId_data
+    ,ams_FieldId_acct
+    ,ams_FieldId_balance
+    ,ams_FieldId_nonce
+    ,ams_FieldId_amount
+    ,ams_FieldId_ok
+    ,ams_FieldId_seg_from
+    ,ams_FieldId_seg_to
+    ,ams_FieldId_title
+    ,ams_FieldId_poll
+    ,ams_FieldId_close_segno
+    ,ams_FieldId_options
+    ,ams_FieldId_nvote
+    ,ams_FieldId_winner
+    ,ams_FieldId_counts
+    ,ams_FieldId_last_time
+    ,ams_FieldId_reason
+    ,ams_FieldId_segno
+    ,ams_FieldId_pts_ms
+    ,ams_FieldId_dur_ms
+    ,ams_FieldId_chat_pos
+    ,ams_FieldId_uri
+    ,ams_FieldId_seg_end
+    ,ams_FieldId_open_pos
+    ,ams_FieldId_close_pos
+    ,ams_FieldId_close_known
+    ,ams_FieldId_canceled
+    ,ams_FieldId_option
+    ,ams_FieldId_pos
     ,ams_FieldId_write
     ,ams_FieldId_read
     ,ams_FieldId_write_err
@@ -147,7 +188,7 @@ enum ams_FieldIdEnum {    // ams.FieldId.value
     ,ams_FieldId_name
 };
 
-enum { ams_FieldIdEnum_N = 86 };
+enum { ams_FieldIdEnum_N = 127 };
 
 
 // --- ams_ShmemberFlagsEnum
@@ -187,6 +228,20 @@ enum ams_MsgHeader_type_Enum {                                  // ams.MsgHeader
     ,ams_MsgHeader_type_ams_SampMengSymbolrowMsg       = 2013   // Matcher state: one symbol, in the order ids were assigned
     ,ams_MsgHeader_type_ams_SampMengTextMsg            = 2010
     ,ams_MsgHeader_type_ams_SampMengUserrowMsg         = 2014   // Matcher state: one user
+    ,ams_MsgHeader_type_ams_SampPcapjoinMatchMsg       = 2025   // A request both captures saw whole: its four times and what follows from them
+    ,ams_MsgHeader_type_ams_SampPcapjoinMissMsg        = 2026   // A request the captures did not see whole within the window; an unseen time is 0
+    ,ams_MsgHeader_type_ams_SampPcapjoinPairMsg        = 2028   // Joiner snapshot: a request still open; an unseen time is 0
+    ,ams_MsgHeader_type_ams_SampPcapjoinStateMsg       = 2027   // Joiner snapshot: one piece of a capture's lib_snf state
+    ,ams_MsgHeader_type_ams_SampRpcAcctMsg             = 2023   // samp_rpc: one account of the service's snapshot
+    ,ams_MsgHeader_type_ams_SampRpcReplyMsg            = 2022   // samp_rpc: the answer to one call, naming its client and nonce
+    ,ams_MsgHeader_type_ams_SampRpcReqMsg              = 2021   // samp_rpc: a call that moves an amount into an account
+    ,ams_MsgHeader_type_ams_SampVodChatMsg             = 2031   // samp_vod chat line: who typed it and what
+    ,ams_MsgHeader_type_ams_SampVodClipMsg             = 2030   // samp_vod clip: a named range of segments, the payload of a keyed record on the clip stream
+    ,ams_MsgHeader_type_ams_SampVodPollCancelMsg       = 2035   // samp_vod poll cancel: the named poll ends with no result, in the result's place
+    ,ams_MsgHeader_type_ams_SampVodPollOpenMsg         = 2033   // samp_vod poll opening: its name, its options and the segment it closes at
+    ,ams_MsgHeader_type_ams_SampVodPollResultMsg       = 2034   // samp_vod poll result: the votes counted between the poll's open and its close
+    ,ams_MsgHeader_type_ams_SampVodRejectMsg           = 2032   // samp_vod chat line that moderation refused, with the rule that refused it
+    ,ams_MsgHeader_type_ams_SampVodSegMsg              = 2029   // samp_vod segment record: one HLS segment, its media time and file, and the chat position when the ingest sealed it
     ,ams_MsgHeader_type_ams_ShmHbMsg                   = 3      // Shm heartbeat
     ,ams_MsgHeader_type_ams_TerminateMsg               = 352    // Message sent to process to terminate it
     ,ams_MsgHeader_type_ams_UdpFrame                   = 2      // sniffer-captured ethernet frame
@@ -199,7 +254,7 @@ enum ams_MsgHeader_type_Enum {                                  // ams.MsgHeader
     ,ams_MsgHeader_type_ws_ServerStopMsg               = 501
 };
 
-enum { ams_MsgHeader_type_Enum_N = 34 };
+enum { ams_MsgHeader_type_Enum_N = 48 };
 
 
 // --- ams_MsgHeaderMsgsCaseEnum
@@ -229,6 +284,20 @@ enum ams_MsgHeaderMsgsCaseEnum {                                  // ams.MsgHead
     ,ams_MsgHeaderMsgsCase_ams_SampMengSymbolrowMsg       = 2013
     ,ams_MsgHeaderMsgsCase_ams_SampMengTextMsg            = 2010
     ,ams_MsgHeaderMsgsCase_ams_SampMengUserrowMsg         = 2014
+    ,ams_MsgHeaderMsgsCase_ams_SampPcapjoinMatchMsg       = 2025
+    ,ams_MsgHeaderMsgsCase_ams_SampPcapjoinMissMsg        = 2026
+    ,ams_MsgHeaderMsgsCase_ams_SampPcapjoinPairMsg        = 2028
+    ,ams_MsgHeaderMsgsCase_ams_SampPcapjoinStateMsg       = 2027
+    ,ams_MsgHeaderMsgsCase_ams_SampRpcAcctMsg             = 2023
+    ,ams_MsgHeaderMsgsCase_ams_SampRpcReplyMsg            = 2022
+    ,ams_MsgHeaderMsgsCase_ams_SampRpcReqMsg              = 2021
+    ,ams_MsgHeaderMsgsCase_ams_SampVodChatMsg             = 2031
+    ,ams_MsgHeaderMsgsCase_ams_SampVodClipMsg             = 2030
+    ,ams_MsgHeaderMsgsCase_ams_SampVodPollCancelMsg       = 2035
+    ,ams_MsgHeaderMsgsCase_ams_SampVodPollOpenMsg         = 2033
+    ,ams_MsgHeaderMsgsCase_ams_SampVodPollResultMsg       = 2034
+    ,ams_MsgHeaderMsgsCase_ams_SampVodRejectMsg           = 2032
+    ,ams_MsgHeaderMsgsCase_ams_SampVodSegMsg              = 2029
     ,ams_MsgHeaderMsgsCase_ams_ShmHbMsg                   = 3
     ,ams_MsgHeaderMsgsCase_ams_TerminateMsg               = 352
     ,ams_MsgHeaderMsgsCase_ams_UdpFrame                   = 2
@@ -241,7 +310,7 @@ enum ams_MsgHeaderMsgsCaseEnum {                                  // ams.MsgHead
     ,ams_MsgHeaderMsgsCase_ws_ServerStopMsg               = 501
 };
 
-enum { ams_MsgHeaderMsgsCaseEnum_N = 34 };
+enum { ams_MsgHeaderMsgsCaseEnum_N = 48 };
 
 
 // --- ams_ShmFlagsEnum
@@ -296,6 +365,20 @@ namespace ams { struct SampMengRestingMsg; }
 namespace ams { struct SampMengSymbolrowMsg; }
 namespace ams { struct SampMengTextMsg; }
 namespace ams { struct SampMengUserrowMsg; }
+namespace ams { struct SampPcapjoinMatchMsg; }
+namespace ams { struct SampPcapjoinMissMsg; }
+namespace ams { struct SampPcapjoinPairMsg; }
+namespace ams { struct SampPcapjoinStateMsg; }
+namespace ams { struct SampRpcAcctMsg; }
+namespace ams { struct SampRpcReplyMsg; }
+namespace ams { struct SampRpcReqMsg; }
+namespace ams { struct SampVodChatMsg; }
+namespace ams { struct SampVodClipMsg; }
+namespace ams { struct SampVodPollCancelMsg; }
+namespace ams { struct SampVodPollOpenMsg; }
+namespace ams { struct SampVodPollResultMsg; }
+namespace ams { struct SampVodRejectMsg; }
+namespace ams { struct SampVodSegMsg; }
 namespace ams { struct ShmHbMsg; }
 namespace ams { struct TerminateMsg; }
 namespace ams { struct UdpFrame; }
@@ -318,6 +401,15 @@ namespace ams { struct SampAggLateMsg_page_curs; }
 namespace ams { struct SampAggPaneMsg_page_curs; }
 namespace ams { struct SampAggWindowMsg_page_curs; }
 namespace ams { struct SampMengTextMsg_text_curs; }
+namespace ams { struct SampPcapjoinStateMsg_data_curs; }
+namespace ams { struct SampRpcReplyMsg_client_curs; }
+namespace ams { struct SampRpcReqMsg_client_curs; }
+namespace ams { struct SampVodChatMsg_text_curs; }
+namespace ams { struct SampVodClipMsg_title_curs; }
+namespace ams { struct SampVodPollOpenMsg_options_curs; }
+namespace ams { struct SampVodPollResultMsg_counts_curs; }
+namespace ams { struct SampVodRejectMsg_text_curs; }
+namespace ams { struct SampVodSegMsg_uri_curs; }
 namespace ams { struct UdpFrame_payload_curs; }
 namespace ams { struct UprocTextMsg_text_curs; }
 namespace ams { struct Proctype; }
@@ -332,6 +424,11 @@ namespace ams { struct MsgHeader_curs; }
 namespace ams { struct Procspec; }
 namespace ams { struct SampCkptstate; }
 namespace ams { struct SampMengSymbol; }
+namespace ams { struct SampVodRatestate; }
+namespace ams { struct SampVodTallyMark; }
+namespace ams { struct SampVodTallyPoll; }
+namespace ams { struct SampVodTallySeg; }
+namespace ams { struct SampVodTallyVote; }
 namespace ams { struct ShmFlags; }
 namespace ams { struct Shmchannel; }
 namespace ams { struct Shmember; }
@@ -2255,6 +2352,1003 @@ inline void          SampMengUserrowMsg_Init(ams::SampMengUserrowMsg& parent);
 // func:ams.SampMengUserrowMsg..Print
 void                 SampMengUserrowMsg_Print(ams::SampMengUserrowMsg row, algo::cstring& str) __attribute__((nothrow));
 
+// --- ams.SampPcapjoinMatchMsg
+#pragma pack(push,1)
+struct SampPcapjoinMatchMsg { // ams.SampPcapjoinMatchMsg: A request both captures saw whole: its four times and what follows from them
+    u32            type;         //   2025
+    u32            length;       //   ssizeof(parent)
+    ietf::Ipport   client;       // Client end of the connection
+    ietf::Ipport   gateway;      // Gateway end of the connection
+    u64            request_id;   //   0  Request id of the publish
+    u64            t1;           //   0  Publish leaves the client, client clock, ns
+    u64            t2;           //   0  Publish reaches the gateway, gateway clock, ns
+    u64            t3;           //   0  Ack leaves the gateway, gateway clock, ns
+    u64            t4;           //   0  Ack reaches the client, client clock, ns
+    i64            rtt_ns;       //   0  Round trip the client saw: t4 - t1
+    i64            svc_ns;       //   0  Service time the gateway saw: t3 - t2
+    i64            offset_ns;    //   0  Gateway clock less client clock: ((t2 - t1) + (t3 - t4)) / 2
+    // func:ams.SampPcapjoinMatchMsg..Ctor
+    inline               SampPcapjoinMatchMsg() __attribute__((nothrow));
+};
+#pragma pack(pop)
+// Copy fields out of row
+// func:ams.SampPcapjoinMatchMsg.base.CopyOut
+void                 samp_pcapjoin_match_msg_CopyOut(ams::SampPcapjoinMatchMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
+// Check if ams::MsgHeader is an instance of SampPcapjoinMatchMsg by checking the type field
+// If it is, return the pointer of target type.
+// Additionally, check if the length field permits valid instance of SampPcapjoinMatchMsg.
+// If not successful, quietly return NULL.
+// func:ams.SampPcapjoinMatchMsg.base.Castdown
+inline ams::SampPcapjoinMatchMsg* SampPcapjoinMatchMsg_Castdown(ams::MsgHeader &hdr);
+// func:ams.SampPcapjoinMatchMsg.base.Castbase
+inline ams::MsgHeader& Castbase(ams::SampPcapjoinMatchMsg& parent);
+
+// func:ams.SampPcapjoinMatchMsg..ReadFieldMaybe
+bool                 SampPcapjoinMatchMsg_ReadFieldMaybe(ams::SampPcapjoinMatchMsg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of ams::SampPcapjoinMatchMsg from an ascii string.
+// The format of the string is an ssim Tuple
+// func:ams.SampPcapjoinMatchMsg..ReadStrptrMaybe
+bool                 SampPcapjoinMatchMsg_ReadStrptrMaybe(ams::SampPcapjoinMatchMsg &parent, algo::strptr in_str) __attribute__((nothrow));
+// Message length (uses length field)
+// func:ams.SampPcapjoinMatchMsg..GetMsgLength
+inline i32           GetMsgLength(const ams::SampPcapjoinMatchMsg& parent) __attribute__((nothrow));
+// Memptr encompassing the message (uses length field)
+// func:ams.SampPcapjoinMatchMsg..GetMsgMemptr
+inline algo::memptr  GetMsgMemptr(const ams::SampPcapjoinMatchMsg& row) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:ams.SampPcapjoinMatchMsg..Init
+void                 SampPcapjoinMatchMsg_Init(ams::SampPcapjoinMatchMsg& parent);
+// print string representation of ROW to string STR
+// cfmt:ams.SampPcapjoinMatchMsg.String  printfmt:Tuple
+// func:ams.SampPcapjoinMatchMsg..Print
+void                 SampPcapjoinMatchMsg_Print(ams::SampPcapjoinMatchMsg& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- ams.SampPcapjoinMissMsg
+#pragma pack(push,1)
+struct SampPcapjoinMissMsg { // ams.SampPcapjoinMissMsg: A request the captures did not see whole within the window; an unseen time is 0
+    u32            type;         //   2026
+    u32            length;       //   ssizeof(parent)
+    ietf::Ipport   client;       // Client end of the connection
+    ietf::Ipport   gateway;      // Gateway end of the connection
+    u64            request_id;   //   0  Request id of the publish
+    u64            t1;           //   0  Publish leaves the client, client clock, ns
+    u64            t2;           //   0  Publish reaches the gateway, gateway clock, ns
+    u64            t3;           //   0  Ack leaves the gateway, gateway clock, ns
+    u64            t4;           //   0  Ack reaches the client, client clock, ns
+    // func:ams.SampPcapjoinMissMsg..Ctor
+    inline               SampPcapjoinMissMsg() __attribute__((nothrow));
+};
+#pragma pack(pop)
+// Copy fields out of row
+// func:ams.SampPcapjoinMissMsg.base.CopyOut
+void                 samp_pcapjoin_miss_msg_CopyOut(ams::SampPcapjoinMissMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
+// Check if ams::MsgHeader is an instance of SampPcapjoinMissMsg by checking the type field
+// If it is, return the pointer of target type.
+// Additionally, check if the length field permits valid instance of SampPcapjoinMissMsg.
+// If not successful, quietly return NULL.
+// func:ams.SampPcapjoinMissMsg.base.Castdown
+inline ams::SampPcapjoinMissMsg* SampPcapjoinMissMsg_Castdown(ams::MsgHeader &hdr);
+// func:ams.SampPcapjoinMissMsg.base.Castbase
+inline ams::MsgHeader& Castbase(ams::SampPcapjoinMissMsg& parent);
+
+// func:ams.SampPcapjoinMissMsg..ReadFieldMaybe
+bool                 SampPcapjoinMissMsg_ReadFieldMaybe(ams::SampPcapjoinMissMsg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of ams::SampPcapjoinMissMsg from an ascii string.
+// The format of the string is an ssim Tuple
+// func:ams.SampPcapjoinMissMsg..ReadStrptrMaybe
+bool                 SampPcapjoinMissMsg_ReadStrptrMaybe(ams::SampPcapjoinMissMsg &parent, algo::strptr in_str) __attribute__((nothrow));
+// Message length (uses length field)
+// func:ams.SampPcapjoinMissMsg..GetMsgLength
+inline i32           GetMsgLength(const ams::SampPcapjoinMissMsg& parent) __attribute__((nothrow));
+// Memptr encompassing the message (uses length field)
+// func:ams.SampPcapjoinMissMsg..GetMsgMemptr
+inline algo::memptr  GetMsgMemptr(const ams::SampPcapjoinMissMsg& row) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:ams.SampPcapjoinMissMsg..Init
+inline void          SampPcapjoinMissMsg_Init(ams::SampPcapjoinMissMsg& parent);
+// print string representation of ROW to string STR
+// cfmt:ams.SampPcapjoinMissMsg.String  printfmt:Tuple
+// func:ams.SampPcapjoinMissMsg..Print
+void                 SampPcapjoinMissMsg_Print(ams::SampPcapjoinMissMsg& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- ams.SampPcapjoinPairMsg
+#pragma pack(push,1)
+struct SampPcapjoinPairMsg { // ams.SampPcapjoinPairMsg: Joiner snapshot: a request still open; an unseen time is 0
+    u32            type;         //   2028
+    u32            length;       //   ssizeof(parent)
+    ietf::Ipport   client;       // Client end of the connection
+    ietf::Ipport   gateway;      // Gateway end of the connection
+    u64            request_id;   //   0  Request id of the publish
+    u64            opened;       //   0  Capture time of the first sighting, ns
+    u64            t1;           //   0  Publish leaves the client, ns
+    u64            t2;           //   0  Publish reaches the gateway, ns
+    u64            t3;           //   0  Ack leaves the gateway, ns
+    u64            t4;           //   0  Ack reaches the client, ns
+    u64            stream;       //   0  Stream of the publish
+    // func:ams.SampPcapjoinPairMsg..Ctor
+    inline               SampPcapjoinPairMsg() __attribute__((nothrow));
+};
+#pragma pack(pop)
+// Copy fields out of row
+// func:ams.SampPcapjoinPairMsg.base.CopyOut
+void                 samp_pcapjoin_pair_msg_CopyOut(ams::SampPcapjoinPairMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
+// Check if ams::MsgHeader is an instance of SampPcapjoinPairMsg by checking the type field
+// If it is, return the pointer of target type.
+// Additionally, check if the length field permits valid instance of SampPcapjoinPairMsg.
+// If not successful, quietly return NULL.
+// func:ams.SampPcapjoinPairMsg.base.Castdown
+inline ams::SampPcapjoinPairMsg* SampPcapjoinPairMsg_Castdown(ams::MsgHeader &hdr);
+// func:ams.SampPcapjoinPairMsg.base.Castbase
+inline ams::MsgHeader& Castbase(ams::SampPcapjoinPairMsg& parent);
+
+// func:ams.SampPcapjoinPairMsg..ReadFieldMaybe
+bool                 SampPcapjoinPairMsg_ReadFieldMaybe(ams::SampPcapjoinPairMsg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of ams::SampPcapjoinPairMsg from an ascii string.
+// The format of the string is an ssim Tuple
+// func:ams.SampPcapjoinPairMsg..ReadStrptrMaybe
+bool                 SampPcapjoinPairMsg_ReadStrptrMaybe(ams::SampPcapjoinPairMsg &parent, algo::strptr in_str) __attribute__((nothrow));
+// Message length (uses length field)
+// func:ams.SampPcapjoinPairMsg..GetMsgLength
+inline i32           GetMsgLength(const ams::SampPcapjoinPairMsg& parent) __attribute__((nothrow));
+// Memptr encompassing the message (uses length field)
+// func:ams.SampPcapjoinPairMsg..GetMsgMemptr
+inline algo::memptr  GetMsgMemptr(const ams::SampPcapjoinPairMsg& row) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:ams.SampPcapjoinPairMsg..Init
+void                 SampPcapjoinPairMsg_Init(ams::SampPcapjoinPairMsg& parent);
+// print string representation of ROW to string STR
+// cfmt:ams.SampPcapjoinPairMsg.String  printfmt:Tuple
+// func:ams.SampPcapjoinPairMsg..Print
+void                 SampPcapjoinPairMsg_Print(ams::SampPcapjoinPairMsg& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- ams.SampPcapjoinStateMsg
+#pragma pack(push,1)
+struct SampPcapjoinStateMsg { // ams.SampPcapjoinStateMsg: Joiner snapshot: one piece of a capture's lib_snf state
+    u32    type;      //   2027
+    u32    length;    //   ssizeof(parent)
+    bool   gateway;   //   false  The piece is of the gateway's capture, not the client's
+    u64    offset;    //   0  File offset the capture's next block starts at
+    // var-length field ams.SampPcapjoinStateMsg.data starts here. access it with data_Addr
+    // func:ams.SampPcapjoinStateMsg..Ctor
+    inline               SampPcapjoinStateMsg() __attribute__((nothrow));
+};
+#pragma pack(pop)
+// Copy fields out of row
+// func:ams.SampPcapjoinStateMsg.base.CopyOut
+void                 samp_pcapjoin_state_msg_CopyOut(ams::SampPcapjoinStateMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
+// Check if ams::MsgHeader is an instance of SampPcapjoinStateMsg by checking the type field
+// If it is, return the pointer of target type.
+// Additionally, check if the length field permits valid instance of SampPcapjoinStateMsg.
+// If not successful, quietly return NULL.
+// func:ams.SampPcapjoinStateMsg.base.Castdown
+inline ams::SampPcapjoinStateMsg* SampPcapjoinStateMsg_Castdown(ams::MsgHeader &hdr);
+// func:ams.SampPcapjoinStateMsg.base.Castbase
+inline ams::MsgHeader& Castbase(ams::SampPcapjoinStateMsg& parent);
+
+// Access var-length portion as an aryptr. Length is determined from one of the fields.
+// func:ams.SampPcapjoinStateMsg.data.Getary
+algo::aryptr<u8>     data_Getary(ams::SampPcapjoinStateMsg& parent) __attribute__((nothrow));
+// func:ams.SampPcapjoinStateMsg.data.Addr
+u8*                  data_Addr(ams::SampPcapjoinStateMsg& parent);
+// Return number of elements in varlen field
+// func:ams.SampPcapjoinStateMsg.data.N
+inline u32           data_N(const ams::SampPcapjoinStateMsg& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+// Convert string to field. Return success value
+// func:ams.SampPcapjoinStateMsg.data.ReadStrptrMaybe
+bool                 data_ReadStrptrMaybe(ams::SampPcapjoinStateMsg& parent, algo::strptr in_str) __attribute__((nothrow));
+// Convert data to a string.
+// Array is printed as a regular string.
+// func:ams.SampPcapjoinStateMsg.data.Print
+void                 data_Print(ams::SampPcapjoinStateMsg& parent, algo::cstring &rhs) __attribute__((nothrow));
+
+// func:ams.SampPcapjoinStateMsg.data_curs.Reset
+inline void          SampPcapjoinStateMsg_data_curs_Reset(SampPcapjoinStateMsg_data_curs &curs, ams::SampPcapjoinStateMsg &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:ams.SampPcapjoinStateMsg.data_curs.ValidQ
+inline bool          SampPcapjoinStateMsg_data_curs_ValidQ(SampPcapjoinStateMsg_data_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:ams.SampPcapjoinStateMsg.data_curs.Next
+inline void          SampPcapjoinStateMsg_data_curs_Next(SampPcapjoinStateMsg_data_curs &curs) __attribute__((nothrow));
+// item access
+// func:ams.SampPcapjoinStateMsg.data_curs.Access
+inline u8&           SampPcapjoinStateMsg_data_curs_Access(SampPcapjoinStateMsg_data_curs &curs) __attribute__((nothrow));
+// func:ams.SampPcapjoinStateMsg..ReadFieldMaybe
+bool                 SampPcapjoinStateMsg_ReadFieldMaybe(ams::SampPcapjoinStateMsg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Any varlen fields are returned in algo_lib::_db.varlenbuf if set
+// Read fields of ams::SampPcapjoinStateMsg from an ascii string.
+// The format of the string is an ssim Tuple
+// func:ams.SampPcapjoinStateMsg..ReadStrptrMaybe
+bool                 SampPcapjoinStateMsg_ReadStrptrMaybe(ams::SampPcapjoinStateMsg &parent, algo::strptr in_str) __attribute__((nothrow));
+// Message length (uses length field)
+// func:ams.SampPcapjoinStateMsg..GetMsgLength
+inline i32           GetMsgLength(const ams::SampPcapjoinStateMsg& parent) __attribute__((nothrow));
+// Memptr encompassing the message (uses length field)
+// func:ams.SampPcapjoinStateMsg..GetMsgMemptr
+inline algo::memptr  GetMsgMemptr(const ams::SampPcapjoinStateMsg& row) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:ams.SampPcapjoinStateMsg..Init
+inline void          SampPcapjoinStateMsg_Init(ams::SampPcapjoinStateMsg& parent);
+// print string representation of ROW to string STR
+// cfmt:ams.SampPcapjoinStateMsg.String  printfmt:Tuple
+// func:ams.SampPcapjoinStateMsg..Print
+void                 SampPcapjoinStateMsg_Print(ams::SampPcapjoinStateMsg& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- ams.SampRpcAcctMsg
+#pragma pack(push,1)
+struct SampRpcAcctMsg { // ams.SampRpcAcctMsg: samp_rpc: one account of the service's snapshot
+    u32   type;      //   2023
+    u32   length;    //   ssizeof(parent)
+    u32   acct;      //   0  Account
+    i64   balance;   //   0  Its balance
+    // func:ams.SampRpcAcctMsg..Ctor
+    inline               SampRpcAcctMsg() __attribute__((nothrow));
+};
+#pragma pack(pop)
+// Copy fields out of row
+// func:ams.SampRpcAcctMsg.base.CopyOut
+void                 samp_rpc_acct_msg_CopyOut(ams::SampRpcAcctMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
+// Check if ams::MsgHeader is an instance of SampRpcAcctMsg by checking the type field
+// If it is, return the pointer of target type.
+// Additionally, check if the length field permits valid instance of SampRpcAcctMsg.
+// If not successful, quietly return NULL.
+// func:ams.SampRpcAcctMsg.base.Castdown
+inline ams::SampRpcAcctMsg* SampRpcAcctMsg_Castdown(ams::MsgHeader &hdr);
+// func:ams.SampRpcAcctMsg.base.Castbase
+inline ams::MsgHeader& Castbase(ams::SampRpcAcctMsg& parent);
+
+// func:ams.SampRpcAcctMsg..ReadFieldMaybe
+bool                 SampRpcAcctMsg_ReadFieldMaybe(ams::SampRpcAcctMsg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of ams::SampRpcAcctMsg from an ascii string.
+// The format of the string is an ssim Tuple
+// func:ams.SampRpcAcctMsg..ReadStrptrMaybe
+bool                 SampRpcAcctMsg_ReadStrptrMaybe(ams::SampRpcAcctMsg &parent, algo::strptr in_str) __attribute__((nothrow));
+// Message length (uses length field)
+// func:ams.SampRpcAcctMsg..GetMsgLength
+inline i32           GetMsgLength(const ams::SampRpcAcctMsg& parent) __attribute__((nothrow));
+// Memptr encompassing the message (uses length field)
+// func:ams.SampRpcAcctMsg..GetMsgMemptr
+inline algo::memptr  GetMsgMemptr(const ams::SampRpcAcctMsg& row) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:ams.SampRpcAcctMsg..Init
+inline void          SampRpcAcctMsg_Init(ams::SampRpcAcctMsg& parent);
+// print string representation of ROW to string STR
+// cfmt:ams.SampRpcAcctMsg.String  printfmt:Tuple
+// func:ams.SampRpcAcctMsg..Print
+void                 SampRpcAcctMsg_Print(ams::SampRpcAcctMsg& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- ams.SampRpcReplyMsg
+#pragma pack(push,1)
+struct SampRpcReplyMsg { // ams.SampRpcReplyMsg: samp_rpc: the answer to one call, naming its client and nonce
+    u32    type;      //   2022
+    u32    length;    //   ssizeof(parent)
+    u64    nonce;     //   0  Nonce of the call this answers
+    u32    acct;      //   0  Account the call was on
+    i64    amount;    //   0  Amount the call asked to move
+    bool   ok;        //   false  The amount moved; N when it would have left the balance below 0
+    i64    balance;   //   0  Balance of the account after the call
+    // var-length field ams.SampRpcReplyMsg.client starts here. access it with client_Addr
+    // func:ams.SampRpcReplyMsg..Ctor
+    inline               SampRpcReplyMsg() __attribute__((nothrow));
+};
+#pragma pack(pop)
+// Copy fields out of row
+// func:ams.SampRpcReplyMsg.base.CopyOut
+void                 samp_rpc_reply_msg_CopyOut(ams::SampRpcReplyMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
+// Check if ams::MsgHeader is an instance of SampRpcReplyMsg by checking the type field
+// If it is, return the pointer of target type.
+// Additionally, check if the length field permits valid instance of SampRpcReplyMsg.
+// If not successful, quietly return NULL.
+// func:ams.SampRpcReplyMsg.base.Castdown
+inline ams::SampRpcReplyMsg* SampRpcReplyMsg_Castdown(ams::MsgHeader &hdr);
+// func:ams.SampRpcReplyMsg.base.Castbase
+inline ams::MsgHeader& Castbase(ams::SampRpcReplyMsg& parent);
+
+// Access var-length portion as an aryptr. Length is determined from one of the fields.
+// func:ams.SampRpcReplyMsg.client.Getary
+algo::aryptr<char>   client_Getary(ams::SampRpcReplyMsg& parent) __attribute__((nothrow));
+// func:ams.SampRpcReplyMsg.client.Addr
+char*                client_Addr(ams::SampRpcReplyMsg& parent);
+// Return number of elements in varlen field
+// func:ams.SampRpcReplyMsg.client.N
+inline u32           client_N(const ams::SampRpcReplyMsg& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+// Convert string to field. Return success value
+// func:ams.SampRpcReplyMsg.client.ReadStrptrMaybe
+bool                 client_ReadStrptrMaybe(ams::SampRpcReplyMsg& parent, algo::strptr in_str) __attribute__((nothrow));
+// Convert client to a string.
+// Array is printed as a regular string.
+// func:ams.SampRpcReplyMsg.client.Print
+void                 client_Print(ams::SampRpcReplyMsg& parent, algo::cstring &rhs) __attribute__((nothrow));
+
+// func:ams.SampRpcReplyMsg.client_curs.Reset
+inline void          SampRpcReplyMsg_client_curs_Reset(SampRpcReplyMsg_client_curs &curs, ams::SampRpcReplyMsg &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:ams.SampRpcReplyMsg.client_curs.ValidQ
+inline bool          SampRpcReplyMsg_client_curs_ValidQ(SampRpcReplyMsg_client_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:ams.SampRpcReplyMsg.client_curs.Next
+inline void          SampRpcReplyMsg_client_curs_Next(SampRpcReplyMsg_client_curs &curs) __attribute__((nothrow));
+// item access
+// func:ams.SampRpcReplyMsg.client_curs.Access
+inline char&         SampRpcReplyMsg_client_curs_Access(SampRpcReplyMsg_client_curs &curs) __attribute__((nothrow));
+// func:ams.SampRpcReplyMsg..ReadFieldMaybe
+bool                 SampRpcReplyMsg_ReadFieldMaybe(ams::SampRpcReplyMsg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Any varlen fields are returned in algo_lib::_db.varlenbuf if set
+// Read fields of ams::SampRpcReplyMsg from an ascii string.
+// The format of the string is an ssim Tuple
+// func:ams.SampRpcReplyMsg..ReadStrptrMaybe
+bool                 SampRpcReplyMsg_ReadStrptrMaybe(ams::SampRpcReplyMsg &parent, algo::strptr in_str) __attribute__((nothrow));
+// Message length (uses length field)
+// func:ams.SampRpcReplyMsg..GetMsgLength
+inline i32           GetMsgLength(const ams::SampRpcReplyMsg& parent) __attribute__((nothrow));
+// Memptr encompassing the message (uses length field)
+// func:ams.SampRpcReplyMsg..GetMsgMemptr
+inline algo::memptr  GetMsgMemptr(const ams::SampRpcReplyMsg& row) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:ams.SampRpcReplyMsg..Init
+inline void          SampRpcReplyMsg_Init(ams::SampRpcReplyMsg& parent);
+// print string representation of ROW to string STR
+// cfmt:ams.SampRpcReplyMsg.String  printfmt:Tuple
+// func:ams.SampRpcReplyMsg..Print
+void                 SampRpcReplyMsg_Print(ams::SampRpcReplyMsg& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- ams.SampRpcReqMsg
+#pragma pack(push,1)
+struct SampRpcReqMsg { // ams.SampRpcReqMsg: samp_rpc: a call that moves an amount into an account
+    u32   type;     //   2021
+    u32   length;   //   ssizeof(parent)
+    u64   nonce;    //   0  Number the client gave this call; the reply carries it back
+    u32   acct;     //   0  Account the call is on
+    i64   amount;   //   0  Positive deposits, negative withdraws, 0 asks the balance
+    // var-length field ams.SampRpcReqMsg.client starts here. access it with client_Addr
+    // func:ams.SampRpcReqMsg..Ctor
+    inline               SampRpcReqMsg() __attribute__((nothrow));
+};
+#pragma pack(pop)
+// Copy fields out of row
+// func:ams.SampRpcReqMsg.base.CopyOut
+void                 samp_rpc_req_msg_CopyOut(ams::SampRpcReqMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
+// Check if ams::MsgHeader is an instance of SampRpcReqMsg by checking the type field
+// If it is, return the pointer of target type.
+// Additionally, check if the length field permits valid instance of SampRpcReqMsg.
+// If not successful, quietly return NULL.
+// func:ams.SampRpcReqMsg.base.Castdown
+inline ams::SampRpcReqMsg* SampRpcReqMsg_Castdown(ams::MsgHeader &hdr);
+// func:ams.SampRpcReqMsg.base.Castbase
+inline ams::MsgHeader& Castbase(ams::SampRpcReqMsg& parent);
+
+// Access var-length portion as an aryptr. Length is determined from one of the fields.
+// func:ams.SampRpcReqMsg.client.Getary
+algo::aryptr<char>   client_Getary(ams::SampRpcReqMsg& parent) __attribute__((nothrow));
+// func:ams.SampRpcReqMsg.client.Addr
+char*                client_Addr(ams::SampRpcReqMsg& parent);
+// Return number of elements in varlen field
+// func:ams.SampRpcReqMsg.client.N
+inline u32           client_N(const ams::SampRpcReqMsg& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+// Convert string to field. Return success value
+// func:ams.SampRpcReqMsg.client.ReadStrptrMaybe
+bool                 client_ReadStrptrMaybe(ams::SampRpcReqMsg& parent, algo::strptr in_str) __attribute__((nothrow));
+// Convert client to a string.
+// Array is printed as a regular string.
+// func:ams.SampRpcReqMsg.client.Print
+void                 client_Print(ams::SampRpcReqMsg& parent, algo::cstring &rhs) __attribute__((nothrow));
+
+// func:ams.SampRpcReqMsg.client_curs.Reset
+inline void          SampRpcReqMsg_client_curs_Reset(SampRpcReqMsg_client_curs &curs, ams::SampRpcReqMsg &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:ams.SampRpcReqMsg.client_curs.ValidQ
+inline bool          SampRpcReqMsg_client_curs_ValidQ(SampRpcReqMsg_client_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:ams.SampRpcReqMsg.client_curs.Next
+inline void          SampRpcReqMsg_client_curs_Next(SampRpcReqMsg_client_curs &curs) __attribute__((nothrow));
+// item access
+// func:ams.SampRpcReqMsg.client_curs.Access
+inline char&         SampRpcReqMsg_client_curs_Access(SampRpcReqMsg_client_curs &curs) __attribute__((nothrow));
+// func:ams.SampRpcReqMsg..ReadFieldMaybe
+bool                 SampRpcReqMsg_ReadFieldMaybe(ams::SampRpcReqMsg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Any varlen fields are returned in algo_lib::_db.varlenbuf if set
+// Read fields of ams::SampRpcReqMsg from an ascii string.
+// The format of the string is an ssim Tuple
+// func:ams.SampRpcReqMsg..ReadStrptrMaybe
+bool                 SampRpcReqMsg_ReadStrptrMaybe(ams::SampRpcReqMsg &parent, algo::strptr in_str) __attribute__((nothrow));
+// Message length (uses length field)
+// func:ams.SampRpcReqMsg..GetMsgLength
+inline i32           GetMsgLength(const ams::SampRpcReqMsg& parent) __attribute__((nothrow));
+// Memptr encompassing the message (uses length field)
+// func:ams.SampRpcReqMsg..GetMsgMemptr
+inline algo::memptr  GetMsgMemptr(const ams::SampRpcReqMsg& row) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:ams.SampRpcReqMsg..Init
+inline void          SampRpcReqMsg_Init(ams::SampRpcReqMsg& parent);
+// print string representation of ROW to string STR
+// cfmt:ams.SampRpcReqMsg.String  printfmt:Tuple
+// func:ams.SampRpcReqMsg..Print
+void                 SampRpcReqMsg_Print(ams::SampRpcReqMsg& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- ams.SampVodChatMsg
+#pragma pack(push,1)
+struct SampVodChatMsg { // ams.SampVodChatMsg: samp_vod chat line: who typed it and what
+    u32                type;     //   2031
+    u32                length;   //   ssizeof(parent)
+    algo::RnullStr32   user;     // Who typed the line
+    // var-length field ams.SampVodChatMsg.text starts here. access it with text_Addr
+    // func:ams.SampVodChatMsg..Ctor
+    inline               SampVodChatMsg() __attribute__((nothrow));
+};
+#pragma pack(pop)
+// Copy fields out of row
+// func:ams.SampVodChatMsg.base.CopyOut
+void                 samp_vod_chat_msg_CopyOut(ams::SampVodChatMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
+// Check if ams::MsgHeader is an instance of SampVodChatMsg by checking the type field
+// If it is, return the pointer of target type.
+// Additionally, check if the length field permits valid instance of SampVodChatMsg.
+// If not successful, quietly return NULL.
+// func:ams.SampVodChatMsg.base.Castdown
+inline ams::SampVodChatMsg* SampVodChatMsg_Castdown(ams::MsgHeader &hdr);
+// func:ams.SampVodChatMsg.base.Castbase
+inline ams::MsgHeader& Castbase(ams::SampVodChatMsg& parent);
+
+// Access var-length portion as an aryptr. Length is determined from one of the fields.
+// func:ams.SampVodChatMsg.text.Getary
+algo::aryptr<char>   text_Getary(ams::SampVodChatMsg& parent) __attribute__((nothrow));
+// func:ams.SampVodChatMsg.text.Addr
+char*                text_Addr(ams::SampVodChatMsg& parent);
+// Return number of elements in varlen field
+// func:ams.SampVodChatMsg.text.N
+inline u32           text_N(const ams::SampVodChatMsg& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+// Convert string to field. Return success value
+// func:ams.SampVodChatMsg.text.ReadStrptrMaybe
+bool                 text_ReadStrptrMaybe(ams::SampVodChatMsg& parent, algo::strptr in_str) __attribute__((nothrow));
+// Convert text to a string.
+// Array is printed as a regular string.
+// func:ams.SampVodChatMsg.text.Print
+void                 text_Print(ams::SampVodChatMsg& parent, algo::cstring &rhs) __attribute__((nothrow));
+
+// func:ams.SampVodChatMsg.text_curs.Reset
+inline void          SampVodChatMsg_text_curs_Reset(SampVodChatMsg_text_curs &curs, ams::SampVodChatMsg &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:ams.SampVodChatMsg.text_curs.ValidQ
+inline bool          SampVodChatMsg_text_curs_ValidQ(SampVodChatMsg_text_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:ams.SampVodChatMsg.text_curs.Next
+inline void          SampVodChatMsg_text_curs_Next(SampVodChatMsg_text_curs &curs) __attribute__((nothrow));
+// item access
+// func:ams.SampVodChatMsg.text_curs.Access
+inline char&         SampVodChatMsg_text_curs_Access(SampVodChatMsg_text_curs &curs) __attribute__((nothrow));
+// func:ams.SampVodChatMsg..ReadFieldMaybe
+bool                 SampVodChatMsg_ReadFieldMaybe(ams::SampVodChatMsg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Any varlen fields are returned in algo_lib::_db.varlenbuf if set
+// Read fields of ams::SampVodChatMsg from an ascii string.
+// The format of the string is an ssim Tuple
+// func:ams.SampVodChatMsg..ReadStrptrMaybe
+bool                 SampVodChatMsg_ReadStrptrMaybe(ams::SampVodChatMsg &parent, algo::strptr in_str) __attribute__((nothrow));
+// Message length (uses length field)
+// func:ams.SampVodChatMsg..GetMsgLength
+inline i32           GetMsgLength(const ams::SampVodChatMsg& parent) __attribute__((nothrow));
+// Memptr encompassing the message (uses length field)
+// func:ams.SampVodChatMsg..GetMsgMemptr
+inline algo::memptr  GetMsgMemptr(const ams::SampVodChatMsg& row) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:ams.SampVodChatMsg..Init
+inline void          SampVodChatMsg_Init(ams::SampVodChatMsg& parent);
+// print string representation of ROW to string STR
+// cfmt:ams.SampVodChatMsg.String  printfmt:Tuple
+// func:ams.SampVodChatMsg..Print
+void                 SampVodChatMsg_Print(ams::SampVodChatMsg& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- ams.SampVodClipMsg
+#pragma pack(push,1)
+struct SampVodClipMsg { // ams.SampVodClipMsg: samp_vod clip: a named range of segments, the payload of a keyed record on the clip stream
+    u32                type;       //   2030
+    u32                length;     //   ssizeof(parent)
+    u64                seg_from;   //   0  First segment of the clip
+    u64                seg_to;     //   0  Segment after the clip's last one
+    algo::RnullStr32   user;       // Who cut the clip
+    // var-length field ams.SampVodClipMsg.title starts here. access it with title_Addr
+    // func:ams.SampVodClipMsg..Ctor
+    inline               SampVodClipMsg() __attribute__((nothrow));
+};
+#pragma pack(pop)
+// Copy fields out of row
+// func:ams.SampVodClipMsg.base.CopyOut
+void                 samp_vod_clip_msg_CopyOut(ams::SampVodClipMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
+// Check if ams::MsgHeader is an instance of SampVodClipMsg by checking the type field
+// If it is, return the pointer of target type.
+// Additionally, check if the length field permits valid instance of SampVodClipMsg.
+// If not successful, quietly return NULL.
+// func:ams.SampVodClipMsg.base.Castdown
+inline ams::SampVodClipMsg* SampVodClipMsg_Castdown(ams::MsgHeader &hdr);
+// func:ams.SampVodClipMsg.base.Castbase
+inline ams::MsgHeader& Castbase(ams::SampVodClipMsg& parent);
+
+// Access var-length portion as an aryptr. Length is determined from one of the fields.
+// func:ams.SampVodClipMsg.title.Getary
+algo::aryptr<char>   title_Getary(ams::SampVodClipMsg& parent) __attribute__((nothrow));
+// func:ams.SampVodClipMsg.title.Addr
+char*                title_Addr(ams::SampVodClipMsg& parent);
+// Return number of elements in varlen field
+// func:ams.SampVodClipMsg.title.N
+inline u32           title_N(const ams::SampVodClipMsg& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+// Convert string to field. Return success value
+// func:ams.SampVodClipMsg.title.ReadStrptrMaybe
+bool                 title_ReadStrptrMaybe(ams::SampVodClipMsg& parent, algo::strptr in_str) __attribute__((nothrow));
+// Convert title to a string.
+// Array is printed as a regular string.
+// func:ams.SampVodClipMsg.title.Print
+void                 title_Print(ams::SampVodClipMsg& parent, algo::cstring &rhs) __attribute__((nothrow));
+
+// func:ams.SampVodClipMsg.title_curs.Reset
+inline void          SampVodClipMsg_title_curs_Reset(SampVodClipMsg_title_curs &curs, ams::SampVodClipMsg &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:ams.SampVodClipMsg.title_curs.ValidQ
+inline bool          SampVodClipMsg_title_curs_ValidQ(SampVodClipMsg_title_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:ams.SampVodClipMsg.title_curs.Next
+inline void          SampVodClipMsg_title_curs_Next(SampVodClipMsg_title_curs &curs) __attribute__((nothrow));
+// item access
+// func:ams.SampVodClipMsg.title_curs.Access
+inline char&         SampVodClipMsg_title_curs_Access(SampVodClipMsg_title_curs &curs) __attribute__((nothrow));
+// func:ams.SampVodClipMsg..ReadFieldMaybe
+bool                 SampVodClipMsg_ReadFieldMaybe(ams::SampVodClipMsg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Any varlen fields are returned in algo_lib::_db.varlenbuf if set
+// Read fields of ams::SampVodClipMsg from an ascii string.
+// The format of the string is an ssim Tuple
+// func:ams.SampVodClipMsg..ReadStrptrMaybe
+bool                 SampVodClipMsg_ReadStrptrMaybe(ams::SampVodClipMsg &parent, algo::strptr in_str) __attribute__((nothrow));
+// Message length (uses length field)
+// func:ams.SampVodClipMsg..GetMsgLength
+inline i32           GetMsgLength(const ams::SampVodClipMsg& parent) __attribute__((nothrow));
+// Memptr encompassing the message (uses length field)
+// func:ams.SampVodClipMsg..GetMsgMemptr
+inline algo::memptr  GetMsgMemptr(const ams::SampVodClipMsg& row) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:ams.SampVodClipMsg..Init
+inline void          SampVodClipMsg_Init(ams::SampVodClipMsg& parent);
+// print string representation of ROW to string STR
+// cfmt:ams.SampVodClipMsg.String  printfmt:Tuple
+// func:ams.SampVodClipMsg..Print
+void                 SampVodClipMsg_Print(ams::SampVodClipMsg& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- ams.SampVodPollCancelMsg
+#pragma pack(push,1)
+struct SampVodPollCancelMsg { // ams.SampVodPollCancelMsg: samp_vod poll cancel: the named poll ends with no result, in the result's place
+    u32                type;     //   2035
+    u32                length;   //   ssizeof(parent)
+    algo::RnullStr32   poll;     // Poll name
+    // func:ams.SampVodPollCancelMsg..Ctor
+    inline               SampVodPollCancelMsg() __attribute__((nothrow));
+};
+#pragma pack(pop)
+// Copy fields out of row
+// func:ams.SampVodPollCancelMsg.base.CopyOut
+void                 samp_vod_poll_cancel_msg_CopyOut(ams::SampVodPollCancelMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
+// Check if ams::MsgHeader is an instance of SampVodPollCancelMsg by checking the type field
+// If it is, return the pointer of target type.
+// Additionally, check if the length field permits valid instance of SampVodPollCancelMsg.
+// If not successful, quietly return NULL.
+// func:ams.SampVodPollCancelMsg.base.Castdown
+inline ams::SampVodPollCancelMsg* SampVodPollCancelMsg_Castdown(ams::MsgHeader &hdr);
+// func:ams.SampVodPollCancelMsg.base.Castbase
+inline ams::MsgHeader& Castbase(ams::SampVodPollCancelMsg& parent);
+
+// func:ams.SampVodPollCancelMsg..ReadFieldMaybe
+bool                 SampVodPollCancelMsg_ReadFieldMaybe(ams::SampVodPollCancelMsg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of ams::SampVodPollCancelMsg from an ascii string.
+// The format of the string is an ssim Tuple
+// func:ams.SampVodPollCancelMsg..ReadStrptrMaybe
+bool                 SampVodPollCancelMsg_ReadStrptrMaybe(ams::SampVodPollCancelMsg &parent, algo::strptr in_str) __attribute__((nothrow));
+// Message length (uses length field)
+// func:ams.SampVodPollCancelMsg..GetMsgLength
+inline i32           GetMsgLength(const ams::SampVodPollCancelMsg& parent) __attribute__((nothrow));
+// Memptr encompassing the message (uses length field)
+// func:ams.SampVodPollCancelMsg..GetMsgMemptr
+inline algo::memptr  GetMsgMemptr(const ams::SampVodPollCancelMsg& row) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:ams.SampVodPollCancelMsg..Init
+inline void          SampVodPollCancelMsg_Init(ams::SampVodPollCancelMsg& parent);
+// print string representation of ROW to string STR
+// cfmt:ams.SampVodPollCancelMsg.String  printfmt:Tuple
+// func:ams.SampVodPollCancelMsg..Print
+void                 SampVodPollCancelMsg_Print(ams::SampVodPollCancelMsg& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- ams.SampVodPollOpenMsg
+#pragma pack(push,1)
+struct SampVodPollOpenMsg { // ams.SampVodPollOpenMsg: samp_vod poll opening: its name, its options and the segment it closes at
+    u32                type;          //   2033
+    u32                length;        //   ssizeof(parent)
+    algo::RnullStr32   poll;          // Poll name
+    u64                close_segno;   //   0  Segment whose publication closes the poll
+    // var-length field ams.SampVodPollOpenMsg.options starts here. access it with options_Addr
+    // func:ams.SampVodPollOpenMsg..Ctor
+    inline               SampVodPollOpenMsg() __attribute__((nothrow));
+};
+#pragma pack(pop)
+// Copy fields out of row
+// func:ams.SampVodPollOpenMsg.base.CopyOut
+void                 samp_vod_poll_open_msg_CopyOut(ams::SampVodPollOpenMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
+// Check if ams::MsgHeader is an instance of SampVodPollOpenMsg by checking the type field
+// If it is, return the pointer of target type.
+// Additionally, check if the length field permits valid instance of SampVodPollOpenMsg.
+// If not successful, quietly return NULL.
+// func:ams.SampVodPollOpenMsg.base.Castdown
+inline ams::SampVodPollOpenMsg* SampVodPollOpenMsg_Castdown(ams::MsgHeader &hdr);
+// func:ams.SampVodPollOpenMsg.base.Castbase
+inline ams::MsgHeader& Castbase(ams::SampVodPollOpenMsg& parent);
+
+// Access var-length portion as an aryptr. Length is determined from one of the fields.
+// func:ams.SampVodPollOpenMsg.options.Getary
+algo::aryptr<char>   options_Getary(ams::SampVodPollOpenMsg& parent) __attribute__((nothrow));
+// func:ams.SampVodPollOpenMsg.options.Addr
+char*                options_Addr(ams::SampVodPollOpenMsg& parent);
+// Return number of elements in varlen field
+// func:ams.SampVodPollOpenMsg.options.N
+inline u32           options_N(const ams::SampVodPollOpenMsg& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+// Convert string to field. Return success value
+// func:ams.SampVodPollOpenMsg.options.ReadStrptrMaybe
+bool                 options_ReadStrptrMaybe(ams::SampVodPollOpenMsg& parent, algo::strptr in_str) __attribute__((nothrow));
+// Convert options to a string.
+// Array is printed as a regular string.
+// func:ams.SampVodPollOpenMsg.options.Print
+void                 options_Print(ams::SampVodPollOpenMsg& parent, algo::cstring &rhs) __attribute__((nothrow));
+
+// func:ams.SampVodPollOpenMsg.options_curs.Reset
+inline void          SampVodPollOpenMsg_options_curs_Reset(SampVodPollOpenMsg_options_curs &curs, ams::SampVodPollOpenMsg &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:ams.SampVodPollOpenMsg.options_curs.ValidQ
+inline bool          SampVodPollOpenMsg_options_curs_ValidQ(SampVodPollOpenMsg_options_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:ams.SampVodPollOpenMsg.options_curs.Next
+inline void          SampVodPollOpenMsg_options_curs_Next(SampVodPollOpenMsg_options_curs &curs) __attribute__((nothrow));
+// item access
+// func:ams.SampVodPollOpenMsg.options_curs.Access
+inline char&         SampVodPollOpenMsg_options_curs_Access(SampVodPollOpenMsg_options_curs &curs) __attribute__((nothrow));
+// func:ams.SampVodPollOpenMsg..ReadFieldMaybe
+bool                 SampVodPollOpenMsg_ReadFieldMaybe(ams::SampVodPollOpenMsg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Any varlen fields are returned in algo_lib::_db.varlenbuf if set
+// Read fields of ams::SampVodPollOpenMsg from an ascii string.
+// The format of the string is an ssim Tuple
+// func:ams.SampVodPollOpenMsg..ReadStrptrMaybe
+bool                 SampVodPollOpenMsg_ReadStrptrMaybe(ams::SampVodPollOpenMsg &parent, algo::strptr in_str) __attribute__((nothrow));
+// Message length (uses length field)
+// func:ams.SampVodPollOpenMsg..GetMsgLength
+inline i32           GetMsgLength(const ams::SampVodPollOpenMsg& parent) __attribute__((nothrow));
+// Memptr encompassing the message (uses length field)
+// func:ams.SampVodPollOpenMsg..GetMsgMemptr
+inline algo::memptr  GetMsgMemptr(const ams::SampVodPollOpenMsg& row) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:ams.SampVodPollOpenMsg..Init
+inline void          SampVodPollOpenMsg_Init(ams::SampVodPollOpenMsg& parent);
+// print string representation of ROW to string STR
+// cfmt:ams.SampVodPollOpenMsg.String  printfmt:Tuple
+// func:ams.SampVodPollOpenMsg..Print
+void                 SampVodPollOpenMsg_Print(ams::SampVodPollOpenMsg& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- ams.SampVodPollResultMsg
+#pragma pack(push,1)
+struct SampVodPollResultMsg { // ams.SampVodPollResultMsg: samp_vod poll result: the votes counted between the poll's open and its close
+    u32                type;     //   2034
+    u32                length;   //   ssizeof(parent)
+    algo::RnullStr32   poll;     // Poll name
+    u32                nvote;    //   0  Votes counted, one per user
+    algo::RnullStr32   winner;   // Option with the most votes
+    // var-length field ams.SampVodPollResultMsg.counts starts here. access it with counts_Addr
+    // func:ams.SampVodPollResultMsg..Ctor
+    inline               SampVodPollResultMsg() __attribute__((nothrow));
+};
+#pragma pack(pop)
+// Copy fields out of row
+// func:ams.SampVodPollResultMsg.base.CopyOut
+void                 samp_vod_poll_result_msg_CopyOut(ams::SampVodPollResultMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
+// Check if ams::MsgHeader is an instance of SampVodPollResultMsg by checking the type field
+// If it is, return the pointer of target type.
+// Additionally, check if the length field permits valid instance of SampVodPollResultMsg.
+// If not successful, quietly return NULL.
+// func:ams.SampVodPollResultMsg.base.Castdown
+inline ams::SampVodPollResultMsg* SampVodPollResultMsg_Castdown(ams::MsgHeader &hdr);
+// func:ams.SampVodPollResultMsg.base.Castbase
+inline ams::MsgHeader& Castbase(ams::SampVodPollResultMsg& parent);
+
+// Access var-length portion as an aryptr. Length is determined from one of the fields.
+// func:ams.SampVodPollResultMsg.counts.Getary
+algo::aryptr<char>   counts_Getary(ams::SampVodPollResultMsg& parent) __attribute__((nothrow));
+// func:ams.SampVodPollResultMsg.counts.Addr
+char*                counts_Addr(ams::SampVodPollResultMsg& parent);
+// Return number of elements in varlen field
+// func:ams.SampVodPollResultMsg.counts.N
+inline u32           counts_N(const ams::SampVodPollResultMsg& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+// Convert string to field. Return success value
+// func:ams.SampVodPollResultMsg.counts.ReadStrptrMaybe
+bool                 counts_ReadStrptrMaybe(ams::SampVodPollResultMsg& parent, algo::strptr in_str) __attribute__((nothrow));
+// Convert counts to a string.
+// Array is printed as a regular string.
+// func:ams.SampVodPollResultMsg.counts.Print
+void                 counts_Print(ams::SampVodPollResultMsg& parent, algo::cstring &rhs) __attribute__((nothrow));
+
+// func:ams.SampVodPollResultMsg.counts_curs.Reset
+inline void          SampVodPollResultMsg_counts_curs_Reset(SampVodPollResultMsg_counts_curs &curs, ams::SampVodPollResultMsg &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:ams.SampVodPollResultMsg.counts_curs.ValidQ
+inline bool          SampVodPollResultMsg_counts_curs_ValidQ(SampVodPollResultMsg_counts_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:ams.SampVodPollResultMsg.counts_curs.Next
+inline void          SampVodPollResultMsg_counts_curs_Next(SampVodPollResultMsg_counts_curs &curs) __attribute__((nothrow));
+// item access
+// func:ams.SampVodPollResultMsg.counts_curs.Access
+inline char&         SampVodPollResultMsg_counts_curs_Access(SampVodPollResultMsg_counts_curs &curs) __attribute__((nothrow));
+// func:ams.SampVodPollResultMsg..ReadFieldMaybe
+bool                 SampVodPollResultMsg_ReadFieldMaybe(ams::SampVodPollResultMsg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Any varlen fields are returned in algo_lib::_db.varlenbuf if set
+// Read fields of ams::SampVodPollResultMsg from an ascii string.
+// The format of the string is an ssim Tuple
+// func:ams.SampVodPollResultMsg..ReadStrptrMaybe
+bool                 SampVodPollResultMsg_ReadStrptrMaybe(ams::SampVodPollResultMsg &parent, algo::strptr in_str) __attribute__((nothrow));
+// Message length (uses length field)
+// func:ams.SampVodPollResultMsg..GetMsgLength
+inline i32           GetMsgLength(const ams::SampVodPollResultMsg& parent) __attribute__((nothrow));
+// Memptr encompassing the message (uses length field)
+// func:ams.SampVodPollResultMsg..GetMsgMemptr
+inline algo::memptr  GetMsgMemptr(const ams::SampVodPollResultMsg& row) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:ams.SampVodPollResultMsg..Init
+inline void          SampVodPollResultMsg_Init(ams::SampVodPollResultMsg& parent);
+// print string representation of ROW to string STR
+// cfmt:ams.SampVodPollResultMsg.String  printfmt:Tuple
+// func:ams.SampVodPollResultMsg..Print
+void                 SampVodPollResultMsg_Print(ams::SampVodPollResultMsg& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- ams.SampVodRatestate
+struct SampVodRatestate { // ams.SampVodRatestate: samp_vod moderator snapshot record: one user and the time of their last line
+    algo::RnullStr32   user;        // Who wrote the line
+    algo::UnTime       last_time;   // Sequencing time of the user's last line
+    // func:ams.SampVodRatestate..Ctor
+    inline               SampVodRatestate() __attribute__((nothrow));
+};
+// func:ams.SampVodRatestate..ReadFieldMaybe
+bool                 SampVodRatestate_ReadFieldMaybe(ams::SampVodRatestate& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of ams::SampVodRatestate from an ascii string.
+// The format of the string is an ssim Tuple
+// func:ams.SampVodRatestate..ReadStrptrMaybe
+bool                 SampVodRatestate_ReadStrptrMaybe(ams::SampVodRatestate &parent, algo::strptr in_str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:ams.SampVodRatestate.String  printfmt:Tuple
+// func:ams.SampVodRatestate..Print
+void                 SampVodRatestate_Print(ams::SampVodRatestate& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- ams.SampVodRejectMsg
+#pragma pack(push,1)
+struct SampVodRejectMsg { // ams.SampVodRejectMsg: samp_vod chat line that moderation refused, with the rule that refused it
+    u32                type;     //   2032
+    u32                length;   //   ssizeof(parent)
+    algo::RnullStr32   user;     // Who typed the line
+    algo::RnullStr32   reason;   // The rule that refused the line: rate or word
+    // var-length field ams.SampVodRejectMsg.text starts here. access it with text_Addr
+    // func:ams.SampVodRejectMsg..Ctor
+    inline               SampVodRejectMsg() __attribute__((nothrow));
+};
+#pragma pack(pop)
+// Copy fields out of row
+// func:ams.SampVodRejectMsg.base.CopyOut
+void                 samp_vod_reject_msg_CopyOut(ams::SampVodRejectMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
+// Check if ams::MsgHeader is an instance of SampVodRejectMsg by checking the type field
+// If it is, return the pointer of target type.
+// Additionally, check if the length field permits valid instance of SampVodRejectMsg.
+// If not successful, quietly return NULL.
+// func:ams.SampVodRejectMsg.base.Castdown
+inline ams::SampVodRejectMsg* SampVodRejectMsg_Castdown(ams::MsgHeader &hdr);
+// func:ams.SampVodRejectMsg.base.Castbase
+inline ams::MsgHeader& Castbase(ams::SampVodRejectMsg& parent);
+
+// Access var-length portion as an aryptr. Length is determined from one of the fields.
+// func:ams.SampVodRejectMsg.text.Getary
+algo::aryptr<char>   text_Getary(ams::SampVodRejectMsg& parent) __attribute__((nothrow));
+// func:ams.SampVodRejectMsg.text.Addr
+char*                text_Addr(ams::SampVodRejectMsg& parent);
+// Return number of elements in varlen field
+// func:ams.SampVodRejectMsg.text.N
+inline u32           text_N(const ams::SampVodRejectMsg& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+// Convert string to field. Return success value
+// func:ams.SampVodRejectMsg.text.ReadStrptrMaybe
+bool                 text_ReadStrptrMaybe(ams::SampVodRejectMsg& parent, algo::strptr in_str) __attribute__((nothrow));
+// Convert text to a string.
+// Array is printed as a regular string.
+// func:ams.SampVodRejectMsg.text.Print
+void                 text_Print(ams::SampVodRejectMsg& parent, algo::cstring &rhs) __attribute__((nothrow));
+
+// func:ams.SampVodRejectMsg.text_curs.Reset
+inline void          SampVodRejectMsg_text_curs_Reset(SampVodRejectMsg_text_curs &curs, ams::SampVodRejectMsg &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:ams.SampVodRejectMsg.text_curs.ValidQ
+inline bool          SampVodRejectMsg_text_curs_ValidQ(SampVodRejectMsg_text_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:ams.SampVodRejectMsg.text_curs.Next
+inline void          SampVodRejectMsg_text_curs_Next(SampVodRejectMsg_text_curs &curs) __attribute__((nothrow));
+// item access
+// func:ams.SampVodRejectMsg.text_curs.Access
+inline char&         SampVodRejectMsg_text_curs_Access(SampVodRejectMsg_text_curs &curs) __attribute__((nothrow));
+// func:ams.SampVodRejectMsg..ReadFieldMaybe
+bool                 SampVodRejectMsg_ReadFieldMaybe(ams::SampVodRejectMsg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Any varlen fields are returned in algo_lib::_db.varlenbuf if set
+// Read fields of ams::SampVodRejectMsg from an ascii string.
+// The format of the string is an ssim Tuple
+// func:ams.SampVodRejectMsg..ReadStrptrMaybe
+bool                 SampVodRejectMsg_ReadStrptrMaybe(ams::SampVodRejectMsg &parent, algo::strptr in_str) __attribute__((nothrow));
+// Message length (uses length field)
+// func:ams.SampVodRejectMsg..GetMsgLength
+inline i32           GetMsgLength(const ams::SampVodRejectMsg& parent) __attribute__((nothrow));
+// Memptr encompassing the message (uses length field)
+// func:ams.SampVodRejectMsg..GetMsgMemptr
+inline algo::memptr  GetMsgMemptr(const ams::SampVodRejectMsg& row) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:ams.SampVodRejectMsg..Init
+inline void          SampVodRejectMsg_Init(ams::SampVodRejectMsg& parent);
+// print string representation of ROW to string STR
+// cfmt:ams.SampVodRejectMsg.String  printfmt:Tuple
+// func:ams.SampVodRejectMsg..Print
+void                 SampVodRejectMsg_Print(ams::SampVodRejectMsg& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- ams.SampVodSegMsg
+#pragma pack(push,1)
+struct SampVodSegMsg { // ams.SampVodSegMsg: samp_vod segment record: one HLS segment, its media time and file, and the chat position when the ingest sealed it
+    u32   type;       //   2029
+    u32   length;     //   ssizeof(parent)
+    u64   segno;      //   0  Media sequence number of the segment in the HLS playlist
+    u64   pts_ms;     //   0  Media time the segment starts at, in milliseconds
+    u32   dur_ms;     //   0  Segment duration in milliseconds
+    u64   chat_pos;   //   0  Position of the approved chat stream when the ingest sealed this segment
+    // var-length field ams.SampVodSegMsg.uri starts here. access it with uri_Addr
+    // func:ams.SampVodSegMsg..Ctor
+    inline               SampVodSegMsg() __attribute__((nothrow));
+};
+#pragma pack(pop)
+// Copy fields out of row
+// func:ams.SampVodSegMsg.base.CopyOut
+void                 samp_vod_seg_msg_CopyOut(ams::SampVodSegMsg &row, ams::MsgHeader &out) __attribute__((nothrow));
+// Check if ams::MsgHeader is an instance of SampVodSegMsg by checking the type field
+// If it is, return the pointer of target type.
+// Additionally, check if the length field permits valid instance of SampVodSegMsg.
+// If not successful, quietly return NULL.
+// func:ams.SampVodSegMsg.base.Castdown
+inline ams::SampVodSegMsg* SampVodSegMsg_Castdown(ams::MsgHeader &hdr);
+// func:ams.SampVodSegMsg.base.Castbase
+inline ams::MsgHeader& Castbase(ams::SampVodSegMsg& parent);
+
+// Access var-length portion as an aryptr. Length is determined from one of the fields.
+// func:ams.SampVodSegMsg.uri.Getary
+algo::aryptr<char>   uri_Getary(ams::SampVodSegMsg& parent) __attribute__((nothrow));
+// func:ams.SampVodSegMsg.uri.Addr
+char*                uri_Addr(ams::SampVodSegMsg& parent);
+// Return number of elements in varlen field
+// func:ams.SampVodSegMsg.uri.N
+inline u32           uri_N(const ams::SampVodSegMsg& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+// Convert string to field. Return success value
+// func:ams.SampVodSegMsg.uri.ReadStrptrMaybe
+bool                 uri_ReadStrptrMaybe(ams::SampVodSegMsg& parent, algo::strptr in_str) __attribute__((nothrow));
+// Convert uri to a string.
+// Array is printed as a regular string.
+// func:ams.SampVodSegMsg.uri.Print
+void                 uri_Print(ams::SampVodSegMsg& parent, algo::cstring &rhs) __attribute__((nothrow));
+
+// func:ams.SampVodSegMsg.uri_curs.Reset
+inline void          SampVodSegMsg_uri_curs_Reset(SampVodSegMsg_uri_curs &curs, ams::SampVodSegMsg &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:ams.SampVodSegMsg.uri_curs.ValidQ
+inline bool          SampVodSegMsg_uri_curs_ValidQ(SampVodSegMsg_uri_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:ams.SampVodSegMsg.uri_curs.Next
+inline void          SampVodSegMsg_uri_curs_Next(SampVodSegMsg_uri_curs &curs) __attribute__((nothrow));
+// item access
+// func:ams.SampVodSegMsg.uri_curs.Access
+inline char&         SampVodSegMsg_uri_curs_Access(SampVodSegMsg_uri_curs &curs) __attribute__((nothrow));
+// func:ams.SampVodSegMsg..ReadFieldMaybe
+bool                 SampVodSegMsg_ReadFieldMaybe(ams::SampVodSegMsg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Any varlen fields are returned in algo_lib::_db.varlenbuf if set
+// Read fields of ams::SampVodSegMsg from an ascii string.
+// The format of the string is an ssim Tuple
+// func:ams.SampVodSegMsg..ReadStrptrMaybe
+bool                 SampVodSegMsg_ReadStrptrMaybe(ams::SampVodSegMsg &parent, algo::strptr in_str) __attribute__((nothrow));
+// Message length (uses length field)
+// func:ams.SampVodSegMsg..GetMsgLength
+inline i32           GetMsgLength(const ams::SampVodSegMsg& parent) __attribute__((nothrow));
+// Memptr encompassing the message (uses length field)
+// func:ams.SampVodSegMsg..GetMsgMemptr
+inline algo::memptr  GetMsgMemptr(const ams::SampVodSegMsg& row) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:ams.SampVodSegMsg..Init
+inline void          SampVodSegMsg_Init(ams::SampVodSegMsg& parent);
+// print string representation of ROW to string STR
+// cfmt:ams.SampVodSegMsg.String  printfmt:Tuple
+// func:ams.SampVodSegMsg..Print
+void                 SampVodSegMsg_Print(ams::SampVodSegMsg& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- ams.SampVodTallyMark
+struct SampVodTallyMark { // ams.SampVodTallyMark: samp_vod tally snapshot record: how far its segment read reached
+    u64   seg_end;   //   0  One past the highest segment number read
+    // func:ams.SampVodTallyMark..Ctor
+    inline               SampVodTallyMark() __attribute__((nothrow));
+};
+// func:ams.SampVodTallyMark..ReadFieldMaybe
+bool                 SampVodTallyMark_ReadFieldMaybe(ams::SampVodTallyMark& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of ams::SampVodTallyMark from an ascii string.
+// The format of the string is an ssim Tuple
+// func:ams.SampVodTallyMark..ReadStrptrMaybe
+bool                 SampVodTallyMark_ReadStrptrMaybe(ams::SampVodTallyMark &parent, algo::strptr in_str) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:ams.SampVodTallyMark..Init
+inline void          SampVodTallyMark_Init(ams::SampVodTallyMark& parent);
+// print string representation of ROW to string STR
+// cfmt:ams.SampVodTallyMark.String  printfmt:Tuple
+// func:ams.SampVodTallyMark..Print
+void                 SampVodTallyMark_Print(ams::SampVodTallyMark row, algo::cstring& str) __attribute__((nothrow));
+
+// --- ams.SampVodTallyPoll
+struct SampVodTallyPoll { // ams.SampVodTallyPoll: samp_vod tally snapshot record: one open poll
+    algo::RnullStr32   poll;          // Poll name
+    u64                close_segno;   //   0  Segment whose seal closes the poll
+    u64                open_pos;      //   0  Position of the poll's open on chat/approved
+    u64                close_pos;     //   0  The boundary, when close_known
+    bool               close_known;   //   false  close_pos holds the boundary
+    algo::cstring      options;       // Comma-separated vote options
+    bool               canceled;      //   false  A cancel was read for the poll
+    // func:ams.SampVodTallyPoll..Ctor
+    inline               SampVodTallyPoll() __attribute__((nothrow));
+};
+// func:ams.SampVodTallyPoll..ReadFieldMaybe
+bool                 SampVodTallyPoll_ReadFieldMaybe(ams::SampVodTallyPoll& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of ams::SampVodTallyPoll from an ascii string.
+// The format of the string is an ssim Tuple
+// func:ams.SampVodTallyPoll..ReadStrptrMaybe
+bool                 SampVodTallyPoll_ReadStrptrMaybe(ams::SampVodTallyPoll &parent, algo::strptr in_str) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:ams.SampVodTallyPoll..Init
+inline void          SampVodTallyPoll_Init(ams::SampVodTallyPoll& parent);
+// print string representation of ROW to string STR
+// cfmt:ams.SampVodTallyPoll.String  printfmt:Tuple
+// func:ams.SampVodTallyPoll..Print
+void                 SampVodTallyPoll_Print(ams::SampVodTallyPoll& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- ams.SampVodTallySeg
+struct SampVodTallySeg { // ams.SampVodTallySeg: samp_vod tally snapshot record: one segment held for a poll that may name it
+    u64   segno;      //   0  Segment number
+    u64   chat_pos;   //   0  The segment's chat_pos
+    // func:ams.SampVodTallySeg..Ctor
+    inline               SampVodTallySeg() __attribute__((nothrow));
+};
+// func:ams.SampVodTallySeg..ReadFieldMaybe
+bool                 SampVodTallySeg_ReadFieldMaybe(ams::SampVodTallySeg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of ams::SampVodTallySeg from an ascii string.
+// The format of the string is an ssim Tuple
+// func:ams.SampVodTallySeg..ReadStrptrMaybe
+bool                 SampVodTallySeg_ReadStrptrMaybe(ams::SampVodTallySeg &parent, algo::strptr in_str) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:ams.SampVodTallySeg..Init
+inline void          SampVodTallySeg_Init(ams::SampVodTallySeg& parent);
+// print string representation of ROW to string STR
+// cfmt:ams.SampVodTallySeg.String  printfmt:Tuple
+// func:ams.SampVodTallySeg..Print
+void                 SampVodTallySeg_Print(ams::SampVodTallySeg row, algo::cstring& str) __attribute__((nothrow));
+
+// --- ams.SampVodTallyVote
+struct SampVodTallyVote { // ams.SampVodTallyVote: samp_vod tally snapshot record: one vote of an open poll
+    algo::RnullStr32   poll;     // Poll name
+    algo::RnullStr32   user;     // Who voted
+    algo::RnullStr32   option;   // The option voted for
+    u64                pos;      //   0  Position of the vote on chat/approved
+    // func:ams.SampVodTallyVote..Ctor
+    inline               SampVodTallyVote() __attribute__((nothrow));
+};
+// func:ams.SampVodTallyVote..ReadFieldMaybe
+bool                 SampVodTallyVote_ReadFieldMaybe(ams::SampVodTallyVote& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of ams::SampVodTallyVote from an ascii string.
+// The format of the string is an ssim Tuple
+// func:ams.SampVodTallyVote..ReadStrptrMaybe
+bool                 SampVodTallyVote_ReadStrptrMaybe(ams::SampVodTallyVote &parent, algo::strptr in_str) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:ams.SampVodTallyVote..Init
+inline void          SampVodTallyVote_Init(ams::SampVodTallyVote& parent);
+// print string representation of ROW to string STR
+// cfmt:ams.SampVodTallyVote.String  printfmt:Tuple
+// func:ams.SampVodTallyVote..Print
+void                 SampVodTallyVote_Print(ams::SampVodTallyVote& row, algo::cstring& str) __attribute__((nothrow));
+
 // --- ams.ShmFlags
 #pragma pack(push,1)
 struct ShmFlags { // ams.ShmFlags
@@ -2764,6 +3858,87 @@ struct SampMengTextMsg_text_curs {// cursor
 };
 
 
+struct SampPcapjoinStateMsg_data_curs {// cursor
+    typedef u8 ChildType;
+    u8 *ptr;
+    int length;
+    int index;
+    SampPcapjoinStateMsg_data_curs() { ptr=NULL; length=0; index=0; }
+};
+
+
+struct SampRpcReplyMsg_client_curs {// cursor
+    typedef char ChildType;
+    u8 *ptr;
+    int length;
+    int index;
+    SampRpcReplyMsg_client_curs() { ptr=NULL; length=0; index=0; }
+};
+
+
+struct SampRpcReqMsg_client_curs {// cursor
+    typedef char ChildType;
+    u8 *ptr;
+    int length;
+    int index;
+    SampRpcReqMsg_client_curs() { ptr=NULL; length=0; index=0; }
+};
+
+
+struct SampVodChatMsg_text_curs {// cursor
+    typedef char ChildType;
+    u8 *ptr;
+    int length;
+    int index;
+    SampVodChatMsg_text_curs() { ptr=NULL; length=0; index=0; }
+};
+
+
+struct SampVodClipMsg_title_curs {// cursor
+    typedef char ChildType;
+    u8 *ptr;
+    int length;
+    int index;
+    SampVodClipMsg_title_curs() { ptr=NULL; length=0; index=0; }
+};
+
+
+struct SampVodPollOpenMsg_options_curs {// cursor
+    typedef char ChildType;
+    u8 *ptr;
+    int length;
+    int index;
+    SampVodPollOpenMsg_options_curs() { ptr=NULL; length=0; index=0; }
+};
+
+
+struct SampVodPollResultMsg_counts_curs {// cursor
+    typedef char ChildType;
+    u8 *ptr;
+    int length;
+    int index;
+    SampVodPollResultMsg_counts_curs() { ptr=NULL; length=0; index=0; }
+};
+
+
+struct SampVodRejectMsg_text_curs {// cursor
+    typedef char ChildType;
+    u8 *ptr;
+    int length;
+    int index;
+    SampVodRejectMsg_text_curs() { ptr=NULL; length=0; index=0; }
+};
+
+
+struct SampVodSegMsg_uri_curs {// cursor
+    typedef char ChildType;
+    u8 *ptr;
+    int length;
+    int index;
+    SampVodSegMsg_uri_curs() { ptr=NULL; length=0; index=0; }
+};
+
+
 struct UdpFrame_payload_curs {// cursor
     typedef u8 ChildType;
     u8 *ptr;
@@ -2896,6 +4071,25 @@ inline algo::cstring &operator <<(algo::cstring &str, const ams::SampMengResting
 inline algo::cstring &operator <<(algo::cstring &str, const ams::SampMengSymbolrowMsg &row);// cfmt:ams.SampMengSymbolrowMsg.String
 inline algo::cstring &operator <<(algo::cstring &str, const ams::SampMengTextMsg &row);// cfmt:ams.SampMengTextMsg.String
 inline algo::cstring &operator <<(algo::cstring &str, const ams::SampMengUserrowMsg &row);// cfmt:ams.SampMengUserrowMsg.String
+inline algo::cstring &operator <<(algo::cstring &str, const ams::SampPcapjoinMatchMsg &row);// cfmt:ams.SampPcapjoinMatchMsg.String
+inline algo::cstring &operator <<(algo::cstring &str, const ams::SampPcapjoinMissMsg &row);// cfmt:ams.SampPcapjoinMissMsg.String
+inline algo::cstring &operator <<(algo::cstring &str, const ams::SampPcapjoinPairMsg &row);// cfmt:ams.SampPcapjoinPairMsg.String
+inline algo::cstring &operator <<(algo::cstring &str, const ams::SampPcapjoinStateMsg &row);// cfmt:ams.SampPcapjoinStateMsg.String
+inline algo::cstring &operator <<(algo::cstring &str, const ams::SampRpcAcctMsg &row);// cfmt:ams.SampRpcAcctMsg.String
+inline algo::cstring &operator <<(algo::cstring &str, const ams::SampRpcReplyMsg &row);// cfmt:ams.SampRpcReplyMsg.String
+inline algo::cstring &operator <<(algo::cstring &str, const ams::SampRpcReqMsg &row);// cfmt:ams.SampRpcReqMsg.String
+inline algo::cstring &operator <<(algo::cstring &str, const ams::SampVodChatMsg &row);// cfmt:ams.SampVodChatMsg.String
+inline algo::cstring &operator <<(algo::cstring &str, const ams::SampVodClipMsg &row);// cfmt:ams.SampVodClipMsg.String
+inline algo::cstring &operator <<(algo::cstring &str, const ams::SampVodPollCancelMsg &row);// cfmt:ams.SampVodPollCancelMsg.String
+inline algo::cstring &operator <<(algo::cstring &str, const ams::SampVodPollOpenMsg &row);// cfmt:ams.SampVodPollOpenMsg.String
+inline algo::cstring &operator <<(algo::cstring &str, const ams::SampVodPollResultMsg &row);// cfmt:ams.SampVodPollResultMsg.String
+inline algo::cstring &operator <<(algo::cstring &str, const ams::SampVodRatestate &row);// cfmt:ams.SampVodRatestate.String
+inline algo::cstring &operator <<(algo::cstring &str, const ams::SampVodRejectMsg &row);// cfmt:ams.SampVodRejectMsg.String
+inline algo::cstring &operator <<(algo::cstring &str, const ams::SampVodSegMsg &row);// cfmt:ams.SampVodSegMsg.String
+inline algo::cstring &operator <<(algo::cstring &str, const ams::SampVodTallyMark &row);// cfmt:ams.SampVodTallyMark.String
+inline algo::cstring &operator <<(algo::cstring &str, const ams::SampVodTallyPoll &row);// cfmt:ams.SampVodTallyPoll.String
+inline algo::cstring &operator <<(algo::cstring &str, const ams::SampVodTallySeg &row);// cfmt:ams.SampVodTallySeg.String
+inline algo::cstring &operator <<(algo::cstring &str, const ams::SampVodTallyVote &row);// cfmt:ams.SampVodTallyVote.String
 inline algo::cstring &operator <<(algo::cstring &str, const ams::ShmFlags &row);// cfmt:ams.ShmFlags.String
 inline algo::cstring &operator <<(algo::cstring &str, const ams::ShmHbMsg &row);// cfmt:ams.ShmHbMsg.String
 inline algo::cstring &operator <<(algo::cstring &str, const ams::Shmchannel &row);// cfmt:ams.Shmchannel.String

@@ -10,7 +10,6 @@ dmmeta.charset  field:algo_lib.FDb.IdentChar  expr:a-zA-Z0-9_  charrange:Y  calc
 dmmeta.charset  field:algo_lib.FDb.IdentStart  expr:a-zA-Z_  charrange:Y  calc:Y  comment:""
 dmmeta.charset  field:algo_lib.FDb.LowerChar  expr:a-z  charrange:Y  calc:Y  comment:""
 dmmeta.charset  field:algo_lib.FDb.NewLineChar  expr:"\n\r"  charrange:N  calc:Y  comment:""
-dmmeta.charset  field:algo_lib.FDb.RegxSqlSpecial  expr:"$.|?*+(){}^\\[]#"  charrange:N  calc:N  comment:""
 dmmeta.charset  field:algo_lib.FDb.SsimBreakName  expr:"[]{}()\t \r\n:"  charrange:N  calc:N  comment:""
 dmmeta.charset  field:algo_lib.FDb.SsimBreakValue  expr:"[]{}()\t \r\n"  charrange:N  calc:N  comment:""
 dmmeta.charset  field:algo_lib.FDb.SsimQuotesafe  expr:a-zA-Z0-9_;&*^%$@.!:,+/-  charrange:Y  calc:N  comment:""

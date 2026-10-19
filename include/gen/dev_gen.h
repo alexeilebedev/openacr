@@ -22,13 +22,14 @@
 #include "include/gen/algo_gen.h"
 //#pragma endinclude
 // gen:ns_enums
-extern const char *  dev_Arch_arch_;         //           fconst:dev.Arch.arch/
-extern const char *  dev_Arch_arch_amd64;    // amd64     fconst:dev.Arch.arch/amd64
-extern const char *  dev_Arch_arch_arm64;    // arm64     fconst:dev.Arch.arch/arm64
-extern const char *  dev_Arch_arch_i686;     // i686      fconst:dev.Arch.arch/i686
-extern const char *  dev_Arch_arch_i86pc;    // i86pc     fconst:dev.Arch.arch/i86pc
-extern const char *  dev_Arch_arch_x64;      // x64       fconst:dev.Arch.arch/x64
-extern const char *  dev_Arch_arch_x86_64;   // x86_64    fconst:dev.Arch.arch/x86_64
+extern const char *  dev_Arch_arch_;          //            fconst:dev.Arch.arch/
+extern const char *  dev_Arch_arch_aarch64;   // aarch64    fconst:dev.Arch.arch/aarch64
+extern const char *  dev_Arch_arch_amd64;     // amd64      fconst:dev.Arch.arch/amd64
+extern const char *  dev_Arch_arch_arm64;     // arm64      fconst:dev.Arch.arch/arm64
+extern const char *  dev_Arch_arch_i686;      // i686       fconst:dev.Arch.arch/i686
+extern const char *  dev_Arch_arch_i86pc;     // i86pc      fconst:dev.Arch.arch/i86pc
+extern const char *  dev_Arch_arch_x64;       // x64        fconst:dev.Arch.arch/x64
+extern const char *  dev_Arch_arch_x86_64;    // x86_64     fconst:dev.Arch.arch/x86_64
 extern const char *  dev_Builddir_builddir_Darwin_clangPP_coverage_arm64;    // Darwin-clang++.coverage-arm64     fconst:dev.Builddir.builddir/Darwin-clang++.coverage-arm64
 extern const char *  dev_Builddir_builddir_Darwin_clangPP_coverage_x86_64;   // Darwin-clang++.coverage-x86_64    fconst:dev.Builddir.builddir/Darwin-clang++.coverage-x86_64
 extern const char *  dev_Builddir_builddir_Darwin_clangPP_debug_arm64;       // Darwin-clang++.debug-arm64        fconst:dev.Builddir.builddir/Darwin-clang++.debug-arm64
@@ -43,10 +44,14 @@ extern const char *  dev_Builddir_builddir_FreeBSD_clangPP_debug_amd64;      // 
 extern const char *  dev_Builddir_builddir_FreeBSD_clangPP_memcheck_amd64;   // FreeBSD-clang++.memcheck-amd64    fconst:dev.Builddir.builddir/FreeBSD-clang++.memcheck-amd64
 extern const char *  dev_Builddir_builddir_FreeBSD_clangPP_profile_amd64;    // FreeBSD-clang++.profile-amd64     fconst:dev.Builddir.builddir/FreeBSD-clang++.profile-amd64
 extern const char *  dev_Builddir_builddir_FreeBSD_clangPP_release_amd64;    // FreeBSD-clang++.release-amd64     fconst:dev.Builddir.builddir/FreeBSD-clang++.release-amd64
+extern const char *  dev_Builddir_builddir_Linux_gPP_coverage_aarch64;       // Linux-g++.coverage-aarch64        fconst:dev.Builddir.builddir/Linux-g++.coverage-aarch64
 extern const char *  dev_Builddir_builddir_Linux_gPP_coverage_x86_64;        // Linux-g++.coverage-x86_64         fconst:dev.Builddir.builddir/Linux-g++.coverage-x86_64
+extern const char *  dev_Builddir_builddir_Linux_gPP_debug_aarch64;          // Linux-g++.debug-aarch64           fconst:dev.Builddir.builddir/Linux-g++.debug-aarch64
 extern const char *  dev_Builddir_builddir_Linux_gPP_debug_x86_64;           // Linux-g++.debug-x86_64            fconst:dev.Builddir.builddir/Linux-g++.debug-x86_64
 extern const char *  dev_Builddir_builddir_Linux_gPP_memcheck_x86_64;        // Linux-g++.memcheck-x86_64         fconst:dev.Builddir.builddir/Linux-g++.memcheck-x86_64
+extern const char *  dev_Builddir_builddir_Linux_gPP_profile_aarch64;        // Linux-g++.profile-aarch64         fconst:dev.Builddir.builddir/Linux-g++.profile-aarch64
 extern const char *  dev_Builddir_builddir_Linux_gPP_profile_x86_64;         // Linux-g++.profile-x86_64          fconst:dev.Builddir.builddir/Linux-g++.profile-x86_64
+extern const char *  dev_Builddir_builddir_Linux_gPP_release_aarch64;        // Linux-g++.release-aarch64         fconst:dev.Builddir.builddir/Linux-g++.release-aarch64
 extern const char *  dev_Builddir_builddir_Linux_gPP_release_x86_64;         // Linux-g++.release-x86_64          fconst:dev.Builddir.builddir/Linux-g++.release-x86_64
 extern const char *  dev_Cfg_cfg_;           //             fconst:dev.Cfg.cfg/
 extern const char *  dev_Cfg_cfg_coverage;   // coverage    fconst:dev.Cfg.cfg/coverage
@@ -90,6 +95,7 @@ enum dev_FieldIdEnum {    // dev.FieldId.value
     ,dev_FieldId_link
     ,dev_FieldId_libext
     ,dev_FieldId_exeext
+    ,dev_FieldId_soext
     ,dev_FieldId_pchext
     ,dev_FieldId_objext
     ,dev_FieldId_rc
@@ -111,6 +117,9 @@ enum dev_FieldIdEnum {    // dev.FieldId.value
     ,dev_FieldId_cred
     ,dev_FieldId_kind
     ,dev_FieldId_envvar
+    ,dev_FieldId_credperm
+    ,dev_FieldId_name
+    ,dev_FieldId_role
     ,dev_FieldId_dbgtarget
     ,dev_FieldId_args
     ,dev_FieldId_buildcmd
@@ -118,12 +127,13 @@ enum dev_FieldIdEnum {    // dev.FieldId.value
     ,dev_FieldId_word
     ,dev_FieldId_bare
     ,dev_FieldId_bytable
+    ,dev_FieldId_view
     ,dev_FieldId_edaction
     ,dev_FieldId_edacttype
-    ,dev_FieldId_name
     ,dev_FieldId_needamc
     ,dev_FieldId_ours
     ,dev_FieldId_extpkg
+    ,dev_FieldId_extpkgnoarch
     ,dev_FieldId_probe
     ,dev_FieldId_extpkgsrc
     ,dev_FieldId_url
@@ -160,21 +170,24 @@ enum dev_FieldIdEnum {    // dev.FieldId.value
     ,dev_FieldId_opt_type
     ,dev_FieldId_sep
     ,dev_FieldId_opensource
+    ,dev_FieldId_readmefile
     ,dev_FieldId_pkgdep
     ,dev_FieldId_parent
     ,dev_FieldId_soft
     ,dev_FieldId_pkgdeptype
+    ,dev_FieldId_pkgfile
+    ,dev_FieldId_dest
     ,dev_FieldId_pkgkey
     ,dev_FieldId_key
     ,dev_FieldId_up
     ,dev_FieldId_down
     ,dev_FieldId_ref
     ,dev_FieldId_exclude
+    ,dev_FieldId_stub
     ,dev_FieldId_pkgkeyword
     ,dev_FieldId_keyword
     ,dev_FieldId_forbid
     ,dev_FieldId_pkgupstream
-    ,dev_FieldId_dest
     ,dev_FieldId_origin
     ,dev_FieldId_baseref
     ,dev_FieldId_localref
@@ -182,8 +195,10 @@ enum dev_FieldIdEnum {    // dev.FieldId.value
     ,dev_FieldId_transport
     ,dev_FieldId_inl
     ,dev_FieldId_sandbox
+    ,dev_FieldId_tut
     ,dev_FieldId_filter
     ,dev_FieldId_publish
+    ,dev_FieldId_narrow
     ,dev_FieldId_rpm
     ,dev_FieldId_cow
     ,dev_FieldId_sbpath
@@ -198,11 +213,14 @@ enum dev_FieldIdEnum {    // dev.FieldId.value
     ,dev_FieldId_maxtime
     ,dev_FieldId_child
     ,dev_FieldId_syslib
+    ,dev_FieldId_syslibuname
+    ,dev_FieldId_lib
+    ,dev_FieldId_pkgconfig
     ,dev_FieldId_targdep
     ,dev_FieldId_target
     ,dev_FieldId_targsrc
     ,dev_FieldId_targsyslib
-    ,dev_FieldId_prefix
+    ,dev_FieldId_optional
     ,dev_FieldId_cov_min
     ,dev_FieldId_timefmt
     ,dev_FieldId_dirname
@@ -213,10 +231,17 @@ enum dev_FieldIdEnum {    // dev.FieldId.value
     ,dev_FieldId_uncovfunc
     ,dev_FieldId_field
     ,dev_FieldId_upstreamtype
+    ,dev_FieldId_vendorlib
+    ,dev_FieldId_cpe
+    ,dev_FieldId_vulnaccept
+    ,dev_FieldId_until
+    ,dev_FieldId_vulnsev
+    ,dev_FieldId_cvss
+    ,dev_FieldId_fail
     ,dev_FieldId_value
 };
 
-enum { dev_FieldIdEnum_N = 140 };
+enum { dev_FieldIdEnum_N = 160 };
 
 extern const char *  dev_License_license_ARND;           // ARND            fconst:dev.License.license/ARND
 extern const char *  dev_License_license_Apache;         // Apache          fconst:dev.License.license/Apache
@@ -226,6 +251,7 @@ extern const char *  dev_License_license_GPL_FOSS;       // GPL-FOSS        fcon
 extern const char *  dev_License_license_GPL_RLE;        // GPL-RLE         fconst:dev.License.license/GPL-RLE
 extern const char *  dev_License_license_LGPL;           // LGPL            fconst:dev.License.license/LGPL
 extern const char *  dev_License_license_MIT;            // MIT             fconst:dev.License.license/MIT
+extern const char *  dev_License_license_PSF;            // PSF             fconst:dev.License.license/PSF
 extern const char *  dev_License_license_PostgreSQL;     // PostgreSQL      fconst:dev.License.license/PostgreSQL
 extern const char *  dev_License_license_PublicDomain;   // PublicDomain    fconst:dev.License.license/PublicDomain
 extern const char *  dev_License_license_Zlib;           // Zlib            fconst:dev.License.license/Zlib
@@ -257,12 +283,14 @@ namespace dev { // gen:ns_pkeytypedef
     typedef algo::Smallstr50 CopyrightPkey;
     typedef algo::cstring CovlinePkey;
     typedef algo::Smallstr50 CredPkey;
+    typedef algo::Smallstr100 CredpermPkey;
     typedef algo::Smallstr50 DbgtargetPkey;
     typedef algo::Smallstr50 DocpagePkey;
     typedef algo::Smallstr50 EdactionPkey;
     typedef algo::Smallstr50 EdacttypePkey;
     typedef algo::Smallstr50 EnvvarPkey;
     typedef algo::Smallstr50 ExtpkgPkey;
+    typedef algo::Smallstr50 ExtpkgnoarchPkey;
     typedef algo::Smallstr50 ExtpkgsrcPkey;
     typedef algo::Smallstr200 GitfilePkey;
     typedef algo::Smallstr40 GitinfoPkey;
@@ -277,16 +305,19 @@ namespace dev { // gen:ns_pkeytypedef
     typedef algo::Smallstr50 PackagePkey;
     typedef algo::Smallstr100 PkgdepPkey;
     typedef algo::Smallstr50 PkgdeptypePkey;
+    typedef algo::Smallstr200 PkgfilePkey;
     typedef algo::Smallstr150 PkgkeyPkey;
     typedef algo::Smallstr100 PkgkeywordPkey;
     typedef algo::Smallstr100 PkgupstreamPkey;
     typedef algo::Smallstr50 PrototransportPkey;
+    typedef algo::Smallstr200 ReadmefilePkey;
     typedef algo::Smallstr50 RpmPkey;
     typedef algo::Smallstr50 SandboxPkey;
     typedef algo::Smallstr50 SbpathPkey;
     typedef algo::Smallstr200 SrcfilePkey;
     typedef i64 SyscmdPkey;
     typedef algo::Smallstr50 SyslibPkey;
+    typedef algo::Smallstr50 SyslibunamePkey;
     typedef algo::Smallstr50 TargdepPkey;
     typedef algo::Smallstr16 TargetPkey;
     typedef algo::Smallstr100 TargsrcPkey;
@@ -297,6 +328,9 @@ namespace dev { // gen:ns_pkeytypedef
     typedef algo::Smallstr50 UnamePkey;
     typedef algo::cstring UncovfuncPkey;
     typedef algo::Smallstr50 UpstreamtypePkey;
+    typedef algo::Smallstr50 VendorlibPkey;
+    typedef algo::Smallstr50 VulnacceptPkey;
+    typedef algo::Smallstr50 VulnsevPkey;
 } // gen:ns_pkeytypedef
 namespace dev { // gen:ns_tclass_field
 } // gen:ns_tclass_field
@@ -311,12 +345,16 @@ namespace dev { struct Covfile; }
 namespace dev { struct Covline; }
 namespace dev { struct Covtarget; }
 namespace dev { struct Cred; }
+namespace dev { struct Credperm; }
+namespace dev { struct Credrole; }
 namespace dev { struct Dbgtarget; }
 namespace dev { struct Docpage; }
 namespace dev { struct Edaction; }
 namespace dev { struct Edacttype; }
 namespace dev { struct Envvar; }
 namespace dev { struct Extpkg; }
+namespace dev { struct Extpkgnoarch; }
+namespace dev { struct Extpkgprobe; }
 namespace dev { struct Extpkgsrc; }
 namespace dev { struct Extpkgver; }
 namespace dev { struct FieldId; }
@@ -335,6 +373,7 @@ namespace dev { struct OptType; }
 namespace dev { struct Package; }
 namespace dev { struct Pkgdep; }
 namespace dev { struct Pkgdeptype; }
+namespace dev { struct Pkgfile; }
 namespace dev { struct Pkgkey; }
 namespace dev { struct Pkgkeyword; }
 namespace dev { struct Pkgupstream; }
@@ -348,6 +387,7 @@ namespace dev { struct Srcfile; }
 namespace dev { struct Syscmd; }
 namespace dev { struct Syscmddep; }
 namespace dev { struct Syslib; }
+namespace dev { struct Syslibuname; }
 namespace dev { struct Targdep; }
 namespace dev { struct Target; }
 namespace dev { struct Targsrc; }
@@ -360,6 +400,9 @@ namespace dev { struct Uname; }
 namespace dev { struct Uncovfunc; }
 namespace dev { struct Unstablefld; }
 namespace dev { struct Upstreamtype; }
+namespace dev { struct Vendorlib; }
+namespace dev { struct Vulnaccept; }
+namespace dev { struct Vulnsev; }
 namespace dev { // gen:ns_print_struct
 
 // --- dev.Arch
@@ -472,6 +515,7 @@ struct Compiler { // dev.Compiler: One of the known compilers
     algo::Smallstr50   link;       //
     algo::Smallstr50   libext;     //
     algo::Smallstr20   exeext;     //
+    algo::Smallstr20   soext;      // Extension of a shared object
     algo::Smallstr20   pchext;     //
     algo::Smallstr20   objext;     //
     algo::Smallstr50   rc;         //
@@ -479,7 +523,7 @@ struct Compiler { // dev.Compiler: One of the known compilers
     // func:dev.Compiler..Ctor
     inline               Compiler() __attribute__((nothrow));
     // func:dev.Compiler..FieldwiseCtor
-    explicit inline               Compiler(const algo::strptr& in_compiler, const algo::strptr& in_ranlib, const algo::strptr& in_ar, const algo::strptr& in_link, const algo::strptr& in_libext, const algo::strptr& in_exeext, const algo::strptr& in_pchext, const algo::strptr& in_objext, const algo::strptr& in_rc, const algo::Comment& in_comment) __attribute__((nothrow));
+    explicit inline               Compiler(const algo::strptr& in_compiler, const algo::strptr& in_ranlib, const algo::strptr& in_ar, const algo::strptr& in_link, const algo::strptr& in_libext, const algo::strptr& in_exeext, const algo::strptr& in_soext, const algo::strptr& in_pchext, const algo::strptr& in_objext, const algo::strptr& in_rc, const algo::Comment& in_comment) __attribute__((nothrow));
 };
 // func:dev.Compiler..ReadFieldMaybe
 bool                 Compiler_ReadFieldMaybe(dev::Compiler& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
@@ -648,6 +692,55 @@ bool                 Cred_ReadStrptrMaybe(dev::Cred &parent, algo::strptr in_str
 // func:dev.Cred..Print
 void                 Cred_Print(dev::Cred& row, algo::cstring& str) __attribute__((nothrow));
 
+// --- dev.Credperm
+struct Credperm { // dev.Credperm: One permission a credential this tree names must carry, keyed cred/name
+    algo::Smallstr100   credperm;   //
+    algo::Comment       comment;    //
+    // func:dev.Credperm..Ctor
+    inline               Credperm() __attribute__((nothrow));
+};
+// func:dev.Credperm.cred.Get
+algo::strptr         cred_Get(dev::Credperm& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:dev.Credperm.cred.Get2
+algo::strptr         Credperm_cred_Get(algo::strptr arg) __attribute__((nothrow));
+
+// func:dev.Credperm.name.Get
+algo::strptr         name_Get(dev::Credperm& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:dev.Credperm.name.Get2
+algo::strptr         Credperm_name_Get(algo::strptr arg) __attribute__((nothrow));
+
+// func:dev.Credperm..Concat_cred_name
+tempstr              Credperm_Concat_cred_name( const algo::strptr& cred ,const algo::strptr& name );
+// func:dev.Credperm..ReadFieldMaybe
+bool                 Credperm_ReadFieldMaybe(dev::Credperm& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of dev::Credperm from an ascii string.
+// The format of the string is an ssim Tuple
+// func:dev.Credperm..ReadStrptrMaybe
+bool                 Credperm_ReadStrptrMaybe(dev::Credperm &parent, algo::strptr in_str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:dev.Credperm.String  printfmt:Tuple
+// func:dev.Credperm..Print
+void                 Credperm_Print(dev::Credperm& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- dev.Credrole
+struct Credrole { // dev.Credrole: The role a credential this tree names acts in, for a kind that has roles
+    algo::Smallstr50    cred;      //
+    algo::Smallstr100   role;      // The role, under the credential's kind
+    algo::Comment       comment;   //
+    // func:dev.Credrole..Ctor
+    inline               Credrole() __attribute__((nothrow));
+};
+// func:dev.Credrole..ReadFieldMaybe
+bool                 Credrole_ReadFieldMaybe(dev::Credrole& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of dev::Credrole from an ascii string.
+// The format of the string is an ssim Tuple
+// func:dev.Credrole..ReadStrptrMaybe
+bool                 Credrole_ReadStrptrMaybe(dev::Credrole &parent, algo::strptr in_str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:dev.Credrole.String  printfmt:Tuple
+// func:dev.Credrole..Print
+void                 Credrole_Print(dev::Credrole& row, algo::cstring& str) __attribute__((nothrow));
+
 // --- dev.Dbgtarget
 struct Dbgtarget { // dev.Dbgtarget
     algo::Smallstr50   dbgtarget;   //
@@ -674,6 +767,7 @@ struct Docpage { // dev.Docpage: A page doc generates rather than reads from a f
     bool               word;      //   false  A location names this page by this word and a colon
     bool               bare;      //   false  A bare key naming this page addresses it
     bool               bytable;   //   false  A pattern handed to this word is the query over the table its name expands to
+    bool               view;      //   false  The page is a view of the records its word is handed
     algo::Comment      comment;   //
     // func:dev.Docpage..Ctor
     inline               Docpage() __attribute__((nothrow));
@@ -769,7 +863,6 @@ void                 Envvar_Print(dev::Envvar& row, algo::cstring& str) __attrib
 // --- dev.Extpkg
 struct Extpkg { // dev.Extpkg: One piece of third-party software ainst can install
     algo::Smallstr50   extpkg;    //
-    algo::cstring      probe;     //   ""  shell command that exits 0 on a host holding the package; empty means a host cannot be checked for it
     algo::Comment      comment;   //
     // func:dev.Extpkg..Ctor
     inline               Extpkg() __attribute__((nothrow));
@@ -780,13 +873,59 @@ bool                 Extpkg_ReadFieldMaybe(dev::Extpkg& parent, algo::strptr fie
 // The format of the string is an ssim Tuple
 // func:dev.Extpkg..ReadStrptrMaybe
 bool                 Extpkg_ReadStrptrMaybe(dev::Extpkg &parent, algo::strptr in_str) __attribute__((nothrow));
-// Set all fields to initial values.
-// func:dev.Extpkg..Init
-inline void          Extpkg_Init(dev::Extpkg& parent);
 // print string representation of ROW to string STR
 // cfmt:dev.Extpkg.String  printfmt:Tuple
 // func:dev.Extpkg..Print
 void                 Extpkg_Print(dev::Extpkg& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- dev.Extpkgnoarch
+struct Extpkgnoarch { // dev.Extpkgnoarch: a package that is not built for an architecture, and why
+    algo::Smallstr50   extpkgnoarch;   //
+    algo::Comment      comment;        //
+    // func:dev.Extpkgnoarch..Ctor
+    inline               Extpkgnoarch() __attribute__((nothrow));
+};
+// func:dev.Extpkgnoarch.extpkg.Get
+algo::strptr         extpkg_Get(dev::Extpkgnoarch& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:dev.Extpkgnoarch.extpkg.Get2
+algo::strptr         Extpkgnoarch_extpkg_Get(algo::strptr arg) __attribute__((nothrow));
+
+// func:dev.Extpkgnoarch.arch.Get
+algo::strptr         arch_Get(dev::Extpkgnoarch& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:dev.Extpkgnoarch.arch.Get2
+algo::strptr         Extpkgnoarch_arch_Get(algo::strptr arg) __attribute__((nothrow));
+
+// func:dev.Extpkgnoarch..Concat_extpkg_arch
+tempstr              Extpkgnoarch_Concat_extpkg_arch( const algo::strptr& extpkg ,const algo::strptr& arch );
+// func:dev.Extpkgnoarch..ReadFieldMaybe
+bool                 Extpkgnoarch_ReadFieldMaybe(dev::Extpkgnoarch& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of dev::Extpkgnoarch from an ascii string.
+// The format of the string is an ssim Tuple
+// func:dev.Extpkgnoarch..ReadStrptrMaybe
+bool                 Extpkgnoarch_ReadStrptrMaybe(dev::Extpkgnoarch &parent, algo::strptr in_str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:dev.Extpkgnoarch.String  printfmt:Tuple
+// func:dev.Extpkgnoarch..Print
+void                 Extpkgnoarch_Print(dev::Extpkgnoarch& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- dev.Extpkgprobe
+struct Extpkgprobe { // dev.Extpkgprobe: The check that a host holds a package, for the packages that have one
+    algo::Smallstr50   extpkg;    //
+    algo::cstring      probe;     // shell command that exits 0 on a host holding the package; VERSION is its pinned release
+    algo::Comment      comment;   //
+    // func:dev.Extpkgprobe..Ctor
+    inline               Extpkgprobe() __attribute__((nothrow));
+};
+// func:dev.Extpkgprobe..ReadFieldMaybe
+bool                 Extpkgprobe_ReadFieldMaybe(dev::Extpkgprobe& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of dev::Extpkgprobe from an ascii string.
+// The format of the string is an ssim Tuple
+// func:dev.Extpkgprobe..ReadStrptrMaybe
+bool                 Extpkgprobe_ReadStrptrMaybe(dev::Extpkgprobe &parent, algo::strptr in_str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:dev.Extpkgprobe.String  printfmt:Tuple
+// func:dev.Extpkgprobe..Print
+void                 Extpkgprobe_Print(dev::Extpkgprobe& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- dev.Extpkgsrc
 struct Extpkgsrc { // dev.Extpkgsrc: One file a package is built or installed from, identified by its sha256
@@ -807,8 +946,13 @@ algo::strptr         name_Get(dev::Extpkgsrc& parent) __attribute__((__warn_unus
 // func:dev.Extpkgsrc.name.Get2
 algo::strptr         Extpkgsrc_name_Get(algo::strptr arg) __attribute__((nothrow));
 
-// func:dev.Extpkgsrc..Concat_extpkg_name
-tempstr              Extpkgsrc_Concat_extpkg_name( const algo::strptr& extpkg ,const algo::strptr& name );
+// func:dev.Extpkgsrc.arch.Get
+algo::strptr         arch_Get(dev::Extpkgsrc& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:dev.Extpkgsrc.arch.Get2
+algo::strptr         Extpkgsrc_arch_Get(algo::strptr arg) __attribute__((nothrow));
+
+// func:dev.Extpkgsrc..Concat_extpkg_name_arch
+tempstr              Extpkgsrc_Concat_extpkg_name_arch( const algo::strptr& extpkg ,const algo::strptr& name ,const algo::strptr& arch );
 // func:dev.Extpkgsrc..ReadFieldMaybe
 bool                 Extpkgsrc_ReadFieldMaybe(dev::Extpkgsrc& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::Extpkgsrc from an ascii string.
@@ -1164,13 +1308,14 @@ void                 OptType_Print(dev::OptType& row, algo::cstring& str) __attr
 
 // --- dev.Package
 struct Package { // dev.Package: OpenACR package
-    algo::Smallstr50   package;      // Package name
-    bool               opensource;   //   false  Published openly; apm refuses content under a proprietary license
-    algo::Comment      comment;      //
+    algo::Smallstr50    package;      // Package name
+    bool                opensource;   //   false  Published openly; apm refuses content under a proprietary license
+    algo::Smallstr200   readmefile;   //   "txt/README.md"  Front page of the package: its projection's txt/README.md
+    algo::Comment       comment;      //
     // func:dev.Package..Ctor
     inline               Package() __attribute__((nothrow));
     // func:dev.Package..FieldwiseCtor
-    explicit inline               Package(const algo::strptr& in_package, bool in_opensource, const algo::Comment& in_comment) __attribute__((nothrow));
+    explicit inline               Package(const algo::strptr& in_package, bool in_opensource, const algo::strptr& in_readmefile, const algo::Comment& in_comment) __attribute__((nothrow));
 };
 // func:dev.Package..ReadFieldMaybe
 bool                 Package_ReadFieldMaybe(dev::Package& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
@@ -1241,6 +1386,37 @@ bool                 Pkgdeptype_ReadStrptrMaybe(dev::Pkgdeptype &parent, algo::s
 // func:dev.Pkgdeptype..Print
 void                 Pkgdeptype_Print(dev::Pkgdeptype& row, algo::cstring& str) __attribute__((nothrow));
 
+// --- dev.Pkgfile
+struct Pkgfile { // dev.Pkgfile: A file of this tree that a package ships at another path of its projection
+    algo::Smallstr200   pkgfile;   // Package and the path of the file in its projection
+    algo::Smallstr200   gitfile;   // File of this tree that the projection carries at dest
+    algo::Comment       comment;   //
+    // func:dev.Pkgfile..Ctor
+    inline               Pkgfile() __attribute__((nothrow));
+};
+// func:dev.Pkgfile.package.Get
+algo::strptr         package_Get(dev::Pkgfile& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:dev.Pkgfile.package.Get2
+algo::strptr         Pkgfile_package_Get(algo::strptr arg) __attribute__((nothrow));
+
+// func:dev.Pkgfile.dest.Get
+algo::strptr         dest_Get(dev::Pkgfile& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:dev.Pkgfile.dest.Get2
+algo::strptr         Pkgfile_dest_Get(algo::strptr arg) __attribute__((nothrow));
+
+// func:dev.Pkgfile..Concat_package_dest
+tempstr              Pkgfile_Concat_package_dest( const algo::strptr& package ,const algo::strptr& dest );
+// func:dev.Pkgfile..ReadFieldMaybe
+bool                 Pkgfile_ReadFieldMaybe(dev::Pkgfile& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of dev::Pkgfile from an ascii string.
+// The format of the string is an ssim Tuple
+// func:dev.Pkgfile..ReadStrptrMaybe
+bool                 Pkgfile_ReadStrptrMaybe(dev::Pkgfile &parent, algo::strptr in_str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:dev.Pkgfile.String  printfmt:Tuple
+// func:dev.Pkgfile..Print
+void                 Pkgfile_Print(dev::Pkgfile& row, algo::cstring& str) __attribute__((nothrow));
+
 // --- dev.Pkgkey
 struct Pkgkey { // dev.Pkgkey: Keys belonging to the OpenACR package
     algo::Smallstr150   pkgkey;    //
@@ -1248,11 +1424,12 @@ struct Pkgkey { // dev.Pkgkey: Keys belonging to the OpenACR package
     bool                down;      //   false  perform transitive closure downwards (via the leftmost parent link)
     bool                ref;       //   false  select what the selection references; a referenced record comes with what it owns
     bool                exclude;   //   false  exclude selected records from the package
+    bool                stub;      //   false  carry the matched files as stubs: title and one sentence
     algo::Comment       comment;   //
     // func:dev.Pkgkey..Ctor
     inline               Pkgkey() __attribute__((nothrow));
     // func:dev.Pkgkey..FieldwiseCtor
-    explicit inline               Pkgkey(const algo::strptr& in_pkgkey, bool in_up, bool in_down, bool in_ref, bool in_exclude, const algo::Comment& in_comment) __attribute__((nothrow));
+    explicit inline               Pkgkey(const algo::strptr& in_pkgkey, bool in_up, bool in_down, bool in_ref, bool in_exclude, bool in_stub, const algo::Comment& in_comment) __attribute__((nothrow));
 };
 // func:dev.Pkgkey.package.Get
 algo::strptr         package_Get(dev::Pkgkey& parent) __attribute__((__warn_unused_result__, nothrow));
@@ -1383,13 +1560,15 @@ struct Readmefile { // dev.Readmefile: File containing documentation
     algo::Smallstr200   gitfile;   //
     bool                inl;       //   false
     bool                sandbox;   //   false
+    bool                tut;       //   false  A tutorial: abt_md evaluates its commands only under -tut
     algo::Smallstr100   filter;    //
     bool                publish;   //   false  Carry this page into the generated documentation list
+    bool                narrow;    //   false  Every table row fits 120 characters; abt_md -check refuses a wider one
     algo::Comment       comment;   //
     // func:dev.Readmefile..Ctor
     inline               Readmefile() __attribute__((nothrow));
     // func:dev.Readmefile..FieldwiseCtor
-    explicit inline               Readmefile(const algo::strptr& in_gitfile, bool in_inl, bool in_sandbox, const algo::strptr& in_filter, bool in_publish, const algo::Comment& in_comment) __attribute__((nothrow));
+    explicit inline               Readmefile(const algo::strptr& in_gitfile, bool in_inl, bool in_sandbox, bool in_tut, const algo::strptr& in_filter, bool in_publish, bool in_narrow, const algo::Comment& in_comment) __attribute__((nothrow));
 };
 // func:dev.Readmefile..ReadFieldMaybe
 bool                 Readmefile_ReadFieldMaybe(dev::Readmefile& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
@@ -1587,6 +1766,38 @@ inline void          Syslib_Init(dev::Syslib& parent);
 // func:dev.Syslib..Print
 void                 Syslib_Print(dev::Syslib& row, algo::cstring& str) __attribute__((nothrow));
 
+// --- dev.Syslibuname
+struct Syslibuname { // dev.Syslibuname: A system library or kernel facility that a platform provides
+    algo::Smallstr50   syslibuname;   //
+    algo::Smallstr50   lib;           // Name the linker takes as -l<lib>; empty when the C library holds it
+    algo::Smallstr50   pkgconfig;     // pkg-config package whose --cflags compile the targets that need the library
+    algo::Comment      comment;       //
+    // func:dev.Syslibuname..Ctor
+    inline               Syslibuname() __attribute__((nothrow));
+};
+// func:dev.Syslibuname.syslib.Get
+algo::strptr         syslib_Get(dev::Syslibuname& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:dev.Syslibuname.syslib.Get2
+algo::strptr         Syslibuname_syslib_Get(algo::strptr arg) __attribute__((nothrow));
+
+// func:dev.Syslibuname.uname.Get
+algo::strptr         uname_Get(dev::Syslibuname& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:dev.Syslibuname.uname.Get2
+algo::strptr         Syslibuname_uname_Get(algo::strptr arg) __attribute__((nothrow));
+
+// func:dev.Syslibuname..Concat_syslib_uname
+tempstr              Syslibuname_Concat_syslib_uname( const algo::strptr& syslib ,const algo::strptr& uname );
+// func:dev.Syslibuname..ReadFieldMaybe
+bool                 Syslibuname_ReadFieldMaybe(dev::Syslibuname& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of dev::Syslibuname from an ascii string.
+// The format of the string is an ssim Tuple
+// func:dev.Syslibuname..ReadStrptrMaybe
+bool                 Syslibuname_ReadStrptrMaybe(dev::Syslibuname &parent, algo::strptr in_str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:dev.Syslibuname.String  printfmt:Tuple
+// func:dev.Syslibuname..Print
+void                 Syslibuname_Print(dev::Syslibuname& row, algo::cstring& str) __attribute__((nothrow));
+
 // --- dev.Targdep
 struct Targdep { // dev.Targdep: Dependency between targets
     algo::Smallstr50   targdep;   // Primary key - target.parent
@@ -1678,6 +1889,7 @@ void                 Targsrc_Print(dev::Targsrc& row, algo::cstring& str) __attr
 // --- dev.Targsyslib
 struct Targsyslib { // dev.Targsyslib: Use of system library by target
     algo::Smallstr50   targsyslib;   //
+    bool               optional;     //   false  Link the library where the platform provides it; build the target without it elsewhere
     algo::Comment      comment;      //
     // func:dev.Targsyslib..Ctor
     inline               Targsyslib() __attribute__((nothrow));
@@ -1692,24 +1904,17 @@ algo::strptr         syslib_Get(dev::Targsyslib& parent) __attribute__((__warn_u
 // func:dev.Targsyslib.syslib.Get2
 algo::strptr         Targsyslib_syslib_Get(algo::strptr arg) __attribute__((nothrow));
 
-// func:dev.Targsyslib.uname.Get
-algo::strptr         uname_Get(dev::Targsyslib& parent) __attribute__((__warn_unused_result__, nothrow));
-// func:dev.Targsyslib.uname.Get2
-algo::strptr         Targsyslib_uname_Get(algo::strptr arg) __attribute__((nothrow));
-
-// func:dev.Targsyslib.prefix.Get
-algo::strptr         prefix_Get(dev::Targsyslib& parent) __attribute__((__warn_unused_result__, nothrow));
-// func:dev.Targsyslib.prefix.Get2
-algo::strptr         Targsyslib_prefix_Get(algo::strptr arg) __attribute__((nothrow));
-
-// func:dev.Targsyslib..Concat_uname_target_syslib
-tempstr              Targsyslib_Concat_uname_target_syslib( const algo::strptr& uname ,const algo::strptr& target ,const algo::strptr& syslib );
+// func:dev.Targsyslib..Concat_target_syslib
+tempstr              Targsyslib_Concat_target_syslib( const algo::strptr& target ,const algo::strptr& syslib );
 // func:dev.Targsyslib..ReadFieldMaybe
 bool                 Targsyslib_ReadFieldMaybe(dev::Targsyslib& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::Targsyslib from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dev.Targsyslib..ReadStrptrMaybe
 bool                 Targsyslib_ReadStrptrMaybe(dev::Targsyslib &parent, algo::strptr in_str) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:dev.Targsyslib..Init
+inline void          Targsyslib_Init(dev::Targsyslib& parent);
 // print string representation of ROW to string STR
 // cfmt:dev.Targsyslib.String  printfmt:Tuple
 // func:dev.Targsyslib..Print
@@ -1917,6 +2122,69 @@ bool                 Upstreamtype_ReadStrptrMaybe(dev::Upstreamtype &parent, alg
 // cfmt:dev.Upstreamtype.String  printfmt:Tuple
 // func:dev.Upstreamtype..Print
 void                 Upstreamtype_Print(dev::Upstreamtype& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- dev.Vendorlib
+struct Vendorlib { // dev.Vendorlib: Third-party C/C++ library vendored into the tree, for the advisory check
+    algo::Smallstr50    vendorlib;   // Library name, as in sqlite
+    algo::Smallstr200   gitfile;     // A file of the library, so the row goes stale with the tree
+    algo::Smallstr50    version;     // Upstream release, as the advisory database spells it
+    algo::Smallstr100   cpe;         // CPE 2.3 name up to the product, such as cpe:2.3:a:sqlite:sqlite
+    algo::Comment       comment;     //
+    // func:dev.Vendorlib..Ctor
+    inline               Vendorlib() __attribute__((nothrow));
+};
+// func:dev.Vendorlib..ReadFieldMaybe
+bool                 Vendorlib_ReadFieldMaybe(dev::Vendorlib& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of dev::Vendorlib from an ascii string.
+// The format of the string is an ssim Tuple
+// func:dev.Vendorlib..ReadStrptrMaybe
+bool                 Vendorlib_ReadStrptrMaybe(dev::Vendorlib &parent, algo::strptr in_str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:dev.Vendorlib.String  printfmt:Tuple
+// func:dev.Vendorlib..Print
+void                 Vendorlib_Print(dev::Vendorlib& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- dev.Vulnaccept
+struct Vulnaccept { // dev.Vulnaccept: Advisory accepted after review; the comment carries the rationale
+    algo::Smallstr50   vulnaccept;   // Advisory id, such as GHSA-w5vr-8v7q-w6rv or CVE-2026-11822
+    algo::UnTime       until;        // When the acceptance lapses and the advisory fails the scan again
+    algo::Comment      comment;      //
+    // func:dev.Vulnaccept..Ctor
+    inline               Vulnaccept() __attribute__((nothrow));
+};
+// func:dev.Vulnaccept..ReadFieldMaybe
+bool                 Vulnaccept_ReadFieldMaybe(dev::Vulnaccept& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of dev::Vulnaccept from an ascii string.
+// The format of the string is an ssim Tuple
+// func:dev.Vulnaccept..ReadStrptrMaybe
+bool                 Vulnaccept_ReadStrptrMaybe(dev::Vulnaccept &parent, algo::strptr in_str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:dev.Vulnaccept.String  printfmt:Tuple
+// func:dev.Vulnaccept..Print
+void                 Vulnaccept_Print(dev::Vulnaccept& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- dev.Vulnsev
+struct Vulnsev { // dev.Vulnsev: Severity band of an advisory by CVSS score, and whether it fails the depscan job
+    algo::Smallstr50   vulnsev;   // Band name, as in high
+    algo::U32Dec2      cvss;      // Lowest CVSS base score in the band
+    bool               fail;      //   false  An advisory in the band fails the scan unless dev.vulnaccept accepts it
+    algo::Comment      comment;   //
+    // func:dev.Vulnsev..Ctor
+    inline               Vulnsev() __attribute__((nothrow));
+};
+// func:dev.Vulnsev..ReadFieldMaybe
+bool                 Vulnsev_ReadFieldMaybe(dev::Vulnsev& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of dev::Vulnsev from an ascii string.
+// The format of the string is an ssim Tuple
+// func:dev.Vulnsev..ReadStrptrMaybe
+bool                 Vulnsev_ReadStrptrMaybe(dev::Vulnsev &parent, algo::strptr in_str) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:dev.Vulnsev..Init
+inline void          Vulnsev_Init(dev::Vulnsev& parent);
+// print string representation of ROW to string STR
+// cfmt:dev.Vulnsev.String  printfmt:Tuple
+// func:dev.Vulnsev..Print
+void                 Vulnsev_Print(dev::Vulnsev& row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace dev { // gen:ns_func
 } // gen:ns_func
@@ -1928,12 +2196,16 @@ inline algo::cstring &operator <<(algo::cstring &str, const dev::Covfile &row);/
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Covline &row);// cfmt:dev.Covline.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Covtarget &row);// cfmt:dev.Covtarget.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Cred &row);// cfmt:dev.Cred.String
+inline algo::cstring &operator <<(algo::cstring &str, const dev::Credperm &row);// cfmt:dev.Credperm.String
+inline algo::cstring &operator <<(algo::cstring &str, const dev::Credrole &row);// cfmt:dev.Credrole.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Dbgtarget &row);// cfmt:dev.Dbgtarget.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Docpage &row);// cfmt:dev.Docpage.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Edaction &row);// cfmt:dev.Edaction.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Edacttype &row);// cfmt:dev.Edacttype.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Envvar &row);// cfmt:dev.Envvar.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Extpkg &row);// cfmt:dev.Extpkg.String
+inline algo::cstring &operator <<(algo::cstring &str, const dev::Extpkgnoarch &row);// cfmt:dev.Extpkgnoarch.String
+inline algo::cstring &operator <<(algo::cstring &str, const dev::Extpkgprobe &row);// cfmt:dev.Extpkgprobe.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Extpkgsrc &row);// cfmt:dev.Extpkgsrc.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Extpkgver &row);// cfmt:dev.Extpkgver.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::FieldId &row);// cfmt:dev.FieldId.String
@@ -1950,6 +2222,7 @@ inline algo::cstring &operator <<(algo::cstring &str, const dev::Noindent &row);
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Package &row);// cfmt:dev.Package.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Pkgdep &row);// cfmt:dev.Pkgdep.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Pkgdeptype &row);// cfmt:dev.Pkgdeptype.String
+inline algo::cstring &operator <<(algo::cstring &str, const dev::Pkgfile &row);// cfmt:dev.Pkgfile.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Pkgkey &row);// cfmt:dev.Pkgkey.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Pkgkeyword &row);// cfmt:dev.Pkgkeyword.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Pkgupstream &row);// cfmt:dev.Pkgupstream.String
@@ -1963,6 +2236,7 @@ inline algo::cstring &operator <<(algo::cstring &str, const dev::Srcfile &row);/
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Syscmd &row);// cfmt:dev.Syscmd.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Syscmddep &row);// cfmt:dev.Syscmddep.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Syslib &row);// cfmt:dev.Syslib.String
+inline algo::cstring &operator <<(algo::cstring &str, const dev::Syslibuname &row);// cfmt:dev.Syslibuname.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Targdep &row);// cfmt:dev.Targdep.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Target &row);// cfmt:dev.Target.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Targsrc &row);// cfmt:dev.Targsrc.String
@@ -1975,4 +2249,7 @@ inline algo::cstring &operator <<(algo::cstring &str, const dev::Uname &row);// 
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Uncovfunc &row);// cfmt:dev.Uncovfunc.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Unstablefld &row);// cfmt:dev.Unstablefld.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Upstreamtype &row);// cfmt:dev.Upstreamtype.String
+inline algo::cstring &operator <<(algo::cstring &str, const dev::Vendorlib &row);// cfmt:dev.Vendorlib.String
+inline algo::cstring &operator <<(algo::cstring &str, const dev::Vulnaccept &row);// cfmt:dev.Vulnaccept.String
+inline algo::cstring &operator <<(algo::cstring &str, const dev::Vulnsev &row);// cfmt:dev.Vulnsev.String
 }

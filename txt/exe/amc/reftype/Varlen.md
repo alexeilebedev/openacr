@@ -66,15 +66,15 @@ Optional:
 
 Source: `cpp/amc/varlen.cpp`.
 
-| Tfunc                  | Generated function                              | Effect |
-|------------------------|-------------------------------------------------|--------|
-| `Varlen.Init`          | (folded)                                        | Set `<name>_end = 0` if applicable. |
-| `Varlen.Addr`          | `T* <name>_Addr(P&)`                            | Return `(u8*)&parent + sizeof(parent) [+ prev_end]`. |
-| `Varlen.Getary`        | `aryptr<T> <name>_Getary(P&)`                   | Span (`Addr`, `N`). |
-| `Varlen.N`             | `u32 <name>_N(const P&)`                        | Element count.  Computed from `lenfld` (with adjustments for `_end` of any preceding Varlens) or user-extern when no `lenfld`. |
-| `Varlen.Print`         | `void <name>_Print(P&, cstring& out)`           | For `char`/`u8`: print as string. |
-| `Varlen.ReadStrptrMaybe`| `bool <name>_ReadStrptrMaybe(P&, strptr in)`   | Append from a span (typically used during ssim load). |
-| `Varlen.curs`          | `<P>_<name>_curs` + accessors                   | Forward cursor over the trailing array. |
+| Tfunc                    | Generated function                           | Effect |
+| ------------------------ | -------------------------------------------- | ------ |
+| `Varlen.Init`            | (folded)                                     | Set `<name>_end = 0` if applicable. |
+| `Varlen.Addr`            | `T* <name>_Addr(P&)`                         | Return `(u8*)&parent + sizeof(parent) [+ prev_end]`. |
+| `Varlen.Getary`          | `aryptr<T> <name>_Getary(P&)`                | Span (`Addr`, `N`). |
+| `Varlen.N`               | `u32 <name>_N(const P&)`                     | Element count.  Computed from `lenfld` (with adjustments for `_end` of any preceding Varlens) or user-extern when no `lenfld`. |
+| `Varlen.Print`           | `void <name>_Print(P&, cstring& out)`        | For `char`/`u8`: print as string. |
+| `Varlen.ReadStrptrMaybe` | `bool <name>_ReadStrptrMaybe(P&, strptr in)` | Append from a span (typically used during ssim load). |
+| `Varlen.curs`            | `<P>_<name>_curs` + accessors                | Forward cursor over the trailing array. |
 
 Allocation of the parent + trailing bytes is done via the
 [Pool](/txt/exe/amc/reftype.md) family's `AllocVarlen` /

@@ -35,7 +35,9 @@ namespace wt { // update-hdr
     //
 
     // Select sandboxes by the name regex and perform the requested actions on
-    // each; -list prints the surviving state afterwards
+    // each; -list prints the surviving state afterwards.  Under -hook the
+    // selection and the action come from Claude Code's hook JSON, and a create
+    // ends by printing the worktree's path for Claude Code to enter.
     //     (user-implemented function, prototype is in amc-generated header)
     // void Main(); // dmmeta.main:wt
 }

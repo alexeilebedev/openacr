@@ -171,7 +171,7 @@ static bool ServableQ(algo::strptr loc) {
 // answering a question other than the one it was handed.
 //
 // A path that named a location other than itself is redirected to that location
-// `/func:lib_x2.FStream` and `/acr` are both real ways to ask
+// `/func:amc.FCtype` and `/acr` are both real ways to ask
 // for a page, and answering them where they were asked would leave the page's text
 // disagreeing with the page -- so the address bar is corrected first, and every page
 // that gets rendered is one whose location is already canonical.

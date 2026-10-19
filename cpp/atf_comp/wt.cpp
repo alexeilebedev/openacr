@@ -52,10 +52,18 @@ void atf_comp::comptest_wt_Diff() {
     atf_comp::ProcStart("test/wt-scratch $bindir/wt test.diff.xyz -cow -q -diff -del true");
 }
 
+void atf_comp::comptest_wt_Hook() {
+    atf_comp::ProcStart("test/wt-hook $bindir/wt");
+}
+
 void atf_comp::comptest_wt_List() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/wt -in:- -list test%");
     atf_comp::ProcWrite(proc, "dev.sandbox  sandbox:test1  comment:\"Test sandbox 1\"");
     atf_comp::ProcWrite(proc, "dev.sandbox  sandbox:test2  cow:Y  comment:\"Test sandbox 2\"");
+}
+
+void atf_comp::comptest_wt_Merged() {
+    atf_comp::ProcStart("test/wt-merged $bindir/wt");
 }
 
 void atf_comp::comptest_wt_Reset() {

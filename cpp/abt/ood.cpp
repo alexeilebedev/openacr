@@ -67,8 +67,9 @@ void abt::ComputeTimestamps() {
 
 // -----------------------------------------------------------------------------
 
-// Recalculate SRCFILE.OOD, TARGET.OOD, TARGET.OUT_MODTIME
-// for given build directory BUILDDIR
+// Recalculate SRCFILE.OOD, TARGET.OOD, TARGET.OUT_MODTIME for the pass of the
+// build directory BUILDDIR, and report how many of the pass's sources and targets
+// are out of date
 void abt::ComputeOod(abt::FBuilddir &builddir) {
     ind_beg(abt::_db_zs_sel_target_curs,target,abt::_db) {
         target.ood=false;
@@ -113,14 +114,14 @@ void abt::ComputeOod(abt::FBuilddir &builddir) {
     // Show out-of-date files for current build directory
     bool realexec = !abt::_db.cmdline.dry_run && !abt::_db.cmdline.printcmd;
     int ood_src=0, ood_target=0;
-    ind_beg(abt::_db_zs_sel_target_curs, target,abt::_db) {
+    ind_beg(abt::_db_zs_sel_target_curs, target,abt::_db) if (abt::InPassQ(builddir, target)) {
         ood_target += target.ood;
         ind_beg(abt::target_c_srcfile_curs, srcfile, target) {
             ood_src += srcfile.ood;
         }ind_end;
     }ind_end;
     if (realexec && abt::zs_sel_target_N() > 0 && abt::_db.cmdline.report) {
-        prlog(abt::config(builddir.builddir
+        prlog(abt::config(tempstr() << builddir.builddir << (builddir.so ? "/so" : "")
                           ,ood_src
                           ,ood_target
                           ,(abt::_db.ccache ? "ccache" : abt::_db.gcache ? "gcache" : "none")));

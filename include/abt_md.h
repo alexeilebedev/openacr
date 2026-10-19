@@ -114,6 +114,8 @@ namespace abt_md { // update-hdr
     // (Note that contents of generated sections are not considered sections, so they may be empty
     // and will not be deleted)
     // A blank line separates sections; the file ends with a single newline (no trailing blank line).
+    // Every pipe table comes out aligned (AlignTables), so a table reads as a table in the
+    // markdown source as it does rendered.
     void PrintSections(cstring &out);
 
     // -------------------------------------------------------------------
@@ -357,4 +359,21 @@ namespace abt_md { // update-hdr
 
     // Update copyright section
     // void mdsection_Copyright(abt_md::FFileSection &); // dev.mdsection:Copyright
+
+    // -------------------------------------------------------------------
+    // cpp/abt_md/table.cpp
+    //
+
+    // Return TEXT, a readme, with every pipe table aligned (PrintTable).  A table is a run
+    // of rows at one indent whose second row is a delimiter row; a run of pipe lines with
+    // no delimiter row is left as it stands, and so is everything inside a fenced block.
+    // Every line of the result ends with a newline.
+    tempstr AlignTables(algo::strptr text);
+
+    // Check every readme marked narrow for tables wider than 120 characters
+    // (CheckTableWidth).  Rule 29 of the writing style asks this of every readme.  A
+    // readme is marked narrow once its tables hold to it, which the rule files do, so
+    // the rest of the tree joins the check one file at a time as its tables are brought
+    // to it.
+    void Main_CheckTableWidth();
 }

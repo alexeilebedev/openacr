@@ -147,6 +147,7 @@ static void Child(lib_exec::FSyscmd &cmd, algo::Fildes pty_slave) {
         alarm(cmd.maxtime);// limit physical time as well
     }
     algo_lib::DieWithParent();
+    algo_lib::ResetChildSignal();
     if (ValidQ(pty_slave)) {
         dup2(pty_slave.value, 0);// pty slave becomes stdin; the originals fall to CloseInheritedFd below
     }

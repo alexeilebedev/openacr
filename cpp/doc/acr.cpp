@@ -58,7 +58,7 @@ bool doc::QueryQ(algo::strptr loc) {
 // A location carrying a colon is answered from the ssim database, and the word before
 // that colon says which answer.  A table's full name is a namespace and a name with a
 // dot between them, so a word with no dot in it is not a table, and that is the whole
-// of the discrimination: func:dmmeta.ctype:lib_x2.FStream is the page doc builds about
+// of the discrimination: func:dmmeta.ctype:amc.FCtype is the page doc builds about
 // those records, while dmmeta.func:x is the row acr answers with.
 //
 // The vocabulary is closed and every word in it has a page.  It is dev.docpage that says
@@ -76,6 +76,16 @@ tempstr doc::ViewWord(algo::strptr loc) {
         ret << word;
     }
     return ret;
+}
+
+// Return true when LOC names a view of the records its word is handed: the functions a
+// selection is about, the code amc generated for it, its gist.  The selection is what the
+// page shows a view of, so it is what a link back from the word leads to and what an edit
+// of the page edits.  Which words are views is `view` on their `dev.docpage` rows.
+bool doc::QueryviewQ(algo::strptr loc) {
+    tempstr word(doc::ViewWord(loc));
+    doc::FDocpage *docpage = ch_N(word) > 0 ? doc::ind_docpage_Find(word) : NULL;
+    return docpage && docpage->view;
 }
 
 // Return the query the location LOC means when its word was handed a pattern, and the
@@ -121,87 +131,146 @@ tempstr doc::Wordpattern(algo::strptr loc) {
 // would give a reader two histories of the same walk -- so the short name is expanded
 // here, and every location that reaches a link, a history or a URL carries the full one.
 //
-// Ten short names in the tree name two tables each, gitfile and target and user among
-// them, and one of those is left exactly as the reader wrote it.  Choosing between two
-// tables is acr's business rather than this tool's.
+// A short name that several tables share, gitfile and target and user among them, is left
+// exactly as the reader wrote it.  Choosing between those tables is acr's business.
 tempstr doc::ExpandQuery(algo::strptr query) {
     algo::strptr word = Pathcomp(query, ":LL");
     bool bare = ch_N(word) < ch_N(query) && algo::FindChar(word, '.') < 0;
-    int nmatch = 0;
-    tempstr full;
-    if (bare) {
-        ind_beg(doc::_db_ssimfile_curs, ssimfile, doc::_db) {
-            if (doc::name_Get(ssimfile) == word) {
-                nmatch++;
-                ch_RemoveAll(full);
-                full << ssimfile.ssimfile;
-            }
-        }ind_end;
-    }
+    doc::FSsimfile *ssimfile = bare ? doc::Shortssimfile(word) : NULL;
     tempstr ret;
-    if (nmatch == 1) {
-        ret << full << ":" << Pathcomp(query, ":LR");
+    if (ssimfile) {
+        ret << ssimfile->ssimfile << ":" << Pathcomp(query, ":LR");
     } else {
         ret << query;
     }
     return ret;
 }
 
-
-// Return the function that carries the record the location LOC selects, and the empty
-// string when no function does.
+// Return the one table whose short name is WORD, and NULL when no table or more than one
+// answers to it.
 //
-// A table a dmmeta.gstatic row names is compiled into the program that reads it, and amc
-// binds each of its rows to a function of that program.  The gstatic names the field those
-// rows land in -- `atf_comp.FDb.comptest` -- and that field says both which program the
-// function belongs to and what the functions of the table are called: the name of the
-// field, an underscore, and the row's own key with its dots replaced.  So the comptest
-// `doc.Fold` is `atf_comp.comptest_doc_Fold` and the citest `apm_check` is
-// `atf_ci.citest_apm_check`.
-//
-// A dmmeta.dispatch_msg record is the other case, and its function is named after both
-// halves of the key rather than read off a gstatic -- the record says which dispatch calls
-// which message, and amc names the handler after the two.
-//
-// A location selecting a pattern rather than one key answers with the empty string.  A
-// page of forty tests is about forty functions, and a section showing one of them would be
-// picking a row out of the page for no reason the reader gave.
-// Return the handler the dmmeta.dispatch_msg record KEY names, and the empty string when
-// KEY is not one of those records.
-//
-// A dispatch_msg is a dispatch and a message with a slash between them, and amc names the
-// function that dispatch calls after both: `<prog>.<Dispatch>/<ns>.<Msg>` is handled
-// by `<prog>::<Dispatch>_<Msg>`.  The message's own namespace does not enter the name, since
-// the dispatch is what says which program the handler belongs to.
-static tempstr Dispatchfunc(algo::strptr key) {
-    algo::strptr dispatch = Pathcomp(key, "/LL");
-    algo::strptr msg = Pathcomp(key, "/LR");
-    tempstr ret;
-    if (msg != key && ch_N(dispatch) > 0 && ch_N(msg) > 0) {
-        ret << Pathcomp(dispatch, ".LL") << "." << Pathcomp(dispatch, ".RR")
-            << "_" << Pathcomp(msg, ".RR");
-    }
-    return ret;
+// A table's short name is its full name with the namespace taken off, so `gen` names
+// amcdb.gen.  A short name that several tables share names none of them.
+doc::FSsimfile *doc::Shortssimfile(algo::strptr word) {
+    int nmatch = 0;
+    doc::FSsimfile *ret = NULL;
+    ind_beg(doc::_db_ssimfile_curs, ssimfile, doc::_db) {
+        if (doc::name_Get(ssimfile) == word) {
+            nmatch++;
+            ret = &ssimfile;
+        }
+    }ind_end;
+    return nmatch == 1 ? ret : NULL;
 }
 
-tempstr doc::Recfunc(algo::strptr loc) {
+// Return the table the key KEY names, by its full name or by its short name, and NULL when
+// KEY names no table.
+doc::FSsimfile *doc::Keyssimfile(algo::strptr key) {
+    doc::FSsimfile *full = doc::ind_ssimfile_Find(key);
+    return full ? full : doc::Shortssimfile(key);
+}
+
+// Return the first function the record the location LOC selects stands for, and NULL when
+// no function does.
+//
+// A table a dmmeta.gstatic row names is compiled into the program that reads it, and amc
+// binds each of its rows to one function of that program per hook of the program's ctype.
+// A dmmeta.dispatch_msg record is bound the same way, to the handler its dispatch calls
+// for its message.  amc names each function after the record's key, and src_func reports
+// every function with the key that caused it, so the function comes from src_func: the
+// comptest `doc.Fold` is `atf_comp.comptest_doc_Fold`, and the dispatch_msg
+// `lib_ws.FrameLen/ws.Frame16` is `lib_ws.FrameLen_Frame16`.  A row of a table whose ctype
+// has no hook is a constant compiled in and stands for no function.  A row with several
+// hooks answers with the first of them, and its gist shows all of them.
+//
+// A location selecting a pattern rather than one key answers with NULL.  A page of forty
+// tests is about forty functions, and a section showing one of them would be picking a row
+// out of the page for no reason the reader gave.  The gist of that page shows all forty.
+doc::FGist *doc::Recgist(algo::strptr loc) {
     tempstr query(doc::LocQuery(loc));
     algo::strptr table = Pathcomp(query, ":LL");
     algo::strptr key = Pathcomp(query, ":LR");
     bool one = ch_N(key) > 0 && algo::FindChar(key, '%') < 0;
-    doc::FSsimfile *ssimfile = one ? doc::ind_ssimfile_Find(table) : NULL;
-    tempstr ret(one && table == "dmmeta.dispatch_msg" ? Dispatchfunc(key) : tempstr());
-    ind_beg(doc::_db_gstatic_curs, gstatic, doc::_db) {
-        doc::FField *field = ssimfile ? doc::ind_field_Find(gstatic.field) : NULL;
-        doc::FField *base = field ? doc::ind_field_Find(tempstr() << field->arg << ".base") : NULL;
-        if (base && base->arg == ssimfile->ctype) {
-            ch_RemoveAll(ret);
-            ret << Pathcomp(gstatic.field, ".LL") << "." << Pathcomp(gstatic.field, ".RR") << "_";
-            frep_(i, ch_N(key)) {
-                ret << (key.elems[i] == '.' ? '_' : key.elems[i]);
-            }
+    bool bound = one && (doc::Tablegstatic(table) || table == "dmmeta.dispatch_msg");
+    if (bound && !doc::ind_gistrec_Find(query)) {
+        doc::GistRead(query);
+    }
+    doc::FGistrec *gistrec = bound ? doc::ind_gistrec_Find(query) : NULL;
+    return gistrec ? doc::zd_gist_First(*gistrec) : NULL;
+}
+
+// Return the name of the function the record the location LOC selects stands for, and the
+// empty string when no function does.
+tempstr doc::Recfunc(algo::strptr loc) {
+    doc::FGist *gist = doc::Recgist(loc);
+    tempstr ret;
+    if (gist) {
+        ret << gist->gist;
+    }
+    return ret;
+}
+
+// Return true when FIELD is the primary key of its ctype, the first field the ctype
+// declares.
+static bool PkeyQ(doc::FField &field) {
+    doc::FField *first = NULL;
+    ind_beg(doc::_db_field_curs, other, doc::_db) {
+        if (!first && ctype_Get(other) == ctype_Get(field)) {
+            first = &other;
         }
     }ind_end;
+    return first == &field;
+}
+
+// Return the path of the source file that the function of the record at LOC lives in,
+// when a dmmeta.ssimreq requires that file for that record, and the empty string otherwise.
+//
+// A test bound to one function often has a file of its own, and the file around the
+// function holds the comment that says what the test proves and the static helpers that
+// drive the scenario.  A reader shown the function alone gets the steps without the story.
+// The schema already says which records own a file this way: a ssimreq whose child is a
+// dev.gitfile spelled with the table's key, such as `cpp/<dir>/$<key>.cpp`, requires one
+// file per record.  Such a file is the record's documentation as a whole.
+//
+// The key is substituted for the variable that names the table's primary key, which is
+// what a location carries.  A requirement spelled with any other attribute of the row
+// answers nothing, and so does a required file that the function does not live in.
+tempstr doc::Recfile(algo::strptr loc) {
+    doc::FGist *gist = doc::Recgist(loc);
+    tempstr query(doc::LocQuery(loc));
+    doc::FSsimfile *ssimfile = gist ? doc::ind_ssimfile_Find(Pathcomp(query, ":LL")) : NULL;
+    tempstr ret;
+    if (ssimfile) {
+        ind_beg(doc::_db_ssimreq_curs, ssimreq, doc::_db) {
+            doc::FField *field = doc::ind_field_Find(parent_field_Get(ssimreq));
+            bool fit = ch_N(ret) == 0 && parent_ctype_Get(ssimreq) == ssimfile->ctype
+                && child_ssimfile_Get(ssimreq) == "dev.gitfile" && value_Get(ssimreq) == "%"
+                && field && PkeyQ(*field);
+            if (fit) {
+                algo_lib::Replscope scope;
+                Set(scope, tempstr() << "$" << name_Get(*field), Pathcomp(query, ":LR"));
+                tempstr path(Subst(scope, child_key_Get(ssimreq)));
+                if (path == gist->src) {
+                    ret << path;
+                }
+            }
+        }ind_end;
+    }
+    return ret;
+}
+
+// Return the heading of the section that shows the source of the record at LOC: the whole
+// file when a ssimreq requires it for the record (Recfile), the function otherwise.
+tempstr doc::Rechead(algo::strptr loc) {
+    tempstr ret;
+    ret << (ch_N(doc::Recfile(loc)) > 0 ? "As File" : "As Function");
+    return ret;
+}
+
+// Return the anchor of the section Rechead names for the record at LOC.
+tempstr doc::Recanchor(algo::strptr loc) {
+    tempstr ret;
+    ret << (ch_N(doc::Recfile(loc)) > 0 ? "as-file" : "as-function");
     return ret;
 }
 
@@ -262,7 +331,7 @@ int doc::WordEnd(algo::strptr line, int pos) {
 // nothing this tool can open.
 //
 // A word in backticks is the name of something more often than not, and in this tree those
-// names are recognizable: `dmmeta.thash` is a table, `lib_x2.FStream` is a ctype, `amc` is a
+// names are recognizable: `dmmeta.thash` is a table, `amc.FCtype` is a ctype, `amc` is a
 // namespace, and `dmmeta.ctype:doc.FSpan` is a selection of records.  A table leads to its
 // rows rather than to the page about it: a reader who wrote a table's name in a sentence is
 // pointing at what is in it.  Each becomes a link
@@ -633,7 +702,7 @@ bool doc::BarepageQ(algo::strptr loc) {
 // function and a page showing a drawing select nothing, and the empty string is what
 // says so -- their locations carry a colon, so nothing else would.
 tempstr doc::LocQuery(algo::strptr loc) {
-    bool view = doc::FuncQ(loc) || doc::CodeQ(loc);
+    bool view = doc::QueryviewQ(loc);
     tempstr ret;
     if (doc::FuncsrcQ(loc) || doc::AccesspathQ(loc) || doc::NsQ(loc)) {
         ret << "";
@@ -712,8 +781,8 @@ tempstr doc::AcrFlag(algo::strptr query) {
 //
 // A location carries only the flags it honours, and each of the three tests here is the
 // one the emitter itself branches on: the tabs belong to a page acr answered, the two
-// folds to a ctype's page and a namespace's page, and the data fold to a page about one
-// table.  Testing them any other way is how `ns:abt` came to draw an Access Paths fold
+// folds to a ctype's page and a namespace's page, the data fold to a page about one
+// table, and the directory fold to a document.  Testing them any other way is how `ns:abt` came to draw an Access Paths fold
 // whose link carried no `-vis`, so following it redrew the page with the fold still shut.
 tempstr doc::PageFlag(algo::strptr loc) {
     bool tab = doc::RecordsQ(loc);
@@ -734,6 +803,9 @@ tempstr doc::PageFlag(algo::strptr loc) {
     }
     if (data && doc::_db.data) {
         ret << " -data";
+    }
+    if (doc::DocpageQ(loc) && doc::_db.dir) {
+        ret << " -dir";
     }
     return ret;
 }
@@ -775,6 +847,7 @@ tempstr doc::ReadText(algo::strptr text) {
     doc::_db.vis = false;
     doc::_db.code = false;
     doc::_db.data = false;
+    doc::_db.dir = false;
     while (flag && i < ch_N(text)) {
         int end = i;
         while (end < ch_N(text) && text.elems[end] != ' ') {
@@ -790,6 +863,7 @@ tempstr doc::ReadText(algo::strptr text) {
             doc::_db.vis = name == "-vis" ? on : doc::_db.vis;
             doc::_db.code = name == "-code" ? on : doc::_db.code;
             doc::_db.data = name == "-data" ? on : doc::_db.data;
+            doc::_db.dir = name == "-dir" ? on : doc::_db.dir;
             i = doc::SkipSpace(text, end);
         }
     }

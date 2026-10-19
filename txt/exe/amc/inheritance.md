@@ -8,13 +8,13 @@ shared layout, polymorphic message dispatch, foreign-key
 references, parent pointers — without the runtime tax of
 virtuals or the maintenance burden of multi-inheritance.
 
-| Concept             | Reftype                                  | What it provides |
-|---------------------|------------------------------------------|------------------|
-| Shared prefix layout | [Base](/txt/exe/amc/reftype/Base.md)    | "Is-a" via field-copying; binary-compatible on the wire. |
-| Down-cast by tag    | `Castdown` tfunc on Base                 | Safe runtime dispatch on a discriminant (`typefld`). |
-| Foreign key by name | [Pkey](/txt/exe/amc/reftype/Pkey.md)    | Schema-only "use the target's pkey type"; rewritten to Val. |
-| Foreign key by ptr  | [Upptr](/txt/exe/amc/reftype/Upptr.md)  | Runtime pointer set by an xref's `via:` path. |
-| Forward pointer     | [Ptr](/txt/exe/amc/reftype/Ptr.md)      | Single-slot xref pointer. |
+| Concept              | Reftype                                | What it provides |
+| -------------------- | -------------------------------------- | ---------------- |
+| Shared prefix layout | [Base](/txt/exe/amc/reftype/Base.md)   | "Is-a" via field-copying; binary-compatible on the wire. |
+| Down-cast by tag     | `Castdown` tfunc on Base               | Safe runtime dispatch on a discriminant (`typefld`). |
+| Foreign key by name  | [Pkey](/txt/exe/amc/reftype/Pkey.md)   | Schema-only "use the target's pkey type"; rewritten to Val. |
+| Foreign key by ptr   | [Upptr](/txt/exe/amc/reftype/Upptr.md) | Runtime pointer set by an xref's `via:` path. |
+| Forward pointer      | [Ptr](/txt/exe/amc/reftype/Ptr.md)     | Single-slot xref pointer. |
 
 This page covers how they fit together.
 
@@ -193,15 +193,15 @@ at most one Base field.
 ### Picking the right mechanism
 <a href="#picking-the-right-mechanism"></a>
 
-| You want…                                                | Use                                                     |
-|----------------------------------------------------------|---------------------------------------------------------|
-| Multiple messages sharing the first N bytes              | [Base](/txt/exe/amc/reftype/Base.md) + `typefld` + `msgtype` |
-| Polymorphic processing of a buffer of messages           | [Dispatch](/txt/exe/amc/dispatch.md) over the Base'd types |
-| A field that names another record by its pkey            | [Pkey](/txt/exe/amc/reftype/Pkey.md)                   |
-| The runtime pointer for that pkey                        | Companion [Upptr](/txt/exe/amc/reftype/Upptr.md), populated via xref |
-| A single optional child pointer (no array)               | [Ptr](/txt/exe/amc/reftype/Ptr.md)                     |
-| Many children indexed by name / value                    | [Thash](/txt/exe/amc/reftype/Thash.md) / [Atree](/txt/exe/amc/reftype/Atree.md) |
-| A virtual-method-like callback                           | [Hook](/txt/exe/amc/hook.md)                            |
+| You want…                                      | Use |
+| ---------------------------------------------- | --- |
+| Multiple messages sharing the first N bytes    | [Base](/txt/exe/amc/reftype/Base.md) + `typefld` + `msgtype` |
+| Polymorphic processing of a buffer of messages | [Dispatch](/txt/exe/amc/dispatch.md) over the Base'd types |
+| A field that names another record by its pkey  | [Pkey](/txt/exe/amc/reftype/Pkey.md) |
+| The runtime pointer for that pkey              | Companion [Upptr](/txt/exe/amc/reftype/Upptr.md), populated via xref |
+| A single optional child pointer (no array)     | [Ptr](/txt/exe/amc/reftype/Ptr.md) |
+| Many children indexed by name / value          | [Thash](/txt/exe/amc/reftype/Thash.md) / [Atree](/txt/exe/amc/reftype/Atree.md) |
+| A virtual-method-like callback                 | [Hook](/txt/exe/amc/hook.md) |
 
 ### Pitfalls
 <a href="#pitfalls"></a>

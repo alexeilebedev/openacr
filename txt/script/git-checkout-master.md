@@ -1,2 +1,0 @@
-## bin/git-checkout-master -
-

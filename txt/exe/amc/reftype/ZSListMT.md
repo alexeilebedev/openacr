@@ -23,16 +23,16 @@ dmmeta.field  field:lib_kafka.FDb.zs_msg  arg:lib_kafka.FMsg  reftype:ZSListMT  
 State in the **parent** ctype
 (see `tclass_ZSListMT` in `cpp/amc/llist.cpp`):
 
-| Field          | Type   | Meaning                                                 |
-|----------------|--------|---------------------------------------------------------|
-| `<name>_head`  | `T*`   | reader-side list head (no atomic — owned by the reader) |
-| `<name>_mt`    | `T*`   | writer-side list head (atomic CAS for inserts)          |
+| Field         | Type | Meaning |
+| ------------- | ---- | ------- |
+| `<name>_head` | `T*` | reader-side list head (no atomic — owned by the reader) |
+| `<name>_mt`   | `T*` | writer-side list head (atomic CAS for inserts) |
 
 State in the **element** ctype:
 
-| Field             | Type | Meaning                                          |
-|-------------------|------|--------------------------------------------------|
-| `<xfname>_next`   | `T*` | next element; `(T*)-1` while not in any list     |
+| Field           | Type | Meaning |
+| --------------- | ---- | ------- |
+| `<xfname>_next` | `T*` | next element; `(T*)-1` while not in any list |
 
 ### How it works
 <a href="#how-it-works"></a>
@@ -60,11 +60,11 @@ State in the **element** ctype:
 ### When to use it
 <a href="#when-to-use-it"></a>
 
-| Use ZSListMT when… | Use plain Llist (`zs`) when… |
-|--------------------|------------------------------|
-| Producer and consumer are different threads | Single-threaded |
+| Use ZSListMT when…                                 | Use plain Llist (`zs`) when… |
+| -------------------------------------------------- | ---------------------------- |
+| Producer and consumer are different threads        | Single-threaded |
 | Producer is willing to do an atomic CAS per insert | Need O(1) removal of arbitrary elements |
-| FIFO order is acceptable (reversed at drain time) | Need head/tail access without draining |
+| FIFO order is acceptable (reversed at drain time)  | Need head/tail access without draining |
 
 ZSListMT does **not** support: `Last`, `Prev`, `RotateFirst`,
 `fstep` ("ZSListMT doesn't support fstep" enforced in
@@ -89,14 +89,14 @@ reftype with a fixed shape.
 
 Source: `cpp/amc/llist.cpp` (search for `ZSListMT`).
 
-| Tfunc                            | Generated function                              | Effect |
-|----------------------------------|-------------------------------------------------|--------|
-| `ZSListMT.Init`                  | (folded)                                        | NULL `_head` and `_mt`. |
-| `ZSListMT.InLlistQ`              | `bool <xfname>_InLlistQ(T& row)`                | `row.<xfname>_next != (T*)-1`. |
-| `ZSListMT.Insert`                | `void <name>_Insert(P&, T& row)`                | CAS-prepend `row` onto `_mt`.  Row must not already be in the list (UB if it is). |
-| `ZSListMT.DestructiveFirst`      | `T* <name>_DestructiveFirst(P&)`                | If `_head` is empty, drain `_mt` (atomic swap + reverse) into `_head`; return current head. **Reader-thread only.** |
-| `ZSListMT.RemoveFirst`           | `T* <name>_RemoveFirst(P&)`                     | Pop the head; calls `DestructiveFirst` first. |
-| `ZSListMT.Remove`                | `void <name>_Remove(P&, T& row)`                | Reader-side: walk `_head` and unlink. |
+| Tfunc                       | Generated function               | Effect |
+| --------------------------- | -------------------------------- | ------ |
+| `ZSListMT.Init`             | (folded)                         | NULL `_head` and `_mt`. |
+| `ZSListMT.InLlistQ`         | `bool <xfname>_InLlistQ(T& row)` | `row.<xfname>_next != (T*)-1`. |
+| `ZSListMT.Insert`           | `void <name>_Insert(P&, T& row)` | CAS-prepend `row` onto `_mt`.  Row must not already be in the list (UB if it is). |
+| `ZSListMT.DestructiveFirst` | `T* <name>_DestructiveFirst(P&)` | If `_head` is empty, drain `_mt` (atomic swap + reverse) into `_head`; return current head. **Reader-thread only.** |
+| `ZSListMT.RemoveFirst`      | `T* <name>_RemoveFirst(P&)`      | Pop the head; calls `DestructiveFirst` first. |
+| `ZSListMT.Remove`           | `void <name>_Remove(P&, T& row)` | Reader-side: walk `_head` and unlink. |
 
 There is no `_First` (without draining you can't see writer-
 side entries), no `_Last`, no `_N`.

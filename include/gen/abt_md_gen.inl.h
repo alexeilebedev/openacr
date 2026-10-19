@@ -92,15 +92,6 @@ inline  abt_md::FCheckReq::~FCheckReq() {
     abt_md::FCheckReq_Uninit(*this);
 }
 
-// --- abt_md.FComptest..Init
-// Set all fields to initial values.
-inline void abt_md::FComptest_Init(abt_md::FComptest& parent) {
-    parent.timeout = i32(10);
-    parent.coverage = bool(true);
-    parent.stablefld = bool(false);
-    parent.ns_c_comptest_in_ary = bool(false);
-}
-
 // --- abt_md.FComptest..Ctor
 inline  abt_md::FComptest::FComptest() {
     abt_md::FComptest_Init(*this);
@@ -2859,6 +2850,7 @@ inline void abt_md::FDocpage_Init(abt_md::FDocpage& parent) {
     parent.word = bool(false);
     parent.bare = bool(false);
     parent.bytable = bool(false);
+    parent.view = bool(false);
 }
 
 // --- abt_md.FDocpage..Ctor

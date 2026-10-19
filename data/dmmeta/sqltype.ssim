@@ -1,3 +1,4 @@
+dmmeta.sqltype  ctype:algo.Fldtype  expr:"varchar(10)"  comment:"symbolic layout round-trips mysql as its fconst name"
 dmmeta.sqltype  ctype:algo.I32Dec1  expr:"decimal(10,1)"  comment:""
 dmmeta.sqltype  ctype:algo.I32Dec2  expr:"decimal(10,2)"  comment:""
 dmmeta.sqltype  ctype:algo.I32Dec3  expr:"decimal(10,3)"  comment:""

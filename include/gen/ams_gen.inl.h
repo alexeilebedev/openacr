@@ -2085,6 +2085,963 @@ inline  ams::SampMengUserrowMsg::SampMengUserrowMsg() {
     ams::SampMengUserrowMsg_Init(*this);
 }
 
+// --- ams.SampPcapjoinMatchMsg.base.Castdown
+// Check if ams::MsgHeader is an instance of SampPcapjoinMatchMsg by checking the type field
+// If it is, return the pointer of target type.
+// Additionally, check if the length field permits valid instance of SampPcapjoinMatchMsg.
+// If not successful, quietly return NULL.
+inline ams::SampPcapjoinMatchMsg* ams::SampPcapjoinMatchMsg_Castdown(ams::MsgHeader &hdr) {
+    bool cond = hdr.type == (2025);
+    cond &= i32(hdr.length) >= ssizeof(ams::SampPcapjoinMatchMsg);
+    return cond ? reinterpret_cast<ams::SampPcapjoinMatchMsg*>(&hdr) : NULL;
+}
+
+// --- ams.SampPcapjoinMatchMsg.base.Castbase
+inline ams::MsgHeader& ams::Castbase(ams::SampPcapjoinMatchMsg& parent) {
+    return reinterpret_cast<ams::MsgHeader&>(parent);
+}
+
+// --- ams.SampPcapjoinMatchMsg..GetMsgLength
+// Message length (uses length field)
+inline i32 ams::GetMsgLength(const ams::SampPcapjoinMatchMsg& parent) {
+    return i32(const_cast<ams::SampPcapjoinMatchMsg&>(parent).length);
+}
+
+// --- ams.SampPcapjoinMatchMsg..GetMsgMemptr
+// Memptr encompassing the message (uses length field)
+inline algo::memptr ams::GetMsgMemptr(const ams::SampPcapjoinMatchMsg& row) {
+    return algo::memptr((u8*)&row, i32(const_cast<ams::SampPcapjoinMatchMsg&>(row).length));
+}
+
+// --- ams.SampPcapjoinMatchMsg..Ctor
+inline  ams::SampPcapjoinMatchMsg::SampPcapjoinMatchMsg() {
+    ams::SampPcapjoinMatchMsg_Init(*this);
+}
+
+// --- ams.SampPcapjoinMissMsg.base.Castdown
+// Check if ams::MsgHeader is an instance of SampPcapjoinMissMsg by checking the type field
+// If it is, return the pointer of target type.
+// Additionally, check if the length field permits valid instance of SampPcapjoinMissMsg.
+// If not successful, quietly return NULL.
+inline ams::SampPcapjoinMissMsg* ams::SampPcapjoinMissMsg_Castdown(ams::MsgHeader &hdr) {
+    bool cond = hdr.type == (2026);
+    cond &= i32(hdr.length) >= ssizeof(ams::SampPcapjoinMissMsg);
+    return cond ? reinterpret_cast<ams::SampPcapjoinMissMsg*>(&hdr) : NULL;
+}
+
+// --- ams.SampPcapjoinMissMsg.base.Castbase
+inline ams::MsgHeader& ams::Castbase(ams::SampPcapjoinMissMsg& parent) {
+    return reinterpret_cast<ams::MsgHeader&>(parent);
+}
+
+// --- ams.SampPcapjoinMissMsg..GetMsgLength
+// Message length (uses length field)
+inline i32 ams::GetMsgLength(const ams::SampPcapjoinMissMsg& parent) {
+    return i32(const_cast<ams::SampPcapjoinMissMsg&>(parent).length);
+}
+
+// --- ams.SampPcapjoinMissMsg..GetMsgMemptr
+// Memptr encompassing the message (uses length field)
+inline algo::memptr ams::GetMsgMemptr(const ams::SampPcapjoinMissMsg& row) {
+    return algo::memptr((u8*)&row, i32(const_cast<ams::SampPcapjoinMissMsg&>(row).length));
+}
+
+// --- ams.SampPcapjoinMissMsg..Init
+// Set all fields to initial values.
+inline void ams::SampPcapjoinMissMsg_Init(ams::SampPcapjoinMissMsg& parent) {
+    parent.type = u32(2026);
+    parent.length = u32(ssizeof(parent));
+    parent.request_id = u64(0);
+    parent.t1 = u64(0);
+    parent.t2 = u64(0);
+    parent.t3 = u64(0);
+    parent.t4 = u64(0);
+}
+
+// --- ams.SampPcapjoinMissMsg..Ctor
+inline  ams::SampPcapjoinMissMsg::SampPcapjoinMissMsg() {
+    ams::SampPcapjoinMissMsg_Init(*this);
+}
+
+// --- ams.SampPcapjoinPairMsg.base.Castdown
+// Check if ams::MsgHeader is an instance of SampPcapjoinPairMsg by checking the type field
+// If it is, return the pointer of target type.
+// Additionally, check if the length field permits valid instance of SampPcapjoinPairMsg.
+// If not successful, quietly return NULL.
+inline ams::SampPcapjoinPairMsg* ams::SampPcapjoinPairMsg_Castdown(ams::MsgHeader &hdr) {
+    bool cond = hdr.type == (2028);
+    cond &= i32(hdr.length) >= ssizeof(ams::SampPcapjoinPairMsg);
+    return cond ? reinterpret_cast<ams::SampPcapjoinPairMsg*>(&hdr) : NULL;
+}
+
+// --- ams.SampPcapjoinPairMsg.base.Castbase
+inline ams::MsgHeader& ams::Castbase(ams::SampPcapjoinPairMsg& parent) {
+    return reinterpret_cast<ams::MsgHeader&>(parent);
+}
+
+// --- ams.SampPcapjoinPairMsg..GetMsgLength
+// Message length (uses length field)
+inline i32 ams::GetMsgLength(const ams::SampPcapjoinPairMsg& parent) {
+    return i32(const_cast<ams::SampPcapjoinPairMsg&>(parent).length);
+}
+
+// --- ams.SampPcapjoinPairMsg..GetMsgMemptr
+// Memptr encompassing the message (uses length field)
+inline algo::memptr ams::GetMsgMemptr(const ams::SampPcapjoinPairMsg& row) {
+    return algo::memptr((u8*)&row, i32(const_cast<ams::SampPcapjoinPairMsg&>(row).length));
+}
+
+// --- ams.SampPcapjoinPairMsg..Ctor
+inline  ams::SampPcapjoinPairMsg::SampPcapjoinPairMsg() {
+    ams::SampPcapjoinPairMsg_Init(*this);
+}
+
+// --- ams.SampPcapjoinStateMsg.base.Castdown
+// Check if ams::MsgHeader is an instance of SampPcapjoinStateMsg by checking the type field
+// If it is, return the pointer of target type.
+// Additionally, check if the length field permits valid instance of SampPcapjoinStateMsg.
+// If not successful, quietly return NULL.
+inline ams::SampPcapjoinStateMsg* ams::SampPcapjoinStateMsg_Castdown(ams::MsgHeader &hdr) {
+    bool cond = hdr.type == (2027);
+    cond &= i32(hdr.length) >= ssizeof(ams::SampPcapjoinStateMsg);
+    return cond ? reinterpret_cast<ams::SampPcapjoinStateMsg*>(&hdr) : NULL;
+}
+
+// --- ams.SampPcapjoinStateMsg.base.Castbase
+inline ams::MsgHeader& ams::Castbase(ams::SampPcapjoinStateMsg& parent) {
+    return reinterpret_cast<ams::MsgHeader&>(parent);
+}
+
+// --- ams.SampPcapjoinStateMsg.data.N
+// Return number of elements in varlen field
+inline u32 ams::data_N(const ams::SampPcapjoinStateMsg& parent) {
+    u32 length = i32(((ams::SampPcapjoinStateMsg&)parent).length);
+    u32 extra_bytes = u32_Max(length,sizeof(ams::SampPcapjoinStateMsg)) - sizeof(ams::SampPcapjoinStateMsg); // avoid unsigned subtraction underflow
+    return u32(extra_bytes / sizeof(u8));
+}
+
+// --- ams.SampPcapjoinStateMsg.data_curs.Reset
+inline void ams::SampPcapjoinStateMsg_data_curs_Reset(SampPcapjoinStateMsg_data_curs &curs, ams::SampPcapjoinStateMsg &parent) {
+    curs.ptr = (u8*)data_Addr(parent);
+    curs.length = i32(parent.length) - sizeof(ams::SampPcapjoinStateMsg);
+    curs.index = 0;
+}
+
+// --- ams.SampPcapjoinStateMsg.data_curs.ValidQ
+// cursor points to valid item
+inline bool ams::SampPcapjoinStateMsg_data_curs_ValidQ(SampPcapjoinStateMsg_data_curs &curs) {
+    bool valid = ssizeof(u8) <= curs.length;
+    return valid;
+}
+
+// --- ams.SampPcapjoinStateMsg.data_curs.Next
+// proceed to next item
+inline void ams::SampPcapjoinStateMsg_data_curs_Next(SampPcapjoinStateMsg_data_curs &curs) {
+    i32 len = i32(sizeof(u8));
+    curs.ptr += len;
+    curs.length -= len;
+    ++curs.index;
+}
+
+// --- ams.SampPcapjoinStateMsg.data_curs.Access
+// item access
+inline u8& ams::SampPcapjoinStateMsg_data_curs_Access(SampPcapjoinStateMsg_data_curs &curs) {
+    return *(u8*)curs.ptr;
+}
+
+// --- ams.SampPcapjoinStateMsg..GetMsgLength
+// Message length (uses length field)
+inline i32 ams::GetMsgLength(const ams::SampPcapjoinStateMsg& parent) {
+    return i32(const_cast<ams::SampPcapjoinStateMsg&>(parent).length);
+}
+
+// --- ams.SampPcapjoinStateMsg..GetMsgMemptr
+// Memptr encompassing the message (uses length field)
+inline algo::memptr ams::GetMsgMemptr(const ams::SampPcapjoinStateMsg& row) {
+    return algo::memptr((u8*)&row, i32(const_cast<ams::SampPcapjoinStateMsg&>(row).length));
+}
+
+// --- ams.SampPcapjoinStateMsg..Init
+// Set all fields to initial values.
+inline void ams::SampPcapjoinStateMsg_Init(ams::SampPcapjoinStateMsg& parent) {
+    parent.type = u32(2027);
+    parent.length = u32(ssizeof(parent));
+    parent.gateway = bool(false);
+    parent.offset = u64(0);
+}
+
+// --- ams.SampPcapjoinStateMsg..Ctor
+inline  ams::SampPcapjoinStateMsg::SampPcapjoinStateMsg() {
+    ams::SampPcapjoinStateMsg_Init(*this);
+}
+
+// --- ams.SampRpcAcctMsg.base.Castdown
+// Check if ams::MsgHeader is an instance of SampRpcAcctMsg by checking the type field
+// If it is, return the pointer of target type.
+// Additionally, check if the length field permits valid instance of SampRpcAcctMsg.
+// If not successful, quietly return NULL.
+inline ams::SampRpcAcctMsg* ams::SampRpcAcctMsg_Castdown(ams::MsgHeader &hdr) {
+    bool cond = hdr.type == (2023);
+    cond &= i32(hdr.length) >= ssizeof(ams::SampRpcAcctMsg);
+    return cond ? reinterpret_cast<ams::SampRpcAcctMsg*>(&hdr) : NULL;
+}
+
+// --- ams.SampRpcAcctMsg.base.Castbase
+inline ams::MsgHeader& ams::Castbase(ams::SampRpcAcctMsg& parent) {
+    return reinterpret_cast<ams::MsgHeader&>(parent);
+}
+
+// --- ams.SampRpcAcctMsg..GetMsgLength
+// Message length (uses length field)
+inline i32 ams::GetMsgLength(const ams::SampRpcAcctMsg& parent) {
+    return i32(const_cast<ams::SampRpcAcctMsg&>(parent).length);
+}
+
+// --- ams.SampRpcAcctMsg..GetMsgMemptr
+// Memptr encompassing the message (uses length field)
+inline algo::memptr ams::GetMsgMemptr(const ams::SampRpcAcctMsg& row) {
+    return algo::memptr((u8*)&row, i32(const_cast<ams::SampRpcAcctMsg&>(row).length));
+}
+
+// --- ams.SampRpcAcctMsg..Init
+// Set all fields to initial values.
+inline void ams::SampRpcAcctMsg_Init(ams::SampRpcAcctMsg& parent) {
+    parent.type = u32(2023);
+    parent.length = u32(ssizeof(parent));
+    parent.acct = u32(0);
+    parent.balance = i64(0);
+}
+
+// --- ams.SampRpcAcctMsg..Ctor
+inline  ams::SampRpcAcctMsg::SampRpcAcctMsg() {
+    ams::SampRpcAcctMsg_Init(*this);
+}
+
+// --- ams.SampRpcReplyMsg.base.Castdown
+// Check if ams::MsgHeader is an instance of SampRpcReplyMsg by checking the type field
+// If it is, return the pointer of target type.
+// Additionally, check if the length field permits valid instance of SampRpcReplyMsg.
+// If not successful, quietly return NULL.
+inline ams::SampRpcReplyMsg* ams::SampRpcReplyMsg_Castdown(ams::MsgHeader &hdr) {
+    bool cond = hdr.type == (2022);
+    cond &= i32(hdr.length) >= ssizeof(ams::SampRpcReplyMsg);
+    return cond ? reinterpret_cast<ams::SampRpcReplyMsg*>(&hdr) : NULL;
+}
+
+// --- ams.SampRpcReplyMsg.base.Castbase
+inline ams::MsgHeader& ams::Castbase(ams::SampRpcReplyMsg& parent) {
+    return reinterpret_cast<ams::MsgHeader&>(parent);
+}
+
+// --- ams.SampRpcReplyMsg.client.N
+// Return number of elements in varlen field
+inline u32 ams::client_N(const ams::SampRpcReplyMsg& parent) {
+    u32 length = i32(((ams::SampRpcReplyMsg&)parent).length);
+    u32 extra_bytes = u32_Max(length,sizeof(ams::SampRpcReplyMsg)) - sizeof(ams::SampRpcReplyMsg); // avoid unsigned subtraction underflow
+    return u32(extra_bytes / sizeof(char));
+}
+
+// --- ams.SampRpcReplyMsg.client_curs.Reset
+inline void ams::SampRpcReplyMsg_client_curs_Reset(SampRpcReplyMsg_client_curs &curs, ams::SampRpcReplyMsg &parent) {
+    curs.ptr = (u8*)client_Addr(parent);
+    curs.length = i32(parent.length) - sizeof(ams::SampRpcReplyMsg);
+    curs.index = 0;
+}
+
+// --- ams.SampRpcReplyMsg.client_curs.ValidQ
+// cursor points to valid item
+inline bool ams::SampRpcReplyMsg_client_curs_ValidQ(SampRpcReplyMsg_client_curs &curs) {
+    bool valid = ssizeof(char) <= curs.length;
+    return valid;
+}
+
+// --- ams.SampRpcReplyMsg.client_curs.Next
+// proceed to next item
+inline void ams::SampRpcReplyMsg_client_curs_Next(SampRpcReplyMsg_client_curs &curs) {
+    i32 len = i32(sizeof(char));
+    curs.ptr += len;
+    curs.length -= len;
+    ++curs.index;
+}
+
+// --- ams.SampRpcReplyMsg.client_curs.Access
+// item access
+inline char& ams::SampRpcReplyMsg_client_curs_Access(SampRpcReplyMsg_client_curs &curs) {
+    return *(char*)curs.ptr;
+}
+
+// --- ams.SampRpcReplyMsg..GetMsgLength
+// Message length (uses length field)
+inline i32 ams::GetMsgLength(const ams::SampRpcReplyMsg& parent) {
+    return i32(const_cast<ams::SampRpcReplyMsg&>(parent).length);
+}
+
+// --- ams.SampRpcReplyMsg..GetMsgMemptr
+// Memptr encompassing the message (uses length field)
+inline algo::memptr ams::GetMsgMemptr(const ams::SampRpcReplyMsg& row) {
+    return algo::memptr((u8*)&row, i32(const_cast<ams::SampRpcReplyMsg&>(row).length));
+}
+
+// --- ams.SampRpcReplyMsg..Init
+// Set all fields to initial values.
+inline void ams::SampRpcReplyMsg_Init(ams::SampRpcReplyMsg& parent) {
+    parent.type = u32(2022);
+    parent.length = u32(ssizeof(parent));
+    parent.nonce = u64(0);
+    parent.acct = u32(0);
+    parent.amount = i64(0);
+    parent.ok = bool(false);
+    parent.balance = i64(0);
+}
+
+// --- ams.SampRpcReplyMsg..Ctor
+inline  ams::SampRpcReplyMsg::SampRpcReplyMsg() {
+    ams::SampRpcReplyMsg_Init(*this);
+}
+
+// --- ams.SampRpcReqMsg.base.Castdown
+// Check if ams::MsgHeader is an instance of SampRpcReqMsg by checking the type field
+// If it is, return the pointer of target type.
+// Additionally, check if the length field permits valid instance of SampRpcReqMsg.
+// If not successful, quietly return NULL.
+inline ams::SampRpcReqMsg* ams::SampRpcReqMsg_Castdown(ams::MsgHeader &hdr) {
+    bool cond = hdr.type == (2021);
+    cond &= i32(hdr.length) >= ssizeof(ams::SampRpcReqMsg);
+    return cond ? reinterpret_cast<ams::SampRpcReqMsg*>(&hdr) : NULL;
+}
+
+// --- ams.SampRpcReqMsg.base.Castbase
+inline ams::MsgHeader& ams::Castbase(ams::SampRpcReqMsg& parent) {
+    return reinterpret_cast<ams::MsgHeader&>(parent);
+}
+
+// --- ams.SampRpcReqMsg.client.N
+// Return number of elements in varlen field
+inline u32 ams::client_N(const ams::SampRpcReqMsg& parent) {
+    u32 length = i32(((ams::SampRpcReqMsg&)parent).length);
+    u32 extra_bytes = u32_Max(length,sizeof(ams::SampRpcReqMsg)) - sizeof(ams::SampRpcReqMsg); // avoid unsigned subtraction underflow
+    return u32(extra_bytes / sizeof(char));
+}
+
+// --- ams.SampRpcReqMsg.client_curs.Reset
+inline void ams::SampRpcReqMsg_client_curs_Reset(SampRpcReqMsg_client_curs &curs, ams::SampRpcReqMsg &parent) {
+    curs.ptr = (u8*)client_Addr(parent);
+    curs.length = i32(parent.length) - sizeof(ams::SampRpcReqMsg);
+    curs.index = 0;
+}
+
+// --- ams.SampRpcReqMsg.client_curs.ValidQ
+// cursor points to valid item
+inline bool ams::SampRpcReqMsg_client_curs_ValidQ(SampRpcReqMsg_client_curs &curs) {
+    bool valid = ssizeof(char) <= curs.length;
+    return valid;
+}
+
+// --- ams.SampRpcReqMsg.client_curs.Next
+// proceed to next item
+inline void ams::SampRpcReqMsg_client_curs_Next(SampRpcReqMsg_client_curs &curs) {
+    i32 len = i32(sizeof(char));
+    curs.ptr += len;
+    curs.length -= len;
+    ++curs.index;
+}
+
+// --- ams.SampRpcReqMsg.client_curs.Access
+// item access
+inline char& ams::SampRpcReqMsg_client_curs_Access(SampRpcReqMsg_client_curs &curs) {
+    return *(char*)curs.ptr;
+}
+
+// --- ams.SampRpcReqMsg..GetMsgLength
+// Message length (uses length field)
+inline i32 ams::GetMsgLength(const ams::SampRpcReqMsg& parent) {
+    return i32(const_cast<ams::SampRpcReqMsg&>(parent).length);
+}
+
+// --- ams.SampRpcReqMsg..GetMsgMemptr
+// Memptr encompassing the message (uses length field)
+inline algo::memptr ams::GetMsgMemptr(const ams::SampRpcReqMsg& row) {
+    return algo::memptr((u8*)&row, i32(const_cast<ams::SampRpcReqMsg&>(row).length));
+}
+
+// --- ams.SampRpcReqMsg..Init
+// Set all fields to initial values.
+inline void ams::SampRpcReqMsg_Init(ams::SampRpcReqMsg& parent) {
+    parent.type = u32(2021);
+    parent.length = u32(ssizeof(parent));
+    parent.nonce = u64(0);
+    parent.acct = u32(0);
+    parent.amount = i64(0);
+}
+
+// --- ams.SampRpcReqMsg..Ctor
+inline  ams::SampRpcReqMsg::SampRpcReqMsg() {
+    ams::SampRpcReqMsg_Init(*this);
+}
+
+// --- ams.SampVodChatMsg.base.Castdown
+// Check if ams::MsgHeader is an instance of SampVodChatMsg by checking the type field
+// If it is, return the pointer of target type.
+// Additionally, check if the length field permits valid instance of SampVodChatMsg.
+// If not successful, quietly return NULL.
+inline ams::SampVodChatMsg* ams::SampVodChatMsg_Castdown(ams::MsgHeader &hdr) {
+    bool cond = hdr.type == (2031);
+    cond &= i32(hdr.length) >= ssizeof(ams::SampVodChatMsg);
+    return cond ? reinterpret_cast<ams::SampVodChatMsg*>(&hdr) : NULL;
+}
+
+// --- ams.SampVodChatMsg.base.Castbase
+inline ams::MsgHeader& ams::Castbase(ams::SampVodChatMsg& parent) {
+    return reinterpret_cast<ams::MsgHeader&>(parent);
+}
+
+// --- ams.SampVodChatMsg.text.N
+// Return number of elements in varlen field
+inline u32 ams::text_N(const ams::SampVodChatMsg& parent) {
+    u32 length = i32(((ams::SampVodChatMsg&)parent).length);
+    u32 extra_bytes = u32_Max(length,sizeof(ams::SampVodChatMsg)) - sizeof(ams::SampVodChatMsg); // avoid unsigned subtraction underflow
+    return u32(extra_bytes / sizeof(char));
+}
+
+// --- ams.SampVodChatMsg.text_curs.Reset
+inline void ams::SampVodChatMsg_text_curs_Reset(SampVodChatMsg_text_curs &curs, ams::SampVodChatMsg &parent) {
+    curs.ptr = (u8*)text_Addr(parent);
+    curs.length = i32(parent.length) - sizeof(ams::SampVodChatMsg);
+    curs.index = 0;
+}
+
+// --- ams.SampVodChatMsg.text_curs.ValidQ
+// cursor points to valid item
+inline bool ams::SampVodChatMsg_text_curs_ValidQ(SampVodChatMsg_text_curs &curs) {
+    bool valid = ssizeof(char) <= curs.length;
+    return valid;
+}
+
+// --- ams.SampVodChatMsg.text_curs.Next
+// proceed to next item
+inline void ams::SampVodChatMsg_text_curs_Next(SampVodChatMsg_text_curs &curs) {
+    i32 len = i32(sizeof(char));
+    curs.ptr += len;
+    curs.length -= len;
+    ++curs.index;
+}
+
+// --- ams.SampVodChatMsg.text_curs.Access
+// item access
+inline char& ams::SampVodChatMsg_text_curs_Access(SampVodChatMsg_text_curs &curs) {
+    return *(char*)curs.ptr;
+}
+
+// --- ams.SampVodChatMsg..GetMsgLength
+// Message length (uses length field)
+inline i32 ams::GetMsgLength(const ams::SampVodChatMsg& parent) {
+    return i32(const_cast<ams::SampVodChatMsg&>(parent).length);
+}
+
+// --- ams.SampVodChatMsg..GetMsgMemptr
+// Memptr encompassing the message (uses length field)
+inline algo::memptr ams::GetMsgMemptr(const ams::SampVodChatMsg& row) {
+    return algo::memptr((u8*)&row, i32(const_cast<ams::SampVodChatMsg&>(row).length));
+}
+
+// --- ams.SampVodChatMsg..Init
+// Set all fields to initial values.
+inline void ams::SampVodChatMsg_Init(ams::SampVodChatMsg& parent) {
+    parent.type = u32(2031);
+    parent.length = u32(ssizeof(parent));
+}
+
+// --- ams.SampVodChatMsg..Ctor
+inline  ams::SampVodChatMsg::SampVodChatMsg() {
+    ams::SampVodChatMsg_Init(*this);
+}
+
+// --- ams.SampVodClipMsg.base.Castdown
+// Check if ams::MsgHeader is an instance of SampVodClipMsg by checking the type field
+// If it is, return the pointer of target type.
+// Additionally, check if the length field permits valid instance of SampVodClipMsg.
+// If not successful, quietly return NULL.
+inline ams::SampVodClipMsg* ams::SampVodClipMsg_Castdown(ams::MsgHeader &hdr) {
+    bool cond = hdr.type == (2030);
+    cond &= i32(hdr.length) >= ssizeof(ams::SampVodClipMsg);
+    return cond ? reinterpret_cast<ams::SampVodClipMsg*>(&hdr) : NULL;
+}
+
+// --- ams.SampVodClipMsg.base.Castbase
+inline ams::MsgHeader& ams::Castbase(ams::SampVodClipMsg& parent) {
+    return reinterpret_cast<ams::MsgHeader&>(parent);
+}
+
+// --- ams.SampVodClipMsg.title.N
+// Return number of elements in varlen field
+inline u32 ams::title_N(const ams::SampVodClipMsg& parent) {
+    u32 length = i32(((ams::SampVodClipMsg&)parent).length);
+    u32 extra_bytes = u32_Max(length,sizeof(ams::SampVodClipMsg)) - sizeof(ams::SampVodClipMsg); // avoid unsigned subtraction underflow
+    return u32(extra_bytes / sizeof(char));
+}
+
+// --- ams.SampVodClipMsg.title_curs.Reset
+inline void ams::SampVodClipMsg_title_curs_Reset(SampVodClipMsg_title_curs &curs, ams::SampVodClipMsg &parent) {
+    curs.ptr = (u8*)title_Addr(parent);
+    curs.length = i32(parent.length) - sizeof(ams::SampVodClipMsg);
+    curs.index = 0;
+}
+
+// --- ams.SampVodClipMsg.title_curs.ValidQ
+// cursor points to valid item
+inline bool ams::SampVodClipMsg_title_curs_ValidQ(SampVodClipMsg_title_curs &curs) {
+    bool valid = ssizeof(char) <= curs.length;
+    return valid;
+}
+
+// --- ams.SampVodClipMsg.title_curs.Next
+// proceed to next item
+inline void ams::SampVodClipMsg_title_curs_Next(SampVodClipMsg_title_curs &curs) {
+    i32 len = i32(sizeof(char));
+    curs.ptr += len;
+    curs.length -= len;
+    ++curs.index;
+}
+
+// --- ams.SampVodClipMsg.title_curs.Access
+// item access
+inline char& ams::SampVodClipMsg_title_curs_Access(SampVodClipMsg_title_curs &curs) {
+    return *(char*)curs.ptr;
+}
+
+// --- ams.SampVodClipMsg..GetMsgLength
+// Message length (uses length field)
+inline i32 ams::GetMsgLength(const ams::SampVodClipMsg& parent) {
+    return i32(const_cast<ams::SampVodClipMsg&>(parent).length);
+}
+
+// --- ams.SampVodClipMsg..GetMsgMemptr
+// Memptr encompassing the message (uses length field)
+inline algo::memptr ams::GetMsgMemptr(const ams::SampVodClipMsg& row) {
+    return algo::memptr((u8*)&row, i32(const_cast<ams::SampVodClipMsg&>(row).length));
+}
+
+// --- ams.SampVodClipMsg..Init
+// Set all fields to initial values.
+inline void ams::SampVodClipMsg_Init(ams::SampVodClipMsg& parent) {
+    parent.type = u32(2030);
+    parent.length = u32(ssizeof(parent));
+    parent.seg_from = u64(0);
+    parent.seg_to = u64(0);
+}
+
+// --- ams.SampVodClipMsg..Ctor
+inline  ams::SampVodClipMsg::SampVodClipMsg() {
+    ams::SampVodClipMsg_Init(*this);
+}
+
+// --- ams.SampVodPollCancelMsg.base.Castdown
+// Check if ams::MsgHeader is an instance of SampVodPollCancelMsg by checking the type field
+// If it is, return the pointer of target type.
+// Additionally, check if the length field permits valid instance of SampVodPollCancelMsg.
+// If not successful, quietly return NULL.
+inline ams::SampVodPollCancelMsg* ams::SampVodPollCancelMsg_Castdown(ams::MsgHeader &hdr) {
+    bool cond = hdr.type == (2035);
+    cond &= i32(hdr.length) >= ssizeof(ams::SampVodPollCancelMsg);
+    return cond ? reinterpret_cast<ams::SampVodPollCancelMsg*>(&hdr) : NULL;
+}
+
+// --- ams.SampVodPollCancelMsg.base.Castbase
+inline ams::MsgHeader& ams::Castbase(ams::SampVodPollCancelMsg& parent) {
+    return reinterpret_cast<ams::MsgHeader&>(parent);
+}
+
+// --- ams.SampVodPollCancelMsg..GetMsgLength
+// Message length (uses length field)
+inline i32 ams::GetMsgLength(const ams::SampVodPollCancelMsg& parent) {
+    return i32(const_cast<ams::SampVodPollCancelMsg&>(parent).length);
+}
+
+// --- ams.SampVodPollCancelMsg..GetMsgMemptr
+// Memptr encompassing the message (uses length field)
+inline algo::memptr ams::GetMsgMemptr(const ams::SampVodPollCancelMsg& row) {
+    return algo::memptr((u8*)&row, i32(const_cast<ams::SampVodPollCancelMsg&>(row).length));
+}
+
+// --- ams.SampVodPollCancelMsg..Init
+// Set all fields to initial values.
+inline void ams::SampVodPollCancelMsg_Init(ams::SampVodPollCancelMsg& parent) {
+    parent.type = u32(2035);
+    parent.length = u32(ssizeof(parent));
+}
+
+// --- ams.SampVodPollCancelMsg..Ctor
+inline  ams::SampVodPollCancelMsg::SampVodPollCancelMsg() {
+    ams::SampVodPollCancelMsg_Init(*this);
+}
+
+// --- ams.SampVodPollOpenMsg.base.Castdown
+// Check if ams::MsgHeader is an instance of SampVodPollOpenMsg by checking the type field
+// If it is, return the pointer of target type.
+// Additionally, check if the length field permits valid instance of SampVodPollOpenMsg.
+// If not successful, quietly return NULL.
+inline ams::SampVodPollOpenMsg* ams::SampVodPollOpenMsg_Castdown(ams::MsgHeader &hdr) {
+    bool cond = hdr.type == (2033);
+    cond &= i32(hdr.length) >= ssizeof(ams::SampVodPollOpenMsg);
+    return cond ? reinterpret_cast<ams::SampVodPollOpenMsg*>(&hdr) : NULL;
+}
+
+// --- ams.SampVodPollOpenMsg.base.Castbase
+inline ams::MsgHeader& ams::Castbase(ams::SampVodPollOpenMsg& parent) {
+    return reinterpret_cast<ams::MsgHeader&>(parent);
+}
+
+// --- ams.SampVodPollOpenMsg.options.N
+// Return number of elements in varlen field
+inline u32 ams::options_N(const ams::SampVodPollOpenMsg& parent) {
+    u32 length = i32(((ams::SampVodPollOpenMsg&)parent).length);
+    u32 extra_bytes = u32_Max(length,sizeof(ams::SampVodPollOpenMsg)) - sizeof(ams::SampVodPollOpenMsg); // avoid unsigned subtraction underflow
+    return u32(extra_bytes / sizeof(char));
+}
+
+// --- ams.SampVodPollOpenMsg.options_curs.Reset
+inline void ams::SampVodPollOpenMsg_options_curs_Reset(SampVodPollOpenMsg_options_curs &curs, ams::SampVodPollOpenMsg &parent) {
+    curs.ptr = (u8*)options_Addr(parent);
+    curs.length = i32(parent.length) - sizeof(ams::SampVodPollOpenMsg);
+    curs.index = 0;
+}
+
+// --- ams.SampVodPollOpenMsg.options_curs.ValidQ
+// cursor points to valid item
+inline bool ams::SampVodPollOpenMsg_options_curs_ValidQ(SampVodPollOpenMsg_options_curs &curs) {
+    bool valid = ssizeof(char) <= curs.length;
+    return valid;
+}
+
+// --- ams.SampVodPollOpenMsg.options_curs.Next
+// proceed to next item
+inline void ams::SampVodPollOpenMsg_options_curs_Next(SampVodPollOpenMsg_options_curs &curs) {
+    i32 len = i32(sizeof(char));
+    curs.ptr += len;
+    curs.length -= len;
+    ++curs.index;
+}
+
+// --- ams.SampVodPollOpenMsg.options_curs.Access
+// item access
+inline char& ams::SampVodPollOpenMsg_options_curs_Access(SampVodPollOpenMsg_options_curs &curs) {
+    return *(char*)curs.ptr;
+}
+
+// --- ams.SampVodPollOpenMsg..GetMsgLength
+// Message length (uses length field)
+inline i32 ams::GetMsgLength(const ams::SampVodPollOpenMsg& parent) {
+    return i32(const_cast<ams::SampVodPollOpenMsg&>(parent).length);
+}
+
+// --- ams.SampVodPollOpenMsg..GetMsgMemptr
+// Memptr encompassing the message (uses length field)
+inline algo::memptr ams::GetMsgMemptr(const ams::SampVodPollOpenMsg& row) {
+    return algo::memptr((u8*)&row, i32(const_cast<ams::SampVodPollOpenMsg&>(row).length));
+}
+
+// --- ams.SampVodPollOpenMsg..Init
+// Set all fields to initial values.
+inline void ams::SampVodPollOpenMsg_Init(ams::SampVodPollOpenMsg& parent) {
+    parent.type = u32(2033);
+    parent.length = u32(ssizeof(parent));
+    parent.close_segno = u64(0);
+}
+
+// --- ams.SampVodPollOpenMsg..Ctor
+inline  ams::SampVodPollOpenMsg::SampVodPollOpenMsg() {
+    ams::SampVodPollOpenMsg_Init(*this);
+}
+
+// --- ams.SampVodPollResultMsg.base.Castdown
+// Check if ams::MsgHeader is an instance of SampVodPollResultMsg by checking the type field
+// If it is, return the pointer of target type.
+// Additionally, check if the length field permits valid instance of SampVodPollResultMsg.
+// If not successful, quietly return NULL.
+inline ams::SampVodPollResultMsg* ams::SampVodPollResultMsg_Castdown(ams::MsgHeader &hdr) {
+    bool cond = hdr.type == (2034);
+    cond &= i32(hdr.length) >= ssizeof(ams::SampVodPollResultMsg);
+    return cond ? reinterpret_cast<ams::SampVodPollResultMsg*>(&hdr) : NULL;
+}
+
+// --- ams.SampVodPollResultMsg.base.Castbase
+inline ams::MsgHeader& ams::Castbase(ams::SampVodPollResultMsg& parent) {
+    return reinterpret_cast<ams::MsgHeader&>(parent);
+}
+
+// --- ams.SampVodPollResultMsg.counts.N
+// Return number of elements in varlen field
+inline u32 ams::counts_N(const ams::SampVodPollResultMsg& parent) {
+    u32 length = i32(((ams::SampVodPollResultMsg&)parent).length);
+    u32 extra_bytes = u32_Max(length,sizeof(ams::SampVodPollResultMsg)) - sizeof(ams::SampVodPollResultMsg); // avoid unsigned subtraction underflow
+    return u32(extra_bytes / sizeof(char));
+}
+
+// --- ams.SampVodPollResultMsg.counts_curs.Reset
+inline void ams::SampVodPollResultMsg_counts_curs_Reset(SampVodPollResultMsg_counts_curs &curs, ams::SampVodPollResultMsg &parent) {
+    curs.ptr = (u8*)counts_Addr(parent);
+    curs.length = i32(parent.length) - sizeof(ams::SampVodPollResultMsg);
+    curs.index = 0;
+}
+
+// --- ams.SampVodPollResultMsg.counts_curs.ValidQ
+// cursor points to valid item
+inline bool ams::SampVodPollResultMsg_counts_curs_ValidQ(SampVodPollResultMsg_counts_curs &curs) {
+    bool valid = ssizeof(char) <= curs.length;
+    return valid;
+}
+
+// --- ams.SampVodPollResultMsg.counts_curs.Next
+// proceed to next item
+inline void ams::SampVodPollResultMsg_counts_curs_Next(SampVodPollResultMsg_counts_curs &curs) {
+    i32 len = i32(sizeof(char));
+    curs.ptr += len;
+    curs.length -= len;
+    ++curs.index;
+}
+
+// --- ams.SampVodPollResultMsg.counts_curs.Access
+// item access
+inline char& ams::SampVodPollResultMsg_counts_curs_Access(SampVodPollResultMsg_counts_curs &curs) {
+    return *(char*)curs.ptr;
+}
+
+// --- ams.SampVodPollResultMsg..GetMsgLength
+// Message length (uses length field)
+inline i32 ams::GetMsgLength(const ams::SampVodPollResultMsg& parent) {
+    return i32(const_cast<ams::SampVodPollResultMsg&>(parent).length);
+}
+
+// --- ams.SampVodPollResultMsg..GetMsgMemptr
+// Memptr encompassing the message (uses length field)
+inline algo::memptr ams::GetMsgMemptr(const ams::SampVodPollResultMsg& row) {
+    return algo::memptr((u8*)&row, i32(const_cast<ams::SampVodPollResultMsg&>(row).length));
+}
+
+// --- ams.SampVodPollResultMsg..Init
+// Set all fields to initial values.
+inline void ams::SampVodPollResultMsg_Init(ams::SampVodPollResultMsg& parent) {
+    parent.type = u32(2034);
+    parent.length = u32(ssizeof(parent));
+    parent.nvote = u32(0);
+}
+
+// --- ams.SampVodPollResultMsg..Ctor
+inline  ams::SampVodPollResultMsg::SampVodPollResultMsg() {
+    ams::SampVodPollResultMsg_Init(*this);
+}
+
+// --- ams.SampVodRatestate..Ctor
+inline  ams::SampVodRatestate::SampVodRatestate() {
+}
+
+// --- ams.SampVodRejectMsg.base.Castdown
+// Check if ams::MsgHeader is an instance of SampVodRejectMsg by checking the type field
+// If it is, return the pointer of target type.
+// Additionally, check if the length field permits valid instance of SampVodRejectMsg.
+// If not successful, quietly return NULL.
+inline ams::SampVodRejectMsg* ams::SampVodRejectMsg_Castdown(ams::MsgHeader &hdr) {
+    bool cond = hdr.type == (2032);
+    cond &= i32(hdr.length) >= ssizeof(ams::SampVodRejectMsg);
+    return cond ? reinterpret_cast<ams::SampVodRejectMsg*>(&hdr) : NULL;
+}
+
+// --- ams.SampVodRejectMsg.base.Castbase
+inline ams::MsgHeader& ams::Castbase(ams::SampVodRejectMsg& parent) {
+    return reinterpret_cast<ams::MsgHeader&>(parent);
+}
+
+// --- ams.SampVodRejectMsg.text.N
+// Return number of elements in varlen field
+inline u32 ams::text_N(const ams::SampVodRejectMsg& parent) {
+    u32 length = i32(((ams::SampVodRejectMsg&)parent).length);
+    u32 extra_bytes = u32_Max(length,sizeof(ams::SampVodRejectMsg)) - sizeof(ams::SampVodRejectMsg); // avoid unsigned subtraction underflow
+    return u32(extra_bytes / sizeof(char));
+}
+
+// --- ams.SampVodRejectMsg.text_curs.Reset
+inline void ams::SampVodRejectMsg_text_curs_Reset(SampVodRejectMsg_text_curs &curs, ams::SampVodRejectMsg &parent) {
+    curs.ptr = (u8*)text_Addr(parent);
+    curs.length = i32(parent.length) - sizeof(ams::SampVodRejectMsg);
+    curs.index = 0;
+}
+
+// --- ams.SampVodRejectMsg.text_curs.ValidQ
+// cursor points to valid item
+inline bool ams::SampVodRejectMsg_text_curs_ValidQ(SampVodRejectMsg_text_curs &curs) {
+    bool valid = ssizeof(char) <= curs.length;
+    return valid;
+}
+
+// --- ams.SampVodRejectMsg.text_curs.Next
+// proceed to next item
+inline void ams::SampVodRejectMsg_text_curs_Next(SampVodRejectMsg_text_curs &curs) {
+    i32 len = i32(sizeof(char));
+    curs.ptr += len;
+    curs.length -= len;
+    ++curs.index;
+}
+
+// --- ams.SampVodRejectMsg.text_curs.Access
+// item access
+inline char& ams::SampVodRejectMsg_text_curs_Access(SampVodRejectMsg_text_curs &curs) {
+    return *(char*)curs.ptr;
+}
+
+// --- ams.SampVodRejectMsg..GetMsgLength
+// Message length (uses length field)
+inline i32 ams::GetMsgLength(const ams::SampVodRejectMsg& parent) {
+    return i32(const_cast<ams::SampVodRejectMsg&>(parent).length);
+}
+
+// --- ams.SampVodRejectMsg..GetMsgMemptr
+// Memptr encompassing the message (uses length field)
+inline algo::memptr ams::GetMsgMemptr(const ams::SampVodRejectMsg& row) {
+    return algo::memptr((u8*)&row, i32(const_cast<ams::SampVodRejectMsg&>(row).length));
+}
+
+// --- ams.SampVodRejectMsg..Init
+// Set all fields to initial values.
+inline void ams::SampVodRejectMsg_Init(ams::SampVodRejectMsg& parent) {
+    parent.type = u32(2032);
+    parent.length = u32(ssizeof(parent));
+}
+
+// --- ams.SampVodRejectMsg..Ctor
+inline  ams::SampVodRejectMsg::SampVodRejectMsg() {
+    ams::SampVodRejectMsg_Init(*this);
+}
+
+// --- ams.SampVodSegMsg.base.Castdown
+// Check if ams::MsgHeader is an instance of SampVodSegMsg by checking the type field
+// If it is, return the pointer of target type.
+// Additionally, check if the length field permits valid instance of SampVodSegMsg.
+// If not successful, quietly return NULL.
+inline ams::SampVodSegMsg* ams::SampVodSegMsg_Castdown(ams::MsgHeader &hdr) {
+    bool cond = hdr.type == (2029);
+    cond &= i32(hdr.length) >= ssizeof(ams::SampVodSegMsg);
+    return cond ? reinterpret_cast<ams::SampVodSegMsg*>(&hdr) : NULL;
+}
+
+// --- ams.SampVodSegMsg.base.Castbase
+inline ams::MsgHeader& ams::Castbase(ams::SampVodSegMsg& parent) {
+    return reinterpret_cast<ams::MsgHeader&>(parent);
+}
+
+// --- ams.SampVodSegMsg.uri.N
+// Return number of elements in varlen field
+inline u32 ams::uri_N(const ams::SampVodSegMsg& parent) {
+    u32 length = i32(((ams::SampVodSegMsg&)parent).length);
+    u32 extra_bytes = u32_Max(length,sizeof(ams::SampVodSegMsg)) - sizeof(ams::SampVodSegMsg); // avoid unsigned subtraction underflow
+    return u32(extra_bytes / sizeof(char));
+}
+
+// --- ams.SampVodSegMsg.uri_curs.Reset
+inline void ams::SampVodSegMsg_uri_curs_Reset(SampVodSegMsg_uri_curs &curs, ams::SampVodSegMsg &parent) {
+    curs.ptr = (u8*)uri_Addr(parent);
+    curs.length = i32(parent.length) - sizeof(ams::SampVodSegMsg);
+    curs.index = 0;
+}
+
+// --- ams.SampVodSegMsg.uri_curs.ValidQ
+// cursor points to valid item
+inline bool ams::SampVodSegMsg_uri_curs_ValidQ(SampVodSegMsg_uri_curs &curs) {
+    bool valid = ssizeof(char) <= curs.length;
+    return valid;
+}
+
+// --- ams.SampVodSegMsg.uri_curs.Next
+// proceed to next item
+inline void ams::SampVodSegMsg_uri_curs_Next(SampVodSegMsg_uri_curs &curs) {
+    i32 len = i32(sizeof(char));
+    curs.ptr += len;
+    curs.length -= len;
+    ++curs.index;
+}
+
+// --- ams.SampVodSegMsg.uri_curs.Access
+// item access
+inline char& ams::SampVodSegMsg_uri_curs_Access(SampVodSegMsg_uri_curs &curs) {
+    return *(char*)curs.ptr;
+}
+
+// --- ams.SampVodSegMsg..GetMsgLength
+// Message length (uses length field)
+inline i32 ams::GetMsgLength(const ams::SampVodSegMsg& parent) {
+    return i32(const_cast<ams::SampVodSegMsg&>(parent).length);
+}
+
+// --- ams.SampVodSegMsg..GetMsgMemptr
+// Memptr encompassing the message (uses length field)
+inline algo::memptr ams::GetMsgMemptr(const ams::SampVodSegMsg& row) {
+    return algo::memptr((u8*)&row, i32(const_cast<ams::SampVodSegMsg&>(row).length));
+}
+
+// --- ams.SampVodSegMsg..Init
+// Set all fields to initial values.
+inline void ams::SampVodSegMsg_Init(ams::SampVodSegMsg& parent) {
+    parent.type = u32(2029);
+    parent.length = u32(ssizeof(parent));
+    parent.segno = u64(0);
+    parent.pts_ms = u64(0);
+    parent.dur_ms = u32(0);
+    parent.chat_pos = u64(0);
+}
+
+// --- ams.SampVodSegMsg..Ctor
+inline  ams::SampVodSegMsg::SampVodSegMsg() {
+    ams::SampVodSegMsg_Init(*this);
+}
+
+// --- ams.SampVodTallyMark..Init
+// Set all fields to initial values.
+inline void ams::SampVodTallyMark_Init(ams::SampVodTallyMark& parent) {
+    parent.seg_end = u64(0);
+}
+
+// --- ams.SampVodTallyMark..Ctor
+inline  ams::SampVodTallyMark::SampVodTallyMark() {
+    ams::SampVodTallyMark_Init(*this);
+}
+
+// --- ams.SampVodTallyPoll..Init
+// Set all fields to initial values.
+inline void ams::SampVodTallyPoll_Init(ams::SampVodTallyPoll& parent) {
+    parent.close_segno = u64(0);
+    parent.open_pos = u64(0);
+    parent.close_pos = u64(0);
+    parent.close_known = bool(false);
+    parent.canceled = bool(false);
+}
+
+// --- ams.SampVodTallyPoll..Ctor
+inline  ams::SampVodTallyPoll::SampVodTallyPoll() {
+    ams::SampVodTallyPoll_Init(*this);
+}
+
+// --- ams.SampVodTallySeg..Init
+// Set all fields to initial values.
+inline void ams::SampVodTallySeg_Init(ams::SampVodTallySeg& parent) {
+    parent.segno = u64(0);
+    parent.chat_pos = u64(0);
+}
+
+// --- ams.SampVodTallySeg..Ctor
+inline  ams::SampVodTallySeg::SampVodTallySeg() {
+    ams::SampVodTallySeg_Init(*this);
+}
+
+// --- ams.SampVodTallyVote..Init
+// Set all fields to initial values.
+inline void ams::SampVodTallyVote_Init(ams::SampVodTallyVote& parent) {
+    parent.pos = u64(0);
+}
+
+// --- ams.SampVodTallyVote..Ctor
+inline  ams::SampVodTallyVote::SampVodTallyVote() {
+    ams::SampVodTallyVote_Init(*this);
+}
+
 // --- ams.ShmFlags.write.Get
 // Retrieve bitfield from value of field value
 //    1 bits starting at bit 1.
@@ -2702,6 +3659,101 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const ams::SampMengT
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const ams::SampMengUserrowMsg &row) {// cfmt:ams.SampMengUserrowMsg.String
     ams::SampMengUserrowMsg_Print(const_cast<ams::SampMengUserrowMsg&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const ams::SampPcapjoinMatchMsg &row) {// cfmt:ams.SampPcapjoinMatchMsg.String
+    ams::SampPcapjoinMatchMsg_Print(const_cast<ams::SampPcapjoinMatchMsg&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const ams::SampPcapjoinMissMsg &row) {// cfmt:ams.SampPcapjoinMissMsg.String
+    ams::SampPcapjoinMissMsg_Print(const_cast<ams::SampPcapjoinMissMsg&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const ams::SampPcapjoinPairMsg &row) {// cfmt:ams.SampPcapjoinPairMsg.String
+    ams::SampPcapjoinPairMsg_Print(const_cast<ams::SampPcapjoinPairMsg&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const ams::SampPcapjoinStateMsg &row) {// cfmt:ams.SampPcapjoinStateMsg.String
+    ams::SampPcapjoinStateMsg_Print(const_cast<ams::SampPcapjoinStateMsg&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const ams::SampRpcAcctMsg &row) {// cfmt:ams.SampRpcAcctMsg.String
+    ams::SampRpcAcctMsg_Print(const_cast<ams::SampRpcAcctMsg&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const ams::SampRpcReplyMsg &row) {// cfmt:ams.SampRpcReplyMsg.String
+    ams::SampRpcReplyMsg_Print(const_cast<ams::SampRpcReplyMsg&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const ams::SampRpcReqMsg &row) {// cfmt:ams.SampRpcReqMsg.String
+    ams::SampRpcReqMsg_Print(const_cast<ams::SampRpcReqMsg&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const ams::SampVodChatMsg &row) {// cfmt:ams.SampVodChatMsg.String
+    ams::SampVodChatMsg_Print(const_cast<ams::SampVodChatMsg&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const ams::SampVodClipMsg &row) {// cfmt:ams.SampVodClipMsg.String
+    ams::SampVodClipMsg_Print(const_cast<ams::SampVodClipMsg&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const ams::SampVodPollCancelMsg &row) {// cfmt:ams.SampVodPollCancelMsg.String
+    ams::SampVodPollCancelMsg_Print(const_cast<ams::SampVodPollCancelMsg&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const ams::SampVodPollOpenMsg &row) {// cfmt:ams.SampVodPollOpenMsg.String
+    ams::SampVodPollOpenMsg_Print(const_cast<ams::SampVodPollOpenMsg&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const ams::SampVodPollResultMsg &row) {// cfmt:ams.SampVodPollResultMsg.String
+    ams::SampVodPollResultMsg_Print(const_cast<ams::SampVodPollResultMsg&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const ams::SampVodRatestate &row) {// cfmt:ams.SampVodRatestate.String
+    ams::SampVodRatestate_Print(const_cast<ams::SampVodRatestate&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const ams::SampVodRejectMsg &row) {// cfmt:ams.SampVodRejectMsg.String
+    ams::SampVodRejectMsg_Print(const_cast<ams::SampVodRejectMsg&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const ams::SampVodSegMsg &row) {// cfmt:ams.SampVodSegMsg.String
+    ams::SampVodSegMsg_Print(const_cast<ams::SampVodSegMsg&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const ams::SampVodTallyMark &row) {// cfmt:ams.SampVodTallyMark.String
+    ams::SampVodTallyMark_Print(const_cast<ams::SampVodTallyMark&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const ams::SampVodTallyPoll &row) {// cfmt:ams.SampVodTallyPoll.String
+    ams::SampVodTallyPoll_Print(const_cast<ams::SampVodTallyPoll&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const ams::SampVodTallySeg &row) {// cfmt:ams.SampVodTallySeg.String
+    ams::SampVodTallySeg_Print(const_cast<ams::SampVodTallySeg&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const ams::SampVodTallyVote &row) {// cfmt:ams.SampVodTallyVote.String
+    ams::SampVodTallyVote_Print(const_cast<ams::SampVodTallyVote&>(row), str);
     return str;
 }
 

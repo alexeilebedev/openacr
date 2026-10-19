@@ -39,7 +39,7 @@ Usage: src_func [[-func:]<regx>] [options]
     -report                         Print final report
     -verbose        flag            Verbosity level (0..255); alias -v; cumulative
     -debug          flag            Debug level (0..255); alias -d; cumulative
-    -trace          string  ""      Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps
+    -trace          string  ""      Trace expression: log categories to enable, as category[:filter],...
     -help                           Print help and exit; alias -h
     -version                        Print version and exit
     -signature                      Show signatures and exit; alias -sig
@@ -94,7 +94,10 @@ files.
 
 A function that `amc` already declares in a generated header appears in the
 section commented out.  src_func replaces the text between the marker and the
-closing brace on every run, so you lose any edit made there.  To turn a section into a
+closing brace on every run, so you lose any declaration or comment typed there.
+A line there that carries a brace is hand-written code, a definition for
+example, so src_func refuses the file and leaves it unchanged.  Move the code
+out of the section to clear the refusal.  To turn a section into a
 hand-written one, delete the word `update-hdr` from its namespace line.
 
 You rarely run `-updateproto` by hand.  The `update-hdr` script runs

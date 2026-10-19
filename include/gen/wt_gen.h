@@ -20,8 +20,8 @@
 
 #pragma once
 #include "include/gen/command_gen.h"
-#include "include/gen/dev_gen.h"
 #include "include/gen/algo_gen.h"
+#include "include/gen/dev_gen.h"
 //#pragma endinclude
 // gen:ns_enums
 
@@ -84,6 +84,7 @@ struct FDb { // wt.FDb: In-memory database for sandbox
     i32              ind_sandbox_n;               // number of elements in the hash table
     wt::FSbpath*     sbpath_lary[36];             // level array
     i64              sbpath_n;                    // number of elements in array
+    algo::cstring    remote;                      // Remote whose master the branches merge into
     wt::trace        trace;                       //
 };
 // Read argc,argv into the fields of wt.FDb.cmdline (and any base command line)
@@ -280,6 +281,9 @@ struct FSandbox { // wt.FSandbox
     algo::cstring      comment;               //
     algo::cstring      dir;                   //
     bool               select;                //   false
+    bool               branch;                //   false  Branch worktree read from git
+    algo::cstring      merged;                // Y when the branch merged and the worktree is idle, else why it is kept
+    algo::cstring      holder;                // One line per process in the worktree: pid, ppid, age, cmd as key-value pairs
     // func:wt.FSandbox..AssignOp
     inline wt::FSandbox& operator =(const wt::FSandbox &rhs) = delete;
     // func:wt.FSandbox..CopyCtor

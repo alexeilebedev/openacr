@@ -1674,20 +1674,34 @@ bool algo::cstring_ReadCmdarg(cstring &out, algo::StringIter &S, bool is_value) 
     return ret;
 }
 
+// Step ITER past a '$' that opens a bash ANSI-C quoted word, $'...', so the
+// body that follows reads like any '...' word.  strptr_PrintBash writes that
+// form for a value holding a character it must escape other than a blank, and
+// C-escapes the body, which cstring_ReadCmdarg unescapes.
+static void SkipAnsiQuote(algo::StringIter &iter) {
+    if (iter.index + 1 < elems_N(iter.expr) && iter.expr[iter.index] == '$' && iter.expr[iter.index + 1] == '\'') {
+        iter.index++;
+    }
+}
+
 // Tokenize CMDLINE into argv-shaped words in OUT: each element is a bare
-// token, "-opt", or "-opt:value", with any quoted ("...") segment unescaped
-// into owned storage.  This is the dual of a shell's argv split; the
-// field-aware <cmd>_ReadArgv then interprets dashes, colons, and per-option
-// NArgs (so "-opt value" works, not only "-opt:value").
+// token, "-opt", or "-opt:value", with any quoted ("...", '...' or $'...')
+// segment unescaped into owned storage.  This is the dual of a shell's argv
+// split, so a command line that <cmd>_ToCmdline wrote, whose values
+// strptr_PrintBash quoted, splits back into the values it was written from.
+// The field-aware <cmd>_ReadArgv then interprets dashes, colons, and
+// per-option NArgs (so "-opt value" works, not only "-opt:value").
 void algo::CmdlineToArgv(algo::strptr cmdline, algo::StringAry &out) {
     algo::StringIter iter(cmdline);
     while (!iter.Ws().EofQ()) {
         int from = iter.index;
         algo::cstring word;
+        SkipAnsiQuote(iter);
         algo::cstring_ReadCmdarg(word, iter, false);
         if (algo::SkipChar(iter, ':')) {
             word << ":";
             algo::cstring val;
+            SkipAnsiQuote(iter);
             algo::cstring_ReadCmdarg(val, iter, true);
             word << val;
         }
@@ -2256,11 +2270,11 @@ u32 algo::ParseNum8(u64 x, u32 len, u32 &ok) {
 
 // -----------------------------------------------------------------------------
 
-// Print a string as a classic regex, escaping all special
-// characters. This regex will only match the specified string.
-void algo::strptr_PrintRegxSql(algo::strptr value, algo::cstring &str) {
+// Append to STR an acr-style pattern that matches VALUE alone: a backslash goes
+// before each character the acr style reads as an operator.
+void algo::strptr_PrintRegxAcr(algo::strptr value, algo::cstring &str) {
     frep_(i, elems_N(value)) {
-        if (algo_lib::RegxSqlSpecialQ(value.elems[i])) {
+        if (algo_lib::RegxQuoteQ(value.elems[i], algo_lib_RegxStyle_acr)) {
             str << '\\';
         }
         str << value.elems[i];

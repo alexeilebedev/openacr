@@ -1827,6 +1827,7 @@ inline void acr_in::FSsimfile_Init(acr_in::FSsimfile& parent) {
     parent.zd_nsssimfile_ssimfile_head = NULL; // (acr_in.FSsimfile.zd_nsssimfile_ssimfile)
     parent.zd_nsssimfile_ssimfile_n = 0; // (acr_in.FSsimfile.zd_nsssimfile_ssimfile)
     parent.zd_nsssimfile_ssimfile_tail = NULL; // (acr_in.FSsimfile.zd_nsssimfile_ssimfile)
+    parent.listed = bool(false);
     parent.zd_ssimfile_next = (acr_in::FSsimfile*)-1; // (acr_in.FDb.zd_ssimfile) not-in-list
     parent.zd_ssimfile_prev = NULL; // (acr_in.FDb.zd_ssimfile)
     parent.ind_ssimfile_next = (acr_in::FSsimfile*)-1; // (acr_in.FDb.ind_ssimfile) not-in-hash

@@ -133,12 +133,13 @@ export class AlarmMsg {
     objtype_summary: string; // Object type explained
     summary: string; // Alarm summary from inventory
     description: string; // Alarm message from object
+    metric: string; // Metric whose reading raised the alarm; empty when no metric carries it
     shelved: boolean; // RFC 8632 shelving: published but hidden from the default operator view
     n_flap: number; // Reading transitions absorbed by the debounce window
     static size(): number {
-        return 465;
+        return 667;
     }
-    constructor(code?: string, objtype?: string, objinst?: string, objname?: string, flag?: Flag, severity?: Severity, n_occurred?: number, first_time?: UnTime, last_time?: UnTime, clear_time?: UnTime, update_time?: UnTime, objtype_summary?: string, summary?: string, description?: string, shelved?: boolean, n_flap?: number) {
+    constructor(code?: string, objtype?: string, objinst?: string, objname?: string, flag?: Flag, severity?: Severity, n_occurred?: number, first_time?: UnTime, last_time?: UnTime, clear_time?: UnTime, update_time?: UnTime, objtype_summary?: string, summary?: string, description?: string, metric?: string, shelved?: boolean, n_flap?: number) {
         this.code = code !== undefined ? code : "";
         this.objtype = objtype !== undefined ? objtype : "";
         this.objinst = objinst !== undefined ? objinst : "";
@@ -153,27 +154,29 @@ export class AlarmMsg {
         this.objtype_summary = objtype_summary !== undefined ? objtype_summary : "";
         this.summary = summary !== undefined ? summary : "";
         this.description = description !== undefined ? description : "";
+        this.metric = metric !== undefined ? metric : "";
         this.shelved = shelved !== undefined ? shelved : Boolean(false);
         this.n_flap = n_flap !== undefined ? n_flap : Number(0);
     }
 }
 
 export function AlarmMsg_Encode(view: DataView, offset: number, parent: AlarmMsg) {
-    let length = 465;
+    let length = 667;
     view.setUint32(offset+0,17,true);
     view.setUint32(offset+4,length,true);
     let _a_code = new Uint8Array(view.buffer,view.byteOffset+offset+8,32);
-    _a_code.fill(0);
+    _a_code.fill(32);
     _g_text_encoder.encodeInto(parent.code,_a_code);
     let _a_objtype = new Uint8Array(view.buffer,view.byteOffset+offset+40,15);
-    _a_objtype.fill(0);
+    _a_objtype.fill(32);
     _g_text_encoder.encodeInto(parent.objtype,_a_objtype);
     let _a_objinst = new Uint8Array(view.buffer,view.byteOffset+offset+55,79);
-    _a_objinst.fill(0);
+    _a_objinst.fill(32);
     _g_text_encoder.encodeInto(parent.objinst,_a_objinst);
     let _a_objname = new Uint8Array(view.buffer,view.byteOffset+offset+134,32);
     _a_objname.fill(0);
-    _g_text_encoder.encodeInto(parent.objname,_a_objname);
+    let _n_objname = _g_text_encoder.encodeInto(parent.objname,_a_objname.subarray(0,30)).written;
+    _a_objname[30+1] = _n_objname;
     Flag_Encode(view,offset+166,parent.flag);
     Severity_Encode(view,offset+167,parent.severity);
     view.setInt32(offset+168,parent.n_occurred,true);
@@ -182,16 +185,20 @@ export function AlarmMsg_Encode(view: DataView, offset: number, parent: AlarmMsg
     UnTime_Encode(view,offset+188,parent.clear_time);
     UnTime_Encode(view,offset+196,parent.update_time);
     let _a_objtype_summary = new Uint8Array(view.buffer,view.byteOffset+offset+204,64);
-    _a_objtype_summary.fill(0);
+    _a_objtype_summary.fill(32);
     _g_text_encoder.encodeInto(parent.objtype_summary,_a_objtype_summary);
     let _a_summary = new Uint8Array(view.buffer,view.byteOffset+offset+268,64);
-    _a_summary.fill(0);
+    _a_summary.fill(32);
     _g_text_encoder.encodeInto(parent.summary,_a_summary);
     let _a_description = new Uint8Array(view.buffer,view.byteOffset+offset+332,128);
-    _a_description.fill(0);
+    _a_description.fill(32);
     _g_text_encoder.encodeInto(parent.description,_a_description);
-    view.setUint8(offset+460,parent.shelved ? 1 : 0);
-    view.setUint32(offset+461,parent.n_flap,true);
+    let _a_metric = new Uint8Array(view.buffer,view.byteOffset+offset+460,202);
+    _a_metric.fill(0);
+    let _n_metric = _g_text_encoder.encodeInto(parent.metric,_a_metric.subarray(0,200)).written;
+    _a_metric[200+1] = _n_metric;
+    view.setUint8(offset+662,parent.shelved ? 1 : 0);
+    view.setUint32(offset+663,parent.n_flap,true);
     return length;
 }
 
@@ -200,17 +207,25 @@ export function AlarmMsg_Decode(view: DataView, offset: number): AlarmMsg {
     let length = 0;
     length = view.getUint32(offset+4,true);
     let _s_code = new Uint8Array(view.buffer,view.byteOffset+offset+8,32);
-    let _e_code = _s_code.indexOf(0);
-    parent.code = _g_text_decoder.decode(_e_code < 0 ? _s_code : _s_code.subarray(0,_e_code));
+    let _e_code = 32;
+    while (_e_code > 0 && _s_code[_e_code-1] === 32) {
+        _e_code--;
+    }
+    parent.code = _g_text_decoder.decode(_s_code.subarray(0,_e_code));
     let _s_objtype = new Uint8Array(view.buffer,view.byteOffset+offset+40,15);
-    let _e_objtype = _s_objtype.indexOf(0);
-    parent.objtype = _g_text_decoder.decode(_e_objtype < 0 ? _s_objtype : _s_objtype.subarray(0,_e_objtype));
+    let _e_objtype = 15;
+    while (_e_objtype > 0 && _s_objtype[_e_objtype-1] === 32) {
+        _e_objtype--;
+    }
+    parent.objtype = _g_text_decoder.decode(_s_objtype.subarray(0,_e_objtype));
     let _s_objinst = new Uint8Array(view.buffer,view.byteOffset+offset+55,79);
-    let _e_objinst = _s_objinst.indexOf(0);
-    parent.objinst = _g_text_decoder.decode(_e_objinst < 0 ? _s_objinst : _s_objinst.subarray(0,_e_objinst));
-    let _s_objname = new Uint8Array(view.buffer,view.byteOffset+offset+134,32);
-    let _e_objname = _s_objname.indexOf(0);
-    parent.objname = _g_text_decoder.decode(_e_objname < 0 ? _s_objname : _s_objname.subarray(0,_e_objname));
+    let _e_objinst = 79;
+    while (_e_objinst > 0 && _s_objinst[_e_objinst-1] === 32) {
+        _e_objinst--;
+    }
+    parent.objinst = _g_text_decoder.decode(_s_objinst.subarray(0,_e_objinst));
+    let _n_objname = Math.min(view.getUint8(offset+134+30+1),30);
+    parent.objname = _g_text_decoder.decode(new Uint8Array(view.buffer,view.byteOffset+offset+134,_n_objname));
     parent.flag = Flag_Decode(view,offset+166);
     parent.severity = Severity_Decode(view,offset+167);
     parent.n_occurred = view.getInt32(offset+168,true);
@@ -219,21 +234,32 @@ export function AlarmMsg_Decode(view: DataView, offset: number): AlarmMsg {
     parent.clear_time = UnTime_Decode(view,offset+188);
     parent.update_time = UnTime_Decode(view,offset+196);
     let _s_objtype_summary = new Uint8Array(view.buffer,view.byteOffset+offset+204,64);
-    let _e_objtype_summary = _s_objtype_summary.indexOf(0);
-    parent.objtype_summary = _g_text_decoder.decode(_e_objtype_summary < 0 ? _s_objtype_summary : _s_objtype_summary.subarray(0,_e_objtype_summary));
+    let _e_objtype_summary = 64;
+    while (_e_objtype_summary > 0 && _s_objtype_summary[_e_objtype_summary-1] === 32) {
+        _e_objtype_summary--;
+    }
+    parent.objtype_summary = _g_text_decoder.decode(_s_objtype_summary.subarray(0,_e_objtype_summary));
     let _s_summary = new Uint8Array(view.buffer,view.byteOffset+offset+268,64);
-    let _e_summary = _s_summary.indexOf(0);
-    parent.summary = _g_text_decoder.decode(_e_summary < 0 ? _s_summary : _s_summary.subarray(0,_e_summary));
+    let _e_summary = 64;
+    while (_e_summary > 0 && _s_summary[_e_summary-1] === 32) {
+        _e_summary--;
+    }
+    parent.summary = _g_text_decoder.decode(_s_summary.subarray(0,_e_summary));
     let _s_description = new Uint8Array(view.buffer,view.byteOffset+offset+332,128);
-    let _e_description = _s_description.indexOf(0);
-    parent.description = _g_text_decoder.decode(_e_description < 0 ? _s_description : _s_description.subarray(0,_e_description));
-    parent.shelved = view.getUint8(offset+460) !== 0;
-    parent.n_flap = view.getUint32(offset+461,true);
+    let _e_description = 128;
+    while (_e_description > 0 && _s_description[_e_description-1] === 32) {
+        _e_description--;
+    }
+    parent.description = _g_text_decoder.decode(_s_description.subarray(0,_e_description));
+    let _n_metric = Math.min(view.getUint8(offset+460+200+1),200);
+    parent.metric = _g_text_decoder.decode(new Uint8Array(view.buffer,view.byteOffset+offset+460,_n_metric));
+    parent.shelved = view.getUint8(offset+662) !== 0;
+    parent.n_flap = view.getUint32(offset+663,true);
     return parent;
 }
 
 export function AlarmMsg_Print(parent: AlarmMsg): string {
-    return `code:${parent.code} objtype:${parent.objtype} objinst:${parent.objinst} objname:${parent.objname} flag:${Flag_Print(parent.flag)} severity:${Severity_Print(parent.severity)} n_occurred:${parent.n_occurred} first_time:${UnTime_Print(parent.first_time)} last_time:${UnTime_Print(parent.last_time)} clear_time:${UnTime_Print(parent.clear_time)} update_time:${UnTime_Print(parent.update_time)} objtype_summary:${parent.objtype_summary} summary:${parent.summary} description:${parent.description} shelved:${parent.shelved} n_flap:${parent.n_flap}`;
+    return `code:${parent.code} objtype:${parent.objtype} objinst:${parent.objinst} objname:${parent.objname} flag:${Flag_Print(parent.flag)} severity:${Severity_Print(parent.severity)} n_occurred:${parent.n_occurred} first_time:${UnTime_Print(parent.first_time)} last_time:${UnTime_Print(parent.last_time)} clear_time:${UnTime_Print(parent.clear_time)} update_time:${UnTime_Print(parent.update_time)} objtype_summary:${parent.objtype_summary} summary:${parent.summary} description:${parent.description} metric:${parent.metric} shelved:${parent.shelved} n_flap:${parent.n_flap}`;
 }
 
 export interface AlarmMsgJson {
@@ -251,6 +277,7 @@ export interface AlarmMsgJson {
     objtype_summary: string; // Object type explained
     summary: string; // Alarm summary from inventory
     description: string; // Alarm message from object
+    metric: string; // Metric whose reading raised the alarm; empty when no metric carries it
     shelved: boolean; // RFC 8632 shelving: published but hidden from the default operator view
     n_flap: number; // Reading transitions absorbed by the debounce window
 }

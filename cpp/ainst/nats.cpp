@@ -23,12 +23,21 @@
 
 // -----------------------------------------------------------------------------
 
-// Install the nats command line client.
-// The release is a deb and it is unpacked rather than installed, because
+// Install the nats command line client into $PREFIX/bin.
+// The Linux release is a deb and it is unpacked rather than installed, because
 // dpkg-deb is present in every image this runs in while unzip is not, and
-// because the package would otherwise land the binary in /usr/local/bin.
+// because the package would otherwise land the binary in /usr/local/bin.  The
+// macOS release is a zip, which macOS unpacks itself.
 void ainst::extpkg_nats(ainst::FExtpkg &extpkg) {
-    AddStage(extpkg,"extpkg=$(mktemp -d)");
-    AddStage(extpkg,tempstr()<<"dpkg-deb -x "<<GetExtpkgsrcVar(extpkg,"deb")<<" \"$extpkg\"");
-    AddStage(extpkg,"ainst_install 755 \"$extpkg/usr/local/bin/nats\" /usr/bin/nats");
+    tempstr rel(GetExtpkgsrcVar(extpkg,"rel"));
+    AddStage(extpkg,"if [[ $DARWIN == Y ]]; then");
+    // the archive's one directory is named after the release, which the
+    // script does not spell, so a release bump stays one row of data
+    AddStage(extpkg,tempstr()<<"    bin=$(echo \"$(ainst_unpack "<<rel<<")\"/nats-*-darwin-$(uname -m)/nats)");
+    AddStage(extpkg,"else");
+    AddStage(extpkg,"    extpkg=$(ainst_tmpdir)");
+    AddStage(extpkg,tempstr()<<"    dpkg-deb -x "<<rel<<" \"$extpkg\"");
+    AddStage(extpkg,"    bin=\"$extpkg/usr/local/bin/nats\"");
+    AddStage(extpkg,"fi");
+    AddStage(extpkg,"ainst_install 755 \"$bin\" \"$PREFIX/bin/nats\"");
 }

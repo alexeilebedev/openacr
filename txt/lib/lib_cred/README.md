@@ -23,10 +23,10 @@ shell sources.  `lib_cred::SysEvalStdin` runs a command with a secret on its
 standard input, which is how a tool hands a token to curl without putting it on
 a command line.
 
-| tool | credential | file |
-|---|---|---|
-| gli | the token of a gitlab server, named in `~/.ssh/gli.ssim` | `~/.ssh/gli.ssim` |
-| a cloudflare client | a cloudflare token, named by its account or the domain | `~/.ssh/<name>_token` |
-| a hardware vendor client | a vendor's api key, named by the account | `~/.ssh/<name>_token` |
-| an AWS client | an IAM user's access key, named by the user | `~/.ssh/<user>.token` |
-| gptcli | `openai` | `~/.ssh/openai_api_secrets` |
+| tool                     | credential                                               | file |
+| ------------------------ | -------------------------------------------------------- | ---- |
+| gli                      | the token of a gitlab server, named in `~/.ssh/gli.ssim` | `~/.ssh/gli.ssim` |
+| a cloudflare client      | a cloudflare token, named by its account or the domain   | `~/.ssh/<name>_token` |
+| a hardware vendor client | a vendor's api key, named by the account                 | `~/.ssh/<name>_token` |
+| an AWS client            | an IAM user's access key, named by the user              | `~/.ssh/<user>.token` |
+| gptcli                   | `openai`                                                 | `~/.ssh/openai_api_secrets` |

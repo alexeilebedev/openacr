@@ -118,12 +118,14 @@ test.
 Four document sets cover openacr, and each answers a different question.
 Putting a fact in the wrong one is how the same fact ends up in three of them.
 
-| Read for | Document |
-|---|---|
-| what openacr is, and why it is shaped this way | [/txt/openacr](/txt/openacr/README.md) -- short, human, principles |
-| the rule a change is written against | `txt/rule/<ns>.md`, plus this file |
+| Read for                                            | Document |
+| --------------------------------------------------- | -------- |
+| what openacr is, and why it is shaped this way      | [/txt/openacr](/txt/openacr/README.md) |
+| the rule a change is written against                | `txt/rule/<ns>.md`, plus this file |
 | every option of one tool, and examples of that tool | `txt/exe/<tool>/README.md` |
-| the columns of one ssim table | `txt/ssimdb/<ns>/<table>.md` |
+| the columns of one ssim table                       | `txt/ssimdb/<ns>/<table>.md` |
+
+- `/txt/openacr`: short and human, and it states principles.
 
 Two consequences.  An example of a tool belongs in that tool's README, so a
 page about `acr` shows `acr` and names `acr_ed` with a link rather than
@@ -136,6 +138,14 @@ principle that made them worth knowing.
 
 These govern hand-editing or extending the ssim schema and the in-memory
 database `amc` generates from it.
+
+**A command line's field comment fits in 80 characters.**  A command line is a
+ctype read with a `strfmt:Argv` cfmt, such as a tool's options in
+`command.<tool>`.  A field's comment is the option's line in `-help` and its
+heading in the README, so it names what the option does in one phrase.  Put what
+a reader needs beyond that phrase under the option's heading in
+`txt/exe/<tool>/README.md`.  `amc` refuses a longer comment as
+`amc.cmdcomment_long`.
 
 **A structured key carries only components that vary independently.**  A key
 names an element of a set, so it must carry exactly those components whose
@@ -167,6 +177,21 @@ A composite key shows its arity in the column list, where a reviewer asks whethe
 it is minimal.  A structured key shows one column and keeps its arity in
 `dmmeta.substr` one table away, so the question never gets asked on its own.
 Ask it deliberately.
+
+**A key's fldfuncs follow the pkey, in the order their parts appear in it, and
+the least variable part comes first.**  Take `dev.builddir`, keyed
+`Darwin-clang++.coverage-arm64`: the system, the compiler, the configuration,
+then the architecture.  The system is first because it varies least, so the
+build directories of one system sort together, and a prefix selects them.  The
+ctype's fields read `builddir`, `uname`, `compiler`, `cfg`, `arch`: the key and
+then its parts in key order.  A reader of the ctype sees the key spelled out
+beside it, and a part that sits in the key but not among the fields, or among
+the fields in another order, shows at once.  The same holds of every fldfunc a
+pkey has: it comes right after the pkey field and before any stored field.
+`dev.syslibuname` is keyed `ssl/Darwin`, and its fields read `syslibuname`,
+`syslib`, `uname`, in the order the parts appear in the key.  A key whose fields
+wander from that order keeps its shape in `dmmeta.substr` alone, where nobody
+reads it.
 
 **String defaults need inner quotes.**  A `dmmeta.field` `dflt` for a string is
 `'""'` for empty and `'"release"'` for a value.
@@ -292,7 +317,8 @@ so `ALGOFATALDIR` is what `algo_lib` reads.
 
 So a change that introduces an environment variable adds its row to
 `data/dev/envvar.ssim` in the same commit, and one that introduces a credential
-name adds its row to `data/dev/cred.ssim`.  The names form one global set --
+name adds its row to `data/dev/cred.ssim`, with its role in `dev.credrole` and its
+scopes in `dev.credperm` when the kind has them, which is what `credd -mint` makes it to.  The names form one global set --
 two programs that each pick `PORT` do not collide until one execs the other --
 and a table is what makes the set visible and lets `acr` cross-reference it:
 `acr dev.envvar` lists the variables a tree reads today.
@@ -328,9 +354,9 @@ A query names one ssimfile, and an alternation has to sit inside the namespace o
 inside the file name.  Spanning the dot names no table at all, and acr reports
 that as an empty selection rather than as an error, so the exit code is 0.
 
-| could be | discriminant |
-|---|---|
-| the alternation spans the dot | run one of the branches alone -- a count where the joined form gave 0 is this case |
+| could be                       | discriminant |
+| ------------------------------ | ------------ |
+| the alternation spans the dot  | run one of the branches alone -- a count where the joined form gave 0 is this case |
 | the tables really hold nothing | `acr '<ns>.%' -in:<root>` counts the namespace, and 0 there means the root is empty |
 
 Write the alternation inside a component:
@@ -574,10 +600,12 @@ that steps across commits this way can compare mismatched libraries, and the
 result is not merely noisy, it is fabricated: a runtime bug appears to bisect to a
 commit whose own diff cannot explain it.
 
-| symptom | discriminant |
-|---|---|
-| the same commit behaves differently built here than in another checkout | build the executable's whole dependency closure: `abt <exe> -build -install -force`, and compare again |
-| a bisect lands on a commit whose diff cannot explain the behavior | re-run each point with `-force`; a result that moves is a stale-link artifact, not a real bisect |
+- **the same commit behaves differently built here than in another checkout**:
+  build the executable's whole dependency closure with
+  `abt <exe> -build -install -force`, and compare again.
+- **a bisect lands on a commit whose diff cannot explain the behavior**: re-run
+  each point with `-force`.  A result that moves is a stale-link artifact, not a
+  real bisect.
 
 `-force` treats every file in the closure as out of date, so `algo_lib` and every
 other dependency relink from their own commit's sources; with gcache warm this
@@ -611,9 +639,8 @@ does it, and so does a plain checkout or pull.  In each case `bin/amc` is a
 symlink into `build/release`, still holding the binary the previous tree built,
 and that binary knows the schema the previous tree had.  What it rewrites is not
 confined to `cpp/gen` and `include/gen` either: the tables under `data/gendb`
-go with it, so rows in `ssimfile:gendb.msgfield` come back with
-`strtype:rightpad  pad:0` flattened to `strtype:""  pad:""` — which reads as a
-schema edit nobody made.
+go with it, so rows in `ssimfile:gendb.msgfield` come back in the columns the
+old generator wrote — which reads as a schema edit nobody made.
 
 Two symptoms, and the one that reaches you first is a build error in
 hand-written code that calls a generated accessor the old generator spelled
@@ -881,9 +908,10 @@ echo -> algo_lib.signal  text:Segmentation fault
 abt.config  builddir:Linux-g++.release-x86_64  ood_src:0  ood_target:0  cache:gcache
 ```
 
-| could be | discriminant |
-|---|---|
-| the object cache answered the regenerated sources from before the checkout | `strings build/release/<tool> \| grep "<a comment from the regenerated header>"` finds nothing while `include/gen` carries it; `abt <tool> -build -install` says `ood_src:0` |
+- **the object cache answered the regenerated sources from before the checkout**:
+  `strings build/release/<tool> | grep "<a comment from the regenerated header>"`
+  finds nothing while `include/gen` carries it, and `abt <tool> -build -install`
+  says `ood_src:0`.
 
 `abt % -build -install -force -cache:none` rebuilds every object from the
 sources as they stand, and the binaries then match the generated tree.
@@ -898,16 +926,16 @@ matches, and the next `abt` run reports nothing to do:
 abt.config  builddir:Linux-g++.profile-x86_64  ood_src:0  ood_target:0  cache:gcache
 ```
 
-| could be | discriminant |
-|---|---|
-| abt dates an object against its sources and not against the flags that produced it | `abt <target> -cfg:<cfg> -printcmd` shows the new flag while the object predates the row |
+- **abt dates an object against its sources and not against the flags that
+  produced it**: `abt <target> -cfg:<cfg> -printcmd` shows the new flag while the
+  object predates the row.
 
 `abt <target> -cfg:<cfg> -build -force` recompiles with the flags as they stand.
 
 #### The readme_tut citest rewrites txt/tut/tut01.md with gcache.warning lines in a captured build
 <a href="#the-readme_tut-citest-rewrites-txt-tut-tut01-md-with-gcache-warning-lines-in-a-captured-build"></a>
 
-The `comp` job on a CI runner fails with `atf_ci.modified_files  during:readme_tut
+The `compB` job on a CI runner fails with `atf_ci.modified_files  during:readme_tut
 files:txt/tut/tut01.md`, and the diff it prints adds lines of this shape to the
 tutorial's captured `amc && ai samp_tut1` output:
 
@@ -916,9 +944,10 @@ tutorial's captured `amc && ai samp_tut1` output:
 +gcache.warning  from:build/release/cpp.gen.dev_gen.o  to:/tmp/gcache/cd/00/cd00d74a2f9884d93b789cf613272ba7bceb5d99  comment:"cache entry could not be published"
 ```
 
-| could be | discriminant |
-|---|---|
-| the runner's compiler cache disk is full, so gcache builds the object and cannot store it, and says so on the build's stdout | `df` of the `to:` path's filesystem on that runner reads full; the same job retried on another runner passes with no diff |
+- **the runner's compiler cache disk is full, so gcache builds the object and
+  cannot store it, and says so on the build's stdout**: `df` of the `to:` path's
+  filesystem on that runner reads full.  The same job retried on another runner
+  passes with no diff.
 
 The tree is clean and the tutorial is right: the lines are the runner's, and the
 fix is its disk.  Retry the job so it lands elsewhere, and free the cache on the
@@ -935,9 +964,11 @@ warning: failed to remove temp/cov/atf_x2_cov.d: Directory not empty
 ERROR: Job failed: exit status 1
 ```
 
-| could be | discriminant |
-|---|---|
-| a coverage job the reaper canceled on that runner left instrumented processes alive, and they write `.gcda` files into the checkout while `git clean` empties it, so the clean fails and the runner stops there | the `Removing` lines name `temp/cov/atf_x2_cov.d/...gcda` files; `ps` on the runner shows processes of the canceled job; the same job retried lands elsewhere and runs |
+- **a coverage job the reaper canceled on that runner left instrumented processes
+  alive, and they write `.gcda` files into the checkout while `git clean` empties
+  it, so the clean fails and the runner stops there**: the `Removing` lines name
+  `temp/cov/atf_x2_cov.d/...gcda` files; `ps` on the runner shows processes of the
+  canceled job; the same job retried lands elsewhere and runs.
 
 Nothing of the branch ran, so the commit is not in question.  Retry the job.
 
@@ -956,10 +987,12 @@ not one -- it is the stale generator agreeing with its own output.  The damage
 surfaces at the commit, where a branch that touches twenty files produces a diff
 touching a hundred and the extra ones are generated files nobody edited.
 
-| could be | discriminant |
-|---|---|
-| `bin/amc` is built from a different commit than the schema it is reading | `git diff --stat origin/master HEAD` right after the commit -- a file count far above what the branch touched, made up of `%_gen.cpp`, is this |
-| the schema change genuinely reaches that many targets | read one of the surprising diffs: a hunk adding or removing a line unrelated to the change (an `ApplyTrace` call, a field the branch never named) is the stale generator |
+- **`bin/amc` is built from a different commit than the schema it is reading**:
+  run `git diff --stat origin/master HEAD` right after the commit.  A file count
+  far above what the branch touched, made up of `%_gen.cpp`, is this.
+- **the schema change genuinely reaches that many targets**: read one of the
+  surprising diffs.  A hunk adding or removing a line unrelated to the change (an
+  `ApplyTrace` call, a field the branch never named) is the stale generator.
 
 The cause is that `amc` is itself built from the tree, so every rebase and every
 pull can move it.  Running it before the build regenerates the whole tree in the
@@ -994,10 +1027,10 @@ field existed.  Rebuilding it needs the generated code that knows the field, and
 producing that code needs a working `amc`.  The cycle only exists while some row
 carries a value for the new field.
 
-| could be | discriminant |
-|---|---|
-| the installed `amc` predates the field | `grep <field> include/gen/dmmeta_gen.h` -- no hit is this |
-| the attribute is misspelled | `acr dmmeta.field:<ns>.<Ctype>.%` -- the field is not listed under that name |
+- **the installed `amc` predates the field**: `grep <field> include/gen/dmmeta_gen.h`
+  finds no hit.
+- **the attribute is misspelled**: `acr dmmeta.field:<ns>.<Ctype>.%` does not list
+  the field under that name.
 
 Run the installed `amc` once on a copy of the data with the field's values
 removed, which keeps the field's own definition, then rebuild it and regenerate:
@@ -1172,7 +1205,7 @@ A generated section is one whose heading matches a pattern in `acr mdsection`.
 `abt_md <mdfile regx>` regenerates it; `abt_md -ns:<ns regx>` refreshes a whole
 namespace.  An inline command appears as `inline-command: ...` inside a
 preformatted block, and its output replaces the rest of that block, which is
-why `abt_md -tut` is schema-mutating: the tutorials under `txt/tut` run
+why `abt_md -tut` is schema-mutating: the OpenACR tutorials under `txt/tut` run
 `acr_ed -create ... -write` to produce their output, and a plain run leaves
 their blocks alone.  Two concurrent runs blank each other's blocks, so never
 start one beside a comptest sweep or a normalize.  `abt_md -evalcmd:N` skips
@@ -1292,9 +1325,9 @@ A command gained an option, `abt_md` ran, the README was committed, and
 atf_ci.modified_files  during:quickreadme  files:txt/exe/samp_agg/README.md  success:N  comment:"Please resolve modified files and try again"
 ```
 
-| could be | discriminant |
-|---|---|
-| the first `abt_md` pass after a new option does not reach its fixpoint | `git diff` shows one added blank line after the new option's `<a href>` anchor, and a second `abt_md` leaves the file unchanged |
+- **the first `abt_md` pass after a new option does not reach its fixpoint**:
+  `git diff` shows one added blank line after the new option's `<a href>` anchor,
+  and a second `abt_md` leaves the file unchanged.
 
 The first pass writes the new option's section without the blank line that
 separates it from the next one, and the second pass adds it.  Run `abt_md`
@@ -1340,14 +1373,18 @@ list, no scheduled timehook.  A server that reaches for
 `algo_lib::ReqExitMainLoop()` is papering over a state bug; the shutdown is
 performed by draining whatever is keeping the loop alive.
 
-| what holds the loop open | how it is drained |
-|---|---|
-| inbound shm | set `c_shmhdr->eof`, or `cd_poll_read_Remove(shm)` when the peer signalled end-of-stream |
-| outbound shm | nothing -- a write-only shm is not polled and holds nothing open |
-| signaled mode | `lib_ams::SetSignaledMode(false)`, which removes the signalfd FIohook |
-| stdin | `fdin_RemoveAll()` on EOF, and drop the stdio-mode loopback shm if one is in `cd_poll_read` |
-| forked children | reap in a recurring timehook, and `bh_timehook_Remove(th)` once `waitpid` returns ECHILD |
-| an FCmd's in-fbuf | in-fbuf EOF fires `cd_cmd_eof_Step`; remove the FCmd and any shm reads left without a producer |
+- **inbound shm**: set `c_shmhdr->eof`, or `cd_poll_read_Remove(shm)` when the
+  peer signaled end-of-stream.
+- **outbound shm**: nothing.  A write-only shm is not polled and holds nothing
+  open.
+- **signaled mode**: `lib_ams::SetSignaledMode(false)`, which removes the signalfd
+  FIohook.
+- **stdin**: `fdin_RemoveAll()` on EOF, and drop the stdio-mode loopback shm if one
+  is in `cd_poll_read`.
+- **forked children**: reap in a recurring timehook, and `bh_timehook_Remove(th)`
+  once `waitpid` returns ECHILD.
+- **an FCmd's in-fbuf**: in-fbuf EOF fires `cd_cmd_eof_Step`; remove the FCmd and
+  any shm reads left without a producer.
 
 Signaled mode is the one worth reading twice.  `lib_ams::SetSignaledMode(true)`
 arms a signalfd and registers it as an FIohook so a peer's SIGRTMIN wakes the
@@ -1370,6 +1407,34 @@ exiting is the normal terminus.
 `algo_lib::ErrorX` on a non-zero one.  Setting `_fstdout="|"` makes `_Start`
 create a pipe and expose the read end as `_from_stdout`, which `_Wait` closes.
 
+**A process started through fork and exec starts with a clean signal state.**
+Every fork that goes on to exec calls `algo_lib::ResetChildSignal` in the child,
+which gives each signal its default disposition and empties the signal mask.
+The generated `_Start`, `algo_lib`'s process start and `lib_exec` call it, and so
+does each hand-written fork that execs.  A launcher that wants its child to start
+with a signal ignored sets that after the reset, as `lib_lst`'s waiter does for
+the terminal's stop signals.  A fork that does not exec runs the
+parent's own code, a daemonized copy or a test worker, and it keeps the
+parent's signal state, because that code was written for it.  Each process
+blocks or handles what it uses itself.  `SetupHangupSignal` unblocks SIGHUP,
+and a process that reads a signal through a signalfd blocks that signal where it
+opens the fd.  So nothing a process does rests on a mask or a handler it
+inherited.  A command that a shell started blocking SIGHUP still hears the
+hangup a supervisor stops it with.
+
+**A daemon blocks SIGPIPE in its own Main.**  It calls `algo_lib::BlockSigpipe`
+first, before it starts a thread, so a peer that has gone answers the daemon's
+next write with EPIPE and the daemon reports it and goes on.  Nothing unblocks
+SIGPIPE afterwards or waits with a mask that leaves it unblocked, because the
+signal stays pending once raised and an unblock would deliver it.  Whether a
+tool blocks or ignores SIGPIPE is its author's decision.  Most keep the
+default, so a pipeline into `head` ends them, and `SetupExitSignals` ignores it.
+
+**A failed `Prlog` write ends the process with a nonzero code.**  `Prlog` does not
+report the failure through itself, since the report would meet the same
+failure, and it throws nothing.  It sets the exit code to 1 when nothing else
+has set one, so a tool whose output was lost does not exit 0.
+
 **State lives on `FDb`.**  A file-scope `static` is invisible to `acr`, does
 not travel with copy and print, and takes part in no xref.  The codestyle skill
 states this rule and its consequences in full.
@@ -1390,6 +1455,17 @@ existed, so its dependency scan demands a file it does not know how to write.
 A tool cannot bootstrap a feature it predates.  `ai` plants an empty
 `build/gitinfo.h`, the build succeeds unversioned, and the fresh `abt` it
 installs writes the real stamp on the next run.
+
+**A shared object links objects compiled position-independent, and an executable
+links objects compiled without.**  An `so` namespace is a shared object that a
+host process loads, such as a Python module.  Ubuntu's g++ compiles PIE
+by default, and `ld` refuses a PIE object in a shared object (`recompile with
+-fPIC`).  `-fPIC` costs an executable a few percent on its hot path, so abt builds
+a shared object and every library it links a second time, under the build
+directory's `so/`, with the `SOCC` options `-fPIC -fno-semantic-interposition`
+([/txt/rule/abt.md](/txt/rule/abt.md)).  An `so` links with the `SOLINK` options
+besides the `LINK` ones, and a system library its host supplies, such as CPython,
+names a pkg-config package in `dev.syslibuname` rather than a library to link.
 
 **A rebase leaves the built tools a version behind, and each of the two
 failures is mistaken for something else.**  The silent one comes from `amc`.
@@ -1433,18 +1509,18 @@ synthetic universe and diffs the generator's stdout against a stored baseline,
 and none of those ctypes appears in `data/`, so none contributes a line to
 `cpp/gen`.  A rule that renames them leaves the committed generated tree
 byte-identical.  Such a change can therefore reach `n_filemod:0`, build, pass
-`atf_unit`, `atf_amc` and `bin/normalize` in full, and still fail the `comp`
-and `coverage` jobs on a golden diff -- `bin/normalize` does not run
+`atf_unit`, `atf_amc` and `bin/normalize` in full, and still fail the `compB`
+and `coverageA` jobs on a golden diff -- `bin/normalize` does not run
 `atf_comp`.  Run `atf_comp -comptest:'amc.%'` before pushing.
 
 **A new ctype field drifts every comptest golden that prints that ctype's
 rows.**  Add a field to `dev.Target` and any golden that dumped a target row now
 shows the new column and its comptest fails.  The change touches no line of that test's source, so it
 reaches `n_filemod:0`, builds, and passes `bin/normalize` in full while the
-`comp` and `coverage` jobs go red, exactly as a name-derivation change does.
+`compA` or `compB` and the `coverageA` job go red, exactly as a name-derivation change does.
 After adding a field, grep the goldens for a row of the ctype
 (`grep -rl "<ns>.<ctype>  <key>:" test/atf_comp`) and recapture each, or run the
-`comp` cijob, before pushing.
+`compA` and `compB` cijobs, before pushing.
 
 **A comptest diff is read, not blessed.**  `atf_comp` prints a coloured diff
 between `temp/atf_comp/<name>` and `test/atf_comp/<name>`.  A diff consistent
@@ -1530,6 +1606,27 @@ own paths and configuration.  Regenerate it after a target's source list or
 its flags change, because `clangd` reads whatever is on disk and gives no
 signal that it has gone stale.
 
+**Where a target builds follows from what it needs and what a platform provides.**
+`dev.targsyslib` says what a target needs, `amc.crypto`, with no platform in the
+key.  `dev.syslibuname` says what a platform provides, `crypto/Darwin`, and its
+`lib` is the name the linker takes, empty when the C library already holds it and
+different when the platform names it otherwise: FreeBSD provides `mariadb` as
+`-lmysqlclient`.  abt links the `lib` of each need, and drops from a build every
+target that needs something the platform lacks, directly or through a dependency,
+printing `abt.unavailable` for the ones the command line named.  So a target
+that needs `ibverbs` never reaches a compiler on FreeBSD, which has no
+`ibverbs/FreeBSD` row.  A target is never listed as
+Linux-only; a need is stated once, and the platforms that meet it build the target.
+A need marked `optional` is linked where the platform provides it and never drops
+the target: lib_x2net uses `rdmacm` where it exists, and its RDMA transport keeps
+a second body for a platform without one, on the other side of one `#if` in the
+same file.  The source learns which body to compile from
+abt, never from the operating system: for every optional need of a target or of
+its dependencies that the platform provides, the compile line carries
+`-DALGO_SYSLIB_<NAME>`, as `-DALGO_SYSLIB_RDMACM`.  The RDMA body needs both of
+the libraries it calls, so a platform gains RDMA with an `rdmacm` and an
+`ibverbs` row in `syslibuname`.
+
 **macOS keeps its adaptation layer in one file.**  A call that Linux provides and
 macOS does not needs a function with a Darwin body, and those bodies belong in
 `cpp/lib/algo/macos.cpp`, inside one `#if defined(__MACH__)` spanning the whole
@@ -1538,6 +1635,16 @@ every source in a target compiles on every platform, and the file-wide `#if` is
 what leaves this one empty on Linux.  A conditional that picks between two bodies
 of the same function stays where it is, and so does one in a header, since
 neither is a function that is missing.
+
+**A `dev.arch` key is the word `uname -m` prints on that platform.**  On a
+fresh checkout, `bin/select-bootstrap` builds the bootstrap file name from
+`uname -s` and `uname -m`, and runs `bin/bootstrap/<uname>-<compiler>.release-<arch>`
+if that file exists.  So 64-bit ARM is `aarch64` on Linux and `arm64` on Darwin,
+because those are the words each kernel prints, even though the instruction set
+is the same.  A key in any other spelling yields a bootstrap file that
+`select-bootstrap` never finds.  `atf_ci bootstrap` writes one bootstrap file
+for every `release` row of `dev.builddir`, and it runs on any host, so a new
+platform's bootstrap is generated on x86 and committed with its rows.
 
 **`atf_comp -capture` rewrites `dev.gitfile` from `git ls-files`, and a row for
 a file git does not track yet goes with it.**  The capture ends by running
@@ -1602,6 +1709,32 @@ avoids it is to restore the file with `git checkout -- <path>` or an edit rather
 than a copy, and to read the build's runtime before believing the test that
 follows it.
 
+#### A delete proved harmless by reading the function body alone
+<a href="#a-delete-proved-harmless-by-reading-the-function-body-alone"></a>
+
+A change reorders two calls, and the argument that they commute reads the
+second function's body and finds that it touches none of the rows the first
+one deletes.  The argument is wrong whenever the deleted ctype carries a
+cleanup hook, because `<ctype>_Delete` runs every `Cleanup` ffunc on the
+ctype's fields and every `cascdel` on its xrefs before the row goes, and none
+of that is in the body of the function that called `_Delete`.
+`algo_lib.FProc.pid` carries a `Cleanup` that kills the child process, so a
+function that deletes the row ends a process without a line of its body
+saying so, and the same shape once deleted a companion row that the function
+reordered behind the delete then looked up.
+
+The proof has to trace the delete, and two queries list what a delete runs:
+
+```bash
+acr ffunc:algo_lib.FProc.%      # the Cleanup hooks the row's fields carry
+acr cascdel:acr.FDb.%           # the xrefs whose rows go with the parent
+```
+
+The generated `<Ctype>_Uninit` in `cpp/gen/<ns>_gen.cpp` is the same list in
+call order, and `grep -n "<field>_Cleanup" cpp/<ns>/*.cpp` finds the body of
+each hook.  A delete is independent of a read only when the hooks and the
+cascades touch nothing the read consults.
+
 #### A citest that reports success in eleven milliseconds
 <a href="#a-citest-that-reports-success-in-eleven-milliseconds"></a>
 
@@ -1623,7 +1756,7 @@ warnings.
 The runtime column is what separates the two cases, and it is the only thing
 in the job log that does.  When a citest is meant to build, run a cluster or
 walk the tree, a sub-second runtime is the symptom — scan the column before
-trusting a green `comp` job, and grep the handler for `#if 0` when a number
+trusting a green `compA` or `compB` job, and grep the handler for `#if 0` when a number
 looks too small for the work its comment describes:
 
 ```bash
@@ -1635,17 +1768,17 @@ nothing has not passed until you know it can fail.  A disabled test is that
 rule's worst case, because the harness reports it as a pass rather than as an
 empty result, and nobody re-reads a green line.
 
-#### A comp job that names three failing goldens has stopped counting
-<a href="#a-comp-job-that-names-three-failing-goldens-has-stopped-counting"></a>
+#### A comptest job that names three failing goldens has stopped counting
+<a href="#a-comptest-job-that-names-three-failing-goldens-has-stopped-counting"></a>
 
-The `comp` job runs `atf_comp` at its default `-maxerr:3`, so its log names the
-first three goldens that differ and ends there:
+Each of `compA` and `compB` runs `atf_comp` at its default `-maxerr:3`, so its
+log names the first three goldens that differ and ends there:
 
 ```
 atf_comp.end  comptest:samp_exch.Addorder  success:N  nlines:52  duration:0.71
 atf_comp.end  comptest:acr_ed.CreateCtype  success:N  nlines:147  duration:0.75
 atf_comp.end  comptest:acr_in.Reverse  success:N  nlines:78  duration:0.70
-atf_ci.citest  citest:atf_comp  runtime:00:04:51  success:N
+atf_ci.citest  citest:atf_compB  runtime:00:04:51  success:N
 ```
 
 Three is the cap, not the count.  A change that moves one table's layout moves
@@ -1677,9 +1810,8 @@ the processes a test spawned changing order, and belongs restored from the old g
 > acr -> dmmeta.ctype  ctype:amc.FCtype  comment:""
 ```
 
-| could be | discriminant |
-|---|---|
-| a `sort` in the comptest's command follows the locale | the command sorts without `LC_ALL=C`, and `LC_ALL=C atf_comp <test>` fails locally the way CI does |
+- **a `sort` in the comptest's command follows the locale**: the command sorts
+  without `LC_ALL=C`, and `LC_ALL=C atf_comp <test>` fails locally the way CI does.
 
 A locale collation such as `en_US.UTF-8` skips spaces and punctuation, so an
 indented `  "dmmeta.field` line sorts after `dmmeta.ctype` on a
@@ -1886,11 +2018,13 @@ reports.
 time, so a leaked element pins its buffer and the report names the buffer's
 `ReserveBuffers` stack rather than the element's own.
 
-#### The coverage cijob fails with atf_cov.coverage_lost
-<a href="#the-coverage-cijob-fails-with-atf_cov-coverage_lost"></a>
+#### A coverage job fails with atf_cov.coverage_lost
+<a href="#a-coverage-job-fails-with-atf_cov-coverage_lost"></a>
 
-Every citest before `cov_finalize` reports success, and then the merge says the
-run lost data:
+The tests of a coverage job report success, and then a merge says the run lost
+data.  In `coverageA` or `coverageB` the merge is the job's last citest,
+`cov_gcovA` or `cov_gcovB`, which runs gcov over its citests' directories.  In
+`covfinal` it reads the line counts the two jobs uploaded.
 
 ```ssim
 atf_cov.merge  covdir:temp/cov/atf_comp_cov.d  n_gcda:812  n_gcov:0  n_fail:0  success:N  comment:"gcov read nothing here; every target this citest alone exercises is lost"
@@ -1901,14 +2035,28 @@ The verdict is about the run, so the named targets are evidence rather than
 findings: they are the targets the missing data would have measured, and the
 diff under test has nothing to do with which ones they are.  Read the
 `atf_cov.merge` line above it -- it names the directory, and the directory names
-the citest whose data went missing.
+the citest or the job whose data went missing.
 
-| could be | discriminant |
-|---|---|
-| the instrumented binary died instead of exiting | a binary writes its coverage database as it exits, so a crash or a SIGKILL leaves nothing behind; read the citest's own output for the process that ended badly |
-| the coverage build produced no program graphs | `atf_ci.cov_prep` reports `n_obj` and `n_gcno` at the end of the build, and fails there when they differ; a passing `cov_prep` rules this out |
-| gcov could not read one of the profiles | an `atf_cov.gcov_fail` line above the merge line names the `.gcda` or `.gcno` gcov refused and why, in gcov's own words; `n_fail` on the merge line counts such commands, and a directory whose other files still yielded coverage is kept and judged per target |
-| the covdir was cleared under the run | `cov_prep` empties `temp/cov`, so a second pipeline sharing the checkout removes a directory the first one is still filling; compare job start times on the runner |
+- **a job wrote no line counts**: the merge line in `covfinal` names
+  `temp/cov/coverageA` or `temp/cov/coverageB` with `n_ssim:0`.  That job passed,
+  and its gcov step found nothing to count.  Read the `atf_cov.merge` lines in
+  that job's log: a citest directory with `n_gcda:0` wrote no profile data.  A job
+  that failed, or whose upload failed, skips `covfinal` instead.
+- **a job's line counts come from another commit**: `covfinal` stops with
+  `atf_ci.cov_stale` before any merge line, naming the directory and the two
+  commits.  A directory with no `commit` stamp reads `commit:""`.  Locally this
+  means the job has not run since the last commit, so run it again; in CI it
+  means the upload lost the stamp.
+- **the instrumented binary died instead of exiting**: a binary writes its coverage
+  database as it exits, so a crash or a SIGKILL leaves nothing behind.  Read the
+  citest's own output for the process that ended badly.
+- **the coverage build produced no program graphs**: `atf_ci.cov_prep` reports
+  `n_obj` and `n_gcno` at the end of the build, and fails there when they differ.
+  A passing `cov_prepA` or `cov_prepB` rules this out.
+- **gcov could not read one of the profiles**: an `atf_cov.gcov_fail` line above
+  the merge line names the `.gcda` or `.gcno` gcov refused and why, in gcov's own
+  words.  `n_fail` on the merge line counts such commands, and a directory whose
+  other files still yielded coverage is kept and judged per target.
 
 `n_gcda:0` says the citest wrote no coverage database at all, and a non-zero
 `n_gcda` with `n_gcov:0` says gcov could not read what it wrote.  The two have
@@ -1930,10 +2078,11 @@ gli.load_input  lib_gli.duplicate_key  xref:lib_gli.FDb.ind_label
 data/glidb/label.ssim:<line>: glidb.label  label:<new>  ...
 ```
 
-| could be | discriminant |
-|---|---|
-| a `sed` rename turned one row into a copy of another | `awk '{print $2}' data/<ns>/<file>.ssim \| sort \| uniq -d` names the repeated key; the earlier copy sits where the old name sorted |
-| the file held the pair before the rename | the same pipe over `git show origin/master:<path>` names it too |
+- **a `sed` rename turned one row into a copy of another**:
+  `awk '{print $2}' data/<ns>/<file>.ssim | sort | uniq -d` names the repeated
+  key.  The earlier copy sits where the old name sorted.
+- **the file held the pair before the rename**: the same pipe over
+  `git show origin/master:<path>` names it too.
 
 `acr -check % -x` reports `n_err:0` with two rows under one key, so a clean check
 proves nothing here.  The tool that indexes the table, `gli` for `glidb.label`, is
@@ -1968,14 +2117,14 @@ The trap is in how the change is checked.  `atf_comp '<pattern>'` runs the tests
 the pattern names, and a pattern is written from the tests the author has in
 mind, so the ones they did not think of pass by not running.  Four of those nine
 goldens were recaptured that way and the run reported 16 of 16; `comp` then
-failed on three more, and two rounds of `atf_ci -citest:atf_comp` -- the citest
-the job actually runs -- turned up the rest, two or three at a time, because a
+failed on three more, and two rounds of the component-test citests -- the ones
+the jobs actually run -- turned up the rest, two or three at a time, because a
 loaded box flakes a different pair of timing-sensitive tests on every pass.
 
 So the gate is the citest, never a pattern:
 
 ```bash
-atf_ci -citest:atf_comp        # what the comp job runs
+atf_ci -citest:'atf_compA|atf_compB'   # what the compA and compB jobs run
 ```
 
 And for this class of change there is a check that does not run a test at all,
@@ -2004,29 +2153,44 @@ same word names the whole set, read as the query `noun:%`.  Plurals are never
 used, and an attribute of one element is a two-word `noun noun` phrase: `ctype
 name`, `field reftype`, `target license`.
 
-| term | meaning |
-|---|---|
-| ssim tuple | one record: a type tag, then whitespace-separated `key:value` attributes, the first of which is the primary key |
-| ssimfile | a sorted text file of tuples of one type, under `data/<ns>/<name>.ssim`, and the table it holds |
-| ssimdb | a namespace that defines tables only, with no in-memory pool and no build target |
-| ctype | a compound type -- a record, a struct, a message -- named `<ns>.<Name>` |
-| field | one attribute of a ctype, named `<ns>.<Ctype>.<name>`, and the row that declares it |
-| reftype | what a field's declared type constructs: `Val`, `Pkey`, `Base`, `Thash`, `Llist`, `Ptrary`, `Upptr`, `Varlen` and the rest of `acr reftype` |
-| pkey | the first field of a ctype, the value that identifies one row |
-| base | a field whose reftype is `Base`: the ctype it names contributes all of its fields to this one |
-| xref | an in-memory cross-reference: the row that says one record is reachable from another, and by which access path |
-| via | the access path an xref takes, either a pointer field on the child or a `<hash>/<key>` pair |
-| ns | a namespace, and the unit a target is built from |
-| target | a thing `abt` builds: an executable, a library, an ssimdb, a protocol |
-| finput | a declaration that a target loads an ssimfile into an in-memory pool at startup |
-| gstatic | the same, except the rows are compiled in rather than read at startup |
-| fstep | a declaration that a field's collection is driven by a step function |
-| fldfunc | a field whose value is computed rather than stored: a substr, a cppfunc, a Count |
-| cursor | the generated way to walk a pool, list, heap or index: `ind_beg(<curs>, var, root) ... ind_end` |
-| in-memory database | the pools, indexes and cross-references `amc` generates for one namespace, rooted at its `FDb` |
-| FDb | the singleton that holds every pool and every global index of a namespace |
-| package | a named subset of the tree that `apm` can evaluate and publish |
-| citest | one check of a cijob, driven by `atf_ci` |
+- **ssim tuple**: one record.  It is a type tag, then whitespace-separated
+  `key:value` attributes, the first of which is the primary key.
+- **ssimfile**: a sorted text file of tuples of one type, under
+  `data/<ns>/<name>.ssim`, and the table it holds.
+- **ssimdb**: a namespace that defines tables only, with no in-memory pool and no
+  build target.
+- **ctype**: a compound type -- a record, a struct, a message -- named
+  `<ns>.<Name>`.
+- **field**: one attribute of a ctype, named `<ns>.<Ctype>.<name>`, and the row
+  that declares it.
+- **reftype**: what a field's declared type constructs, one of `Val`, `Pkey`,
+  `Base`, `Thash`, `Llist`, `Ptrary`, `Upptr`, `Varlen` and the rest of
+  `acr reftype`.
+- **pkey**: the first field of a ctype, the value that identifies one row.
+- **base**: a field whose reftype is `Base`.  The ctype it names contributes all of
+  its fields to this one.
+- **xref**: an in-memory cross-reference.  It is the row that says one record is
+  reachable from another, and by which access path.
+- **via**: the access path an xref takes, either a pointer field on the child or a
+  `<hash>/<key>` pair.
+- **ns**: a namespace, and the unit a target is built from.
+- **target**: a thing `abt` builds, which is an executable, a library, an ssimdb
+  or a protocol.
+- **finput**: a declaration that a target loads an ssimfile into an in-memory pool
+  at startup.
+- **gstatic**: the same, except the rows are compiled in rather than read at
+  startup.
+- **fstep**: a declaration that a field's collection is driven by a step function.
+- **fldfunc**: a field whose value is computed rather than stored, which is a
+  substr, a cppfunc or a Count.
+- **cursor**: the generated way to walk a pool, list, heap or index, as in
+  `ind_beg(<curs>, var, root) ... ind_end`.
+- **in-memory database**: the pools, indexes and cross-references `amc` generates
+  for one namespace, rooted at its `FDb`.
+- **FDb**: the singleton that holds every pool and every global index of a
+  namespace.
+- **package**: a named subset of the tree that `apm` can evaluate and publish.
+- **citest**: one check of a cijob, driven by `atf_ci`.
 
 **A document names a table by its short name, and `abt_md -check` resolves it.**  A span
 `ssimfile:dmmeta.ctype` names that table; the qualified `dmmeta.ssimfile:dmmeta.ctype`

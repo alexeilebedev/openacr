@@ -29,9 +29,9 @@
 #include <fcntl.h>
 #include <unistd.h>
 
-// The named credential must not exist yet, and its name carries no slash,
-// which -add reads as a path.
-static void CheckNewName(algo::strptr name) {
+// Refuse NAME as the name of a new credential when a credential of that name
+// is in the store, or when it carries a slash, which -add reads as a path.
+void credd::CheckNewName(algo::strptr name) {
     vrfy(algo::FindChar(name, '/') < 0, tempstr()
          << "credd.badname" << Keyval("name", name)
          << Keyval("comment", "a slash makes a path; a credential's name has none"));
@@ -84,8 +84,8 @@ void credd::Start() {
             (void)dup2(log, 2);
             close(devnull);
             close(log);
-            // a kqueue does not survive fork, so the child opens its own event
-            // queue before the daemon registers its socket in it
+            // the child opens its own event queue before the daemon registers
+            // its socket, since a kqueue does not survive fork
             algo_lib::IohookInit();
             credd::RunDaemon();
             _exit(0);
@@ -288,7 +288,7 @@ static void AddSecret(creddb::Cred &rec) {
 static void AddNamed(algo::strptr name) {
     creddb::Cred rec;
     rec.cred = name;
-    CheckNewName(rec.cred);
+    credd::CheckNewName(rec.cred);
     if (credd::_db.cmdline.linkto != "") {
         AddLink(rec);
     } else {
@@ -346,7 +346,7 @@ void credd::Add() {
 void credd::Keygen() {
     creddb::Cred rec;
     rec.cred = credd::_db.cmdline.keygen;
-    CheckNewName(rec.cred);
+    credd::CheckNewName(rec.cred);
     algo::tempstr keyfile = algo::DirFileJoin(credd::KeyTempDir(), rec.cred);
     algo::tempstr pubfile;
     pubfile << keyfile << ".pub";
@@ -374,26 +374,31 @@ void credd::Keygen() {
     prlog(rec.pubkey);
 }
 
-// Renew the token -renew names: print the page where its kind reissues a
-// token, with the server, name and permissions filled in, then read the new
-// value per -src, ask the master password, and reseal.  A new -expires
-// replaces the old; without one the old expiry stands.
+// Renew the token -renew names.  A token issued with the self_rotate
+// permission, of a kind with a rotation endpoint, is rotated over the API: the
+// master password is asked, the token asks the provider for its successor, and
+// the new value and the expiry the provider set are sealed in its place.  Any
+// other token, and one the provider refuses to rotate, is renewed by a
+// person: the page where its kind reissues a token is printed, with the
+// server, name and permissions filled in, and the new value is read per -src.
+// -expires sets the new expiry.  Without it a rotation asks for the lifetime
+// the token was issued with and stores the expiry the provider sets, and a
+// pasted token keeps the old one.
 void credd::Renew() {
     credd::FCred *target = credd::Target(credd::_db.cmdline.renew);
     vrfy(target, tempstr() << "credd.notfound" << Keyval("name", credd::_db.cmdline.renew));
     credd::FCred &cred = *target;
     vrfy(cred.kind != creddb_Kind_kind_sshkey, tempstr() << "credd.notoken" << Keyval("cred", cred.cred)
          << Keyval("comment", "an ssh key is not renewed; -keygen a new one and -remove this"));
-    algo_lib::Replscope R;
-    Set(R, "$server", cred.server);
-    Set(R, "$name", cred.cred);
-    Set(R, "$account", cred.account);
-    Set(R, "$perm", credd::PermList(cred));
-    algo::tempstr url;
-    Ins(&R, url, cred.p_kind->tokenurl, false);
-    Set(R, "$tokenurl", url);
-    algo::tempstr howto;
-    Ins(&R, howto, cred.p_kind->howto, false);
+    // the tree says which role a credential it names acts in; a token the
+    // tree does not name is reissued in the role it has now
+    dev::Cred need;
+    algo::cstring rolename;
+    algo::cstring needperm;
+    (void)credd::ReadNeed(credd::_db.cmdline.in, cred.cred, need, rolename, needperm);
+    credd::FRole *role = credd::ind_role_Find(rolename);
+    bool rotate = cred.p_kind->rotateurl != ""
+        && credd::ind_credperm_Find(creddb::Credperm_Concat_cred_name(cred.cred, "self_rotate")) != NULL;
     if (cred.cred != credd::_db.cmdline.renew) {
         prlog(credd::_db.cmdline.renew << " is a link to " << cred.cred << ", so that is the token renewed.");
     }
@@ -403,25 +408,57 @@ void credd::Renew() {
     if (links != "") {
         prlog("The links " << links << " stand for it and follow along.");
     }
-    if (credd::c_credperm_N(cred) > 0) {
-        prlog("It was issued with these permissions, which the new token needs too:");
-        ind_beg(credd::cred_c_credperm_curs, credperm, cred) {
-            credd::FPerm *perm = credd::ind_perm_Find(creddb::Perm_Concat_kind_name(cred.kind, credd::name_Get(credperm)));
-            prlog("  " << credd::name_Get(credperm) << (perm ? tempstr() << ": " << perm->comment : tempstr()));
-        }ind_end;
-    }
-    if (howto != "") {
-        prlog(howto);
-    }
-    prlog("The new value replaces the old one in the store once you paste it and give the master password; the running daemon serves it at once.");
     (void)credd::ParseExpires(credd::_db.cmdline.expires);
-    algo::tempstr secret = credd::ReadKindSecret(*cred.p_kind, "New token value: ");
-    vrfy(algo::Trimmed(secret) != "", "credd.emptysecret  comment:\"no token value was given\""); // ignore:hand_quote
-    credd::UnlockPrompt();
-    vrfy(credd::Seal(credd::_db.key, algo::Trimmed(secret), cred.secret), "credd.seal");
+    int status = 0;
+    algo::cstring secret;
+    algo::cstring expires(credd::_db.cmdline.expires);
+    algo::cstring msg;
+    algo::cstring ask;
+    if (rotate) {
+        credd::UnlockPrompt();
+        algo::cstring plain;
+        vrfy(credd::Unseal(credd::_db.key, cred.secret, plain), tempstr() << "credd.unseal" << Keyval("cred", cred.cred));
+        ask = credd::_db.cmdline.expires != "" ? strptr(credd::_db.cmdline.expires) : strptr(credd::GetRenewExpires(cred));
+        status = credd::RotateOverApi(cred, plain, ask, secret, expires, msg);
+    }
+    // A refusal means the token can no longer speak for itself -- revoked,
+    // expired, or stripped of the scope -- and a person can still reissue it.
+    // Any other failure is a mistake in the request, and GitLab may or may not
+    // have rotated, so the store is left as it was and the failure says why.
+    bool refused = credd::RefusedQ(status);
+    vrfy(!rotate || status == 200 || refused, tempstr() << "credd.rotatefail" << Keyval("cred", cred.cred)
+         << Keyval("status", status) << Keyval("msg", msg));
+    if (status == 200) {
+        prlog("credd.rotated" << Keyval("cred", cred.cred) << Keyval("asked", ask) << Keyval("expires", expires)
+              << Keyval("comment", "GitLab revoked the old value; the new one goes into the store"));
+    } else {
+        if (refused) {
+            prlog("credd.rotaterefused" << Keyval("cred", cred.cred) << Keyval("status", status) << Keyval("msg", msg)
+                  << Keyval("comment", "the token may not rotate itself; the steps below are for a person"));
+        }
+        if (credd::c_credperm_N(cred) > 0) {
+            prlog("It was issued with these permissions, which the new token needs too:");
+            ind_beg(credd::cred_c_credperm_curs, credperm, cred) {
+                credd::FPerm *perm = credd::ind_perm_Find(creddb::Perm_Concat_kind_name(cred.kind, credd::name_Get(credperm)));
+                prlog("  " << credd::name_Get(credperm) << (perm ? tempstr() << ": " << perm->comment : tempstr()));
+            }ind_end;
+        }
+        algo::tempstr howto(credd::GetHowto(*cred.p_kind, cred.server, cred.cred, cred.account, credd::PermList(cred)
+                                            , role ? credd::name_Get(*role) : strptr()));
+        if (howto != "") {
+            prlog(howto);
+        }
+        prlog("The new value replaces the old one in the store once you paste it and give the master password; the running daemon serves it at once.");
+        secret = algo::Trimmed(credd::ReadKindSecret(*cred.p_kind, "New token value: "));
+        credd::UnlockPrompt();
+    }
+    vrfy(secret != "", "credd.emptysecret  comment:\"no token value was given\""); // ignore:hand_quote
+    vrfy(credd::Seal(credd::_db.key, secret, cred.secret), "credd.seal");
     cred.created = credd::NowSec();
-    if (credd::_db.cmdline.expires != "") {
-        cred.expires = credd::_db.cmdline.expires;
+    // a rotated token expires when GitLab says, never included; a pasted one
+    // keeps the old date unless -expires gives a new one
+    if (status == 200 || expires != "") {
+        cred.expires = expires;
     }
     credd::SaveStore();
     credd::NotifyReload();
@@ -577,9 +614,16 @@ void credd::Main() {
     credd::LoadStore();
     bool any = credd::_db.cmdline.start || credd::_db.cmdline.stop || credd::_db.cmdline.status
         || credd::_db.cmdline.list || credd::_db.cmdline.show != "" || credd::_db.cmdline.check
-        || credd::_db.cmdline.add != "" || credd::_db.cmdline.keygen != ""
+        || credd::_db.cmdline.add != "" || credd::_db.cmdline.mint != "" || credd::_db.cmdline.keygen != ""
         || credd::_db.cmdline.renew != "" || credd::_db.cmdline.remove != "" || credd::_db.cmdline.passwd
         || credd::_db.cmdline.dump || credd::_db.cmdline.daemon || credd::_db.cmdline.seed != "";
+    // every verb that writes the store asks the daemon to read it again, so a
+    // daemon that cannot is found before anything is asked
+    bool change = credd::_db.cmdline.add != "" || credd::_db.cmdline.mint != "" || credd::_db.cmdline.keygen != ""
+        || credd::_db.cmdline.renew != "" || credd::_db.cmdline.remove != "";
+    if (change) {
+        credd::RefuseOldBuild();
+    }
     if (credd::_db.cmdline.start) {
         credd::Start();
     }
@@ -603,6 +647,9 @@ void credd::Main() {
     }
     if (credd::_db.cmdline.add != "") {
         credd::Add();
+    }
+    if (credd::_db.cmdline.mint != "") {
+        credd::Mint();
     }
     if (credd::_db.cmdline.keygen != "") {
         credd::Keygen();

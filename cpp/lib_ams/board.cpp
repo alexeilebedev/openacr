@@ -52,20 +52,22 @@
 // The board of lane SHM's writer, or NULL when that process keeps none.
 // A process keeps one board, so the lookup is by the writer's proc id, and the
 // answer is cached on the lane so a lane opened before the board existed finds
-// it on a later call.
+// it on a later call.  The writer is the lane's owner unless the row names
+// another (LaneWriter).
 //
 // A reader learns of a board by the first reference that reaches it, so on a
 // lane this process reads and does not write the board is opened here when it
 // is not mapped yet.  The open fails while the writer has not created its board,
-// which costs one shm_open per reference until it has; a writer sends no
+// which costs one open per reference until it has; a writer sends no
 // reference before its board exists, so in practice the first one succeeds.
 lib_ams::FShm *lib_ams::BoardOf(lib_ams::FShm &shm) {
+    ams::ProcId writer = lib_ams::LaneWriter(shm);
     if (!shm.p_board && !lib_ams::BoardQ(shm)) {
-        shm.p_board = lib_ams::ind_shm_Find(ams::GrpId(shm.grp_id.proc_id, ams::Grptype(ams_Grptype_board), 0));
+        shm.p_board = lib_ams::ind_shm_Find(ams::GrpId(writer, ams::Grptype(ams_Grptype_board), 0));
     }
     bool mapped = shm.p_board && shm.p_board->c_shmhdr;
     if (!mapped && read_Get(shm.flags) && !write_Get(shm.flags) && !lib_ams::BoardQ(shm)) {
-        shm.p_board = lib_ams::BoardOpen(shm.grp_id.proc_id);
+        shm.p_board = lib_ams::BoardOpen(writer);
     }
     return shm.p_board;
 }
@@ -161,7 +163,7 @@ u64 lib_ams::BoardSize(u64 body, u32 chunk_size) {
 
 // Create a message board of this process as a private mapping of this process
 // alone -- BODY bytes as chunks of CHUNK_SIZE, anonymous memory, no file under
-// /dev/shm -- and open it for writing.  INDEX is the board's index among this
+// the segment directory -- and open it for writing.  INDEX is the board's index among this
 // process's boards: index 0 is the one readers open (BoardOpen), so a private
 // board kept beside a shared one takes another index.  NULL when the memory
 // cannot be mapped.
@@ -209,6 +211,7 @@ lib_ams::FShm *lib_ams::BoardCreatePrivate(u64 body, u32 chunk_size, u32 index D
 // matters is the one the reader already keeps on the lane the reference arrived
 // on, and the writer reads it there.
 lib_ams::FShm *lib_ams::BoardOpen(ams::ProcId writer) {
+    lib_ams::ind_proc_GetOrCreate(writer);// FShm xref requires parent FProc
     lib_ams::FShm *ret = lib_ams::ind_shm_GetOrCreate(ams::GrpId(writer, ams::Grptype(ams_Grptype_board), 0));
     if (ret && !lib_ams::ShmOpen(*ret, ams_ShmFlags_read)) {
         ret = NULL;
@@ -412,6 +415,8 @@ void *lib_ams::BoardBeginSend(lib_ams::FShm &shm, ams::MsgHeader &msg, int refle
         ret = lib_ams::BeginWrite(shm, reflen);
     } else if (chunk) {
         lib_ams::_db.trace.n_board_nochunkref++;
+    } else if (!board) {
+        lib_ams::_db.trace.n_board_noboard++;
     }
     return ret;
 }
@@ -463,7 +468,9 @@ bool lib_ams::BoardSend(lib_ams::FShm &shm, ams::MsgHeader &msg) {
 // The LENGTH bytes at board OFFSET on lane SHM's writer's board, or NULL when
 // they do not lie inside the board's body.  A module that carries several
 // messages under one reference walks them from here; a single message is
-// BoardResolve, which also checks the header at the offset.
+// BoardResolve, which also checks the header at the offset.  A lane whose
+// writer's board this process has not mapped resolves nothing, and says so in
+// n_board_noboard; every span resolved counts in n_board_resolve.
 u8 *lib_ams::BoardSpan(lib_ams::FShm &shm, u64 offset, u32 length) {
     u8 *ret = NULL;
     lib_ams::FShm *board = lib_ams::BoardOf(shm);
@@ -471,6 +478,11 @@ u8 *lib_ams::BoardSpan(lib_ams::FShm &shm, u64 offset, u32 length) {
         u64 end = offset + u64(length);
         bool inbound = offset >= board->c_shmhdr->datastart && end <= u64(board->shm_region.n_elems);
         ret = inbound ? board->shm_region.elems + offset : NULL;
+    } else {
+        lib_ams::_db.trace.n_board_noboard++;
+    }
+    if (ret) {
+        lib_ams::_db.trace.n_board_resolve++;
     }
     return ret;
 }

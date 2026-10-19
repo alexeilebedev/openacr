@@ -38,12 +38,13 @@ void atf_comp::comptest_jkv_ReverseSmoke() {
     atf_comp::ProcWrite(proc, "A.I:0.33");
 }
 
-// A tool that writes its output file has to check the write: a full disk or an
-// unwritable path otherwise leaves no output and reports success. The output
-// path here has a regular file standing where its parent directory would be, so
-// the write cannot succeed under any filesystem state or privilege level, and
-// jkv names the file and the errno and exits non-zero. The blocking file is
-// seeded in the test's own tempdir, which the harness reclaims per run.
+// Ask jkv to write $tempdir/notadir/out.json, where a regular file stands in place
+// of the parent directory, and check that jkv names the file and the errno and exits
+// non-zero.
+// A tool that writes its output file has to check the write.  Otherwise a full disk
+// or an unwritable path leaves no output while the tool reports success.  The
+// blocking file makes the write fail under any filesystem state or privilege level.
+// The test seeds it in its own tempdir, which the harness reclaims per run.
 void atf_comp::comptest_jkv_WriteFail() {
     atf_comp::ProcStart("bash -c 'touch $tempdir/notadir"
                         " && $bindir/jkv -write -file:$tempdir/notadir/out.json -kv:a=1'");

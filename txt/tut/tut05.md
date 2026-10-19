@@ -38,7 +38,7 @@ Usage: atf_nrun [[-ncmd:]<int>] [options]
     [ncmd]      int     6
     -verbose    flag            Verbosity level (0..255); alias -v; cumulative
     -debug      flag            Debug level (0..255); alias -d; cumulative
-    -trace      string  ""      Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps
+    -trace      string  ""      Trace expression: log categories to enable, as category[:filter],...
     -help                       Print help and exit; alias -h
     -version                    Print version and exit
     -signature                  Show signatures and exit; alias -sig
@@ -192,7 +192,7 @@ For completeness, here are the ssim lines defining the `atf_nrun` process, minus
 some less useful ones:
 
 ```ssim
-inline-command: acr ns:atf_nrun -t -report:N | egrep -v '(dev.targsrc|gendb.ctypelen)'
+inline-command: acr ns:atf_nrun -t -report:N | grep -E -v '(dev.targsrc|gendb.ctypelen)'
 dev.license  license:Apache  proprietary:N  copyleft:N  comment:"Apache License 2.0"
 dmmeta.nstype  nstype:exe  comment:Executable
   dmmeta.ns  ns:atf_nrun  nstype:exe  license:Apache  comment:"Run N subprocesses in parallel"

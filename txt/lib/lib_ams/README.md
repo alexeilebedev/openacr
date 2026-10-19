@@ -236,21 +236,21 @@ bandwidth and not flow control.
 
 64 KB messages:
 
-|readers|ring MB/s|board MB/s|ring latency|board latency|
-|---|---|---|---|---|
-|1|17759|12334|2.6 us|4.4 us|
-|2|20863|23910|3.6 us|4.4 us|
-|4|26558|40071|5.7 us|5.4 us|
-|8|28594|73112|10.1 us|5.8 us|
+| readers | ring MB/s | board MB/s | ring latency | board latency |
+| ------- | --------- | ---------- | ------------ | ------------- |
+| 1       | 17759     | 12334      | 2.6 us       | 4.4 us |
+| 2       | 20863     | 23910      | 3.6 us       | 4.4 us |
+| 4       | 26558     | 40071      | 5.7 us       | 5.4 us |
+| 8       | 28594     | 73112      | 10.1 us      | 5.8 us |
 
 8 KB messages, with `-nmsg:2000000 -msgsize_min:8192 -msgsize_max:8193`:
 
-|readers|ring MB/s|board MB/s|ring latency|board latency|
-|---|---|---|---|---|
-|1|7896|8319|1.1 us|1.2 us|
-|2|11671|13449|1.3 us|1.4 us|
-|4|11107|16700|2.1 us|2.0 us|
-|8|11078|21732|3.6 us|2.7 us|
+| readers | ring MB/s | board MB/s | ring latency | board latency |
+| ------- | --------- | ---------- | ------------ | ------------- |
+| 1       | 7896      | 8319       | 1.1 us       | 1.2 us |
+| 2       | 11671     | 13449      | 1.3 us       | 1.4 us |
+| 4       | 11107     | 16700      | 2.1 us       | 2.0 us |
+| 8       | 11078     | 21732      | 3.6 us       | 2.7 us |
 
 The board carries one fixed extra cost, and it is a single payload copy: the
 inline path formats in place through the zero-copy `LogMsg_FmtShm`, while the
@@ -267,12 +267,12 @@ flight. The ring path must size every lane for 64 KB messages. The board path
 sizes its lanes for the references they carry — that is what `-bufsize:32768`
 says — and the payloads live once in the board:
 
-|readers|ring bytes|board bytes (lanes + board)|
-|---|---|---|
-|1|1,118,273|307,460|
-|2|2,236,546|610,824|
-|4|4,473,092|1,217,552|
-|8|8,946,184|2,431,008|
+| readers | ring bytes | board bytes (lanes + board) |
+| ------- | ---------- | --------------------------- |
+| 1       | 1,118,273  | 307,460 |
+| 2       | 2,236,546  | 610,824 |
+| 4       | 4,473,092  | 1,217,552 |
+| 8       | 8,946,184  | 2,431,008 |
 
 A board grows with its readers as well, because it is sized for the sum of their
 allowances, so the ratio stays near 3.7x rather than widening with the fan-out.

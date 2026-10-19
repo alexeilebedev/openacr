@@ -51,6 +51,21 @@ enum amcdb_FieldIdEnum {    // amcdb.FieldId.value
     ,amcdb_FieldId_decval
     ,amcdb_FieldId_nondflt
     ,amcdb_FieldId_argtype
+    ,amcdb_FieldId_regxcase
+    ,amcdb_FieldId_regxstyle
+    ,amcdb_FieldId_pattern
+    ,amcdb_FieldId_subject
+    ,amcdb_FieldId_full
+    ,amcdb_FieldId_match
+    ,amcdb_FieldId_regxlenient
+    ,amcdb_FieldId_invalid
+    ,amcdb_FieldId_regxmacro
+    ,amcdb_FieldId_chclass
+    ,amcdb_FieldId_neg
+    ,amcdb_FieldId_regxrule
+    ,amcdb_FieldId_token
+    ,amcdb_FieldId_out
+    ,amcdb_FieldId_esc
     ,amcdb_FieldId_regxtype
     ,amcdb_FieldId_stepband
     ,amcdb_FieldId_rank
@@ -69,7 +84,7 @@ enum amcdb_FieldIdEnum {    // amcdb.FieldId.value
     ,amcdb_FieldId_value
 };
 
-enum { amcdb_FieldIdEnum_N = 35 };
+enum { amcdb_FieldIdEnum_N = 50 };
 
 extern const char *  amcdb_Tclass_tclass_Alias;      // Alias       fconst:amcdb.Tclass.tclass/Alias
 extern const char *  amcdb_Tclass_tclass_Atree;      // Atree       fconst:amcdb.Tclass.tclass/Atree
@@ -131,6 +146,11 @@ namespace amcdb { // gen:ns_pkeytypedef
     typedef algo::Smallstr50 GenPkey;
     typedef algo::Smallstr50 LangPkey;
     typedef algo::Smallstr20 PbtypePkey;
+    typedef algo::Smallstr50 RegxcasePkey;
+    typedef algo::Smallstr50 RegxlenientPkey;
+    typedef algo::Smallstr50 RegxmacroPkey;
+    typedef algo::Smallstr50 RegxrulePkey;
+    typedef algo::Smallstr50 RegxstylePkey;
     typedef algo::Smallstr50 RegxtypePkey;
     typedef algo::Smallstr50 StepbandPkey;
     typedef algo::Smallstr50 TclassPkey;
@@ -147,6 +167,11 @@ namespace amcdb { struct FieldId; }
 namespace amcdb { struct Gen; }
 namespace amcdb { struct Lang; }
 namespace amcdb { struct Pbtype; }
+namespace amcdb { struct Regxcase; }
+namespace amcdb { struct Regxlenient; }
+namespace amcdb { struct Regxmacro; }
+namespace amcdb { struct Regxrule; }
+namespace amcdb { struct Regxstyle; }
 namespace amcdb { struct Regxtype; }
 namespace amcdb { struct Stepband; }
 namespace amcdb { struct Tclass; }
@@ -342,6 +367,130 @@ inline void          Pbtype_Init(amcdb::Pbtype& parent);
 // func:amcdb.Pbtype..Print
 void                 Pbtype_Print(amcdb::Pbtype& row, algo::cstring& str) __attribute__((nothrow));
 
+// --- amcdb.Regxcase
+struct Regxcase { // amcdb.Regxcase: An example of a regx style, matched alike by algo_lib in C++ and by its TypeScript twin
+    algo::Smallstr50   regxcase;    //
+    algo::Smallstr50   regxstyle;   //
+    algo::cstring      pattern;     // A pattern in the style
+    algo::cstring      subject;     // The string matched against it
+    bool               full;        //   true  The pattern covers the whole subject
+    bool               match;       //   false  What algo_lib's Regx and the TypeScript RegExp both answer
+    algo::Comment      comment;     //
+    // func:amcdb.Regxcase..Ctor
+    inline               Regxcase() __attribute__((nothrow));
+};
+// func:amcdb.Regxcase..ReadFieldMaybe
+bool                 Regxcase_ReadFieldMaybe(amcdb::Regxcase& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of amcdb::Regxcase from an ascii string.
+// The format of the string is an ssim Tuple
+// func:amcdb.Regxcase..ReadStrptrMaybe
+bool                 Regxcase_ReadStrptrMaybe(amcdb::Regxcase &parent, algo::strptr in_str) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:amcdb.Regxcase..Init
+inline void          Regxcase_Init(amcdb::Regxcase& parent);
+// print string representation of ROW to string STR
+// cfmt:amcdb.Regxcase.String  printfmt:Tuple
+// func:amcdb.Regxcase..Print
+void                 Regxcase_Print(amcdb::Regxcase& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- amcdb.Regxlenient
+struct Regxlenient { // amcdb.Regxlenient: A malformed shape of the default syntax, and what a pattern holding it means
+    algo::Smallstr50   regxlenient;   //
+    bool               invalid;       //   false  The shape makes the pattern invalid; otherwise its character is literal
+    algo::Comment      comment;       //
+    // func:amcdb.Regxlenient..Ctor
+    inline               Regxlenient() __attribute__((nothrow));
+};
+// func:amcdb.Regxlenient..ReadFieldMaybe
+bool                 Regxlenient_ReadFieldMaybe(amcdb::Regxlenient& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of amcdb::Regxlenient from an ascii string.
+// The format of the string is an ssim Tuple
+// func:amcdb.Regxlenient..ReadStrptrMaybe
+bool                 Regxlenient_ReadStrptrMaybe(amcdb::Regxlenient &parent, algo::strptr in_str) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:amcdb.Regxlenient..Init
+inline void          Regxlenient_Init(amcdb::Regxlenient& parent);
+// print string representation of ROW to string STR
+// cfmt:amcdb.Regxlenient.String  printfmt:Tuple
+// func:amcdb.Regxlenient..Print
+void                 Regxlenient_Print(amcdb::Regxlenient& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- amcdb.Regxmacro
+struct Regxmacro { // amcdb.Regxmacro: A backslash escape of the default syntax that stands for a class of characters
+    algo::Smallstr50   regxmacro;   //
+    algo::Smallstr50   chclass;     // Characters the escape matches, as single characters and ranges a-b
+    bool               neg;         //   false  The escape matches every character outside chclass
+    algo::Comment      comment;     //
+    // func:amcdb.Regxmacro..Ctor
+    inline               Regxmacro() __attribute__((nothrow));
+};
+// func:amcdb.Regxmacro..ReadFieldMaybe
+bool                 Regxmacro_ReadFieldMaybe(amcdb::Regxmacro& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of amcdb::Regxmacro from an ascii string.
+// The format of the string is an ssim Tuple
+// func:amcdb.Regxmacro..ReadStrptrMaybe
+bool                 Regxmacro_ReadStrptrMaybe(amcdb::Regxmacro &parent, algo::strptr in_str) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:amcdb.Regxmacro..Init
+inline void          Regxmacro_Init(amcdb::Regxmacro& parent);
+// print string representation of ROW to string STR
+// cfmt:amcdb.Regxmacro.String  printfmt:Tuple
+// func:amcdb.Regxmacro..Print
+void                 Regxmacro_Print(amcdb::Regxmacro& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- amcdb.Regxrule
+struct Regxrule { // amcdb.Regxrule: What one token of a regx style becomes in the default syntax
+    algo::Smallstr50   regxrule;   //
+    algo::Smallstr50   out;        // Default-syntax text of the token; a catch-all token prefixes it to the character
+    algo::Comment      comment;    //
+    // func:amcdb.Regxrule..Ctor
+    inline               Regxrule() __attribute__((nothrow));
+};
+// func:amcdb.Regxrule.regxstyle.Get
+algo::strptr         regxstyle_Get(amcdb::Regxrule& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:amcdb.Regxrule.regxstyle.Get2
+algo::strptr         Regxrule_regxstyle_Get(algo::strptr arg) __attribute__((nothrow));
+
+// func:amcdb.Regxrule.token.Get
+algo::strptr         token_Get(amcdb::Regxrule& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:amcdb.Regxrule.token.Get2
+algo::strptr         Regxrule_token_Get(algo::strptr arg) __attribute__((nothrow));
+
+// func:amcdb.Regxrule..Concat_regxstyle_token
+tempstr              Regxrule_Concat_regxstyle_token( const algo::strptr& regxstyle ,const algo::strptr& token );
+// func:amcdb.Regxrule..ReadFieldMaybe
+bool                 Regxrule_ReadFieldMaybe(amcdb::Regxrule& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of amcdb::Regxrule from an ascii string.
+// The format of the string is an ssim Tuple
+// func:amcdb.Regxrule..ReadStrptrMaybe
+bool                 Regxrule_ReadStrptrMaybe(amcdb::Regxrule &parent, algo::strptr in_str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:amcdb.Regxrule.String  printfmt:Tuple
+// func:amcdb.Regxrule..Print
+void                 Regxrule_Print(amcdb::Regxrule& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- amcdb.Regxstyle
+struct Regxstyle { // amcdb.Regxstyle: A regx syntax style, rewritten by its regxrule rows into the default syntax
+    algo::Smallstr50   regxstyle;   //
+    bool               esc;         //   false  A backslash reads the next character by its escaped rule
+    algo::Comment      comment;     //
+    // func:amcdb.Regxstyle..Ctor
+    inline               Regxstyle() __attribute__((nothrow));
+};
+// func:amcdb.Regxstyle..ReadFieldMaybe
+bool                 Regxstyle_ReadFieldMaybe(amcdb::Regxstyle& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of amcdb::Regxstyle from an ascii string.
+// The format of the string is an ssim Tuple
+// func:amcdb.Regxstyle..ReadStrptrMaybe
+bool                 Regxstyle_ReadStrptrMaybe(amcdb::Regxstyle &parent, algo::strptr in_str) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:amcdb.Regxstyle..Init
+inline void          Regxstyle_Init(amcdb::Regxstyle& parent);
+// print string representation of ROW to string STR
+// cfmt:amcdb.Regxstyle.String  printfmt:Tuple
+// func:amcdb.Regxstyle..Print
+void                 Regxstyle_Print(amcdb::Regxstyle& row, algo::cstring& str) __attribute__((nothrow));
+
 // --- amcdb.Regxtype
 struct Regxtype { // amcdb.Regxtype
     algo::Smallstr50   regxtype;   //
@@ -505,6 +654,11 @@ inline algo::cstring &operator <<(algo::cstring &str, const amcdb::Cbtype &row);
 inline algo::cstring &operator <<(algo::cstring &str, const amcdb::FieldId &row);// cfmt:amcdb.FieldId.String
 inline algo::cstring &operator <<(algo::cstring &str, const amcdb::Lang &row);// cfmt:amcdb.Lang.String
 inline algo::cstring &operator <<(algo::cstring &str, const amcdb::Pbtype &row);// cfmt:amcdb.Pbtype.String
+inline algo::cstring &operator <<(algo::cstring &str, const amcdb::Regxcase &row);// cfmt:amcdb.Regxcase.String
+inline algo::cstring &operator <<(algo::cstring &str, const amcdb::Regxlenient &row);// cfmt:amcdb.Regxlenient.String
+inline algo::cstring &operator <<(algo::cstring &str, const amcdb::Regxmacro &row);// cfmt:amcdb.Regxmacro.String
+inline algo::cstring &operator <<(algo::cstring &str, const amcdb::Regxrule &row);// cfmt:amcdb.Regxrule.String
+inline algo::cstring &operator <<(algo::cstring &str, const amcdb::Regxstyle &row);// cfmt:amcdb.Regxstyle.String
 inline algo::cstring &operator <<(algo::cstring &str, const amcdb::Regxtype &row);// cfmt:amcdb.Regxtype.String
 inline algo::cstring &operator <<(algo::cstring &str, const amcdb::Stepband &row);// cfmt:amcdb.Stepband.String
 inline algo::cstring &operator <<(algo::cstring &str, const amcdb::Tcurs &row);// cfmt:amcdb.Tcurs.String

@@ -238,13 +238,27 @@ static void ReleaseChildren(acr::FPline &pline) {
 // -----------------------------------------------------------------------------
 
 // Initialize RANK field for every known ctype
+//
+// A ctype is ranked once every ctype its fields refer to has been, and a field
+// that refers to its own ctype is not counted.  Say a table of directories names
+// each row's parent directory, and a table of grants names a directory.
+// Counted, the parent field would never resolve, so the directory table's count
+// would stay at one, tied with the grant table that waits on it, and the tie
+// goes by name: grants would print before the directories they name, and a
+// reader that applies rows in printed order drops every grant.  Rows of a
+// table sorted by key come out parent first when the self-reference is a prefix
+// of the key.
 static void CreateCtypeRank() {
     // sort key is:
-    // - # of unresolved dependencies
+    // - # of unresolved dependencies on other ctypes
     // - rowid of ctype
     // So all things being equal, the ctypes are output alphabetically
     ind_beg(acr::_db_ctype_curs, ctype, acr::_db) {
-        ctype.topokey.alldep = c_field_N(ctype);
+        i32 alldep = 0;
+        ind_beg(acr::ctype_c_field_curs, field, ctype) {
+            alldep += field.p_arg != &ctype;
+        }ind_end;
+        ctype.topokey.alldep = alldep;
         ctype.topokey.rowid = ctype.rowid;
         bh_ctype_topo_Reheap(ctype);
     }ind_end;
@@ -256,7 +270,11 @@ static void CreateCtypeRank() {
         ctype->rank = rank;
         rank++;
         ind_beg(acr::ctype_zd_arg_curs, field, *ctype) {
-            field.p_ctype->topokey.alldep--;
+            if (field.p_ctype != ctype) {
+                field.p_ctype->topokey.alldep--;
+            }
+            // Reheap inserts a row the heap no longer holds, and a ctype
+            // ranked already must stay out
             if (bh_ctype_topo_InBheapQ(*field.p_ctype)) {
                 bh_ctype_topo_Reheap(*field.p_ctype);
             }

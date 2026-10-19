@@ -78,7 +78,7 @@ void doc::SubjectOne(algo::strptr name) {
 // The value may be a ctype outright, as it is on a row of dmmeta.ctype.  Failing
 // that, the part of it before its last dot may be one, which is what a row keyed
 // by a field carries: a field row, a cascdel row, an xref row and a llist row all
-// name lib_x2.FStream.c_appender, and all four therefore describe lib_x2.FStream.
+// name amc.FCtype.c_field, and all four therefore describe amc.FCtype.
 // A key with no dot in it may be a namespace.
 //
 // Only the primary key is read, and that is what holds the page's subject to what
@@ -144,7 +144,7 @@ void doc::SubjectRead(algo::strptr out) {
 // function of any subject namespace, or every prototype naming any subject ctype.
 //
 // A prototype in this tree is printed with its types fully qualified, so matching
-// lib_x2::FStream against the prototype finds the functions of every namespace
+// amc::FCtype against the prototype finds the functions of every namespace
 // that takes the type and not only those of the one that declares it.  The name of
 // the function is part of its prototype too, which is what also brings in the
 // functions named after the type without taking one.
@@ -363,7 +363,7 @@ void doc::RenderFuncset(algo::strptr query) {
 // a builtin type, which belongs to no namespace and so to no generated header.
 //
 // amc divides a generated header into sections and opens each one with a comment naming
-// what the section is for, so the span from `// --- lib_x2.FStream` onward is that ctype's
+// what the section is for, so the span from `// --- amc.FCtype` onward is that ctype's
 // generated code: where the records live, the struct itself, and then the accessor of every
 // field of it.
 //
@@ -401,7 +401,7 @@ tempstr doc::CodeChunk(algo::strptr ctype, algo::cstring &path, int &at) {
 // its namespace's generated header carries none.
 //
 // amc divides a generated header into sections and opens each one with a comment
-// naming what the section is for, so the span from `// --- lib_x2.FStream` to the
+// naming what the section is for, so the span from `// --- amc.FCtype` to the
 // next such comment is exactly that ctype's generated code: where the records
 // live, the struct itself, and the accessor of every field of it.  Reading amc's
 // own boundary is what keeps the extraction one rule, where matching the struct
@@ -548,7 +548,7 @@ static bool CommentlineQ(algo::strptr line) {
 // and what it achieves, so that block is half of what a reader came for and src_func
 // reports the line below it.  The run ends at the first line that is not a comment,
 // which keeps the function above from being dragged in with it.
-static int CommentTop(algo::strptr text, int at) {
+int doc::CommentTop(algo::strptr text, int at) {
     int n = 0;
     int top = 0;
     int ret = at;
@@ -563,7 +563,7 @@ static int CommentTop(algo::strptr text, int at) {
 }
 
 // Return the lines FIRST through LAST of TEXT, both included.
-static tempstr Lines(algo::strptr text, int first, int last) {
+tempstr doc::Lines(algo::strptr text, int first, int last) {
     int n = 0;
     tempstr ret;
     ind_beg(algo::Line_curs, line, text) {
@@ -627,22 +627,67 @@ void doc::ReadFuncsrc(algo::strptr name, algo::strptr src) {
     bool found = ch_N(funcsrc.src) > 0 && algo::FileQ(funcsrc.src);
     tempstr text(found ? algo::FileToString(funcsrc.src, algo::FileFlags()) : tempstr());
     if (found) {
-        funcsrc.first = u32(CommentTop(text, i32(funcsrc.line)));
-        funcsrc.text << Lines(text, i32(funcsrc.first), i32(funcsrc.endline));
+        funcsrc.first = u32(doc::CommentTop(text, i32(funcsrc.line)));
+        funcsrc.text << doc::Lines(text, i32(funcsrc.first), i32(funcsrc.endline));
     } else {
         ch_RemoveAll(funcsrc.src);
     }
 }
 
-// Lay the source of the function NAME onto the page, under a link to the file at the
-// line the function starts on.
+// Return the line that the comment of the file TEXT begins at, below the header src_hdr
+// writes, and 1 when TEXT carries no such header.
 //
-// The listing carries the file's own line numbers, so a link naming L and a number
-// lands on the line it names here exactly as it does on the page showing the whole
-// file.  The head is a link, so a reader who wants the surroundings after all is one
-// Enter from them.
-void doc::RenderFuncsrc(algo::strptr name, algo::strptr src) {
-    doc::ReadFuncsrc(name, src);
+// The header is the copyright, the license and the target's tags, and the last tag names
+// the file itself (`Source:` or `Header:`), followed by one empty comment line.  What comes
+// after is the file's own comment, which says what the file is for.
+static int HeaderEnd(algo::strptr text) {
+    int n = 0;
+    bool head = true;
+    int ret = 1;
+    ind_beg(algo::Line_curs, line, text) {
+        n++;
+        head = head && CommentlineQ(line);
+        algo::strptr rest = algo::Trimmed(doc::RestFrom(line, doc::SkipSpace(line, 0) + 2));
+        if (head && (StartsWithQ(rest, "Source:") || StartsWithQ(rest, "Header:"))) {
+            ret = n + 2;
+        }
+    }ind_end;
+    return ret;
+}
+
+// Read the source of the function the record at LOC stands for into _db.funcsrc, and
+// return true when one answered.
+//
+// The gist of the record already asked src_func where the function lives, so the listing
+// comes from that answer and its command line, and src_func runs once per page.  When a
+// dmmeta.ssimreq requires the function's file for the record (Recfile), the listing is the
+// whole file below its header: the file comment and the static helpers are documentation
+// of the record as much as the function is.
+bool doc::ReadRecfunc(algo::strptr loc) {
+    doc::FGist *gist = doc::Recgist(loc);
+    bool whole = ch_N(doc::Recfile(loc)) > 0;
+    doc::Funcsrc &funcsrc = doc::_db.funcsrc;
+    funcsrc = doc::Funcsrc();
+    bool found = gist && algo::FileQ(gist->src) && gist->endline >= gist->line;
+    tempstr text(found ? algo::FileToString(gist->src, algo::FileFlags()) : tempstr());
+    if (found) {
+        funcsrc.cmd << doc::_db.gistcmd;
+        funcsrc.src << gist->src;
+        funcsrc.line = gist->line;
+        funcsrc.endline = whole ? u32(doc::NLine(text)) : gist->endline;
+        funcsrc.first = u32(whole ? HeaderEnd(text) : doc::CommentTop(text, i32(gist->line)));
+        funcsrc.text << doc::Lines(text, i32(funcsrc.first), i32(funcsrc.endline));
+    }
+    return found;
+}
+
+// Lay the source held in _db.funcsrc onto the page, under a link to the file at the line
+// the function starts on.
+//
+// The listing carries the file's own line numbers, so a link naming L and a number lands
+// on the line it names here exactly as it does on the page showing the whole file.  The
+// head is a link, so a reader who wants the surroundings after all is one Enter from them.
+void doc::RenderFuncsrcText() {
     doc::Funcsrc &funcsrc = doc::_db.funcsrc;
     if (ch_N(funcsrc.src) > 0) {
         tempstr target;
@@ -659,6 +704,13 @@ void doc::RenderFuncsrc(algo::strptr name, algo::strptr src) {
     } else {
         doc::PutNote(tempstr() << "no function of that name   " << doc::Querytext(funcsrc.cmd));
     }
+}
+
+// Lay the source of the function NAME onto the page, under a link to the file at the
+// line the function starts on.  SRC narrows the search to one file, as ReadFuncsrc says.
+void doc::RenderFuncsrc(algo::strptr name, algo::strptr src) {
+    doc::ReadFuncsrc(name, src);
+    doc::RenderFuncsrcText();
 }
 
 // Return the amc_vis command line that draws the access paths of the page's subjects.
@@ -800,11 +852,10 @@ void doc::RenderSection(algo::strptr loc) {
             doc::PutNote(tempstr() << transcript << " has not been captured");
         }
     }
-    tempstr func(doc::Recfunc(loc));
-    if (ch_N(func) > 0) {
+    if (doc::ReadRecfunc(loc)) {
         doc::EndRow();
-        doc::PutFoldhead("As Function", "as-function", "", true);
-        doc::RenderFuncsrc(func, "");
+        doc::PutFoldhead(doc::Rechead(loc), doc::Recanchor(loc), "", true);
+        doc::RenderFuncsrcText();
     }
     tempstr whole(doc::Wholetable(doc::LocQuery(loc)));
     if (ch_N(whole) > 0) {

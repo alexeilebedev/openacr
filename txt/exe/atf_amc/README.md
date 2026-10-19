@@ -2,7 +2,7 @@
 <a href="#atf_amc"></a>
 `atf_amc` tests the code `amc` generates.  Its namespace declares ~140 ctypes
 that exercise the reftypes, and each test calls the generated functions on them
-and checks the result.  CI runs it in the `comp` cijob as the `atf_amc` citest.
+and checks the result.  CI runs it in the `compB` cijob as the `atf_amc` citest.
 
 ### Syntax
 <a href="#syntax"></a>
@@ -16,7 +16,7 @@ Usage: atf_amc [[-amctest:]<regx>] [options]
     -q                          Quiet mode
     -verbose    flag            Verbosity level (0..255); alias -v; cumulative
     -debug      flag            Debug level (0..255); alias -d; cumulative
-    -trace      string  ""      Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps
+    -trace      string  ""      Trace expression: log categories to enable, as category[:filter],...
     -help                       Print help and exit; alias -h
     -version                    Print version and exit
     -signature                  Show signatures and exit; alias -sig

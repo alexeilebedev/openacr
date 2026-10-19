@@ -45,21 +45,23 @@ if (! -f "build/gitinfo.h") {
     close($fh);
 }
 
-# build the header-writing tools from the current tree first, so the
-# regeneration below uses this checkout's src_hdr and src_func rather than
-# whatever binaries a shared, long-lived CI runner happens to have cached in
-# build/ from an earlier job.  src_hdr -write rewrites the tool headers and
-# shells out to src_func for prototypes; a branch that changes either tool's
-# output would otherwise have the stale cached binary rewrite headers into the
-# old shape, and the clean-tree gate would fail before the main build below
-# ever rebuilt the tool.
+# build the tools the build itself runs from the current tree first, so the
+# regeneration and the main build below use this checkout's abt, src_hdr and
+# src_func rather than whatever binaries a shared, long-lived CI runner happens
+# to have cached in build/ from an earlier job.  src_hdr -write rewrites the tool
+# headers and shells out to src_func for prototypes; a branch that changes either
+# tool's output would otherwise have the stale cached binary rewrite headers into
+# the old shape, and the clean-tree gate would fail before the main build below
+# ever rebuilt the tool.  abt is the same case one level up: a branch that
+# teaches abt a new kind of target, or a new source of compile options, has the
+# cached abt build the tree without them.
 #
 # This is the first build of the run, so its failure is the run's failure.
 # Whatever stops abt here stops it below as well -- another build holding
 # build/release/abt.lock is the common one -- and carrying on prints the same
 # error a second time before giving up, which reads as two problems and buries
 # the first.
-system("bin/abt", "-build", "-install", "src_hdr|src_func")==0 or Die("abt failed: $?");
+system("bin/abt", "-build", "-install", "abt|src_hdr|src_func")==0 or Die("abt failed: $?");
 # update copyright headers, call src_func to update prototypes in headers
 # allow this one to fail
 system("bin/src_hdr", "-write", "-targsrc:%");

@@ -62,6 +62,16 @@ verbose2  N        N        N       0       0       N         Extra verbose mess
 
 ```
 
+#### Tracing from the command line
+<a href="#tracing-from-the-command-line"></a>
+
+Every tool takes `-trace`, a comma-separated list of log categories to enable.
+A category may carry a filter regex after a colon, as in `category:<regx>`, and
+a leading `!` negates the regex.  The names `verbose` and `debug` enable those
+categories, and `timestamps` stamps each line.  `payload_lim:N` is not a
+category.  It sets how many payload bytes a trace line prints before it
+summarizes the rest.  A tool passes its `-trace` on to the commands it starts.
+
 ### Verblog
 <a href="#verblog"></a>
 

@@ -80,6 +80,19 @@ static void CollectKeyword(apm::FPackage &package, bool forbid) {
 
 // -----------------------------------------------------------------------------
 
+// Add to c_keyword the words PACKAGE must not contain, and the words of every
+// package it ships inside.  apm is contained in openacr and goes out with it, so
+// the words a package extending openacr keeps out of openacr are kept out of apm
+// as well.  FORBID chooses the kind of word, as for CollectKeyword.
+static void CollectShippedKeyword(apm::FPackage &package, bool forbid) {
+    CollectKeyword(package, forbid);
+    ind_beg(apm::package_c_pkgdep_curs, pkgdep, package) if (pkgdep.pkgdeptype == apm::dev_pkgdeptype_contain) {
+        CollectShippedKeyword(*pkgdep.p_parent, forbid);
+    }ind_end;
+}
+
+// -----------------------------------------------------------------------------
+
 // TRUE when the published file FNAME is read for words.  Generated code is
 // regenerated downstream from that tree's own schema, data/ is records, which
 // are checked as records, extern/ is third-party code, a symlink names a built
@@ -120,14 +133,18 @@ static void ReportKeyword(apm::FPackage &package, strptr where, strptr text, int
 // notice, which names the owner of the code in every tree that carries it; a
 // line inside a header's update-hdr block, a README's usage block, or the
 // fenced output of a document's inline command, all rebuilt from that tree's
-// own sources and data; and a line that carries ignore:pkgkeyword.
-static void ScanFile(apm::FPackage &package, algo_lib::Regx &regx, strptr fname, int &nbad, int &nshow) {
-    algo_lib::MmapFile file;
-    MmapFile_Load(file, fname);
+// own sources and data; and a line that carries ignore:pkgkeyword.  With STUB
+// the package carries the file as a stub, and the stub's text is what is
+// scanned.
+static void ScanFile(apm::FPackage &package, algo_lib::Regx &regx, strptr fname, bool stub, int &nbad, int &nshow) {
+    tempstr text(apm::GetPublishText(fname, stub));
+    // only a header has an update-hdr block; a document that names the marker
+    // is scanned to its last line
+    bool header = EndsWithQ(fname, ".h");
     bool hdr = false;
     bool fence = false;
     bool generated = false;
-    ind_beg(algo::Line_curs, line, file.text) {
+    ind_beg(algo::Line_curs, line, text) {
         // a fence whose first line is inline-command: holds that command's output
         bool fencehead = fence && !generated && StartsWithQ(line, "inline-command:");
         if (fencehead) {
@@ -136,7 +153,7 @@ static void ScanFile(apm::FPackage &package, algo_lib::Regx &regx, strptr fname,
         bool skip = hdr || generated
             || FindStr(line, "Copyright") != -1
             || FindStr(line, "ignore:pkgkeyword") != -1;
-        if (FindStr(line, "// update-hdr") != -1) {
+        if (header && FindStr(line, "// update-hdr") != -1) {
             hdr = true;
         } else if (hdr && StartsWithQ(line, "}")) {
             hdr = false;
@@ -168,7 +185,8 @@ static void ScanFile(apm::FPackage &package, algo_lib::Regx &regx, strptr fname,
 //
 // What is checked is the package's evaluation, records and files alike, since
 // that is exactly what a push carries, so a downstream table named in a
-// published document is reported in the commit that writes it.
+// published document is reported in the commit that writes it.  A file the
+// package maps to another path is checked under that path's name too.
 //
 // Only the first ten findings of a package are printed, because a package that
 // has gone wrong tends to go wrong in bulk, and -v prints them all.  The summary reports how many there
@@ -188,7 +206,7 @@ int apm::CheckKeyword() {
                     c_keyword_Insert(pkgkeyword);
                 }ind_end;
             }
-            CollectKeyword(package, forbid);
+            CollectShippedKeyword(package, forbid);
         }
         ind_beg(_db_package_curs,other,_db) {
             other.visited = false;
@@ -218,7 +236,18 @@ int apm::CheckKeyword() {
                 }
                 bool file = rec.p_ssimfile->ssimfile == "dev.gitfile";
                 if (file && ScanFileQ(Pathcomp(rec.rec, ":LR"))) {
-                    ScanFile(package, regx, Pathcomp(rec.rec, ":LR"), nbad, nshow);
+                    ScanFile(package, regx, Pathcomp(rec.rec, ":LR"), apm::StubQ(rec, package), nbad, nshow);
+                }
+            }ind_end;
+            // a mapped file goes out under the mapped name, and a source the
+            // package does not carry goes out only there
+            ind_beg(package_c_pkgfile_curs, pkgfile, package) {
+                apm::FRec *src = ind_rec_Find(tempstr() << "dev.gitfile:" << pkgfile.gitfile);
+                if (MentionQ(regx, dest_Get(pkgfile))) {
+                    ReportKeyword(package, pkgfile.pkgfile, dest_Get(pkgfile), nbad, nshow);
+                }
+                if (src && !zd_selrec_InLlistQ(*src) && ScanFileQ(pkgfile.gitfile)) {
+                    ScanFile(package, regx, pkgfile.gitfile, false, nbad, nshow);
                 }
             }ind_end;
             zd_selrec_RemoveAll();
@@ -239,13 +268,30 @@ int apm::CheckKeyword() {
 
 // -----------------------------------------------------------------------------
 
+// True when a package of the carrier set maps a file of this tree to PATH of its
+// projection, so the projection holds a file at PATH whether or not the carrier
+// set carries this tree's own file there.
+static bool MappedQ(algo::strptr path) {
+    bool ret = false;
+    ind_beg(apm::_db_package_curs, package, apm::_db) if (package.visited) {
+        ind_beg(apm::package_c_pkgfile_curs, pkgfile, package) {
+            ret = ret || apm::dest_Get(pkgfile) == path;
+        }ind_end;
+    }ind_end;
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
 // Report the reference to record KEY at FNAME:LINENO when the record exists
 // here and PACKAGE does not carry it, and return 1 for a report.  A key that
-// names no record is abt_md's to report, and it is skipped here.
+// names no record is abt_md's to report, and it is skipped here.  A link to a
+// path that a mapping fills resolves downstream, so it is not reported.
 static int ReportLink(apm::FPackage &package, algo::strptr fname, int lineno, algo::strptr key) {
     int ret = 0;
     apm::FRec *rec = apm::ind_rec_Find(key);
-    if (rec && !apm::CarriedQ(*rec)) {
+    bool mapped = StartsWithQ(key, "dev.gitfile:") && MappedQ(Pathcomp(key, ":LR"));
+    if (rec && !apm::CarriedQ(*rec) && !mapped) {
         prerr("apm.deadlink" << Keyval("package", package.package)
               << Keyval("file", tempstr() << fname << ":" << lineno)
               << Keyval("target", key)
@@ -255,19 +301,55 @@ static int ReportLink(apm::FPackage &package, algo::strptr fname, int lineno, al
     return ret;
 }
 
+// -----------------------------------------------------------------------------
+
+// True when the carrier set carries REC, and carries it only as a stub.
+static bool CarriedStubQ(apm::FRec &rec) {
+    bool carried = false;
+    bool whole = false;
+    ind_beg(apm::rec_zd_rec_pkgrec_curs, pkgrec, rec) if (pkgrec.p_package->visited) {
+        carried = true;
+        whole = whole || !pkgrec.stub;
+    }ind_end;
+    return carried && !whole;
+}
+
+// -----------------------------------------------------------------------------
+
+// Report the link at FNAME:LINENO to section ANCHOR of file PATH when PACKAGE's
+// carrier set carries PATH only as a stub and the stub has no such anchor, and
+// return 1 for a report.  A stub keeps the anchor of its title alone, so a link
+// to any other section of the page dangles downstream.  An empty ANCHOR links
+// the page, which the stub keeps.
+static int ReportStubAnchor(apm::FPackage &package, algo::strptr fname, int lineno, algo::strptr path, algo::strptr anchor) {
+    int ret = 0;
+    apm::FRec *rec = ch_N(anchor) > 0 ? apm::ind_rec_Find(tempstr() << "dev.gitfile:" << path) : NULL;
+    if (rec && CarriedStubQ(*rec) && FindStr(apm::GetStubText(path), tempstr() << "<a href=\"#" << anchor << "\">") == -1) {
+        prerr("apm.deadlink" << Keyval("package", package.package)
+              << Keyval("file", tempstr() << fname << ":" << lineno)
+              << Keyval("target", tempstr() << path << "#" << anchor)
+              << Keyval("comment", "the link names a section of a page the package carries as a stub"));
+        ret = 1;
+    }
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
 // Report each reference of the published markdown file FNAME to a record that
 // PACKAGE does not carry, and return how many there are.  A document refers to
 // a record in two ways.  A link `](/<path>)` names the file <path>, up to an
 // anchor.  An inline span `<ns>.<table>:<key>` names a row, and abt_md resolves
 // it against the tree it runs in; `ssimfile:<ns>.<table>` is the short form for
 // a row of dmmeta.ssimfile.  A span carrying `%` or `<` is a query or a
-// template, and spans inside a fence are skipped, the same as abt_md does.
-static int CheckLinkFile(apm::FPackage &package, algo::strptr fname) {
+// template, and spans inside a fence are skipped, the same as abt_md does.  With
+// STUB the package carries the file as a stub, and only the stub's text is
+// checked.
+static int CheckLinkFile(apm::FPackage &package, algo::strptr fname, bool stub) {
     int ret = 0;
     bool fence = false;
-    algo_lib::MmapFile file;
-    MmapFile_Load(file, fname);
-    ind_beg(algo::Line_curs, line, file.text) {
+    tempstr text(apm::GetPublishText(fname, stub));
+    ind_beg(algo::Line_curs, line, text) {
         int lineno = ind_curs(line).i + 1;
         fence = fence != StartsWithQ(algo::Trimmed(line), "```");
         int i = FindStr(line, "](/");
@@ -277,7 +359,18 @@ static int CheckLinkFile(apm::FPackage &package, algo::strptr fname) {
             while (end < rest.n_elems && rest[end] != ')' && rest[end] != '#' && rest[end] != ' ') {
                 end++;
             }
-            ret += ReportLink(package, fname, lineno, tempstr() << "dev.gitfile:" << algo::FirstN(rest, end));
+            algo::strptr path = algo::ch_FirstN(rest, end);
+            algo::strptr anchor;
+            if (end < rest.n_elems && rest[end] == '#') {
+                algo::strptr after = algo::ch_RestFrom(rest, end + 1);
+                int len = 0;
+                while (len < after.n_elems && after[len] != ')' && after[len] != ' ') {
+                    len++;
+                }
+                anchor = algo::ch_FirstN(after, len);
+            }
+            ret += ReportLink(package, fname, lineno, tempstr() << "dev.gitfile:" << path);
+            ret += ReportStubAnchor(package, fname, lineno, path, anchor);
             int next = FindStr(rest, "](/");
             i = next == -1 ? -1 : i + 3 + next;
         }
@@ -304,21 +397,29 @@ static int CheckLinkFile(apm::FPackage &package, algo::strptr fname) {
 // -----------------------------------------------------------------------------
 
 // Report every link of a selected package's published markdown that names a
-// tracked file the package does not carry, and return how many there are.  The
+// tracked file the package does not carry, and return how many there are.  A
+// markdown file the package maps to another path is published too.  The
 // carrier set is the package and every package it carries, the files a push
 // sends together, so a link from a contained package into its parent's docs
-// resolves.  A package with no dev.pkgupstream row has no downstream for a
-// link to dangle in, and the check starts with its first destination.
+// resolves.  Every package is checked, whether or not it has a destination yet,
+// so a link that would dangle downstream fails the commit that writes it.
 int apm::CheckLink() {
     int ret = 0;
-    ind_beg(_db_zd_sel_package_curs, package, _db) if (!c_pkgupstream_EmptyQ(package)) {
+    ind_beg(_db_zd_sel_package_curs, package, _db) {
         SetCarrier(&package);
         zd_selrec_RemoveAll();
         SelectPkgRecs(package);
         ind_beg(_db_zd_selrec_curs, rec, _db) if (rec.p_ssimfile->ssimfile == "dev.gitfile") {
             algo::strptr fname = Pathcomp(rec.rec, ":LR");
             if (EndsWithQ(fname, ".md") && ScanFileQ(fname)) {
-                ret += CheckLinkFile(package, fname);
+                ret += CheckLinkFile(package, fname, apm::StubQ(rec, package));
+            }
+        }ind_end;
+        // a source the package maps and does not carry goes out at the mapped path
+        ind_beg(package_c_pkgfile_curs, pkgfile, package) {
+            apm::FRec *src = ind_rec_Find(tempstr() << "dev.gitfile:" << pkgfile.gitfile);
+            if (src && !zd_selrec_InLlistQ(*src) && EndsWithQ(pkgfile.gitfile, ".md") && ScanFileQ(pkgfile.gitfile)) {
+                ret += CheckLinkFile(package, pkgfile.gitfile, false);
             }
         }ind_end;
         zd_selrec_RemoveAll();

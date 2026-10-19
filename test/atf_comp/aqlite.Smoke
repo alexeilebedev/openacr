@@ -2,7 +2,7 @@ CTYPE  COMMENT
 i16
 i32
 
-FIELD                 ARG           REFTYPE  DFLT  COMMENT
-abt.FArch.msghdr      dev.Arch      Base
-abt.FCfg.msghdr       dev.Cfg       Base
-abt.FCompiler.msghdr  dev.Compiler  Base
+FIELD               ARG           REFTYPE  DFLT  COMMENT
+abt.FArch.base      dev.Arch      Base
+abt.FCfg.base       dev.Cfg       Base
+abt.FCompiler.base  dev.Compiler  Base

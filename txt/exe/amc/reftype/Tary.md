@@ -19,11 +19,11 @@ dmmeta.field  field:algo.LineBuf.buf  arg:char  reftype:Tary  dflt:""  comment:"
 Three storage fields are inserted into the parent ctype
 (see `tclass_Tary` in `cpp/amc/tary.cpp`):
 
-| Field            | C++ type    | Meaning                                       |
-|------------------|-------------|-----------------------------------------------|
-| `<name>_elems`   | `T*`        | pointer to the heap block holding the values  |
-| `<name>_n`       | `u64`       | number of constructed elements                |
-| `<name>_max`     | `u64`       | capacity in elements before the next realloc  |
+| Field          | C++ type | Meaning |
+| -------------- | -------- | ------- |
+| `<name>_elems` | `T*`     | pointer to the heap block holding the values |
+| `<name>_n`     | `u64`    | number of constructed elements |
+| `<name>_max`   | `u64`    | capacity in elements before the next realloc |
 
 The first allocation grows `max` to 4, after which each grow
 doubles the capacity (see `tfunc_Tary_AbsReserve` in
@@ -85,100 +85,100 @@ templates live in `cpp/amc/tary.cpp`; tfunc records live in
 #### Lifecycle
 <a href="#lifecycle"></a>
 
-| Tfunc          | Generated function                                | Effect |
-|----------------|---------------------------------------------------|--------|
-| `Tary.Init`    | `<name>_Init(P&)` (macro, inline)                 | Zero elems/n/max. |
-| `Tary.Uninit`  | `<name>_Uninit(P&)` (macro)                       | Destruct + free buffer. |
+| Tfunc         | Generated function                | Effect |
+| ------------- | --------------------------------- | ------ |
+| `Tary.Init`   | `<name>_Init(P&)` (macro, inline) | Zero elems/n/max. |
+| `Tary.Uninit` | `<name>_Uninit(P&)` (macro)       | Destruct + free buffer. |
 
 #### Capacity
 <a href="#capacity"></a>
 
-| Tfunc             | Generated function                          | Effect |
-|-------------------|---------------------------------------------|--------|
-| `Tary.N`          | `i64 <name>_N(const P&)`                    | Number of elements. |
-| `Tary.Max`        | `i64 <name>_Max(P&)`                        | Capacity (without reallocating). |
-| `Tary.EmptyQ`     | `bool <name>_EmptyQ(P&)`                    | True if `N() == 0`. |
-| `Tary.Reserve`    | `void <name>_Reserve(P&, i64 n)`            | Ensure room for `n` **more** elements. |
-| `Tary.AbsReserve` | `void <name>_AbsReserve(P&, i64 n)`         | Ensure capacity ≥ `n` absolute. Doubles, never shrinks. |
+| Tfunc             | Generated function                  | Effect |
+| ----------------- | ----------------------------------- | ------ |
+| `Tary.N`          | `i64 <name>_N(const P&)`            | Number of elements. |
+| `Tary.Max`        | `i64 <name>_Max(P&)`                | Capacity (without reallocating). |
+| `Tary.EmptyQ`     | `bool <name>_EmptyQ(P&)`            | True if `N() == 0`. |
+| `Tary.Reserve`    | `void <name>_Reserve(P&, i64 n)`    | Ensure room for `n` **more** elements. |
+| `Tary.AbsReserve` | `void <name>_AbsReserve(P&, i64 n)` | Ensure capacity ≥ `n` absolute. Doubles, never shrinks. |
 
 #### Single-element insertion
 <a href="#single-element-insertion"></a>
 
-| Tfunc              | Generated function                                   | Effect |
-|--------------------|------------------------------------------------------|--------|
-| `Tary.Alloc`       | `T& <name>_Alloc(P&)`                                | Append a default-constructed element, return reference. |
-| `Tary.AllocAt`     | `T& <name>_AllocAt(P&, i64 at)`                      | Insert default-constructed element at index `at`; fatal if `at` out of range. |
+| Tfunc          | Generated function              | Effect |
+| -------------- | ------------------------------- | ------ |
+| `Tary.Alloc`   | `T& <name>_Alloc(P&)`           | Append a default-constructed element, return reference. |
+| `Tary.AllocAt` | `T& <name>_AllocAt(P&, i64 at)` | Insert default-constructed element at index `at`; fatal if `at` out of range. |
 
 #### Bulk insertion
 <a href="#bulk-insertion"></a>
 
-| Tfunc                | Generated function                                                  | Effect |
-|----------------------|---------------------------------------------------------------------|--------|
-| `Tary.AllocN`        | `aryptr<T> <name>_AllocN(P&, i64 n)`                                | Append `n` default-constructed elements. |
-| `Tary.AllocNAt`      | `aryptr<T> <name>_AllocNAt(P&, i64 n, i64 at)`                      | Insert `n` default-constructed elements at index `at`. |
-| `Tary.AllocNVal`     | `aryptr<T> <name>_AllocNVal(P&, i64 n, const T& val)`               | Append `n` copies of `val`. |
-| `Tary.Addary`        | `aryptr<T> <name>_Addary(P&, aryptr<T> rhs)` *(if `aliased:Y`)*     | Append every element of `rhs`. Fatal if `rhs` aliases the array. |
-| `Tary.Insary`        | `void <name>_Insary(P&, aryptr<T> rhs, i64 at)` *(if `aliased:Y`)*  | Insert `rhs` at index `at`. Fatal on alias. |
+| Tfunc            | Generated function                                                 | Effect |
+| ---------------- | ------------------------------------------------------------------ | ------ |
+| `Tary.AllocN`    | `aryptr<T> <name>_AllocN(P&, i64 n)`                               | Append `n` default-constructed elements. |
+| `Tary.AllocNAt`  | `aryptr<T> <name>_AllocNAt(P&, i64 n, i64 at)`                     | Insert `n` default-constructed elements at index `at`. |
+| `Tary.AllocNVal` | `aryptr<T> <name>_AllocNVal(P&, i64 n, const T& val)`              | Append `n` copies of `val`. |
+| `Tary.Addary`    | `aryptr<T> <name>_Addary(P&, aryptr<T> rhs)` *(if `aliased:Y`)*    | Append every element of `rhs`. Fatal if `rhs` aliases the array. |
+| `Tary.Insary`    | `void <name>_Insary(P&, aryptr<T> rhs, i64 at)` *(if `aliased:Y`)* | Insert `rhs` at index `at`. Fatal on alias. |
 
 #### Replacement
 <a href="#replacement"></a>
 
-| Tfunc            | Generated function                                          | Effect |
-|------------------|-------------------------------------------------------------|--------|
-| `Tary.Setary`    | `void <name>_Setary(P&, P& rhs)`                            | Copy elements from another struct of the same type. |
-| `Tary.Setary2`   | `void <name>_Setary(P&, const aryptr<T>& rhs)` *(aliased:Y)* | Replace contents from `aryptr`. Fatal on alias. |
+| Tfunc               | Generated function                                           | Effect |
+| ------------------- | ------------------------------------------------------------ | ------ |
+| `Tary.Setary`       | `void <name>_Setary(P&, P& rhs)`                             | Copy elements from another struct of the same type. |
+| `Tary.Setary2`      | `void <name>_Setary(P&, const aryptr<T>& rhs)` *(aliased:Y)* | Replace contents from `aryptr`. Fatal on alias. |
 | `Tary.AssignAryptr` | `void operator=(const strptr&)` etc. *(generated as method)* | Assignment from `aryptr<T>` / `strptr` for char/u8 cases. |
-| `Tary.CtorAryptr`   | Constructor from `aryptr<T>` / `strptr` (char/u8)         | Ctor variant for char/u8 arrays. |
+| `Tary.CtorAryptr`   | Constructor from `aryptr<T>` / `strptr` (char/u8)            | Ctor variant for char/u8 arrays. |
 
 #### Removal
 <a href="#removal"></a>
 
-| Tfunc              | Generated function                          | Effect |
-|--------------------|---------------------------------------------|--------|
-| `Tary.Remove`      | `void <name>_Remove(P&, u64 i)`             | Remove element at `i`; shifts tail left. No-op if `i` out of range. |
-| `Tary.RemoveLast`  | `void <name>_RemoveLast(P&)`                | Pop. No-op if empty. |
-| `Tary.RemoveAll`   | `void <name>_RemoveAll(P&)`                 | Set `n=0`, destruct each element. |
-| `Tary.RemRegion`   | `void <name>_RemRegion(P&, i64 beg, i64 n)` | Remove `[beg, beg+n)`; clipped to valid range. |
+| Tfunc             | Generated function                          | Effect |
+| ----------------- | ------------------------------------------- | ------ |
+| `Tary.Remove`     | `void <name>_Remove(P&, u64 i)`             | Remove element at `i`; shifts tail left. No-op if `i` out of range. |
+| `Tary.RemoveLast` | `void <name>_RemoveLast(P&)`                | Pop. No-op if empty. |
+| `Tary.RemoveAll`  | `void <name>_RemoveAll(P&)`                 | Set `n=0`, destruct each element. |
+| `Tary.RemRegion`  | `void <name>_RemRegion(P&, i64 beg, i64 n)` | Remove `[beg, beg+n)`; clipped to valid range. |
 
 #### Access
 <a href="#access"></a>
 
-| Tfunc            | Generated function                          | Effect |
-|------------------|---------------------------------------------|--------|
-| `Tary.Find`      | `T* <name>_Find(P&, u64 t)`                 | Pointer to element `t`, or NULL if out of range. |
-| `Tary.qFind`     | `T& <name>_qFind(P&, u64 t)`                | "Quick" find — no bounds check. |
-| `Tary.Last`      | `T* <name>_Last(P&)`                        | Pointer to last element, or NULL if empty. |
-| `Tary.qLast`     | `T& <name>_qLast(P&)`                       | Reference to last element — no bounds check. |
-| `Tary.Getary`    | `aryptr<T> <name>_Getary(const P&)`         | Return `(elems, n)` as an `aryptr`. |
-| `Tary.rowid_Get` | `u64 <name>_rowid_Get(P&, T& elem)`         | Index of `elem` (must be a member of the array). |
-| `Tary.RowidFind` | Internal `ImrowPtr` for reflection          | Only if `field.reflect` set. |
+| Tfunc            | Generated function                                        | Effect |
+| ---------------- | --------------------------------------------------------- | ------ |
+| `Tary.Find`      | `T* <name>_Find(P&, u64 t)`                               | Pointer to element `t`, or NULL if out of range. |
+| `Tary.qFind`     | `T& <name>_qFind(P&, u64 t)`                              | "Quick" find — no bounds check. |
+| `Tary.Last`      | `T* <name>_Last(P&)`                                      | Pointer to last element, or NULL if empty. |
+| `Tary.qLast`     | `T& <name>_qLast(P&)`                                     | Reference to last element — no bounds check. |
+| `Tary.Getary`    | `aryptr<T> <name>_Getary(const P&)`                       | Return `(elems, n)` as an `aryptr`. |
+| `Tary.rowid_Get` | `u64 <name>_rowid_Get(P&, T& elem)`                       | Index of `elem` (must be a member of the array). |
+| `Tary.RowidFind` | Internal `ImrowPtr` for reflection                        | Only if `field.reflect` set. |
 | `Tary.curs`      | `<P>_<name>_curs` cursor + `_Reset/_ValidQ/_Next/_Access` | `ind_beg`-compatible iterator. |
 
 #### Comparison
 <a href="#comparison"></a>
 
-| Tfunc        | Generated function              | Effect |
-|--------------|---------------------------------|--------|
-| `Tary.Eq`    | `bool <name>_Eq(P&, P&)`        | Element-wise equality. Requires elements to be comparable. |
-| `Tary.Cmp`   | `i32 <name>_Cmp(P&, P&)`        | Lexicographic compare. |
+| Tfunc      | Generated function       | Effect |
+| ---------- | ------------------------ | ------ |
+| `Tary.Eq`  | `bool <name>_Eq(P&, P&)` | Element-wise equality. Requires elements to be comparable. |
+| `Tary.Cmp` | `i32 <name>_Cmp(P&, P&)` | Lexicographic compare. |
 
 #### Serialization
 <a href="#serialization"></a>
 
-| Tfunc                  | Generated function                                          | Effect |
-|------------------------|-------------------------------------------------------------|--------|
-| `Tary.Print`           | `void <name>_Print(P&, cstring& out)`                       | For `char`/`u8` arrays — print as string. Otherwise prints separator-joined elements. |
-| `Tary.ReadStrptrMaybe` | `bool <name>_ReadStrptrMaybe(P&, strptr in)`                | For `char`/`u8` — assign from string.  For other types with a separator — split and parse. |
+| Tfunc                  | Generated function                           | Effect |
+| ---------------------- | -------------------------------------------- | ------ |
+| `Tary.Print`           | `void <name>_Print(P&, cstring& out)`        | For `char`/`u8` arrays — print as string. Otherwise prints separator-joined elements. |
+| `Tary.ReadStrptrMaybe` | `bool <name>_ReadStrptrMaybe(P&, strptr in)` | For `char`/`u8` — assign from string.  For other types with a separator — split and parse. |
 
 #### Streaming append (char/u8 only)
 <a href="#streaming-append-char-u8-only-"></a>
 
-| Tfunc                       | Generated function                                       | Effect |
-|-----------------------------|----------------------------------------------------------|--------|
-| `Tary.GetAlloc`             | `algo::Alloc <name>_GetAlloc(P&)`                        | Returns an `Alloc` handle that **clears then fills** the buffer. |
-| `Tary.BeginAlloc`           | `void* <name>_BeginAlloc(P&, i64 len)`                   | Internal helper used by `GetAlloc`. |
-| `Tary.GetAllocAppend`       | `algo::Alloc <name>_GetAllocAppend(P&)`                  | Handle that **appends** rather than clearing first. |
-| `Tary.BeginAllocAppend`     | `void* <name>_BeginAllocAppend(P&, i64 len)`             | Internal helper used by `GetAllocAppend`. |
+| Tfunc                   | Generated function                           | Effect |
+| ----------------------- | -------------------------------------------- | ------ |
+| `Tary.GetAlloc`         | `algo::Alloc <name>_GetAlloc(P&)`            | Returns an `Alloc` handle that **clears then fills** the buffer. |
+| `Tary.BeginAlloc`       | `void* <name>_BeginAlloc(P&, i64 len)`       | Internal helper used by `GetAlloc`. |
+| `Tary.GetAllocAppend`   | `algo::Alloc <name>_GetAllocAppend(P&)`      | Handle that **appends** rather than clearing first. |
+| `Tary.BeginAllocAppend` | `void* <name>_BeginAllocAppend(P&, i64 len)` | Internal helper used by `GetAllocAppend`. |
 
 ### Pitfalls
 <a href="#pitfalls"></a>

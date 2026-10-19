@@ -71,18 +71,18 @@ that choice is made under, and the pitfalls it walks into, are in
 ### Tools
 <a href="#tools"></a>
 
-| Tool | Purpose |
-|------|---------|
-| [acr](/txt/exe/acr/README.md) | Query / edit the ssim database; transitive closure, regex selection, in-place rewrites, editor and MariaDB integration |
-| [acr_ed](/txt/exe/acr_ed/README.md) | Schema editor — creates fields, ctypes, targets, source files; runs `amc` to keep generated code in sync |
-| [acr_in](/txt/exe/acr_in/README.md) | Extract the ssimfile inputs (and optionally the data) that a given target reads |
-| [amc](/txt/exe/amc/README.md) | Code generator — reads `data/*.ssim` and emits `cpp/gen/*.cpp` / `include/gen/*.h` |
+| Tool                                    | Purpose |
+| --------------------------------------- | ------- |
+| [acr](/txt/exe/acr/README.md)           | Query / edit the ssim database; transitive closure, regex selection, in-place rewrites, editor and MariaDB integration |
+| [acr_ed](/txt/exe/acr_ed/README.md)     | Schema editor — creates fields, ctypes, targets, source files; runs `amc` to keep generated code in sync |
+| [acr_in](/txt/exe/acr_in/README.md)     | Extract the ssimfile inputs (and optionally the data) that a given target reads |
+| [amc](/txt/exe/amc/README.md)           | Code generator — reads `data/*.ssim` and emits `cpp/gen/*.cpp` / `include/gen/*.h` |
 | [src_func](/txt/exe/src_func/README.md) | Source-function index: list, grep, navigate, create missing dispatch handlers |
-| [abt](/txt/exe/abt/README.md) | Build tool — replaces make/cmake, regex-selects targets, links and installs |
-| [abt_md](/txt/exe/abt_md/README.md) | Markdown linter / regenerator — runs inline commands, refreshes TOCs, checks links |
+| [abt](/txt/exe/abt/README.md)           | Build tool — replaces make/cmake, regex-selects targets, links and installs |
+| [abt_md](/txt/exe/abt_md/README.md)     | Markdown linter / regenerator — runs inline commands, refreshes TOCs, checks links |
 | [atf_unit](/txt/exe/atf_unit/README.md) | C++ unit-test runner |
 | [atf_comp](/txt/exe/atf_comp/README.md) | Component-test runner — captures stdout/stderr from a scripted process invocation, diffs against a reference |
-| [atf_ci](/txt/exe/atf_ci/README.md) | CI gate — drives test suites under named `cijob`s (`normalize`, `comp`, `memcheck`, `coverage`) |
+| [atf_ci](/txt/exe/atf_ci/README.md)     | CI gate — drives test suites under named `cijob`s (`normalize`, `compA`, `compB`, `memcheckA`, `coverageA`, `covfinal`) |
 
 ### Main ssimfiles
 <a href="#main-ssimfiles"></a>
@@ -90,20 +90,20 @@ that choice is made under, and the pitfalls it walks into, are in
 The schema for OpenACR itself lives in a handful of tables under
 `data/dmmeta/` and `data/dev/`:
 
-| Table | What it defines |
-|-------|----------------|
-| `dmmeta.ns` | Namespaces (`lib`, `exe`, `ssimdb`, `protocol`, …) |
-| `dmmeta.ctype` | Compound types (records / structs); primary key is `<ns>.<Name>` |
-| `dmmeta.field` | Fields of a ctype — type, reftype, default, comment |
-| `dmmeta.xref` | In-memory cross-references between ctypes (Thash, Llist, Bheap, Ptrary, …) |
-| `dmmeta.thash` | Hash-index definitions for `ind_<x>_Find()` lookups |
-| `dmmeta.fstep` | Step associations — which scheduler callback fires for a given index or timer |
+| Table                 | What it defines |
+| --------------------- | --------------- |
+| `dmmeta.ns`           | Namespaces (`lib`, `exe`, `ssimdb`, `protocol`, …) |
+| `dmmeta.ctype`        | Compound types (records / structs); primary key is `<ns>.<Name>` |
+| `dmmeta.field`        | Fields of a ctype — type, reftype, default, comment |
+| `dmmeta.xref`         | In-memory cross-references between ctypes (Thash, Llist, Bheap, Ptrary, …) |
+| `dmmeta.thash`        | Hash-index definitions for `ind_<x>_Find()` lookups |
+| `dmmeta.fstep`        | Step associations — which scheduler callback fires for a given index or timer |
 | `dmmeta.dispatch_msg` | Auto-routed message handlers (`<ns>.<disp>` → `void ns::Disp_<Msg>(...)`) |
-| `dev.target` | Build targets (libs, exes, ssimdbs, protocols) |
-| `dev.targdep` | Per-target dependencies |
-| `dev.targsrc` | Source files attached to a target |
-| `dev.gitfile` | Every file tracked in git |
-| `dev.gitpath` | Patterns naming where a tracked file may live |
+| `dev.target`          | Build targets (libs, exes, ssimdbs, protocols) |
+| `dev.targdep`         | Per-target dependencies |
+| `dev.targsrc`         | Source files attached to a target |
+| `dev.gitfile`         | Every file tracked in git |
+| `dev.gitpath`         | Patterns naming where a tracked file may live |
 
 A complete list of ssim tables: `acr ssimfile`.  Per-table column
 docs: `acr field:<ns>.<Ctype>.%`.  Schema dump: `acr %`.  All

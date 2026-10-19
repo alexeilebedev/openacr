@@ -208,7 +208,7 @@ private:
 };
 // Invoke function by pointer
 // func:lib_curl.FCall.done.Call
-inline void          done_Call(lib_curl::FCall& parent, lib_curl::FCall& arg) __attribute__((nothrow));
+inline void          done_Call(lib_curl::FCall& parent, lib_curl::FCall& arg);
 // Assign 0-argument hook with no context pointer
 // func:lib_curl.FCall.done.Set0
 inline void          done_Set0(lib_curl::FCall& parent, void (*fcn)() ) __attribute__((nothrow));

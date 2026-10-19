@@ -66,19 +66,21 @@ bool doc::ResolveKey(algo::strptr key) {
     algo::strptr ns = Pathcomp(key, ".LL");
     algo::strptr name = Pathcomp(key, ".LR");
     bool dotted = ch_N(name) > 0 && name != key;
-    MatchFile(algo::tempstr() << "txt/exe/" << key << "/README.md");
-    MatchFile(algo::tempstr() << "txt/lib/" << key << "/README.md");
-    MatchFile(algo::tempstr() << "txt/ssimdb/" << key << "/README.md");
-    MatchFile(algo::tempstr() << "txt/protocol/" << key << "/README.md");
+    // the README of the namespace KEY names sits under the directory its nstype
+    // names -- txt/exe, txt/so, txt/lib, txt/ssimdb, txt/protocol -- which abt_md
+    // enforces, so the namespace says where to look
+    doc::FNs *nsrec = doc::ind_ns_Find(key);
+    if (nsrec) {
+        MatchFile(algo::tempstr() << "txt/" << nsrec->nstype << "/" << key << "/README.md");
+    }
     if (dotted) {
         MatchFile(algo::tempstr() << "txt/protocol/" << ns << "/" << name << ".md");
     }
     MatchFile(algo::tempstr() << "txt/rule/" << key << ".md");
-    // a topic directory's page, txt/<dir>/<key>.md, whichever directories the
-    // tree's documents live in
+    // a topic page, txt/<dir>/<key>.md at any depth, in whichever directories the
+    // tree's documents live
     ind_beg(doc::_db_readmefile_curs, readmefile, doc::_db) {
-        algo::strptr rest = Pathcomp(readmefile.gitfile, "/LR");
-        bool topic = Pathcomp(readmefile.gitfile, "/LL") == "txt" && Pathcomp(rest, "/LR") == tempstr() << key << ".md";
+        bool topic = Pathcomp(readmefile.gitfile, "/LL") == "txt" && Pathcomp(readmefile.gitfile, "/RR") == tempstr() << key << ".md";
         if (topic) {
             doc::c_match_InsertMaybe(readmefile);
         }
@@ -104,11 +106,11 @@ bool doc::ResolveKey(algo::strptr key) {
 // A document is half of what this tool reads and the database is the other half, so
 // a key that matched no document has only been half looked for.  A table whose name
 // carries the key leads to the whole of that table, and a ctype whose name carries it
-// leads to its record -- which is what a reader typing `FStream` is after, since no
-// document is named that and eight ctypes are.
+// leads to its record -- which is what a reader typing `FCtype` is after, since no
+// document is named that and more than a dozen ctypes are.
 //
 // A dotted key whose namespace exists offers that namespace's ctypes as well.  The
-// key that prompts this is the near miss: `lib_x2.FCtype` names nothing at all, and
+// key that prompts this is the near miss: `algo_lib.FCtype` names nothing at all, and
 // the useful answer is not silence but the list its author was picking from.
 tempstr doc::GuessLoc(algo::strptr key, int nmax, int &nfound) {
     algo::strptr ns = Pathcomp(key, ".LL");
@@ -154,8 +156,8 @@ tempstr doc::GuessLoc(algo::strptr key, int nmax, int &nfound) {
 // name is arbitrary, so the regex goes to src_func as it stands.
 //
 // This is what a view of a query resolves its key with, and it prefers records where
-// resolving a key on its own prefers documents.  `func:lib_x2` asks about the
-// functions of that library, where a bare `lib_x2` opens the library's README --
+// resolving a key on its own prefers documents.  `func:algo_lib` asks about the
+// functions of that library, where a bare `algo_lib` opens the library's README --
 // which is right both times, because a view is a view of records and there is nothing
 // else for it to be a view of.
 tempstr doc::KeyQuery(algo::strptr key) {
@@ -166,8 +168,8 @@ tempstr doc::KeyQuery(algo::strptr key) {
         ret << "dmmeta.ctype:" << key;
     } else if (doc::ind_ns_Find(key)) {
         ret << "dmmeta.ns:" << key;
-    } else if (doc::ind_ssimfile_Find(key)) {
-        ret << key << ":%";
+    } else if (doc::Keyssimfile(key)) {
+        ret << doc::Keyssimfile(key)->ssimfile << ":%";
     } else if (algo::FindChar(key, '%') >= 0) {
         ret << "dmmeta.ctype:" << key;
     }
@@ -194,6 +196,13 @@ static bool TreedirQ(algo::strptr key) {
         ret = ret || StartsWithQ(gitfile.gitfile, want);
     }ind_end;
     return ret;
+}
+
+// Return true when a flag in force asks for a view of records: their schema, the command
+// behind them, their access paths, their code or their data.  A table's name opens its gist
+// only when no such flag does, since each of them is about the table's records.
+static bool RecflagQ() {
+    return doc::_db.meta || doc::_db.showcmd || doc::_db.vis || doc::_db.code || doc::_db.data;
 }
 
 // Return the location the key KEY names, or the empty string when it names no one
@@ -232,6 +241,14 @@ static bool TreedirQ(algo::strptr key) {
 // file under txt/ssimdb that holds the prose is still a document and still opens when it
 // is named by its path.
 //
+// A table whose rows a program binds to functions is the exception, and its name is its
+// gist.  Each row of amcdb.gen is a step of amc, and what a reader typing `gen` wants is
+// what the steps do, which the comments of their functions say and the rows do not.
+//
+// A table's short name names it as the full name does, once the path conventions have had
+// their turn.  `gen` is amcdb.gen, where a substring match over the documents would
+// offer every page whose path mentions it.
+//
 // A word doc does not synthesize a page for is a table's short name, and it is expanded
 // to the full one here.  So `ssimfile:dmmeta.ctype` and `dmmeta.ssimfile:dmmeta.ctype`
 // are one page rather than two, and the location a link or a history carries is the
@@ -249,9 +266,9 @@ static bool TreedirQ(algo::strptr key) {
 // whatever it is handed.
 //
 // A key naming a view of a query carries a key of its own, and that inner key is
-// resolved to records rather than to a document.  So `func:lib_x2.FStream` is the
-// functions of that ctype and `code:lib_x2` the generated code of that namespace,
-// while what comes back is spelled out in full -- `func:dmmeta.ctype:lib_x2.FStream`
+// resolved to records rather than to a document.  So `func:amc.FCtype` is the
+// functions of that ctype and `code:algo_lib` the generated code of that namespace,
+// while what comes back is spelled out in full -- `func:dmmeta.ctype:amc.FCtype`
 // -- because one page has one canonical text and the short form is a way of typing
 // it rather than a second name for it.
 tempstr doc::ResolveLoc(algo::strptr want) {
@@ -269,8 +286,8 @@ tempstr doc::ResolveLoc(algo::strptr want) {
         key << doc::ExpandQuery(typed);
     }
     bool funcsrc = doc::FuncsrcQ(key);
-    bool view = !funcsrc && !doc::FuncregxQ(key) && (doc::FuncQ(key) || doc::CodeQ(key));
-    tempstr inner(view ? doc::KeyQuery(doc::LocQuery(key)) : tempstr());
+    bool view = !funcsrc && !doc::FuncregxQ(key) && doc::QueryviewQ(key);
+    tempstr inner(view ? doc::ExpandQuery(doc::KeyQuery(doc::LocQuery(key))) : tempstr());
     tempstr readme;
     readme << key << (doc::DirQ(key) ? "" : "/") << "README.md";
     bool literal = !view && ch_N(key) > 0
@@ -278,15 +295,16 @@ tempstr doc::ResolveLoc(algo::strptr want) {
     bool index = !view && !literal && algo::FileQ(readme);
     bool listing = !view && !literal && !index && doc::DirQ(key);
     bool open = !view && !literal && !index && !listing;
-    doc::FSsimfile *table = open ? doc::ind_ssimfile_Find(key) : NULL;
+    doc::FSsimfile *full = open ? doc::ind_ssimfile_Find(key) : NULL;
     doc::c_match_RemoveAll();
-    bool named = open && !table && doc::ResolveKey(key);
+    bool named = open && !full && doc::ResolveKey(key);
+    doc::FSsimfile *table = full ? full : (open && !named ? doc::Shortssimfile(key) : NULL);
     doc::FCtype *ctype = open && !table && !named ? doc::ind_ctype_Find(key) : NULL;
     bool amckey = open && !table && !named && !ctype && doc::AmckeyQ(key);
     bool tree = open && !table && !named && !ctype && !amckey && ch_N(key) > 0 && TreedirQ(key);
     tempstr ret;
     if (view && ch_N(inner) > 0) {
-        ret << (doc::FuncQ(key) ? "func:" : "code:") << inner;
+        ret << doc::ViewWord(key) << ":" << inner;
     } else if (view) {
         ret << "";
     } else if (literal) {
@@ -295,6 +313,8 @@ tempstr doc::ResolveLoc(algo::strptr want) {
         ret << readme;
     } else if (listing) {
         ret << key;
+    } else if (table && table->p_gstatic && !RecflagQ()) {
+        ret << "gist:" << table->ssimfile << ":%";
     } else if (table) {
         ret << table->ssimfile << ":%";
     } else if (ch_N(key) == 0) {
@@ -354,6 +374,7 @@ static void ResolveView() {
     doc::_db.vis = doc::_db.cmdline.vis;
     doc::_db.code = doc::_db.cmdline.code;
     doc::_db.data = doc::_db.cmdline.data;
+    doc::_db.dir = doc::_db.cmdline.dir;
 }
 
 // Settle the measure and the colour decision, both of which the renderer reads
@@ -432,6 +453,8 @@ bool doc::Foldflip(algo::strptr target) {
         doc::_db.code = !doc::_db.code;
     } else if (target == "-data") {
         doc::_db.data = !doc::_db.data;
+    } else if (target == "-dir") {
+        doc::_db.dir = !doc::_db.dir;
     } else {
         ret = false;
     }
@@ -460,6 +483,22 @@ static void ListLink() {
               << Keyval("target", link.target));
     }ind_end;
     prlog("report.doc  n_link:" << doc::link_N());
+}
+
+// Return the query the key KEY means under -q.
+//
+// A table's name opens its gist when the table's rows stand for functions, and the gist
+// is a page doc builds.  Under -q the reader asked for records, so a table's name, full or
+// short, is every row of that table.  Any other key is expanded as ExpandQuery expands it.
+static tempstr Qkey(algo::strptr key) {
+    doc::FSsimfile *ssimfile = algo::FindChar(key, ':') < 0 ? doc::Keyssimfile(key) : NULL;
+    tempstr ret;
+    if (ssimfile) {
+        ret << ssimfile->ssimfile << ":%";
+    } else {
+        ret << doc::ExpandQuery(key);
+    }
+    return ret;
 }
 
 // Show one document, answer one query, or say which documents the key could have
@@ -492,7 +531,7 @@ static void ListLink() {
 // still lists every document.
 //
 // A key that names no document at all may still name a ctype, and `doc
-// lib_x2.FStream` then opens that ctype's record.  Most of the tree's types have
+// amc.FCtype` then opens that ctype's record.  Most of the tree's types have
 // no document of their own, and the record is what there is to read about one:
 // its fields, and from there the functions that take it.
 //
@@ -503,9 +542,11 @@ void doc::Main() {
     ResolveOutput();
     ResolveView();
     doc::ReadmedirRead();
+    doc::BaseRead();
+    doc::GstaticRead();
     tempstr key;
     if (doc::_db.cmdline.q) {
-        key << doc::ExpandQuery(doc::_db.cmdline.key);
+        key << Qkey(doc::_db.cmdline.key);
     } else {
         key << doc::_db.cmdline.key;
     }

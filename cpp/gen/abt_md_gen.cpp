@@ -143,6 +143,7 @@ void abt_md::FCheckReq_Uninit(abt_md::FCheckReq& parent) {
 void abt_md::comptest_CopyOut(abt_md::FComptest &row, atfdb::Comptest &out) {
     out.comptest = row.comptest;
     out.timeout = row.timeout;
+    out.cijob = row.cijob;
     out.memcheck = row.memcheck;
     out.coverage = row.coverage;
     out.stablefld = row.stablefld;
@@ -154,6 +155,7 @@ void abt_md::comptest_CopyOut(abt_md::FComptest &row, atfdb::Comptest &out) {
 void abt_md::comptest_CopyIn(abt_md::FComptest &row, atfdb::Comptest &in) {
     row.comptest = in.comptest;
     row.timeout = in.timeout;
+    row.cijob = in.cijob;
     row.memcheck = in.memcheck;
     row.coverage = in.coverage;
     row.stablefld = in.stablefld;
@@ -168,6 +170,16 @@ algo::strptr abt_md::target_Get(abt_md::FComptest& parent) {
 // --- abt_md.FComptest.testname.Get
 algo::strptr abt_md::testname_Get(abt_md::FComptest& parent) {
     return algo::Pathcomp(parent.comptest, ".LR");
+}
+
+// --- abt_md.FComptest..Init
+// Set all fields to initial values.
+void abt_md::FComptest_Init(abt_md::FComptest& parent) {
+    parent.timeout = i32(10);
+    parent.cijob = algo::strptr("compB");
+    parent.coverage = bool(true);
+    parent.stablefld = bool(false);
+    parent.ns_c_comptest_in_ary = bool(false);
 }
 
 // --- abt_md.FComptest..Uninit
@@ -608,7 +620,7 @@ static void abt_md::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'abt_md.Input'  signature:'77219d1b50cf7d1acb6e370e3d579ec2ecb34ff5'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'abt_md.Input'  signature:'4c9d927a5fd10fcf101b7a568c10d2a87029ff55'");
 }
 
 // --- abt_md.FDb._db.InsertStrptrMaybe
@@ -785,8 +797,8 @@ bool abt_md::LoadTuplesMaybe(algo::strptr root, bool recursive) {
         retval = retval && abt_md::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
         retval = retval && abt_md::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispatch_msg"),recursive);
         retval = retval && abt_md::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cstr"),recursive);
-        retval = retval && abt_md::LoadTuplesFile(algo::SsimFname(root,"dev.target"),recursive);
         retval = retval && abt_md::LoadTuplesFile(algo::SsimFname(root,"dev.gitfile"),recursive);
+        retval = retval && abt_md::LoadTuplesFile(algo::SsimFname(root,"dev.target"),recursive);
         retval = retval && abt_md::LoadTuplesFile(algo::SsimFname(root,"dev.targsrc"),recursive);
         retval = retval && abt_md::LoadTuplesFile(algo::SsimFname(root,"dev.targdep"),recursive);
         retval = retval && abt_md::LoadTuplesFile(algo::SsimFname(root,"dev.scriptfile"),recursive);
@@ -7618,6 +7630,7 @@ void abt_md::docpage_CopyOut(abt_md::FDocpage &row, dev::Docpage &out) {
     out.word = row.word;
     out.bare = row.bare;
     out.bytable = row.bytable;
+    out.view = row.view;
     out.comment = algo::Comment(row.comment);
 }
 
@@ -8330,8 +8343,10 @@ void abt_md::readmefile_CopyOut(abt_md::FReadmefile &row, dev::Readmefile &out) 
     out.gitfile = row.gitfile;
     out.inl = row.inl;
     out.sandbox = row.sandbox;
+    out.tut = row.tut;
     out.filter = row.filter;
     out.publish = row.publish;
+    out.narrow = row.narrow;
     out.comment = algo::Comment(row.comment);
 }
 
@@ -8341,8 +8356,10 @@ void abt_md::readmefile_CopyIn(abt_md::FReadmefile &row, dev::Readmefile &in) {
     row.gitfile = in.gitfile;
     row.inl = in.inl;
     row.sandbox = in.sandbox;
+    row.tut = in.tut;
     row.filter = in.filter;
     row.publish = in.publish;
+    row.narrow = in.narrow;
     row.comment = in.comment;
 }
 
@@ -8351,7 +8368,9 @@ void abt_md::readmefile_CopyIn(abt_md::FReadmefile &row, dev::Readmefile &in) {
 void abt_md::FReadmefile_Init(abt_md::FReadmefile& parent) {
     parent.inl = bool(false);
     parent.sandbox = bool(false);
+    parent.tut = bool(false);
     parent.publish = bool(false);
+    parent.narrow = bool(false);
     parent.p_ns = NULL;
     parent.p_ssimfile = NULL;
     parent.p_ctype = NULL;

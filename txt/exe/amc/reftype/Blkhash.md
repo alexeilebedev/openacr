@@ -35,23 +35,23 @@ data-only change: flip the field's reftype and replace the
 State in the **parent** ctype (see `tclass_Blkhash` in
 `cpp/amc/blkhash.cpp`):
 
-| Field (parent)            | Type      | Meaning                                        |
-|---------------------------|-----------|------------------------------------------------|
-| `<name>_dir_elems`        | `Blk***`  | directory of bucket segments, 512 buckets each |
-| `<name>_dir_max`          | `i32`     | directory capacity, in segments                |
-| `<name>_buckets_n`        | `i32`     | number of buckets; one more per split          |
-| `<name>_nblk`             | `i32`     | number of resident blocks                      |
-| `<name>_n`                | `i32`     | number of indexed elements                     |
+| Field (parent)     | Type     | Meaning |
+| ------------------ | -------- | ------- |
+| `<name>_dir_elems` | `Blk***` | directory of bucket segments, 512 buckets each |
+| `<name>_dir_max`   | `i32`    | directory capacity, in segments |
+| `<name>_buckets_n` | `i32`    | number of buckets; one more per split |
+| `<name>_nblk`      | `i32`    | number of resident blocks |
+| `<name>_n`         | `i32`    | number of indexed elements |
 
 Per index, one block struct `<Parname>_<name>_Blk` is emitted:
 
-| Field (block)   | Type     | Meaning                                                 |
-|-----------------|----------|---------------------------------------------------------|
-| `key`           | key type | key with the low `linbits` linfld bits zeroed           |
-| `next`          | `Blk*`   | bucket chain                                            |
-| `elem`          | `T**`    | 2^linbits slot pointers; slot = linfld & (2^linbits-1)  |
-| `hashval`       | `u32`    | hash of the masked key, for cheap re-chain on growth    |
-| `n`             | `u32`    | occupied slots; the block is freed when it reaches zero |
+| Field (block) | Type     | Meaning |
+| ------------- | -------- | ------- |
+| `key`         | key type | key with the low `linbits` linfld bits zeroed |
+| `next`        | `Blk*`   | bucket chain |
+| `elem`        | `T**`    | 2^linbits slot pointers; slot = linfld & (2^linbits-1) |
+| `hashval`     | `u32`    | hash of the masked key, for cheap re-chain on growth |
+| `n`           | `u32`    | occupied slots; the block is freed when it reaches zero |
 
 The **element** ctype gets no new fields — membership is recorded
 only in the block's slot pointer.
@@ -116,19 +116,19 @@ Required:
 
 Source: `cpp/amc/blkhash.cpp`.
 
-| Tfunc                    | Generated function                                    | Effect |
-|--------------------------|-------------------------------------------------------|--------|
-| `Blkhash.Init`           | `<name>_Init(P&)` (macro)                             | Allocate the initial 4-bucket array; OOM is fatal. |
-| `Blkhash.Uninit`         | `<name>_Uninit(P&)` (macro)                           | Free every resident block and the bucket array. |
-| `Blkhash.N`              | `i32 <name>_N(const P&)`                              | Number of indexed elements. |
-| `Blkhash.EmptyQ`         | `bool <name>_EmptyQ(P&)`                              | `_n == 0`. |
-| `Blkhash.Find`           | `T* <name>_Find(P&, key)`                             | Look up by key; NULL if not found. |
-| `Blkhash.FindX`          | `T& <name>_FindX(P&, key)`                            | Look up by key; throw on miss. |
-| `Blkhash.FindRemove`     | `T* <name>_FindRemove(P&, key)` *(opt-in via `dmmeta.ffunc`, as for Thash)* | Find + clear the slot in one walk. |
-| `Blkhash.InsertMaybe`    | `bool <name>_InsertMaybe(P&, T& row)`                 | Claim the row's slot.  Returns false if a different row holds the key.  No-op if `row` is already in the index. |
-| `Blkhash.Remove`         | `void <name>_Remove(P&, T& row)`                      | Clear the row's slot; no-op if the row is not in the index.  Frees the block when its last slot clears. |
-| `Blkhash.Cascdel`        | (private)                                             | Delete every element reachable through the index.  Emitted when the xref has `cascdel:Y`. |
-| `Blkhash.curs`           | `<P>_<name>_curs` + `_Reset/_ValidQ/_Next/_Access` *(opt-in)* | Forward cursor — walks each bucket's blocks and each block's occupied slots.  Request it with a `dmmeta.fcurs` row, see [cursors](/txt/exe/amc/reftype.md#cursors). |
+| Tfunc                 | Generated function                                                          | Effect |
+| --------------------- | --------------------------------------------------------------------------- | ------ |
+| `Blkhash.Init`        | `<name>_Init(P&)` (macro)                                                   | Allocate the initial 4-bucket array; OOM is fatal. |
+| `Blkhash.Uninit`      | `<name>_Uninit(P&)` (macro)                                                 | Free every resident block and the bucket array. |
+| `Blkhash.N`           | `i32 <name>_N(const P&)`                                                    | Number of indexed elements. |
+| `Blkhash.EmptyQ`      | `bool <name>_EmptyQ(P&)`                                                    | `_n == 0`. |
+| `Blkhash.Find`        | `T* <name>_Find(P&, key)`                                                   | Look up by key; NULL if not found. |
+| `Blkhash.FindX`       | `T& <name>_FindX(P&, key)`                                                  | Look up by key; throw on miss. |
+| `Blkhash.FindRemove`  | `T* <name>_FindRemove(P&, key)` *(opt-in via `dmmeta.ffunc`, as for Thash)* | Find + clear the slot in one walk. |
+| `Blkhash.InsertMaybe` | `bool <name>_InsertMaybe(P&, T& row)`                                       | Claim the row's slot.  Returns false if a different row holds the key.  No-op if `row` is already in the index. |
+| `Blkhash.Remove`      | `void <name>_Remove(P&, T& row)`                                            | Clear the row's slot; no-op if the row is not in the index.  Frees the block when its last slot clears. |
+| `Blkhash.Cascdel`     | (private)                                                                   | Delete every element reachable through the index.  Emitted when the xref has `cascdel:Y`. |
+| `Blkhash.curs`        | `<P>_<name>_curs` + `_Reset/_ValidQ/_Next/_Access` *(opt-in)*               | Forward cursor — walks each bucket's blocks and each block's occupied slots.  Request it with a `dmmeta.fcurs` row, see [cursors](/txt/exe/amc/reftype.md#cursors). |
 
 ### Memory model
 <a href="#memory-model"></a>

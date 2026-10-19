@@ -464,6 +464,14 @@ namespace amc { // gen:ns_print_proto
     static bool          trie_InputMaybe(dmmeta::Trie &elem) __attribute__((nothrow));
     // func:amc.FDb.bheap.InputMaybe
     static bool          bheap_InputMaybe(dmmeta::Bheap &elem) __attribute__((nothrow));
+    // func:amc.FDb.regxstyle.InputMaybe
+    static bool          regxstyle_InputMaybe(amcdb::Regxstyle &elem) __attribute__((nothrow));
+    // func:amc.FDb.regxlenient.InputMaybe
+    static bool          regxlenient_InputMaybe(amcdb::Regxlenient &elem) __attribute__((nothrow));
+    // func:amc.FDb.regxrule.InputMaybe
+    static bool          regxrule_InputMaybe(amcdb::Regxrule &elem) __attribute__((nothrow));
+    // func:amc.FDb.regxmacro.InputMaybe
+    static bool          regxmacro_InputMaybe(amcdb::Regxmacro &elem) __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
     // func:amc.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
@@ -1163,14 +1171,14 @@ void amc::Enumstr_Print(amc::Enumstr& row, algo::cstring& str) {
     PrintAttrSpaceReset(str,"str", temp);
 }
 
-// --- amc.FAnonfld.msghdr.CopyOut
+// --- amc.FAnonfld.base.CopyOut
 // Copy fields out of row
 void amc::anonfld_CopyOut(amc::FAnonfld &row, dmmeta::Anonfld &out) {
     out.field = row.field;
     out.comment = algo::Comment(row.comment);
 }
 
-// --- amc.FAnonfld.msghdr.CopyIn
+// --- amc.FAnonfld.base.CopyIn
 // Copy fields in to row
 void amc::anonfld_CopyIn(amc::FAnonfld &row, dmmeta::Anonfld &in) {
     row.field = in.field;
@@ -1255,7 +1263,7 @@ void amc::FBheap_Uninit(amc::FBheap& parent) {
     }
 }
 
-// --- amc.FBitfld.msghdr.CopyOut
+// --- amc.FBitfld.base.CopyOut
 // Copy fields out of row
 void amc::bitfld_CopyOut(amc::FBitfld &row, dmmeta::Bitfld &out) {
     out.field = row.field;
@@ -1265,7 +1273,7 @@ void amc::bitfld_CopyOut(amc::FBitfld &row, dmmeta::Bitfld &out) {
     out.comment = algo::Comment(row.comment);
 }
 
-// --- amc.FBitfld.msghdr.CopyIn
+// --- amc.FBitfld.base.CopyIn
 // Copy fields in to row
 void amc::bitfld_CopyIn(amc::FBitfld &row, dmmeta::Bitfld &in) {
     row.field = in.field;
@@ -1292,7 +1300,7 @@ void amc::FBitfld_Uninit(amc::FBitfld& parent) {
     }
 }
 
-// --- amc.FBlkhash.msghdr.CopyOut
+// --- amc.FBlkhash.base.CopyOut
 // Copy fields out of row
 void amc::blkhash_CopyOut(amc::FBlkhash &row, dmmeta::Blkhash &out) {
     out.field = row.field;
@@ -1302,7 +1310,7 @@ void amc::blkhash_CopyOut(amc::FBlkhash &row, dmmeta::Blkhash &out) {
     out.comment = algo::Comment(row.comment);
 }
 
-// --- amc.FBlkhash.msghdr.CopyIn
+// --- amc.FBlkhash.base.CopyIn
 // Copy fields in to row
 void amc::blkhash_CopyIn(amc::FBlkhash &row, dmmeta::Blkhash &in) {
     row.field = in.field;
@@ -1320,7 +1328,7 @@ void amc::FBlkhash_Uninit(amc::FBlkhash& parent) {
     }
 }
 
-// --- amc.FBltin.msghdr.CopyOut
+// --- amc.FBltin.base.CopyOut
 // Copy fields out of row
 void amc::bltin_CopyOut(amc::FBltin &row, amcdb::Bltin &out) {
     out.ctype = row.ctype;
@@ -1330,7 +1338,7 @@ void amc::bltin_CopyOut(amc::FBltin &row, amcdb::Bltin &out) {
     out.comment = algo::Comment(row.comment);
 }
 
-// --- amc.FBltin.msghdr.CopyIn
+// --- amc.FBltin.base.CopyIn
 // Copy fields in to row
 void amc::bltin_CopyIn(amc::FBltin &row, amcdb::Bltin &in) {
     row.ctype = in.ctype;
@@ -1349,14 +1357,14 @@ void amc::FBltin_Uninit(amc::FBltin& parent) {
     }
 }
 
-// --- amc.FCafter.msghdr.CopyOut
+// --- amc.FCafter.base.CopyOut
 // Copy fields out of row
 void amc::cafter_CopyOut(amc::FCafter &row, dmmeta::Cafter &out) {
     out.cafter = row.cafter;
     out.comment = algo::Comment(row.comment);
 }
 
-// --- amc.FCafter.msghdr.CopyIn
+// --- amc.FCafter.base.CopyIn
 // Copy fields in to row
 void amc::cafter_CopyIn(amc::FCafter &row, dmmeta::Cafter &in) {
     row.cafter = in.cafter;
@@ -1381,14 +1389,14 @@ void amc::FCafter_Uninit(amc::FCafter& parent) {
     }
 }
 
-// --- amc.FCascdel.msghdr.CopyOut
+// --- amc.FCascdel.base.CopyOut
 // Copy fields out of row
 void amc::cascdel_CopyOut(amc::FCascdel &row, dmmeta::Cascdel &out) {
     out.field = row.field;
     out.comment = algo::Comment(row.comment);
 }
 
-// --- amc.FCascdel.msghdr.CopyIn
+// --- amc.FCascdel.base.CopyIn
 // Copy fields in to row
 void amc::cascdel_CopyIn(amc::FCascdel &row, dmmeta::Cascdel &in) {
     row.field = in.field;
@@ -1429,7 +1437,7 @@ void amc::FCcmdline_Uninit(amc::FCcmdline& parent) {
     }
 }
 
-// --- amc.FCcmp.msghdr.CopyOut
+// --- amc.FCcmp.base.CopyOut
 // Copy fields out of row
 void amc::ccmp_CopyOut(amc::FCcmp &row, dmmeta::Ccmp &out) {
     out.ctype = row.ctype;
@@ -1440,7 +1448,7 @@ void amc::ccmp_CopyOut(amc::FCcmp &row, dmmeta::Ccmp &out) {
     out.comment = algo::Comment(row.comment);
 }
 
-// --- amc.FCcmp.msghdr.CopyIn
+// --- amc.FCcmp.base.CopyIn
 // Copy fields in to row
 void amc::ccmp_CopyIn(amc::FCcmp &row, dmmeta::Ccmp &in) {
     row.ctype = in.ctype;
@@ -1488,7 +1496,7 @@ void amc::FCdflt_Uninit(amc::FCdflt& parent) {
     }
 }
 
-// --- amc.FCextern.msghdr.CopyOut
+// --- amc.FCextern.base.CopyOut
 // Copy fields out of row
 void amc::cextern_CopyOut(amc::FCextern &row, dmmeta::Cextern &out) {
     out.ctype = row.ctype;
@@ -1497,7 +1505,7 @@ void amc::cextern_CopyOut(amc::FCextern &row, dmmeta::Cextern &out) {
     out.plaindata = row.plaindata;
 }
 
-// --- amc.FCextern.msghdr.CopyIn
+// --- amc.FCextern.base.CopyIn
 // Copy fields in to row
 void amc::cextern_CopyIn(amc::FCextern &row, dmmeta::Cextern &in) {
     row.ctype = in.ctype;
@@ -1542,7 +1550,7 @@ void amc::FCfast_Uninit(amc::FCfast& parent) {
     }
 }
 
-// --- amc.FCfmt.msghdr.CopyOut
+// --- amc.FCfmt.base.CopyOut
 // Copy fields out of row
 void amc::cfmt_CopyOut(amc::FCfmt &row, dmmeta::Cfmt &out) {
     out.cfmt = row.cfmt;
@@ -1554,7 +1562,7 @@ void amc::cfmt_CopyOut(amc::FCfmt &row, dmmeta::Cfmt &out) {
     out.comment = algo::Comment(row.comment);
 }
 
-// --- amc.FCfmt.msghdr.CopyIn
+// --- amc.FCfmt.base.CopyIn
 // Copy fields in to row
 void amc::cfmt_CopyIn(amc::FCfmt &row, dmmeta::Cfmt &in) {
     row.cfmt = in.cfmt;
@@ -1639,7 +1647,7 @@ void amc::FCharset_Uninit(amc::FCharset& parent) {
     }
 }
 
-// --- amc.FChash.msghdr.CopyOut
+// --- amc.FChash.base.CopyOut
 // Copy fields out of row
 void amc::chash_CopyOut(amc::FChash &row, dmmeta::Chash &out) {
     out.ctype = row.ctype;
@@ -1647,7 +1655,7 @@ void amc::chash_CopyOut(amc::FChash &row, dmmeta::Chash &out) {
     out.comment = algo::Comment(row.comment);
 }
 
-// --- amc.FChash.msghdr.CopyIn
+// --- amc.FChash.base.CopyIn
 // Copy fields in to row
 void amc::chash_CopyIn(amc::FChash &row, dmmeta::Chash &in) {
     row.ctype = in.ctype;
@@ -1766,7 +1774,7 @@ void amc::FCpbuf_Uninit(amc::FCpbuf& parent) {
     }
 }
 
-// --- amc.FCppfunc.msghdr.CopyOut
+// --- amc.FCppfunc.base.CopyOut
 // Copy fields out of row
 void amc::cppfunc_CopyOut(amc::FCppfunc &row, dmmeta::Cppfunc &out) {
     out.field = row.field;
@@ -1775,7 +1783,7 @@ void amc::cppfunc_CopyOut(amc::FCppfunc &row, dmmeta::Cppfunc &out) {
     out.set = row.set;
 }
 
-// --- amc.FCppfunc.msghdr.CopyIn
+// --- amc.FCppfunc.base.CopyIn
 // Copy fields in to row
 void amc::cppfunc_CopyIn(amc::FCppfunc &row, dmmeta::Cppfunc &in) {
     row.field = in.field;
@@ -1821,14 +1829,14 @@ void amc::FCppsym_Uninit(amc::FCppsym& parent) {
     ind_cppsym_Remove(parent); // remove cppsym from index ind_cppsym
 }
 
-// --- amc.FCpptype.msghdr.CopyOut
+// --- amc.FCpptype.base.CopyOut
 // Copy fields out of row
 void amc::cpptype_CopyOut(amc::FCpptype &row, dmmeta::Cpptype &out) {
     out.ctype = row.ctype;
     out.ctor = row.ctor;
 }
 
-// --- amc.FCpptype.msghdr.CopyIn
+// --- amc.FCpptype.base.CopyIn
 // Copy fields in to row
 void amc::cpptype_CopyIn(amc::FCpptype &row, dmmeta::Cpptype &in) {
     row.ctype = in.ctype;
@@ -1844,7 +1852,7 @@ void amc::FCpptype_Uninit(amc::FCpptype& parent) {
     }
 }
 
-// --- amc.FCsize.msghdr.CopyOut
+// --- amc.FCsize.base.CopyOut
 // Copy fields out of row
 void amc::csize_CopyOut(amc::FCsize &row, dmmeta::Csize &out) {
     out.ctype = row.ctype;
@@ -1853,7 +1861,7 @@ void amc::csize_CopyOut(amc::FCsize &row, dmmeta::Csize &out) {
     out.comment = algo::Comment(row.comment);
 }
 
-// --- amc.FCsize.msghdr.CopyIn
+// --- amc.FCsize.base.CopyIn
 // Copy fields in to row
 void amc::csize_CopyIn(amc::FCsize &row, dmmeta::Csize &in) {
     row.ctype = in.ctype;
@@ -1870,7 +1878,7 @@ void amc::FCsize_Uninit(amc::FCsize& parent) {
     }
 }
 
-// --- amc.FCstr.msghdr.CopyOut
+// --- amc.FCstr.base.CopyOut
 // Copy fields out of row
 void amc::cstr_CopyOut(amc::FCstr &row, dmmeta::Cstr &out) {
     out.ctype = row.ctype;
@@ -1878,7 +1886,7 @@ void amc::cstr_CopyOut(amc::FCstr &row, dmmeta::Cstr &out) {
     out.comment = algo::Comment(row.comment);
 }
 
-// --- amc.FCstr.msghdr.CopyIn
+// --- amc.FCstr.base.CopyIn
 // Copy fields in to row
 void amc::cstr_CopyIn(amc::FCstr &row, dmmeta::Cstr &in) {
     row.ctype = in.ctype;
@@ -1894,14 +1902,14 @@ void amc::FCstr_Uninit(amc::FCstr& parent) {
     }
 }
 
-// --- amc.FCtype.msghdr.CopyOut
+// --- amc.FCtype.base.CopyOut
 // Copy fields out of row
 void amc::ctype_CopyOut(amc::FCtype &row, dmmeta::Ctype &out) {
     out.ctype = row.ctype;
     out.comment = algo::Comment(row.comment);
 }
 
-// --- amc.FCtype.msghdr.CopyIn
+// --- amc.FCtype.base.CopyIn
 // Copy fields in to row
 void amc::ctype_CopyIn(amc::FCtype &row, dmmeta::Ctype &in) {
     row.ctype = in.ctype;
@@ -3729,14 +3737,14 @@ void amc::FJsbltin_Uninit(amc::FJsbltin& parent) {
     ind_jsbltin_Remove(parent); // remove jsbltin from index ind_jsbltin
 }
 
-// --- amc.FTclass.msghdr.CopyOut
+// --- amc.FTclass.base.CopyOut
 // Copy fields out of row
 void amc::tclass_CopyOut(amc::FTclass &row, amcdb::Tclass &out) {
     out.tclass = row.tclass;
     out.comment = algo::Comment(row.comment);
 }
 
-// --- amc.FTclass.msghdr.CopyIn
+// --- amc.FTclass.base.CopyIn
 // Copy fields in to row
 void amc::tclass_CopyIn(amc::FTclass &row, amcdb::Tclass &in) {
     row.tclass = in.tclass;
@@ -4275,7 +4283,7 @@ static void amc::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'amc.Input'  signature:'afa7f8f2ce85465472d2701374ddeb60633b0b67'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'amc.Input'  signature:'dfcc2ed43161880327a7477c5677cb23ec61f52f'");
 }
 
 // --- amc.FDb._db.InsertStrptrMaybe
@@ -4972,6 +4980,30 @@ bool amc::InsertStrptrMaybe(algo::strptr str) {
             retval = retval && bheap_InputMaybe(elem);
             break;
         }
+        case amc_TableId_amcdb_Regxstyle: { // finput:amc.FDb.regxstyle
+            amcdb::Regxstyle elem;
+            retval = amcdb::Regxstyle_ReadStrptrMaybe(elem, str);
+            retval = retval && regxstyle_InputMaybe(elem);
+            break;
+        }
+        case amc_TableId_amcdb_Regxlenient: { // finput:amc.FDb.regxlenient
+            amcdb::Regxlenient elem;
+            retval = amcdb::Regxlenient_ReadStrptrMaybe(elem, str);
+            retval = retval && regxlenient_InputMaybe(elem);
+            break;
+        }
+        case amc_TableId_amcdb_Regxrule: { // finput:amc.FDb.regxrule
+            amcdb::Regxrule elem;
+            retval = amcdb::Regxrule_ReadStrptrMaybe(elem, str);
+            retval = retval && regxrule_InputMaybe(elem);
+            break;
+        }
+        case amc_TableId_amcdb_Regxmacro: { // finput:amc.FDb.regxmacro
+            amcdb::Regxmacro elem;
+            retval = amcdb::Regxmacro_ReadStrptrMaybe(elem, str);
+            retval = retval && regxmacro_InputMaybe(elem);
+            break;
+        }
         default:
         break;
     } //switch
@@ -5104,6 +5136,10 @@ bool amc::LoadTuplesMaybe(algo::strptr root, bool recursive) {
         retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dev.target"),recursive);
         retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dev.targdep"),recursive);
         retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"amcdb.tcurs"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"amcdb.regxstyle"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"amcdb.regxrule"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"amcdb.regxmacro"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"amcdb.regxlenient"),recursive);
         retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"amcdb.bltin"),recursive);
     } else {
         algo_lib::AppendErrtext("path", root);
@@ -5857,6 +5893,30 @@ bool amc::RemoveStrptrMaybe(algo::strptr str) {
         }
         case amc_TableId_dmmeta_Bheap: { // finput:amc.FDb.bheap
             // finput amc.FDb.bheap: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case amc_TableId_amcdb_Regxstyle: { // finput:amc.FDb.regxstyle
+            // finput amc.FDb.regxstyle: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case amc_TableId_amcdb_Regxlenient: { // finput:amc.FDb.regxlenient
+            // finput amc.FDb.regxlenient: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case amc_TableId_amcdb_Regxrule: { // finput:amc.FDb.regxrule
+            // finput amc.FDb.regxrule: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case amc_TableId_amcdb_Regxmacro: { // finput:amc.FDb.regxmacro
+            // finput amc.FDb.regxmacro: random delete unsupported
             // (need reftype del:Y plus a Thash on the pkey)
             retval = false;
             break;
@@ -17607,7 +17667,9 @@ static void amc::tfunc_LoadStatic() {
         ,{ "amcdb.tfunc  tfunc:Global.LoadSsimfileMaybe  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Load specified ssimfile.\"", amc::tfunc_Global_LoadSsimfileMaybe }
         ,{ "amcdb.tfunc  tfunc:Global.Steps  hasthrow:N  leaf:N  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Call every step of this process, band by band, each band in dependency order\"", amc::tfunc_Global_Steps }
         ,{ "amcdb.tfunc  tfunc:Global.RemoveStrptrMaybe  hasthrow:N  leaf:N  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Global_RemoveStrptrMaybe }
-        ,{ "amcdb.tfunc  tfunc:Hook.Call  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Invoke function by pointer\"", amc::tfunc_Hook_Call }
+        ,{ "amcdb.tfunc  tfunc:Global.Load  hasthrow:N  leaf:N  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Initialize a shared object for its host and call its Main\"", amc::tfunc_Global_Load }
+        ,{ "amcdb.tfunc  tfunc:Global.Unload  hasthrow:N  leaf:N  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Uninitialize a shared object before its host unloads it\"", amc::tfunc_Global_Unload }
+        ,{ "amcdb.tfunc  tfunc:Hook.Call  hasthrow:N  leaf:N  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Invoke function by pointer\"", amc::tfunc_Hook_Call }
         ,{ "amcdb.tfunc  tfunc:Hook.Set0  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Assign 0-argument hook with no context pointer\"", amc::tfunc_Hook_Set0 }
         ,{ "amcdb.tfunc  tfunc:Hook.Set1  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Assign 1-argument hook with context pointer\"", amc::tfunc_Hook_Set1 }
         ,{ "amcdb.tfunc  tfunc:Hook.Set2  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Assign 2-argument hook with context pointer\"", amc::tfunc_Hook_Set2 }
@@ -17757,8 +17819,8 @@ static void amc::tfunc_LoadStatic() {
         ,{ "amcdb.tfunc  tfunc:Step.FirstChanged  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Step_FirstChanged }
         ,{ "amcdb.tfunc  tfunc:Step.Init  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:Y  comment:\"\"", amc::tfunc_Step_Init }
         ,{ "amcdb.tfunc  tfunc:Step.UpdateCycles  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Step_UpdateCycles }
-        ,{ "amcdb.tfunc  tfunc:Step.Step  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Step_Step }
-        ,{ "amcdb.tfunc  tfunc:Step.Call  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Step_Call }
+        ,{ "amcdb.tfunc  tfunc:Step.Step  hasthrow:N  leaf:N  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Step_Step }
+        ,{ "amcdb.tfunc  tfunc:Step.Call  hasthrow:N  leaf:N  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Step_Call }
         ,{ "amcdb.tfunc  tfunc:Step.SetDelay  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Step_SetDelay }
         ,{ "amcdb.tfunc  tfunc:Substr.Get  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:Y  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Substr_Get }
         ,{ "amcdb.tfunc  tfunc:Substr.Get2  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Substr_Get2 }
@@ -18127,6 +18189,7 @@ static void amc::gen_LoadStatic() {
         ,{ "amcdb.gen  gen:msgcurs  perns:N  comment:\"Generate message cursors\"", amc::gen_msgcurs }
         ,{ "amcdb.gen  gen:check_basefield  perns:N  comment:\"Check Base usage\"", amc::gen_check_basefield }
         ,{ "amcdb.gen  gen:check_ssimsort  perns:N  comment:\"Check Ssimsort table\"", amc::gen_check_ssimsort }
+        ,{ "amcdb.gen  gen:check_cmdcomment  perns:N  comment:\"Check that a command field comment fits in 80 characters\"", amc::gen_check_cmdcomment }
         ,{ "amcdb.gen  gen:clonefconst  perns:N  comment:\"Generate numeric fconsts for all string-based fconsts (creates new ctype)\"", amc::gen_clonefconst }
         ,{ "amcdb.gen  gen:newfield_charset  perns:N  comment:\"Generate code for charsets -- earlyish\"", amc::gen_newfield_charset }
         ,{ "amcdb.gen  gen:newfield_count  perns:N  comment:\"Create new fields for Count\"", amc::gen_newfield_count }
@@ -18184,6 +18247,7 @@ static void amc::gen_LoadStatic() {
         ,{ "amcdb.gen  gen:fcmap  perns:N  comment:\"Generate mapping between different enums using fcmap.ssim\"", amc::gen_fcmap }
         ,{ "amcdb.gen  gen:ns_include  perns:Y  comment:\"Generate includes\"", amc::gen_ns_include }
         ,{ "amcdb.gen  gen:ns_gsymbol  perns:Y  comment:\"Generate strings from tables\"", amc::gen_ns_gsymbol }
+        ,{ "amcdb.gen  gen:ns_regxstyle  perns:Y  comment:\"Generate regx style translators in C++ and TypeScript\"", amc::gen_ns_regxstyle }
         ,{ "amcdb.gen  gen:ns_size_enums  perns:Y  comment:\"Enums for sizes of certain types (avoids circular dependency of includes)\"", amc::gen_ns_size_enums }
         ,{ "amcdb.gen  gen:ns_tclass_ns  perns:Y  comment:\"Generate namespace-level tfuncs\"", amc::gen_ns_tclass_ns }
         ,{ "amcdb.gen  gen:ns_tclass_ctype  perns:Y  comment:\"Generate ctype-level tfuncs\"", amc::gen_ns_tclass_ctype }
@@ -26726,11 +26790,7 @@ void* amc::msgfield_AllocMem() {
 // --- amc.FDb.msgfield.RemoveAll
 // Remove all elements from Lary
 void amc::msgfield_RemoveAll() {
-    for (u64 n = _db.msgfield_n; n>0; ) {
-        n--;
-        msgfield_qFind(u64(n)).~FMsgfield(); // destroy last element
-        _db.msgfield_n = i64(n);
-    }
+    _db.msgfield_n = 0;
 }
 
 // --- amc.FDb.msgfield.RemoveLast
@@ -26739,7 +26799,6 @@ void amc::msgfield_RemoveLast() {
     u64 n = _db.msgfield_n;
     if (n > 0) {
         n -= 1;
-        msgfield_qFind(u64(n)).~FMsgfield();
         _db.msgfield_n = i64(n);
     }
 }
@@ -28763,6 +28822,673 @@ bool amc::bheap_XrefMaybe(amc::FBheap &row) {
     return retval;
 }
 
+// --- amc.FDb.regxstyle.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+amc::FRegxstyle& amc::regxstyle_Alloc() {
+    amc::FRegxstyle* row = regxstyle_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("amc.out_of_mem  field:amc.FDb.regxstyle  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- amc.FDb.regxstyle.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+amc::FRegxstyle* amc::regxstyle_AllocMaybe() {
+    amc::FRegxstyle *row = (amc::FRegxstyle*)regxstyle_AllocMem();
+    if (row) {
+        new (row) amc::FRegxstyle; // call constructor
+    }
+    return row;
+}
+
+// --- amc.FDb.regxstyle.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+amc::FRegxstyle* amc::regxstyle_InsertMaybe(const amcdb::Regxstyle &value) {
+    amc::FRegxstyle *row = &regxstyle_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    regxstyle_CopyIn(*row,const_cast<amcdb::Regxstyle&>(value));
+    bool ok = regxstyle_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        regxstyle_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- amc.FDb.regxstyle.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* amc::regxstyle_AllocMem() {
+    u64 new_nelems     = _db.regxstyle_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    amc::FRegxstyle*  lev   = NULL;
+    if (bsr < 36) {
+        lev = _db.regxstyle_lary[bsr];
+        if (!lev) {
+            lev=(amc::FRegxstyle*)amc::lpool_AllocMem(sizeof(amc::FRegxstyle) * (u64(1)<<bsr));
+            _db.regxstyle_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.regxstyle_n = i64(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- amc.FDb.regxstyle.RemoveAll
+// Remove all elements from Lary
+void amc::regxstyle_RemoveAll() {
+    for (u64 n = _db.regxstyle_n; n>0; ) {
+        n--;
+        regxstyle_qFind(u64(n)).~FRegxstyle(); // destroy last element
+        _db.regxstyle_n = i64(n);
+    }
+}
+
+// --- amc.FDb.regxstyle.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void amc::regxstyle_RemoveLast() {
+    u64 n = _db.regxstyle_n;
+    if (n > 0) {
+        n -= 1;
+        regxstyle_qFind(u64(n)).~FRegxstyle();
+        _db.regxstyle_n = i64(n);
+    }
+}
+
+// --- amc.FDb.regxstyle.InputMaybe
+static bool amc::regxstyle_InputMaybe(amcdb::Regxstyle &elem) {
+    bool retval = true;
+    retval = regxstyle_InsertMaybe(elem) != nullptr;
+    return retval;
+}
+
+// --- amc.FDb.regxstyle.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool amc::regxstyle_XrefMaybe(amc::FRegxstyle &row) {
+    bool retval = true;
+    (void)row;
+    // insert regxstyle into index ind_regxstyle
+    if (true) { // user-defined insert condition
+        bool success = ind_regxstyle_InsertMaybe(row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "amc.duplicate_key  xref:amc.FDb.ind_regxstyle"; // check for duplicate key
+            return false;
+        }
+    }
+    return retval;
+}
+
+// --- amc.FDb.ind_regxstyle.Find
+// Find row by key. Return NULL if not found.
+amc::FRegxstyle* amc::ind_regxstyle_Find(const algo::strptr& key) {
+    u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_regxstyle_buckets_n - 1);
+    amc::FRegxstyle *ret = _db.ind_regxstyle_buckets_elems[index];
+    for (; ret && !((*ret).regxstyle == key); ret = ret->ind_regxstyle_next) {
+    }
+    return ret;
+}
+
+// --- amc.FDb.ind_regxstyle.FindX
+// Look up row by key and return reference. Throw exception if not found
+amc::FRegxstyle& amc::ind_regxstyle_FindX(const algo::strptr& key) {
+    amc::FRegxstyle* ret = ind_regxstyle_Find(key);
+    vrfy(ret, tempstr() << "amc.key_error  table:ind_regxstyle  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
+}
+
+// --- amc.FDb.ind_regxstyle.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+amc::FRegxstyle& amc::ind_regxstyle_GetOrCreate(const algo::strptr& key) {
+    amc::FRegxstyle* ret = ind_regxstyle_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &regxstyle_Alloc();
+        (*ret).regxstyle = key;
+        bool good = regxstyle_XrefMaybe(*ret);
+        if (!good) {
+            regxstyle_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
+    }
+    vrfy(ret, tempstr() << "amc.create_error  table:ind_regxstyle  key:'"<<key<<"'  comment:'bad xref'");
+    return *ret;
+}
+
+// --- amc.FDb.ind_regxstyle.InsertMaybe
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+bool amc::ind_regxstyle_InsertMaybe(amc::FRegxstyle& row) {
+    bool retval = true; // if already in hash, InsertMaybe returns true
+    if (LIKELY(row.ind_regxstyle_next == (amc::FRegxstyle*)-1)) {// check if in hash already
+        row.ind_regxstyle_hashval = algo::Smallstr50_Hash(0, row.regxstyle);
+        ind_regxstyle_Reserve(1);
+        u32 index = row.ind_regxstyle_hashval & (_db.ind_regxstyle_buckets_n - 1);
+        amc::FRegxstyle* *prev = &_db.ind_regxstyle_buckets_elems[index];
+        do {
+            amc::FRegxstyle* ret = *prev;
+            if (!ret) { // exit condition 1: reached the end of the list
+                break;
+            }
+            if ((*ret).regxstyle == row.regxstyle) { // exit condition 2: found matching key
+                retval = false;
+                break;
+            }
+            prev = &ret->ind_regxstyle_next;
+        } while (true);
+        if (retval) {
+            row.ind_regxstyle_next = *prev;
+            _db.ind_regxstyle_n++;
+            *prev = &row;
+        }
+    }
+    return retval;
+}
+
+// --- amc.FDb.ind_regxstyle.Remove
+// Remove reference to element from hash index. If element is not in hash, do nothing
+void amc::ind_regxstyle_Remove(amc::FRegxstyle& row) {
+    if (LIKELY(row.ind_regxstyle_next != (amc::FRegxstyle*)-1)) {// check if in hash already
+        u32 index = row.ind_regxstyle_hashval & (_db.ind_regxstyle_buckets_n - 1);
+        amc::FRegxstyle* *prev = &_db.ind_regxstyle_buckets_elems[index]; // addr of pointer to current element
+        while (amc::FRegxstyle *next = *prev) {                          // scan the collision chain for our element
+            if (next == &row) {        // found it?
+                *prev = next->ind_regxstyle_next; // unlink (singly linked list)
+                _db.ind_regxstyle_n--;
+                row.ind_regxstyle_next = (amc::FRegxstyle*)-1;// not-in-hash
+                break;
+            }
+            prev = &next->ind_regxstyle_next;
+        }
+    }
+}
+
+// --- amc.FDb.ind_regxstyle.Reserve
+// Reserve enough room in the hash for N more elements. Return success code.
+void amc::ind_regxstyle_Reserve(int n) {
+    ind_regxstyle_AbsReserve(_db.ind_regxstyle_n + n);
+}
+
+// --- amc.FDb.ind_regxstyle.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void amc::ind_regxstyle_AbsReserve(int n) {
+    u32 old_nbuckets = _db.ind_regxstyle_buckets_n;
+    u32 new_nelems   = n;
+    // # of elements has to be roughly equal to the number of buckets
+    if (new_nelems > old_nbuckets) {
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
+        u32 old_size = old_nbuckets * sizeof(amc::FRegxstyle*);
+        u32 new_size = new_nbuckets * sizeof(amc::FRegxstyle*);
+        // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
+        // means new memory will have to be allocated anyway
+        amc::FRegxstyle* *new_buckets = (amc::FRegxstyle**)amc::lpool_AllocMem(new_size);
+        if (UNLIKELY(!new_buckets)) {
+            FatalErrorExit("amc.out_of_memory  field:amc.FDb.ind_regxstyle");
+        }
+        memset(new_buckets, 0, new_size); // clear pointers
+        // rehash all entries
+        for (int i = 0; i < _db.ind_regxstyle_buckets_n; i++) {
+            amc::FRegxstyle* elem = _db.ind_regxstyle_buckets_elems[i];
+            while (elem) {
+                amc::FRegxstyle &row        = *elem;
+                amc::FRegxstyle* next       = row.ind_regxstyle_next;
+                u32 index          = row.ind_regxstyle_hashval & (new_nbuckets-1);
+                row.ind_regxstyle_next     = new_buckets[index];
+                new_buckets[index] = &row;
+                elem               = next;
+            }
+        }
+        // free old array
+        amc::lpool_FreeMem(_db.ind_regxstyle_buckets_elems, old_size);
+        _db.ind_regxstyle_buckets_elems = new_buckets;
+        _db.ind_regxstyle_buckets_n = new_nbuckets;
+    }
+}
+
+// --- amc.FDb.regxlenient.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+amc::FRegxlenient& amc::regxlenient_Alloc() {
+    amc::FRegxlenient* row = regxlenient_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("amc.out_of_mem  field:amc.FDb.regxlenient  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- amc.FDb.regxlenient.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+amc::FRegxlenient* amc::regxlenient_AllocMaybe() {
+    amc::FRegxlenient *row = (amc::FRegxlenient*)regxlenient_AllocMem();
+    if (row) {
+        new (row) amc::FRegxlenient; // call constructor
+    }
+    return row;
+}
+
+// --- amc.FDb.regxlenient.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+amc::FRegxlenient* amc::regxlenient_InsertMaybe(const amcdb::Regxlenient &value) {
+    amc::FRegxlenient *row = &regxlenient_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    regxlenient_CopyIn(*row,const_cast<amcdb::Regxlenient&>(value));
+    bool ok = regxlenient_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        regxlenient_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- amc.FDb.regxlenient.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* amc::regxlenient_AllocMem() {
+    u64 new_nelems     = _db.regxlenient_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    amc::FRegxlenient*  lev   = NULL;
+    if (bsr < 36) {
+        lev = _db.regxlenient_lary[bsr];
+        if (!lev) {
+            lev=(amc::FRegxlenient*)amc::lpool_AllocMem(sizeof(amc::FRegxlenient) * (u64(1)<<bsr));
+            _db.regxlenient_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.regxlenient_n = i64(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- amc.FDb.regxlenient.RemoveAll
+// Remove all elements from Lary
+void amc::regxlenient_RemoveAll() {
+    for (u64 n = _db.regxlenient_n; n>0; ) {
+        n--;
+        regxlenient_qFind(u64(n)).~FRegxlenient(); // destroy last element
+        _db.regxlenient_n = i64(n);
+    }
+}
+
+// --- amc.FDb.regxlenient.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void amc::regxlenient_RemoveLast() {
+    u64 n = _db.regxlenient_n;
+    if (n > 0) {
+        n -= 1;
+        regxlenient_qFind(u64(n)).~FRegxlenient();
+        _db.regxlenient_n = i64(n);
+    }
+}
+
+// --- amc.FDb.regxlenient.InputMaybe
+static bool amc::regxlenient_InputMaybe(amcdb::Regxlenient &elem) {
+    bool retval = true;
+    retval = regxlenient_InsertMaybe(elem) != nullptr;
+    return retval;
+}
+
+// --- amc.FDb.regxlenient.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool amc::regxlenient_XrefMaybe(amc::FRegxlenient &row) {
+    bool retval = true;
+    (void)row;
+    // insert regxlenient into index ind_regxlenient
+    if (true) { // user-defined insert condition
+        bool success = ind_regxlenient_InsertMaybe(row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "amc.duplicate_key  xref:amc.FDb.ind_regxlenient"; // check for duplicate key
+            return false;
+        }
+    }
+    return retval;
+}
+
+// --- amc.FDb.ind_regxlenient.Find
+// Find row by key. Return NULL if not found.
+amc::FRegxlenient* amc::ind_regxlenient_Find(const algo::strptr& key) {
+    u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_regxlenient_buckets_n - 1);
+    amc::FRegxlenient *ret = _db.ind_regxlenient_buckets_elems[index];
+    for (; ret && !((*ret).regxlenient == key); ret = ret->ind_regxlenient_next) {
+    }
+    return ret;
+}
+
+// --- amc.FDb.ind_regxlenient.FindX
+// Look up row by key and return reference. Throw exception if not found
+amc::FRegxlenient& amc::ind_regxlenient_FindX(const algo::strptr& key) {
+    amc::FRegxlenient* ret = ind_regxlenient_Find(key);
+    vrfy(ret, tempstr() << "amc.key_error  table:ind_regxlenient  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
+}
+
+// --- amc.FDb.ind_regxlenient.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+amc::FRegxlenient& amc::ind_regxlenient_GetOrCreate(const algo::strptr& key) {
+    amc::FRegxlenient* ret = ind_regxlenient_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &regxlenient_Alloc();
+        (*ret).regxlenient = key;
+        bool good = regxlenient_XrefMaybe(*ret);
+        if (!good) {
+            regxlenient_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
+    }
+    vrfy(ret, tempstr() << "amc.create_error  table:ind_regxlenient  key:'"<<key<<"'  comment:'bad xref'");
+    return *ret;
+}
+
+// --- amc.FDb.ind_regxlenient.InsertMaybe
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+bool amc::ind_regxlenient_InsertMaybe(amc::FRegxlenient& row) {
+    bool retval = true; // if already in hash, InsertMaybe returns true
+    if (LIKELY(row.ind_regxlenient_next == (amc::FRegxlenient*)-1)) {// check if in hash already
+        row.ind_regxlenient_hashval = algo::Smallstr50_Hash(0, row.regxlenient);
+        ind_regxlenient_Reserve(1);
+        u32 index = row.ind_regxlenient_hashval & (_db.ind_regxlenient_buckets_n - 1);
+        amc::FRegxlenient* *prev = &_db.ind_regxlenient_buckets_elems[index];
+        do {
+            amc::FRegxlenient* ret = *prev;
+            if (!ret) { // exit condition 1: reached the end of the list
+                break;
+            }
+            if ((*ret).regxlenient == row.regxlenient) { // exit condition 2: found matching key
+                retval = false;
+                break;
+            }
+            prev = &ret->ind_regxlenient_next;
+        } while (true);
+        if (retval) {
+            row.ind_regxlenient_next = *prev;
+            _db.ind_regxlenient_n++;
+            *prev = &row;
+        }
+    }
+    return retval;
+}
+
+// --- amc.FDb.ind_regxlenient.Remove
+// Remove reference to element from hash index. If element is not in hash, do nothing
+void amc::ind_regxlenient_Remove(amc::FRegxlenient& row) {
+    if (LIKELY(row.ind_regxlenient_next != (amc::FRegxlenient*)-1)) {// check if in hash already
+        u32 index = row.ind_regxlenient_hashval & (_db.ind_regxlenient_buckets_n - 1);
+        amc::FRegxlenient* *prev = &_db.ind_regxlenient_buckets_elems[index]; // addr of pointer to current element
+        while (amc::FRegxlenient *next = *prev) {                          // scan the collision chain for our element
+            if (next == &row) {        // found it?
+                *prev = next->ind_regxlenient_next; // unlink (singly linked list)
+                _db.ind_regxlenient_n--;
+                row.ind_regxlenient_next = (amc::FRegxlenient*)-1;// not-in-hash
+                break;
+            }
+            prev = &next->ind_regxlenient_next;
+        }
+    }
+}
+
+// --- amc.FDb.ind_regxlenient.Reserve
+// Reserve enough room in the hash for N more elements. Return success code.
+void amc::ind_regxlenient_Reserve(int n) {
+    ind_regxlenient_AbsReserve(_db.ind_regxlenient_n + n);
+}
+
+// --- amc.FDb.ind_regxlenient.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void amc::ind_regxlenient_AbsReserve(int n) {
+    u32 old_nbuckets = _db.ind_regxlenient_buckets_n;
+    u32 new_nelems   = n;
+    // # of elements has to be roughly equal to the number of buckets
+    if (new_nelems > old_nbuckets) {
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
+        u32 old_size = old_nbuckets * sizeof(amc::FRegxlenient*);
+        u32 new_size = new_nbuckets * sizeof(amc::FRegxlenient*);
+        // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
+        // means new memory will have to be allocated anyway
+        amc::FRegxlenient* *new_buckets = (amc::FRegxlenient**)amc::lpool_AllocMem(new_size);
+        if (UNLIKELY(!new_buckets)) {
+            FatalErrorExit("amc.out_of_memory  field:amc.FDb.ind_regxlenient");
+        }
+        memset(new_buckets, 0, new_size); // clear pointers
+        // rehash all entries
+        for (int i = 0; i < _db.ind_regxlenient_buckets_n; i++) {
+            amc::FRegxlenient* elem = _db.ind_regxlenient_buckets_elems[i];
+            while (elem) {
+                amc::FRegxlenient &row        = *elem;
+                amc::FRegxlenient* next       = row.ind_regxlenient_next;
+                u32 index          = row.ind_regxlenient_hashval & (new_nbuckets-1);
+                row.ind_regxlenient_next     = new_buckets[index];
+                new_buckets[index] = &row;
+                elem               = next;
+            }
+        }
+        // free old array
+        amc::lpool_FreeMem(_db.ind_regxlenient_buckets_elems, old_size);
+        _db.ind_regxlenient_buckets_elems = new_buckets;
+        _db.ind_regxlenient_buckets_n = new_nbuckets;
+    }
+}
+
+// --- amc.FDb.regxrule.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+amc::FRegxrule& amc::regxrule_Alloc() {
+    amc::FRegxrule* row = regxrule_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("amc.out_of_mem  field:amc.FDb.regxrule  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- amc.FDb.regxrule.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+amc::FRegxrule* amc::regxrule_AllocMaybe() {
+    amc::FRegxrule *row = (amc::FRegxrule*)regxrule_AllocMem();
+    if (row) {
+        new (row) amc::FRegxrule; // call constructor
+    }
+    return row;
+}
+
+// --- amc.FDb.regxrule.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+amc::FRegxrule* amc::regxrule_InsertMaybe(const amcdb::Regxrule &value) {
+    amc::FRegxrule *row = &regxrule_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    regxrule_CopyIn(*row,const_cast<amcdb::Regxrule&>(value));
+    bool ok = regxrule_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        regxrule_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- amc.FDb.regxrule.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* amc::regxrule_AllocMem() {
+    u64 new_nelems     = _db.regxrule_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    amc::FRegxrule*  lev   = NULL;
+    if (bsr < 36) {
+        lev = _db.regxrule_lary[bsr];
+        if (!lev) {
+            lev=(amc::FRegxrule*)amc::lpool_AllocMem(sizeof(amc::FRegxrule) * (u64(1)<<bsr));
+            _db.regxrule_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.regxrule_n = i64(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- amc.FDb.regxrule.RemoveAll
+// Remove all elements from Lary
+void amc::regxrule_RemoveAll() {
+    for (u64 n = _db.regxrule_n; n>0; ) {
+        n--;
+        regxrule_qFind(u64(n)).~FRegxrule(); // destroy last element
+        _db.regxrule_n = i64(n);
+    }
+}
+
+// --- amc.FDb.regxrule.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void amc::regxrule_RemoveLast() {
+    u64 n = _db.regxrule_n;
+    if (n > 0) {
+        n -= 1;
+        regxrule_qFind(u64(n)).~FRegxrule();
+        _db.regxrule_n = i64(n);
+    }
+}
+
+// --- amc.FDb.regxrule.InputMaybe
+static bool amc::regxrule_InputMaybe(amcdb::Regxrule &elem) {
+    bool retval = true;
+    retval = regxrule_InsertMaybe(elem) != nullptr;
+    return retval;
+}
+
+// --- amc.FDb.regxrule.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool amc::regxrule_XrefMaybe(amc::FRegxrule &row) {
+    bool retval = true;
+    (void)row;
+    amc::FRegxstyle* p_regxstyle = amc::ind_regxstyle_Find(regxstyle_Get(row));
+    if (UNLIKELY(!p_regxstyle)) {
+        algo_lib::ResetErrtext() << "amc.bad_xref  index:amc.FDb.ind_regxstyle" << Keyval("key", regxstyle_Get(row));
+        return false;
+    }
+    // insert regxrule into index c_regxrule
+    if (true) { // user-defined insert condition
+        c_regxrule_Insert(*p_regxstyle, row);
+    }
+    return retval;
+}
+
+// --- amc.FDb.regxmacro.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+amc::FRegxmacro& amc::regxmacro_Alloc() {
+    amc::FRegxmacro* row = regxmacro_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("amc.out_of_mem  field:amc.FDb.regxmacro  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- amc.FDb.regxmacro.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+amc::FRegxmacro* amc::regxmacro_AllocMaybe() {
+    amc::FRegxmacro *row = (amc::FRegxmacro*)regxmacro_AllocMem();
+    if (row) {
+        new (row) amc::FRegxmacro; // call constructor
+    }
+    return row;
+}
+
+// --- amc.FDb.regxmacro.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+amc::FRegxmacro* amc::regxmacro_InsertMaybe(const amcdb::Regxmacro &value) {
+    amc::FRegxmacro *row = &regxmacro_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    regxmacro_CopyIn(*row,const_cast<amcdb::Regxmacro&>(value));
+    bool ok = regxmacro_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        regxmacro_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- amc.FDb.regxmacro.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* amc::regxmacro_AllocMem() {
+    u64 new_nelems     = _db.regxmacro_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    amc::FRegxmacro*  lev   = NULL;
+    if (bsr < 36) {
+        lev = _db.regxmacro_lary[bsr];
+        if (!lev) {
+            lev=(amc::FRegxmacro*)amc::lpool_AllocMem(sizeof(amc::FRegxmacro) * (u64(1)<<bsr));
+            _db.regxmacro_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.regxmacro_n = i64(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- amc.FDb.regxmacro.RemoveAll
+// Remove all elements from Lary
+void amc::regxmacro_RemoveAll() {
+    for (u64 n = _db.regxmacro_n; n>0; ) {
+        n--;
+        regxmacro_qFind(u64(n)).~FRegxmacro(); // destroy last element
+        _db.regxmacro_n = i64(n);
+    }
+}
+
+// --- amc.FDb.regxmacro.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void amc::regxmacro_RemoveLast() {
+    u64 n = _db.regxmacro_n;
+    if (n > 0) {
+        n -= 1;
+        regxmacro_qFind(u64(n)).~FRegxmacro();
+        _db.regxmacro_n = i64(n);
+    }
+}
+
+// --- amc.FDb.regxmacro.InputMaybe
+static bool amc::regxmacro_InputMaybe(amcdb::Regxmacro &elem) {
+    bool retval = true;
+    retval = regxmacro_InsertMaybe(elem) != nullptr;
+    return retval;
+}
+
+// --- amc.FDb.regxmacro.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool amc::regxmacro_XrefMaybe(amc::FRegxmacro &row) {
+    bool retval = true;
+    (void)row;
+    return retval;
+}
+
 // --- amc.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
 static algo::ImrowPtr amc::trace_RowidFind(int t) {
@@ -30754,6 +31480,66 @@ void amc::FDb_Init() {
         _db.bheap_lary[i]  = bheap_first;
         bheap_first    += 1ULL<<i;
     }
+    // initialize LAry regxstyle (amc.FDb.regxstyle)
+    _db.regxstyle_n = 0;
+    memset(_db.regxstyle_lary, 0, sizeof(_db.regxstyle_lary)); // zero out all level pointers
+    amc::FRegxstyle* regxstyle_first = (amc::FRegxstyle*)amc::lpool_AllocMem(sizeof(amc::FRegxstyle) * (u64(1)<<4));
+    if (!regxstyle_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.regxstyle_lary[i]  = regxstyle_first;
+        regxstyle_first    += 1ULL<<i;
+    }
+    // initialize hash table for amc::FRegxstyle;
+    _db.ind_regxstyle_n             	= 0; // (amc.FDb.ind_regxstyle)
+    _db.ind_regxstyle_buckets_n     	= 4; // (amc.FDb.ind_regxstyle)
+    _db.ind_regxstyle_buckets_elems 	= (amc::FRegxstyle**)amc::lpool_AllocMem(sizeof(amc::FRegxstyle*)*_db.ind_regxstyle_buckets_n); // initial buckets (amc.FDb.ind_regxstyle)
+    if (!_db.ind_regxstyle_buckets_elems) {
+        FatalErrorExit("out of memory"); // (amc.FDb.ind_regxstyle)
+    }
+    memset(_db.ind_regxstyle_buckets_elems, 0, sizeof(amc::FRegxstyle*)*_db.ind_regxstyle_buckets_n); // (amc.FDb.ind_regxstyle)
+    // initialize LAry regxlenient (amc.FDb.regxlenient)
+    _db.regxlenient_n = 0;
+    memset(_db.regxlenient_lary, 0, sizeof(_db.regxlenient_lary)); // zero out all level pointers
+    amc::FRegxlenient* regxlenient_first = (amc::FRegxlenient*)amc::lpool_AllocMem(sizeof(amc::FRegxlenient) * (u64(1)<<4));
+    if (!regxlenient_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.regxlenient_lary[i]  = regxlenient_first;
+        regxlenient_first    += 1ULL<<i;
+    }
+    // initialize hash table for amc::FRegxlenient;
+    _db.ind_regxlenient_n             	= 0; // (amc.FDb.ind_regxlenient)
+    _db.ind_regxlenient_buckets_n     	= 4; // (amc.FDb.ind_regxlenient)
+    _db.ind_regxlenient_buckets_elems 	= (amc::FRegxlenient**)amc::lpool_AllocMem(sizeof(amc::FRegxlenient*)*_db.ind_regxlenient_buckets_n); // initial buckets (amc.FDb.ind_regxlenient)
+    if (!_db.ind_regxlenient_buckets_elems) {
+        FatalErrorExit("out of memory"); // (amc.FDb.ind_regxlenient)
+    }
+    memset(_db.ind_regxlenient_buckets_elems, 0, sizeof(amc::FRegxlenient*)*_db.ind_regxlenient_buckets_n); // (amc.FDb.ind_regxlenient)
+    // initialize LAry regxrule (amc.FDb.regxrule)
+    _db.regxrule_n = 0;
+    memset(_db.regxrule_lary, 0, sizeof(_db.regxrule_lary)); // zero out all level pointers
+    amc::FRegxrule* regxrule_first = (amc::FRegxrule*)amc::lpool_AllocMem(sizeof(amc::FRegxrule) * (u64(1)<<4));
+    if (!regxrule_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.regxrule_lary[i]  = regxrule_first;
+        regxrule_first    += 1ULL<<i;
+    }
+    // initialize LAry regxmacro (amc.FDb.regxmacro)
+    _db.regxmacro_n = 0;
+    memset(_db.regxmacro_lary, 0, sizeof(_db.regxmacro_lary)); // zero out all level pointers
+    amc::FRegxmacro* regxmacro_first = (amc::FRegxmacro*)amc::lpool_AllocMem(sizeof(amc::FRegxmacro) * (u64(1)<<4));
+    if (!regxmacro_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.regxmacro_lary[i]  = regxmacro_first;
+        regxmacro_first    += 1ULL<<i;
+    }
 
     amc::InitReflection();
     tclass_LoadStatic(); // gen:ns_gstatic  gstatic:amc.FDb.tclass  load amc.FTclass records
@@ -30768,6 +31554,24 @@ void amc::FDb_Init() {
 
 // --- amc.FDb..Uninit
 void amc::FDb_Uninit() {
+
+    // amc.FDb.regxmacro.Uninit (Lary)  //
+    // skip destruction in global scope
+
+    // amc.FDb.regxrule.Uninit (Lary)  //
+    // skip destruction in global scope
+
+    // amc.FDb.ind_regxlenient.Uninit (Thash)  //
+    // skip destruction of ind_regxlenient in global scope
+
+    // amc.FDb.regxlenient.Uninit (Lary)  //
+    // skip destruction in global scope
+
+    // amc.FDb.ind_regxstyle.Uninit (Thash)  //
+    // skip destruction of ind_regxstyle in global scope
+
+    // amc.FDb.regxstyle.Uninit (Lary)  //
+    // skip destruction in global scope
 
     // amc.FDb.bheap.Uninit (Lary)  //
     // skip destruction in global scope
@@ -31334,7 +32138,7 @@ void amc::FDb_Uninit() {
     // skip destruction in global scope
 }
 
-// --- amc.FDispatch.msghdr.CopyOut
+// --- amc.FDispatch.base.CopyOut
 // Copy fields out of row
 void amc::dispatch_CopyOut(amc::FDispatch &row, dmmeta::Dispatch &out) {
     out.dispatch = row.dispatch;
@@ -31348,7 +32152,7 @@ void amc::dispatch_CopyOut(amc::FDispatch &row, dmmeta::Dispatch &out) {
     out.comment = algo::Comment(row.comment);
 }
 
-// --- amc.FDispatch.msghdr.CopyIn
+// --- amc.FDispatch.base.CopyIn
 // Copy fields in to row
 void amc::dispatch_CopyIn(amc::FDispatch &row, dmmeta::Dispatch &in) {
     row.dispatch = in.dispatch;
@@ -31537,14 +32341,14 @@ void amc::FDispatch_Uninit(amc::FDispatch& parent) {
     amc::lpool_FreeMem(parent.c_dispatch_msg_elems, sizeof(amc::FDispatchmsg*)*parent.c_dispatch_msg_max); // (amc.FDispatch.c_dispatch_msg)
 }
 
-// --- amc.FDispatchmsg.msghdr.CopyOut
+// --- amc.FDispatchmsg.base.CopyOut
 // Copy fields out of row
 void amc::dispatchmsg_CopyOut(amc::FDispatchmsg &row, dmmeta::DispatchMsg &out) {
     out.dispatch_msg = row.dispatch_msg;
     out.comment = algo::Comment(row.comment);
 }
 
-// --- amc.FDispatchmsg.msghdr.CopyIn
+// --- amc.FDispatchmsg.base.CopyIn
 // Copy fields in to row
 void amc::dispatchmsg_CopyIn(amc::FDispatchmsg &row, dmmeta::DispatchMsg &in) {
     row.dispatch_msg = in.dispatch_msg;
@@ -31569,7 +32373,7 @@ void amc::FDispatchmsg_Uninit(amc::FDispatchmsg& parent) {
     }
 }
 
-// --- amc.FDispctx.msghdr.CopyOut
+// --- amc.FDispctx.base.CopyOut
 // Copy fields out of row
 void amc::dispctx_CopyOut(amc::FDispctx &row, dmmeta::Dispctx &out) {
     out.dispatch = row.dispatch;
@@ -31577,7 +32381,7 @@ void amc::dispctx_CopyOut(amc::FDispctx &row, dmmeta::Dispctx &out) {
     out.comment = algo::Comment(row.comment);
 }
 
-// --- amc.FDispctx.msghdr.CopyIn
+// --- amc.FDispctx.base.CopyIn
 // Copy fields in to row
 void amc::dispctx_CopyIn(amc::FDispctx &row, dmmeta::Dispctx &in) {
     row.dispatch = in.dispatch;
@@ -31593,7 +32397,7 @@ void amc::FDispctx_Uninit(amc::FDispctx& parent) {
     }
 }
 
-// --- amc.FDispfilter.msghdr.CopyOut
+// --- amc.FDispfilter.base.CopyOut
 // Copy fields out of row
 void amc::dispfilter_CopyOut(amc::FDispfilter &row, dmmeta::Dispfilter &out) {
     out.dispatch = row.dispatch;
@@ -31601,7 +32405,7 @@ void amc::dispfilter_CopyOut(amc::FDispfilter &row, dmmeta::Dispfilter &out) {
     out.comment = algo::Comment(row.comment);
 }
 
-// --- amc.FDispfilter.msghdr.CopyIn
+// --- amc.FDispfilter.base.CopyIn
 // Copy fields in to row
 void amc::dispfilter_CopyIn(amc::FDispfilter &row, dmmeta::Dispfilter &in) {
     row.dispatch = in.dispatch;
@@ -31649,14 +32453,14 @@ void amc::FDisplang_Uninit(amc::FDisplang& parent) {
     }
 }
 
-// --- amc.FDispsig.msghdr.CopyOut
+// --- amc.FDispsig.base.CopyOut
 // Copy fields out of row
 void amc::dispsig_CopyOut(amc::FDispsig &row, gendb::Dispsig &out) {
     out.dispsig = row.dispsig;
     out.signature = row.signature;
 }
 
-// --- amc.FDispsig.msghdr.CopyIn
+// --- amc.FDispsig.base.CopyIn
 // Copy fields in to row
 void amc::dispsig_CopyIn(amc::FDispsig &row, gendb::Dispsig &in) {
     row.dispsig = in.dispsig;
@@ -31681,7 +32485,7 @@ void amc::FDispsig_Uninit(amc::FDispsig& parent) {
     }
 }
 
-// --- amc.FDisptrace.msghdr.CopyOut
+// --- amc.FDisptrace.base.CopyOut
 // Copy fields out of row
 void amc::disptrace_CopyOut(amc::FDisptrace &row, dmmeta::Disptrace &out) {
     out.dispatch = row.dispatch;
@@ -31689,7 +32493,7 @@ void amc::disptrace_CopyOut(amc::FDisptrace &row, dmmeta::Disptrace &out) {
     out.comment = algo::Comment(row.comment);
 }
 
-// --- amc.FDisptrace.msghdr.CopyIn
+// --- amc.FDisptrace.base.CopyIn
 // Copy fields in to row
 void amc::disptrace_CopyIn(amc::FDisptrace &row, dmmeta::Disptrace &in) {
     row.dispatch = in.dispatch;
@@ -32069,14 +32873,14 @@ void amc::FFalias_Uninit(amc::FFalias& parent) {
     }
 }
 
-// --- amc.FFbigend.msghdr.CopyOut
+// --- amc.FFbigend.base.CopyOut
 // Copy fields out of row
 void amc::fbigend_CopyOut(amc::FFbigend &row, dmmeta::Fbigend &out) {
     out.field = row.field;
     out.comment = algo::Comment(row.comment);
 }
 
-// --- amc.FFbigend.msghdr.CopyIn
+// --- amc.FFbigend.base.CopyIn
 // Copy fields in to row
 void amc::fbigend_CopyIn(amc::FFbigend &row, dmmeta::Fbigend &in) {
     row.field = in.field;
@@ -32091,14 +32895,14 @@ void amc::FFbigend_Uninit(amc::FFbigend& parent) {
     }
 }
 
-// --- amc.FFbitset.msghdr.CopyOut
+// --- amc.FFbitset.base.CopyOut
 // Copy fields out of row
 void amc::fbitset_CopyOut(amc::FFbitset &row, dmmeta::Fbitset &out) {
     out.field = row.field;
     out.comment = algo::Comment(row.comment);
 }
 
-// --- amc.FFbitset.msghdr.CopyIn
+// --- amc.FFbitset.base.CopyIn
 // Copy fields in to row
 void amc::fbitset_CopyIn(amc::FFbitset &row, dmmeta::Fbitset &in) {
     row.field = in.field;
@@ -32114,7 +32918,7 @@ void amc::FFbitset_Uninit(amc::FFbitset& parent) {
     ind_fbitset_Remove(parent); // remove fbitset from index ind_fbitset
 }
 
-// --- amc.FFbuf.msghdr.CopyOut
+// --- amc.FFbuf.base.CopyOut
 // Copy fields out of row
 void amc::fbuf_CopyOut(amc::FFbuf &row, dmmeta::Fbuf &out) {
     out.field = row.field;
@@ -32125,7 +32929,7 @@ void amc::fbuf_CopyOut(amc::FFbuf &row, dmmeta::Fbuf &out) {
     out.comment = algo::Comment(row.comment);
 }
 
-// --- amc.FFbuf.msghdr.CopyIn
+// --- amc.FFbuf.base.CopyIn
 // Copy fields in to row
 void amc::fbuf_CopyIn(amc::FFbuf &row, dmmeta::Fbuf &in) {
     row.field = in.field;
@@ -32171,7 +32975,7 @@ void amc::FFbuftype_Uninit(amc::FFbuftype& parent) {
     ind_fbuftype_Remove(parent); // remove fbuftype from index ind_fbuftype
 }
 
-// --- amc.FFcast.msghdr.CopyOut
+// --- amc.FFcast.base.CopyOut
 // Copy fields out of row
 void amc::fcast_CopyOut(amc::FFcast &row, dmmeta::Fcast &out) {
     out.field = row.field;
@@ -32179,7 +32983,7 @@ void amc::fcast_CopyOut(amc::FFcast &row, dmmeta::Fcast &out) {
     out.comment = algo::Comment(row.comment);
 }
 
-// --- amc.FFcast.msghdr.CopyIn
+// --- amc.FFcast.base.CopyIn
 // Copy fields in to row
 void amc::fcast_CopyIn(amc::FFcast &row, dmmeta::Fcast &in) {
     row.field = in.field;
@@ -32252,7 +33056,7 @@ void amc::FFcmap_Uninit(amc::FFcmap& parent) {
     ind_fcmap_Remove(parent); // remove fcmap from index ind_fcmap
 }
 
-// --- amc.FFcmp.msghdr.CopyOut
+// --- amc.FFcmp.base.CopyOut
 // Copy fields out of row
 void amc::fcmp_CopyOut(amc::FFcmp &row, dmmeta::Fcmp &out) {
     out.field = row.field;
@@ -32262,7 +33066,7 @@ void amc::fcmp_CopyOut(amc::FFcmp &row, dmmeta::Fcmp &out) {
     out.comment = algo::Comment(row.comment);
 }
 
-// --- amc.FFcmp.msghdr.CopyIn
+// --- amc.FFcmp.base.CopyIn
 // Copy fields in to row
 void amc::fcmp_CopyIn(amc::FFcmp &row, dmmeta::Fcmp &in) {
     row.field = in.field;
@@ -32340,7 +33144,7 @@ void amc::FFcond_Uninit(amc::FFcond& parent) {
     }
 }
 
-// --- amc.FFconst.msghdr.CopyOut
+// --- amc.FFconst.base.CopyOut
 // Copy fields out of row
 void amc::fconst_CopyOut(amc::FFconst &row, dmmeta::Fconst &out) {
     out.fconst = row.fconst;
@@ -32348,7 +33152,7 @@ void amc::fconst_CopyOut(amc::FFconst &row, dmmeta::Fconst &out) {
     out.comment = algo::Comment(row.comment);
 }
 
-// --- amc.FFconst.msghdr.CopyIn
+// --- amc.FFconst.base.CopyIn
 // Copy fields in to row
 void amc::fconst_CopyIn(amc::FFconst &row, dmmeta::Fconst &in) {
     row.fconst = in.fconst;
@@ -32425,7 +33229,7 @@ void amc::FFcurs_Uninit(amc::FFcurs& parent) {
     ind_fcurs_Remove(parent); // remove fcurs from index ind_fcurs
 }
 
-// --- amc.FFdec.msghdr.CopyOut
+// --- amc.FFdec.base.CopyOut
 // Copy fields out of row
 void amc::fdec_CopyOut(amc::FFdec &row, dmmeta::Fdec &out) {
     out.field = row.field;
@@ -32434,7 +33238,7 @@ void amc::fdec_CopyOut(amc::FFdec &row, dmmeta::Fdec &out) {
     out.comment = algo::Comment(row.comment);
 }
 
-// --- amc.FFdec.msghdr.CopyIn
+// --- amc.FFdec.base.CopyIn
 // Copy fields in to row
 void amc::fdec_CopyIn(amc::FFdec &row, dmmeta::Fdec &in) {
     row.field = in.field;
@@ -32452,7 +33256,7 @@ void amc::FFdec_Uninit(amc::FFdec& parent) {
     }
 }
 
-// --- amc.FFdelay.msghdr.CopyOut
+// --- amc.FFdelay.base.CopyOut
 // Copy fields out of row
 void amc::fdelay_CopyOut(amc::FFdelay &row, dmmeta::Fdelay &out) {
     out.fstep = row.fstep;
@@ -32461,7 +33265,7 @@ void amc::fdelay_CopyOut(amc::FFdelay &row, dmmeta::Fdelay &out) {
     out.comment = algo::Comment(row.comment);
 }
 
-// --- amc.FFdelay.msghdr.CopyIn
+// --- amc.FFdelay.base.CopyIn
 // Copy fields in to row
 void amc::fdelay_CopyIn(amc::FFdelay &row, dmmeta::Fdelay &in) {
     row.fstep = in.fstep;
@@ -32614,7 +33418,7 @@ void amc::FFfunc_Uninit(amc::FFfunc& parent) {
     }
 }
 
-// --- amc.FField.msghdr.CopyOut
+// --- amc.FField.base.CopyOut
 // Copy fields out of row
 void amc::field_CopyOut(amc::FField &row, dmmeta::Field &out) {
     out.field = row.field;
@@ -32624,7 +33428,7 @@ void amc::field_CopyOut(amc::FField &row, dmmeta::Field &out) {
     out.comment = algo::Comment(row.comment);
 }
 
-// --- amc.FField.msghdr.CopyIn
+// --- amc.FField.base.CopyIn
 // Copy fields in to row
 void amc::field_CopyIn(amc::FField &row, dmmeta::Field &in) {
     row.field = in.field;
@@ -33601,7 +34405,7 @@ void amc::FField_Uninit(amc::FField& parent) {
     amc::lpool_FreeMem(parent.c_ffunc_elems, sizeof(amc::FFunc*)*parent.c_ffunc_max); // (amc.FField.c_ffunc)
 }
 
-// --- amc.FFinput.msghdr.CopyOut
+// --- amc.FFinput.base.CopyOut
 // Copy fields out of row
 void amc::finput_CopyOut(amc::FFinput &row, dmmeta::Finput &out) {
     out.field = row.field;
@@ -33610,7 +34414,7 @@ void amc::finput_CopyOut(amc::FFinput &row, dmmeta::Finput &out) {
     out.comment = algo::Comment(row.comment);
 }
 
-// --- amc.FFinput.msghdr.CopyIn
+// --- amc.FFinput.base.CopyIn
 // Copy fields in to row
 void amc::finput_CopyIn(amc::FFinput &row, dmmeta::Finput &in) {
     row.field = in.field;
@@ -33662,14 +34466,14 @@ void amc::FFkafka_Uninit(amc::FFkafka& parent) {
     }
 }
 
-// --- amc.FFldoffset.msghdr.CopyOut
+// --- amc.FFldoffset.base.CopyOut
 // Copy fields out of row
 void amc::fldoffset_CopyOut(amc::FFldoffset &row, dmmeta::Fldoffset &out) {
     out.field = row.field;
     out.offset = row.offset;
 }
 
-// --- amc.FFldoffset.msghdr.CopyIn
+// --- amc.FFldoffset.base.CopyIn
 // Copy fields in to row
 void amc::fldoffset_CopyIn(amc::FFldoffset &row, dmmeta::Fldoffset &in) {
     row.field = in.field;
@@ -33737,14 +34541,14 @@ void amc::FFnoremove_Uninit(amc::FFnoremove& parent) {
     }
 }
 
-// --- amc.FFoutput.msghdr.CopyOut
+// --- amc.FFoutput.base.CopyOut
 // Copy fields out of row
 void amc::foutput_CopyOut(amc::FFoutput &row, dmmeta::Foutput &out) {
     out.field = row.field;
     out.comment = algo::Comment(row.comment);
 }
 
-// --- amc.FFoutput.msghdr.CopyIn
+// --- amc.FFoutput.base.CopyIn
 // Copy fields in to row
 void amc::foutput_CopyIn(amc::FFoutput &row, dmmeta::Foutput &in) {
     row.field = in.field;
@@ -33873,7 +34677,7 @@ void amc::FFprefix_Uninit(amc::FFprefix& parent) {
     }
 }
 
-// --- amc.FFregx.msghdr.CopyOut
+// --- amc.FFregx.base.CopyOut
 // Copy fields out of row
 void amc::fregx_CopyOut(amc::FFregx &row, dmmeta::Fregx &out) {
     out.field = row.field;
@@ -33882,7 +34686,7 @@ void amc::fregx_CopyOut(amc::FFregx &row, dmmeta::Fregx &out) {
     out.comment = algo::Comment(row.comment);
 }
 
-// --- amc.FFregx.msghdr.CopyIn
+// --- amc.FFregx.base.CopyIn
 // Copy fields in to row
 void amc::fregx_CopyIn(amc::FFregx &row, dmmeta::Fregx &in) {
     row.field = in.field;
@@ -33899,7 +34703,7 @@ void amc::FFregx_Uninit(amc::FFregx& parent) {
     }
 }
 
-// --- amc.FFsort.msghdr.CopyOut
+// --- amc.FFsort.base.CopyOut
 // Copy fields out of row
 void amc::fsort_CopyOut(amc::FFsort &row, dmmeta::Fsort &out) {
     out.field = row.field;
@@ -33908,7 +34712,7 @@ void amc::fsort_CopyOut(amc::FFsort &row, dmmeta::Fsort &out) {
     out.comment = algo::Comment(row.comment);
 }
 
-// --- amc.FFsort.msghdr.CopyIn
+// --- amc.FFsort.base.CopyIn
 // Copy fields in to row
 void amc::fsort_CopyIn(amc::FFsort &row, dmmeta::Fsort &in) {
     row.field = in.field;
@@ -33925,7 +34729,7 @@ void amc::FFsort_Uninit(amc::FFsort& parent) {
     }
 }
 
-// --- amc.FFstep.msghdr.CopyOut
+// --- amc.FFstep.base.CopyOut
 // Copy fields out of row
 void amc::fstep_CopyOut(amc::FFstep &row, dmmeta::Fstep &out) {
     out.fstep = row.fstep;
@@ -33934,7 +34738,7 @@ void amc::fstep_CopyOut(amc::FFstep &row, dmmeta::Fstep &out) {
     out.comment = algo::Comment(row.comment);
 }
 
-// --- amc.FFstep.msghdr.CopyIn
+// --- amc.FFstep.base.CopyIn
 // Copy fields in to row
 void amc::fstep_CopyIn(amc::FFstep &row, dmmeta::Fstep &in) {
     row.fstep = in.fstep;
@@ -34033,7 +34837,7 @@ void amc::FFtrace_Uninit(amc::FFtrace& parent) {
     }
 }
 
-// --- amc.FFunc.msghdr.CopyOut
+// --- amc.FFunc.base.CopyOut
 // Copy fields out of row
 void amc::func_CopyOut(amc::FFunc &row, dmmeta::Func &out) {
     out.func = row.func;
@@ -34041,7 +34845,7 @@ void amc::func_CopyOut(amc::FFunc &row, dmmeta::Func &out) {
     out.comment = row.comment;
 }
 
-// --- amc.FFunc.msghdr.CopyIn
+// --- amc.FFunc.base.CopyIn
 // Copy fields in to row
 void amc::func_CopyIn(amc::FFunc &row, dmmeta::Func &in) {
     row.func = in.func;
@@ -34346,14 +35150,14 @@ void amc::FFunique_Uninit(amc::FFunique& parent) {
     }
 }
 
-// --- amc.FFwddecl.msghdr.CopyOut
+// --- amc.FFwddecl.base.CopyOut
 // Copy fields out of row
 void amc::fwddecl_CopyOut(amc::FFwddecl &row, dmmeta::Fwddecl &out) {
     out.fwddecl = row.fwddecl;
     out.comment = algo::Comment(row.comment);
 }
 
-// --- amc.FFwddecl.msghdr.CopyIn
+// --- amc.FFwddecl.base.CopyIn
 // Copy fields in to row
 void amc::fwddecl_CopyIn(amc::FFwddecl &row, dmmeta::Fwddecl &in) {
     row.fwddecl = in.fwddecl;
@@ -34379,7 +35183,7 @@ void amc::FFwddecl_Uninit(amc::FFwddecl& parent) {
     ind_fwddecl_Remove(parent); // remove fwddecl from index ind_fwddecl
 }
 
-// --- amc.FGconst.msghdr.CopyOut
+// --- amc.FGconst.base.CopyOut
 // Copy fields out of row
 void amc::gconst_CopyOut(amc::FGconst &row, dmmeta::Gconst &out) {
     out.field = row.field;
@@ -34388,7 +35192,7 @@ void amc::gconst_CopyOut(amc::FGconst &row, dmmeta::Gconst &out) {
     out.wantenum = row.wantenum;
 }
 
-// --- amc.FGconst.msghdr.CopyIn
+// --- amc.FGconst.base.CopyIn
 // Copy fields in to row
 void amc::gconst_CopyIn(amc::FGconst &row, dmmeta::Gconst &in) {
     row.field = in.field;
@@ -34410,7 +35214,7 @@ void amc::FGconst_Uninit(amc::FGconst& parent) {
     }
 }
 
-// --- amc.FGen.msghdr.CopyOut
+// --- amc.FGen.base.CopyOut
 // Copy fields out of row
 void amc::gen_CopyOut(amc::FGen &row, amcdb::Gen &out) {
     out.gen = row.gen;
@@ -34418,7 +35222,7 @@ void amc::gen_CopyOut(amc::FGen &row, amcdb::Gen &out) {
     out.comment = algo::Comment(row.comment);
 }
 
-// --- amc.FGen.msghdr.CopyIn
+// --- amc.FGen.base.CopyIn
 // Copy fields in to row
 void amc::gen_CopyIn(amc::FGen &row, amcdb::Gen &in) {
     row.gen = in.gen;
@@ -34656,14 +35460,14 @@ void amc::FGenXref_Uninit(amc::FGenXref& parent) {
     amc::lpool_FreeMem(parent.ind_seen_buckets_elems, sizeof(amc::FGenXrefSeen*)*parent.ind_seen_buckets_n); // (amc.FGenXref.ind_seen)
 }
 
-// --- amc.FGstatic.msghdr.CopyOut
+// --- amc.FGstatic.base.CopyOut
 // Copy fields out of row
 void amc::gstatic_CopyOut(amc::FGstatic &row, dmmeta::Gstatic &out) {
     out.field = row.field;
     out.comment = algo::Comment(row.comment);
 }
 
-// --- amc.FGstatic.msghdr.CopyIn
+// --- amc.FGstatic.base.CopyIn
 // Copy fields in to row
 void amc::gstatic_CopyIn(amc::FGstatic &row, dmmeta::Gstatic &in) {
     row.field = in.field;
@@ -34743,7 +35547,7 @@ void amc::FHook_Uninit(amc::FHook& parent) {
     }
 }
 
-// --- amc.FInlary.msghdr.CopyOut
+// --- amc.FInlary.base.CopyOut
 // Copy fields out of row
 void amc::inlary_CopyOut(amc::FInlary &row, dmmeta::Inlary &out) {
     out.field = row.field;
@@ -34752,7 +35556,7 @@ void amc::inlary_CopyOut(amc::FInlary &row, dmmeta::Inlary &out) {
     out.comment = algo::Comment(row.comment);
 }
 
-// --- amc.FInlary.msghdr.CopyIn
+// --- amc.FInlary.base.CopyIn
 // Copy fields in to row
 void amc::inlary_CopyIn(amc::FInlary &row, dmmeta::Inlary &in) {
     row.field = in.field;
@@ -34793,7 +35597,7 @@ void amc::FLang_Uninit(amc::FLang& parent) {
     ind_lang_Remove(parent); // remove lang from index ind_lang
 }
 
-// --- amc.FLenfld.msghdr.CopyOut
+// --- amc.FLenfld.base.CopyOut
 // Copy fields out of row
 void amc::lenfld_CopyOut(amc::FLenfld &row, dmmeta::Lenfld &out) {
     out.field = row.field;
@@ -34801,7 +35605,7 @@ void amc::lenfld_CopyOut(amc::FLenfld &row, dmmeta::Lenfld &out) {
     out.scale = row.scale;
 }
 
-// --- amc.FLenfld.msghdr.CopyIn
+// --- amc.FLenfld.base.CopyIn
 // Copy fields in to row
 void amc::lenfld_CopyIn(amc::FLenfld &row, dmmeta::Lenfld &in) {
     row.field = in.field;
@@ -34849,7 +35653,7 @@ void amc::FLicense_Uninit(amc::FLicense& parent) {
     ind_license_Remove(parent); // remove license from index ind_license
 }
 
-// --- amc.FListtype.msghdr.CopyOut
+// --- amc.FListtype.base.CopyOut
 // Copy fields out of row
 void amc::listtype_CopyOut(amc::FListtype &row, dmmeta::Listtype &out) {
     out.listtype = row.listtype;
@@ -34859,7 +35663,7 @@ void amc::listtype_CopyOut(amc::FListtype &row, dmmeta::Listtype &out) {
     out.comment = algo::Comment(row.comment);
 }
 
-// --- amc.FListtype.msghdr.CopyIn
+// --- amc.FListtype.base.CopyIn
 // Copy fields in to row
 void amc::listtype_CopyIn(amc::FListtype &row, dmmeta::Listtype &in) {
     row.listtype = in.listtype;
@@ -34874,7 +35678,7 @@ void amc::FListtype_Uninit(amc::FListtype& parent) {
     ind_listtype_Remove(parent); // remove listtype from index ind_listtype
 }
 
-// --- amc.FLlist.msghdr.CopyOut
+// --- amc.FLlist.base.CopyOut
 // Copy fields out of row
 void amc::llist_CopyOut(amc::FLlist &row, dmmeta::Llist &out) {
     out.field = row.field;
@@ -34883,7 +35687,7 @@ void amc::llist_CopyOut(amc::FLlist &row, dmmeta::Llist &out) {
     out.comment = algo::Comment(row.comment);
 }
 
-// --- amc.FLlist.msghdr.CopyIn
+// --- amc.FLlist.base.CopyIn
 // Copy fields in to row
 void amc::llist_CopyIn(amc::FLlist &row, dmmeta::Llist &in) {
     row.field = in.field;
@@ -34905,14 +35709,14 @@ void amc::FLlist_Uninit(amc::FLlist& parent) {
     }
 }
 
-// --- amc.FMain.msghdr.CopyOut
+// --- amc.FMain.base.CopyOut
 // Copy fields out of row
 void amc::main_CopyOut(amc::FMain &row, dmmeta::Main &out) {
     out.ns = row.ns;
     out.ismodule = row.ismodule;
 }
 
-// --- amc.FMain.msghdr.CopyIn
+// --- amc.FMain.base.CopyIn
 // Copy fields in to row
 void amc::main_CopyIn(amc::FMain &row, dmmeta::Main &in) {
     row.ns = in.ns;
@@ -34961,28 +35765,22 @@ void amc::FMsg_Uninit(amc::FMsg& parent) {
 // Copy fields out of row
 void amc::msgfield_CopyOut(amc::FMsgfield &row, gendb::Msgfield &out) {
     out.msgfield = row.msgfield;
-    out.offset = row.offset;
+    out.fldtype = row.fldtype;
     out.arg = row.arg;
+    out.offset = row.offset;
     out.width = row.width;
-    out.bigend = row.bigend;
-    out.varlen = row.varlen;
-    out.strtype = row.strtype;
-    out.pad = row.pad;
-    out.comment = algo::Comment(row.comment);
+    out.aux = row.aux;
 }
 
 // --- amc.FMsgfield.base.CopyIn
 // Copy fields in to row
 void amc::msgfield_CopyIn(amc::FMsgfield &row, gendb::Msgfield &in) {
     row.msgfield = in.msgfield;
-    row.offset = in.offset;
+    row.fldtype = in.fldtype;
     row.arg = in.arg;
+    row.offset = in.offset;
     row.width = in.width;
-    row.bigend = in.bigend;
-    row.varlen = in.varlen;
-    row.strtype = in.strtype;
-    row.pad = in.pad;
-    row.comment = in.comment;
+    row.aux = in.aux;
 }
 
 // --- amc.FMsgfield.msg.Get
@@ -34995,16 +35793,7 @@ algo::strptr amc::name_Get(amc::FMsgfield& parent) {
     return algo::Pathcomp(parent.msgfield, "/RR");
 }
 
-// --- amc.FMsgfield..Init
-// Set all fields to initial values.
-void amc::FMsgfield_Init(amc::FMsgfield& parent) {
-    parent.offset = i32(0);
-    parent.width = i32(0);
-    parent.bigend = bool(false);
-    parent.varlen = bool(false);
-}
-
-// --- amc.FMsgtype.msghdr.CopyOut
+// --- amc.FMsgtype.base.CopyOut
 // Copy fields out of row
 void amc::msgtype_CopyOut(amc::FMsgtype &row, dmmeta::Msgtype &out) {
     out.ctype = row.ctype;
@@ -35013,7 +35802,7 @@ void amc::msgtype_CopyOut(amc::FMsgtype &row, dmmeta::Msgtype &out) {
     out.heartbeat = row.heartbeat;
 }
 
-// --- amc.FMsgtype.msghdr.CopyIn
+// --- amc.FMsgtype.base.CopyIn
 // Copy fields in to row
 void amc::msgtype_CopyIn(amc::FMsgtype &row, dmmeta::Msgtype &in) {
     row.ctype = in.ctype;
@@ -35030,14 +35819,14 @@ void amc::FMsgtype_Uninit(amc::FMsgtype& parent) {
     }
 }
 
-// --- amc.FNocascdel.msghdr.CopyOut
+// --- amc.FNocascdel.base.CopyOut
 // Copy fields out of row
 void amc::nocascdel_CopyOut(amc::FNocascdel &row, dmmeta::Nocascdel &out) {
     out.xref = row.xref;
     out.comment = algo::Comment(row.comment);
 }
 
-// --- amc.FNocascdel.msghdr.CopyIn
+// --- amc.FNocascdel.base.CopyIn
 // Copy fields in to row
 void amc::nocascdel_CopyIn(amc::FNocascdel &row, dmmeta::Nocascdel &in) {
     row.xref = in.xref;
@@ -35074,7 +35863,7 @@ void amc::FNossimfile_Uninit(amc::FNossimfile& parent) {
     }
 }
 
-// --- amc.FNs.msghdr.CopyOut
+// --- amc.FNs.base.CopyOut
 // Copy fields out of row
 void amc::ns_CopyOut(amc::FNs &row, dmmeta::Ns &out) {
     out.ns = row.ns;
@@ -35083,7 +35872,7 @@ void amc::ns_CopyOut(amc::FNs &row, dmmeta::Ns &out) {
     out.comment = algo::Comment(row.comment);
 }
 
-// --- amc.FNs.msghdr.CopyIn
+// --- amc.FNs.base.CopyIn
 // Copy fields in to row
 void amc::ns_CopyIn(amc::FNs &row, dmmeta::Ns &in) {
     row.ns = in.ns;
@@ -36552,14 +37341,14 @@ void amc::FOutfile_Uninit(amc::FOutfile& parent) {
     }
 }
 
-// --- amc.FPack.msghdr.CopyOut
+// --- amc.FPack.base.CopyOut
 // Copy fields out of row
 void amc::pack_CopyOut(amc::FPack &row, dmmeta::Pack &out) {
     out.ctype = row.ctype;
     out.comment = algo::Comment(row.comment);
 }
 
-// --- amc.FPack.msghdr.CopyIn
+// --- amc.FPack.base.CopyIn
 // Copy fields in to row
 void amc::pack_CopyIn(amc::FPack &row, dmmeta::Pack &in) {
     row.ctype = in.ctype;
@@ -36681,7 +37470,7 @@ void amc::FPbtype_Uninit(amc::FPbtype& parent) {
     ind_pbtype_Remove(parent); // remove pbtype from index ind_pbtype
 }
 
-// --- amc.FPmaskfld.msghdr.CopyOut
+// --- amc.FPmaskfld.base.CopyOut
 // Copy fields out of row
 void amc::pmaskfld_CopyOut(amc::FPmaskfld &row, dmmeta::Pmaskfld &out) {
     out.field = row.field;
@@ -36689,7 +37478,7 @@ void amc::pmaskfld_CopyOut(amc::FPmaskfld &row, dmmeta::Pmaskfld &out) {
     out.comment = algo::Comment(row.comment);
 }
 
-// --- amc.FPmaskfld.msghdr.CopyIn
+// --- amc.FPmaskfld.base.CopyIn
 // Copy fields in to row
 void amc::pmaskfld_CopyIn(amc::FPmaskfld &row, dmmeta::Pmaskfld &in) {
     row.field = in.field;
@@ -36814,14 +37603,14 @@ void amc::FPmaskfldMember_Uninit(amc::FPmaskfldMember& parent) {
     }
 }
 
-// --- amc.FPnew.msghdr.CopyOut
+// --- amc.FPnew.base.CopyOut
 // Copy fields out of row
 void amc::pnew_CopyOut(amc::FPnew &row, dmmeta::Pnew &out) {
     out.pnew = row.pnew;
     out.comment = algo::Comment(row.comment);
 }
 
-// --- amc.FPnew.msghdr.CopyIn
+// --- amc.FPnew.base.CopyIn
 // Copy fields in to row
 void amc::pnew_CopyIn(amc::FPnew &row, dmmeta::Pnew &in) {
     row.pnew = in.pnew;
@@ -36856,7 +37645,7 @@ void amc::FPnew_Uninit(amc::FPnew& parent) {
     }
 }
 
-// --- amc.FPtrary.msghdr.CopyOut
+// --- amc.FPtrary.base.CopyOut
 // Copy fields out of row
 void amc::ptrary_CopyOut(amc::FPtrary &row, dmmeta::Ptrary &out) {
     out.field = row.field;
@@ -36864,7 +37653,7 @@ void amc::ptrary_CopyOut(amc::FPtrary &row, dmmeta::Ptrary &out) {
     out.heaplike = row.heaplike;
 }
 
-// --- amc.FPtrary.msghdr.CopyIn
+// --- amc.FPtrary.base.CopyIn
 // Copy fields in to row
 void amc::ptrary_CopyIn(amc::FPtrary &row, dmmeta::Ptrary &in) {
     row.field = in.field;
@@ -36880,7 +37669,7 @@ void amc::FPtrary_Uninit(amc::FPtrary& parent) {
     }
 }
 
-// --- amc.FReftype.msghdr.CopyOut
+// --- amc.FReftype.base.CopyOut
 // Copy fields out of row
 void amc::reftype_CopyOut(amc::FReftype &row, dmmeta::Reftype &out) {
     out.reftype = row.reftype;
@@ -36897,7 +37686,7 @@ void amc::reftype_CopyOut(amc::FReftype &row, dmmeta::Reftype &out) {
     out.varlen = row.varlen;
 }
 
-// --- amc.FReftype.msghdr.CopyIn
+// --- amc.FReftype.base.CopyIn
 // Copy fields in to row
 void amc::reftype_CopyIn(amc::FReftype &row, dmmeta::Reftype &in) {
     row.reftype = in.reftype;
@@ -37017,14 +37806,171 @@ void amc::FReftype_Uninit(amc::FReftype& parent) {
     ind_reftype_Remove(parent); // remove reftype from index ind_reftype
 }
 
-// --- amc.FRowid.msghdr.CopyOut
+// --- amc.FRegxlenient.base.CopyOut
+// Copy fields out of row
+void amc::regxlenient_CopyOut(amc::FRegxlenient &row, amcdb::Regxlenient &out) {
+    out.regxlenient = row.regxlenient;
+    out.invalid = row.invalid;
+    out.comment = algo::Comment(row.comment);
+}
+
+// --- amc.FRegxlenient.base.CopyIn
+// Copy fields in to row
+void amc::regxlenient_CopyIn(amc::FRegxlenient &row, amcdb::Regxlenient &in) {
+    row.regxlenient = in.regxlenient;
+    row.invalid = in.invalid;
+    row.comment = in.comment;
+}
+
+// --- amc.FRegxlenient..Uninit
+void amc::FRegxlenient_Uninit(amc::FRegxlenient& parent) {
+    ind_regxlenient_Remove(parent); // remove regxlenient from index ind_regxlenient
+}
+
+// --- amc.FRegxmacro.base.CopyOut
+// Copy fields out of row
+void amc::regxmacro_CopyOut(amc::FRegxmacro &row, amcdb::Regxmacro &out) {
+    out.regxmacro = row.regxmacro;
+    out.chclass = row.chclass;
+    out.neg = row.neg;
+    out.comment = algo::Comment(row.comment);
+}
+
+// --- amc.FRegxmacro.base.CopyIn
+// Copy fields in to row
+void amc::regxmacro_CopyIn(amc::FRegxmacro &row, amcdb::Regxmacro &in) {
+    row.regxmacro = in.regxmacro;
+    row.chclass = in.chclass;
+    row.neg = in.neg;
+    row.comment = in.comment;
+}
+
+// --- amc.FRegxrule.base.CopyOut
+// Copy fields out of row
+void amc::regxrule_CopyOut(amc::FRegxrule &row, amcdb::Regxrule &out) {
+    out.regxrule = row.regxrule;
+    out.out = row.out;
+    out.comment = algo::Comment(row.comment);
+}
+
+// --- amc.FRegxrule.base.CopyIn
+// Copy fields in to row
+void amc::regxrule_CopyIn(amc::FRegxrule &row, amcdb::Regxrule &in) {
+    row.regxrule = in.regxrule;
+    row.out = in.out;
+    row.comment = in.comment;
+}
+
+// --- amc.FRegxrule.regxstyle.Get
+algo::strptr amc::regxstyle_Get(amc::FRegxrule& parent) {
+    return algo::Pathcomp(parent.regxrule, "/LL");
+}
+
+// --- amc.FRegxrule.token.Get
+algo::strptr amc::token_Get(amc::FRegxrule& parent) {
+    return algo::Pathcomp(parent.regxrule, "/LR");
+}
+
+// --- amc.FRegxrule..Uninit
+void amc::FRegxrule_Uninit(amc::FRegxrule& parent) {
+    amc::FRegxstyle* p_regxstyle = amc::ind_regxstyle_Find(regxstyle_Get(parent));
+    if (p_regxstyle)  {
+        c_regxrule_Remove(*p_regxstyle, parent);// remove regxrule from index c_regxrule
+    }
+}
+
+// --- amc.FRegxstyle.base.CopyOut
+// Copy fields out of row
+void amc::regxstyle_CopyOut(amc::FRegxstyle &row, amcdb::Regxstyle &out) {
+    out.regxstyle = row.regxstyle;
+    out.esc = row.esc;
+    out.comment = algo::Comment(row.comment);
+}
+
+// --- amc.FRegxstyle.base.CopyIn
+// Copy fields in to row
+void amc::regxstyle_CopyIn(amc::FRegxstyle &row, amcdb::Regxstyle &in) {
+    row.regxstyle = in.regxstyle;
+    row.esc = in.esc;
+    row.comment = in.comment;
+}
+
+// --- amc.FRegxstyle.c_regxrule.Insert
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
+void amc::c_regxrule_Insert(amc::FRegxstyle& parent, amc::FRegxrule& row) {
+    if (!row.regxstyle_c_regxrule_in_ary) {
+        c_regxrule_Reserve(parent, 1);
+        u64 n  = parent.c_regxrule_n++;
+        parent.c_regxrule_elems[n] = &row;
+        row.regxstyle_c_regxrule_in_ary = true;
+    }
+}
+
+// --- amc.FRegxstyle.c_regxrule.InsertMaybe
+// Insert pointer to row in array.
+// If row is already in the array, do nothing.
+// Return value: whether element was inserted into array.
+bool amc::c_regxrule_InsertMaybe(amc::FRegxstyle& parent, amc::FRegxrule& row) {
+    bool retval = !regxstyle_c_regxrule_InAryQ(row);
+    c_regxrule_Insert(parent,row); // check is performed in _Insert again
+    return retval;
+}
+
+// --- amc.FRegxstyle.c_regxrule.Remove
+// Find element using linear scan. If element is in array, remove, otherwise do nothing
+void amc::c_regxrule_Remove(amc::FRegxstyle& parent, amc::FRegxrule& row) {
+    i64 n = parent.c_regxrule_n;
+    if (bool_Update(row.regxstyle_c_regxrule_in_ary,false)) {
+        amc::FRegxrule* *elems = parent.c_regxrule_elems;
+        // search backward, so that most recently added element is found first.
+        // if found, shift array.
+        for (i64 i = n-1; i>=0; i--) {
+            amc::FRegxrule* elem = elems[i]; // fetch element
+            if (elem == &row) {
+                i64 j = i + 1;
+                size_t nbytes = sizeof(amc::FRegxrule*) * (n - j);
+                memmove(elems + i, elems + j, nbytes);
+                parent.c_regxrule_n = n - 1;
+                break;
+            }
+        }
+    }
+}
+
+// --- amc.FRegxstyle.c_regxrule.Reserve
+// Reserve space in index for N more elements;
+void amc::c_regxrule_Reserve(amc::FRegxstyle& parent, u64 n) {
+    u64 old_max = parent.c_regxrule_max;
+    if (UNLIKELY(parent.c_regxrule_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_regxrule_n + n), 4);
+        u64 old_size = old_max * sizeof(amc::FRegxrule*);
+        u64 new_size = new_max * sizeof(amc::FRegxrule*);
+        void *new_mem = amc::lpool_ReallocMem(parent.c_regxrule_elems, old_size, new_size);
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("amc.out_of_memory  field:amc.FRegxstyle.c_regxrule");
+        }
+        parent.c_regxrule_elems = (amc::FRegxrule**)new_mem;
+        parent.c_regxrule_max = new_max;
+    }
+}
+
+// --- amc.FRegxstyle..Uninit
+void amc::FRegxstyle_Uninit(amc::FRegxstyle& parent) {
+    ind_regxstyle_Remove(parent); // remove regxstyle from index ind_regxstyle
+
+    // amc.FRegxstyle.c_regxrule.Uninit (Ptrary)  //
+    amc::lpool_FreeMem(parent.c_regxrule_elems, sizeof(amc::FRegxrule*)*parent.c_regxrule_max); // (amc.FRegxstyle.c_regxrule)
+}
+
+// --- amc.FRowid.base.CopyOut
 // Copy fields out of row
 void amc::rowid_CopyOut(amc::FRowid &row, dmmeta::Rowid &out) {
     out.field = row.field;
     out.comment = algo::Comment(row.comment);
 }
 
-// --- amc.FRowid.msghdr.CopyIn
+// --- amc.FRowid.base.CopyIn
 // Copy fields in to row
 void amc::rowid_CopyIn(amc::FRowid &row, dmmeta::Rowid &in) {
     row.field = in.field;
@@ -37040,7 +37986,7 @@ void amc::FRowid_Uninit(amc::FRowid& parent) {
     }
 }
 
-// --- amc.FSmallstr.msghdr.CopyOut
+// --- amc.FSmallstr.base.CopyOut
 // Copy fields out of row
 void amc::smallstr_CopyOut(amc::FSmallstr &row, dmmeta::Smallstr &out) {
     out.field = row.field;
@@ -37050,7 +37996,7 @@ void amc::smallstr_CopyOut(amc::FSmallstr &row, dmmeta::Smallstr &out) {
     out.strict = row.strict;
 }
 
-// --- amc.FSmallstr.msghdr.CopyIn
+// --- amc.FSmallstr.base.CopyIn
 // Copy fields in to row
 void amc::smallstr_CopyIn(amc::FSmallstr &row, dmmeta::Smallstr &in) {
     row.field = in.field;
@@ -37074,14 +38020,14 @@ void amc::FSmallstr_Uninit(amc::FSmallstr& parent) {
     ind_smallstr_Remove(parent); // remove smallstr from index ind_smallstr
 }
 
-// --- amc.FSortfld.msghdr.CopyOut
+// --- amc.FSortfld.base.CopyOut
 // Copy fields out of row
 void amc::sortfld_CopyOut(amc::FSortfld &row, dmmeta::Sortfld &out) {
     out.field = row.field;
     out.sortfld = row.sortfld;
 }
 
-// --- amc.FSortfld.msghdr.CopyIn
+// --- amc.FSortfld.base.CopyIn
 // Copy fields in to row
 void amc::sortfld_CopyIn(amc::FSortfld &row, dmmeta::Sortfld &in) {
     row.field = in.field;
@@ -37096,14 +38042,14 @@ void amc::FSortfld_Uninit(amc::FSortfld& parent) {
     }
 }
 
-// --- amc.FSsimfile.msghdr.CopyOut
+// --- amc.FSsimfile.base.CopyOut
 // Copy fields out of row
 void amc::ssimfile_CopyOut(amc::FSsimfile &row, dmmeta::Ssimfile &out) {
     out.ssimfile = row.ssimfile;
     out.ctype = row.ctype;
 }
 
-// --- amc.FSsimfile.msghdr.CopyIn
+// --- amc.FSsimfile.base.CopyIn
 // Copy fields in to row
 void amc::ssimfile_CopyIn(amc::FSsimfile &row, dmmeta::Ssimfile &in) {
     row.ssimfile = in.ssimfile;
@@ -37237,7 +38183,7 @@ void amc::FSteptype_Uninit(amc::FSteptype& parent) {
     ind_steptype_Remove(parent); // remove steptype from index ind_steptype
 }
 
-// --- amc.FSubstr.msghdr.CopyOut
+// --- amc.FSubstr.base.CopyOut
 // Copy fields out of row
 void amc::substr_CopyOut(amc::FSubstr &row, dmmeta::Substr &out) {
     out.field = row.field;
@@ -37245,7 +38191,7 @@ void amc::substr_CopyOut(amc::FSubstr &row, dmmeta::Substr &out) {
     out.srcfield = row.srcfield;
 }
 
-// --- amc.FSubstr.msghdr.CopyIn
+// --- amc.FSubstr.base.CopyIn
 // Copy fields in to row
 void amc::substr_CopyIn(amc::FSubstr &row, dmmeta::Substr &in) {
     row.field = in.field;
@@ -37262,14 +38208,14 @@ void amc::FSubstr_Uninit(amc::FSubstr& parent) {
     zd_substr_params_Remove(parent); // remove substr from index zd_substr_params
 }
 
-// --- amc.FTargdep.msghdr.CopyOut
+// --- amc.FTargdep.base.CopyOut
 // Copy fields out of row
 void amc::targdep_CopyOut(amc::FTargdep &row, dev::Targdep &out) {
     out.targdep = row.targdep;
     out.comment = algo::Comment(row.comment);
 }
 
-// --- amc.FTargdep.msghdr.CopyIn
+// --- amc.FTargdep.base.CopyIn
 // Copy fields in to row
 void amc::targdep_CopyIn(amc::FTargdep &row, dev::Targdep &in) {
     row.targdep = in.targdep;
@@ -37294,13 +38240,13 @@ void amc::FTargdep_Uninit(amc::FTargdep& parent) {
     }
 }
 
-// --- amc.FTarget.msghdr.CopyOut
+// --- amc.FTarget.base.CopyOut
 // Copy fields out of row
 void amc::target_CopyOut(amc::FTarget &row, dev::Target &out) {
     out.target = row.target;
 }
 
-// --- amc.FTarget.msghdr.CopyIn
+// --- amc.FTarget.base.CopyIn
 // Copy fields in to row
 void amc::target_CopyIn(amc::FTarget &row, dev::Target &in) {
     row.target = in.target;
@@ -37378,7 +38324,7 @@ void amc::FTarget_Uninit(amc::FTarget& parent) {
     amc::lpool_FreeMem(parent.c_targdep_elems, sizeof(amc::FTargdep*)*parent.c_targdep_max); // (amc.FTarget.c_targdep)
 }
 
-// --- amc.FTary.msghdr.CopyOut
+// --- amc.FTary.base.CopyOut
 // Copy fields out of row
 void amc::tary_CopyOut(amc::FTary &row, dmmeta::Tary &out) {
     out.field = row.field;
@@ -37386,7 +38332,7 @@ void amc::tary_CopyOut(amc::FTary &row, dmmeta::Tary &out) {
     out.comment = algo::Comment(row.comment);
 }
 
-// --- amc.FTary.msghdr.CopyIn
+// --- amc.FTary.base.CopyIn
 // Copy fields in to row
 void amc::tary_CopyIn(amc::FTary &row, dmmeta::Tary &in) {
     row.field = in.field;
@@ -37465,7 +38411,7 @@ void amc::FTcurs_Uninit(amc::FTcurs& parent) {
     }
 }
 
-// --- amc.FTfunc.msghdr.CopyOut
+// --- amc.FTfunc.base.CopyOut
 // Copy fields out of row
 void amc::tfunc_CopyOut(amc::FTfunc &row, amcdb::Tfunc &out) {
     out.tfunc = row.tfunc;
@@ -37479,7 +38425,7 @@ void amc::tfunc_CopyOut(amc::FTfunc &row, amcdb::Tfunc &out) {
     out.comment = algo::Comment(row.comment);
 }
 
-// --- amc.FTfunc.msghdr.CopyIn
+// --- amc.FTfunc.base.CopyIn
 // Copy fields in to row
 void amc::tfunc_CopyIn(amc::FTfunc &row, amcdb::Tfunc &in) {
     row.tfunc = in.tfunc;
@@ -37529,7 +38475,7 @@ void amc::FTfunc_Uninit(amc::FTfunc& parent) {
     }
 }
 
-// --- amc.FThash.msghdr.CopyOut
+// --- amc.FThash.base.CopyOut
 // Copy fields out of row
 void amc::thash_CopyOut(amc::FThash &row, dmmeta::Thash &out) {
     out.field = row.field;
@@ -37538,7 +38484,7 @@ void amc::thash_CopyOut(amc::FThash &row, dmmeta::Thash &out) {
     out.comment = algo::Comment(row.comment);
 }
 
-// --- amc.FThash.msghdr.CopyIn
+// --- amc.FThash.base.CopyIn
 // Copy fields in to row
 void amc::thash_CopyIn(amc::FThash &row, dmmeta::Thash &in) {
     row.field = in.field;
@@ -37555,14 +38501,14 @@ void amc::FThash_Uninit(amc::FThash& parent) {
     }
 }
 
-// --- amc.FTracefld.msghdr.CopyOut
+// --- amc.FTracefld.base.CopyOut
 // Copy fields out of row
 void amc::tracefld_CopyOut(amc::FTracefld &row, gendb::Tracefld &out) {
     out.tracefld = row.tracefld;
     out.comment = algo::Comment(row.comment);
 }
 
-// --- amc.FTracefld.msghdr.CopyIn
+// --- amc.FTracefld.base.CopyIn
 // Copy fields in to row
 void amc::tracefld_CopyIn(amc::FTracefld &row, gendb::Tracefld &in) {
     row.tracefld = in.tracefld;
@@ -37579,14 +38525,14 @@ algo::strptr amc::name_Get(amc::FTracefld& parent) {
     return algo::Pathcomp(parent.tracefld, ".RR");
 }
 
-// --- amc.FTracerec.msghdr.CopyOut
+// --- amc.FTracerec.base.CopyOut
 // Copy fields out of row
 void amc::tracerec_CopyOut(amc::FTracerec &row, gendb::Tracerec &out) {
     out.tracerec = row.tracerec;
     out.comment = algo::Comment(row.comment);
 }
 
-// --- amc.FTracerec.msghdr.CopyIn
+// --- amc.FTracerec.base.CopyIn
 // Copy fields in to row
 void amc::tracerec_CopyIn(amc::FTracerec &row, gendb::Tracerec &in) {
     row.tracerec = in.tracerec;
@@ -37645,14 +38591,14 @@ void amc::FTsns_Uninit(amc::FTsns& parent) {
     }
 }
 
-// --- amc.FTypefld.msghdr.CopyOut
+// --- amc.FTypefld.base.CopyOut
 // Copy fields out of row
 void amc::typefld_CopyOut(amc::FTypefld &row, dmmeta::Typefld &out) {
     out.field = row.field;
     out.comment = algo::Comment(row.comment);
 }
 
-// --- amc.FTypefld.msghdr.CopyIn
+// --- amc.FTypefld.base.CopyIn
 // Copy fields in to row
 void amc::typefld_CopyIn(amc::FTypefld &row, dmmeta::Typefld &in) {
     row.field = in.field;
@@ -37676,21 +38622,21 @@ void amc::FTypefld_Uninit(amc::FTypefld& parent) {
     }
 }
 
-// --- amc.FUsertracefld.msghdr.CopyOut
+// --- amc.FUsertracefld.base.CopyOut
 // Copy fields out of row
 void amc::usertracefld_CopyOut(amc::FUsertracefld &row, dmmeta::Usertracefld &out) {
     out.tracefld = row.tracefld;
     out.comment = algo::Comment(row.comment);
 }
 
-// --- amc.FUsertracefld.msghdr.CopyIn
+// --- amc.FUsertracefld.base.CopyIn
 // Copy fields in to row
 void amc::usertracefld_CopyIn(amc::FUsertracefld &row, dmmeta::Usertracefld &in) {
     row.tracefld = in.tracefld;
     row.comment = in.comment;
 }
 
-// --- amc.FXref.msghdr.CopyOut
+// --- amc.FXref.base.CopyOut
 // Copy fields out of row
 void amc::xref_CopyOut(amc::FXref &row, dmmeta::Xref &out) {
     out.field = row.field;
@@ -37698,7 +38644,7 @@ void amc::xref_CopyOut(amc::FXref &row, dmmeta::Xref &out) {
     out.via = row.via;
 }
 
-// --- amc.FXref.msghdr.CopyIn
+// --- amc.FXref.base.CopyIn
 // Copy fields in to row
 void amc::xref_CopyIn(amc::FXref &row, dmmeta::Xref &in) {
     row.field = in.field;
@@ -38065,6 +39011,10 @@ const char* amc::value_ToCstr(const amc::TableId& parent) {
         case amc_TableId_dmmeta_PmaskfldMember: ret = "dmmeta.PmaskfldMember";  break;
         case amc_TableId_dmmeta_Pnew       : ret = "dmmeta.Pnew";  break;
         case amc_TableId_dmmeta_Ptrary     : ret = "dmmeta.Ptrary";  break;
+        case amc_TableId_amcdb_Regxlenient : ret = "amcdb.Regxlenient";  break;
+        case amc_TableId_amcdb_Regxmacro   : ret = "amcdb.Regxmacro";  break;
+        case amc_TableId_amcdb_Regxrule    : ret = "amcdb.Regxrule";  break;
+        case amc_TableId_amcdb_Regxstyle   : ret = "amcdb.Regxstyle";  break;
         case amc_TableId_dmmeta_Rowid      : ret = "dmmeta.Rowid";  break;
         case amc_TableId_dmmeta_Smallstr   : ret = "dmmeta.Smallstr";  break;
         case amc_TableId_dmmeta_Sortfld    : ret = "dmmeta.Sortfld";  break;
@@ -38453,8 +39403,16 @@ bool amc::value_SetStrptrMaybe(amc::TableId& parent, algo::strptr rhs) {
         }
         case 14: {
             switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('a','m','c','d','b','.','R','e'): {
+                    if (memcmp(rhs.elems+8,"gxrule",6)==0) { value_SetEnum(parent,amc_TableId_amcdb_Regxrule); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('a','m','c','d','b','.','S','t'): {
                     if (memcmp(rhs.elems+8,"epband",6)==0) { value_SetEnum(parent,amc_TableId_amcdb_Stepband); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('a','m','c','d','b','.','r','e'): {
+                    if (memcmp(rhs.elems+8,"gxrule",6)==0) { value_SetEnum(parent,amc_TableId_amcdb_regxrule); ret = true; break; }
                     break;
                 }
                 case LE_STR8('a','m','c','d','b','.','s','t'): {
@@ -38566,6 +39524,16 @@ bool amc::value_SetStrptrMaybe(amc::TableId& parent, algo::strptr rhs) {
         }
         case 15: {
             switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('a','m','c','d','b','.','R','e'): {
+                    if (memcmp(rhs.elems+8,"gxmacro",7)==0) { value_SetEnum(parent,amc_TableId_amcdb_Regxmacro); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"gxstyle",7)==0) { value_SetEnum(parent,amc_TableId_amcdb_Regxstyle); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('a','m','c','d','b','.','r','e'): {
+                    if (memcmp(rhs.elems+8,"gxmacro",7)==0) { value_SetEnum(parent,amc_TableId_amcdb_regxmacro); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"gxstyle",7)==0) { value_SetEnum(parent,amc_TableId_amcdb_regxstyle); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('d','m','m','e','t','a','.','A'): {
                     if (memcmp(rhs.elems+8,"rgvtype",7)==0) { value_SetEnum(parent,amc_TableId_dmmeta_Argvtype); ret = true; break; }
                     break;
@@ -38692,6 +39660,14 @@ bool amc::value_SetStrptrMaybe(amc::TableId& parent, algo::strptr rhs) {
         }
         case 17: {
             switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('a','m','c','d','b','.','R','e'): {
+                    if (memcmp(rhs.elems+8,"gxlenient",9)==0) { value_SetEnum(parent,amc_TableId_amcdb_Regxlenient); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('a','m','c','d','b','.','r','e'): {
+                    if (memcmp(rhs.elems+8,"gxlenient",9)==0) { value_SetEnum(parent,amc_TableId_amcdb_regxlenient); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('d','m','m','e','t','a','.','D'): {
                     if (memcmp(rhs.elems+8,"ispfilter",9)==0) { value_SetEnum(parent,amc_TableId_dmmeta_Dispfilter); ret = true; break; }
                     break;

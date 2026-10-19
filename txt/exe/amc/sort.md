@@ -54,18 +54,18 @@ the records do not move.
 Source: `cpp/amc/sort.cpp`.  Four functions are public; the rest are
 static in the generated `.cpp` and exist to implement them.
 
-|Tfunc|Generated function|Emitted for|Effect|
-|---|---|---|---|
-|`Sort.SortedQ`|`bool <name>_SortedQ(P&)`|every sorttype|Walk the array and return whether it is already in order.|
-|`Sort.InsertionSort`|`void <name>_InsertionSort(P&)`|`InsertionSort`, `QuickSort`|Insertion sort over the whole array.|
-|`Sort.HeapSort`|`void <name>_HeapSort(P&)`|`HeapSort`, `QuickSort`|Heap sort over the whole array.|
-|`Sort.QuickSort`|`void <name>_QuickSort(P&)`|`QuickSort`|Compute a recursion-depth bound from the element count and call the engine.|
-|`Sort.Lt`|`bool <name>_Lt(T&, T&)` *(private)*|every sorttype|Compare two elements by `sortfld`.  Must be anti-symmetric.|
-|`Sort.Swap`|`void <name>_Swap(T&, T&)` *(private)*|every sorttype|Exchange two elements.|
-|`Sort.Rotleft`|`void <name>_Rotleft(T&, T&, T&)` *(private)*|every sorttype|Rotate three elements left, for median-of-three pivot selection.|
-|`Sort.IntInsertionSort`|`void <name>_IntInsertionSort(T*, int n)` *(private)*|`InsertionSort`, `QuickSort`|Insertion sort of a raw range.|
-|`Sort.IntHeapSort`|`void <name>_IntHeapSort(T*, int n)` *(private)*|`HeapSort`, `QuickSort`|Heap sort of a raw range.|
-|`Sort.IntQuickSort`|`void <name>_IntQuickSort(T*, int n, int depth)` *(private)*|`QuickSort`|The quicksort engine.|
+| Tfunc                   | Generated function                                           | Emitted for                  | Effect |
+| ----------------------- | ------------------------------------------------------------ | ---------------------------- | ------ |
+| `Sort.SortedQ`          | `bool <name>_SortedQ(P&)`                                    | every sorttype               | Walk the array and return whether it is already in order. |
+| `Sort.InsertionSort`    | `void <name>_InsertionSort(P&)`                              | `InsertionSort`, `QuickSort` | Insertion sort over the whole array. |
+| `Sort.HeapSort`         | `void <name>_HeapSort(P&)`                                   | `HeapSort`, `QuickSort`      | Heap sort over the whole array. |
+| `Sort.QuickSort`        | `void <name>_QuickSort(P&)`                                  | `QuickSort`                  | Compute a recursion-depth bound from the element count and call the engine. |
+| `Sort.Lt`               | `bool <name>_Lt(T&, T&)` *(private)*                         | every sorttype               | Compare two elements by `sortfld`.  Must be anti-symmetric. |
+| `Sort.Swap`             | `void <name>_Swap(T&, T&)` *(private)*                       | every sorttype               | Exchange two elements. |
+| `Sort.Rotleft`          | `void <name>_Rotleft(T&, T&, T&)` *(private)*                | every sorttype               | Rotate three elements left, for median-of-three pivot selection. |
+| `Sort.IntInsertionSort` | `void <name>_IntInsertionSort(T*, int n)` *(private)*        | `InsertionSort`, `QuickSort` | Insertion sort of a raw range. |
+| `Sort.IntHeapSort`      | `void <name>_IntHeapSort(T*, int n)` *(private)*             | `HeapSort`, `QuickSort`      | Heap sort of a raw range. |
+| `Sort.IntQuickSort`     | `void <name>_IntQuickSort(T*, int n, int depth)` *(private)* | `QuickSort`                  | The quicksort engine. |
 
 `QuickSort` is an introsort, which is why choosing it emits all three
 algorithms.  The engine partitions around a median-of-three pivot while
@@ -87,22 +87,22 @@ dependency between the two records described on this page.
 compares with C++ `<` on its value, and a string field compares
 bytewise.  The record has three switches:
 
-|Field|Effect|
-|---|---|
-|`versionsort`|A run of digits in the string compares as a number, so `a9` sorts before `a10`.|
-|`casesens`|`N` folds upper case to lower before comparing.|
-|`extrn`|amc emits the prototype only; the body is hand-written.|
+| Field         | Effect |
+| ------------- | ------ |
+| `versionsort` | A run of digits in the string compares as a number, so `a9` sorts before `a10`. |
+| `casesens`    | `N` folds upper case to lower before comparing. |
+| `extrn`       | amc emits the prototype only; the body is hand-written. |
 
 The comparison is a property of the field within its ctype, not of the
 field's type.  The same `algo.Smallstr100` can be case-sensitive in one
 ctype and case-insensitive in another, which is why the record hangs off
 the field rather than off the type.
 
-|Tfunc|Generated function|Emitted when|Effect|
-|---|---|---|---|
-|`Cmp.Cmp`|`i32 <name>_Cmp(P&, P& rhs)`|always|Three-way comparison of two records by this field.|
-|`Cmp.Lt`|`bool <name>_Lt(P&, P& rhs)`|always|Less-than of two records by this field.|
-|`Cmp.Nextchar`|`u64 <name>_Nextchar(const P&, strptr&, int&)` *(private)*|the field's type is a string and `extrn:N`|Pull the next comparison unit — one folded character, or a whole integer under `versionsort`.|
+| Tfunc          | Generated function                                         | Emitted when                               | Effect |
+| -------------- | ---------------------------------------------------------- | ------------------------------------------ | ------ |
+| `Cmp.Cmp`      | `i32 <name>_Cmp(P&, P& rhs)`                               | always                                     | Three-way comparison of two records by this field. |
+| `Cmp.Lt`       | `bool <name>_Lt(P&, P& rhs)`                               | always                                     | Less-than of two records by this field. |
+| `Cmp.Nextchar` | `u64 <name>_Nextchar(const P&, strptr&, int&)` *(private)* | the field's type is a string and `extrn:N` | Pull the next comparison unit — one folded character, or a whole integer under `versionsort`. |
 
 `versionsort` and `casesens` require the target type to have exactly one
 data field, since `Nextchar` walks a single string.

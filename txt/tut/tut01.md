@@ -40,7 +40,7 @@ acr.insert  dev.gitfile  gitfile:include/gen/samp_tut1_gen.h
 acr.insert  dev.gitfile  gitfile:include/gen/samp_tut1_gen.inl.h
 acr.insert  dev.gitfile  gitfile:include/samp_tut1.h
 acr.insert  dev.gitfile  gitfile:txt/exe/samp_tut1/README.md
-  acr.insert  dev.readmefile  gitfile:txt/exe/samp_tut1/README.md      inl:N  sandbox:N  filter:""  publish:N  comment:""
+  acr.insert  dev.readmefile  gitfile:txt/exe/samp_tut1/README.md      inl:N  sandbox:N  tut:N  filter:""  publish:N  narrow:N  comment:""
 
 acr.insert  dmmeta.ns  ns:samp_tut1  nstype:exe  license:Apache  comment:""
   acr.insert  dev.target  target:samp_tut1
@@ -71,7 +71,7 @@ report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n
 abt.config  builddir:***  ood_src:***  ood_target:***  cache:***
 report.abt  n_target:***  time:***  hitrate:***  pch_hitrate:***  n_warn:0  n_err:0  n_install:***
 please execute $(acr_compl -install) to add completions support for new target
-acr.update  dev.readmefile  gitfile:txt/exe/samp_tut1/README.md  inl:N  sandbox:N  filter:""  publish:N  comment:"samp_tut1 -"
+acr.update  dev.readmefile  gitfile:txt/exe/samp_tut1/README.md  inl:N  sandbox:N  tut:N  filter:""  publish:N  narrow:N  comment:"samp_tut1 -"
 report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***  n_badline:0
 report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n_filemod:***
 ```

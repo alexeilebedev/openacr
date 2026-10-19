@@ -369,3 +369,27 @@ void atf_unit::unittest_algo_lib_RegxReadTwice2() {
     vrfyeq_(Regx_Match(regx, "a"), false);
     vrfyeq_(Regx_Match(regx, "b"), true);
 }
+
+// --------------------------------------------------------------------------------
+
+// Match every amcdb.regxcase row and compare the answer with the row's.  A
+// vitest matches the same rows with the TypeScript translators in
+// ts/gen/algo_lib_regx.ts, so a row that passes in both is a pattern that
+// algo_lib and the browser read alike.  The test refuses an empty table, since
+// a table that failed to load would otherwise pass.
+void atf_unit::unittest_algo_lib_RegxCase() {
+    vrfy(atf_unit::regxcase_N() > 0, "amcdb.regxcase holds no rows");
+    ind_beg(atf_unit::_db_regxcase_curs, regxcase, atf_unit::_db) {
+        algo_lib::Regx regx;
+        algo_lib::RegxStyle style;
+        bool known = algo_lib::value_SetStrptrMaybe(style, regxcase.regxstyle);
+        vrfy(known, tempstr()<<"atf_unit.regxstyle"<<Keyval("regxcase",regxcase.regxcase));
+        Regx_ReadStyle(regx, regxcase.pattern, style, regxcase.full);
+        bool match = Regx_Match(regx, regxcase.subject);
+        vrfy(match == regxcase.match, tempstr()<<"atf_unit.regxcase"
+             <<Keyval("regxcase",regxcase.regxcase)
+             <<Keyval("pattern",regxcase.pattern)
+             <<Keyval("subject",regxcase.subject)
+             <<Keyval("match",match));
+    }ind_end;
+}

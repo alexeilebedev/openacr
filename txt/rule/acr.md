@@ -135,6 +135,32 @@ formatting matter at all: it is the member order of the generated struct, so
 `acr_ed -create -field ... -before <field>` is how a row is placed
 deliberately.
 
+### A delete takes the rows that refer to it, wherever they came from
+<a href="#a-delete-takes-the-rows-that-refer-to-it-wherever-they-came-from"></a>
+
+A script feeds `acr -insert` a namespace, a ctype in it and a field of the
+ctype, and then an `acr.delete` of the namespace.  If the cascade began only at
+rows that were in the dataset before the run, it would delete the namespace and
+leave the ctype and the field in place.  `-write` would then save a ctype and a
+field whose namespace is gone.
+
+A row inserted earlier in the run is a row of the dataset like any other.  So
+the cascade starts at every deleted row, and a run that inserts a tree and then
+deletes its root leaves no change.  Comptest `acr.CascDel2` holds it.
+
+### Tables print parents first, a table that refers to itself included
+<a href="#tables-print-parents-first-a-table-that-refers-to-itself-included"></a>
+
+A multi-table print or write orders the tables by their references: a table
+comes out after every table its fields refer to, and ties go by name.  A
+reader that applies rows in printed order drops a row whose reference does not
+resolve yet, so the order is a contract.  A field that refers to its own table
+is not a reference to wait for.  Counted, it would never resolve: a table of
+directories that names each row's parent would tie with a table of grants on
+those directories, and the grants would print first by name.  Rows inside one
+table print in the order its `dmmeta.ssimsort` row names, which is parent first
+when the table sorts by key and the self-reference is a prefix of the key.  Comptest `acr.SelfRefOrder` holds it.
+
 ### Validation after any edit
 <a href="#validation-after-any-edit"></a>
 

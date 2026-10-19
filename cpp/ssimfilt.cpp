@@ -242,24 +242,13 @@ void ssimfilt::PrintCsv(algo::Tuple &tuple) {
 
 // -----------------------------------------------------------------------------
 
+// Save TUPLE as a row of the table in progress, printing that table first when TUPLE cannot
+// join it (algo_lib::NewTableQ).
 void ssimfilt::Table_Save(algo::Tuple &tuple) {
-    // flush when input type changes
-    if (tuple_N()>0) {
-        auto& header = tuple_qFind(0);
-        auto flush = header.head.name == ""
-            ? header.head.value != tuple.head.value
-            : header.head.name != tuple.head.name;
-        flush |= attrs_N(tuple) != attrs_N(header);
-        if (flush) {
-            Table_Flush();
-        }
+    if (tuple_N()>0 && algo_lib::NewTableQ(tuple_qFind(0), tuple)) {
+        Table_Flush();
     }
-    // save tuple
-    algo::Tuple &saved=tuple_Alloc();
-    saved.head=tuple.head;
-    ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
-        attrs_Alloc(saved)=attr;
-    }ind_end;
+    tuple_Alloc() = tuple;
 }
 
 // -----------------------------------------------------------------------------
@@ -271,36 +260,26 @@ void ssimfilt::MDTable_Save(algo::Tuple &tuple) {
 
 // -----------------------------------------------------------------------------
 
-static void AddCol(algo_lib::FTxttbl& txttbl, algo::Attr& attr) {
-    if (attr.name != "" && ssimfilt::MatchOutputAttr(attr)) {
-        tempstr name(attr.name);
-        ind_beg(algo::cstring_ch_curs,ch,name) {
-            ch=algo::ToUpper(ch);
-        }ind_end;
-        AddCol(txttbl,name);
+// Copy into SEL the part of TUPLE that -field selects: the attrs it matches, and the head
+// when the head is unnamed or matched.
+static void SelectTuple(algo::Tuple &tuple, algo::Tuple &sel) {
+    if (tuple.head.name == "" || ssimfilt::MatchOutputAttr(tuple.head)) {
+        sel.head = tuple.head;
     }
+    ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
+        if (ssimfilt::MatchOutputAttr(attr)) {
+            attrs_Alloc(sel) = attr;
+        }
+    }ind_end;
 }
 
-static void AddCell(algo_lib::FTxttbl& txttbl, algo::Attr& attr) {
-    if (attr.name != "" && ssimfilt::MatchOutputAttr(attr)) {
-        AddCell(txttbl)=attr.value;
-    }
-}
-
+// Print the saved tuples as one table, in markdown under -format:mdtable, and forget them.
 void ssimfilt::Table_Flush() {
     algo_lib::FTxttbl txttbl;
     ind_beg(_db_tuple_curs,tuple,_db) {
-        if (ind_curs(tuple).index==0) {
-            AddCol(txttbl, tuple.head);
-            ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
-                AddCol(txttbl, attr);
-            }ind_end;
-        }
-        AddRow(txttbl);
-        AddCell(txttbl, tuple.head);
-        ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
-            AddCell(txttbl, attr);
-        }ind_end;
+        algo::Tuple sel;
+        SelectTuple(tuple, sel);
+        algo_lib::FTxttbl_AddTuple(txttbl, sel, "");
     }ind_end;
     tempstr out;
     ssimfilt::_db.markdown ? FTxttbl_Markdown(txttbl,out) : FTxttbl_Print(txttbl,out);

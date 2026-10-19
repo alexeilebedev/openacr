@@ -48,7 +48,7 @@ variants.
 — per-field record:
 
 | Attribute      | Meaning |
-|----------------|---------|
+| -------------- | ------- |
 | `field_number` | The integer tag from the `.proto` file (after `=`).  Must be in 1..2^29-1, and outside 19000..19999, the span the protobuf format reserves for its own implementation. |
 | `pb_type`      | Protobuf type name — see the table below. |
 | `packed`       | For repeated scalar fields, use packed encoding.  Only a repeated field of a varint or fixed-width pb_type has a packed form; `packed:Y` anywhere else is rejected. |
@@ -65,13 +65,13 @@ Each `pb_type` names a row of
 protobuf type to its wire type and to the `lib_pb` encode/decode
 routine the codec calls for it:
 
-| pb_type                        | Wire form        | Notes |
-|--------------------------------|------------------|-------|
-| `int32`, `int64`, `uint32`, `uint64`, `bool`, `enum` | varint     | Standard zig-zag-less integer encoding. |
-| `sint32`, `sint64`             | varint (zigzag)  | Better for small negative numbers. |
-| `fixed32`, `sfixed32`, `float` | 32-bit fixed     | Little-endian 4 bytes. |
-| `fixed64`, `sfixed64`, `double`| 64-bit fixed     | Little-endian 8 bytes. |
-| `string`, `bytes`, `message`   | length-delimited | Length prefix (varint) + raw bytes. |
+| pb_type                                              | Wire form        | Notes |
+| ---------------------------------------------------- | ---------------- | ----- |
+| `int32`, `int64`, `uint32`, `uint64`, `bool`, `enum` | varint           | Standard zig-zag-less integer encoding. |
+| `sint32`, `sint64`                                   | varint (zigzag)  | Better for small negative numbers. |
+| `fixed32`, `sfixed32`, `float`                       | 32-bit fixed     | Little-endian 4 bytes. |
+| `fixed64`, `sfixed64`, `double`                      | 64-bit fixed     | Little-endian 8 bytes. |
+| `string`, `bytes`, `message`                         | length-delimited | Length prefix (varint) + raw bytes. |
 
 The pbtype row also carries the value expressions the routine is
 called with, so each field's encode and decode call is fixed when
@@ -228,10 +228,10 @@ with two nonzero members writes both of them.
 
 Source: `cpp/amc/pbuf.cpp`.
 
-| Tfunc                  | Generated function                                    | Effect |
-|------------------------|-------------------------------------------------------|--------|
-| `Ctype.PbufEncode`     | `void <T>_PbufEncode(algo::ByteAry& buf, <T>& parent)` | Append `parent` to `buf` in protobuf wire format. |
-| `Ctype.PbufDecode`     | `bool <T>_PbufDecode(algo::memptr& buf, <T>& parent)` | Read `parent` from `buf`, advancing it past the bytes consumed; returns false on truncation or malformed wire.  An unknown tag is skipped, not an error. |
+| Tfunc              | Generated function                                     | Effect |
+| ------------------ | ------------------------------------------------------ | ------ |
+| `Ctype.PbufEncode` | `void <T>_PbufEncode(algo::ByteAry& buf, <T>& parent)` | Append `parent` to `buf` in protobuf wire format. |
+| `Ctype.PbufDecode` | `bool <T>_PbufDecode(algo::memptr& buf, <T>& parent)`  | Read `parent` from `buf`, advancing it past the bytes consumed; returns false on truncation or malformed wire.  An unknown tag is skipped, not an error. |
 
 Each pb-typed field is encoded with `(tag << 3) | wire_type`
 + the field bytes.  Decode reads tags one at a time and

@@ -80,7 +80,7 @@ void atf_amc::amctest_ReadProc() {
 
     prlog("reading output 2");
     // check that the output is the same as running SysEval (popen)
-    cstring out2 = SysEval("amc command.amc_proc",FailokQ(true),1024*1024);
+    cstring out2 = SysEval("amc command.amc_proc",FailokQ(true));
     vrfy_(out1==out2);
 }
 

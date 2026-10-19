@@ -24,18 +24,22 @@
 
 // -----------------------------------------------------------------------------
 
-// A gcov command that exits non-zero is named in the merge report with the
-// lines gcov printed about the file it refused, and a directory whose profile
-// data yielded no coverage at all is reported lost.  The directory holds one
-// .gcda that is not a profile, so gcov refuses it and the notes file beside
-// it, exits 2, and produces no .gcov; atf_cov reports both and exits 1.  The
-// report is read back from a file, because the harness drops every output line
-// naming a .gcda, which is gcov's own noise in a coverage build.
+// Run atf_cov over profile data that gcov refuses, and check that atf_cov names the
+// failed gcov command and reports the directory lost:
+// 1. Create bad.d holding one x.gcda that is garbage, so gcov refuses it and the
+//    notes file beside it, exits 2 and produces no .gcov.
+// 2. Install a stand-in gcov that refuses every file the way GNU gcov does.
+// 3. Run atf_cov with -mergepath:$tempdir/bad.d, and check that it exits 1.
+// 4. Read its stderr back from a file, and check that the atf_cov.gcov_fail line
+//    carries exit:2 and the lines gcov printed about x.gcda and x.gcno.
+// 5. Check that the atf_cov.merge line reports
+//    n_gcda:1  n_gcov:0  n_fail:1  success:N.
+// The test reads the report from a file because the harness drops every output line
+// that names a .gcda, which is gcov's own noise in a coverage build.
 //
-// The gcov that runs is a stand-in that refuses every file the way GNU gcov
-// does.  The gcov on a macOS host is LLVM's, which words its refusal
-// differently and exits 0 on a file it cannot read, and this test is about
-// what atf_cov makes of a refusal.
+// The test runs a stand-in because the gcov on a macOS host is LLVM's.  LLVM's gcov
+// words its refusal differently and exits 0 on a file it fails to read.  This test
+// is about what atf_cov makes of a refusal.
 void atf_comp::comptest_atf_cov_GcovFail() {
     CreateDirRecurse(atf_comp::TempPath("bad.d"));
     CreateDirRecurse(atf_comp::TempPath("bin"));

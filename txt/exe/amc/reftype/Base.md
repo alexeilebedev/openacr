@@ -64,12 +64,12 @@ declares this; it applies to every base that carries a comment.
 
 Source: `cpp/amc/base.cpp`.
 
-| Tfunc            | Generated function                                          | When emitted | Effect |
-|------------------|-------------------------------------------------------------|--------------|--------|
-| `Base.CopyOut`   | `void <basename>_CopyOut(P& row, Base& out)`                | always       | Copies each field of the base out of the derived row.  Handles `Val`, `Tary`, `Regx`, computed fields, and fields the derived does not carry. |
-| `Base.CopyIn`    | `void <basename>_CopyIn(P& row, Base& in)`                  | when derived is copyable | Reverse direction. |
-| `Base.Castbase`  | `Base& Castbase(P& row)`                                    | when layouts agree (see `AllowCastbaseQ`) | `reinterpret_cast<Base&>(row)` — zero-cost. |
-| `Base.Castdown`  | `Derived* <Derived>_Castdown(Base& hdr)`                    | when derived has `msgtype` + base has `typefld` | Return `&hdr` cast to derived only if `hdr.typefld == msgtype` (and the length check, if `lenfld` is present); otherwise NULL. |
+| Tfunc           | Generated function                           | When emitted                                    | Effect |
+| --------------- | -------------------------------------------- | ----------------------------------------------- | ------ |
+| `Base.CopyOut`  | `void <basename>_CopyOut(P& row, Base& out)` | always                                          | Copies each field of the base out of the derived row.  Handles `Val`, `Tary`, `Regx`, computed fields, and fields the derived does not carry. |
+| `Base.CopyIn`   | `void <basename>_CopyIn(P& row, Base& in)`   | when derived is copyable                        | Reverse direction. |
+| `Base.Castbase` | `Base& Castbase(P& row)`                     | when layouts agree (see `AllowCastbaseQ`)       | `reinterpret_cast<Base&>(row)` — zero-cost. |
+| `Base.Castdown` | `Derived* <Derived>_Castdown(Base& hdr)`     | when derived has `msgtype` + base has `typefld` | Return `&hdr` cast to derived only if `hdr.typefld == msgtype` (and the length check, if `lenfld` is present); otherwise NULL. |
 
 The two cast operations are the wire-protocol bread and butter:
 `Castdown` is the *type tag dispatch*, `Castbase` is the no-op

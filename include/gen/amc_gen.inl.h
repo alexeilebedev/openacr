@@ -9754,6 +9754,198 @@ inline amc::FBheap& amc::bheap_qFind(u64 t) {
     return _db.bheap_lary[bsr][index];
 }
 
+// --- amc.FDb.regxstyle.EmptyQ
+// Return true if index is empty
+inline bool amc::regxstyle_EmptyQ() {
+    return _db.regxstyle_n == 0;
+}
+
+// --- amc.FDb.regxstyle.Find
+// Look up row by row id. Return NULL if out of range
+inline amc::FRegxstyle* amc::regxstyle_Find(u64 t) {
+    amc::FRegxstyle *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.regxstyle_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.regxstyle_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- amc.FDb.regxstyle.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline amc::FRegxstyle* amc::regxstyle_Last() {
+    return regxstyle_Find(u64(_db.regxstyle_n-1));
+}
+
+// --- amc.FDb.regxstyle.N
+// Return number of items in the pool
+inline i64 amc::regxstyle_N() {
+    return _db.regxstyle_n;
+}
+
+// --- amc.FDb.regxstyle.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline amc::FRegxstyle& amc::regxstyle_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.regxstyle_lary[bsr][index];
+}
+
+// --- amc.FDb.ind_regxstyle.EmptyQ
+// Return true if hash is empty
+inline bool amc::ind_regxstyle_EmptyQ() {
+    return _db.ind_regxstyle_n == 0;
+}
+
+// --- amc.FDb.ind_regxstyle.N
+// Return number of items in the hash
+inline i32 amc::ind_regxstyle_N() {
+    return _db.ind_regxstyle_n;
+}
+
+// --- amc.FDb.regxlenient.EmptyQ
+// Return true if index is empty
+inline bool amc::regxlenient_EmptyQ() {
+    return _db.regxlenient_n == 0;
+}
+
+// --- amc.FDb.regxlenient.Find
+// Look up row by row id. Return NULL if out of range
+inline amc::FRegxlenient* amc::regxlenient_Find(u64 t) {
+    amc::FRegxlenient *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.regxlenient_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.regxlenient_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- amc.FDb.regxlenient.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline amc::FRegxlenient* amc::regxlenient_Last() {
+    return regxlenient_Find(u64(_db.regxlenient_n-1));
+}
+
+// --- amc.FDb.regxlenient.N
+// Return number of items in the pool
+inline i64 amc::regxlenient_N() {
+    return _db.regxlenient_n;
+}
+
+// --- amc.FDb.regxlenient.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline amc::FRegxlenient& amc::regxlenient_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.regxlenient_lary[bsr][index];
+}
+
+// --- amc.FDb.ind_regxlenient.EmptyQ
+// Return true if hash is empty
+inline bool amc::ind_regxlenient_EmptyQ() {
+    return _db.ind_regxlenient_n == 0;
+}
+
+// --- amc.FDb.ind_regxlenient.N
+// Return number of items in the hash
+inline i32 amc::ind_regxlenient_N() {
+    return _db.ind_regxlenient_n;
+}
+
+// --- amc.FDb.regxrule.EmptyQ
+// Return true if index is empty
+inline bool amc::regxrule_EmptyQ() {
+    return _db.regxrule_n == 0;
+}
+
+// --- amc.FDb.regxrule.Find
+// Look up row by row id. Return NULL if out of range
+inline amc::FRegxrule* amc::regxrule_Find(u64 t) {
+    amc::FRegxrule *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.regxrule_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.regxrule_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- amc.FDb.regxrule.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline amc::FRegxrule* amc::regxrule_Last() {
+    return regxrule_Find(u64(_db.regxrule_n-1));
+}
+
+// --- amc.FDb.regxrule.N
+// Return number of items in the pool
+inline i64 amc::regxrule_N() {
+    return _db.regxrule_n;
+}
+
+// --- amc.FDb.regxrule.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline amc::FRegxrule& amc::regxrule_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.regxrule_lary[bsr][index];
+}
+
+// --- amc.FDb.regxmacro.EmptyQ
+// Return true if index is empty
+inline bool amc::regxmacro_EmptyQ() {
+    return _db.regxmacro_n == 0;
+}
+
+// --- amc.FDb.regxmacro.Find
+// Look up row by row id. Return NULL if out of range
+inline amc::FRegxmacro* amc::regxmacro_Find(u64 t) {
+    amc::FRegxmacro *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.regxmacro_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.regxmacro_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- amc.FDb.regxmacro.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline amc::FRegxmacro* amc::regxmacro_Last() {
+    return regxmacro_Find(u64(_db.regxmacro_n-1));
+}
+
+// --- amc.FDb.regxmacro.N
+// Return number of items in the pool
+inline i64 amc::regxmacro_N() {
+    return _db.regxmacro_n;
+}
+
+// --- amc.FDb.regxmacro.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline amc::FRegxmacro& amc::regxmacro_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.regxmacro_lary[bsr][index];
+}
+
 // --- amc.FDb.fsort_curs.Reset
 // cursor points to valid item
 inline void amc::_db_fsort_curs_Reset(_db_fsort_curs &curs, amc::FDb &parent) {
@@ -13420,6 +13612,106 @@ inline amc::FBheap& amc::_db_bheap_curs_Access(_db_bheap_curs &curs) {
     return bheap_qFind(u64(curs.index));
 }
 
+// --- amc.FDb.regxstyle_curs.Reset
+// cursor points to valid item
+inline void amc::_db_regxstyle_curs_Reset(_db_regxstyle_curs &curs, amc::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- amc.FDb.regxstyle_curs.ValidQ
+// cursor points to valid item
+inline bool amc::_db_regxstyle_curs_ValidQ(_db_regxstyle_curs &curs) {
+    return curs.index < _db.regxstyle_n;
+}
+
+// --- amc.FDb.regxstyle_curs.Next
+// proceed to next item
+inline void amc::_db_regxstyle_curs_Next(_db_regxstyle_curs &curs) {
+    curs.index++;
+}
+
+// --- amc.FDb.regxstyle_curs.Access
+// item access
+inline amc::FRegxstyle& amc::_db_regxstyle_curs_Access(_db_regxstyle_curs &curs) {
+    return regxstyle_qFind(u64(curs.index));
+}
+
+// --- amc.FDb.regxlenient_curs.Reset
+// cursor points to valid item
+inline void amc::_db_regxlenient_curs_Reset(_db_regxlenient_curs &curs, amc::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- amc.FDb.regxlenient_curs.ValidQ
+// cursor points to valid item
+inline bool amc::_db_regxlenient_curs_ValidQ(_db_regxlenient_curs &curs) {
+    return curs.index < _db.regxlenient_n;
+}
+
+// --- amc.FDb.regxlenient_curs.Next
+// proceed to next item
+inline void amc::_db_regxlenient_curs_Next(_db_regxlenient_curs &curs) {
+    curs.index++;
+}
+
+// --- amc.FDb.regxlenient_curs.Access
+// item access
+inline amc::FRegxlenient& amc::_db_regxlenient_curs_Access(_db_regxlenient_curs &curs) {
+    return regxlenient_qFind(u64(curs.index));
+}
+
+// --- amc.FDb.regxrule_curs.Reset
+// cursor points to valid item
+inline void amc::_db_regxrule_curs_Reset(_db_regxrule_curs &curs, amc::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- amc.FDb.regxrule_curs.ValidQ
+// cursor points to valid item
+inline bool amc::_db_regxrule_curs_ValidQ(_db_regxrule_curs &curs) {
+    return curs.index < _db.regxrule_n;
+}
+
+// --- amc.FDb.regxrule_curs.Next
+// proceed to next item
+inline void amc::_db_regxrule_curs_Next(_db_regxrule_curs &curs) {
+    curs.index++;
+}
+
+// --- amc.FDb.regxrule_curs.Access
+// item access
+inline amc::FRegxrule& amc::_db_regxrule_curs_Access(_db_regxrule_curs &curs) {
+    return regxrule_qFind(u64(curs.index));
+}
+
+// --- amc.FDb.regxmacro_curs.Reset
+// cursor points to valid item
+inline void amc::_db_regxmacro_curs_Reset(_db_regxmacro_curs &curs, amc::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- amc.FDb.regxmacro_curs.ValidQ
+// cursor points to valid item
+inline bool amc::_db_regxmacro_curs_ValidQ(_db_regxmacro_curs &curs) {
+    return curs.index < _db.regxmacro_n;
+}
+
+// --- amc.FDb.regxmacro_curs.Next
+// proceed to next item
+inline void amc::_db_regxmacro_curs_Next(_db_regxmacro_curs &curs) {
+    curs.index++;
+}
+
+// --- amc.FDb.regxmacro_curs.Access
+// item access
+inline amc::FRegxmacro& amc::_db_regxmacro_curs_Access(_db_regxmacro_curs &curs) {
+    return regxmacro_qFind(u64(curs.index));
+}
+
 // --- amc.FDispatch.c_dispfilter.InsertMaybe
 // Insert row into pointer index. Return final membership status.
 inline bool amc::c_dispfilter_InsertMaybe(amc::FDispatch& parent, amc::FDispfilter& row) {
@@ -16577,6 +16869,14 @@ inline  amc::FMsg::~FMsg() {
     amc::FMsg_Uninit(*this);
 }
 
+// --- amc.FMsgfield..Init
+// Set all fields to initial values.
+inline void amc::FMsgfield_Init(amc::FMsgfield& parent) {
+    parent.offset = i32(0);
+    parent.width = i32(0);
+    parent.aux = i32(0);
+}
+
 // --- amc.FMsgfield..Ctor
 inline  amc::FMsgfield::FMsgfield() {
     amc::FMsgfield_Init(*this);
@@ -18519,6 +18819,155 @@ inline  amc::FReftype::FReftype() {
 // --- amc.FReftype..Dtor
 inline  amc::FReftype::~FReftype() {
     amc::FReftype_Uninit(*this);
+}
+
+// --- amc.FRegxlenient..Init
+// Set all fields to initial values.
+inline void amc::FRegxlenient_Init(amc::FRegxlenient& parent) {
+    parent.invalid = bool(false);
+    parent.ind_regxlenient_next = (amc::FRegxlenient*)-1; // (amc.FDb.ind_regxlenient) not-in-hash
+    parent.ind_regxlenient_hashval = 0; // stored hash value
+}
+
+// --- amc.FRegxlenient..Ctor
+inline  amc::FRegxlenient::FRegxlenient() {
+    amc::FRegxlenient_Init(*this);
+}
+
+// --- amc.FRegxlenient..Dtor
+inline  amc::FRegxlenient::~FRegxlenient() {
+    amc::FRegxlenient_Uninit(*this);
+}
+
+// --- amc.FRegxmacro..Init
+// Set all fields to initial values.
+inline void amc::FRegxmacro_Init(amc::FRegxmacro& parent) {
+    parent.neg = bool(false);
+}
+
+// --- amc.FRegxmacro..Ctor
+inline  amc::FRegxmacro::FRegxmacro() {
+    amc::FRegxmacro_Init(*this);
+}
+
+// --- amc.FRegxrule..Init
+// Set all fields to initial values.
+inline void amc::FRegxrule_Init(amc::FRegxrule& parent) {
+    parent.regxstyle_c_regxrule_in_ary = bool(false);
+}
+
+// --- amc.FRegxrule..Ctor
+inline  amc::FRegxrule::FRegxrule() {
+    amc::FRegxrule_Init(*this);
+}
+
+// --- amc.FRegxrule..Dtor
+inline  amc::FRegxrule::~FRegxrule() {
+    amc::FRegxrule_Uninit(*this);
+}
+
+// --- amc.FRegxstyle.c_regxrule.EmptyQ
+// Return true if index is empty
+inline bool amc::c_regxrule_EmptyQ(amc::FRegxstyle& parent) {
+    return parent.c_regxrule_n == 0;
+}
+
+// --- amc.FRegxstyle.c_regxrule.Find
+// Look up row by row id. Return NULL if out of range
+inline amc::FRegxrule* amc::c_regxrule_Find(amc::FRegxstyle& parent, u64 t) {
+    amc::FRegxrule *retval = NULL;
+    u64 idx = t;
+    u64 lim = parent.c_regxrule_n;
+    if (idx < lim) {
+        retval = parent.c_regxrule_elems[idx];
+    }
+    return retval;
+}
+
+// --- amc.FRegxstyle.c_regxrule.Getary
+// Return array of pointers
+inline algo::aryptr<amc::FRegxrule*> amc::c_regxrule_Getary(amc::FRegxstyle& parent) {
+    return algo::aryptr<amc::FRegxrule*>(parent.c_regxrule_elems, parent.c_regxrule_n);
+}
+
+// --- amc.FRegxstyle.c_regxrule.N
+// Return number of items in the pointer array
+inline i64 amc::c_regxrule_N(const amc::FRegxstyle& parent) {
+    return parent.c_regxrule_n;
+}
+
+// --- amc.FRegxstyle.c_regxrule.RemoveAll
+// Empty the index. (The rows are not deleted)
+inline void amc::c_regxrule_RemoveAll(amc::FRegxstyle& parent) {
+    for (u64 i = 0; i < parent.c_regxrule_n; i++) {
+        // mark all elements as not-in-array
+        parent.c_regxrule_elems[i]->regxstyle_c_regxrule_in_ary = false;
+    }
+    parent.c_regxrule_n = 0;
+}
+
+// --- amc.FRegxstyle.c_regxrule.qFind
+// Return reference without bounds checking
+inline amc::FRegxrule& amc::c_regxrule_qFind(amc::FRegxstyle& parent, u64 idx) {
+    return *parent.c_regxrule_elems[idx];
+}
+
+// --- amc.FRegxstyle.c_regxrule.InAryQ
+// True if row is in any ptrary instance
+inline bool amc::regxstyle_c_regxrule_InAryQ(amc::FRegxrule& row) {
+    return row.regxstyle_c_regxrule_in_ary;
+}
+
+// --- amc.FRegxstyle.c_regxrule.qLast
+// Reference to last element without bounds checking
+inline amc::FRegxrule& amc::c_regxrule_qLast(amc::FRegxstyle& parent) {
+    return *parent.c_regxrule_elems[parent.c_regxrule_n-1];
+}
+
+// --- amc.FRegxstyle..Init
+// Set all fields to initial values.
+inline void amc::FRegxstyle_Init(amc::FRegxstyle& parent) {
+    parent.esc = bool(false);
+    parent.c_regxrule_elems = NULL; // (amc.FRegxstyle.c_regxrule)
+    parent.c_regxrule_n = 0; // (amc.FRegxstyle.c_regxrule)
+    parent.c_regxrule_max = 0; // (amc.FRegxstyle.c_regxrule)
+    parent.ind_regxstyle_next = (amc::FRegxstyle*)-1; // (amc.FDb.ind_regxstyle) not-in-hash
+    parent.ind_regxstyle_hashval = 0; // stored hash value
+}
+
+// --- amc.FRegxstyle.c_regxrule_curs.Reset
+inline void amc::regxstyle_c_regxrule_curs_Reset(regxstyle_c_regxrule_curs &curs, amc::FRegxstyle &parent) {
+    curs.elems = parent.c_regxrule_elems;
+    curs.n_elems = parent.c_regxrule_n;
+    curs.index = 0;
+}
+
+// --- amc.FRegxstyle.c_regxrule_curs.ValidQ
+// cursor points to valid item
+inline bool amc::regxstyle_c_regxrule_curs_ValidQ(regxstyle_c_regxrule_curs &curs) {
+    return curs.index < curs.n_elems;
+}
+
+// --- amc.FRegxstyle.c_regxrule_curs.Next
+// proceed to next item
+inline void amc::regxstyle_c_regxrule_curs_Next(regxstyle_c_regxrule_curs &curs) {
+    curs.index++;
+}
+
+// --- amc.FRegxstyle.c_regxrule_curs.Access
+// item access
+inline amc::FRegxrule& amc::regxstyle_c_regxrule_curs_Access(regxstyle_c_regxrule_curs &curs) {
+    return *curs.elems[curs.index];
+}
+
+// --- amc.FRegxstyle..Ctor
+inline  amc::FRegxstyle::FRegxstyle() {
+    amc::FRegxstyle_Init(*this);
+}
+
+// --- amc.FRegxstyle..Dtor
+inline  amc::FRegxstyle::~FRegxstyle() {
+    amc::FRegxstyle_Uninit(*this);
 }
 
 // --- amc.FRowid..Init

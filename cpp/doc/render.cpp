@@ -593,7 +593,7 @@ int doc::AnchorRow(algo::strptr name) {
 // browser builds its pane after the body and carries more in it: the functions the code
 // section named.  That is one text asked for at two moments rather than two panes.
 static void RenderNav(algo::strptr loc) {
-    tempstr nav(doc::NavText(loc));
+    tempstr nav(doc::NavText(loc, false));
     if (ch_N(nav) > 0) {
         doc::ParseText(nav);
         doc::RenderDoc();
@@ -708,7 +708,7 @@ void doc::RenderPage(algo::strptr loc) {
     doc::FDocpage *docpage = doc::Docpage(page);
     doc::_db.p_out = NULL;
     bool file = !docpage && !doc::DirQ(page);
-    if (doc::RecpageQ(page)) {
+    if (doc::RecpageQ(page) || doc::GistQ(page)) {
         RenderNav(page);
     }
     if (docpage) {

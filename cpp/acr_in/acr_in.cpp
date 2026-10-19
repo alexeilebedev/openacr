@@ -103,18 +103,21 @@ static bool SelectCtypeQ(acr_in::FCtype *ctype) {
     bool follow_parent=acr_in::_db.cmdline.checkable
         || ch_N(acr_in::_db.cmdline.related)>0;
     return ctype->c_ssimfile
-        && (follow_parent || ctype->c_ssimfile->is_finput)
+        && (follow_parent || ctype->c_ssimfile->is_finput || ctype->c_ssimfile->listed)
         && !Regx_Match(acr_in::_db.cmdline.notssimfile, ctype->c_ssimfile->ssimfile);
 }
 
 // -----------------------------------------------------------------------------
 
 // Select ssimfiles loaded by selected namespaces
-// There are two way a ssimfile gets selected:
+// There are three ways a ssimfile gets selected:
 // - it is a finput to a selected namespace
 // - it matches command line "-r" argument
-// If a ssimfile is selected, it is marked as "is_finput" and its ctype is is added
-// to the temporary "zd_todo" list.
+// - it matches command line "-ssimfile" argument, which names tables a process
+//   applies by hand rather than through a finput; such a ssimfile is "listed":
+//   it takes its place in the order, and its rows are neither loaded nor printed
+// If a ssimfile is selected as an input, it is marked as "is_finput" and its ctype is
+// added to the temporary "zd_todo" list.
 // The "zd_todo" is used to topologically order all selected ssimfiles in order
 // of their dependence.
 // In the end, global "zd_ssimfile" list is populated in the order in which
@@ -131,6 +134,12 @@ static void Main_SelectSsimfile() {
                 acr_in::ind_nsssimfile_GetOrCreate(finput.p_ns->ns,ctype->c_ssimfile->ssimfile);
             }
             zd_todo_Insert(*ctype);
+        }
+    }ind_end;
+    ind_beg(acr_in::_db_ssimfile_curs, ssimfile, acr_in::_db) {
+        if (Regx_Match(acr_in::_db.cmdline.ssimfile, ssimfile.ssimfile) && ssimfile.p_ctype) {
+            ssimfile.listed = true;
+            zd_todo_Insert(*ssimfile.p_ctype);
         }
     }ind_end;
     // topologically sort ctypes that have ssimfiles

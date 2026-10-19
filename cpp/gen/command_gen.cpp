@@ -294,6 +294,8 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_perm          : ret = "perm";  break;
         case command_FieldId_expires       : ret = "expires";  break;
         case command_FieldId_src           : ret = "src";  break;
+        case command_FieldId_mint          : ret = "mint";  break;
+        case command_FieldId_minter        : ret = "minter";  break;
         case command_FieldId_keygen        : ret = "keygen";  break;
         case command_FieldId_pubfile       : ret = "pubfile";  break;
         case command_FieldId_renew         : ret = "renew";  break;
@@ -397,6 +399,8 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_header        : ret = "header";  break;
         case command_FieldId_prefer_signed : ret = "prefer_signed";  break;
         case command_FieldId_name          : ret = "name";  break;
+        case command_FieldId_hook          : ret = "hook";  break;
+        case command_FieldId_merged        : ret = "merged";  break;
         case command_FieldId_cow           : ret = "cow";  break;
         case command_FieldId_claudesess    : ret = "claudesess";  break;
         case command_FieldId_i             : ret = "i";  break;
@@ -680,6 +684,9 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 case LE_STR4('h','a','s','h'): {
                     value_SetEnum(parent,command_FieldId_hash); ret = true; break;
                 }
+                case LE_STR4('h','o','o','k'): {
+                    value_SetEnum(parent,command_FieldId_hook); ret = true; break;
+                }
                 case LE_STR4('h','t','m','l'): {
                     value_SetEnum(parent,command_FieldId_html); ret = true; break;
                 }
@@ -709,6 +716,9 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR4('m','e','t','a'): {
                     value_SetEnum(parent,command_FieldId_meta); ret = true; break;
+                }
+                case LE_STR4('m','i','n','t'): {
+                    value_SetEnum(parent,command_FieldId_mint); ret = true; break;
                 }
                 case LE_STR4('m','n','u','m'): {
                     value_SetEnum(parent,command_FieldId_mnum); ret = true; break;
@@ -1028,6 +1038,12 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR6('m','a','x','e','r','r'): {
                     value_SetEnum(parent,command_FieldId_maxerr); ret = true; break;
+                }
+                case LE_STR6('m','e','r','g','e','d'): {
+                    value_SetEnum(parent,command_FieldId_merged); ret = true; break;
+                }
+                case LE_STR6('m','i','n','t','e','r'): {
+                    value_SetEnum(parent,command_FieldId_minter); ret = true; break;
                 }
                 case LE_STR6('n','c','h','i','l','d'): {
                     value_SetEnum(parent,command_FieldId_nchild); ret = true; break;
@@ -1727,7 +1743,7 @@ const char *command::abt_help = "abt: Algo Build Tool - build & link C++ targets
 "    -shortlink                  Try to shorten sort link if possible\n"
 "    -verbose    flag            Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug      flag            Debug level (0..255); alias -d; cumulative\n"
-"    -trace      string  \"\"      Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps\n"
+"    -trace      string  \"\"      Trace expression: log categories to enable, as category[:filter],...\n"
 "    -help                       Print help and exit; alias -h\n"
 "    -version                    Print version and exit\n"
 "    -signature                  Show signatures and exit; alias -sig\n";
@@ -2577,10 +2593,10 @@ const char *command::abt_md_help = "abt_md: Tool to generate markdown documentat
 "    -dry_run                      Do not write changes to disk\n"
 "    -external                     Check external links as well (may fail if no internet connection)\n"
 "    -evalcmd              Y       Execute inline-commands\n"
-"    -tut                          (with -evalcmd) Evaluate the tutorials' inline commands too (txt/tut)\n"
+"    -tut                          (with -evalcmd) Evaluate the inline commands of the tutorials too\n"
 "    -verbose      flag            Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug        flag            Debug level (0..255); alias -d; cumulative\n"
-"    -trace        string  \"\"      Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps\n"
+"    -trace        string  \"\"      Trace expression: log categories to enable, as category[:filter],...\n"
 "    -help                         Print help and exit; alias -h\n"
 "    -version                      Print version and exit\n"
 "    -signature                    Show signatures and exit; alias -sig\n";
@@ -3090,15 +3106,7 @@ int command::abt_md_Start(command::abt_md_proc& parent) {
         parent.pid = fork();
         if (parent.pid == 0) { // child
             algo_lib::DieWithParent();
-            // inherited signal handlers stay live until exec, so a kill aimed at
-            // the child in the fork-to-exec window would run the parent's handler
-            // in the child and be consumed instead of killing; restore the default
-            // dispositions so the signal does what the sender means
-            (void)signal(SIGTERM, SIG_DFL);
-            (void)signal(SIGINT , SIG_DFL);
-            (void)signal(SIGHUP , SIG_DFL);
-            (void)signal(SIGQUIT, SIG_DFL);
-            (void)signal(SIGALRM, SIG_DFL);
+            algo_lib::ResetChildSignal();
             if (parent.pgroup) {
                 // own process group: a kill by the child's pid alone would
                 // orphan its descendants alive; the group is one killable unit
@@ -3370,15 +3378,7 @@ int command::abt_Start(command::abt_proc& parent) {
         parent.pid = fork();
         if (parent.pid == 0) { // child
             algo_lib::DieWithParent();
-            // inherited signal handlers stay live until exec, so a kill aimed at
-            // the child in the fork-to-exec window would run the parent's handler
-            // in the child and be consumed instead of killing; restore the default
-            // dispositions so the signal does what the sender means
-            (void)signal(SIGTERM, SIG_DFL);
-            (void)signal(SIGINT , SIG_DFL);
-            (void)signal(SIGHUP , SIG_DFL);
-            (void)signal(SIGQUIT, SIG_DFL);
-            (void)signal(SIGALRM, SIG_DFL);
+            algo_lib::ResetChildSignal();
             if (parent.pgroup) {
                 // own process group: a kill by the child's pid alone would
                 // orphan its descendants alive; the group is one killable unit
@@ -3750,7 +3750,7 @@ const char *command::acr_help = "acr: Algo Cross-Reference - ssimfile database &
 "    -meta                       Select meta-data for selected records\n"
 "    -verbose    flag            Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug      flag            Debug level (0..255); alias -d; cumulative\n"
-"    -trace      string  \"\"      Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps\n"
+"    -trace      string  \"\"      Trace expression: log categories to enable, as category[:filter],...\n"
 "    -help                       Print help and exit; alias -h\n"
 "    -version                    Print version and exit\n"
 "    -signature                  Show signatures and exit; alias -sig\n";
@@ -5261,10 +5261,10 @@ const char *command::acr_compl_help = "acr_compl: ACR shell auto-complete for al
 "    -install                      Produce bash commands to install the handler\n"
 "    -debug_log    string  \"\"      Log file for debug information, overrides ACR_COMPL_DEBUG_LOG\n"
 "    -check                        Check command line validity\n"
-"    -check_batch                  Batch mode: read acr_compl.checkreq from stdin, emit acr_compl.checkerr per failure\n"
+"    -check_batch                  Batch mode: check each checkreq row on stdin, print a checkerr per failure\n"
 "    -verbose      flag            Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug        flag            Debug level (0..255); alias -d; cumulative\n"
-"    -trace        string  \"\"      Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps\n"
+"    -trace        string  \"\"      Trace expression: log categories to enable, as category[:filter],...\n"
 "    -help                         Print help and exit; alias -h\n"
 "    -version                      Print version and exit\n"
 "    -signature                    Show signatures and exit; alias -sig\n";
@@ -5661,15 +5661,7 @@ int command::acr_compl_Start(command::acr_compl_proc& parent) {
         parent.pid = fork();
         if (parent.pid == 0) { // child
             algo_lib::DieWithParent();
-            // inherited signal handlers stay live until exec, so a kill aimed at
-            // the child in the fork-to-exec window would run the parent's handler
-            // in the child and be consumed instead of killing; restore the default
-            // dispositions so the signal does what the sender means
-            (void)signal(SIGTERM, SIG_DFL);
-            (void)signal(SIGINT , SIG_DFL);
-            (void)signal(SIGHUP , SIG_DFL);
-            (void)signal(SIGQUIT, SIG_DFL);
-            (void)signal(SIGALRM, SIG_DFL);
+            algo_lib::ResetChildSignal();
             if (parent.pgroup) {
                 // own process group: a kill by the child's pid alone would
                 // orphan its descendants alive; the group is one killable unit
@@ -5906,7 +5898,7 @@ const char *command::acr_dm_help = "acr_dm: ACR Diff/Merge\n"
 "    -rowid                       Print acr.rowid, each row's position in the merged file\n"
 "    -verbose     flag            Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug       flag            Debug level (0..255); alias -d; cumulative\n"
-"    -trace       string  \"\"      Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps\n"
+"    -trace       string  \"\"      Trace expression: log categories to enable, as category[:filter],...\n"
 "    -help                        Print help and exit; alias -h\n"
 "    -version                     Print version and exit\n"
 "    -signature                   Show signatures and exit; alias -sig\n";
@@ -6481,15 +6473,7 @@ int command::acr_dm_Start(command::acr_dm_proc& parent) {
         parent.pid = fork();
         if (parent.pid == 0) { // child
             algo_lib::DieWithParent();
-            // inherited signal handlers stay live until exec, so a kill aimed at
-            // the child in the fork-to-exec window would run the parent's handler
-            // in the child and be consumed instead of killing; restore the default
-            // dispositions so the signal does what the sender means
-            (void)signal(SIGTERM, SIG_DFL);
-            (void)signal(SIGINT , SIG_DFL);
-            (void)signal(SIGHUP , SIG_DFL);
-            (void)signal(SIGQUIT, SIG_DFL);
-            (void)signal(SIGALRM, SIG_DFL);
+            algo_lib::ResetChildSignal();
             if (parent.pgroup) {
                 // own process group: a kill by the child's pid alone would
                 // orphan its descendants alive; the group is one killable unit
@@ -6748,7 +6732,7 @@ const char *command::acr_ed_help = "acr_ed: Script generator for common dev task
 "    -dispatch_msg  string  \"\"        Add dispatch_msg record (-create); pkey is <dispatch>/<msgtype>\n"
 "    -verbose       flag              Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug         flag              Debug level (0..255); alias -d; cumulative\n"
-"    -trace         string  \"\"        Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps\n"
+"    -trace         string  \"\"        Trace expression: log categories to enable, as category[:filter],...\n"
 "    -help                            Print help and exit; alias -h\n"
 "    -version                         Print version and exit\n"
 "    -signature                       Show signatures and exit; alias -sig\n";
@@ -7822,15 +7806,7 @@ int command::acr_ed_Start(command::acr_ed_proc& parent) {
         parent.pid = fork();
         if (parent.pid == 0) { // child
             algo_lib::DieWithParent();
-            // inherited signal handlers stay live until exec, so a kill aimed at
-            // the child in the fork-to-exec window would run the parent's handler
-            // in the child and be consumed instead of killing; restore the default
-            // dispositions so the signal does what the sender means
-            (void)signal(SIGTERM, SIG_DFL);
-            (void)signal(SIGINT , SIG_DFL);
-            (void)signal(SIGHUP , SIG_DFL);
-            (void)signal(SIGQUIT, SIG_DFL);
-            (void)signal(SIGALRM, SIG_DFL);
+            algo_lib::ResetChildSignal();
             if (parent.pgroup) {
                 // own process group: a kill by the child's pid alone would
                 // orphan its descendants alive; the group is one killable unit
@@ -8295,12 +8271,13 @@ const char *command::acr_in_help = "acr_in: ACR Input - compute set of ssimfiles
 "    -data_dir...  string          Directory with ssimfiles; repeat to layer, empty means data\n"
 "    -schema       string  \"data\"\n"
 "    -related      string  \"\"      Select only tuples related to specified acr key\n"
+"    -ssimfile     regx    \"\"      Also list ssimfiles matching regx in load order; their rows are not printed\n"
 "    -notssimfile  regx    \"\"      Exclude ssimfiles matching regx\n"
 "    -checkable                    Ensure output passes acr -check\n"
 "    -r            regx    \"\"      Reverse lookup of target by ssimfile\n"
 "    -verbose      flag            Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug        flag            Debug level (0..255); alias -d; cumulative\n"
-"    -trace        string  \"\"      Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps\n"
+"    -trace        string  \"\"      Trace expression: log categories to enable, as category[:filter],...\n"
 "    -help                         Print help and exit; alias -h\n"
 "    -version                      Print version and exit\n"
 "    -signature                    Show signatures and exit; alias -sig\n";
@@ -8538,6 +8515,21 @@ void command::data_dir_RemRegion(command::acr_in& parent, i64 beg, i64 n) {
     }
 }
 
+// --- command.acr_in.ssimfile.Print
+// Print back to string
+void command::ssimfile_Print(command::acr_in& parent, algo::cstring &out) {
+    Regx_Print(parent.ssimfile, out);
+}
+
+// --- command.acr_in.ssimfile.ReadStrptrMaybe
+// Read Regx from string
+// Convert string to field. Return success value
+bool command::ssimfile_ReadStrptrMaybe(command::acr_in& parent, algo::strptr in) {
+    bool retval = true;
+    Regx_ReadSql(parent.ssimfile, in, true);
+    return retval;
+}
+
 // --- command.acr_in.notssimfile.Print
 // Print back to string
 void command::notssimfile_Print(command::acr_in& parent, algo::cstring &out) {
@@ -8598,6 +8590,9 @@ bool command::acr_in_ReadFieldMaybe(command::acr_in& parent, algo::strptr field,
         case command_FieldId_related: {
             retval = algo::cstring_ReadStrptrMaybe(parent.related, strval);
         } break;
+        case command_FieldId_ssimfile: {
+            retval = ssimfile_ReadStrptrMaybe(parent, strval);
+        } break;
         case command_FieldId_notssimfile: {
             retval = notssimfile_ReadStrptrMaybe(parent, strval);
         } break;
@@ -8633,6 +8628,7 @@ void command::acr_in_Init(command::acr_in& parent) {
     parent.data_dir_max   	= 0; // (command.acr_in.data_dir)
     parent.schema = algo::strptr("data");
     parent.related = algo::strptr("");
+    Regx_ReadSql(parent.ssimfile, "", true);
     Regx_ReadSql(parent.notssimfile, "", true);
     parent.checkable = bool(false);
     Regx_ReadSql(parent.r, "", true);
@@ -8723,6 +8719,12 @@ void command::acr_in_PrintArgv(command::acr_in& row, algo::cstring& str) {
         str << " -related:";
         strptr_PrintBash(temp,str);
     }
+    if (!(row.ssimfile.expr == "")) {
+        ch_RemoveAll(temp);
+        command::ssimfile_Print(row, temp);
+        str << " -ssimfile:";
+        strptr_PrintBash(temp,str);
+    }
     if (!(row.notssimfile.expr == "")) {
         ch_RemoveAll(temp);
         command::notssimfile_Print(row, temp);
@@ -8788,6 +8790,11 @@ void command::acr_in_ToArgv(command::acr_in& row, algo::StringAry& args) {
         ch_RemoveAll(temp);
         cstring_Print(row.related, temp);
         ary_Alloc(args) << "-related:" << temp;
+    }
+    if (!(row.ssimfile.expr == "")) {
+        ch_RemoveAll(temp);
+        command::ssimfile_Print(row, temp);
+        ary_Alloc(args) << "-ssimfile:" << temp;
     }
     if (!(row.notssimfile.expr == "")) {
         ch_RemoveAll(temp);
@@ -8861,6 +8868,9 @@ i32 command::acr_in_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* 
             *out_anon = false;
         } break;
         case command_FieldId_related: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_ssimfile: { //
             *out_anon = false;
         } break;
         case command_FieldId_notssimfile: { //
@@ -8988,6 +8998,7 @@ command::acr_in& command::acr_in::operator =(const command::acr_in &rhs) {
     data_dir_Setary(*this, data_dir_Getary(const_cast<command::acr_in&>(rhs)));
     schema = rhs.schema;
     related = rhs.related;
+    ssimfile = rhs.ssimfile;
     notssimfile = rhs.notssimfile;
     checkable = rhs.checkable;
     r = rhs.r;
@@ -9003,6 +9014,7 @@ command::acr_in& command::acr_in::operator =(const command::acr_in &rhs) {
     , t(rhs.t)
     , schema(rhs.schema)
     , related(rhs.related)
+    , ssimfile(rhs.ssimfile)
     , notssimfile(rhs.notssimfile)
     , checkable(rhs.checkable)
     , r(rhs.r)
@@ -9034,15 +9046,7 @@ int command::acr_in_Start(command::acr_in_proc& parent) {
         parent.pid = fork();
         if (parent.pid == 0) { // child
             algo_lib::DieWithParent();
-            // inherited signal handlers stay live until exec, so a kill aimed at
-            // the child in the fork-to-exec window would run the parent's handler
-            // in the child and be consumed instead of killing; restore the default
-            // dispositions so the signal does what the sender means
-            (void)signal(SIGTERM, SIG_DFL);
-            (void)signal(SIGINT , SIG_DFL);
-            (void)signal(SIGHUP , SIG_DFL);
-            (void)signal(SIGQUIT, SIG_DFL);
-            (void)signal(SIGALRM, SIG_DFL);
+            algo_lib::ResetChildSignal();
             if (parent.pgroup) {
                 // own process group: a kill by the child's pid alone would
                 // orphan its descendants alive; the group is one killable unit
@@ -9234,6 +9238,12 @@ void command::acr_in_ToArgv(command::acr_in_proc& parent, algo::StringAry& args)
         cstring_Print(parent.cmd.related, *arg);
     }
 
+    if (parent.cmd.ssimfile.expr != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-ssimfile:";
+        command::ssimfile_Print(parent.cmd, *arg);
+    }
+
     if (parent.cmd.notssimfile.expr != "") {
         cstring *arg = &ary_Alloc(args);
         *arg << "-notssimfile:";
@@ -9295,7 +9305,7 @@ const char *command::acr_my_help = "acr_my: ACR <-> MariaDB adaptor\n"
 "    -serv                       Start mysql with TCP/IP service enabled\n"
 "    -verbose    flag            Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug      flag            Debug level (0..255); alias -d; cumulative\n"
-"    -trace      string  \"\"      Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps\n"
+"    -trace      string  \"\"      Trace expression: log categories to enable, as category[:filter],...\n"
 "    -help                       Print help and exit; alias -h\n"
 "    -version                    Print version and exit\n"
 "    -signature                  Show signatures and exit; alias -sig\n";
@@ -9740,15 +9750,7 @@ int command::acr_my_Start(command::acr_my_proc& parent) {
         parent.pid = fork();
         if (parent.pid == 0) { // child
             algo_lib::DieWithParent();
-            // inherited signal handlers stay live until exec, so a kill aimed at
-            // the child in the fork-to-exec window would run the parent's handler
-            // in the child and be consumed instead of killing; restore the default
-            // dispositions so the signal does what the sender means
-            (void)signal(SIGTERM, SIG_DFL);
-            (void)signal(SIGINT , SIG_DFL);
-            (void)signal(SIGHUP , SIG_DFL);
-            (void)signal(SIGQUIT, SIG_DFL);
-            (void)signal(SIGALRM, SIG_DFL);
+            algo_lib::ResetChildSignal();
             if (parent.pgroup) {
                 // own process group: a kill by the child's pid alone would
                 // orphan its descendants alive; the group is one killable unit
@@ -10008,15 +10010,7 @@ int command::acr_Start(command::acr_proc& parent) {
         parent.pid = fork();
         if (parent.pid == 0) { // child
             algo_lib::DieWithParent();
-            // inherited signal handlers stay live until exec, so a kill aimed at
-            // the child in the fork-to-exec window would run the parent's handler
-            // in the child and be consumed instead of killing; restore the default
-            // dispositions so the signal does what the sender means
-            (void)signal(SIGTERM, SIG_DFL);
-            (void)signal(SIGINT , SIG_DFL);
-            (void)signal(SIGHUP , SIG_DFL);
-            (void)signal(SIGQUIT, SIG_DFL);
-            (void)signal(SIGALRM, SIG_DFL);
+            algo_lib::ResetChildSignal();
             if (parent.pgroup) {
                 // own process group: a kill by the child's pid alone would
                 // orphan its descendants alive; the group is one killable unit
@@ -10429,14 +10423,15 @@ const char *command::ainst_help = "ainst: Install third-party software described
 "    -script                                 (action) Print the install script instead of running it\n"
 "    -lib                                    (action) Print the install functions of the selected packages as a shell library\n"
 "    -rpm                                    (action) Stage each package and build an rpm out of the staged tree\n"
-"    -update                                 (action) Look upstream for a newer release and record its version, url and sha256\n"
+"    -update                                 (action) Find a newer upstream release and record its version, url and sha256\n"
 "    -root       string  \"\"                  Stage files under this directory instead of /\n"
 "    -cache      string  \"temp/ainst/cache\"  Where verified artifacts are kept, one file per sha256\n"
 "    -outdir     string  \"temp/ainst\"        (with -rpm) Directory the rpm is written to\n"
 "    -dry_run                                Print actions, do not perform\n"
+"    -check                                  (action) Stage each selected package under a scratch root and report which fail\n"
 "    -verbose    flag                        Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug      flag                        Debug level (0..255); alias -d; cumulative\n"
-"    -trace      string  \"\"                  Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps\n"
+"    -trace      string  \"\"                  Trace expression: log categories to enable, as category[:filter],...\n"
 "    -help                                   Print help and exit; alias -h\n"
 "    -version                                Print version and exit\n"
 "    -signature                              Show signatures and exit; alias -sig\n";
@@ -10495,6 +10490,9 @@ bool command::ainst_ReadFieldMaybe(command::ainst& parent, algo::strptr field, a
         case command_FieldId_dry_run: {
             retval = bool_ReadStrptrMaybe(parent.dry_run, strval);
         } break;
+        case command_FieldId_check: {
+            retval = bool_ReadStrptrMaybe(parent.check, strval);
+        } break;
         default: {
             if (!ch_N(field) || (algo_lib::_db.strict_attr && field != "acr.rowid")) {
                 retval = false;
@@ -10522,6 +10520,7 @@ void command::ainst_Init(command::ainst& parent) {
     parent.cache = algo::strptr("temp/ainst/cache");
     parent.outdir = algo::strptr("temp/ainst");
     parent.dry_run = bool(false);
+    parent.check = bool(false);
 }
 
 // --- command.ainst..ToCmdline
@@ -10617,6 +10616,12 @@ void command::ainst_PrintArgv(command::ainst& row, algo::cstring& str) {
         str << " -dry_run:";
         strptr_PrintBash(temp,str);
     }
+    if (!(row.check == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.check, temp);
+        str << " -check:";
+        strptr_PrintBash(temp,str);
+    }
 }
 
 // --- command.ainst..ToArgv
@@ -10679,6 +10684,11 @@ void command::ainst_ToArgv(command::ainst& row, algo::StringAry& args) {
         ch_RemoveAll(temp);
         bool_Print(row.dry_run, temp);
         ary_Alloc(args) << "-dry_run:" << temp;
+    }
+    if (!(row.check == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.check, temp);
+        ary_Alloc(args) << "-check:" << temp;
     }
     for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
         ary_Alloc(args) << "-verbose";
@@ -10748,6 +10758,11 @@ i32 command::ainst_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* o
             *out_anon = false;
         } break;
         case command_FieldId_dry_run: { // bool: no argument required but value may be specified as dry_run:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_check: { // bool: no argument required but value may be specified as check:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
@@ -10877,15 +10892,7 @@ int command::ainst_Start(command::ainst_proc& parent) {
         parent.pid = fork();
         if (parent.pid == 0) { // child
             algo_lib::DieWithParent();
-            // inherited signal handlers stay live until exec, so a kill aimed at
-            // the child in the fork-to-exec window would run the parent's handler
-            // in the child and be consumed instead of killing; restore the default
-            // dispositions so the signal does what the sender means
-            (void)signal(SIGTERM, SIG_DFL);
-            (void)signal(SIGINT , SIG_DFL);
-            (void)signal(SIGHUP , SIG_DFL);
-            (void)signal(SIGQUIT, SIG_DFL);
-            (void)signal(SIGALRM, SIG_DFL);
+            algo_lib::ResetChildSignal();
             if (parent.pgroup) {
                 // own process group: a kill by the child's pid alone would
                 // orphan its descendants alive; the group is one killable unit
@@ -11095,6 +11102,12 @@ void command::ainst_ToArgv(command::ainst_proc& parent, algo::StringAry& args) {
         *arg << "-dry_run:";
         bool_Print(parent.cmd.dry_run, *arg);
     }
+
+    if (parent.cmd.check != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-check:";
+        bool_Print(parent.cmd.check, *arg);
+    }
     for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
         ary_Alloc(args) << "-verbose";
     }
@@ -11136,7 +11149,7 @@ const char *command::amc_help = "amc: Algo Model Compiler: generate code under i
 "    -derive                       Derive and write the amc-owned tables; generate no source\n"
 "    -verbose      flag            Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug        flag            Debug level (0..255); alias -d; cumulative\n"
-"    -trace        string  \"\"      Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps\n"
+"    -trace        string  \"\"      Trace expression: log categories to enable, as category[:filter],...\n"
 "    -help                         Print help and exit; alias -h\n"
 "    -version                      Print version and exit\n"
 "    -signature                    Show signatures and exit; alias -sig\n";
@@ -11480,7 +11493,7 @@ const char *command::amc_gc_help = "amc_gc: Garbage collector for in-memory data
 "    -in         string  \"data\"  Input directory or filename, - for stdin\n"
 "    -verbose    flag            Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug      flag            Debug level (0..255); alias -d; cumulative\n"
-"    -trace      string  \"\"      Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps\n"
+"    -trace      string  \"\"      Trace expression: log categories to enable, as category[:filter],...\n"
 "    -help                       Print help and exit; alias -h\n"
 "    -version                    Print version and exit\n"
 "    -signature                  Show signatures and exit; alias -sig\n";
@@ -11780,15 +11793,7 @@ int command::amc_gc_Start(command::amc_gc_proc& parent) {
         parent.pid = fork();
         if (parent.pid == 0) { // child
             algo_lib::DieWithParent();
-            // inherited signal handlers stay live until exec, so a kill aimed at
-            // the child in the fork-to-exec window would run the parent's handler
-            // in the child and be consumed instead of killing; restore the default
-            // dispositions so the signal does what the sender means
-            (void)signal(SIGTERM, SIG_DFL);
-            (void)signal(SIGINT , SIG_DFL);
-            (void)signal(SIGHUP , SIG_DFL);
-            (void)signal(SIGQUIT, SIG_DFL);
-            (void)signal(SIGALRM, SIG_DFL);
+            algo_lib::ResetChildSignal();
             if (parent.pgroup) {
                 // own process group: a kill by the child's pid alone would
                 // orphan its descendants alive; the group is one killable unit
@@ -12006,15 +12011,7 @@ int command::amc_Start(command::amc_proc& parent) {
         parent.pid = fork();
         if (parent.pid == 0) { // child
             algo_lib::DieWithParent();
-            // inherited signal handlers stay live until exec, so a kill aimed at
-            // the child in the fork-to-exec window would run the parent's handler
-            // in the child and be consumed instead of killing; restore the default
-            // dispositions so the signal does what the sender means
-            (void)signal(SIGTERM, SIG_DFL);
-            (void)signal(SIGINT , SIG_DFL);
-            (void)signal(SIGHUP , SIG_DFL);
-            (void)signal(SIGQUIT, SIG_DFL);
-            (void)signal(SIGALRM, SIG_DFL);
+            algo_lib::ResetChildSignal();
             if (parent.pgroup) {
                 // own process group: a kill by the child's pid alone would
                 // orphan its descendants alive; the group is one killable unit
@@ -12247,7 +12244,7 @@ const char *command::amc_vis_help = "amc_vis: Draw access path diagrams\n"
 "    -render             Y       Produce an ascii drawing\n"
 "    -verbose    flag            Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug      flag            Debug level (0..255); alias -d; cumulative\n"
-"    -trace      string  \"\"      Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps\n"
+"    -trace      string  \"\"      Trace expression: log categories to enable, as category[:filter],...\n"
 "    -help                       Print help and exit; alias -h\n"
 "    -version                    Print version and exit\n"
 "    -signature                  Show signatures and exit; alias -sig\n";
@@ -12632,15 +12629,7 @@ int command::amc_vis_Start(command::amc_vis_proc& parent) {
         parent.pid = fork();
         if (parent.pid == 0) { // child
             algo_lib::DieWithParent();
-            // inherited signal handlers stay live until exec, so a kill aimed at
-            // the child in the fork-to-exec window would run the parent's handler
-            // in the child and be consumed instead of killing; restore the default
-            // dispositions so the signal does what the sender means
-            (void)signal(SIGTERM, SIG_DFL);
-            (void)signal(SIGINT , SIG_DFL);
-            (void)signal(SIGHUP , SIG_DFL);
-            (void)signal(SIGQUIT, SIG_DFL);
-            (void)signal(SIGALRM, SIG_DFL);
+            algo_lib::ResetChildSignal();
             if (parent.pgroup) {
                 // own process group: a kill by the child's pid alone would
                 // orphan its descendants alive; the group is one killable unit
@@ -12888,7 +12877,7 @@ const char *command::ams_sendtest_help = "ams_sendtest: Algo Messaging System te
 "    -parkwrite                       Send from a step that sleeps when refused; only a reader's wake resumes it\n"
 "    -verbose         flag            Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug           flag            Debug level (0..255); alias -d; cumulative\n"
-"    -trace           string  \"\"      Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps\n"
+"    -trace           string  \"\"      Trace expression: log categories to enable, as category[:filter],...\n"
 "    -help                            Print help and exit; alias -h\n"
 "    -version                         Print version and exit\n"
 "    -signature                       Show signatures and exit; alias -sig\n";
@@ -13512,15 +13501,7 @@ int command::ams_sendtest_Start(command::ams_sendtest_proc& parent) {
         parent.pid = fork();
         if (parent.pid == 0) { // child
             algo_lib::DieWithParent();
-            // inherited signal handlers stay live until exec, so a kill aimed at
-            // the child in the fork-to-exec window would run the parent's handler
-            // in the child and be consumed instead of killing; restore the default
-            // dispositions so the signal does what the sender means
-            (void)signal(SIGTERM, SIG_DFL);
-            (void)signal(SIGINT , SIG_DFL);
-            (void)signal(SIGHUP , SIG_DFL);
-            (void)signal(SIGQUIT, SIG_DFL);
-            (void)signal(SIGALRM, SIG_DFL);
+            algo_lib::ResetChildSignal();
             if (parent.pgroup) {
                 // own process group: a kill by the child's pid alone would
                 // orphan its descendants alive; the group is one killable unit
@@ -13839,11 +13820,11 @@ const char *command::amsspy_help = "amsspy: List ams sessions and monitor traffi
 "    -shm                        List shms\n"
 "    -spy        regx    \"\"      Spy on named shared memory segment\n"
 "    -f          enum    decode  (output) Output format (decode|raw|text|json)\n"
-"    -clean                      Unlink orphaned /dev/shm ams segments and exit\n"
+"    -clean                      Unlink orphaned ams segments and exit\n"
 "    -dump                       Dump every segment's header + reader offsets/lag (out-of-band) and exit\n"
 "    -verbose    flag            Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug      flag            Debug level (0..255); alias -d; cumulative\n"
-"    -trace      string  \"\"      Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps\n"
+"    -trace      string  \"\"      Trace expression: log categories to enable, as category[:filter],...\n"
 "    -help                       Print help and exit; alias -h\n"
 "    -version                    Print version and exit\n"
 "    -signature                  Show signatures and exit; alias -sig\n";
@@ -14303,15 +14284,7 @@ int command::amsspy_Start(command::amsspy_proc& parent) {
         parent.pid = fork();
         if (parent.pid == 0) { // child
             algo_lib::DieWithParent();
-            // inherited signal handlers stay live until exec, so a kill aimed at
-            // the child in the fork-to-exec window would run the parent's handler
-            // in the child and be consumed instead of killing; restore the default
-            // dispositions so the signal does what the sender means
-            (void)signal(SIGTERM, SIG_DFL);
-            (void)signal(SIGINT , SIG_DFL);
-            (void)signal(SIGHUP , SIG_DFL);
-            (void)signal(SIGQUIT, SIG_DFL);
-            (void)signal(SIGALRM, SIG_DFL);
+            algo_lib::ResetChildSignal();
             if (parent.pgroup) {
                 // own process group: a kill by the child's pid alone would
                 // orphan its descendants alive; the group is one killable unit
@@ -14543,6 +14516,7 @@ const char *command::apm_help = "apm: Algo Package Manager\n"
 "    -list                        List installed packages\n"
 "    -diff                        Diff package with respect to installed version\n"
 "    -push                        Evaluate package diff and push it to origin\n"
+"    -build                       Produce each package in an empty repo under temp/apm-build and build it\n"
 "    -publish                     Verify, show and push the package to its destination, asking first\n"
 "    -check                       Consistency check\n"
 "    -origin      string  \"\"      Upstream URL of new package\n"
@@ -14564,7 +14538,7 @@ const char *command::apm_help = "apm: Algo Package Manager\n"
 "    -binpath     string  \"bin\"   (internal use)\n"
 "    -verbose     flag            Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug       flag            Debug level (0..255); alias -d; cumulative\n"
-"    -trace       string  \"\"      Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps\n"
+"    -trace       string  \"\"      Trace expression: log categories to enable, as category[:filter],...\n"
 "    -help                        Print help and exit; alias -h\n"
 "    -version                     Print version and exit\n"
 "    -signature                   Show signatures and exit; alias -sig\n";
@@ -14631,6 +14605,9 @@ bool command::apm_ReadFieldMaybe(command::apm& parent, algo::strptr field, algo:
         } break;
         case command_FieldId_push: {
             retval = bool_ReadStrptrMaybe(parent.push, strval);
+        } break;
+        case command_FieldId_build: {
+            retval = bool_ReadStrptrMaybe(parent.build, strval);
         } break;
         case command_FieldId_publish: {
             retval = bool_ReadStrptrMaybe(parent.publish, strval);
@@ -14714,6 +14691,7 @@ void command::apm_Init(command::apm& parent) {
     parent.list = bool(false);
     parent.diff = bool(false);
     parent.push = bool(false);
+    parent.build = bool(false);
     parent.publish = bool(false);
     parent.check = bool(false);
     parent.origin = algo::strptr("");
@@ -14814,6 +14792,12 @@ void command::apm_PrintArgv(command::apm& row, algo::cstring& str) {
         ch_RemoveAll(temp);
         bool_Print(row.push, temp);
         str << " -push:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.build == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.build, temp);
+        str << " -build:";
         strptr_PrintBash(temp,str);
     }
     if (!(row.publish == false)) {
@@ -14983,6 +14967,11 @@ void command::apm_ToArgv(command::apm& row, algo::StringAry& args) {
         bool_Print(row.push, temp);
         ary_Alloc(args) << "-push:" << temp;
     }
+    if (!(row.build == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.build, temp);
+        ary_Alloc(args) << "-build:" << temp;
+    }
     if (!(row.publish == false)) {
         ch_RemoveAll(temp);
         bool_Print(row.publish, temp);
@@ -15138,6 +15127,11 @@ i32 command::apm_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out
             out_dflt="Y";
         } break;
         case command_FieldId_push: { // bool: no argument required but value may be specified as push:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_build: { // bool: no argument required but value may be specified as build:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
@@ -15350,15 +15344,7 @@ int command::apm_Start(command::apm_proc& parent) {
         parent.pid = fork();
         if (parent.pid == 0) { // child
             algo_lib::DieWithParent();
-            // inherited signal handlers stay live until exec, so a kill aimed at
-            // the child in the fork-to-exec window would run the parent's handler
-            // in the child and be consumed instead of killing; restore the default
-            // dispositions so the signal does what the sender means
-            (void)signal(SIGTERM, SIG_DFL);
-            (void)signal(SIGINT , SIG_DFL);
-            (void)signal(SIGHUP , SIG_DFL);
-            (void)signal(SIGQUIT, SIG_DFL);
-            (void)signal(SIGALRM, SIG_DFL);
+            algo_lib::ResetChildSignal();
             if (parent.pgroup) {
                 // own process group: a kill by the child's pid alone would
                 // orphan its descendants alive; the group is one killable unit
@@ -15557,6 +15543,12 @@ void command::apm_ToArgv(command::apm_proc& parent, algo::StringAry& args) {
         bool_Print(parent.cmd.push, *arg);
     }
 
+    if (parent.cmd.build != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-build:";
+        bool_Print(parent.cmd.build, *arg);
+    }
+
     if (parent.cmd.publish != false) {
         cstring *arg = &ary_Alloc(args);
         *arg << "-publish:";
@@ -15707,7 +15699,7 @@ const char *command::aqlite_help = "aqlite: Runs sqlite queries against ssim fil
 "    -ns         regx    \"dmmeta\"  Regx of databases to attach\n"
 "    -verbose    flag              Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug      flag              Debug level (0..255); alias -d; cumulative\n"
-"    -trace      string  \"\"        Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps\n"
+"    -trace      string  \"\"        Trace expression: log categories to enable, as category[:filter],...\n"
 "    -help                         Print help and exit; alias -h\n"
 "    -version                      Print version and exit\n"
 "    -signature                    Show signatures and exit; alias -sig\n";
@@ -16017,15 +16009,7 @@ int command::aqlite_Start(command::aqlite_proc& parent) {
         parent.pid = fork();
         if (parent.pid == 0) { // child
             algo_lib::DieWithParent();
-            // inherited signal handlers stay live until exec, so a kill aimed at
-            // the child in the fork-to-exec window would run the parent's handler
-            // in the child and be consumed instead of killing; restore the default
-            // dispositions so the signal does what the sender means
-            (void)signal(SIGTERM, SIG_DFL);
-            (void)signal(SIGINT , SIG_DFL);
-            (void)signal(SIGHUP , SIG_DFL);
-            (void)signal(SIGQUIT, SIG_DFL);
-            (void)signal(SIGALRM, SIG_DFL);
+            algo_lib::ResetChildSignal();
             if (parent.pgroup) {
                 // own process group: a kill by the child's pid alone would
                 // orphan its descendants alive; the group is one killable unit
@@ -16230,7 +16214,7 @@ const char *command::atf_amc_help = "atf_amc: Unit tests for amc (see amctest ta
 "    -q                          Quiet mode\n"
 "    -verbose    flag            Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug      flag            Debug level (0..255); alias -d; cumulative\n"
-"    -trace      string  \"\"      Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps\n"
+"    -trace      string  \"\"      Trace expression: log categories to enable, as category[:filter],...\n"
 "    -help                       Print help and exit; alias -h\n"
 "    -version                    Print version and exit\n"
 "    -signature                  Show signatures and exit; alias -sig\n";
@@ -16537,15 +16521,7 @@ int command::atf_amc_Start(command::atf_amc_proc& parent) {
         parent.pid = fork();
         if (parent.pid == 0) { // child
             algo_lib::DieWithParent();
-            // inherited signal handlers stay live until exec, so a kill aimed at
-            // the child in the fork-to-exec window would run the parent's handler
-            // in the child and be consumed instead of killing; restore the default
-            // dispositions so the signal does what the sender means
-            (void)signal(SIGTERM, SIG_DFL);
-            (void)signal(SIGINT , SIG_DFL);
-            (void)signal(SIGHUP , SIG_DFL);
-            (void)signal(SIGQUIT, SIG_DFL);
-            (void)signal(SIGALRM, SIG_DFL);
+            algo_lib::ResetChildSignal();
             if (parent.pgroup) {
                 // own process group: a kill by the child's pid alone would
                 // orphan its descendants alive; the group is one killable unit
@@ -16752,7 +16728,7 @@ const char *command::atf_ci_help = "atf_ci: Normalization tests (see citest tabl
 "    -check_clean          Y       Check for modifications after each test\n"
 "    -verbose      flag            Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug        flag            Debug level (0..255); alias -d; cumulative\n"
-"    -trace        string  \"\"      Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps\n"
+"    -trace        string  \"\"      Trace expression: log categories to enable, as category[:filter],...\n"
 "    -help                         Print help and exit; alias -h\n"
 "    -version                      Print version and exit\n"
 "    -signature                    Show signatures and exit; alias -sig\n";
@@ -17110,15 +17086,7 @@ int command::atf_ci_Start(command::atf_ci_proc& parent) {
         parent.pid = fork();
         if (parent.pid == 0) { // child
             algo_lib::DieWithParent();
-            // inherited signal handlers stay live until exec, so a kill aimed at
-            // the child in the fork-to-exec window would run the parent's handler
-            // in the child and be consumed instead of killing; restore the default
-            // dispositions so the signal does what the sender means
-            (void)signal(SIGTERM, SIG_DFL);
-            (void)signal(SIGINT , SIG_DFL);
-            (void)signal(SIGHUP , SIG_DFL);
-            (void)signal(SIGQUIT, SIG_DFL);
-            (void)signal(SIGALRM, SIG_DFL);
+            algo_lib::ResetChildSignal();
             if (parent.pgroup) {
                 // own process group: a kill by the child's pid alone would
                 // orphan its descendants alive; the group is one killable unit
@@ -17353,7 +17321,7 @@ const char *command::atf_cmdline_help = "atf_cmdline: Test tool for command line
 "    -dpkey      string  \"\"      Predefined pkey\n"
 "    -verbose    flag            Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug      flag            Debug level (0..255); alias -d; cumulative\n"
-"    -trace      string  \"\"      Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps\n"
+"    -trace      string  \"\"      Trace expression: log categories to enable, as category[:filter],...\n"
 "    -help                       Print help and exit; alias -h\n"
 "    -version                    Print version and exit\n"
 "    -signature                  Show signatures and exit; alias -sig\n";
@@ -18969,15 +18937,7 @@ int command::atf_cmdline_Start(command::atf_cmdline_proc& parent) {
         parent.pid = fork();
         if (parent.pid == 0) { // child
             algo_lib::DieWithParent();
-            // inherited signal handlers stay live until exec, so a kill aimed at
-            // the child in the fork-to-exec window would run the parent's handler
-            // in the child and be consumed instead of killing; restore the default
-            // dispositions so the signal does what the sender means
-            (void)signal(SIGTERM, SIG_DFL);
-            (void)signal(SIGINT , SIG_DFL);
-            (void)signal(SIGHUP , SIG_DFL);
-            (void)signal(SIGQUIT, SIG_DFL);
-            (void)signal(SIGALRM, SIG_DFL);
+            algo_lib::ResetChildSignal();
             if (parent.pgroup) {
                 // own process group: a kill by the child's pid alone would
                 // orphan its descendants alive; the group is one killable unit
@@ -19282,7 +19242,7 @@ const char *command::atf_comp_help = "atf_comp: Component test runner: spawn pro
 "    OPTION      TYPE    DFLT       COMMENT\n"
 "    -in         string  \"data\"     Input directory or filename, - for stdin\n"
 "    [comptest]  regx    \"%\"        Select comptest (SQL regex)\n"
-"    -cijob      regx    \"%\"        (with -mode:memcheck) run only comptests whose memcheck cijob matches\n"
+"    -cijob      regx    \"%\"        Run only the comptests that the matched cijobs run\n"
 "    -mode       enum    run        Test mode (run|capture|memcheck|valgrind|mdbg|edit|editsource|print|printinput|mdbgall|del)\n"
 "    -capture                       Alias for -mode:capture\n"
 "    -ee                            Alias for -mode:editsource\n"
@@ -19291,7 +19251,7 @@ const char *command::atf_comp_help = "atf_comp: Component test runner: spawn pro
 "    -maxerr     int     3          Exit after this many errors\n"
 "    -verbose    flag               Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug      flag               Debug level (0..255); alias -d; cumulative\n"
-"    -trace      string  \"\"         Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps\n"
+"    -trace      string  \"\"         Trace expression: log categories to enable, as category[:filter],...\n"
 "    -help                          Print help and exit; alias -h\n"
 "    -version                       Print version and exit\n"
 "    -signature                     Show signatures and exit; alias -sig\n";
@@ -19832,15 +19792,7 @@ int command::atf_comp_Start(command::atf_comp_proc& parent) {
         parent.pid = fork();
         if (parent.pid == 0) { // child
             algo_lib::DieWithParent();
-            // inherited signal handlers stay live until exec, so a kill aimed at
-            // the child in the fork-to-exec window would run the parent's handler
-            // in the child and be consumed instead of killing; restore the default
-            // dispositions so the signal does what the sender means
-            (void)signal(SIGTERM, SIG_DFL);
-            (void)signal(SIGINT , SIG_DFL);
-            (void)signal(SIGHUP , SIG_DFL);
-            (void)signal(SIGQUIT, SIG_DFL);
-            (void)signal(SIGALRM, SIG_DFL);
+            algo_lib::ResetChildSignal();
             if (parent.pgroup) {
                 // own process group: a kill by the child's pid alone would
                 // orphan its descendants alive; the group is one killable unit
@@ -20085,7 +20037,7 @@ const char *command::atf_cov_help = "atf_cov: Line coverage\n"
 "    -incremental                                            Keep *.gcda files from previous run\n"
 "    -verbose      flag                                      Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug        flag                                      Debug level (0..255); alias -d; cumulative\n"
-"    -trace        string  \"\"                                Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps\n"
+"    -trace        string  \"\"                                Trace expression: log categories to enable, as category[:filter],...\n"
 "    -help                                                   Print help and exit; alias -h\n"
 "    -version                                                Print version and exit\n"
 "    -signature                                              Show signatures and exit; alias -sig\n";
@@ -20564,15 +20516,7 @@ int command::atf_cov_Start(command::atf_cov_proc& parent) {
         parent.pid = fork();
         if (parent.pid == 0) { // child
             algo_lib::DieWithParent();
-            // inherited signal handlers stay live until exec, so a kill aimed at
-            // the child in the fork-to-exec window would run the parent's handler
-            // in the child and be consumed instead of killing; restore the default
-            // dispositions so the signal does what the sender means
-            (void)signal(SIGTERM, SIG_DFL);
-            (void)signal(SIGINT , SIG_DFL);
-            (void)signal(SIGHUP , SIG_DFL);
-            (void)signal(SIGQUIT, SIG_DFL);
-            (void)signal(SIGALRM, SIG_DFL);
+            algo_lib::ResetChildSignal();
             if (parent.pgroup) {
                 // own process group: a kill by the child's pid alone would
                 // orphan its descendants alive; the group is one killable unit
@@ -20841,7 +20785,7 @@ const char *command::atf_fuzz_help = "atf_fuzz: Generator of bad inputs for targ
 "    -testprob   double  1                      Run each case with this probability\n"
 "    -verbose    flag                           Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug      flag                           Debug level (0..255); alias -d; cumulative\n"
-"    -trace      string  \"\"                     Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps\n"
+"    -trace      string  \"\"                     Trace expression: log categories to enable, as category[:filter],...\n"
 "    -help                                      Print help and exit; alias -h\n"
 "    -version                                   Print version and exit\n"
 "    -signature                                 Show signatures and exit; alias -sig\n";
@@ -21214,15 +21158,7 @@ int command::atf_fuzz_Start(command::atf_fuzz_proc& parent) {
         parent.pid = fork();
         if (parent.pid == 0) { // child
             algo_lib::DieWithParent();
-            // inherited signal handlers stay live until exec, so a kill aimed at
-            // the child in the fork-to-exec window would run the parent's handler
-            // in the child and be consumed instead of killing; restore the default
-            // dispositions so the signal does what the sender means
-            (void)signal(SIGTERM, SIG_DFL);
-            (void)signal(SIGINT , SIG_DFL);
-            (void)signal(SIGHUP , SIG_DFL);
-            (void)signal(SIGQUIT, SIG_DFL);
-            (void)signal(SIGALRM, SIG_DFL);
+            algo_lib::ResetChildSignal();
             if (parent.pgroup) {
                 // own process group: a kill by the child's pid alone would
                 // orphan its descendants alive; the group is one killable unit
@@ -21450,7 +21386,7 @@ const char *command::atf_nrun_help = "atf_nrun: Run N subprocesses in parallel\n
 "    [ncmd]      int     6\n"
 "    -verbose    flag            Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug      flag            Debug level (0..255); alias -d; cumulative\n"
-"    -trace      string  \"\"      Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps\n"
+"    -trace      string  \"\"      Trace expression: log categories to enable, as category[:filter],...\n"
 "    -help                       Print help and exit; alias -h\n"
 "    -version                    Print version and exit\n"
 "    -signature                  Show signatures and exit; alias -sig\n";
@@ -21713,15 +21649,7 @@ int command::atf_nrun_Start(command::atf_nrun_proc& parent) {
         parent.pid = fork();
         if (parent.pid == 0) { // child
             algo_lib::DieWithParent();
-            // inherited signal handlers stay live until exec, so a kill aimed at
-            // the child in the fork-to-exec window would run the parent's handler
-            // in the child and be consumed instead of killing; restore the default
-            // dispositions so the signal does what the sender means
-            (void)signal(SIGTERM, SIG_DFL);
-            (void)signal(SIGINT , SIG_DFL);
-            (void)signal(SIGHUP , SIG_DFL);
-            (void)signal(SIGQUIT, SIG_DFL);
-            (void)signal(SIGALRM, SIG_DFL);
+            algo_lib::ResetChildSignal();
             if (parent.pgroup) {
                 // own process group: a kill by the child's pid alone would
                 // orphan its descendants alive; the group is one killable unit
@@ -21926,7 +21854,7 @@ const char *command::atf_unit_help = "atf_unit: Unit tests (see unittest table)\
 "    -check_untracked          Y       Check for untracked file before allowing test to run\n"
 "    -verbose          flag            Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug            flag            Debug level (0..255); alias -d; cumulative\n"
-"    -trace            string  \"\"      Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps\n"
+"    -trace            string  \"\"      Trace expression: log categories to enable, as category[:filter],...\n"
 "    -help                             Print help and exit; alias -h\n"
 "    -version                          Print version and exit\n"
 "    -signature                        Show signatures and exit; alias -sig\n";
@@ -22347,15 +22275,7 @@ int command::atf_unit_Start(command::atf_unit_proc& parent) {
         parent.pid = fork();
         if (parent.pid == 0) { // child
             algo_lib::DieWithParent();
-            // inherited signal handlers stay live until exec, so a kill aimed at
-            // the child in the fork-to-exec window would run the parent's handler
-            // in the child and be consumed instead of killing; restore the default
-            // dispositions so the signal does what the sender means
-            (void)signal(SIGTERM, SIG_DFL);
-            (void)signal(SIGINT , SIG_DFL);
-            (void)signal(SIGHUP , SIG_DFL);
-            (void)signal(SIGQUIT, SIG_DFL);
-            (void)signal(SIGALRM, SIG_DFL);
+            algo_lib::ResetChildSignal();
             if (parent.pgroup) {
                 // own process group: a kill by the child's pid alone would
                 // orphan its descendants alive; the group is one killable unit
@@ -22625,7 +22545,7 @@ const char *command::bash2html_help = "bash2html: Convert bash output and colors
 "    -test                       Produce Test Output\n"
 "    -verbose    flag            Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug      flag            Debug level (0..255); alias -d; cumulative\n"
-"    -trace      string  \"\"      Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps\n"
+"    -trace      string  \"\"      Trace expression: log categories to enable, as category[:filter],...\n"
 "    -help                       Print help and exit; alias -h\n"
 "    -version                    Print version and exit\n"
 "    -signature                  Show signatures and exit; alias -sig\n";
@@ -22852,15 +22772,7 @@ int command::bash2html_Start(command::bash2html_proc& parent) {
         parent.pid = fork();
         if (parent.pid == 0) { // child
             algo_lib::DieWithParent();
-            // inherited signal handlers stay live until exec, so a kill aimed at
-            // the child in the fork-to-exec window would run the parent's handler
-            // in the child and be consumed instead of killing; restore the default
-            // dispositions so the signal does what the sender means
-            (void)signal(SIGTERM, SIG_DFL);
-            (void)signal(SIGINT , SIG_DFL);
-            (void)signal(SIGHUP , SIG_DFL);
-            (void)signal(SIGQUIT, SIG_DFL);
-            (void)signal(SIGALRM, SIG_DFL);
+            algo_lib::ResetChildSignal();
             if (parent.pgroup) {
                 // own process group: a kill by the child's pid alone would
                 // orphan its descendants alive; the group is one killable unit
@@ -23066,15 +22978,7 @@ int command::bash_Start(command::bash_proc& parent) {
         parent.pid = fork();
         if (parent.pid == 0) { // child
             algo_lib::DieWithParent();
-            // inherited signal handlers stay live until exec, so a kill aimed at
-            // the child in the fork-to-exec window would run the parent's handler
-            // in the child and be consumed instead of killing; restore the default
-            // dispositions so the signal does what the sender means
-            (void)signal(SIGTERM, SIG_DFL);
-            (void)signal(SIGINT , SIG_DFL);
-            (void)signal(SIGHUP , SIG_DFL);
-            (void)signal(SIGQUIT, SIG_DFL);
-            (void)signal(SIGALRM, SIG_DFL);
+            algo_lib::ResetChildSignal();
             if (parent.pgroup) {
                 // own process group: a kill by the child's pid alone would
                 // orphan its descendants alive; the group is one killable unit
@@ -23245,40 +23149,43 @@ void command::bash_proc_Uninit(command::bash_proc& parent) {
 }
 const char *command::credd_help = "credd: Hold a session's credentials unlocked in memory and hand them to the tools that authenticate\n"
 "Usage: credd [options]\n"
-"    OPTION      TYPE    DFLT  COMMENT\n"
-"    -dir        string  \"\"    Store directory; empty = ~/.ssh/credd\n"
-"    -start                    (action) Start the daemon unless one answers: ask the master password, fork, load the ssh agent\n"
-"    -nostore                  hold no store on disk; the daemon keeps what -seed gives it\n"
-"    -seed       string  \"\"    (action) give the running daemon a credential of this name, read per -src\n"
-"    -stop                     (action) Stop the daemon: empty and kill its ssh agent, forget the key\n"
-"    -status                   (action) Report whether a daemon answers and what it holds\n"
-"    -list                     (action) List every credential with its metadata; needs no daemon\n"
-"    -show       string  \"\"    (action) Print the named credential's secret, fetched from the daemon\n"
-"    -check                    (action) List credentials that expire within -window days\n"
-"    -window     int     14    (with -check) Days ahead\n"
-"    -add        string  \"\"    (action) Add a credential: a name takes its secret per -src, % offers each token and key beside the store, a path offers that file\n"
-"    -linkto     string  \"\"    (with -add:<name>) Make the new name a link to this credential, so a tool that asks for the new name gets that one's secret\n"
-"    -kind       string  \"\"    (with -add:<name>) Kind of credential, a row of creddb.kind: a token provider, sshkey, or link\n"
-"    -server     string  \"\"    (with -add:<name>) Server URL of a token\n"
-"    -account    string  \"\"    (with -add:<name>) Account a token belongs to\n"
-"    -perm       string  \"\"    (with -add:<name>) Permissions a token was issued with, comma-separated\n"
-"    -expires    string  \"\"    (with -add:<name>, -keygen, -renew) Expiry as YYYY-MM-DD; empty = never\n"
-"    -comment    string  \"\"    (with -add:<name>, -keygen) Comment on the record\n"
-"    -src        string  \"-\"   (with -add:<name>, -renew) Where the secret is read: - the terminal, @file a file\n"
-"    -keygen     string  \"\"    (action) Make an ed25519 key under this name and add it sealed\n"
-"    -pubfile    string  \"\"    (with -keygen, -show) Write the public key to this file, for installing where the key logs in; -show then shows no secret\n"
-"    -renew      string  \"\"    (action) Print where the named token is reissued, then take its new value per -src\n"
-"    -remove     string  \"\"    (action) Remove the named credential\n"
-"    -passwd                   (action) Change the master password, resealing every secret\n"
-"    -dump                     (action) Print the store, secrets still sealed\n"
-"    -format     enum    auto  (with -list, -dump) Output format; auto is text for -list, ssim for -dump (auto|ssim|text|json)\n"
-"    -daemon                   Serve the socket in the foreground; -start runs this in a forked child\n"
-"    -verbose    flag          Verbosity level (0..255); alias -v; cumulative\n"
-"    -debug      flag          Debug level (0..255); alias -d; cumulative\n"
-"    -trace      string  \"\"    Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps\n"
-"    -help                     Print help and exit; alias -h\n"
-"    -version                  Print version and exit\n"
-"    -signature                Show signatures and exit; alias -sig\n";
+"    OPTION      TYPE    DFLT    COMMENT\n"
+"    -dir        string  \"\"      Store directory; empty = ~/.ssh/credd\n"
+"    -start                      (action) Start the daemon and its ssh agent, unless a daemon already answers\n"
+"    -nostore                    hold no store on disk; the daemon keeps what -seed gives it\n"
+"    -seed       string  \"\"      (action) give the running daemon a credential of this name, read per -src\n"
+"    -stop                       (action) Stop the daemon: empty and kill its ssh agent, forget the key\n"
+"    -status                     (action) Report whether a daemon answers and what it holds\n"
+"    -list                       (action) List every credential with its metadata; needs no daemon\n"
+"    -show       string  \"\"      (action) Print the named credential's secret, fetched from the daemon\n"
+"    -check                      (action) List credentials that expire within -window days\n"
+"    -window     int     14      (with -check) Days ahead\n"
+"    -add        string  \"\"      (action) Add the named credential, or offer the files that % or a path names\n"
+"    -linkto     string  \"\"      (with -add:<name>) Make the new name a link to this credential\n"
+"    -kind       string  \"\"      (with -add:<name>) Kind of credential, a row of creddb.kind\n"
+"    -server     string  \"\"      (with -add:<name>, -mint) Server URL of a token\n"
+"    -account    string  \"\"      (with -add:<name>, -mint) Token's account; for -mint, the group or project path\n"
+"    -perm       string  \"\"      (with -add:<name>) Permissions a token was issued with, comma-separated\n"
+"    -expires    string  \"\"      (with -add:<name>, -mint, -keygen, -renew) Expiry as YYYY-MM-DD; empty = never\n"
+"    -comment    string  \"\"      (with -add:<name>, -mint, -keygen) Comment on the record\n"
+"    -src        string  \"-\"     (with -add:<name>, -mint, -renew) Secret source: - = terminal, @file = a file\n"
+"    -mint       string  \"\"      (action) Mint the credential that dev.cred declares, or read it per -src\n"
+"    -minter     string  \"\"      (with -mint) Token to mint with; empty = the store's gitlab token on -server\n"
+"    -in         string  \"data\"  (with -mint, -renew) The tree's ssimfile directory, which holds dev.cred\n"
+"    -keygen     string  \"\"      (action) Make an ed25519 key under this name and add it sealed\n"
+"    -pubfile    string  \"\"      (with -keygen, -show) Write the public key to this file\n"
+"    -renew      string  \"\"      (action) Renew the named token over the API, or take a new value per -src\n"
+"    -remove     string  \"\"      (action) Remove the named credential\n"
+"    -passwd                     (action) Change the master password, resealing every secret\n"
+"    -dump                       (action) Print the store, secrets still sealed\n"
+"    -format     enum    auto    (with -list, -dump) Output format; auto is text for -list, ssim for -dump (auto|ssim|text|json)\n"
+"    -daemon                     Serve the socket in the foreground; -start runs this in a forked child\n"
+"    -verbose    flag            Verbosity level (0..255); alias -v; cumulative\n"
+"    -debug      flag            Debug level (0..255); alias -d; cumulative\n"
+"    -trace      string  \"\"      Trace expression: log categories to enable, as category[:filter],...\n"
+"    -help                       Print help and exit; alias -h\n"
+"    -version                    Print version and exit\n"
+"    -signature                  Show signatures and exit; alias -sig\n";
 
 // --- command.credd.format.ToCstr
 // Convert numeric value of field to one of predefined string constants.
@@ -23415,6 +23322,15 @@ bool command::credd_ReadFieldMaybe(command::credd& parent, algo::strptr field, a
         case command_FieldId_src: {
             retval = algo::cstring_ReadStrptrMaybe(parent.src, strval);
         } break;
+        case command_FieldId_mint: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.mint, strval);
+        } break;
+        case command_FieldId_minter: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.minter, strval);
+        } break;
+        case command_FieldId_in: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.in, strval);
+        } break;
         case command_FieldId_keygen: {
             retval = algo::cstring_ReadStrptrMaybe(parent.keygen, strval);
         } break;
@@ -23474,6 +23390,9 @@ void command::credd_Init(command::credd& parent) {
     parent.expires = algo::strptr("");
     parent.comment = algo::strptr("");
     parent.src = algo::strptr("-");
+    parent.mint = algo::strptr("");
+    parent.minter = algo::strptr("");
+    parent.in = algo::strptr("data");
     parent.keygen = algo::strptr("");
     parent.pubfile = algo::strptr("");
     parent.renew = algo::strptr("");
@@ -23625,6 +23544,24 @@ void command::credd_PrintArgv(command::credd& row, algo::cstring& str) {
         ch_RemoveAll(temp);
         cstring_Print(row.src, temp);
         str << " -src:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.mint == "")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.mint, temp);
+        str << " -mint:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.minter == "")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.minter, temp);
+        str << " -minter:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.in == "data")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.in, temp);
+        str << " -in:";
         strptr_PrintBash(temp,str);
     }
     if (!(row.keygen == "")) {
@@ -23780,6 +23717,21 @@ void command::credd_ToArgv(command::credd& row, algo::StringAry& args) {
         cstring_Print(row.src, temp);
         ary_Alloc(args) << "-src:" << temp;
     }
+    if (!(row.mint == "")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.mint, temp);
+        ary_Alloc(args) << "-mint:" << temp;
+    }
+    if (!(row.minter == "")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.minter, temp);
+        ary_Alloc(args) << "-minter:" << temp;
+    }
+    if (!(row.in == "data")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.in, temp);
+        ary_Alloc(args) << "-in:" << temp;
+    }
     if (!(row.keygen == "")) {
         ch_RemoveAll(temp);
         cstring_Print(row.keygen, temp);
@@ -23905,6 +23857,15 @@ i32 command::credd_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* o
             *out_anon = false;
         } break;
         case command_FieldId_src: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_mint: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_minter: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_in: { //
             *out_anon = false;
         } break;
         case command_FieldId_keygen: { //
@@ -24047,15 +24008,7 @@ int command::credd_Start(command::credd_proc& parent) {
         parent.pid = fork();
         if (parent.pid == 0) { // child
             algo_lib::DieWithParent();
-            // inherited signal handlers stay live until exec, so a kill aimed at
-            // the child in the fork-to-exec window would run the parent's handler
-            // in the child and be consumed instead of killing; restore the default
-            // dispositions so the signal does what the sender means
-            (void)signal(SIGTERM, SIG_DFL);
-            (void)signal(SIGINT , SIG_DFL);
-            (void)signal(SIGHUP , SIG_DFL);
-            (void)signal(SIGQUIT, SIG_DFL);
-            (void)signal(SIGALRM, SIG_DFL);
+            algo_lib::ResetChildSignal();
             if (parent.pgroup) {
                 // own process group: a kill by the child's pid alone would
                 // orphan its descendants alive; the group is one killable unit
@@ -24314,6 +24267,24 @@ void command::credd_ToArgv(command::credd_proc& parent, algo::StringAry& args) {
         cstring_Print(parent.cmd.src, *arg);
     }
 
+    if (parent.cmd.mint != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-mint:";
+        cstring_Print(parent.cmd.mint, *arg);
+    }
+
+    if (parent.cmd.minter != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-minter:";
+        cstring_Print(parent.cmd.minter, *arg);
+    }
+
+    if (parent.cmd.in != "data") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-in:";
+        cstring_Print(parent.cmd.in, *arg);
+    }
+
     if (parent.cmd.keygen != "") {
         cstring *arg = &ary_Alloc(args);
         *arg << "-keygen:";
@@ -24401,6 +24372,7 @@ const char *command::doc_help = "doc: Render a markdown document to the terminal
 "    -vis                          Show the access paths of the ctypes on the page (amc_vis)\n"
 "    -code                         Show the C++ amc generated for the ctypes on the page, and their functions\n"
 "    -data                         Show the rows of the table the page is about (acr <ssimfile>)\n"
+"    -dir                          List the documents beside this one in the pane; a terminal folds the list\n"
 "    -list                         List matching documents instead of rendering one\n"
 "    -width        int     0       Measure in columns; 0 takes it from the terminal\n"
 "    -color                Y       Style the output when stdout is a terminal\n"
@@ -24418,7 +24390,7 @@ const char *command::doc_help = "doc: Render a markdown document to the terminal
 "    -bind         string  \"\"      Serve HTTP at this ip:port instead of showing one page\n"
 "    -verbose      flag            Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug        flag            Debug level (0..255); alias -d; cumulative\n"
-"    -trace        string  \"\"      Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps\n"
+"    -trace        string  \"\"      Trace expression: log categories to enable, as category[:filter],...\n"
 "    -help                         Print help and exit; alias -h\n"
 "    -version                      Print version and exit\n"
 "    -signature                    Show signatures and exit; alias -sig\n";
@@ -24455,6 +24427,9 @@ bool command::doc_ReadFieldMaybe(command::doc& parent, algo::strptr field, algo:
         } break;
         case command_FieldId_data: {
             retval = bool_ReadStrptrMaybe(parent.data, strval);
+        } break;
+        case command_FieldId_dir: {
+            retval = bool_ReadStrptrMaybe(parent.dir, strval);
         } break;
         case command_FieldId_list: {
             retval = bool_ReadStrptrMaybe(parent.list, strval);
@@ -24526,6 +24501,7 @@ void command::doc_Init(command::doc& parent) {
     parent.vis = bool(false);
     parent.code = bool(false);
     parent.data = bool(false);
+    parent.dir = bool(false);
     parent.list = bool(false);
     parent.width = u32(0);
     parent.color = bool(true);
@@ -24622,6 +24598,12 @@ void command::doc_PrintArgv(command::doc& row, algo::cstring& str) {
         ch_RemoveAll(temp);
         bool_Print(row.data, temp);
         str << " -data:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.dir == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.dir, temp);
+        str << " -dir:";
         strptr_PrintBash(temp,str);
     }
     if (!(row.list == false)) {
@@ -24767,6 +24749,11 @@ void command::doc_ToArgv(command::doc& row, algo::StringAry& args) {
         bool_Print(row.data, temp);
         ary_Alloc(args) << "-data:" << temp;
     }
+    if (!(row.dir == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.dir, temp);
+        ary_Alloc(args) << "-dir:" << temp;
+    }
     if (!(row.list == false)) {
         ch_RemoveAll(temp);
         bool_Print(row.list, temp);
@@ -24904,6 +24891,11 @@ i32 command::doc_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out
             out_dflt="Y";
         } break;
         case command_FieldId_data: { // bool: no argument required but value may be specified as data:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_dir: { // bool: no argument required but value may be specified as dir:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
@@ -25092,15 +25084,7 @@ int command::doc_Start(command::doc_proc& parent) {
         parent.pid = fork();
         if (parent.pid == 0) { // child
             algo_lib::DieWithParent();
-            // inherited signal handlers stay live until exec, so a kill aimed at
-            // the child in the fork-to-exec window would run the parent's handler
-            // in the child and be consumed instead of killing; restore the default
-            // dispositions so the signal does what the sender means
-            (void)signal(SIGTERM, SIG_DFL);
-            (void)signal(SIGINT , SIG_DFL);
-            (void)signal(SIGHUP , SIG_DFL);
-            (void)signal(SIGQUIT, SIG_DFL);
-            (void)signal(SIGALRM, SIG_DFL);
+            algo_lib::ResetChildSignal();
             if (parent.pgroup) {
                 // own process group: a kill by the child's pid alone would
                 // orphan its descendants alive; the group is one killable unit
@@ -25299,6 +25283,12 @@ void command::doc_ToArgv(command::doc_proc& parent, algo::StringAry& args) {
         bool_Print(parent.cmd.data, *arg);
     }
 
+    if (parent.cmd.dir != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-dir:";
+        bool_Print(parent.cmd.dir, *arg);
+    }
+
     if (parent.cmd.list != false) {
         cstring *arg = &ary_Alloc(args);
         *arg << "-list:";
@@ -25435,7 +25425,7 @@ const char *command::gcache_help = "gcache: Compiler cache\n"
 "    -force                             Force recompile and update cache\n"
 "    -verbose    flag                   Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug      flag                   Debug level (0..255); alias -d; cumulative\n"
-"    -trace      string  \"\"             Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps\n"
+"    -trace      string  \"\"             Trace expression: log categories to enable, as category[:filter],...\n"
 "    -help                              Print help and exit; alias -h\n"
 "    -version                           Print version and exit\n"
 "    -signature                         Show signatures and exit; alias -sig\n";
@@ -26249,15 +26239,7 @@ int command::gcache_Start(command::gcache_proc& parent) {
         parent.pid = fork();
         if (parent.pid == 0) { // child
             algo_lib::DieWithParent();
-            // inherited signal handlers stay live until exec, so a kill aimed at
-            // the child in the fork-to-exec window would run the parent's handler
-            // in the child and be consumed instead of killing; restore the default
-            // dispositions so the signal does what the sender means
-            (void)signal(SIGTERM, SIG_DFL);
-            (void)signal(SIGINT , SIG_DFL);
-            (void)signal(SIGHUP , SIG_DFL);
-            (void)signal(SIGQUIT, SIG_DFL);
-            (void)signal(SIGALRM, SIG_DFL);
+            algo_lib::ResetChildSignal();
             if (parent.pgroup) {
                 // own process group: a kill by the child's pid alone would
                 // orphan its descendants alive; the group is one killable unit
@@ -26555,15 +26537,7 @@ int command::name_Start(command::generic_proc& parent) {
         parent.pid = fork();
         if (parent.pid == 0) { // child
             algo_lib::DieWithParent();
-            // inherited signal handlers stay live until exec, so a kill aimed at
-            // the child in the fork-to-exec window would run the parent's handler
-            // in the child and be consumed instead of killing; restore the default
-            // dispositions so the signal does what the sender means
-            (void)signal(SIGTERM, SIG_DFL);
-            (void)signal(SIGINT , SIG_DFL);
-            (void)signal(SIGHUP , SIG_DFL);
-            (void)signal(SIGQUIT, SIG_DFL);
-            (void)signal(SIGALRM, SIG_DFL);
+            algo_lib::ResetChildSignal();
             if (parent.pgroup) {
                 // own process group: a kill by the child's pid alone would
                 // orphan its descendants alive; the group is one killable unit
@@ -26738,7 +26712,7 @@ const char *command::jkv_help = "jkv: JSON <-> key-value mapping tool\n"
 "    -pretty     int     2       Pretty-printer (0-compact; 1=algo style; 2=jq style)\n"
 "    -verbose    flag            Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug      flag            Debug level (0..255); alias -d; cumulative\n"
-"    -trace      string  \"\"      Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps\n"
+"    -trace      string  \"\"      Trace expression: log categories to enable, as category[:filter],...\n"
 "    -help                       Print help and exit; alias -h\n"
 "    -version                    Print version and exit\n"
 "    -signature                  Show signatures and exit; alias -sig\n";
@@ -27407,15 +27381,7 @@ int command::jkv_Start(command::jkv_proc& parent) {
         parent.pid = fork();
         if (parent.pid == 0) { // child
             algo_lib::DieWithParent();
-            // inherited signal handlers stay live until exec, so a kill aimed at
-            // the child in the fork-to-exec window would run the parent's handler
-            // in the child and be consumed instead of killing; restore the default
-            // dispositions so the signal does what the sender means
-            (void)signal(SIGTERM, SIG_DFL);
-            (void)signal(SIGINT , SIG_DFL);
-            (void)signal(SIGHUP , SIG_DFL);
-            (void)signal(SIGQUIT, SIG_DFL);
-            (void)signal(SIGALRM, SIG_DFL);
+            algo_lib::ResetChildSignal();
             if (parent.pgroup) {
                 // own process group: a kill by the child's pid alone would
                 // orphan its descendants alive; the group is one killable unit
@@ -27634,12 +27600,12 @@ const char *command::llmtool_help = "llmtool: Claude Code cost and status report
 "    -session     string  \"\"    Session id to report on; default is every session in this directory\n"
 "    -transcript  string  \"\"    Transcript file to report on, instead of a session id\n"
 "    -all                       Report on every directory claude code has recorded, not just this one\n"
-"    -rate        string  \"\"    Price list to use; default is the .claude/costrate.json of the tree this binary was built from\n"
+"    -rate        string  \"\"    Price list file; empty = .claude/costrate.json above the binary\n"
 "    -analyze                   Report cost per worktree and per model, as ssim tuples\n"
 "    -status                    Print the claude code status line; its json arrives on stdin\n"
 "    -verbose     flag          Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug       flag          Debug level (0..255); alias -d; cumulative\n"
-"    -trace       string  \"\"    Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps\n"
+"    -trace       string  \"\"    Trace expression: log categories to enable, as category[:filter],...\n"
 "    -help                      Print help and exit; alias -h\n"
 "    -version                   Print version and exit\n"
 "    -signature                 Show signatures and exit; alias -sig\n";
@@ -27938,15 +27904,7 @@ int command::llmtool_Start(command::llmtool_proc& parent) {
         parent.pid = fork();
         if (parent.pid == 0) { // child
             algo_lib::DieWithParent();
-            // inherited signal handlers stay live until exec, so a kill aimed at
-            // the child in the fork-to-exec window would run the parent's handler
-            // in the child and be consumed instead of killing; restore the default
-            // dispositions so the signal does what the sender means
-            (void)signal(SIGTERM, SIG_DFL);
-            (void)signal(SIGINT , SIG_DFL);
-            (void)signal(SIGHUP , SIG_DFL);
-            (void)signal(SIGQUIT, SIG_DFL);
-            (void)signal(SIGALRM, SIG_DFL);
+            algo_lib::ResetChildSignal();
             if (parent.pgroup) {
                 // own process group: a kill by the child's pid alone would
                 // orphan its descendants alive; the group is one killable unit
@@ -28176,7 +28134,7 @@ const char *command::mdbg_help = "mdbg: Gdb front-end\n"
 "    -nonstop                        Debug a process tree: keep every spawned process under gdb and let them run\n"
 "    -verbose       flag             Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug         flag             Debug level (0..255); alias -d; cumulative\n"
-"    -trace         string  \"\"       Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps\n"
+"    -trace         string  \"\"       Trace expression: log categories to enable, as category[:filter],...\n"
 "    -help                           Print help and exit; alias -h\n"
 "    -version                        Print version and exit\n"
 "    -signature                      Show signatures and exit; alias -sig\n";
@@ -29230,15 +29188,7 @@ int command::mdbg_Start(command::mdbg_proc& parent) {
         parent.pid = fork();
         if (parent.pid == 0) { // child
             algo_lib::DieWithParent();
-            // inherited signal handlers stay live until exec, so a kill aimed at
-            // the child in the fork-to-exec window would run the parent's handler
-            // in the child and be consumed instead of killing; restore the default
-            // dispositions so the signal does what the sender means
-            (void)signal(SIGTERM, SIG_DFL);
-            (void)signal(SIGINT , SIG_DFL);
-            (void)signal(SIGHUP , SIG_DFL);
-            (void)signal(SIGQUIT, SIG_DFL);
-            (void)signal(SIGALRM, SIG_DFL);
+            algo_lib::ResetChildSignal();
             if (parent.pgroup) {
                 // own process group: a kill by the child's pid alone would
                 // orphan its descendants alive; the group is one killable unit
@@ -29523,7 +29473,7 @@ const char *command::mysql2ssim_help = "mysql2ssim: mysql -> ssim conversion too
 "    -baddbok                        Don't claim if bad database\n"
 "    -verbose        flag            Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug          flag            Debug level (0..255); alias -d; cumulative\n"
-"    -trace          string  \"\"      Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps\n"
+"    -trace          string  \"\"      Trace expression: log categories to enable, as category[:filter],...\n"
 "    -help                           Print help and exit; alias -h\n"
 "    -version                        Print version and exit\n"
 "    -signature                      Show signatures and exit; alias -sig\n";
@@ -29884,15 +29834,7 @@ int command::mysql2ssim_Start(command::mysql2ssim_proc& parent) {
         parent.pid = fork();
         if (parent.pid == 0) { // child
             algo_lib::DieWithParent();
-            // inherited signal handlers stay live until exec, so a kill aimed at
-            // the child in the fork-to-exec window would run the parent's handler
-            // in the child and be consumed instead of killing; restore the default
-            // dispositions so the signal does what the sender means
-            (void)signal(SIGTERM, SIG_DFL);
-            (void)signal(SIGINT , SIG_DFL);
-            (void)signal(SIGHUP , SIG_DFL);
-            (void)signal(SIGQUIT, SIG_DFL);
-            (void)signal(SIGALRM, SIG_DFL);
+            algo_lib::ResetChildSignal();
             if (parent.pgroup) {
                 // own process group: a kill by the child's pid alone would
                 // orphan its descendants alive; the group is one killable unit
@@ -30123,7 +30065,7 @@ const char *command::orgfile_help = "orgfile: Organize and deduplicate files by 
 "    -hash       string  \"sha1\"  Hash command to use for deduplication\n"
 "    -verbose    flag            Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug      flag            Debug level (0..255); alias -d; cumulative\n"
-"    -trace      string  \"\"      Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps\n"
+"    -trace      string  \"\"      Trace expression: log categories to enable, as category[:filter],...\n"
 "    -help                       Print help and exit; alias -h\n"
 "    -version                    Print version and exit\n"
 "    -signature                  Show signatures and exit; alias -sig\n";
@@ -30446,15 +30388,7 @@ int command::orgfile_Start(command::orgfile_proc& parent) {
         parent.pid = fork();
         if (parent.pid == 0) { // child
             algo_lib::DieWithParent();
-            // inherited signal handlers stay live until exec, so a kill aimed at
-            // the child in the fork-to-exec window would run the parent's handler
-            // in the child and be consumed instead of killing; restore the default
-            // dispositions so the signal does what the sender means
-            (void)signal(SIGTERM, SIG_DFL);
-            (void)signal(SIGINT , SIG_DFL);
-            (void)signal(SIGHUP , SIG_DFL);
-            (void)signal(SIGQUIT, SIG_DFL);
-            (void)signal(SIGALRM, SIG_DFL);
+            algo_lib::ResetChildSignal();
             if (parent.pgroup) {
                 // own process group: a kill by the child's pid alone would
                 // orphan its descendants alive; the group is one killable unit
@@ -30672,7 +30606,7 @@ const char *command::samp_make_help = "samp_make: sample program for Makefile ma
 "    -write                                                 P(with parse_make) write ssimfiles, otherwise print them\n"
 "    -verbose     flag                                      Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug       flag                                      Debug level (0..255); alias -d; cumulative\n"
-"    -trace       string  \"\"                                Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps\n"
+"    -trace       string  \"\"                                Trace expression: log categories to enable, as category[:filter],...\n"
 "    -help                                                  Print help and exit; alias -h\n"
 "    -version                                               Print version and exit\n"
 "    -signature                                             Show signatures and exit; alias -sig\n";
@@ -30977,15 +30911,7 @@ int command::samp_make_Start(command::samp_make_proc& parent) {
         parent.pid = fork();
         if (parent.pid == 0) { // child
             algo_lib::DieWithParent();
-            // inherited signal handlers stay live until exec, so a kill aimed at
-            // the child in the fork-to-exec window would run the parent's handler
-            // in the child and be consumed instead of killing; restore the default
-            // dispositions so the signal does what the sender means
-            (void)signal(SIGTERM, SIG_DFL);
-            (void)signal(SIGINT , SIG_DFL);
-            (void)signal(SIGHUP , SIG_DFL);
-            (void)signal(SIGQUIT, SIG_DFL);
-            (void)signal(SIGALRM, SIG_DFL);
+            algo_lib::ResetChildSignal();
             if (parent.pgroup) {
                 // own process group: a kill by the child's pid alone would
                 // orphan its descendants alive; the group is one killable unit
@@ -31201,7 +31127,7 @@ const char *command::samp_regx_help = "samp_regx: Test tool for regular expressi
 "    [string]    string  \"\"      String to match\n"
 "    -verbose    flag            Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug      flag            Debug level (0..255); alias -d; cumulative\n"
-"    -trace      string  \"\"      Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps\n"
+"    -trace      string  \"\"      Trace expression: log categories to enable, as category[:filter],...\n"
 "    -help                       Print help and exit; alias -h\n"
 "    -version                    Print version and exit\n"
 "    -signature                  Show signatures and exit; alias -sig\n";
@@ -31579,15 +31505,7 @@ int command::samp_regx_Start(command::samp_regx_proc& parent) {
         parent.pid = fork();
         if (parent.pid == 0) { // child
             algo_lib::DieWithParent();
-            // inherited signal handlers stay live until exec, so a kill aimed at
-            // the child in the fork-to-exec window would run the parent's handler
-            // in the child and be consumed instead of killing; restore the default
-            // dispositions so the signal does what the sender means
-            (void)signal(SIGTERM, SIG_DFL);
-            (void)signal(SIGINT , SIG_DFL);
-            (void)signal(SIGHUP , SIG_DFL);
-            (void)signal(SIGQUIT, SIG_DFL);
-            (void)signal(SIGALRM, SIG_DFL);
+            algo_lib::ResetChildSignal();
             if (parent.pgroup) {
                 // own process group: a kill by the child's pid alone would
                 // orphan its descendants alive; the group is one killable unit
@@ -31843,7 +31761,7 @@ const char *command::src_func_help = "src_func: Access / edit functions\n"
 "    -report                         Print final report\n"
 "    -verbose        flag            Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug          flag            Debug level (0..255); alias -d; cumulative\n"
-"    -trace          string  \"\"      Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps\n"
+"    -trace          string  \"\"      Trace expression: log categories to enable, as category[:filter],...\n"
 "    -help                           Print help and exit; alias -h\n"
 "    -version                        Print version and exit\n"
 "    -signature                      Show signatures and exit; alias -sig\n";
@@ -32650,15 +32568,7 @@ int command::src_func_Start(command::src_func_proc& parent) {
         parent.pid = fork();
         if (parent.pid == 0) { // child
             algo_lib::DieWithParent();
-            // inherited signal handlers stay live until exec, so a kill aimed at
-            // the child in the fork-to-exec window would run the parent's handler
-            // in the child and be consumed instead of killing; restore the default
-            // dispositions so the signal does what the sender means
-            (void)signal(SIGTERM, SIG_DFL);
-            (void)signal(SIGINT , SIG_DFL);
-            (void)signal(SIGHUP , SIG_DFL);
-            (void)signal(SIGQUIT, SIG_DFL);
-            (void)signal(SIGALRM, SIG_DFL);
+            algo_lib::ResetChildSignal();
             if (parent.pgroup) {
                 // own process group: a kill by the child's pid alone would
                 // orphan its descendants alive; the group is one killable unit
@@ -32991,7 +32901,7 @@ const char *command::src_hdr_help = "src_hdr: Manage source copyright+license he
 "    -scriptfile        regx    \"\"      Regx of scripts to update header\n"
 "    -verbose           flag            Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug             flag            Debug level (0..255); alias -d; cumulative\n"
-"    -trace             string  \"\"      Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps\n"
+"    -trace             string  \"\"      Trace expression: log categories to enable, as category[:filter],...\n"
 "    -help                              Print help and exit; alias -h\n"
 "    -version                           Print version and exit\n"
 "    -signature                         Show signatures and exit; alias -sig\n";
@@ -33331,15 +33241,7 @@ int command::src_hdr_Start(command::src_hdr_proc& parent) {
         parent.pid = fork();
         if (parent.pid == 0) { // child
             algo_lib::DieWithParent();
-            // inherited signal handlers stay live until exec, so a kill aimed at
-            // the child in the fork-to-exec window would run the parent's handler
-            // in the child and be consumed instead of killing; restore the default
-            // dispositions so the signal does what the sender means
-            (void)signal(SIGTERM, SIG_DFL);
-            (void)signal(SIGINT , SIG_DFL);
-            (void)signal(SIGHUP , SIG_DFL);
-            (void)signal(SIGQUIT, SIG_DFL);
-            (void)signal(SIGALRM, SIG_DFL);
+            algo_lib::ResetChildSignal();
             if (parent.pgroup) {
                 // own process group: a kill by the child's pid alone would
                 // orphan its descendants alive; the group is one killable unit
@@ -33556,7 +33458,7 @@ const char *command::src_lim_help = "src_lim: Refuse a bad line pattern and a st
 "    -badline    regx    \"\"      Check badline (acr badline)\n"
 "    -verbose    flag            Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug      flag            Debug level (0..255); alias -d; cumulative\n"
-"    -trace      string  \"\"      Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps\n"
+"    -trace      string  \"\"      Trace expression: log categories to enable, as category[:filter],...\n"
 "    -help                       Print help and exit; alias -h\n"
 "    -version                    Print version and exit\n"
 "    -signature                  Show signatures and exit; alias -sig\n";
@@ -33869,15 +33771,7 @@ int command::src_lim_Start(command::src_lim_proc& parent) {
         parent.pid = fork();
         if (parent.pid == 0) { // child
             algo_lib::DieWithParent();
-            // inherited signal handlers stay live until exec, so a kill aimed at
-            // the child in the fork-to-exec window would run the parent's handler
-            // in the child and be consumed instead of killing; restore the default
-            // dispositions so the signal does what the sender means
-            (void)signal(SIGTERM, SIG_DFL);
-            (void)signal(SIGINT , SIG_DFL);
-            (void)signal(SIGHUP , SIG_DFL);
-            (void)signal(SIGQUIT, SIG_DFL);
-            (void)signal(SIGALRM, SIG_DFL);
+            algo_lib::ResetChildSignal();
             if (parent.pgroup) {
                 // own process group: a kill by the child's pid alone would
                 // orphan its descendants alive; the group is one killable unit
@@ -34080,7 +33974,7 @@ const char *command::ssim2csv_help = "ssim2csv: Ssim -> csv conversion tool\n"
 "    -ignoreQuote\n"
 "    -verbose      flag          Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug        flag          Debug level (0..255); alias -d; cumulative\n"
-"    -trace        string  \"\"    Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps\n"
+"    -trace        string  \"\"    Trace expression: log categories to enable, as category[:filter],...\n"
 "    -help                       Print help and exit; alias -h\n"
 "    -version                    Print version and exit\n"
 "    -signature                  Show signatures and exit; alias -sig\n";
@@ -34307,15 +34201,7 @@ int command::ssim2csv_Start(command::ssim2csv_proc& parent) {
         parent.pid = fork();
         if (parent.pid == 0) { // child
             algo_lib::DieWithParent();
-            // inherited signal handlers stay live until exec, so a kill aimed at
-            // the child in the fork-to-exec window would run the parent's handler
-            // in the child and be consumed instead of killing; restore the default
-            // dispositions so the signal does what the sender means
-            (void)signal(SIGTERM, SIG_DFL);
-            (void)signal(SIGINT , SIG_DFL);
-            (void)signal(SIGHUP , SIG_DFL);
-            (void)signal(SIGQUIT, SIG_DFL);
-            (void)signal(SIGALRM, SIG_DFL);
+            algo_lib::ResetChildSignal();
             if (parent.pgroup) {
                 // own process group: a kill by the child's pid alone would
                 // orphan its descendants alive; the group is one killable unit
@@ -34515,7 +34401,7 @@ const char *command::ssim2mysql_help = "ssim2mysql: Ssim -> mysql\n"
 "    -fkey                       Enable foreign key constraints (uses InnoDB storage engine)\n"
 "    -verbose    flag            Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug      flag            Debug level (0..255); alias -d; cumulative\n"
-"    -trace      string  \"\"      Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps\n"
+"    -trace      string  \"\"      Trace expression: log categories to enable, as category[:filter],...\n"
 "    -help                       Print help and exit; alias -h\n"
 "    -version                    Print version and exit\n"
 "    -signature                  Show signatures and exit; alias -sig\n";
@@ -34921,15 +34807,7 @@ int command::ssim2mysql_Start(command::ssim2mysql_proc& parent) {
         parent.pid = fork();
         if (parent.pid == 0) { // child
             algo_lib::DieWithParent();
-            // inherited signal handlers stay live until exec, so a kill aimed at
-            // the child in the fork-to-exec window would run the parent's handler
-            // in the child and be consumed instead of killing; restore the default
-            // dispositions so the signal does what the sender means
-            (void)signal(SIGTERM, SIG_DFL);
-            (void)signal(SIGINT , SIG_DFL);
-            (void)signal(SIGHUP , SIG_DFL);
-            (void)signal(SIGQUIT, SIG_DFL);
-            (void)signal(SIGALRM, SIG_DFL);
+            algo_lib::ResetChildSignal();
             if (parent.pgroup) {
                 // own process group: a kill by the child's pid alone would
                 // orphan its descendants alive; the group is one killable unit
@@ -35180,7 +35058,7 @@ const char *command::ssimfilt_help = "ssimfilt: Tuple utility\n"
 "    -f          string  \"\"      Alias for -field:<f> -format:field\n"
 "    -verbose    flag            Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug      flag            Debug level (0..255); alias -d; cumulative\n"
-"    -trace      string  \"\"      Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps\n"
+"    -trace      string  \"\"      Trace expression: log categories to enable, as category[:filter],...\n"
 "    -help                       Print help and exit; alias -h\n"
 "    -version                    Print version and exit\n"
 "    -signature                  Show signatures and exit; alias -sig\n";
@@ -36154,15 +36032,7 @@ int command::ssimfilt_Start(command::ssimfilt_proc& parent) {
         parent.pid = fork();
         if (parent.pid == 0) { // child
             algo_lib::DieWithParent();
-            // inherited signal handlers stay live until exec, so a kill aimed at
-            // the child in the fork-to-exec window would run the parent's handler
-            // in the child and be consumed instead of killing; restore the default
-            // dispositions so the signal does what the sender means
-            (void)signal(SIGTERM, SIG_DFL);
-            (void)signal(SIGINT , SIG_DFL);
-            (void)signal(SIGHUP , SIG_DFL);
-            (void)signal(SIGQUIT, SIG_DFL);
-            (void)signal(SIGALRM, SIG_DFL);
+            algo_lib::ResetChildSignal();
             if (parent.pgroup) {
                 // own process group: a kill by the child's pid alone would
                 // orphan its descendants alive; the group is one killable unit
@@ -36390,7 +36260,7 @@ const char *command::strconv_help = "strconv: A simple string utility\n"
 "    -pathcomp      string  \"\"      Extract path component from string\n"
 "    -verbose       flag            Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug         flag            Debug level (0..255); alias -d; cumulative\n"
-"    -trace         string  \"\"      Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps\n"
+"    -trace         string  \"\"      Trace expression: log categories to enable, as category[:filter],...\n"
 "    -help                          Print help and exit; alias -h\n"
 "    -version                       Print version and exit\n"
 "    -signature                     Show signatures and exit; alias -sig\n";
@@ -36697,15 +36567,7 @@ int command::strconv_Start(command::strconv_proc& parent) {
         parent.pid = fork();
         if (parent.pid == 0) { // child
             algo_lib::DieWithParent();
-            // inherited signal handlers stay live until exec, so a kill aimed at
-            // the child in the fork-to-exec window would run the parent's handler
-            // in the child and be consumed instead of killing; restore the default
-            // dispositions so the signal does what the sender means
-            (void)signal(SIGTERM, SIG_DFL);
-            (void)signal(SIGINT , SIG_DFL);
-            (void)signal(SIGHUP , SIG_DFL);
-            (void)signal(SIGQUIT, SIG_DFL);
-            (void)signal(SIGALRM, SIG_DFL);
+            algo_lib::ResetChildSignal();
             if (parent.pgroup) {
                 // own process group: a kill by the child's pid alone would
                 // orphan its descendants alive; the group is one killable unit
@@ -36924,7 +36786,7 @@ const char *command::sv2ssim_help = "sv2ssim: sv2ssim - Separated Value file pro
 "    -prefer_signed                  Prefer signed types when given a choice\n"
 "    -verbose        flag            Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug          flag            Debug level (0..255); alias -d; cumulative\n"
-"    -trace          string  \"\"      Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps\n"
+"    -trace          string  \"\"      Trace expression: log categories to enable, as category[:filter],...\n"
 "    -help                           Print help and exit; alias -h\n"
 "    -version                        Print version and exit\n"
 "    -signature                      Show signatures and exit; alias -sig\n";
@@ -37387,15 +37249,7 @@ int command::sv2ssim_Start(command::sv2ssim_proc& parent) {
         parent.pid = fork();
         if (parent.pid == 0) { // child
             algo_lib::DieWithParent();
-            // inherited signal handlers stay live until exec, so a kill aimed at
-            // the child in the fork-to-exec window would run the parent's handler
-            // in the child and be consumed instead of killing; restore the default
-            // dispositions so the signal does what the sender means
-            (void)signal(SIGTERM, SIG_DFL);
-            (void)signal(SIGINT , SIG_DFL);
-            (void)signal(SIGHUP , SIG_DFL);
-            (void)signal(SIGQUIT, SIG_DFL);
-            (void)signal(SIGALRM, SIG_DFL);
+            algo_lib::ResetChildSignal();
             if (parent.pgroup) {
                 // own process group: a kill by the child's pid alone would
                 // orphan its descendants alive; the group is one killable unit
@@ -37640,12 +37494,14 @@ void command::sv2ssim_proc_Uninit(command::sv2ssim_proc& parent) {
     sv2ssim_Kill(parent); // kill child, ensure forward progress
 }
 const char *command::wt_help = "wt: Worktree manager - reset, run, diff, delete\n"
-"Usage: wt [-name:]<regx> [[-cmd:]<string>] [options]\n"
+"Usage: wt [[-name:]<regx>] [[-cmd:]<string>] [options]\n"
 "    OPTION       TYPE    DFLT    COMMENT\n"
 "    -in          string  \"data\"  Input directory or filename, - for stdin\n"
-"    [name]       regx            Sandbox name\n"
+"    [name]       regx    \"\"      Sandbox name; under -hook it comes from the hook's JSON\n"
+"    -hook        string  \"\"      Claude Code hook, create, remove or sessionstart: reads the hook's JSON on stdin\n"
 "    -create                      Create new sandbox and register in dev.sandbox\n"
 "    -b                           Branch worktree: create on new branch NAME; git-registered, no dev.sandbox row\n"
+"    -merged                      Select branch worktrees whose branch merged into the upstream branch\n"
 "    -cow                         Sandbox is a copy-on-write farm (with -create/anon name)\n"
 "    -list                        List existing sandboxes\n"
 "    -reset                       Reset sandbox to match current directory\n"
@@ -37662,7 +37518,7 @@ const char *command::wt_help = "wt: Worktree manager - reset, run, diff, delete\
 "    -pull                        Pull changes from sandbox to main repo\n"
 "    -verbose     flag            Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug       flag            Debug level (0..255); alias -d; cumulative\n"
-"    -trace       string  \"\"      Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps\n"
+"    -trace       string  \"\"      Trace expression: log categories to enable, as category[:filter],...\n"
 "    -help                        Print help and exit; alias -h\n"
 "    -version                     Print version and exit\n"
 "    -signature                   Show signatures and exit; alias -sig\n";
@@ -37678,7 +37534,7 @@ void command::name_Print(command::wt& parent, algo::cstring &out) {
 // Convert string to field. Return success value
 bool command::name_ReadStrptrMaybe(command::wt& parent, algo::strptr in) {
     bool retval = true;
-    Regx_ReadSql(parent.name, in, true);
+    Regx_ReadAcr(parent.name, in, true);
     return retval;
 }
 
@@ -38130,11 +37986,17 @@ bool command::wt_ReadFieldMaybe(command::wt& parent, algo::strptr field, algo::s
         case command_FieldId_name: {
             retval = name_ReadStrptrMaybe(parent, strval);
         } break;
+        case command_FieldId_hook: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.hook, strval);
+        } break;
         case command_FieldId_create: {
             retval = bool_ReadStrptrMaybe(parent.create, strval);
         } break;
         case command_FieldId_b: {
             retval = bool_ReadStrptrMaybe(parent.b, strval);
+        } break;
+        case command_FieldId_merged: {
+            retval = bool_ReadStrptrMaybe(parent.merged, strval);
         } break;
         case command_FieldId_cow: {
             retval = bool_ReadStrptrMaybe(parent.cow, strval);
@@ -38195,8 +38057,11 @@ bool command::wt_ReadFieldMaybe(command::wt& parent, algo::strptr field, algo::s
 // Set all fields to initial values.
 void command::wt_Init(command::wt& parent) {
     parent.in = algo::strptr("data");
+    Regx_ReadAcr(parent.name, "", true);
+    parent.hook = algo::strptr("");
     parent.create = bool(false);
     parent.b = bool(false);
+    parent.merged = bool(false);
     parent.cow = bool(false);
     parent.list = bool(false);
     parent.reset = bool(false);
@@ -38272,6 +38137,12 @@ void command::wt_PrintArgv(command::wt& row, algo::cstring& str) {
     command::name_Print(row, temp);
     str << " -name:";
     strptr_PrintBash(temp,str);
+    if (!(row.hook == "")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.hook, temp);
+        str << " -hook:";
+        strptr_PrintBash(temp,str);
+    }
     if (!(row.create == false)) {
         ch_RemoveAll(temp);
         bool_Print(row.create, temp);
@@ -38282,6 +38153,12 @@ void command::wt_PrintArgv(command::wt& row, algo::cstring& str) {
         ch_RemoveAll(temp);
         bool_Print(row.b, temp);
         str << " -b:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.merged == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.merged, temp);
+        str << " -merged:";
         strptr_PrintBash(temp,str);
     }
     if (!(row.cow == false)) {
@@ -38386,6 +38263,11 @@ void command::wt_ToArgv(command::wt& row, algo::StringAry& args) {
     ch_RemoveAll(temp);
     command::name_Print(row, temp);
     ary_Alloc(args) << "-name:" << temp;
+    if (!(row.hook == "")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.hook, temp);
+        ary_Alloc(args) << "-hook:" << temp;
+    }
     if (!(row.create == false)) {
         ch_RemoveAll(temp);
         bool_Print(row.create, temp);
@@ -38395,6 +38277,11 @@ void command::wt_ToArgv(command::wt& row, algo::StringAry& args) {
         ch_RemoveAll(temp);
         bool_Print(row.b, temp);
         ary_Alloc(args) << "-b:" << temp;
+    }
+    if (!(row.merged == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.merged, temp);
+        ary_Alloc(args) << "-merged:" << temp;
     }
     if (!(row.cow == false)) {
         ch_RemoveAll(temp);
@@ -38499,12 +38386,20 @@ i32 command::wt_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_
         case command_FieldId_name: { //
             *out_anon = true;
         } break;
+        case command_FieldId_hook: { //
+            *out_anon = false;
+        } break;
         case command_FieldId_create: { // bool: no argument required but value may be specified as create:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
         case command_FieldId_b: { // bool: no argument required but value may be specified as b:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_merged: { // bool: no argument required but value may be specified as merged:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
@@ -38595,7 +38490,6 @@ bool command::wt_ReadArgv(command::wt &parent, algo::StringAry &args, algo::cstr
     command::FieldId attrid;
     bool endopt=false;
     int whichns=0;// 0=base, 1=leaf
-    bool name_present = false;
     for (int argidx=0; argidx < ary_N(args); argidx++) {
         algo::strptr arg = ary_qFind(args, argidx);
         algo::strptr attrval;
@@ -38662,7 +38556,6 @@ bool command::wt_ReadArgv(command::wt &parent, algo::StringAry &args, algo::cstr
             if (whichns==1) {
                 ret=command::wt_ReadFieldMaybe(parent, attrname, attrval);
                 switch(attrid.value) {
-                    case command_FieldId_name: name_present=true; break;
                     default:break;
                 }
             }
@@ -38675,11 +38568,6 @@ bool command::wt_ReadArgv(command::wt &parent, algo::StringAry &args, algo::cstr
             }
         }
     }
-    if (!base.help) {
-        if (!name_present) {
-            err << "wt: Missing value for required argument -name (see -help)" << eol;
-        }
-    }
     retval = (ch_N(err) == 0);
     return retval;
 }
@@ -38688,8 +38576,10 @@ bool command::wt_ReadArgv(command::wt &parent, algo::StringAry &args, algo::cstr
 command::wt& command::wt::operator =(const command::wt &rhs) {
     in = rhs.in;
     name = rhs.name;
+    hook = rhs.hook;
     create = rhs.create;
     b = rhs.b;
+    merged = rhs.merged;
     cow = rhs.cow;
     list = rhs.list;
     reset = rhs.reset;
@@ -38711,8 +38601,10 @@ command::wt& command::wt::operator =(const command::wt &rhs) {
  command::wt::wt(const command::wt &rhs)
     : in(rhs.in)
     , name(rhs.name)
+    , hook(rhs.hook)
     , create(rhs.create)
     , b(rhs.b)
+    , merged(rhs.merged)
     , cow(rhs.cow)
     , list(rhs.list)
     , reset(rhs.reset)
@@ -38757,15 +38649,7 @@ int command::wt_Start(command::wt_proc& parent) {
         parent.pid = fork();
         if (parent.pid == 0) { // child
             algo_lib::DieWithParent();
-            // inherited signal handlers stay live until exec, so a kill aimed at
-            // the child in the fork-to-exec window would run the parent's handler
-            // in the child and be consumed instead of killing; restore the default
-            // dispositions so the signal does what the sender means
-            (void)signal(SIGTERM, SIG_DFL);
-            (void)signal(SIGINT , SIG_DFL);
-            (void)signal(SIGHUP , SIG_DFL);
-            (void)signal(SIGQUIT, SIG_DFL);
-            (void)signal(SIGALRM, SIG_DFL);
+            algo_lib::ResetChildSignal();
             if (parent.pgroup) {
                 // own process group: a kill by the child's pid alone would
                 // orphan its descendants alive; the group is one killable unit
@@ -38916,10 +38800,16 @@ void command::wt_ToArgv(command::wt_proc& parent, algo::StringAry& args) {
         cstring_Print(parent.cmd.in, *arg);
     }
 
-    if (true) {
+    if (parent.cmd.name.expr != "") {
         cstring *arg = &ary_Alloc(args);
         *arg << "-name:";
         command::name_Print(parent.cmd, *arg);
+    }
+
+    if (parent.cmd.hook != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-hook:";
+        cstring_Print(parent.cmd.hook, *arg);
     }
 
     if (parent.cmd.create != false) {
@@ -38932,6 +38822,12 @@ void command::wt_ToArgv(command::wt_proc& parent, algo::StringAry& args) {
         cstring *arg = &ary_Alloc(args);
         *arg << "-b:";
         bool_Print(parent.cmd.b, *arg);
+    }
+
+    if (parent.cmd.merged != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-merged:";
+        bool_Print(parent.cmd.merged, *arg);
     }
 
     if (parent.cmd.cow != false) {

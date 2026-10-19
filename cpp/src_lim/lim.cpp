@@ -181,9 +181,10 @@ static void CheckBadline(strptr fname) {
 // Check the tracked files that -srcfile selects against the badlines -badline
 // selects.  A badline is a line pattern that must not appear in a tracked
 // file, such as a C++ idiom the tree forbids or a credential.  Each rule scopes
-// itself by path, so the walk covers every dev.gitfile except generated code
-// and extern/, and a rule whose path regx takes no file costs nothing.
-static void CheckBadline() {
+// itself by path, so the walk covers every dev.gitfile except what EXCLUDE
+// matches, which is generated code and extern/, and a rule whose path regx takes
+// no file costs nothing.
+static void CheckBadline(algo_lib::Regx &exclude) {
     int nselect=0;
     ind_beg(src_lim::_db_badline_curs,badline,src_lim::_db) {
         badline.select = Regx_Match(src_lim::_db.cmdline.badline,badline.badline);
@@ -194,8 +195,6 @@ static void CheckBadline() {
         (void)Regx_ReadSql(badline._exempt_regx, badline.exempt_regx, true);// full regx
     }ind_end;
     if (nselect) {
-        algo_lib::Regx exclude;
-        Regx_ReadSql(exclude, "(%/gen/%|extern/%)", true);
         ind_beg(src_lim::_db_gitfile_curs,gitfile,src_lim::_db) {
             if (Regx_Match(src_lim::_db.cmdline.srcfile, gitfile.gitfile)
                 && !Regx_Match(exclude, gitfile.gitfile)
@@ -223,6 +222,6 @@ void src_lim::Main() {
         CheckPerms();
     }
     if (src_lim::_db.cmdline.badline.expr != "") {
-        CheckBadline();
+        CheckBadline(exclude);
     }
 }

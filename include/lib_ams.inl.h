@@ -38,6 +38,17 @@ inline ams::ProcId lib_ams::MakeProcId(ams::Proctype proctype, int node, int ind
     return ret;
 }
 
+// The process that writes lane SHM: the writer stamped on the row, else the
+// lane's owner.  A lane is keyed by its owner, and most owners write their own
+// lanes; where the writer is another process -- a bridge-out ring, keyed by
+// the child and written by the parent, or a userproc's delivery lane, keyed by
+// the child and written by its txn -- the writer stamps the row when it opens
+// the lane, and a reader that knows who writes stamps its own.  Return the
+// writer's proc id.
+inline ams::ProcId lib_ams::LaneWriter(lib_ams::FShm &shm) {
+    return shm.writer.value != 0 ? shm.writer : shm.grp_id.proc_id;
+}
+
 // Inbound shm group for a bridged user process: child writes, parent reads.
 // GRPIDX disambiguates multiple bridges between the same proc pair.
 inline ams::GrpId lib_ams::BridgeInGrp(ams::ProcId child_proc_id, int grpidx) {

@@ -22,6 +22,7 @@ Usage: apm [[-package:]<regx>] [options]
     -list                        List installed packages
     -diff                        Diff package with respect to installed version
     -push                        Evaluate package diff and push it to origin
+    -build                       Produce each package in an empty repo under temp/apm-build and build it
     -publish                     Verify, show and push the package to its destination, asking first
     -check                       Consistency check
     -origin      string  ""      Upstream URL of new package
@@ -43,7 +44,7 @@ Usage: apm [[-package:]<regx>] [options]
     -binpath     string  "bin"   (internal use)
     -verbose     flag            Verbosity level (0..255); alias -v; cumulative
     -debug       flag            Debug level (0..255); alias -d; cumulative
-    -trace       string  ""      Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps
+    -trace       string  ""      Trace expression: log categories to enable, as category[:filter],...
     -help                        Print help and exit; alias -h
     -version                     Print version and exit
     -signature                   Show signatures and exit; alias -sig
@@ -62,7 +63,16 @@ select together with their transitive closure.  `down:Y` adds every record that
 references a selected one, `up:Y` every record a selected one references, and
 `exclude:Y` takes the selection out.  `ref:Y` follows references the way a
 compiler does: a referenced record comes with everything it owns, and an owner
-comes alone.
+comes alone with its documentation.  A row that configures a record the package
+holds comes with it, such as the `dev.targsyslib` rows that link a target's
+system libraries.
+
+`stub:Y` changes how files the package already carries leave.  Each file the
+key matches is published as a stub: the page's title and one sentence saying
+the page is not part of the distribution.  A link to the page still resolves,
+and the page's content stays here.  A file the package names outright is
+published whole.  A stub key takes no closure and excludes nothing, and
+`apm -check` reports one that does as `apm.badkey`.
 
 Files are records.  A selection that captures a `dev.gitfile` row puts that file
 in the package, so a namespace's closure brings its sources, its generated code
@@ -86,17 +96,42 @@ sides of a package, and the fix is to split it.
 
 Use `-showrec`, `-showfile` and `-annotate` to see what a definition selects.
 
+#### Shipping a file at another path
+<a href="#shipping-a-file-at-another-path"></a>
+
+A `dev.pkgfile` row ships a file of this tree at another path of the
+projection.  Its key is the package and the path, and `gitfile` names the file:
+
+```
+dev.pkgfile  pkgfile:mysdk/AGENTS.md  gitfile:txt/mysdk/AGENTS.md
+```
+
+A push writes the file's content at the path, in place of any file that a
+package it carries holds there, and deletes the path once the row is gone.  The
+file still goes out at its own path when a key of the package carries it.  An
+update merges the origin's copy at the path with the file here, so this tree's
+own file at that path never takes part.
+
+`dev.package.readmefile` names the package's front page.  A push ships it as the
+projection's `txt/README.md`, and `abt_md` there copies that to `README.md`.  The
+readmefile works as the pkgfile row for `txt/README.md`.  It defaults to
+`txt/README.md` itself, which changes nothing.
+
+A push of several packages can map one path twice.  The package the command
+names wins over a package it carries, and two mappings that cannot be ordered
+that way stop the push with `apm.pkgfile_conflict`.
+
 #### Relations between packages
 <a href="#relations-between-packages"></a>
 
 `dev.pkgdep` rows relate a package to a parent, and `pkgdeptype` names the
 relation:
 
-|`pkgdeptype`|Meaning|
-|---|---|
-|`contain`|The parent distributes this package, so the parent's content covers it.|
-|`extend`|This package builds on the parent without shipping in it, so the parent's content excludes whatever this package captures.|
-|`require`|This package needs the parent built first, and neither one's content touches the other's.|
+| `pkgdeptype` | Meaning |
+| ------------ | ------- |
+| `contain`    | The parent distributes this package, so the parent's content covers it. |
+| `extend`     | This package builds on the parent without shipping in it, so the parent's content excludes whatever this package captures. |
+| `require`    | This package needs the parent built first, and neither one's content touches the other's. |
 
 `extend` keeps a downstream tree out of an upstream distribution: a package
 that extends openacr takes whatever it claims out of openacr, with no exclusion
@@ -121,9 +156,11 @@ every record that references it, and `-v` prints each one as `apm.unmet`.
 carries a word the package must not contain.  A package's `dev.pkgkeyword` rows
 name the words that identify it, and those are kept out of every package it
 builds on; a row with `forbid:Y` names a word kept out of the package itself and
-of everything it carries.  A line regenerated downstream is skipped (a copyright
-notice, an `update-hdr` block, a usage block, an inline command's output), and a
-line that must keep a word carries `ignore:pkgkeyword`.
+of everything it carries.  A package that ships inside another, through a
+`contain` relation, is held to that package's words too.  A line regenerated
+downstream is skipped (a copyright notice, an `update-hdr` block, a usage block,
+an inline command's output), and a line that must keep a word carries
+`ignore:pkgkeyword`.
 
 A table that a package excludes whole, with a key such as `dev.pkgkey:%`, is
 repo-local: each repo keeps its own rows, so a push neither sends this tree's
@@ -132,9 +169,11 @@ rows nor deletes the origin's.  The package definitions are such tables.
 `apm.deadlink` is a reference in a published markdown file to something that
 exists here and that the push leaves behind, so the reference is broken
 downstream.  The reference is a link to a tracked file, or an inline span such
-as `dev.license:GPL` that names a row.  A target that a carried package holds resolves.  Only a package
-with a `dev.pkgupstream` row gets the check, because only such a package has a
-downstream.
+as `dev.license:GPL` that names a row.  A target that a carried package holds resolves.  A
+link to a section of a page that goes out as a stub is broken too, unless it
+names the title the stub keeps.  Every
+package gets the check, including one with no destination yet, so the commit
+that writes a dead link fails CI.
 
 ```bash
 apm openacr -check                          # every finding, keywords included
@@ -190,8 +229,8 @@ and records, and deletes there whatever the projection no longer holds.  The
 origin has to be at `baseref`, or the push refuses with `apm.origin_moved`
 until `-update` has merged what the origin gained.  Commit in the origin and
 publish the commit, then run `-reset -ref:<commit>`, which points `baseref` at
-that commit and `localref` at this tree's HEAD.  The two commits are the sync
-pair, and `-check` reports `apm.syncdrift` for every file they disagree on.
+that commit and `localref` at this tree's HEAD when HEAD's projection is
+that commit.  The two commits are the sync pair, and `-check` reports `apm.syncdrift` for every file they disagree on.
 
 `-publish` runs that whole cycle for one destination and proves the result
 before anything leaves.  It runs `-check`, clones the origin fresh under
@@ -200,7 +239,7 @@ and builds the clone with its own tools.  It runs the clone's `abt_md` and its
 secret scan (`src_lim -badline:secret_%`), and shows the delta against the
 origin's head: the size of the tree, files added, changed and deleted per top
 directory, and every new file by name.  It then commits in the clone and runs
-the destination's own CI there, `bin/normalize && bin/atf_ci -cijob:comp`, with
+the destination's own CI there, `bin/normalize && bin/atf_ci -cijob:'compA|compB'`, with
 its log beside the clone.  Any failed stage stops the run, and `-dry_run` stops
 after the CI.  Otherwise it asks before pushing, takes the token from the
 maintainer's credd under the row's `cred`, and finishes with `-reset`.
@@ -209,6 +248,52 @@ maintainer's credd under the row's `cred`, and finishes with `-reset`.
 apm openacr -publish -dest:github -dry_run  # verify and show what would go out
 apm openacr -publish -dest:github           # the same, then commit, push, reset
 ```
+
+#### Building a package from nothing
+<a href="#building-a-package-from-nothing"></a>
+
+`-build` proves that a package builds in a repository that starts empty.  For
+each selected package it creates a git repository under
+`temp/apm-build/<package>` and runs three stages of `-publish` there.  It
+pushes the projection, regenerates it with this tree's `amc` and `update-hdr`,
+and builds it with `ai`.  A package with a front page of its own also gets
+`abt_md`'s copy of it at `README.md`.  The build compiles through this tree's
+gcache, so a repeated build costs the bootstrap and the links.  A package that does not
+build prints `apm.build_fail` with the path of its build log, and sets the exit
+code.  A CI job that runs it for every package the tree publishes catches a
+change that breaks a distribution before the distribution is published.
+
+```bash
+apm openacr -build                          # build openacr from an empty repository
+```
+
+#### Publishing through a pull request
+<a href="#publishing-through-a-pull-request"></a>
+
+A destination that takes changes by review, as openacr does, merges the
+publication later and often under a new commit, so the cycle runs in four
+steps.
+
+1. Run `apm <package> -publish -dest:<dest> -dry_run` and read the clone's CI
+   log.  Push the clone's commit to a branch of the origin, and open the pull
+   request from it.
+2. Watch the destination's CI until the request merges.  Fix each failure in
+   this tree, which is the source, copy the changed files into the request's
+   checkout, and push them there as a new commit.
+3. Commit the same fixes on the branch the package was published from, and
+   merge it here through its own MR.
+4. On master, once both have merged, run
+   `apm <package> -reset -dest:<dest> -ref:<merged commit>`, commit the row and
+   merge that MR.  When this tree gained a file of the package during the
+   review, no commit here is the projection of the merged one: `-reset` names
+   each such file as `apm.syncdrift`, prints `apm.unpaired`, and leaves
+   `localref` empty.  A file it names that this tree neither added nor deleted
+   during the review is a change of the review that step 3 missed.
+
+The fourth step waits for both merges for two reasons.  A squash merge gives
+the destination a commit the clone never pushed, so `baseref` has to name the
+merged one.  And `localref` has to be a commit master holds, because `-check`
+checks it out, and a branch's commit is squashed away before it gets there.
 
 #### Comparing with the base version
 <a href="#comparing-with-the-base-version"></a>
@@ -285,8 +370,8 @@ The records a package selects come from `-data_in`.
 #### -pkgdata -- Load package definitions from here
 <a href="#-pkgdata"></a>
 
-Replace the `dev.package`, `dev.pkgdep` and `dev.pkgkey` rows from `-in` with
-the ones in this file.  `apm` passes it to the `apm` it runs on the far side
+Replace the `dev.package`, `dev.pkgdep`, `dev.pkgkey` and `dev.pkgfile` rows
+from `-in` with the ones in this file.  `apm` passes it to the `apm` it runs on the far side
 under `-l`, and you rarely need it yourself.
 
 #### -package -- Regx of package
@@ -339,6 +424,15 @@ each package the command names; a required package's sync pair belongs to its
 own origin and is not compared.  New files are marked with `git add -N` and
 deletions are staged, so commit with `git commit -a`.
 
+#### -build -- Produce each package in an empty repo under temp/apm-build and build it
+<a href="#-build"></a>
+
+Create a git repository under `temp/apm-build/<package>` for each selected
+package, push the projection into it, regenerate it and build it with `ai`.  A
+package that does not build prints `apm.build_fail` with its build log.  With
+`-dry_run` it prints each package's directory and builds nothing.  Run one
+`apm` at a time in a tree, since every run writes the same files under `temp/`.
+
 #### -publish -- Verify, show and push the package to its destination, asking first
 <a href="#-publish"></a>
 
@@ -350,7 +444,10 @@ Check the selected packages' definitions.  A key that selects nothing is
 namespace that both a package and one of its `extend` children claim is
 `apm.doubleclaim`.  The first two reports carry the `acr` line that would fix
 them.  `apm.dangling`, `apm.proprietary`, `apm.copyleft`, `apm.mixedfile` and
-`apm.syncdrift` are described above.
+`apm.syncdrift` are described above.  `apm.pkgfile_nosrc` is a mapping whose
+file is not in this tree, `apm.pkgfile_ambiguous` a mapping onto a path that the
+package also carries from its own keys, and `apm.pkgfile_conflict` two packages
+of one push that map different files to one path.
 
 #### -origin -- Upstream URL of new package
 <a href="#-origin"></a>
@@ -417,8 +514,10 @@ maintained.
 
 Set one package's `dev.pkgupstream` row from `-origin` and `-ref`, creating the
 row if there is none.  The ref is resolved against the origin to a commit id,
-which becomes `baseref`, and this tree's HEAD becomes `localref`.  Use it after
-a push that the origin has committed.
+which becomes `baseref`.  This tree's HEAD becomes `localref` when its
+projection is the origin at that commit; otherwise `localref` stays empty, and
+each file on which the two disagree is reported as `apm.syncdrift`.  Use it
+after a push that the origin has committed.
 
 #### -checkclean -- Ensure that changes are applied to a clean directory
 <a href="#-checkclean"></a>

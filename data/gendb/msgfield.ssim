@@ -1,111 +1,181 @@
-gendb.msgfield  msgfield:ams.BoardrefMsg/offset  offset:8  arg:u64  width:8  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ams.BoardrefMsg/payload_length  offset:16  arg:u32  width:4  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ams.InputLineMsg/payload  offset:12  arg:char  width:0  bigend:N  varlen:Y  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ams.InputLineMsg/proc_id.value  offset:8  arg:u32  width:4  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ams.LogMsg/logcat  offset:20  arg:char  width:0  bigend:N  varlen:Y  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ams.LogMsg/proc_id.value  offset:8  arg:u32  width:4  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ams.LogMsg/text  offset:20  arg:char  width:0  bigend:N  varlen:Y  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ams.LogMsg/tstamp.value  offset:12  arg:u64  width:8  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ams.MsgBlock/first_seqno  offset:8  arg:u64  width:8  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ams.MsgBlock/messages  offset:24  arg:u8  width:0  bigend:N  varlen:Y  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ams.MsgBlock/n_messages  offset:16  arg:u32  width:4  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ams.MsgBlock/original_length  offset:20  arg:u32  width:4  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ams.SampAggClickMsg/page  offset:16  arg:char  width:0  bigend:N  varlen:Y  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ams.SampAggClickMsg/time.value  offset:8  arg:i64  width:8  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ams.SampAggClockMsg/clock_floor.value  offset:16  arg:i64  width:8  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ams.SampAggClockMsg/max_event_time.value  offset:8  arg:i64  width:8  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ams.SampAggLateMsg/page  offset:16  arg:char  width:0  bigend:N  varlen:Y  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ams.SampAggLateMsg/time.value  offset:8  arg:i64  width:8  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ams.SampAggPaneMsg/count  offset:25  arg:u64  width:8  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ams.SampAggPaneMsg/end.value  offset:17  arg:i64  width:8  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ams.SampAggPaneMsg/fired  offset:16  arg:bool  width:1  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ams.SampAggPaneMsg/page  offset:41  arg:char  width:0  bigend:N  varlen:Y  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ams.SampAggPaneMsg/start.value  offset:8  arg:i64  width:8  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ams.SampAggPaneMsg/sum  offset:33  arg:i64  width:8  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ams.SampAggWindowMsg/count  offset:24  arg:u64  width:8  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ams.SampAggWindowMsg/end.value  offset:16  arg:i64  width:8  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ams.SampAggWindowMsg/page  offset:32  arg:char  width:0  bigend:N  varlen:Y  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ams.SampAggWindowMsg/start.value  offset:8  arg:i64  width:8  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ams.SampMengBookMsg/next_order_id  offset:8  arg:u64  width:8  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ams.SampMengCancelOrderMsg/order  offset:8  arg:u64  width:8  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ams.SampMengCancelReqMsg/order  offset:8  arg:u64  width:8  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ams.SampMengMassCancelReqMsg/user  offset:8  arg:u32  width:4  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ams.SampMengNewOrderMsg/order  offset:24  arg:u64  width:8  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ams.SampMengNewOrderMsg/price.value  offset:16  arg:i64  width:8  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ams.SampMengNewOrderMsg/qty  offset:40  arg:u32  width:4  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ams.SampMengNewOrderMsg/symbol.symbol  offset:32  arg:char  width:8  bigend:N  varlen:N  strtype:rightpad  pad:0  comment:""
-gendb.msgfield  msgfield:ams.SampMengNewOrderMsg/time.value  offset:8  arg:i64  width:8  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ams.SampMengNewOrderReqMsg/ioc  offset:8  arg:bool  width:1  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ams.SampMengNewOrderReqMsg/price.value  offset:13  arg:i64  width:8  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ams.SampMengNewOrderReqMsg/qty  offset:9  arg:i32  width:4  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ams.SampMengNewOrderReqMsg/symbol.symbol  offset:21  arg:char  width:8  bigend:N  varlen:N  strtype:rightpad  pad:0  comment:""
-gendb.msgfield  msgfield:ams.SampMengNewOrderReqMsg/user  offset:29  arg:u32  width:4  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ams.SampMengNewSymbolMsg/symbol.symbol  offset:8  arg:char  width:8  bigend:N  varlen:N  strtype:rightpad  pad:0  comment:""
-gendb.msgfield  msgfield:ams.SampMengNewSymbolReqMsg/symbol.symbol  offset:8  arg:char  width:8  bigend:N  varlen:N  strtype:rightpad  pad:0  comment:""
-gendb.msgfield  msgfield:ams.SampMengNewUserMsg/user  offset:8  arg:u32  width:4  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ams.SampMengNewUserReqMsg/user  offset:8  arg:u32  width:4  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ams.SampMengOrderTradeMsg/order  offset:8  arg:u64  width:8  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ams.SampMengOrderTradeMsg/price.value  offset:20  arg:i64  width:8  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ams.SampMengOrderTradeMsg/qty  offset:16  arg:u32  width:4  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ams.SampMengRestingMsg/buy  offset:48  arg:bool  width:1  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ams.SampMengRestingMsg/order  offset:8  arg:i64  width:8  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ams.SampMengRestingMsg/price.value  offset:24  arg:i64  width:8  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ams.SampMengRestingMsg/qty  offset:32  arg:u32  width:4  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ams.SampMengRestingMsg/symbol.symbol  offset:16  arg:char  width:8  bigend:N  varlen:N  strtype:rightpad  pad:0  comment:""
-gendb.msgfield  msgfield:ams.SampMengRestingMsg/time.value  offset:36  arg:i64  width:8  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ams.SampMengRestingMsg/user  offset:44  arg:i32  width:4  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ams.SampMengSymbolrowMsg/symbol.symbol  offset:8  arg:char  width:8  bigend:N  varlen:N  strtype:rightpad  pad:0  comment:""
-gendb.msgfield  msgfield:ams.SampMengTextMsg/text  offset:8  arg:char  width:0  bigend:N  varlen:Y  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ams.SampMengUserrowMsg/user  offset:8  arg:i32  width:4  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ams.ShmHbMsg/grpmember.flags.value  offset:18  arg:u16  width:2  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ams.ShmHbMsg/grpmember.grp_id.grptype.value  offset:12  arg:u8  width:1  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ams.ShmHbMsg/grpmember.grp_id.index  offset:13  arg:u8  width:1  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ams.ShmHbMsg/grpmember.grp_id.proc_id.value  offset:8  arg:u32  width:4  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ams.ShmHbMsg/grpmember.proc_id.value  offset:14  arg:u32  width:4  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ams.ShmHbMsg/off  offset:20  arg:u64  width:8  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ams.ShmHbMsg/wbudget  offset:28  arg:u32  width:4  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ams.TerminateMsg/proc_id.value  offset:8  arg:u32  width:4  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ams.UdpFrame/dst_ip.ipv4  offset:20  arg:u32  width:4  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ams.UdpFrame/dst_port  offset:26  arg:u16  width:2  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ams.UdpFrame/payload  offset:28  arg:u8  width:0  bigend:N  varlen:Y  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ams.UdpFrame/src_ip.ipv4  offset:16  arg:u32  width:4  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ams.UdpFrame/src_port  offset:24  arg:u16  width:2  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ams.UdpFrame/timestamp.value  offset:8  arg:i64  width:8  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ams.UprocTextMsg/first_seqno  offset:12  arg:u32  width:4  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ams.UprocTextMsg/last_seqno  offset:16  arg:u32  width:4  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ams.UprocTextMsg/name  offset:20  arg:char  width:32  bigend:N  varlen:N  strtype:rightpad  pad:0  comment:""
-gendb.msgfield  msgfield:ams.UprocTextMsg/seqno  offset:8  arg:u32  width:4  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ams.UprocTextMsg/text  offset:52  arg:char  width:0  bigend:N  varlen:Y  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:atf_amc.MsgLTA/a  offset:2  arg:char  width:4  bigend:N  varlen:N  strtype:rightpad  pad:32  comment:""
-gendb.msgfield  msgfield:atf_amc.MsgLTB/b  offset:2  arg:char  width:6  bigend:N  varlen:N  strtype:rightpad  pad:32  comment:""
-gendb.msgfield  msgfield:atf_amc.MsgLTO/o  offset:2  arg:atf_amc.MsgHdrLT  width:0  bigend:N  varlen:Y  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:atf_amc.MsgLTScaleV/v  offset:2  arg:char  width:0  bigend:N  varlen:Y  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:atf_amc.MsgLTV/v  offset:2  arg:atf_amc.MsgHdrLT  width:0  bigend:N  varlen:Y  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:fm.AlarmMsg/clear_time.value  offset:188  arg:i64  width:8  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:fm.AlarmMsg/code  offset:8  arg:char  width:32  bigend:N  varlen:N  strtype:rightpad  pad:32  comment:""
-gendb.msgfield  msgfield:fm.AlarmMsg/description  offset:332  arg:char  width:128  bigend:N  varlen:N  strtype:rightpad  pad:32  comment:""
-gendb.msgfield  msgfield:fm.AlarmMsg/first_time.value  offset:172  arg:i64  width:8  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:fm.AlarmMsg/flag.value  offset:166  arg:char  width:1  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:fm.AlarmMsg/last_time.value  offset:180  arg:i64  width:8  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:fm.AlarmMsg/n_flap  offset:461  arg:u32  width:4  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:fm.AlarmMsg/n_occurred  offset:168  arg:i32  width:4  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:fm.AlarmMsg/objinst  offset:55  arg:char  width:79  bigend:N  varlen:N  strtype:rightpad  pad:32  comment:""
-gendb.msgfield  msgfield:fm.AlarmMsg/objname  offset:134  arg:char  width:32  bigend:N  varlen:N  strtype:rpascal  pad:""  comment:""
-gendb.msgfield  msgfield:fm.AlarmMsg/objtype  offset:40  arg:char  width:15  bigend:N  varlen:N  strtype:rightpad  pad:32  comment:""
-gendb.msgfield  msgfield:fm.AlarmMsg/objtype_summary  offset:204  arg:char  width:64  bigend:N  varlen:N  strtype:rightpad  pad:32  comment:""
-gendb.msgfield  msgfield:fm.AlarmMsg/severity.value  offset:167  arg:char  width:1  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:fm.AlarmMsg/shelved  offset:460  arg:bool  width:1  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:fm.AlarmMsg/summary  offset:268  arg:char  width:64  bigend:N  varlen:N  strtype:rightpad  pad:32  comment:""
-gendb.msgfield  msgfield:fm.AlarmMsg/update_time.value  offset:196  arg:i64  width:8  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ws.CloseMsg/code.value  offset:59  arg:u16  width:2  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ws.CloseMsg/conn  offset:8  arg:char  width:50  bigend:N  varlen:N  strtype:rightpad  pad:32  comment:""
-gendb.msgfield  msgfield:ws.CloseMsg/reason  offset:61  arg:char  width:0  bigend:N  varlen:Y  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ws.CloseMsg/side.value  offset:58  arg:char  width:1  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ws.ConnectMsg/conn  offset:8  arg:char  width:50  bigend:N  varlen:N  strtype:rightpad  pad:32  comment:""
-gendb.msgfield  msgfield:ws.ConnectMsg/side.value  offset:58  arg:char  width:1  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ws.DataMsg/conn  offset:8  arg:char  width:50  bigend:N  varlen:N  strtype:rightpad  pad:32  comment:""
-gendb.msgfield  msgfield:ws.DataMsg/data  offset:60  arg:char  width:0  bigend:N  varlen:Y  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ws.DataMsg/opcode.value  offset:59  arg:u8  width:1  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ws.DataMsg/side.value  offset:58  arg:char  width:1  bigend:N  varlen:N  strtype:""  pad:""  comment:""
-gendb.msgfield  msgfield:ws.ServerStartMsg/server  offset:8  arg:char  width:25  bigend:N  varlen:N  strtype:rightpad  pad:32  comment:""
-gendb.msgfield  msgfield:ws.ServerStopMsg/server  offset:8  arg:char  width:25  bigend:N  varlen:N  strtype:rightpad  pad:32  comment:""
+gendb.msgfield  msgfield:ams.BoardrefMsg/offset  fldtype:fixed  arg:u64  offset:8  width:8  aux:0
+gendb.msgfield  msgfield:ams.BoardrefMsg/payload_length  fldtype:fixed  arg:u32  offset:16  width:4  aux:0
+gendb.msgfield  msgfield:ams.InputLineMsg/payload  fldtype:varlen  arg:char  offset:12  width:0  aux:0
+gendb.msgfield  msgfield:ams.InputLineMsg/proc_id  fldtype:fixed  arg:u32  offset:8  width:4  aux:0
+gendb.msgfield  msgfield:ams.LogMsg/logcat  fldtype:varlen2  arg:char  offset:24  width:0  aux:20
+gendb.msgfield  msgfield:ams.LogMsg/proc_id  fldtype:fixed  arg:u32  offset:8  width:4  aux:0
+gendb.msgfield  msgfield:ams.LogMsg/text  fldtype:varlen  arg:char  offset:24  width:20  aux:0
+gendb.msgfield  msgfield:ams.LogMsg/tstamp  fldtype:fixed  arg:u64  offset:12  width:8  aux:0
+gendb.msgfield  msgfield:ams.MsgBlock/first_seqno  fldtype:fixed  arg:u64  offset:8  width:8  aux:0
+gendb.msgfield  msgfield:ams.MsgBlock/messages  fldtype:varlen  arg:u8  offset:24  width:0  aux:0
+gendb.msgfield  msgfield:ams.MsgBlock/n_messages  fldtype:fixed  arg:u32  offset:16  width:4  aux:0
+gendb.msgfield  msgfield:ams.MsgBlock/original_length  fldtype:fixed  arg:u32  offset:20  width:4  aux:0
+gendb.msgfield  msgfield:ams.SampAggClickMsg/page  fldtype:varlen  arg:char  offset:16  width:0  aux:0
+gendb.msgfield  msgfield:ams.SampAggClickMsg/time  fldtype:fixed  arg:i64  offset:8  width:8  aux:0
+gendb.msgfield  msgfield:ams.SampAggClockMsg/clock_floor  fldtype:fixed  arg:i64  offset:16  width:8  aux:0
+gendb.msgfield  msgfield:ams.SampAggClockMsg/max_event_time  fldtype:fixed  arg:i64  offset:8  width:8  aux:0
+gendb.msgfield  msgfield:ams.SampAggLateMsg/page  fldtype:varlen  arg:char  offset:16  width:0  aux:0
+gendb.msgfield  msgfield:ams.SampAggLateMsg/time  fldtype:fixed  arg:i64  offset:8  width:8  aux:0
+gendb.msgfield  msgfield:ams.SampAggPaneMsg/count  fldtype:fixed  arg:u64  offset:25  width:8  aux:0
+gendb.msgfield  msgfield:ams.SampAggPaneMsg/end  fldtype:fixed  arg:i64  offset:17  width:8  aux:0
+gendb.msgfield  msgfield:ams.SampAggPaneMsg/fired  fldtype:fixed  arg:bool  offset:16  width:1  aux:0
+gendb.msgfield  msgfield:ams.SampAggPaneMsg/page  fldtype:varlen  arg:char  offset:41  width:0  aux:0
+gendb.msgfield  msgfield:ams.SampAggPaneMsg/start  fldtype:fixed  arg:i64  offset:8  width:8  aux:0
+gendb.msgfield  msgfield:ams.SampAggPaneMsg/sum  fldtype:fixed  arg:i64  offset:33  width:8  aux:0
+gendb.msgfield  msgfield:ams.SampAggWindowMsg/count  fldtype:fixed  arg:u64  offset:24  width:8  aux:0
+gendb.msgfield  msgfield:ams.SampAggWindowMsg/end  fldtype:fixed  arg:i64  offset:16  width:8  aux:0
+gendb.msgfield  msgfield:ams.SampAggWindowMsg/page  fldtype:varlen  arg:char  offset:32  width:0  aux:0
+gendb.msgfield  msgfield:ams.SampAggWindowMsg/start  fldtype:fixed  arg:i64  offset:8  width:8  aux:0
+gendb.msgfield  msgfield:ams.SampMengBookMsg/next_order_id  fldtype:fixed  arg:u64  offset:8  width:8  aux:0
+gendb.msgfield  msgfield:ams.SampMengCancelOrderMsg/order  fldtype:fixed  arg:u64  offset:8  width:8  aux:0
+gendb.msgfield  msgfield:ams.SampMengCancelReqMsg/order  fldtype:fixed  arg:u64  offset:8  width:8  aux:0
+gendb.msgfield  msgfield:ams.SampMengMassCancelReqMsg/user  fldtype:fixed  arg:u32  offset:8  width:4  aux:0
+gendb.msgfield  msgfield:ams.SampMengNewOrderMsg/order  fldtype:fixed  arg:u64  offset:24  width:8  aux:0
+gendb.msgfield  msgfield:ams.SampMengNewOrderMsg/price  fldtype:fixed  arg:i64  offset:16  width:8  aux:0
+gendb.msgfield  msgfield:ams.SampMengNewOrderMsg/qty  fldtype:fixed  arg:u32  offset:40  width:4  aux:0
+gendb.msgfield  msgfield:ams.SampMengNewOrderMsg/symbol  fldtype:rightpad  arg:char  offset:32  width:8  aux:0
+gendb.msgfield  msgfield:ams.SampMengNewOrderMsg/time  fldtype:fixed  arg:i64  offset:8  width:8  aux:0
+gendb.msgfield  msgfield:ams.SampMengNewOrderReqMsg/ioc  fldtype:fixed  arg:bool  offset:8  width:1  aux:0
+gendb.msgfield  msgfield:ams.SampMengNewOrderReqMsg/price  fldtype:fixed  arg:i64  offset:13  width:8  aux:0
+gendb.msgfield  msgfield:ams.SampMengNewOrderReqMsg/qty  fldtype:fixed  arg:i32  offset:9  width:4  aux:0
+gendb.msgfield  msgfield:ams.SampMengNewOrderReqMsg/symbol  fldtype:rightpad  arg:char  offset:21  width:8  aux:0
+gendb.msgfield  msgfield:ams.SampMengNewOrderReqMsg/user  fldtype:fixed  arg:u32  offset:29  width:4  aux:0
+gendb.msgfield  msgfield:ams.SampMengNewSymbolMsg/symbol  fldtype:rightpad  arg:char  offset:8  width:8  aux:0
+gendb.msgfield  msgfield:ams.SampMengNewSymbolReqMsg/symbol  fldtype:rightpad  arg:char  offset:8  width:8  aux:0
+gendb.msgfield  msgfield:ams.SampMengNewUserMsg/user  fldtype:fixed  arg:u32  offset:8  width:4  aux:0
+gendb.msgfield  msgfield:ams.SampMengNewUserReqMsg/user  fldtype:fixed  arg:u32  offset:8  width:4  aux:0
+gendb.msgfield  msgfield:ams.SampMengOrderTradeMsg/order  fldtype:fixed  arg:u64  offset:8  width:8  aux:0
+gendb.msgfield  msgfield:ams.SampMengOrderTradeMsg/price  fldtype:fixed  arg:i64  offset:20  width:8  aux:0
+gendb.msgfield  msgfield:ams.SampMengOrderTradeMsg/qty  fldtype:fixed  arg:u32  offset:16  width:4  aux:0
+gendb.msgfield  msgfield:ams.SampMengRestingMsg/buy  fldtype:fixed  arg:bool  offset:48  width:1  aux:0
+gendb.msgfield  msgfield:ams.SampMengRestingMsg/order  fldtype:fixed  arg:i64  offset:8  width:8  aux:0
+gendb.msgfield  msgfield:ams.SampMengRestingMsg/price  fldtype:fixed  arg:i64  offset:24  width:8  aux:0
+gendb.msgfield  msgfield:ams.SampMengRestingMsg/qty  fldtype:fixed  arg:u32  offset:32  width:4  aux:0
+gendb.msgfield  msgfield:ams.SampMengRestingMsg/symbol  fldtype:rightpad  arg:char  offset:16  width:8  aux:0
+gendb.msgfield  msgfield:ams.SampMengRestingMsg/time  fldtype:fixed  arg:i64  offset:36  width:8  aux:0
+gendb.msgfield  msgfield:ams.SampMengRestingMsg/user  fldtype:fixed  arg:i32  offset:44  width:4  aux:0
+gendb.msgfield  msgfield:ams.SampMengSymbolrowMsg/symbol  fldtype:rightpad  arg:char  offset:8  width:8  aux:0
+gendb.msgfield  msgfield:ams.SampMengTextMsg/text  fldtype:varlen  arg:char  offset:8  width:0  aux:0
+gendb.msgfield  msgfield:ams.SampMengUserrowMsg/user  fldtype:fixed  arg:i32  offset:8  width:4  aux:0
+gendb.msgfield  msgfield:ams.SampPcapjoinMatchMsg/client.ip  fldtype:fixed  arg:u32  offset:8  width:4  aux:0
+gendb.msgfield  msgfield:ams.SampPcapjoinMatchMsg/client.port  fldtype:fixed  arg:u16  offset:12  width:2  aux:0
+gendb.msgfield  msgfield:ams.SampPcapjoinMatchMsg/gateway.ip  fldtype:fixed  arg:u32  offset:14  width:4  aux:0
+gendb.msgfield  msgfield:ams.SampPcapjoinMatchMsg/gateway.port  fldtype:fixed  arg:u16  offset:18  width:2  aux:0
+gendb.msgfield  msgfield:ams.SampPcapjoinMatchMsg/offset_ns  fldtype:fixed  arg:i64  offset:76  width:8  aux:0
+gendb.msgfield  msgfield:ams.SampPcapjoinMatchMsg/request_id  fldtype:fixed  arg:u64  offset:20  width:8  aux:0
+gendb.msgfield  msgfield:ams.SampPcapjoinMatchMsg/rtt_ns  fldtype:fixed  arg:i64  offset:60  width:8  aux:0
+gendb.msgfield  msgfield:ams.SampPcapjoinMatchMsg/svc_ns  fldtype:fixed  arg:i64  offset:68  width:8  aux:0
+gendb.msgfield  msgfield:ams.SampPcapjoinMatchMsg/t1  fldtype:fixed  arg:u64  offset:28  width:8  aux:0
+gendb.msgfield  msgfield:ams.SampPcapjoinMatchMsg/t2  fldtype:fixed  arg:u64  offset:36  width:8  aux:0
+gendb.msgfield  msgfield:ams.SampPcapjoinMatchMsg/t3  fldtype:fixed  arg:u64  offset:44  width:8  aux:0
+gendb.msgfield  msgfield:ams.SampPcapjoinMatchMsg/t4  fldtype:fixed  arg:u64  offset:52  width:8  aux:0
+gendb.msgfield  msgfield:ams.SampPcapjoinMissMsg/client.ip  fldtype:fixed  arg:u32  offset:8  width:4  aux:0
+gendb.msgfield  msgfield:ams.SampPcapjoinMissMsg/client.port  fldtype:fixed  arg:u16  offset:12  width:2  aux:0
+gendb.msgfield  msgfield:ams.SampPcapjoinMissMsg/gateway.ip  fldtype:fixed  arg:u32  offset:14  width:4  aux:0
+gendb.msgfield  msgfield:ams.SampPcapjoinMissMsg/gateway.port  fldtype:fixed  arg:u16  offset:18  width:2  aux:0
+gendb.msgfield  msgfield:ams.SampPcapjoinMissMsg/request_id  fldtype:fixed  arg:u64  offset:20  width:8  aux:0
+gendb.msgfield  msgfield:ams.SampPcapjoinMissMsg/t1  fldtype:fixed  arg:u64  offset:28  width:8  aux:0
+gendb.msgfield  msgfield:ams.SampPcapjoinMissMsg/t2  fldtype:fixed  arg:u64  offset:36  width:8  aux:0
+gendb.msgfield  msgfield:ams.SampPcapjoinMissMsg/t3  fldtype:fixed  arg:u64  offset:44  width:8  aux:0
+gendb.msgfield  msgfield:ams.SampPcapjoinMissMsg/t4  fldtype:fixed  arg:u64  offset:52  width:8  aux:0
+gendb.msgfield  msgfield:ams.SampPcapjoinPairMsg/client.ip  fldtype:fixed  arg:u32  offset:8  width:4  aux:0
+gendb.msgfield  msgfield:ams.SampPcapjoinPairMsg/client.port  fldtype:fixed  arg:u16  offset:12  width:2  aux:0
+gendb.msgfield  msgfield:ams.SampPcapjoinPairMsg/gateway.ip  fldtype:fixed  arg:u32  offset:14  width:4  aux:0
+gendb.msgfield  msgfield:ams.SampPcapjoinPairMsg/gateway.port  fldtype:fixed  arg:u16  offset:18  width:2  aux:0
+gendb.msgfield  msgfield:ams.SampPcapjoinPairMsg/opened  fldtype:fixed  arg:u64  offset:28  width:8  aux:0
+gendb.msgfield  msgfield:ams.SampPcapjoinPairMsg/request_id  fldtype:fixed  arg:u64  offset:20  width:8  aux:0
+gendb.msgfield  msgfield:ams.SampPcapjoinPairMsg/stream  fldtype:fixed  arg:u64  offset:68  width:8  aux:0
+gendb.msgfield  msgfield:ams.SampPcapjoinPairMsg/t1  fldtype:fixed  arg:u64  offset:36  width:8  aux:0
+gendb.msgfield  msgfield:ams.SampPcapjoinPairMsg/t2  fldtype:fixed  arg:u64  offset:44  width:8  aux:0
+gendb.msgfield  msgfield:ams.SampPcapjoinPairMsg/t3  fldtype:fixed  arg:u64  offset:52  width:8  aux:0
+gendb.msgfield  msgfield:ams.SampPcapjoinPairMsg/t4  fldtype:fixed  arg:u64  offset:60  width:8  aux:0
+gendb.msgfield  msgfield:ams.SampPcapjoinStateMsg/data  fldtype:varlen  arg:u8  offset:17  width:0  aux:0
+gendb.msgfield  msgfield:ams.SampPcapjoinStateMsg/gateway  fldtype:fixed  arg:bool  offset:8  width:1  aux:0
+gendb.msgfield  msgfield:ams.SampPcapjoinStateMsg/offset  fldtype:fixed  arg:u64  offset:9  width:8  aux:0
+gendb.msgfield  msgfield:ams.SampRpcAcctMsg/acct  fldtype:fixed  arg:u32  offset:8  width:4  aux:0
+gendb.msgfield  msgfield:ams.SampRpcAcctMsg/balance  fldtype:fixed  arg:i64  offset:12  width:8  aux:0
+gendb.msgfield  msgfield:ams.SampRpcReplyMsg/acct  fldtype:fixed  arg:u32  offset:16  width:4  aux:0
+gendb.msgfield  msgfield:ams.SampRpcReplyMsg/amount  fldtype:fixed  arg:i64  offset:20  width:8  aux:0
+gendb.msgfield  msgfield:ams.SampRpcReplyMsg/balance  fldtype:fixed  arg:i64  offset:29  width:8  aux:0
+gendb.msgfield  msgfield:ams.SampRpcReplyMsg/client  fldtype:varlen  arg:char  offset:37  width:0  aux:0
+gendb.msgfield  msgfield:ams.SampRpcReplyMsg/nonce  fldtype:fixed  arg:u64  offset:8  width:8  aux:0
+gendb.msgfield  msgfield:ams.SampRpcReplyMsg/ok  fldtype:fixed  arg:bool  offset:28  width:1  aux:0
+gendb.msgfield  msgfield:ams.SampRpcReqMsg/acct  fldtype:fixed  arg:u32  offset:16  width:4  aux:0
+gendb.msgfield  msgfield:ams.SampRpcReqMsg/amount  fldtype:fixed  arg:i64  offset:20  width:8  aux:0
+gendb.msgfield  msgfield:ams.SampRpcReqMsg/client  fldtype:varlen  arg:char  offset:28  width:0  aux:0
+gendb.msgfield  msgfield:ams.SampRpcReqMsg/nonce  fldtype:fixed  arg:u64  offset:8  width:8  aux:0
+gendb.msgfield  msgfield:ams.SampVodChatMsg/text  fldtype:varlen  arg:char  offset:40  width:0  aux:0
+gendb.msgfield  msgfield:ams.SampVodChatMsg/user  fldtype:rightpad  arg:char  offset:8  width:32  aux:0
+gendb.msgfield  msgfield:ams.SampVodClipMsg/seg_from  fldtype:fixed  arg:u64  offset:8  width:8  aux:0
+gendb.msgfield  msgfield:ams.SampVodClipMsg/seg_to  fldtype:fixed  arg:u64  offset:16  width:8  aux:0
+gendb.msgfield  msgfield:ams.SampVodClipMsg/title  fldtype:varlen  arg:char  offset:56  width:0  aux:0
+gendb.msgfield  msgfield:ams.SampVodClipMsg/user  fldtype:rightpad  arg:char  offset:24  width:32  aux:0
+gendb.msgfield  msgfield:ams.SampVodPollCancelMsg/poll  fldtype:rightpad  arg:char  offset:8  width:32  aux:0
+gendb.msgfield  msgfield:ams.SampVodPollOpenMsg/close_segno  fldtype:fixed  arg:u64  offset:40  width:8  aux:0
+gendb.msgfield  msgfield:ams.SampVodPollOpenMsg/options  fldtype:varlen  arg:char  offset:48  width:0  aux:0
+gendb.msgfield  msgfield:ams.SampVodPollOpenMsg/poll  fldtype:rightpad  arg:char  offset:8  width:32  aux:0
+gendb.msgfield  msgfield:ams.SampVodPollResultMsg/counts  fldtype:varlen  arg:char  offset:76  width:0  aux:0
+gendb.msgfield  msgfield:ams.SampVodPollResultMsg/nvote  fldtype:fixed  arg:u32  offset:40  width:4  aux:0
+gendb.msgfield  msgfield:ams.SampVodPollResultMsg/poll  fldtype:rightpad  arg:char  offset:8  width:32  aux:0
+gendb.msgfield  msgfield:ams.SampVodPollResultMsg/winner  fldtype:rightpad  arg:char  offset:44  width:32  aux:0
+gendb.msgfield  msgfield:ams.SampVodRejectMsg/reason  fldtype:rightpad  arg:char  offset:40  width:32  aux:0
+gendb.msgfield  msgfield:ams.SampVodRejectMsg/text  fldtype:varlen  arg:char  offset:72  width:0  aux:0
+gendb.msgfield  msgfield:ams.SampVodRejectMsg/user  fldtype:rightpad  arg:char  offset:8  width:32  aux:0
+gendb.msgfield  msgfield:ams.SampVodSegMsg/chat_pos  fldtype:fixed  arg:u64  offset:28  width:8  aux:0
+gendb.msgfield  msgfield:ams.SampVodSegMsg/dur_ms  fldtype:fixed  arg:u32  offset:24  width:4  aux:0
+gendb.msgfield  msgfield:ams.SampVodSegMsg/pts_ms  fldtype:fixed  arg:u64  offset:16  width:8  aux:0
+gendb.msgfield  msgfield:ams.SampVodSegMsg/segno  fldtype:fixed  arg:u64  offset:8  width:8  aux:0
+gendb.msgfield  msgfield:ams.SampVodSegMsg/uri  fldtype:varlen  arg:char  offset:36  width:0  aux:0
+gendb.msgfield  msgfield:ams.ShmHbMsg/grpmember.flags  fldtype:fixed  arg:u16  offset:18  width:2  aux:0
+gendb.msgfield  msgfield:ams.ShmHbMsg/grpmember.grp_id.grptype  fldtype:fixed  arg:u8  offset:12  width:1  aux:0
+gendb.msgfield  msgfield:ams.ShmHbMsg/grpmember.grp_id.index  fldtype:fixed  arg:u8  offset:13  width:1  aux:0
+gendb.msgfield  msgfield:ams.ShmHbMsg/grpmember.grp_id.proc_id  fldtype:fixed  arg:u32  offset:8  width:4  aux:0
+gendb.msgfield  msgfield:ams.ShmHbMsg/grpmember.proc_id  fldtype:fixed  arg:u32  offset:14  width:4  aux:0
+gendb.msgfield  msgfield:ams.ShmHbMsg/off  fldtype:fixed  arg:u64  offset:20  width:8  aux:0
+gendb.msgfield  msgfield:ams.ShmHbMsg/wbudget  fldtype:fixed  arg:u32  offset:28  width:4  aux:0
+gendb.msgfield  msgfield:ams.TerminateMsg/proc_id  fldtype:fixed  arg:u32  offset:8  width:4  aux:0
+gendb.msgfield  msgfield:ams.UdpFrame/dst_ip  fldtype:fixed  arg:u32  offset:20  width:4  aux:0
+gendb.msgfield  msgfield:ams.UdpFrame/dst_port  fldtype:fixed  arg:u16  offset:26  width:2  aux:0
+gendb.msgfield  msgfield:ams.UdpFrame/payload  fldtype:varlen  arg:u8  offset:28  width:0  aux:0
+gendb.msgfield  msgfield:ams.UdpFrame/src_ip  fldtype:fixed  arg:u32  offset:16  width:4  aux:0
+gendb.msgfield  msgfield:ams.UdpFrame/src_port  fldtype:fixed  arg:u16  offset:24  width:2  aux:0
+gendb.msgfield  msgfield:ams.UdpFrame/timestamp  fldtype:fixed  arg:i64  offset:8  width:8  aux:0
+gendb.msgfield  msgfield:ams.UprocTextMsg/first_seqno  fldtype:fixed  arg:u32  offset:12  width:4  aux:0
+gendb.msgfield  msgfield:ams.UprocTextMsg/last_seqno  fldtype:fixed  arg:u32  offset:16  width:4  aux:0
+gendb.msgfield  msgfield:ams.UprocTextMsg/name  fldtype:rightpad  arg:char  offset:20  width:32  aux:0
+gendb.msgfield  msgfield:ams.UprocTextMsg/seqno  fldtype:fixed  arg:u32  offset:8  width:4  aux:0
+gendb.msgfield  msgfield:ams.UprocTextMsg/text  fldtype:varlen  arg:char  offset:52  width:0  aux:0
+gendb.msgfield  msgfield:atf_amc.MsgLTA/a  fldtype:rightpad  arg:char  offset:2  width:4  aux:32
+gendb.msgfield  msgfield:atf_amc.MsgLTB/b  fldtype:rightpad  arg:char  offset:2  width:6  aux:32
+gendb.msgfield  msgfield:atf_amc.MsgLTO/o  fldtype:varlen  arg:atf_amc.MsgHdrLT  offset:2  width:0  aux:0
+gendb.msgfield  msgfield:atf_amc.MsgLTScaleV/v  fldtype:varlen  arg:char  offset:2  width:0  aux:0
+gendb.msgfield  msgfield:atf_amc.MsgLTV/v  fldtype:varlen  arg:atf_amc.MsgHdrLT  offset:2  width:0  aux:0
+gendb.msgfield  msgfield:fm.AlarmMsg/clear_time  fldtype:fixed  arg:i64  offset:188  width:8  aux:0
+gendb.msgfield  msgfield:fm.AlarmMsg/code  fldtype:rightpad  arg:char  offset:8  width:32  aux:32
+gendb.msgfield  msgfield:fm.AlarmMsg/description  fldtype:rightpad  arg:char  offset:332  width:128  aux:32
+gendb.msgfield  msgfield:fm.AlarmMsg/first_time  fldtype:fixed  arg:i64  offset:172  width:8  aux:0
+gendb.msgfield  msgfield:fm.AlarmMsg/flag  fldtype:fixed  arg:char  offset:166  width:1  aux:0
+gendb.msgfield  msgfield:fm.AlarmMsg/last_time  fldtype:fixed  arg:i64  offset:180  width:8  aux:0
+gendb.msgfield  msgfield:fm.AlarmMsg/metric  fldtype:rpascal  arg:char  offset:460  width:202  aux:0
+gendb.msgfield  msgfield:fm.AlarmMsg/n_flap  fldtype:fixed  arg:u32  offset:663  width:4  aux:0
+gendb.msgfield  msgfield:fm.AlarmMsg/n_occurred  fldtype:fixed  arg:i32  offset:168  width:4  aux:0
+gendb.msgfield  msgfield:fm.AlarmMsg/objinst  fldtype:rightpad  arg:char  offset:55  width:79  aux:32
+gendb.msgfield  msgfield:fm.AlarmMsg/objname  fldtype:rpascal  arg:char  offset:134  width:32  aux:0
+gendb.msgfield  msgfield:fm.AlarmMsg/objtype  fldtype:rightpad  arg:char  offset:40  width:15  aux:32
+gendb.msgfield  msgfield:fm.AlarmMsg/objtype_summary  fldtype:rightpad  arg:char  offset:204  width:64  aux:32
+gendb.msgfield  msgfield:fm.AlarmMsg/severity  fldtype:fixed  arg:char  offset:167  width:1  aux:0
+gendb.msgfield  msgfield:fm.AlarmMsg/shelved  fldtype:fixed  arg:bool  offset:662  width:1  aux:0
+gendb.msgfield  msgfield:fm.AlarmMsg/summary  fldtype:rightpad  arg:char  offset:268  width:64  aux:32
+gendb.msgfield  msgfield:fm.AlarmMsg/update_time  fldtype:fixed  arg:i64  offset:196  width:8  aux:0
+gendb.msgfield  msgfield:ws.CloseMsg/code  fldtype:fixed  arg:u16  offset:59  width:2  aux:0
+gendb.msgfield  msgfield:ws.CloseMsg/conn  fldtype:rightpad  arg:char  offset:8  width:50  aux:32
+gendb.msgfield  msgfield:ws.CloseMsg/reason  fldtype:varlen  arg:char  offset:61  width:0  aux:0
+gendb.msgfield  msgfield:ws.CloseMsg/side  fldtype:fixed  arg:char  offset:58  width:1  aux:0
+gendb.msgfield  msgfield:ws.ConnectMsg/conn  fldtype:rightpad  arg:char  offset:8  width:50  aux:32
+gendb.msgfield  msgfield:ws.ConnectMsg/side  fldtype:fixed  arg:char  offset:58  width:1  aux:0
+gendb.msgfield  msgfield:ws.DataMsg/conn  fldtype:rightpad  arg:char  offset:8  width:50  aux:32
+gendb.msgfield  msgfield:ws.DataMsg/data  fldtype:varlen  arg:char  offset:60  width:0  aux:0
+gendb.msgfield  msgfield:ws.DataMsg/opcode  fldtype:fixed  arg:u8  offset:59  width:1  aux:0
+gendb.msgfield  msgfield:ws.DataMsg/side  fldtype:fixed  arg:char  offset:58  width:1  aux:0
+gendb.msgfield  msgfield:ws.ServerStartMsg/server  fldtype:rightpad  arg:char  offset:8  width:25  aux:32
+gendb.msgfield  msgfield:ws.ServerStopMsg/server  fldtype:rightpad  arg:char  offset:8  width:25  aux:32

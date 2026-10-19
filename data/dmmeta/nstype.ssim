@@ -3,4 +3,5 @@ dmmeta.nstype  nstype:lib  comment:Library
 dmmeta.nstype  nstype:none  comment:"Skip building"
 dmmeta.nstype  nstype:objlist  comment:"Object files are added to dependents' link line"
 dmmeta.nstype  nstype:protocol  comment:"Protocol (not a target)"
+dmmeta.nstype  nstype:so  comment:"Shared object a host process loads"
 dmmeta.nstype  nstype:ssimdb  comment:"Ssim database (not a target)"

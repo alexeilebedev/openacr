@@ -18,9 +18,9 @@ dmmeta.field  field:atf_amc.FCascdel.p_parent  arg:atf_amc.FCascdel  reftype:Ptr
 A single pointer in the parent ctype
 (see `tclass_Ptr` in `cpp/amc/ptr.cpp`):
 
-| Field        | Type    | Meaning                                |
-|--------------|---------|----------------------------------------|
-| `<name>`     | `T*`    | NULL or pointer to the indexed record  |
+| Field    | Type | Meaning |
+| -------- | ---- | ------- |
+| `<name>` | `T*` | NULL or pointer to the indexed record |
 
 `Ptr` does **not** support a default value — amc rejects any
 `dflt` on a Ptr field with `"Default value for Ptr is not
@@ -32,12 +32,12 @@ supported (it's always NULL)"`.
 Both `Ptr` and `Upptr` are plain `T*` pointers, but they play
 different roles in amc's cross-reference model:
 
-| | **Ptr** | **Upptr** |
-|---|---|---|
-| Role | Forward pointer, set by xref insertion | Parent pointer, set when child is inserted into the parent |
-| `_InsertMaybe` | Yes — Ptr can be a cross-reference target | No — Upptr is read-only |
-| Auto-population | When `dmmeta.xref` matches | Set by another xref's `via:` path |
-| Cardinality | One in-pointer per parent | One per child (back-pointer) |
+|                 | **Ptr**                                   | **Upptr** |
+| --------------- | ----------------------------------------- | --------- |
+| Role            | Forward pointer, set by xref insertion    | Parent pointer, set when child is inserted into the parent |
+| `_InsertMaybe`  | Yes — Ptr can be a cross-reference target | No — Upptr is read-only |
+| Auto-population | When `dmmeta.xref` matches                | Set by another xref's `via:` path |
+| Cardinality     | One in-pointer per parent                 | One per child (back-pointer) |
 
 ### Ssim inputs
 <a href="#ssim-inputs"></a>
@@ -59,12 +59,12 @@ Optional:
 
 Source: `cpp/amc/ptr.cpp`.
 
-| Tfunc                  | Generated function                                                      | When emitted | Effect |
-|------------------------|-------------------------------------------------------------------------|--------------|--------|
-| `Ptr.Init`             | `<name>_Init(P&)` (inline, folded)                                      | always       | `parent.<name> = NULL;` |
-| `Ptr.InsertMaybe`      | `bool <name>_InsertMaybe(P&, T& row)`                                   | when xref present | Set the pointer if it is NULL or already pointing at `row`; otherwise return false. |
-| `Ptr.Remove`           | `void <name>_Remove(P&, T& row)`                                        | when xref present | If pointer is currently `&row`, NULL it. |
-| `Ptr.Cascdel`          | (private)                                                               | when xref has `cascdel:Y` | Delete the pointed-to row, then NULL the pointer. |
+| Tfunc             | Generated function                    | When emitted              | Effect |
+| ----------------- | ------------------------------------- | ------------------------- | ------ |
+| `Ptr.Init`        | `<name>_Init(P&)` (inline, folded)    | always                    | `parent.<name> = NULL;` |
+| `Ptr.InsertMaybe` | `bool <name>_InsertMaybe(P&, T& row)` | when xref present         | Set the pointer if it is NULL or already pointing at `row`; otherwise return false. |
+| `Ptr.Remove`      | `void <name>_Remove(P&, T& row)`      | when xref present         | If pointer is currently `&row`, NULL it. |
+| `Ptr.Cascdel`     | (private)                             | when xref has `cascdel:Y` | Delete the pointed-to row, then NULL the pointer. |
 
 ### Pitfalls
 <a href="#pitfalls"></a>

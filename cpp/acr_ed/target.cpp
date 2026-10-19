@@ -39,6 +39,10 @@ void acr_ed::edaction_Create_Target() {
         acr_ed::_db.cmdline.nstype = dmmeta_Nstype_nstype_lib;
     }
     bool is_exe = acr_ed::_db.cmdline.nstype == dmmeta_Nstype_nstype_exe;
+    bool is_so = acr_ed::_db.cmdline.nstype == dmmeta_Nstype_nstype_so;
+    // an executable and a shared object are images: each links its closure and
+    // runs a main loop, so each has a main
+    bool is_image = is_exe || is_so;
     bool is_lib = acr_ed::_db.cmdline.nstype == dmmeta_Nstype_nstype_lib;
     bool is_protocol = acr_ed::_db.cmdline.nstype == dmmeta_Nstype_nstype_protocol;
     bool is_ssimdb = acr_ed::_db.cmdline.nstype == dmmeta_Nstype_nstype_ssimdb;
@@ -56,7 +60,7 @@ void acr_ed::edaction_Create_Target() {
         acr_ed::_db.out_ssim<< dmmeta::Nsproto(acr_ed::_db.cmdline.target
                                                , algo::Comment()) << eol;
     }
-    if (is_exe || is_lib) {
+    if (is_image || is_lib) {
         acr_ed::_db.out_ssim<< dmmeta::Nsx(acr_ed::_db.cmdline.target
                                            , true/*genthrow*/
                                            , true/*correct_getorcreate*/
@@ -66,19 +70,19 @@ void acr_ed::edaction_Create_Target() {
                                            , algo::Comment()) << eol;
     }
     // don't emit 'main' for libraries
-    if (is_exe) {
+    if (is_image) {
         acr_ed::_db.out_ssim<<dmmeta::Main(acr_ed::_db.cmdline.target, false/*ismodule*/)<<eol;
     }
     // generate C++ code
     acr_ed::_db.out_ssim<< dmmeta::Nscpp(acr_ed::_db.cmdline.target, algo::Comment()) << eol;
 
     // tuples for abt to build this executable
-    if (is_exe || is_lib || is_protocol) {
+    if (is_image || is_lib || is_protocol) {
         dev::Target target;
         target.target="$target";
         Ins(&R, acr_ed::_db.out_ssim, tempstr()<<target);
     }
-    if (is_exe || is_lib) {
+    if (is_image || is_lib) {
         RegisterFile(Subst(R,"cpp/$target/$target.cpp"), "");
         RegisterFile(Subst(R,"include/$target.h"), "");
     }
@@ -86,11 +90,16 @@ void acr_ed::edaction_Create_Target() {
     RegisterFile(Subst(R, "cpp/gen/$target_gen.cpp"), "");
     RegisterFile(Subst(R, "include/gen/$target_gen.h"), "");
     RegisterFile(Subst(R, "include/gen/$target_gen.inl.h"), "");
-    if (is_exe) {
-        Ins(&R, acr_ed::_db.out_ssim, "dev.gitfile  gitfile:bin/$target  comment:''");
+    // the link abt -install makes to the image, bin/ for an executable and lib/
+    // for a shared object
+    Set(R, "$instdir", is_exe ? "bin" : "lib");
+    Set(R, "$instname", is_exe ? "$target" : "$target.so");
+    Set(R, "$instpath", "$instdir/$instname");
+    if (is_image) {
+        Ins(&R, acr_ed::_db.out_ssim, "dev.gitfile  gitfile:$instpath  comment:''");
     }
 
-    if (is_exe || is_lib) {
+    if (is_image || is_lib) {
         Ins(&R, acr_ed::_db.out_ssim, "dev.targsrc  targsrc:$target/cpp/$target/$target.cpp  comment:''");
         Ins(&R, acr_ed::_db.out_ssim, "dev.targsrc  targsrc:$target/include/$target.h  comment:''");
     }
@@ -100,7 +109,7 @@ void acr_ed::edaction_Create_Target() {
     Ins(&R, acr_ed::_db.out_ssim, "dev.targsrc  targsrc:$gentarget/include/gen/$target_gen.h  comment:''");
     Ins(&R, acr_ed::_db.out_ssim, "dev.targsrc  targsrc:$gentarget/include/gen/$target_gen.inl.h  comment:''");
 
-    if (is_exe || is_lib) {
+    if (is_image || is_lib) {
         Ins(&R, acr_ed::_db.out_ssim, "dev.targdep  targdep:$target.algo_lib  comment:''");
         Ins(&R, acr_ed::_db.out_ssim, "dev.targdep  targdep:$target.lib_prot  comment:''");
         // add FDb and a command line
@@ -152,7 +161,7 @@ void acr_ed::edaction_Create_Target() {
         nsdb.ns="$target";
         Ins(&R, acr_ed::_db.out_ssim, tempstr()<<nsdb);
     }
-    if (is_exe || is_lib) {
+    if (is_image || is_lib) {
         // sample header
         Ins(&R, acr_ed::_db.script, "mkdir -p cpp/$target/");
         Ins(&R, acr_ed::_db.script, "cat > include/$target.h << EOF");
@@ -168,7 +177,7 @@ void acr_ed::edaction_Create_Target() {
         Ins(&R, acr_ed::_db.script, "mkdir -p data/$target/");
     }
     // sample source file
-    if (is_exe || is_lib) {
+    if (is_image || is_lib) {
         Ins(&R, acr_ed::_db.script, "cat > cpp/$target/$target.cpp << EOF");
         Ins(&R, acr_ed::_db.script, "#include \"include/algo.h\"");
         InsertSrcfileInclude(R,false);
@@ -178,15 +187,21 @@ void acr_ed::edaction_Create_Target() {
             Ins(&R, acr_ed::_db.script, "    $target::MainLoop();");
             Ins(&R, acr_ed::_db.script, "}");
         }
+        // the host of a shared object drives its main loop
+        if (is_so) {
+            Ins(&R, acr_ed::_db.script, "void $target::Main() {");
+            Ins(&R, acr_ed::_db.script, "}");
+        }
         Ins(&R, acr_ed::_db.script, "EOF");
         Ins(&R, acr_ed::_db.script, "");
     }
 
     Ins(&R, acr_ed::_db.script,"bin/amc  # make sure */gen/* files are created");
     acr_ed::_db.need_amc=false; // already did it
-    if (is_exe) {
-        Ins(&R, acr_ed::_db.script,"ln -s ../build/release/$target bin/$target");
-        Ins(&R, acr_ed::_db.script,"git add -f bin/$target");
+    if (is_image) {
+        Ins(&R, acr_ed::_db.script,"mkdir -p $instdir");
+        Ins(&R, acr_ed::_db.script,"ln -s ../build/release/$instname $instpath");
+        Ins(&R, acr_ed::_db.script,"git add -f $instpath");
     }
     acr_ed::RegisterFile(Subst(R,"txt/$nstype/$target/README.md"), "");
 

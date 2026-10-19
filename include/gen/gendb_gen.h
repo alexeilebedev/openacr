@@ -44,13 +44,11 @@ enum gendb_FieldIdEnum {    // gendb.FieldId.value
     ,gendb_FieldId_comment
     ,gendb_FieldId_msgfield
     ,gendb_FieldId_msg
-    ,gendb_FieldId_offset
+    ,gendb_FieldId_fldtype
     ,gendb_FieldId_arg
+    ,gendb_FieldId_offset
     ,gendb_FieldId_width
-    ,gendb_FieldId_bigend
-    ,gendb_FieldId_varlen
-    ,gendb_FieldId_strtype
-    ,gendb_FieldId_pad
+    ,gendb_FieldId_aux
     ,gendb_FieldId_typeoffset
     ,gendb_FieldId_typewidth
     ,gendb_FieldId_typebig
@@ -64,7 +62,7 @@ enum gendb_FieldIdEnum {    // gendb.FieldId.value
     ,gendb_FieldId_value
 };
 
-enum { gendb_FieldIdEnum_N = 36 };
+enum { gendb_FieldIdEnum_N = 34 };
 
 namespace gendb { // gen:ns_pkeytypedef
     typedef algo::Smallstr250 CppsymPkey;
@@ -258,14 +256,11 @@ void                 Msg_Print(gendb::Msg& row, algo::cstring& str) __attribute_
 // --- gendb.Msgfield
 struct Msgfield { // gendb.Msgfield: Resolved leaf field layout of a message ctype (amc-derived)
     algo::Smallstr100   msgfield;   //
-    i32                 offset;     //   0  Absolute byte offset in the message
-    algo::Smallstr100   arg;        // Leaf scalar ctype (u8..u64, char, bool, f32, f64)
-    i32                 width;      //   0  Byte width; for a char array the array length
-    bool                bigend;     //   false  Field is big-endian
-    bool                varlen;     //   false  Varlen tail: extends to the end of the message
-    algo::Smallstr50    strtype;    // Inline-string format (dmmeta.strtype): rpascal, leftpad, rightpad; empty when the field is not an inline string
-    algo::Smallstr10    pad;        // Padding character of a padded inline string, as a byte value; empty when it has none
-    algo::Comment       comment;    //
+    algo::Fldtype       fldtype;    // How the field is laid out; it says what offset, width and aux mean
+    algo::Smallstr100   arg;        // Scalar ctype (u8..u64, char, bool, f32, f64), or a varlen's element ctype
+    i32                 offset;     //   0  Byte offset in the message
+    i32                 width;      //   0  Byte width; for a varlen the offset of the end field it starts at, 0 for none
+    i32                 aux;        //   0  rightpad: the pad byte; varlen2: the offset of the end field it ends at
     // func:gendb.Msgfield..Ctor
     inline               Msgfield() __attribute__((nothrow));
 };
@@ -289,7 +284,7 @@ bool                 Msgfield_ReadFieldMaybe(gendb::Msgfield& parent, algo::strp
 bool                 Msgfield_ReadStrptrMaybe(gendb::Msgfield &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:gendb.Msgfield..Init
-void                 Msgfield_Init(gendb::Msgfield& parent);
+inline void          Msgfield_Init(gendb::Msgfield& parent);
 // print string representation of ROW to string STR
 // cfmt:gendb.Msgfield.String  printfmt:Tuple
 // func:gendb.Msgfield..Print

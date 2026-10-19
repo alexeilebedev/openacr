@@ -489,6 +489,35 @@ static bool SpecialQ(char ch) {
     return ch == '\\' || ch == '&' || ch == '<' || ch == '`' || ch == '*' || ch == '_' || ch == '[';
 }
 
+// Append TEXT to OUT as markdown that the parser reads back as TEXT, with a line of
+// markdown for each line of TEXT.
+//
+// A comment in this tree is plain text.  `1K*scale` in one is a number and a word, `<ns>`
+// is a name, and a line opening with `#` or `|` is a line about a flag or a column.  Read
+// as markdown, the star opens an emphasis, the name is dropped as a tag, and the line
+// becomes a heading or a table.  So every character that opens an inline span is escaped,
+// and so is the first character of a line when it is not a letter.  The backquote is the
+// exception inside a line, since the authors of these comments write it to mean a name.
+//
+// A line indented four spaces that no line of prose leads into is a listing, which the
+// parser copies as it stands, so it is copied here as it stands too.
+void doc::PutPlain(algo::cstring &out, algo::strptr text) {
+    bool prose = false;
+    ind_beg(algo::Line_curs, line, text) {
+        bool blank = ch_N(algo::Trimmed(line)) == 0;
+        bool listing = !prose && Indent(line) >= 4;
+        int first = doc::SkipSpace(line, 0);
+        frep_(i, ch_N(line)) {
+            char ch = line.elems[i];
+            bool lead = i == first && !algo_lib::AlphaCharQ(ch) && (ch != '`' || FenceLen(line) > 0);
+            bool markup = ch != '`' && SpecialQ(ch);
+            out << (!listing && (lead || markup) ? "\\" : "") << ch;
+        }
+        out << eol;
+        prose = !blank && !listing;
+    }ind_end;
+}
+
 // Return how many links the spans read so far belong to.
 //
 // It is read off the spans rather than counted in a variable, so a link's number is a

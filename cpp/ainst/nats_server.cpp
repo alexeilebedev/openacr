@@ -24,15 +24,25 @@
 
 // -----------------------------------------------------------------------------
 
-// Install the nats-server broker from the upstream release deb.
-// The deb is unpacked rather than installed, because dpkg-deb is present in
-// every image this runs in while unzip is not, and because the package also
-// carries a /usr/local/bin symlink of the same binary.
+// Install the nats-server broker into $PREFIX/bin from the upstream release:
+// a deb on Linux, a tarball on macOS.  The deb is unpacked rather than
+// installed, because dpkg-deb is present in every image this runs in while
+// unzip is not, and because the package also carries a /usr/local/bin symlink
+// of the same binary.
 // natsusr owns the running broker: omcli reaches the node over ssh as that
 // account, and nats-server keeps its JetStream store under that home.
 void ainst::extpkg_nats_server(ainst::FExtpkg &extpkg) {
-    AddStage(extpkg,"extpkg=$(mktemp -d)");
-    AddStage(extpkg,tempstr()<<"dpkg-deb -x "<<GetExtpkgsrcVar(extpkg,"deb")<<" \"$extpkg\"");
-    AddStage(extpkg,"ainst_install 755 \"$extpkg/usr/bin/nats-server\" /usr/bin/nats-server");
-    AddPost(extpkg,"useradd natsusr -u 1102 -U -m -s /bin/bash || true");
+    tempstr rel(GetExtpkgsrcVar(extpkg,"rel"));
+    AddStage(extpkg,"if [[ $DARWIN == Y ]]; then");
+    // the archive's one directory is named after the release, which the
+    // script does not spell, so a release bump stays one row of data
+    AddStage(extpkg,tempstr()<<"    bin=$(echo \"$(ainst_unpack "<<rel<<")\"/nats-server-*-darwin-$(uname -m)/nats-server)");
+    AddStage(extpkg,"else");
+    AddStage(extpkg,"    extpkg=$(ainst_tmpdir)");
+    AddStage(extpkg,tempstr()<<"    dpkg-deb -x "<<rel<<" \"$extpkg\"");
+    AddStage(extpkg,"    bin=\"$extpkg/usr/bin/nats-server\"");
+    AddStage(extpkg,"fi");
+    AddStage(extpkg,"ainst_install 755 \"$bin\" \"$PREFIX/bin/nats-server\"");
+    // the broker's account is a Linux host's; a Mac runs the server only in tests
+    AddPost(extpkg,"if [[ $DARWIN == N ]]; then useradd natsusr -u 1102 -U -m -s /bin/bash || true; fi");
 }

@@ -1,0 +1,4 @@
+amcdb.regxlenient  regxlenient:class_noclose  invalid:N  comment:"A [ with no ] after it is literal"
+amcdb.regxlenient  regxlenient:close_noopen  invalid:N  comment:"A ) that closes no group is literal"
+amcdb.regxlenient  regxlenient:open_noclose  invalid:Y  comment:"A ( that is never closed makes the pattern invalid"
+amcdb.regxlenient  regxlenient:quant_noatom  invalid:N  comment:"A * + or ? with nothing to repeat is literal"

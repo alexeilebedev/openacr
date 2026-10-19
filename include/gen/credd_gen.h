@@ -60,9 +60,11 @@ namespace credd { struct FCred; }
 namespace creddb { struct Kind; }
 namespace creddb { struct Master; }
 namespace creddb { struct Perm; }
+namespace creddb { struct Role; }
 namespace credd { struct cred_c_credperm_curs; }
 namespace credd { struct _db_kind_curs; }
 namespace credd { struct _db_perm_curs; }
+namespace credd { struct _db_role_curs; }
 namespace credd { struct _db_cred_curs; }
 namespace credd { struct _db_credperm_curs; }
 namespace credd { struct _db_master_curs; }
@@ -75,6 +77,7 @@ namespace credd { struct FDb; }
 namespace credd { struct FImportfile; }
 namespace credd { struct FMaster; }
 namespace credd { struct FPerm; }
+namespace credd { struct FRole; }
 namespace credd { struct FieldId; }
 namespace credd { struct TableId; }
 namespace credd { extern struct credd::FDb _db; }
@@ -258,6 +261,11 @@ struct FDb { // credd.FDb
     credd::FPerm**         ind_perm_buckets_elems;       // pointer to bucket array
     i32                    ind_perm_buckets_n;           // number of elements in bucket array
     i32                    ind_perm_n;                   // number of elements in the hash table
+    credd::FRole*          role_lary[36];                // level array
+    i64                    role_n;                       // number of elements in array
+    credd::FRole**         ind_role_buckets_elems;       // pointer to bucket array
+    i32                    ind_role_buckets_n;           // number of elements in bucket array
+    i32                    ind_role_n;                   // number of elements in the hash table
     credd::FCred*          cred_lary[36];                // level array
     i64                    cred_n;                       // number of elements in array
     credd::FCred**         ind_cred_buckets_elems;       // pointer to bucket array
@@ -461,6 +469,74 @@ void                 ind_perm_Reserve(int n) __attribute__((nothrow));
 // Reserve enough room for exacty N elements. Return success code.
 // func:credd.FDb.ind_perm.AbsReserve
 void                 ind_perm_AbsReserve(int n) __attribute__((nothrow));
+
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:credd.FDb.role.Alloc
+credd::FRole&        role_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:credd.FDb.role.AllocMaybe
+credd::FRole*        role_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:credd.FDb.role.InsertMaybe
+credd::FRole*        role_InsertMaybe(const creddb::Role &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+// func:credd.FDb.role.AllocMem
+void*                role_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:credd.FDb.role.EmptyQ
+inline bool          role_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+// func:credd.FDb.role.Find
+inline credd::FRole* role_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+// func:credd.FDb.role.Last
+inline credd::FRole* role_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+// func:credd.FDb.role.N
+inline i64           role_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+// func:credd.FDb.role.RemoveAll
+void                 role_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:credd.FDb.role.RemoveLast
+void                 role_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:credd.FDb.role.qFind
+inline credd::FRole& role_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:credd.FDb.role.XrefMaybe
+bool                 role_XrefMaybe(credd::FRole &row);
+
+// Return true if hash is empty
+// func:credd.FDb.ind_role.EmptyQ
+inline bool          ind_role_EmptyQ() __attribute__((nothrow));
+// Find row by key. Return NULL if not found.
+// func:credd.FDb.ind_role.Find
+credd::FRole*        ind_role_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:credd.FDb.ind_role.FindX
+credd::FRole&        ind_role_FindX(const algo::strptr& key);
+// Find row by key. If not found, create and x-reference a new row with with this key.
+// func:credd.FDb.ind_role.GetOrCreate
+credd::FRole&        ind_role_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
+// Return number of items in the hash
+// func:credd.FDb.ind_role.N
+inline i32           ind_role_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:credd.FDb.ind_role.InsertMaybe
+bool                 ind_role_InsertMaybe(credd::FRole& row) __attribute__((nothrow));
+// Remove reference to element from hash index. If element is not in hash, do nothing
+// func:credd.FDb.ind_role.Remove
+void                 ind_role_Remove(credd::FRole& row) __attribute__((nothrow));
+// Reserve enough room in the hash for N more elements. Return success code.
+// func:credd.FDb.ind_role.Reserve
+void                 ind_role_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:credd.FDb.ind_role.AbsReserve
+void                 ind_role_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -751,6 +827,18 @@ inline void          _db_perm_curs_Next(_db_perm_curs &curs) __attribute__((noth
 // func:credd.FDb.perm_curs.Access
 inline credd::FPerm& _db_perm_curs_Access(_db_perm_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
+// func:credd.FDb.role_curs.Reset
+inline void          _db_role_curs_Reset(_db_role_curs &curs, credd::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:credd.FDb.role_curs.ValidQ
+inline bool          _db_role_curs_ValidQ(_db_role_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:credd.FDb.role_curs.Next
+inline void          _db_role_curs_Next(_db_role_curs &curs) __attribute__((nothrow));
+// item access
+// func:credd.FDb.role_curs.Access
+inline credd::FRole& _db_role_curs_Access(_db_role_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
 // func:credd.FDb.cred_curs.Reset
 inline void          _db_cred_curs_Reset(_db_cred_curs &curs, credd::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
@@ -854,7 +942,9 @@ struct FKind { // credd.FKind: Provider vocabulary, compiled into the binary
     u32                ind_kind_hashval;   // hash value
     algo::Smallstr50   kind;               //
     algo::cstring      tokenurl;           // Page that issues a token; $server, $name and $perm are filled in
-    algo::cstring      howto;              //   ""  How a person gets a new token of this kind, in steps; , ,  and  are filled in
+    algo::cstring      howto;              //   ""  How a person gets a new token of this kind, in steps; $server, $name, $perm, $role filled in
+    algo::cstring      minturl;            //   ""  API endpoint that mints a token of this kind, $server and $account filled in
+    algo::cstring      rotateurl;          //   ""  API endpoint where a token rotates itself, $server and $account filled in
     algo::cstring      prefix;             //   ""  Starts a value of this kind is recognized by, space-separated; empty = none
     bool               multiline;          //   false  The secret is several lines, pasted and ended by an empty line
     algo::cstring      comment;            //
@@ -863,10 +953,10 @@ struct FKind { // credd.FKind: Provider vocabulary, compiled into the binary
     u64                c_perm_max;         // capacity of allocated array
     // reftype Ptrary of credd.FKind.c_perm prohibits copy
     // func:credd.FKind..AssignOp
-    inline credd::FKind& operator =(const credd::FKind &rhs) = delete;
+    credd::FKind&        operator =(const credd::FKind &rhs) = delete;
     // reftype Ptrary of credd.FKind.c_perm prohibits copy
     // func:credd.FKind..CopyCtor
-    inline               FKind(const credd::FKind &rhs) = delete;
+    FKind(const credd::FKind &rhs) = delete;
 private:
     // func:credd.FKind..Ctor
     inline               FKind() __attribute__((nothrow));
@@ -1012,6 +1102,49 @@ inline void          FPerm_Init(credd::FPerm& parent);
 // func:credd.FPerm..Uninit
 void                 FPerm_Uninit(credd::FPerm& parent) __attribute__((nothrow));
 
+// --- credd.FRole
+// create: credd.FDb.role (Lary)
+// global access: role (Lary, by rowid)
+// global access: ind_role (Thash, hash field role)
+struct FRole { // credd.FRole: One role of one provider, compiled into the binary
+    credd::FRole*       ind_role_next;      // hash next
+    u32                 ind_role_hashval;   // hash value
+    algo::Smallstr100   role;               //
+    i32                 level;              //   0  The access level the provider's API takes for the role
+    algo::cstring       comment;            //
+    // func:credd.FRole..AssignOp
+    inline credd::FRole& operator =(const credd::FRole &rhs) = delete;
+    // func:credd.FRole..CopyCtor
+    inline               FRole(const credd::FRole &rhs) = delete;
+private:
+    // func:credd.FRole..Ctor
+    inline               FRole() __attribute__((nothrow));
+    // func:credd.FRole..Dtor
+    inline               ~FRole() __attribute__((nothrow));
+    friend credd::FRole&        role_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend credd::FRole*        role_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 role_RemoveAll() __attribute__((nothrow));
+    friend void                 role_RemoveLast() __attribute__((nothrow));
+};
+// Copy fields out of row
+// func:credd.FRole.base.CopyOut
+void                 role_CopyOut(credd::FRole &row, creddb::Role &out) __attribute__((nothrow));
+// Copy fields in to row
+// func:credd.FRole.base.CopyIn
+void                 role_CopyIn(credd::FRole &row, creddb::Role &in) __attribute__((nothrow));
+
+// func:credd.FRole.kind.Get
+algo::strptr         kind_Get(credd::FRole& parent) __attribute__((__warn_unused_result__, nothrow));
+
+// func:credd.FRole.name.Get
+algo::strptr         name_Get(credd::FRole& parent) __attribute__((__warn_unused_result__, nothrow));
+
+// Set all fields to initial values.
+// func:credd.FRole..Init
+inline void          FRole_Init(credd::FRole& parent);
+// func:credd.FRole..Uninit
+void                 FRole_Uninit(credd::FRole& parent) __attribute__((nothrow));
+
 // --- credd.FieldId
 #pragma pack(push,1)
 struct FieldId { // credd.FieldId: Field read helper
@@ -1140,6 +1273,14 @@ struct _db_perm_curs {// cursor
     credd::FDb *parent;
     i64 index;
     _db_perm_curs(){ parent=NULL; index=0; }
+};
+
+
+struct _db_role_curs {// cursor
+    typedef credd::FRole ChildType;
+    credd::FDb *parent;
+    i64 index;
+    _db_role_curs(){ parent=NULL; index=0; }
 };
 
 

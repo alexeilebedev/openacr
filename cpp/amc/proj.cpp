@@ -209,14 +209,16 @@ bool amc::ProjNestedQ(amc::FField &field) {
 
 // Return TRUE when FIELD is a member of its ctype in a projected language.  A
 // Base field is an injection point whose fields appear individually, a bitfield
-// is an accessor over its source word, and a message's type and length words are
-// derived: the encoder writes the message's own type and the frame's length, and
-// a decoded value that carried them would restate what the caller had to know to
+// is an accessor over its source word, a computed field (cppfunc, substr, alias)
+// has no bytes of its own, and a message's type and length words are derived:
+// the encoder writes the message's own type and the frame's length, and a
+// decoded value that carried them would restate what the caller had to know to
 // decode.
 bool amc::ProjMemberQ(amc::FField &field) {
     bool derived = field.p_ctype->c_msgtype && (field.c_typefld || field.c_lenfld);
     return field.reftype != dmmeta_Reftype_reftype_Base
         && field.reftype != dmmeta_Reftype_reftype_Bitfld
+        && !amc::FldfuncQ(field)
         && !derived;
 }
 
@@ -307,7 +309,7 @@ bool amc::ProjFloatQ(amc::FCtype &arg) {
 // offsets, and neither can two languages.  A Base, a bitfield and a tail occupy
 // no fixed slot.  A Val field of a ctype occupies that ctype's size only while
 // the ctype has no tail of its own, since a nested tail would run into the next
-// slot.  An inline array occupies its elements only when it is fixed, which is
+// slot, and nor does a computed field.  An inline array occupies its elements only when it is fixed, which is
 // the shape C++ lays out as a bare element array.  An inline string occupies its
 // characters, a spare byte and its count when it is rpascal, and its characters
 // alone when it is rightpad; those are the string forms a projected language
@@ -315,7 +317,7 @@ bool amc::ProjFloatQ(amc::FCtype &arg) {
 int amc::ProjSlotBytes(amc::FField &field) {
     int ret = -1;
     bool scalar = !field.p_arg->c_bltin || amc::ProjScalarQ(*field.p_arg);
-    if (field.reftype == dmmeta_Reftype_reftype_Base || field.reftype == dmmeta_Reftype_reftype_Bitfld) {
+    if (field.reftype == dmmeta_Reftype_reftype_Base || field.reftype == dmmeta_Reftype_reftype_Bitfld || amc::FldfuncQ(field)) {
         ret = 0;
     } else if (amc::ProjRpascalQ(field)) {
         ret = field.c_smallstr->length + 2;

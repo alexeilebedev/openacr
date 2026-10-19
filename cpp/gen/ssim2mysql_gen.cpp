@@ -64,7 +64,7 @@ namespace ssim2mysql { // gen:ns_print_proto
     // func:ssim2mysql.FDb.zs_cmd.UpdateCycles
     inline static void   zs_cmd_UpdateCycles() __attribute__((nothrow));
     // func:ssim2mysql.FDb.zs_cmd.Call
-    inline static void   zs_cmd_Call() __attribute__((nothrow));
+    inline static void   zs_cmd_Call();
     // First element of index changed.
     // func:ssim2mysql.FDb.cd_input_line.FirstChanged
     static void          cd_input_line_FirstChanged() __attribute__((nothrow));
@@ -72,7 +72,7 @@ namespace ssim2mysql { // gen:ns_print_proto
     // func:ssim2mysql.FDb.cd_input_line.UpdateCycles
     inline static void   cd_input_line_UpdateCycles() __attribute__((nothrow));
     // func:ssim2mysql.FDb.cd_input_line.Call
-    inline static void   cd_input_line_Call() __attribute__((nothrow));
+    inline static void   cd_input_line_Call();
     // find trace by row id (used to implement reflection)
     // func:ssim2mysql.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
@@ -150,7 +150,7 @@ void ssim2mysql::FColumn_Print(ssim2mysql::FColumn& row, algo::cstring& str) {
     PrintAttrSpaceReset(str,"ssimfile_c_column_in_ary", temp);
 }
 
-// --- ssim2mysql.FCppfunc.msghdr.CopyOut
+// --- ssim2mysql.FCppfunc.base.CopyOut
 // Copy fields out of row
 void ssim2mysql::cppfunc_CopyOut(ssim2mysql::FCppfunc &row, dmmeta::Cppfunc &out) {
     out.field = row.field;
@@ -159,7 +159,7 @@ void ssim2mysql::cppfunc_CopyOut(ssim2mysql::FCppfunc &row, dmmeta::Cppfunc &out
     out.set = row.set;
 }
 
-// --- ssim2mysql.FCppfunc.msghdr.CopyIn
+// --- ssim2mysql.FCppfunc.base.CopyIn
 // Copy fields in to row
 void ssim2mysql::cppfunc_CopyIn(ssim2mysql::FCppfunc &row, dmmeta::Cppfunc &in) {
     row.field = in.field;
@@ -196,14 +196,14 @@ void ssim2mysql::FCppfunc_Print(ssim2mysql::FCppfunc& row, algo::cstring& str) {
     PrintAttrSpaceReset(str,"set", temp);
 }
 
-// --- ssim2mysql.FCtype.msghdr.CopyOut
+// --- ssim2mysql.FCtype.base.CopyOut
 // Copy fields out of row
 void ssim2mysql::ctype_CopyOut(ssim2mysql::FCtype &row, dmmeta::Ctype &out) {
     out.ctype = row.ctype;
     out.comment = algo::Comment(row.comment);
 }
 
-// --- ssim2mysql.FCtype.msghdr.CopyIn
+// --- ssim2mysql.FCtype.base.CopyIn
 // Copy fields in to row
 void ssim2mysql::ctype_CopyIn(ssim2mysql::FCtype &row, dmmeta::Ctype &in) {
     row.ctype = in.ctype;
@@ -1159,7 +1159,7 @@ static void ssim2mysql::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'ssim2mysql.Input'  signature:'906d764cfa013a17db141585d7de939510d81943'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'ssim2mysql.Input'  signature:'d697b2560769ccae34886deef75fc571bfaf1546'");
 }
 
 // --- ssim2mysql.FDb._db.InsertStrptrMaybe
@@ -2809,7 +2809,7 @@ void ssim2mysql::FDb_Uninit() {
     // skip destruction of ind_column in global scope
 }
 
-// --- ssim2mysql.FField.msghdr.CopyOut
+// --- ssim2mysql.FField.base.CopyOut
 // Copy fields out of row
 void ssim2mysql::field_CopyOut(ssim2mysql::FField &row, dmmeta::Field &out) {
     out.field = row.field;
@@ -2819,7 +2819,7 @@ void ssim2mysql::field_CopyOut(ssim2mysql::FField &row, dmmeta::Field &out) {
     out.comment = algo::Comment(row.comment);
 }
 
-// --- ssim2mysql.FField.msghdr.CopyIn
+// --- ssim2mysql.FField.base.CopyIn
 // Copy fields in to row
 void ssim2mysql::field_CopyIn(ssim2mysql::FField &row, dmmeta::Field &in) {
     row.field = in.field;
@@ -3175,7 +3175,7 @@ void ssim2mysql::FInput_Print(ssim2mysql::FInput& row, algo::cstring& str) {
     PrintAttrSpaceReset(str,"warnstr", temp);
 }
 
-// --- ssim2mysql.FNs.msghdr.CopyOut
+// --- ssim2mysql.FNs.base.CopyOut
 // Copy fields out of row
 void ssim2mysql::ns_CopyOut(ssim2mysql::FNs &row, dmmeta::Ns &out) {
     out.ns = row.ns;
@@ -3184,7 +3184,7 @@ void ssim2mysql::ns_CopyOut(ssim2mysql::FNs &row, dmmeta::Ns &out) {
     out.comment = algo::Comment(row.comment);
 }
 
-// --- ssim2mysql.FNs.msghdr.CopyIn
+// --- ssim2mysql.FNs.base.CopyIn
 // Copy fields in to row
 void ssim2mysql::ns_CopyIn(ssim2mysql::FNs &row, dmmeta::Ns &in) {
     row.ns = in.ns;
@@ -3281,7 +3281,7 @@ void ssim2mysql::FNs_Print(ssim2mysql::FNs& row, algo::cstring& str) {
     PrintAttrSpaceReset(str,"comment", temp);
 }
 
-// --- ssim2mysql.FSqltype.msghdr.CopyOut
+// --- ssim2mysql.FSqltype.base.CopyOut
 // Copy fields out of row
 void ssim2mysql::sqltype_CopyOut(ssim2mysql::FSqltype &row, dmmeta::Sqltype &out) {
     out.ctype = row.ctype;
@@ -3289,7 +3289,7 @@ void ssim2mysql::sqltype_CopyOut(ssim2mysql::FSqltype &row, dmmeta::Sqltype &out
     out.comment = algo::Comment(row.comment);
 }
 
-// --- ssim2mysql.FSqltype.msghdr.CopyIn
+// --- ssim2mysql.FSqltype.base.CopyIn
 // Copy fields in to row
 void ssim2mysql::sqltype_CopyIn(ssim2mysql::FSqltype &row, dmmeta::Sqltype &in) {
     row.ctype = in.ctype;
@@ -3322,14 +3322,14 @@ void ssim2mysql::FSqltype_Print(ssim2mysql::FSqltype& row, algo::cstring& str) {
     PrintAttrSpaceReset(str,"comment", temp);
 }
 
-// --- ssim2mysql.FSsimfile.msghdr.CopyOut
+// --- ssim2mysql.FSsimfile.base.CopyOut
 // Copy fields out of row
 void ssim2mysql::ssimfile_CopyOut(ssim2mysql::FSsimfile &row, dmmeta::Ssimfile &out) {
     out.ssimfile = row.ssimfile;
     out.ctype = row.ctype;
 }
 
-// --- ssim2mysql.FSsimfile.msghdr.CopyIn
+// --- ssim2mysql.FSsimfile.base.CopyIn
 // Copy fields in to row
 void ssim2mysql::ssimfile_CopyIn(ssim2mysql::FSsimfile &row, dmmeta::Ssimfile &in) {
     row.ssimfile = in.ssimfile;
@@ -3467,7 +3467,7 @@ void ssim2mysql::FSsimfile_Print(ssim2mysql::FSsimfile& row, algo::cstring& str)
     PrintAttrSpaceReset(str,"ns_c_ssimfile_in_ary", temp);
 }
 
-// --- ssim2mysql.FSubstr.msghdr.CopyOut
+// --- ssim2mysql.FSubstr.base.CopyOut
 // Copy fields out of row
 void ssim2mysql::substr_CopyOut(ssim2mysql::FSubstr &row, dmmeta::Substr &out) {
     out.field = row.field;
@@ -3475,7 +3475,7 @@ void ssim2mysql::substr_CopyOut(ssim2mysql::FSubstr &row, dmmeta::Substr &out) {
     out.srcfield = row.srcfield;
 }
 
-// --- ssim2mysql.FSubstr.msghdr.CopyIn
+// --- ssim2mysql.FSubstr.base.CopyIn
 // Copy fields in to row
 void ssim2mysql::substr_CopyIn(ssim2mysql::FSubstr &row, dmmeta::Substr &in) {
     row.field = in.field;

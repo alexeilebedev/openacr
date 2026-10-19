@@ -359,7 +359,7 @@ void atf_ci::citest_iffy_src() {
     src_func.baddecl = true;// gripe about declarations that src_func doesn't like
     src_func.list = true;
     src_func.report = false;
-    cstring output(Trimmed(SysEval(src_func_ToCmdline(src_func),FailokQ(false),1024*1024)));
+    cstring output(Trimmed(SysEval(src_func_ToCmdline(src_func),FailokQ(false))));
     if (output != "") {
         prlog(output);
         vrfy(0,"Please fix above instances and retry");
@@ -407,7 +407,7 @@ void atf_ci::citest_tempcode() {
 void atf_ci::citest_lineendings() {
     algo_lib::Regx regx;
     Regx_ReadSql(regx, "txt/%",true);
-    cstring files(SysEval("git ls-files",FailokQ(true),1024*1024*100));
+    cstring files(SysEval("git ls-files",FailokQ(true), 1024*1024*100));
     ind_beg(Line_curs,fname,files) {
         if (Regx_Match(regx,fname) && FileQ(fname)) {
             SysCmd(tempstr() << "perl -pi -e 's/\\r$//;s/\\r/\\n/g' "<<algo::strptr_ToBash(fname),FailokQ(false));
@@ -461,7 +461,7 @@ void atf_ci::citest_update_script() {
 
 // indent all script files modified in the last commit
 void atf_ci::citest_indent_script() {
-    tempstr modfiles(SysEval("git diff-tree --name-only  HEAD -r --no-commit-id",FailokQ(true),1024*1024*10));
+    tempstr modfiles(SysEval("git diff-tree --name-only  HEAD -r --no-commit-id",FailokQ(true)));
     ind_beg(Line_curs,line,modfiles) {
         if (atf_ci::FGitfile *gitfile = ind_gitfile_Find(line)) {
             if (gitfile->c_scriptfile && !gitfile->c_noindent) {
@@ -538,9 +538,8 @@ void atf_ci::citest_cppcheck() {
 //
 // The marker on a namespace line says nothing about the rest of the file,
 // though, and a header that carries one marked namespace can still hold
-// hand-written text outside it: include/atf_snf.h declares three packed
-// structs above its marked namespace, and include/atf_unit.h a multi-line
-// macro.  Skipping such a file would drop its hand-written part out of the
+// hand-written text outside it: include/atf_unit.h holds a multi-line macro
+// above its marked namespaces.  Skipping such a file would drop its hand-written part out of the
 // indent pass with nothing to report that it had gone unchecked.  So the
 // answer is yes only when the file is a header, it opens at least one marked
 // namespace, no namespace lacks the marker, every marked namespace reaches
@@ -708,7 +707,7 @@ void atf_ci::citest_copyright_srcfile() {
             licensetext << Trimmed(line) << eol;
         }ind_end;
     }ind_end;
-    tempstr modfiles(SysEval("git diff-tree --name-only HEAD -r --no-commit-id",FailokQ(true),1024*1024*10));
+    tempstr modfiles(SysEval("git diff-tree --name-only HEAD -r --no-commit-id",FailokQ(true)));
     ind_beg(algo::Line_curs,fname,modfiles) {
         atf_ci::FGitfile *gitfile = atf_ci::ind_gitfile_Find(fname);
         atf_ci::FTargsrc *targsrc = gitfile ? gitfile->c_targsrc : NULL;
@@ -716,7 +715,7 @@ void atf_ci::citest_copyright_srcfile() {
         bool ourfile = FindStr(fname,"/gen/") == -1 && FindStr(fname,"extern/") == -1;
         if (FileQ(fname) && ourfile && (targsrc || scriptfile)) {
             tempstr diff(SysEval(tempstr()<<"git diff-tree -p -w --no-commit-id HEAD -- "<<strptr_ToBash(fname)
-                                 ,FailokQ(true),1024*1024*64));
+                                 ,FailokQ(true), 1024*1024*64));
             if (RealChangeQ(diff,licensetext)) {
                 command::src_hdr src_hdr;
                 src_hdr.update_copyright = true;
@@ -962,10 +961,13 @@ static bool ClonePinnedQ(strptr line) {
 // A reader who knows the installation knows which file to open, and an
 // installation whose steps are spread over two files has no such file.  The
 // pairing is not something the compiler can hold: amc binds a row to a function
-// by name wherever that function is written.
+// by name wherever that function is written.  The script ainst writes for every
+// package, and the library form of it, must also parse: a step is shell text
+// inside C++ strings, so a stray quote compiles and breaks the script of every
+// package written with it, on every platform, with nothing else objecting.
 void atf_ci::citest_check_ainst() {
     command::src_func_proc src_func;
-    src_func.cmd.func.expr = "ainst.pkg_%";
+    src_func.cmd.func.expr = "ainst.extpkg_%";
     src_func.cmd.showloc = true;
     src_func.fstdout = "|";
     src_func_Start(src_func);
@@ -1003,7 +1005,18 @@ void atf_ci::citest_check_ainst() {
             n_err++;
         }
     }ind_end;
-    vrfy(n_err == 0, tempstr() << n_err << " package(s) misplaced or unpinned");
+    ind_beg(algo::Word_curs, form, "-script -lib") {
+        // ainst's own failure, or a script with nothing in it, fails the check
+        // as surely as a script that does not parse
+        int rc = SysCmd(tempstr() << "script=$(bin/ainst % " << form << ") && [ -n \"$script\" ] && bash -n <<<\"$script\"", FailokQ(true));
+        if (rc != 0) {
+            prlog("atf_ci.ainst_parse"
+                  <<Keyval("form",form)
+                  <<Keyval("comment","the generated script does not parse; bash -n names the line"));
+            n_err++;
+        }
+    }ind_end;
+    vrfy(n_err == 0, tempstr() << n_err << " package(s) misplaced or unpinned, or a script that does not parse");
 }
 
 // -----------------------------------------------------------------------------
