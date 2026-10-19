@@ -20,8 +20,8 @@
 
 #pragma once
 #include "include/gen/command_gen.inl.h"
-#include "include/gen/dev_gen.inl.h"
 #include "include/gen/algo_gen.inl.h"
+#include "include/gen/dev_gen.inl.h"
 //#pragma endinclude
 
 // --- wt.trace..Ctor
@@ -179,6 +179,7 @@ inline wt::FSbpath& wt::_db_sbpath_curs_Access(_db_sbpath_curs &curs) {
 inline void wt::FSandbox_Init(wt::FSandbox& parent) {
     parent.cow = bool(false);
     parent.select = bool(false);
+    parent.branch = bool(false);
     parent.ind_sandbox_next = (wt::FSandbox*)-1; // (wt.FDb.ind_sandbox) not-in-hash
     parent.ind_sandbox_hashval = 0; // stored hash value
 }

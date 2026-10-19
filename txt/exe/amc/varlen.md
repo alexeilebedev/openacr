@@ -6,11 +6,11 @@ rest is a sequence of records of type X, length comes from
 a header field."  amc has first-class support for this
 pattern through three coordinated mechanisms:
 
-| Concept     | Reftype                                        | Purpose                                  |
-|-------------|------------------------------------------------|-------------------------------------------|
-| **lenfld**  | (`dmmeta.lenfld` on a Val field)              | Names the field carrying total length    |
-| **Varlen**  | [`reftype:Varlen`](/txt/exe/amc/reftype/Varlen.md) | 0..N trailing records                  |
-| **Opt**     | [`reftype:Opt`](/txt/exe/amc/reftype/Opt.md) | Exactly 0 or 1 trailing record           |
+| Concept    | Reftype                                            | Purpose |
+| ---------- | -------------------------------------------------- | ------- |
+| **lenfld** | (`dmmeta.lenfld` on a Val field)                   | Names the field carrying total length |
+| **Varlen** | [`reftype:Varlen`](/txt/exe/amc/reftype/Varlen.md) | 0..N trailing records |
+| **Opt**    | [`reftype:Opt`](/txt/exe/amc/reftype/Opt.md)       | Exactly 0 or 1 trailing record |
 
 Plus a fourth, **pnew** (`dmmeta.pnew`), which generates
 placement-new constructors that allocate the parent + the
@@ -64,7 +64,7 @@ total_bytes = (field.value * scale) + extra
 ```
 
 | Attribute | Default | Meaning |
-|-----------|---------|---------|
+| --------- | ------- | ------- |
 | `extra`   | 0       | Added to the field value.  Use to offset by sizeof(header) when the wire field counts trailing bytes only. |
 | `scale`   | 1       | Multiplier.  Use when the wire field counts in 32-bit words (`scale:4`) etc. |
 | `ctype`   | (auto)  | Usually inferred from the field's parent ctype. |
@@ -117,13 +117,13 @@ that:
 The **buftype** decides where the allocation lives.  The
 table in `cpp/amc/pnew.cpp`:
 
-| `buftype`  | Generated arg                                | Where the bytes go |
-|------------|----------------------------------------------|---------------------|
-| `Memptr`   | `algo::memptr &buf`                          | A pre-allocated byte span.  Advances the span past the constructed message. |
-| `ByteAry`  | `algo::ByteAry &buf`                         | A `Tary<u8>`-style growable buffer; flushes existing contents first. |
-| `Append`   | `algo::ByteAry &buf`                         | Same as ByteAry but appends rather than clearing. |
-| `Alloc`    | `const algo::Alloc &alloc`                   | A typed allocator handle ([Tary GetAlloc](/txt/exe/amc/reftype/Tary.md), [Fbuf GetAlloc](/txt/exe/amc/reftype/Fbuf.md), …). |
-| `Shm`      | `lib_ams::FShm &shm`                         | Shared-memory ring (used by lib_ams's hot path). |
+| `buftype` | Generated arg              | Where the bytes go |
+| --------- | -------------------------- | ------------------ |
+| `Memptr`  | `algo::memptr &buf`        | A pre-allocated byte span.  Advances the span past the constructed message. |
+| `ByteAry` | `algo::ByteAry &buf`       | A `Tary<u8>`-style growable buffer; flushes existing contents first. |
+| `Append`  | `algo::ByteAry &buf`       | Same as ByteAry but appends rather than clearing. |
+| `Alloc`   | `const algo::Alloc &alloc` | A typed allocator handle ([Tary GetAlloc](/txt/exe/amc/reftype/Tary.md), [Fbuf GetAlloc](/txt/exe/amc/reftype/Fbuf.md), …). |
+| `Shm`     | `lib_ams::FShm &shm`       | Shared-memory ring (used by lib_ams's hot path). |
 
 Use `pnew` when you want to **build a wire message in one
 shot** without separate allocate-and-fill steps.  The Alloc

@@ -182,7 +182,8 @@ void acr_in::Main_Data() {
 
     // load all ssimfiles and build database of tuples
     // Build parent/child relationships between data
-    ind_beg(acr_in::_db_zd_ssimfile_curs, ssimfile, acr_in::_db) {
+    // a ssimfile only listed (-ssimfile) has its place in the order and no rows
+    ind_beg(acr_in::_db_zd_ssimfile_curs, ssimfile, acr_in::_db) if (ssimfile.is_finput || !ssimfile.listed) {
         ind_beg(command::acr_in_data_dir_curs, data_dir, acr_in::_db.cmdline) {
             LoadLayer(ssimfile,data_dir,dag);
         }ind_end;

@@ -1374,6 +1374,13 @@ namespace amc { // update-hdr
     // unclear which instance a cascade delete should remove.
     // void gen_check_cascdel(); // amcdb.gen:check_cascdel
     // void gen_check_ssimsort(); // amcdb.gen:check_ssimsort
+
+    // Check that every field of a command line -- a ctype read with a strfmt:Argv
+    // cfmt (HasArgvReadQ), whose fields are the options a person types -- carries a
+    // comment of at most 80 characters.  The comment is the option's line in -help
+    // and its heading in the README.  Whatever a reader needs beyond one line goes in
+    // the README, under that heading.
+    // void gen_check_cmdcomment(); // amcdb.gen:check_cmdcomment
     // void gen_countxref(); // amcdb.gen:countxref
 
     // Check the dependency order of gstatic tables: a table may refer only to
@@ -1586,6 +1593,21 @@ namespace amc { // update-hdr
     // void tfunc_Global_LoadSsimfileMaybe(); // amcdb.tfunc:Global.LoadSsimfileMaybe
     // void tfunc_Global_main(); // amcdb.tfunc:Global.main
     // void tfunc_Global_WinMain(); // amcdb.tfunc:Global.WinMain
+
+    // Generate Load() for a shared object with a main.  A host process calls it once
+    // it has loaded the object, and it does what an executable's main() does before
+    // the main loop: it initializes every library of the closure in dependency order,
+    // stores ARGC and ARGV where an executable keeps its command line, starts the
+    // clock and calls the user-defined Main.  The host drives the main loop after
+    // that, so Load returns, and an exception goes to the host, which reports it as a
+    // failed load.
+    // void tfunc_Global_Load(); // amcdb.tfunc:Global.Load
+
+    // Generate Unload() for a shared object with a main: uninitialize every library of
+    // the closure in reverse dependency order, as an executable's main() does on its
+    // way out.  The host is unloading the object and has nobody to report an error
+    // to, so an error is dropped.
+    // void tfunc_Global_Unload(); // amcdb.tfunc:Global.Unload
     // void tfunc_Global_MainLoop(); // amcdb.tfunc:Global.MainLoop
 
     // Generate the Steps function of an executable NS: one call per direct step of
@@ -1930,9 +1952,10 @@ namespace amc { // update-hdr
     void TsGenEncode();
 
     // Emit into OUT the TS statement writing (ENCODE) or reading (!ENCODE)
-    // FIELD's fixed-size wire form at $offset: DataView get/set for scalars,
-    // a NUL-padded byte window for a fixed-length string, and a nested
-    // $jsclass_Encode/_Decode call for a ctype-valued field.
+    // FIELD's fixed-size wire form at $offset: DataView get/set for scalars, a
+    // byte window for a fixed-length string laid out as its smallstr row says
+    // (rpascal, rightpad, else NUL-padded), and a nested $jsclass_Encode/_Decode
+    // call for a ctype-valued field.
     void TsSerdeSimpleType(algo_lib::Replscope &R, cstring &out, amc::FField &field, bool encode);
 
     // Generate $ctype_Decode: read a $ctype from VIEW at OFFSET -- fixed-size
@@ -2536,7 +2559,14 @@ namespace amc { // update-hdr
     void CppSection(algo::cstring &out, strptr label, bool major);
     void CppSectionAll(amc::FNs& ns, strptr label);
     void TopoSortVisit(amc::FNs& ns, amc::FCtype& ctype);
+
+    // True when NS is an executable.
     bool ExeQ(amc::FNs &ns);
+
+    // True when NS is the root of an image: an executable, or a shared object that a
+    // host process loads.  An image links the whole closure of NS, so it holds the
+    // FDb of every library in it, and its Steps() runs the steps of all of them.
+    bool ImageQ(amc::FNs &ns);
 
     // Return C++ expression for the arg type for ctype CTYPE
     // argtype is how the type is passed to a function
@@ -2977,9 +3007,10 @@ namespace amc { // update-hdr
 
     // Return TRUE when FIELD is a member of its ctype in a projected language.  A
     // Base field is an injection point whose fields appear individually, a bitfield
-    // is an accessor over its source word, and a message's type and length words are
-    // derived: the encoder writes the message's own type and the frame's length, and
-    // a decoded value that carried them would restate what the caller had to know to
+    // is an accessor over its source word, a computed field (cppfunc, substr, alias)
+    // has no bytes of its own, and a message's type and length words are derived:
+    // the encoder writes the message's own type and the frame's length, and a
+    // decoded value that carried them would restate what the caller had to know to
     // decode.
     bool ProjMemberQ(amc::FField &field);
 
@@ -3017,7 +3048,7 @@ namespace amc { // update-hdr
     // offsets, and neither can two languages.  A Base, a bitfield and a tail occupy
     // no fixed slot.  A Val field of a ctype occupies that ctype's size only while
     // the ctype has no tail of its own, since a nested tail would run into the next
-    // slot.  An inline array occupies its elements only when it is fixed, which is
+    // slot, and nor does a computed field.  An inline array occupies its elements only when it is fixed, which is
     // the shape C++ lays out as a bare element array.  An inline string occupies its
     // characters, a spare byte and its count when it is rpascal, and its characters
     // alone when it is rightpad; those are the string forms a projected language
@@ -3180,6 +3211,16 @@ namespace amc { // update-hdr
     // void tfunc_Regx_ReadStrptrMaybe(); // amcdb.tfunc:Regx.ReadStrptrMaybe
     // void tfunc_Regx_Print(); // amcdb.tfunc:Regx.Print
     // void tfunc_Regx_Init(); // amcdb.tfunc:Regx.Init
+
+    // -------------------------------------------------------------------
+    // cpp/amc/regxstyle.cpp -- Regx style translators, written as C++ and as TypeScript
+    //
+
+    // Write the regx style translators into the namespace that defines the RegxStyle
+    // enum, which is algo_lib, and into ts/gen/algo_lib_regx.ts.  Each amcdb.regxstyle row
+    // needs a value of that enum, which the C++ switch names.
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void gen_ns_regxstyle(); // amcdb.gen:ns_regxstyle
 
     // -------------------------------------------------------------------
     // cpp/amc/sbrk.cpp -- Sbrk allocator
@@ -3556,6 +3597,13 @@ namespace amc { // update-hdr
     // -------------------------------------------------------------------
     // cpp/amc/trace.cpp -- Generate trace code
     //
+
+    // Return TRUE when DISPATCH counts the messages it dispatches: it names a
+    // disptrace row, and its namespace has the global record whose trace the counts
+    // are fields of.  gen_trace declares the fields and the dispatch code increments
+    // them, and both ask this, so no increment names a field that was not declared.
+    // A dispatch with no message type of its own still counts the unknown ones.
+    bool DispTraceQ(amc::FDispatch &dispatch);
     //     (user-implemented function, prototype is in amc-generated header)
     // void gen_trace(); // amcdb.gen:trace
 

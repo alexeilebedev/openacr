@@ -71,7 +71,7 @@ static void Call_msgname(algo_lib::Replscope &R, amc::FDispatch &dispatch) {
 
 // Call-dispatch by type
 static void Call_Raw(algo_lib::Replscope &R, amc::FDispatch &dispatch) {
-    bool trace_cycle = dispatch.c_disptrace && dispatch.c_disptrace->cycle;
+    bool trace_cycle = amc::DispTraceQ(dispatch) && dispatch.c_disptrace->cycle;
     amc::FFunc &func = amc::ind_func_GetOrCreate(Subst(R, "$ns.$Disp..DispatchRaw"));
     func.ret = "int";
     func.glob = true;
@@ -98,7 +98,7 @@ static void Call_Raw(algo_lib::Replscope &R, amc::FDispatch &dispatch) {
             Set(R, "$bound", bound);
             Ins(&R, func.body, "case $Msgtype: if (sizeof($Ctype) $Compare len && ($bound)) {");
         }
-        if (dispatch.c_disptrace) {
+        if (amc::DispTraceQ(dispatch)) {
             Ins(&R, func.body, "    ++$ns::_db.trace.dispatch_$Disp_$Msgname;");
         }
         Ins(&R, func.body    , "    $ns::$Disp_$Msgname();"); {
@@ -113,7 +113,7 @@ static void Call_Raw(algo_lib::Replscope &R, amc::FDispatch &dispatch) {
         Ins(&R, func.body    , "} break;");
     }ind_end;
     Ins(&R, func.body        , "default:");
-    if (dispatch.c_disptrace && dispatch.unkcount) {
+    if (amc::DispTraceQ(dispatch) && dispatch.unkcount) {
         Ins(&R, func.body    , "    ++$ns::_db.trace.dispatch_$Disp_Unkmsg;");
     }
     if (dispatch.unk) {
@@ -211,7 +211,7 @@ static void Call_Unkmsg(algo_lib::Replscope &R, amc::FDispatch &dispatch) {
 // for each case)
 void amc::Disp_Call(amc::FDispatch& dispatch) {
     bool candispatchhdr = CanDispatchHdr(dispatch);
-    bool trace_cycle = dispatch.c_disptrace && dispatch.c_disptrace->cycle;
+    bool trace_cycle = amc::DispTraceQ(dispatch) && dispatch.c_disptrace->cycle;
     algo_lib::Replscope R;
     Set(R, "$Disp", name_Get(dispatch));
     Set(R, "$ns"  , ns_Get(dispatch));

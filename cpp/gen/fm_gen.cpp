@@ -570,6 +570,9 @@ bool fm::AlarmMsg_ReadFieldMaybe(fm::AlarmMsg& parent, algo::strptr field, algo:
         case fm_FieldId_description: {
             retval = fm::Description_ReadStrptrMaybe(parent.description, strval);
         } break;
+        case fm_FieldId_metric: {
+            retval = algo::Smallstr200_ReadStrptrMaybe(parent.metric, strval);
+        } break;
         case fm_FieldId_shelved: {
             retval = bool_ReadStrptrMaybe(parent.shelved, strval);
         } break;
@@ -660,6 +663,9 @@ void fm::AlarmMsg_Print(fm::AlarmMsg& row, algo::cstring& str) {
     fm::Description_Print(row.description, temp);
     PrintAttrSpaceReset(str,"description", temp);
 
+    algo::Smallstr200_Print(row.metric, temp);
+    PrintAttrSpaceReset(str,"metric", temp);
+
     bool_Print(row.shelved, temp);
     PrintAttrSpaceReset(str,"shelved", temp);
 
@@ -690,6 +696,7 @@ const char* fm::value_ToCstr(const fm::FieldId& parent) {
         case fm_FieldId_objtype_summary    : ret = "objtype_summary";  break;
         case fm_FieldId_summary            : ret = "summary";  break;
         case fm_FieldId_description        : ret = "description";  break;
+        case fm_FieldId_metric             : ret = "metric";  break;
         case fm_FieldId_shelved            : ret = "shelved";  break;
         case fm_FieldId_n_flap             : ret = "n_flap";  break;
         case fm_FieldId_ch                 : ret = "ch";  break;
@@ -754,6 +761,9 @@ bool fm::value_SetStrptrMaybe(fm::FieldId& parent, algo::strptr rhs) {
             switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)) {
                 case LE_STR6('l','e','n','g','t','h'): {
                     value_SetEnum(parent,fm_FieldId_length); ret = true; break;
+                }
+                case LE_STR6('m','e','t','r','i','c'): {
+                    value_SetEnum(parent,fm_FieldId_metric); ret = true; break;
                 }
                 case LE_STR6('n','_','f','l','a','p'): {
                     value_SetEnum(parent,fm_FieldId_n_flap); ret = true; break;

@@ -35,6 +35,14 @@ dmmeta.fconst  fconst:algo.Errns.value/win  value:1  comment:"Windows error code
 dmmeta.fconst  fconst:algo.Errns.value/ssl  value:2  comment:"SSL error code"
 dmmeta.fconst  fconst:algo.FailokQ.value/true  value:1  comment:""
 dmmeta.fconst  fconst:algo.FailokQ.value/false  value:0  comment:""
+dmmeta.fconst  fconst:algo.Fldtype.value/fixed  value:0  comment:"A scalar or array of arg: width bytes at offset, little-endian"
+dmmeta.fconst  fconst:algo.Fldtype.value/fixed_be  value:1  comment:"A scalar of arg: width bytes at offset, big-endian"
+dmmeta.fconst  fconst:algo.Fldtype.value/rpascal  value:2  comment:"An inline string of width bytes at offset, its length in the last byte"
+dmmeta.fconst  fconst:algo.Fldtype.value/rightpad  value:3  comment:"An inline string of width bytes at offset, padded on the right with byte aux"
+dmmeta.fconst  fconst:algo.Fldtype.value/varlen  value:5  comment:"Varlen area at offset, from the end field at width (0: its start) to the message end"
+dmmeta.fconst  fconst:algo.Fldtype.value/varlen2  value:6  comment:"Varlen area at offset, from the end field at width (0: its start) to the end field at aux"
+dmmeta.fconst  fconst:algo.Fldtype.value/cppfunc  value:7  comment:"A computed field, read by its getter, which a reader of the row knows by name"
+dmmeta.fconst  fconst:algo.Fldtype.value/leftpad  value:4  comment:"An inline string of width bytes at offset, padded on the left with byte aux"
 dmmeta.fconst  fconst:algo.Month.value/January  value:1  comment:""
 dmmeta.fconst  fconst:algo.Month.value/February  value:2  comment:""
 dmmeta.fconst  fconst:algo.Month.value/March  value:3  comment:""
@@ -223,6 +231,8 @@ dmmeta.fconst  fconst:ietf.Iphdr.protocol/icmp  value:1  comment:ICMP
 dmmeta.fconst  fconst:ietf.Iphdr.protocol/igmp  value:2  comment:IGMP
 dmmeta.fconst  fconst:ietf.Iphdr.protocol/tcp  value:6  comment:TCP
 dmmeta.fconst  fconst:ietf.Iphdr.protocol/udp  value:17  comment:UDP
+dmmeta.fconst  fconst:ietf.Pcaphdr.linktype/ethernet  value:1  comment:""
+dmmeta.fconst  fconst:ietf.Pcaphdr.linktype/linux_sll2  value:276  comment:"Linux cooked capture v2, as tcpdump -i any writes"
 dmmeta.fconst  fconst:lib_json.FNode.type/null  value:0  comment:""
 dmmeta.fconst  fconst:lib_json.FNode.type/false  value:1  comment:""
 dmmeta.fconst  fconst:lib_json.FNode.type/true  value:2  comment:""

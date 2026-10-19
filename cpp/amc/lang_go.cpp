@@ -409,7 +409,7 @@ static void GoGenEncode(algo_lib::Replscope &R, cstring &out, amc::FNs &ns, amc:
         Ins(&R,out,"    pos += copy(buf[pos:], parent.$member)");
     }ind_end;
     int offset = 0;
-    ind_beg(amc::ctype_c_field_curs, field, ctype) {
+    ind_beg(amc::ctype_c_field_curs, field, ctype) if (!amc::FldfuncQ(field)) {
         Set(R,"$member",GoName(field));
         Set(R,"$off",tempstr() << offset);
         GoEncodeSlot(R, out, ns, ctype, field);
@@ -446,7 +446,7 @@ static void GoGenDecode(algo_lib::Replscope &R, cstring &out, amc::FCtype &ctype
     Ins(&R,out,"        return fmt.Errorf(\"$ctypename: %d bytes, want at least $csize\", len(buf))");
     Ins(&R,out,"    }");
     int offset = 0;
-    ind_beg(amc::ctype_c_field_curs, field, ctype) {
+    ind_beg(amc::ctype_c_field_curs, field, ctype) if (!amc::FldfuncQ(field)) {
         Set(R,"$member",GoName(field));
         Set(R,"$off",tempstr() << offset);
         GoDecodeSlot(R, out, ctype, field);

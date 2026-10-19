@@ -1,0 +1,4 @@
+# start bash cmd:"bash -c 'cd $tempdir && mkdir -p bed/rose bed/1511-userproc-pidns bed/.pidns && $$OLDPWD/$bindir/acr_compl -schema:$$OLDPWD/test/acr_compl.schema.ssim -data:$$OLDPWD/test/acr_compl.schema.ssim -line:\"atf_cmdline -dflower:pid%ns\"'"
+# eof bash
+bash -> 1511-userproc-pidns 
+# exit bash code:0

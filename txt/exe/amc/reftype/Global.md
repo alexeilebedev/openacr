@@ -83,35 +83,35 @@ Source: `cpp/amc/global.cpp`.
 #### Singleton & program entry
 <a href="#singleton-program-entry"></a>
 
-| Tfunc                  | Generated function                              | Emitted when |
-|------------------------|-------------------------------------------------|--------------|
-| `Global.Init`          | (folded into FDb's ctor)                        | always       |
-| `Global.main`          | `int main(int argc, char **argv)`               | `dmmeta.main` present |
-| `Global.WinMain`       | `int WinMain(...)`                              | Windows GUI builds |
-| `Global.Main`          | user-extern `void <ns>::Main()`                 | `dmmeta.main` present |
-| `Global.ReadArgv`      | `void <ns>::ReadArgv(strptr help, ...)`         | when ctype has a `cmdline` |
-| `Global.InitReflection`| `static void InitReflection()`                  | always; registers ns in `algo_lib::_db.imdb` |
+| Tfunc                   | Generated function                      | Emitted when |
+| ----------------------- | --------------------------------------- | ------------ |
+| `Global.Init`           | (folded into FDb's ctor)                | always |
+| `Global.main`           | `int main(int argc, char **argv)`       | `dmmeta.main` present |
+| `Global.WinMain`        | `int WinMain(...)`                      | Windows GUI builds |
+| `Global.Main`           | user-extern `void <ns>::Main()`         | `dmmeta.main` present |
+| `Global.ReadArgv`       | `void <ns>::ReadArgv(strptr help, ...)` | when ctype has a `cmdline` |
+| `Global.InitReflection` | `static void InitReflection()`          | always; registers ns in `algo_lib::_db.imdb` |
 
 #### Step scheduling
 <a href="#step-scheduling"></a>
 
-| Tfunc                  | Generated function                       | Effect |
-|------------------------|------------------------------------------|--------|
-| `Global.Steps`         | `void <ns>::Steps()`                     | Executable only: calls each `fstep`'s `_Call` of this ns and of every ns it links, band by band (`amcdb.stepband`) and within a band in dependency order, with an alias step in place of the library step it overrides. |
-| `Global.MainLoop`      | `void <ns>::MainLoop()`                  | Repeatedly calls `Steps` until `algo_lib::_db.next_loop` says quiesce.  Drains epoll between cycles. |
+| Tfunc             | Generated function      | Effect |
+| ----------------- | ----------------------- | ------ |
+| `Global.Steps`    | `void <ns>::Steps()`    | Executable only: calls each `fstep`'s `_Call` of this ns and of every ns it links, band by band (`amcdb.stepband`) and within a band in dependency order, with an alias step in place of the library step it overrides. |
+| `Global.MainLoop` | `void <ns>::MainLoop()` | Repeatedly calls `Steps` until `algo_lib::_db.next_loop` says quiesce.  Drains epoll between cycles. |
 
 #### Ssim I/O
 <a href="#ssim-i-o"></a>
 
-| Tfunc                       | Generated function                                              | Effect |
-|-----------------------------|------------------------------------------------------------------|--------|
-| `Global.LoadTuplesMaybe`    | `bool <ns>::LoadTuplesMaybe(strptr root, bool recursive)`        | Dispatch by `root`: file → one file; `"-"` → stdin; directory → walk `dmmeta.finput`-selected ssimfiles. |
-| `Global.LoadTuplesFile`     | `bool <ns>::LoadTuplesFile(strptr fname, bool recursive)`        | Open + LoadTuplesFd; missing files are not errors. |
-| `Global.LoadTuplesFd`       | `bool <ns>::LoadTuplesFd(Fildes fd, strptr fname, bool recursive)` | Walks the fd line-by-line, calls `InsertStrptrMaybe` and (when recursive) every parent ns's `InsertStrptrMaybe`. |
-| `Global.LoadSsimfileMaybe`  | `bool <ns>::LoadSsimfileMaybe(strptr ssimfile)`                  | Like LoadTuplesFile but resolves `ssimfile` against `algo_lib::_db.cmdline.in`. |
-| `Global.InsertStrptrMaybe`  | `bool <ns>::InsertStrptrMaybe(strptr line)`                      | Parse the tuple tag, dispatch by `TableId`, call the appropriate finput's `_InputMaybe`. |
-| `Global.RemoveStrptrMaybe`  | `bool <ns>::RemoveStrptrMaybe(strptr line)`                      | Reverse of above; removes records that match the parsed tuple. |
-| `Global.SaveTuples`         | `u32 <ns>::SaveTuples(strptr root)`                              | For every `foutput` field, write its table to `<root>/<ssimfile>.ssim`. |
+| Tfunc                      | Generated function                                                 | Effect |
+| -------------------------- | ------------------------------------------------------------------ | ------ |
+| `Global.LoadTuplesMaybe`   | `bool <ns>::LoadTuplesMaybe(strptr root, bool recursive)`          | Dispatch by `root`: file → one file; `"-"` → stdin; directory → walk `dmmeta.finput`-selected ssimfiles. |
+| `Global.LoadTuplesFile`    | `bool <ns>::LoadTuplesFile(strptr fname, bool recursive)`          | Open + LoadTuplesFd; missing files are not errors. |
+| `Global.LoadTuplesFd`      | `bool <ns>::LoadTuplesFd(Fildes fd, strptr fname, bool recursive)` | Walks the fd line-by-line, calls `InsertStrptrMaybe` and (when recursive) every parent ns's `InsertStrptrMaybe`. |
+| `Global.LoadSsimfileMaybe` | `bool <ns>::LoadSsimfileMaybe(strptr ssimfile)`                    | Like LoadTuplesFile but resolves `ssimfile` against `algo_lib::_db.cmdline.in`. |
+| `Global.InsertStrptrMaybe` | `bool <ns>::InsertStrptrMaybe(strptr line)`                        | Parse the tuple tag, dispatch by `TableId`, call the appropriate finput's `_InputMaybe`. |
+| `Global.RemoveStrptrMaybe` | `bool <ns>::RemoveStrptrMaybe(strptr line)`                        | Reverse of above; removes records that match the parsed tuple. |
+| `Global.SaveTuples`        | `u32 <ns>::SaveTuples(strptr root)`                                | For every `foutput` field, write its table to `<root>/<ssimfile>.ssim`. |
 
 ### Gstatics
 <a href="#gstatics"></a>

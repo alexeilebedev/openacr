@@ -65,9 +65,15 @@ enum atf_ci_TableIdEnum {                    // atf_ci.TableId.value
     ,atf_ci_TableId_dmmeta_ssimfile   = 11   // dmmeta.ssimfile -> atf_ci.FSsimfile
     ,atf_ci_TableId_dev_Targsrc       = 12   // dev.Targsrc -> atf_ci.FTargsrc
     ,atf_ci_TableId_dev_targsrc       = 12   // dev.targsrc -> atf_ci.FTargsrc
+    ,atf_ci_TableId_dev_Vendorlib     = 13   // dev.Vendorlib -> atf_ci.FVendorlib
+    ,atf_ci_TableId_dev_vendorlib     = 13   // dev.vendorlib -> atf_ci.FVendorlib
+    ,atf_ci_TableId_dev_Vulnaccept    = 14   // dev.Vulnaccept -> atf_ci.FVulnaccept
+    ,atf_ci_TableId_dev_vulnaccept    = 14   // dev.vulnaccept -> atf_ci.FVulnaccept
+    ,atf_ci_TableId_dev_Vulnsev       = 15   // dev.Vulnsev -> atf_ci.FVulnsev
+    ,atf_ci_TableId_dev_vulnsev       = 15   // dev.vulnsev -> atf_ci.FVulnsev
 };
 
-enum { atf_ci_TableIdEnum_N = 26 };
+enum { atf_ci_TableIdEnum_N = 32 };
 
 namespace atf_ci { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
@@ -88,6 +94,9 @@ namespace dev { struct Readmefile; }
 namespace dev { struct Scriptfile; }
 namespace dmmeta { struct Ssimfile; }
 namespace dev { struct Targsrc; }
+namespace dev { struct Vendorlib; }
+namespace dev { struct Vulnaccept; }
+namespace dev { struct Vulnsev; }
 namespace atf_ci { struct _db_citest_curs; }
 namespace atf_ci { struct _db_ssimfile_curs; }
 namespace atf_ci { struct _db_scriptfile_curs; }
@@ -103,6 +112,9 @@ namespace atf_ci { struct _db_file_curs; }
 namespace atf_ci { struct _db_extpkg_curs; }
 namespace atf_ci { struct _db_extpkgver_curs; }
 namespace atf_ci { struct _db_gitpath_curs; }
+namespace atf_ci { struct _db_vendorlib_curs; }
+namespace atf_ci { struct _db_vulnaccept_curs; }
+namespace atf_ci { struct _db_vulnsev_curs; }
 namespace atf_ci { struct FBuilddir; }
 namespace atf_ci { struct FCfg; }
 namespace atf_ci { struct FCitest; }
@@ -121,6 +133,9 @@ namespace atf_ci { struct FReadmefile; }
 namespace atf_ci { struct FScriptfile; }
 namespace atf_ci { struct FSsimfile; }
 namespace atf_ci { struct FTargsrc; }
+namespace atf_ci { struct FVendorlib; }
+namespace atf_ci { struct FVulnaccept; }
+namespace atf_ci { struct FVulnsev; }
 namespace atf_ci { struct FieldId; }
 namespace atf_ci { struct File; }
 namespace atf_ci { struct TableId; }
@@ -129,8 +144,12 @@ namespace atf_ci { // hook_fcn_typedef
     typedef void (*citest_step_hook)(); // hook:atf_ci.FCitest.step
 } // hook_decl
 namespace atf_ci { // gen:ns_gsymbol
-    extern const atfdb::CijobPkey atfdb_cijob_comp; // "comp"
-    extern const atfdb::CijobPkey atfdb_cijob_coverage; // "coverage"
+    extern const atfdb::CijobPkey atfdb_cijob_compA; // "compA"
+    extern const atfdb::CijobPkey atfdb_cijob_compB; // "compB"
+    extern const atfdb::CijobPkey atfdb_cijob_coverageA; // "coverageA"
+    extern const atfdb::CijobPkey atfdb_cijob_coverageB; // "coverageB"
+    extern const atfdb::CijobPkey atfdb_cijob_covfinal; // "covfinal"
+    extern const atfdb::CijobPkey atfdb_cijob_depscan; // "depscan"
     extern const atfdb::CijobPkey atfdb_cijob_memcheckA; // "memcheckA"
     extern const atfdb::CijobPkey atfdb_cijob_memcheckB; // "memcheckB"
     extern const atfdb::CijobPkey atfdb_cijob_memcheckC; // "memcheckC"
@@ -229,6 +248,7 @@ struct FCitest { // atf_ci.FCitest
     bool                       sandbox;              //   false  Run test in sandbox
     i32                        timeout;              //   600  Max runtime budget for this citest, seconds (>= observed runtime doubled, floored at 10min)
     bool                       failfast;             //   false  A failure ends the run: remaining citests are skipped
+    bool                       gcov;                 //   false  Run with its own profile dir (GCC_PROFILE_DIR) for coverage
     algo::cstring              comment;              //
     i32                        nerr;                 //   0
     atf_ci::citest_step_hook   step;                 //   NULL  Pointer to a function
@@ -260,11 +280,11 @@ void                 citest_CopyIn(atf_ci::FCitest &row, atfdb::Citest &in) __at
 
 // Invoke function by pointer
 // func:atf_ci.FCitest.step.Call
-inline void          step_Call(atf_ci::FCitest& parent) __attribute__((nothrow));
+inline void          step_Call(atf_ci::FCitest& parent);
 
 // Set all fields to initial values.
 // func:atf_ci.FCitest..Init
-inline void          FCitest_Init(atf_ci::FCitest& parent);
+void                 FCitest_Init(atf_ci::FCitest& parent);
 // func:atf_ci.FCitest..Uninit
 void                 FCitest_Uninit(atf_ci::FCitest& parent) __attribute__((nothrow));
 
@@ -345,6 +365,15 @@ struct FDb { // atf_ci.FDb: In-memory database for atf_ci
     i32                     ind_extpkgver_n;                // number of elements in the hash table
     atf_ci::FGitpath*       gitpath_lary[36];               // level array
     i64                     gitpath_n;                      // number of elements in array
+    atf_ci::FVendorlib*     vendorlib_lary[36];             // level array
+    i64                     vendorlib_n;                    // number of elements in array
+    atf_ci::FVulnaccept*    vulnaccept_lary[36];            // level array
+    i64                     vulnaccept_n;                   // number of elements in array
+    atf_ci::FVulnaccept**   ind_vulnaccept_buckets_elems;   // pointer to bucket array
+    i32                     ind_vulnaccept_buckets_n;       // number of elements in bucket array
+    i32                     ind_vulnaccept_n;               // number of elements in the hash table
+    atf_ci::FVulnsev*       vulnsev_lary[36];               // level array
+    i64                     vulnsev_n;                      // number of elements in array
     atf_ci::trace           trace;                          //
 };
 // Read argc,argv into the fields of atf_ci.FDb.cmdline (and any base command line)
@@ -1236,6 +1265,154 @@ inline atf_ci::FGitpath& gitpath_qFind(u64 t) __attribute__((nothrow, pure));
 // func:atf_ci.FDb.gitpath.XrefMaybe
 bool                 gitpath_XrefMaybe(atf_ci::FGitpath &row);
 
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:atf_ci.FDb.vendorlib.Alloc
+atf_ci::FVendorlib&  vendorlib_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:atf_ci.FDb.vendorlib.AllocMaybe
+atf_ci::FVendorlib*  vendorlib_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:atf_ci.FDb.vendorlib.InsertMaybe
+atf_ci::FVendorlib*  vendorlib_InsertMaybe(const dev::Vendorlib &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+// func:atf_ci.FDb.vendorlib.AllocMem
+void*                vendorlib_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:atf_ci.FDb.vendorlib.EmptyQ
+inline bool          vendorlib_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+// func:atf_ci.FDb.vendorlib.Find
+inline atf_ci::FVendorlib* vendorlib_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+// func:atf_ci.FDb.vendorlib.Last
+inline atf_ci::FVendorlib* vendorlib_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+// func:atf_ci.FDb.vendorlib.N
+inline i64           vendorlib_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+// func:atf_ci.FDb.vendorlib.RemoveAll
+void                 vendorlib_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:atf_ci.FDb.vendorlib.RemoveLast
+void                 vendorlib_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:atf_ci.FDb.vendorlib.qFind
+inline atf_ci::FVendorlib& vendorlib_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_ci.FDb.vendorlib.XrefMaybe
+bool                 vendorlib_XrefMaybe(atf_ci::FVendorlib &row);
+
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:atf_ci.FDb.vulnaccept.Alloc
+atf_ci::FVulnaccept& vulnaccept_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:atf_ci.FDb.vulnaccept.AllocMaybe
+atf_ci::FVulnaccept* vulnaccept_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:atf_ci.FDb.vulnaccept.InsertMaybe
+atf_ci::FVulnaccept* vulnaccept_InsertMaybe(const dev::Vulnaccept &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+// func:atf_ci.FDb.vulnaccept.AllocMem
+void*                vulnaccept_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:atf_ci.FDb.vulnaccept.EmptyQ
+inline bool          vulnaccept_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+// func:atf_ci.FDb.vulnaccept.Find
+inline atf_ci::FVulnaccept* vulnaccept_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+// func:atf_ci.FDb.vulnaccept.Last
+inline atf_ci::FVulnaccept* vulnaccept_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+// func:atf_ci.FDb.vulnaccept.N
+inline i64           vulnaccept_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+// func:atf_ci.FDb.vulnaccept.RemoveAll
+void                 vulnaccept_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:atf_ci.FDb.vulnaccept.RemoveLast
+void                 vulnaccept_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:atf_ci.FDb.vulnaccept.qFind
+inline atf_ci::FVulnaccept& vulnaccept_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_ci.FDb.vulnaccept.XrefMaybe
+bool                 vulnaccept_XrefMaybe(atf_ci::FVulnaccept &row);
+
+// Return true if hash is empty
+// func:atf_ci.FDb.ind_vulnaccept.EmptyQ
+inline bool          ind_vulnaccept_EmptyQ() __attribute__((nothrow));
+// Find row by key. Return NULL if not found.
+// func:atf_ci.FDb.ind_vulnaccept.Find
+atf_ci::FVulnaccept* ind_vulnaccept_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:atf_ci.FDb.ind_vulnaccept.FindX
+atf_ci::FVulnaccept& ind_vulnaccept_FindX(const algo::strptr& key);
+// Find row by key. If not found, create and x-reference a new row with with this key.
+// func:atf_ci.FDb.ind_vulnaccept.GetOrCreate
+atf_ci::FVulnaccept& ind_vulnaccept_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
+// Return number of items in the hash
+// func:atf_ci.FDb.ind_vulnaccept.N
+inline i32           ind_vulnaccept_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:atf_ci.FDb.ind_vulnaccept.InsertMaybe
+bool                 ind_vulnaccept_InsertMaybe(atf_ci::FVulnaccept& row) __attribute__((nothrow));
+// Remove reference to element from hash index. If element is not in hash, do nothing
+// func:atf_ci.FDb.ind_vulnaccept.Remove
+void                 ind_vulnaccept_Remove(atf_ci::FVulnaccept& row) __attribute__((nothrow));
+// Reserve enough room in the hash for N more elements. Return success code.
+// func:atf_ci.FDb.ind_vulnaccept.Reserve
+void                 ind_vulnaccept_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:atf_ci.FDb.ind_vulnaccept.AbsReserve
+void                 ind_vulnaccept_AbsReserve(int n) __attribute__((nothrow));
+
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:atf_ci.FDb.vulnsev.Alloc
+atf_ci::FVulnsev&    vulnsev_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:atf_ci.FDb.vulnsev.AllocMaybe
+atf_ci::FVulnsev*    vulnsev_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:atf_ci.FDb.vulnsev.InsertMaybe
+atf_ci::FVulnsev*    vulnsev_InsertMaybe(const dev::Vulnsev &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+// func:atf_ci.FDb.vulnsev.AllocMem
+void*                vulnsev_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:atf_ci.FDb.vulnsev.EmptyQ
+inline bool          vulnsev_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+// func:atf_ci.FDb.vulnsev.Find
+inline atf_ci::FVulnsev* vulnsev_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+// func:atf_ci.FDb.vulnsev.Last
+inline atf_ci::FVulnsev* vulnsev_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+// func:atf_ci.FDb.vulnsev.N
+inline i64           vulnsev_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+// func:atf_ci.FDb.vulnsev.RemoveAll
+void                 vulnsev_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:atf_ci.FDb.vulnsev.RemoveLast
+void                 vulnsev_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:atf_ci.FDb.vulnsev.qFind
+inline atf_ci::FVulnsev& vulnsev_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_ci.FDb.vulnsev.XrefMaybe
+bool                 vulnsev_XrefMaybe(atf_ci::FVulnsev &row);
+
 // cursor points to valid item
 // func:atf_ci.FDb.citest_curs.Reset
 inline void          _db_citest_curs_Reset(_db_citest_curs &curs, atf_ci::FDb &parent) __attribute__((nothrow));
@@ -1416,6 +1593,42 @@ inline void          _db_gitpath_curs_Next(_db_gitpath_curs &curs) __attribute__
 // item access
 // func:atf_ci.FDb.gitpath_curs.Access
 inline atf_ci::FGitpath& _db_gitpath_curs_Access(_db_gitpath_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:atf_ci.FDb.vendorlib_curs.Reset
+inline void          _db_vendorlib_curs_Reset(_db_vendorlib_curs &curs, atf_ci::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:atf_ci.FDb.vendorlib_curs.ValidQ
+inline bool          _db_vendorlib_curs_ValidQ(_db_vendorlib_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:atf_ci.FDb.vendorlib_curs.Next
+inline void          _db_vendorlib_curs_Next(_db_vendorlib_curs &curs) __attribute__((nothrow));
+// item access
+// func:atf_ci.FDb.vendorlib_curs.Access
+inline atf_ci::FVendorlib& _db_vendorlib_curs_Access(_db_vendorlib_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:atf_ci.FDb.vulnaccept_curs.Reset
+inline void          _db_vulnaccept_curs_Reset(_db_vulnaccept_curs &curs, atf_ci::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:atf_ci.FDb.vulnaccept_curs.ValidQ
+inline bool          _db_vulnaccept_curs_ValidQ(_db_vulnaccept_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:atf_ci.FDb.vulnaccept_curs.Next
+inline void          _db_vulnaccept_curs_Next(_db_vulnaccept_curs &curs) __attribute__((nothrow));
+// item access
+// func:atf_ci.FDb.vulnaccept_curs.Access
+inline atf_ci::FVulnaccept& _db_vulnaccept_curs_Access(_db_vulnaccept_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:atf_ci.FDb.vulnsev_curs.Reset
+inline void          _db_vulnsev_curs_Reset(_db_vulnsev_curs &curs, atf_ci::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:atf_ci.FDb.vulnsev_curs.ValidQ
+inline bool          _db_vulnsev_curs_ValidQ(_db_vulnsev_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:atf_ci.FDb.vulnsev_curs.Next
+inline void          _db_vulnsev_curs_Next(_db_vulnsev_curs &curs) __attribute__((nothrow));
+// item access
+// func:atf_ci.FDb.vulnsev_curs.Access
+inline atf_ci::FVulnsev& _db_vulnsev_curs_Access(_db_vulnsev_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atf_ci.FDb..Init
 void                 FDb_Init();
@@ -1436,7 +1649,6 @@ struct FExtpkg { // atf_ci.FExtpkg
     atf_ci::FExtpkg*   ind_extpkg_next;      // hash next
     u32                ind_extpkg_hashval;   // hash value
     algo::Smallstr50   extpkg;               //
-    algo::cstring      probe;                //   ""  shell command that exits 0 on a host holding the package; empty means a host cannot be checked for it
     algo::cstring      comment;              //
     // func:atf_ci.FExtpkg..AssignOp
     inline atf_ci::FExtpkg& operator =(const atf_ci::FExtpkg &rhs) = delete;
@@ -1706,8 +1918,10 @@ struct FReadmefile { // atf_ci.FReadmefile
     algo::Smallstr200   gitfile;   //
     bool                inl;       //   false
     bool                sandbox;   //   false
+    bool                tut;       //   false  A tutorial: abt_md evaluates its commands only under -tut
     algo::Smallstr100   filter;    //
     bool                publish;   //   false  Carry this page into the generated documentation list
+    bool                narrow;    //   false  Every table row fits 120 characters; abt_md -check refuses a wider one
     algo::cstring       comment;   //
 private:
     // func:atf_ci.FReadmefile..Ctor
@@ -1852,6 +2066,95 @@ algo::strptr         ext_Get(atf_ci::FTargsrc& parent) __attribute__((__warn_unu
 
 // func:atf_ci.FTargsrc..Uninit
 void                 FTargsrc_Uninit(atf_ci::FTargsrc& parent) __attribute__((nothrow));
+
+// --- atf_ci.FVendorlib
+// create: atf_ci.FDb.vendorlib (Lary)
+// global access: vendorlib (Lary, by rowid)
+struct FVendorlib { // atf_ci.FVendorlib
+    algo::Smallstr50    vendorlib;   // Library name, as in sqlite
+    algo::Smallstr200   gitfile;     // A file of the library, so the row goes stale with the tree
+    algo::Smallstr50    version;     // Upstream release, as the advisory database spells it
+    algo::Smallstr100   cpe;         // CPE 2.3 name up to the product, such as cpe:2.3:a:sqlite:sqlite
+    algo::cstring       comment;     //
+private:
+    // func:atf_ci.FVendorlib..Ctor
+    inline               FVendorlib() __attribute__((nothrow));
+    friend atf_ci::FVendorlib&  vendorlib_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend atf_ci::FVendorlib*  vendorlib_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 vendorlib_RemoveAll() __attribute__((nothrow));
+    friend void                 vendorlib_RemoveLast() __attribute__((nothrow));
+};
+// Copy fields out of row
+// func:atf_ci.FVendorlib.base.CopyOut
+void                 vendorlib_CopyOut(atf_ci::FVendorlib &row, dev::Vendorlib &out) __attribute__((nothrow));
+// Copy fields in to row
+// func:atf_ci.FVendorlib.base.CopyIn
+void                 vendorlib_CopyIn(atf_ci::FVendorlib &row, dev::Vendorlib &in) __attribute__((nothrow));
+
+
+// --- atf_ci.FVulnaccept
+// create: atf_ci.FDb.vulnaccept (Lary)
+// global access: vulnaccept (Lary, by rowid)
+// global access: ind_vulnaccept (Thash, hash field vulnaccept)
+struct FVulnaccept { // atf_ci.FVulnaccept
+    atf_ci::FVulnaccept*   ind_vulnaccept_next;      // hash next
+    u32                    ind_vulnaccept_hashval;   // hash value
+    algo::Smallstr50       vulnaccept;               // Advisory id, such as GHSA-w5vr-8v7q-w6rv or CVE-2026-11822
+    algo::UnTime           until;                    // When the acceptance lapses and the advisory fails the scan again
+    algo::cstring          comment;                  //
+    // func:atf_ci.FVulnaccept..AssignOp
+    inline atf_ci::FVulnaccept& operator =(const atf_ci::FVulnaccept &rhs) = delete;
+    // func:atf_ci.FVulnaccept..CopyCtor
+    inline               FVulnaccept(const atf_ci::FVulnaccept &rhs) = delete;
+private:
+    // func:atf_ci.FVulnaccept..Ctor
+    inline               FVulnaccept() __attribute__((nothrow));
+    // func:atf_ci.FVulnaccept..Dtor
+    inline               ~FVulnaccept() __attribute__((nothrow));
+    friend atf_ci::FVulnaccept& vulnaccept_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend atf_ci::FVulnaccept* vulnaccept_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 vulnaccept_RemoveAll() __attribute__((nothrow));
+    friend void                 vulnaccept_RemoveLast() __attribute__((nothrow));
+};
+// Copy fields out of row
+// func:atf_ci.FVulnaccept.base.CopyOut
+void                 vulnaccept_CopyOut(atf_ci::FVulnaccept &row, dev::Vulnaccept &out) __attribute__((nothrow));
+// Copy fields in to row
+// func:atf_ci.FVulnaccept.base.CopyIn
+void                 vulnaccept_CopyIn(atf_ci::FVulnaccept &row, dev::Vulnaccept &in) __attribute__((nothrow));
+
+// Set all fields to initial values.
+// func:atf_ci.FVulnaccept..Init
+inline void          FVulnaccept_Init(atf_ci::FVulnaccept& parent);
+// func:atf_ci.FVulnaccept..Uninit
+void                 FVulnaccept_Uninit(atf_ci::FVulnaccept& parent) __attribute__((nothrow));
+
+// --- atf_ci.FVulnsev
+// create: atf_ci.FDb.vulnsev (Lary)
+// global access: vulnsev (Lary, by rowid)
+struct FVulnsev { // atf_ci.FVulnsev
+    algo::Smallstr50   vulnsev;   // Band name, as in high
+    algo::U32Dec2      cvss;      // Lowest CVSS base score in the band
+    bool               fail;      //   false  An advisory in the band fails the scan unless dev.vulnaccept accepts it
+    algo::cstring      comment;   //
+private:
+    // func:atf_ci.FVulnsev..Ctor
+    inline               FVulnsev() __attribute__((nothrow));
+    friend atf_ci::FVulnsev&    vulnsev_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend atf_ci::FVulnsev*    vulnsev_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 vulnsev_RemoveAll() __attribute__((nothrow));
+    friend void                 vulnsev_RemoveLast() __attribute__((nothrow));
+};
+// Copy fields out of row
+// func:atf_ci.FVulnsev.base.CopyOut
+void                 vulnsev_CopyOut(atf_ci::FVulnsev &row, dev::Vulnsev &out) __attribute__((nothrow));
+// Copy fields in to row
+// func:atf_ci.FVulnsev.base.CopyIn
+void                 vulnsev_CopyIn(atf_ci::FVulnsev &row, dev::Vulnsev &in) __attribute__((nothrow));
+
+// Set all fields to initial values.
+// func:atf_ci.FVulnsev..Init
+inline void          FVulnsev_Init(atf_ci::FVulnsev& parent);
 
 // --- atf_ci.FieldId
 #pragma pack(push,1)
@@ -2108,6 +2411,30 @@ struct _db_gitpath_curs {// cursor
     _db_gitpath_curs(){ parent=NULL; index=0; }
 };
 
+
+struct _db_vendorlib_curs {// cursor
+    typedef atf_ci::FVendorlib ChildType;
+    atf_ci::FDb *parent;
+    i64 index;
+    _db_vendorlib_curs(){ parent=NULL; index=0; }
+};
+
+
+struct _db_vulnaccept_curs {// cursor
+    typedef atf_ci::FVulnaccept ChildType;
+    atf_ci::FDb *parent;
+    i64 index;
+    _db_vulnaccept_curs(){ parent=NULL; index=0; }
+};
+
+
+struct _db_vulnsev_curs {// cursor
+    typedef atf_ci::FVulnsev ChildType;
+    atf_ci::FDb *parent;
+    i64 index;
+    _db_vulnsev_curs(){ parent=NULL; index=0; }
+};
+
 } // gen:ns_curstext
 namespace atf_ci { // gen:ns_func
 // User-implemented function from gstatic:atf_ci.FDb.citest
@@ -2235,13 +2562,13 @@ void                 citest_check_json();
 // this function is 'extrn' and implemented by user
 void                 citest_atf_unit();
 // User-implemented function from gstatic:atf_ci.FDb.citest
-// func:atf_ci...citest_atf_comp
+// func:atf_ci...citest_atf_compB
 // this function is 'extrn' and implemented by user
-void                 citest_atf_comp();
+void                 citest_atf_compB();
 // User-implemented function from gstatic:atf_ci.FDb.citest
-// func:atf_ci...citest_cov_prep
+// func:atf_ci...citest_cov_prepA
 // this function is 'extrn' and implemented by user
-void                 citest_cov_prep();
+void                 citest_cov_prepA();
 // User-implemented function from gstatic:atf_ci.FDb.citest
 // func:atf_ci...citest_atf_unit_cov
 // this function is 'extrn' and implemented by user
@@ -2250,6 +2577,22 @@ void                 citest_atf_unit_cov();
 // func:atf_ci...citest_atf_comp_cov
 // this function is 'extrn' and implemented by user
 void                 citest_atf_comp_cov();
+// User-implemented function from gstatic:atf_ci.FDb.citest
+// func:atf_ci...citest_cov_gcovA
+// this function is 'extrn' and implemented by user
+void                 citest_cov_gcovA();
+// User-implemented function from gstatic:atf_ci.FDb.citest
+// func:atf_ci...citest_cov_prepB
+// this function is 'extrn' and implemented by user
+void                 citest_cov_prepB();
+// User-implemented function from gstatic:atf_ci.FDb.citest
+// func:atf_ci...citest_cov_gcovB
+// this function is 'extrn' and implemented by user
+void                 citest_cov_gcovB();
+// User-implemented function from gstatic:atf_ci.FDb.citest
+// func:atf_ci...citest_cov_finalize
+// this function is 'extrn' and implemented by user
+void                 citest_cov_finalize();
 // User-implemented function from gstatic:atf_ci.FDb.citest
 // func:atf_ci...citest_acr_ed_ssimfile
 // this function is 'extrn' and implemented by user
@@ -2274,10 +2617,6 @@ void                 citest_doc_after_ssimfile_is_added();
 // func:atf_ci...citest_check_citest
 // this function is 'extrn' and implemented by user
 void                 citest_check_citest();
-// User-implemented function from gstatic:atf_ci.FDb.citest
-// func:atf_ci...citest_cov_finalize
-// this function is 'extrn' and implemented by user
-void                 citest_cov_finalize();
 // User-implemented function from gstatic:atf_ci.FDb.citest
 // func:atf_ci...citest_ams_sendtest
 // this function is 'extrn' and implemented by user
@@ -2314,6 +2653,18 @@ void                 citest_atf_comp_memC();
 // func:atf_ci...citest_readme_tut
 // this function is 'extrn' and implemented by user
 void                 citest_readme_tut();
+// User-implemented function from gstatic:atf_ci.FDb.citest
+// func:atf_ci...citest_atf_compA
+// this function is 'extrn' and implemented by user
+void                 citest_atf_compA();
+// User-implemented function from gstatic:atf_ci.FDb.citest
+// func:atf_ci...citest_depscan_lockfile
+// this function is 'extrn' and implemented by user
+void                 citest_depscan_lockfile();
+// User-implemented function from gstatic:atf_ci.FDb.citest
+// func:atf_ci...citest_depscan_vendorlib
+// this function is 'extrn' and implemented by user
+void                 citest_depscan_vendorlib();
 // func:atf_ci...StaticCheck
 void                 StaticCheck();
 } // gen:ns_func

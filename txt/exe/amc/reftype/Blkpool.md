@@ -27,19 +27,19 @@ its own primitives.
 Storage in the **parent** ctype (see `tclass_Blkpool` in
 `cpp/amc/blkpool.cpp`):
 
-| Field (parent)             | Type             | Meaning                                         |
-|----------------------------|------------------|-------------------------------------------------|
-| `<name>_free`              | `<name>_Bpbuf*`  | head of the free-buffer list (unused buffers)   |
-| `<name>_cur`               | `<name>_Bpbuf*`  | buffer currently being filled                   |
-| `<name>_pos`               | `u32`            | next free byte offset inside `_cur`             |
-| `<name>_buf_dflt_size`     | `u32`            | size of the next buffer to allocate (default 4 KiB) |
+| Field (parent)         | Type            | Meaning |
+| ---------------------- | --------------- | ------- |
+| `<name>_free`          | `<name>_Bpbuf*` | head of the free-buffer list (unused buffers) |
+| `<name>_cur`           | `<name>_Bpbuf*` | buffer currently being filled |
+| `<name>_pos`           | `u32`           | next free byte offset inside `_cur` |
+| `<name>_buf_dflt_size` | `u32`           | size of the next buffer to allocate (default 4 KiB) |
 
 A back-pointer is also added to the **element** ctype so the
 allocator can locate the owning buffer at free time:
 
-| Field (element)   | Type             | Meaning                               |
-|-------------------|------------------|---------------------------------------|
-| `<name>_buf`      | `<name>_Bpbuf*`  | enclosing buffer; refcount target     |
+| Field (element) | Type            | Meaning |
+| --------------- | --------------- | ------- |
+| `<name>_buf`    | `<name>_Bpbuf*` | enclosing buffer; refcount target |
 
 Each buffer is a `<name>_Bpbuf` struct (declared at the top of
 the namespace header) carrying `next`, `refcount`, and `size`.
@@ -90,14 +90,14 @@ runtime via `SetBufferSize`.
 
 Source: `cpp/amc/blkpool.cpp`.
 
-| Tfunc                    | Generated function                                          | Effect |
-|--------------------------|-------------------------------------------------------------|--------|
-| `Blkpool.Init`           | `<name>_Init(P&)`                                           | Set defaults: 4 KiB buffer size, empty free list, no current buffer. |
-| `Blkpool.SetBufferSize`  | `void <name>_SetBufferSize(P&, u32 nbytes)`                 | Override the size of *future* buffers; does not affect already-allocated ones. |
-| `Blkpool.ReserveBuffers` | `bool <name>_ReserveBuffers(P&, u32 nbuf, u32 size)`        | Prefetch `nbuf` buffers of `size` bytes onto the free list.  Returns false on OOM. |
-| `Blkpool.AllocMem`       | `T* <name>_AllocMem(P&, size_t size)`                       | The core primitive: returns a 16-byte-aligned block of at least `size` bytes, or NULL. |
-| `Blkpool.FreeMem`        | `void <name>_FreeMem(P&, <name>_Bpbuf* buf)`                | Decrement refcount; recycle the buffer when it goes to zero. |
-| `Blkpool.UsedBytes`      | `u64 <name>_UsedBytes(P&)`                                  | Bytes reserved from the base pool minus the free list.  Whole buffers count, so a buffer pinned by one live element counts in full — this is the pool's address-space cost, which live-byte accounting understates. |
+| Tfunc                    | Generated function                                   | Effect |
+| ------------------------ | ---------------------------------------------------- | ------ |
+| `Blkpool.Init`           | `<name>_Init(P&)`                                    | Set defaults: 4 KiB buffer size, empty free list, no current buffer. |
+| `Blkpool.SetBufferSize`  | `void <name>_SetBufferSize(P&, u32 nbytes)`          | Override the size of *future* buffers; does not affect already-allocated ones. |
+| `Blkpool.ReserveBuffers` | `bool <name>_ReserveBuffers(P&, u32 nbuf, u32 size)` | Prefetch `nbuf` buffers of `size` bytes onto the free list.  Returns false on OOM. |
+| `Blkpool.AllocMem`       | `T* <name>_AllocMem(P&, size_t size)`                | The core primitive: returns a 16-byte-aligned block of at least `size` bytes, or NULL. |
+| `Blkpool.FreeMem`        | `void <name>_FreeMem(P&, <name>_Bpbuf* buf)`         | Decrement refcount; recycle the buffer when it goes to zero. |
+| `Blkpool.UsedBytes`      | `u64 <name>_UsedBytes(P&)`                           | Bytes reserved from the base pool minus the free list.  Whole buffers count, so a buffer pinned by one live element counts in full — this is the pool's address-space cost, which live-byte accounting understates. |
 
 Plus the full set of `Pool.*` tfuncs (`Alloc`, `AllocMaybe`,
 `AllocVarlen`, `AllocVarlenMaybe`, `InsertMaybe`, `Delete`,

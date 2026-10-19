@@ -22,11 +22,11 @@ ctype (see `tclass_Smallstr` in `cpp/amc/smallstr.cpp`).
 The layout depends on the **strtype** picked from
 `dmmeta.strtype`:
 
-| strtype     | Layout                                                                |
-|-------------|----------------------------------------------------------------------|
-| `rightpad`  | `length` bytes; unused tail filled with `pad`.                       |
-| `leftpad`   | `length` bytes; unused head filled with `pad`.                       |
-| `rpascal`   | `length + 2` bytes: data, then a trailing `u8` length byte (max length 255). |
+| strtype    | Layout |
+| ---------- | ------ |
+| `rightpad` | `length` bytes; unused tail filled with `pad`. |
+| `leftpad`  | `length` bytes; unused head filled with `pad`. |
+| `rpascal`  | `length + 2` bytes: data, then a trailing `u8` length byte (max length 255). |
 
 `pad` is a C++ character expression (`"' '"`, `"'0'"`, `"0"`).
 For numeric strings (paired with `dmmeta.numstr`), the pad
@@ -38,14 +38,14 @@ typically is `'0'` to enable left-padded base-10/16 encoding.
 With `strict:Y` (the usual setting), amc enforces a strict ctype
 name → behavior mapping:
 
-| Prefix      | strtype  | pad    | Use                                         |
-|-------------|----------|--------|---------------------------------------------|
-| `Smallstr`  | `rpascal`| —      | Generic pascal string up to `N` chars.      |
-| `RspaceStr` | rightpad | `' '`  | Right-space-padded (used in fixed-format APIs). |
-| `LspaceStr` | leftpad  | `' '`  | Left-space-padded.                          |
-| `LnumStr`   | leftpad  | `'0'`  | Numeric, zero-padded on left.               |
-| `RnullStr`  | rightpad | `0`    | Right-NUL-padded.                           |
-| `LnullStr`  | leftpad  | `0`    | Left-NUL-padded.                            |
+| Prefix      | strtype   | pad   | Use |
+| ----------- | --------- | ----- | --- |
+| `Smallstr`  | `rpascal` | —     | Generic pascal string up to `N` chars. |
+| `RspaceStr` | rightpad  | `' '` | Right-space-padded (used in fixed-format APIs). |
+| `LspaceStr` | leftpad   | `' '` | Left-space-padded. |
+| `LnumStr`   | leftpad   | `'0'` | Numeric, zero-padded on left. |
+| `RnullStr`  | rightpad  | `0`   | Right-NUL-padded. |
+| `LnullStr`  | leftpad   | `0`   | Left-NUL-padded. |
 
 Length suffix in the name must match `length` (e.g.,
 `LspaceStr7` ↔ `length:7`).  Numstr base, if any, appears as
@@ -76,19 +76,19 @@ Optional:
 
 Source: `cpp/amc/smallstr.cpp`.
 
-| Tfunc                       | Generated function                                  | Effect |
-|-----------------------------|-----------------------------------------------------|--------|
-| `Smallstr.Init`             | `<name>_Init(P&)` (folded)                          | Padded forms fill the storage with the pad character; rpascal sets the length byte to zero and leaves the character bytes as they were. |
-| `Smallstr.N`                | `int <name>_N(const P&)`                            | Current logical length (for rpascal: trailing byte; for padded forms: counts non-pad characters). |
-| `Smallstr.Max`              | `int <name>_Max(P&)`                                | Compile-time constant equal to `length`. |
-| `Smallstr.Getary`           | `aryptr<char> <name>_Getary(const P&)`              | Span over the storage (excluding the rpascal length byte). |
-| `Smallstr.Add`              | `void <name>_Add(P&, char c)`                       | Append `c`, if there's room.  rpascal: bumps the length. |
-| `Smallstr.AddStrptr`        | `void <name>_AddStrptr(P&, strptr rhs)`             | Append a span; same rules as `Add`. |
-| `Smallstr.SetStrptr`        | `void <name>_SetStrptr(P&, const strptr& rhs)`      | Replace contents; clip if `rhs.n_elems > length`. |
-| `Smallstr.AssignStrptr`     | `operator=(const strptr&)` (method)                 | Same as `SetStrptr`. |
-| `Smallstr.CtorStrptr`       | `<Parent>::<Parent>(const strptr& rhs)` (method)    | Initialize from a span. |
-| `Smallstr.Print`            | `void <name>_Print(P&, cstring& out)`               | Append the visible characters (strips pad on the appropriate side). |
-| `Smallstr.ReadStrptrMaybe`  | `bool <name>_ReadStrptrMaybe(P&, strptr in)`        | Store the string and return true when it fits; a longer string leaves the field unchanged, appends errtext and returns false. |
+| Tfunc                      | Generated function                               | Effect |
+| -------------------------- | ------------------------------------------------ | ------ |
+| `Smallstr.Init`            | `<name>_Init(P&)` (folded)                       | Padded forms fill the storage with the pad character; rpascal sets the length byte to zero and leaves the character bytes as they were. |
+| `Smallstr.N`               | `int <name>_N(const P&)`                         | Current logical length (for rpascal: trailing byte; for padded forms: counts non-pad characters). |
+| `Smallstr.Max`             | `int <name>_Max(P&)`                             | Compile-time constant equal to `length`. |
+| `Smallstr.Getary`          | `aryptr<char> <name>_Getary(const P&)`           | Span over the storage (excluding the rpascal length byte). |
+| `Smallstr.Add`             | `void <name>_Add(P&, char c)`                    | Append `c`, if there's room.  rpascal: bumps the length. |
+| `Smallstr.AddStrptr`       | `void <name>_AddStrptr(P&, strptr rhs)`          | Append a span; same rules as `Add`. |
+| `Smallstr.SetStrptr`       | `void <name>_SetStrptr(P&, const strptr& rhs)`   | Replace contents; clip if `rhs.n_elems > length`. |
+| `Smallstr.AssignStrptr`    | `operator=(const strptr&)` (method)              | Same as `SetStrptr`. |
+| `Smallstr.CtorStrptr`      | `<Parent>::<Parent>(const strptr& rhs)` (method) | Initialize from a span. |
+| `Smallstr.Print`           | `void <name>_Print(P&, cstring& out)`            | Append the visible characters (strips pad on the appropriate side). |
+| `Smallstr.ReadStrptrMaybe` | `bool <name>_ReadStrptrMaybe(P&, strptr in)`     | Store the string and return true when it fits; a longer string leaves the field unchanged, appends errtext and returns false. |
 
 ### Memory model
 <a href="#memory-model"></a>

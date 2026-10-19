@@ -32,13 +32,18 @@
 // Notes on WriteFile use:
 // we must use WriteFile (which contains a loop) to write all the bytes out,
 // otherwise some terminals push back and refuse the data.
+//
+// A write that fails is not reported through the log, since the report would
+// meet the same failure.  The process instead ends with a nonzero exit code: a
+// tool whose output was lost has not done its job, whatever else went right.
 void algo::Prlog(algo_lib::FLogcat *logcat, algo::SchedTime tstamp, strptr str) {
     try {
         algo::Fildes fildes(logcat->stdout ? 1:2);
+        bool ok = true;
         if (LogcatFilterQ(*logcat,str) && algo_lib::_db.dotline) {
             // a line logged after a run of progress dots starts on a line of its own
             algo_lib::_db.dotline = false;
-            WriteFile(algo::Fildes(1), (u8*)"\n", 1);
+            ok = WriteFile(algo::Fildes(1), (u8*)"\n", 1);
         }
         if (!LogcatFilterQ(*logcat,str)) {
             // filtered out
@@ -71,10 +76,13 @@ void algo::Prlog(algo_lib::FLogcat *logcat, algo::SchedTime tstamp, strptr str) 
             }
             algo_lib::_db.pending_eol = start != pos;
             // write out the temp string with additional annotations
-            WriteFile(fildes,(u8*)out.ch_elems,out.ch_n);
+            ok = WriteFile(fildes,(u8*)out.ch_elems,out.ch_n) && ok;
         } else {
             // simple and fast case
-            WriteFile(fildes, (u8*)str.elems, i32(str.n_elems));
+            ok = WriteFile(fildes, (u8*)str.elems, i32(str.n_elems)) && ok;
+        }
+        if (!ok && algo_lib::_db.exit_code == 0) {
+            algo_lib::_db.exit_code = 1;
         }
     } catch (...) {
         // coverity UNCAUGHT_EXCEPT --

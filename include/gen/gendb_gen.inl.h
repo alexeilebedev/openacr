@@ -112,6 +112,14 @@ inline  gendb::Msg::Msg() {
     gendb::Msg_Init(*this);
 }
 
+// --- gendb.Msgfield..Init
+// Set all fields to initial values.
+inline void gendb::Msgfield_Init(gendb::Msgfield& parent) {
+    parent.offset = i32(0);
+    parent.width = i32(0);
+    parent.aux = i32(0);
+}
+
 // --- gendb.Msgfield..Ctor
 inline  gendb::Msgfield::Msgfield() {
     gendb::Msgfield_Init(*this);

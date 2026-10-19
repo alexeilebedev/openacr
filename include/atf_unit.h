@@ -354,6 +354,14 @@ namespace atf_unit { // update-hdr
     // void unittest_algo_lib_ExitCode(); // atfdb.unittest:algo_lib.ExitCode
     // void unittest_algo_lib_KillRecurse(); // atfdb.unittest:algo_lib.KillRecurse
 
+    // A daemon inherits its signal mask from whoever started it, and a parent that
+    // blocks SIGHUP would leave the hangup pending forever.  So the test blocks
+    // SIGHUP, installs the handler, and raises the signal: the handler sets the
+    // flag before raise returns only when SetupHangupSignal unblocked it.  The mask
+    // comes back first, while the handler is still installed, so a hangup left
+    // pending by a failing build reaches the handler and does not end the test.
+    // void unittest_algo_lib_SetupHangupSignal(); // atfdb.unittest:algo_lib.SetupHangupSignal
+
     // check that all characters print from memptr, and get parsed
     // back as a string
     // void unittest_algo_lib_PrintMemptr(); // atfdb.unittest:algo_lib.PrintMemptr
@@ -368,6 +376,16 @@ namespace atf_unit { // update-hdr
     // void unittest_algo_lib_FileAppend(); // atfdb.unittest:algo_lib.FileAppend
     // void unittest_algo_lib_Url(); // atfdb.unittest:algo_lib.Url
     // void unittest_algo_lib_Blkpool(); // atfdb.unittest:algo_lib.Blkpool
+
+    // A child started through a generated _Start reads a clean signal state, whatever
+    // its parent blocked or ignored.  The test blocks every signal it can and starts
+    // a child that reports the signals it has blocked and ignored; both are empty
+    // only when the launch path reset them in the child.  On Linux the child reads
+    // its whole mask and ignored set from /proc, every signal included.  macOS has
+    // no /proc, and there the child reads them through perl's POSIX module, over
+    // the 31 signals macOS has, leaving out SIGFPE, which perl ignores itself.  The parent's mask comes back before
+    // anything is checked, so a failing run leaves the test runner as it found it.
+    // void unittest_algo_lib_ResetChildSignal(); // atfdb.unittest:algo_lib.ResetChildSignal
     // void unittest_algo_lib_FProc(); // atfdb.unittest:algo_lib.FProc
 
     // Pump a bit of data through cat/tee and verify it round-trips through every
@@ -384,7 +402,9 @@ namespace atf_unit { // update-hdr
     // it, so an approximate comparison would pass for the very values the
     // kernel export exists to exclude.
     //
-    // A host with no export has nothing to compare against, so the check is
+    // The machine's own statement of the rate is GetCpuHzKernel's: the kernel's
+    // tsc_freq_khz on x86, cntfrq_el0 on ARM.  A host with no export has nothing
+    // to compare against, so the check is
     // announced as skipped rather than passing silently.  That host is exactly
     // where a process that needs the rate refuses to start unless it is stated, and
     // where the file source under /etc is exercised -- installing that file
@@ -439,6 +459,20 @@ namespace atf_unit { // update-hdr
     // retry loop whose body logs a line on every attempt, which under -verbose
     // prints each of those lines on a line of its own between the runs of dots.
     // void unittest_algo_lib_PrlogDot(); // atfdb.unittest:algo_lib.PrlogDot
+
+    // fallocate reserves space the way Linux's call does on every platform: a
+    // reservation past the end of a 64 MB file under FALLOC_FL_KEEP_SIZE allocates
+    // the 1 MB it names and leaves the length alone, and a mode-0 call over a range
+    // the file already covers leaves a longer file as long as it was.  On macOS the
+    // call is algo_lib's shim over F_PREALLOCATE, whose length counts the new bytes
+    // past the space the file already holds.
+    // void unittest_algo_lib_Fallocate(); // atfdb.unittest:algo_lib.Fallocate
+
+    // A read hook on an empty regular file is called back at once.  A regular file
+    // never blocks, so neither event queue waits on it: epoll refuses one, and
+    // kqueue would fire a read only while the offset is short of the end, so a hook
+    // on an empty file would never be called.
+    // void unittest_algo_lib_IohookRegularFile(); // atfdb.unittest:algo_lib.IohookRegularFile
 
     // -------------------------------------------------------------------
     // cpp/atf_unit/algo_txttbl.cpp
@@ -732,6 +766,13 @@ namespace atf_unit { // update-hdr
     // void unittest_algo_lib_RegxDotEof(); // atfdb.unittest:algo_lib.RegxDotEof
     // void unittest_algo_lib_RegxReadTwice(); // atfdb.unittest:algo_lib.RegxReadTwice
     // void unittest_algo_lib_RegxReadTwice2(); // atfdb.unittest:algo_lib.RegxReadTwice2
+
+    // Match every amcdb.regxcase row and compare the answer with the row's.  A
+    // vitest matches the same rows with the TypeScript translators in
+    // ts/gen/algo_lib_regx.ts, so a row that passes in both is a pattern that
+    // algo_lib and the browser read alike.  The test refuses an empty table, since
+    // a table that failed to load would otherwise pass.
+    // void unittest_algo_lib_RegxCase(); // atfdb.unittest:algo_lib.RegxCase
 
     // -------------------------------------------------------------------
     // cpp/atf_unit/string.cpp

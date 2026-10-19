@@ -666,6 +666,17 @@ inline  dmmeta::Fcmp::Fcmp(const algo::strptr& in_field, bool in_versionsort, bo
 inline  dmmeta::Fcompact::Fcompact() {
 }
 
+// --- dmmeta.Fcompldir..Init
+// Set all fields to initial values.
+inline void dmmeta::Fcompldir_Init(dmmeta::Fcompldir& parent) {
+    parent.dir = algo::strptr("");
+}
+
+// --- dmmeta.Fcompldir..Ctor
+inline  dmmeta::Fcompldir::Fcompldir() {
+    dmmeta::Fcompldir_Init(*this);
+}
+
 // --- dmmeta.Fcond..Init
 // Set all fields to initial values.
 inline void dmmeta::Fcond_Init(dmmeta::Fcond& parent) {
@@ -1862,6 +1873,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Fcmp &
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Fcompact &row) {// cfmt:dmmeta.Fcompact.String
     dmmeta::Fcompact_Print(const_cast<dmmeta::Fcompact&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Fcompldir &row) {// cfmt:dmmeta.Fcompldir.String
+    dmmeta::Fcompldir_Print(const_cast<dmmeta::Fcompldir&>(row), str);
     return str;
 }
 

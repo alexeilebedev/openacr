@@ -56,7 +56,7 @@ static tempstr Msgsize(algo::strptr name) {
     tempstr ret;
     if (msg) {
         ind_beg(doc::msg_c_msgfield_curs, msgfield, *msg) {
-            varlen = varlen || msgfield.varlen;
+            varlen = varlen || msgfield.fldtype == algo_Fldtype_varlen;
         }ind_end;
         ret << msg->len << (varlen ? "+" : "");
     }
@@ -64,13 +64,14 @@ static tempstr Msgsize(algo::strptr name) {
 }
 
 // Append the wire layout of the message NAME to OUT: every leaf field, where it begins
-// and how wide it is.
+// and how wide it is.  A computed field (cppfunc) takes no bytes and is left out.
 //
 // This is the table somebody reading a packet capture needs, and nothing else on the page
 // answers it: the declaration says what the fields are and in what order, and the offsets
 // come from how amc laid them out -- alignment, packing, the header cloned in at the
-// front.  A varlen tail has no width, since what bounds it is the length the header
-// carries rather than anything about the field.
+// front.  A varlen has no width: the last one ends where the header's length says, and
+// every other one where the end field amc adds for it says, and its offset is where the
+// varlen area begins.
 //
 // The rows come out in the order the bytes arrive, which the walk gets by taking the
 // offsets in turn rather than by sorting: ten messages in the tree put two fields at one
@@ -87,14 +88,22 @@ static void PutMsgwire(algo::cstring &out, algo::strptr name) {
         }ind_end;
         frep_(at, last + 1) {
             ind_beg(doc::msg_c_msgfield_curs, msgfield, *msg) {
-                if (msgfield.offset == int(at)) {
+                if (msgfield.offset == int(at) && msgfield.fldtype != algo_Fldtype_cppfunc) {
                     n++;
                     body << "|";
                     doc::PutTablecell(body, tempstr() << "`" << doc::name_Get(msgfield) << "`");
                     doc::PutTablecell(body, tempstr() << msgfield.offset);
-                    doc::PutTablecell(body, msgfield.varlen ? tempstr() << "to the end" : tempstr() << msgfield.width);
+                    tempstr bytes;
+                    if (msgfield.fldtype == algo_Fldtype_varlen) {
+                        bytes << "to the end";
+                    } else if (msgfield.fldtype == algo_Fldtype_varlen2) {
+                        bytes << "to the end field at " << msgfield.aux;
+                    } else {
+                        bytes << msgfield.width;
+                    }
+                    doc::PutTablecell(body, bytes);
                     doc::PutTablecell(body, tempstr() << "[" << msgfield.arg << "](ctype:" << msgfield.arg << ")"
-                                      << (msgfield.bigend ? ", big-endian" : ""));
+                                      << (msgfield.fldtype == algo_Fldtype_fixed_be ? ", big-endian" : ""));
                     body << eol;
                 }
             }ind_end;

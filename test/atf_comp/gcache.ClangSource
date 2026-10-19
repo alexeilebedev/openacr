@@ -1,0 +1,31 @@
+# stage install
+# start gcache cmd:"cd $tempdir && $$OLDPWD/$bindir/gcache -install -dir:cache"
+gcache -> setting up gcache...
+gcache -> done
+# eof gcache
+# exit gcache code:0
+# stage miss
+# start gcache-2 cmd:"cd $tempdir && $$OLDPWD/$bindir/gcache -report -- ./clang++ -c x.cpp -o x.o"
+gcache-2 -> report.gcache  starttime:***  elapsed_sec:***  preproc_size:***  hit:N  cached_file:***  copy_file_range:***  pch_hit:N  pch_file:***  source:x.cpp  pch_source:""
+# eof gcache-2
+# exit gcache-2 code:0
+# check object:object from x.cpp
+# stage hit
+# start gcache-3 cmd:"cd $tempdir && $$OLDPWD/$bindir/gcache -report -- ./clang++ -c x.cpp -o x.o"
+gcache-3 -> report.gcache  starttime:***  elapsed_sec:***  preproc_size:***  hit:Y  cached_file:***  copy_file_range:***  pch_hit:N  pch_file:***  source:x.cpp  pch_source:""
+# eof gcache-3
+# exit gcache-3 code:0
+# check hit:Y
+# stage edited
+# start gcache-4 cmd:"cd $tempdir && $$OLDPWD/$bindir/gcache -report -- ./clang++ -c edit.cpp -o edit.o"
+gcache-4 -> gcache.warning  o_file:edit.o  comment:"cache entry not published: the source changed while it compiled"
+gcache-4 -> report.gcache  starttime:***  elapsed_sec:***  preproc_size:***  hit:N  cached_file:***  copy_file_range:***  pch_hit:N  pch_file:***  source:edit.cpp  pch_source:""
+# eof gcache-4
+# exit gcache-4 code:0
+# stage edited_again
+# start gcache-5 cmd:"cd $tempdir && $$OLDPWD/$bindir/gcache -report -- ./clang++ -c edit.cpp -o edit.o"
+gcache-5 -> gcache.warning  o_file:edit.o  comment:"cache entry not published: the source changed while it compiled"
+gcache-5 -> report.gcache  starttime:***  elapsed_sec:***  preproc_size:***  hit:N  cached_file:***  copy_file_range:***  pch_hit:N  pch_file:***  source:edit.cpp  pch_source:""
+# eof gcache-5
+# exit gcache-5 code:0
+# check edited_hit:N

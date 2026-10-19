@@ -24,21 +24,18 @@
 #include <sys/statvfs.h>
 #include <fcntl.h>// posix_fallocate
 #include <sys/mman.h>// mlock
-#ifdef __APPLE__
-#include <sys/posix_shm.h>
-#endif
 #endif
 
 // -----------------------------------------------------------------------------
 
-// Free bytes on the tmpfs backing /dev/shm.  INT64_MAX on statvfs
-// failure (treated as "no limit" by callers comparing against a need),
-// so chroots or platforms without /dev/shm don't hard-fail callers.
+// Free bytes on the filesystem under the segment directory (algo_lib::ShmDir).
+// INT64_MAX on statvfs failure (treated as "no limit" by callers comparing
+// against a need), so a chroot without the directory doesn't hard-fail callers.
 i64 lib_ams::GetShmAvail() {
     i64 ret = INT64_MAX;
 #ifndef WIN32
     struct statvfs vfs;
-    if (statvfs("/dev/shm", &vfs) == 0) {
+    if (statvfs(Zeroterm(tempstr() << algo_lib::ShmDir()), &vfs) == 0) {
         // f_bavail is counted in f_frsize (fragment) units, not f_bsize.
         ret = i64(vfs.f_bavail) * i64(vfs.f_frsize);
     }
@@ -46,40 +43,41 @@ i64 lib_ams::GetShmAvail() {
     return ret;
 }
 
-// Size in bytes of the tmpfs backing /dev/shm, and 0 when statvfs cannot
+// Size in bytes of the filesystem under the segment directory, and 0 when statvfs cannot
 // answer, so a reserve derived from it is nothing where the filesystem is
 // unknown.
 i64 lib_ams::GetShmTotal() {
     i64 ret = 0;
 #ifndef WIN32
     struct statvfs vfs;
-    if (statvfs("/dev/shm", &vfs) == 0) {
+    if (statvfs(Zeroterm(tempstr() << algo_lib::ShmDir()), &vfs) == 0) {
         ret = i64(vfs.f_blocks) * i64(vfs.f_frsize);
     }
 #endif
     return ret;
 }
 
-// The name shm_open gives the segment of group GRP_ID: the file prefix that
-// separates one instance's segments from another's, the group id, and the
-// suffix.  shm_open resolves it under /dev/shm, so a caller that reaches the
-// file through the filesystem instead puts that directory in front of it.
-// Darwin limits these names to PSHMNAMLEN (31) characters, and a descriptive
-// name can be longer, so there an overlong name is compacted to a hash.  Two
-// different CRC polynomials keep a 64-bit fingerprint of the whole identity.
+// The file name of the segment of group GRP_ID: the file prefix that separates
+// one instance's segments from another's, the group id, and the suffix.  The
+// file lives in the segment directory (ShmPath).
 static algo::tempstr ShmFileName(ams::GrpId grp_id) {
     algo::tempstr ret;
     ret << lib_ams::_db.file_prefix << (lib_ams::_db.file_prefix=="" ? "" : "-") << grp_id << ".ams";
-#ifdef __APPLE__
-    if (ch_N(ret) > PSHMNAMLEN) {
-        algo::memptr bytes = strptr_ToMemptr(ret);
-        u64 hash = u64(algo::CRC32Step(0, bytes.elems, bytes.n_elems)) << 32
-            | algo::CRC32IEEE(0, bytes.elems, bytes.n_elems);
-        ret = "ams-";
-        algo::u64_PrintHex(hash, ret, 16, false);
-        ret << ".ams";
+    return ret;
+}
+
+// The path of the segment file FILENAME: the segment directory, then the name.
+// Every segment is a file there on every platform, so a process creates, opens,
+// lists and unlinks segments as files.  A FILENAME that is already a path is
+// its own answer.  That is how a bridged child reads a file prefix that names
+// the directory too (ChildProcStr), which every client of the -proc spec does
+// the same way, whatever language it is written in.
+algo::tempstr lib_ams::ShmPath(algo::strptr filename) {
+    algo::tempstr ret;
+    if (!StartsWithQ(filename, "/")) {
+        ret << algo_lib::ShmDir() << "/";
     }
-#endif
+    ret << filename;
     return ret;
 }
 
@@ -104,8 +102,7 @@ static algo::tempstr ShmFileName(ams::GrpId grp_id) {
 i64 lib_ams::ShmExistingSize(ams::GrpId grp_id) {
     i64 ret = 0;
 #ifndef WIN32
-    tempstr filename;
-    filename << "/dev/shm/" << ShmFileName(grp_id);
+    tempstr filename(lib_ams::ShmPath(ShmFileName(grp_id)));
     struct stat st;
     if (stat(Zeroterm(filename), &st) == 0) {
         ret = i64(st.st_blocks) * 512;
@@ -119,8 +116,7 @@ i64 lib_ams::ShmExistingSize(ams::GrpId grp_id) {
 bool lib_ams::ShmExistsQ(ams::GrpId grp_id) {
     bool ret = false;
 #ifndef WIN32
-    tempstr filename;
-    filename << "/dev/shm/" << ShmFileName(grp_id);
+    tempstr filename(lib_ams::ShmPath(ShmFileName(grp_id)));
     struct stat st;
     ret = stat(Zeroterm(filename), &st) == 0;
 #endif
@@ -128,10 +124,6 @@ bool lib_ams::ShmExistsQ(ams::GrpId grp_id) {
 }
 
 #ifndef WIN32
-// TRUE when the segment named PATH (open on FD) is a reclaimable orphan.  For a
-// segment this host can attribute to a process, the answer rests on a proof that
-// some process is gone, never on the segment's age.
-//
 // Take every page of board segment SHM from the tmpfs now, and lock them in
 // memory; TRUE when the pages are committed.
 //
@@ -175,7 +167,7 @@ static bool BoardCommit(lib_ams::FShm &shm) {
                   <<Keyval("shm_avail",avail)
                   <<Keyval("shm_reserve",reserve)
                   <<Keyval("err",algo::FromErrno(err))
-                  <<Keyval("comment","/dev/shm cannot commit the board's pages and keep a tenth free; raise the tmpfs size or shrink the board"));
+                  <<Keyval("comment","the segment directory cannot commit the board's pages and keep a tenth free; enlarge its filesystem or shrink the board"));
         } else if (mlock(shm.shm_region.elems, size_t(shm.shm_region.n_elems)) != 0) {
             lib_ams::_db.trace.n_board_unlocked++;
             verblog("lib_ams.board_unlocked"
@@ -216,8 +208,12 @@ static void BoardPopulate(lib_ams::FShm &shm) {
     }
 }
 
+// TRUE when the segment named PATH (open on FD) is a reclaimable orphan.  For a
+// segment this host can attribute to a process, the answer rests on a proof that
+// some process is gone, never on the segment's age.
+//
 // Consider what a sweep sees and how easily it reads a live ring as a dead one.
-// Any process starting up scans every segment in /dev/shm, not just its own
+// Any process starting up scans every segment in the segment directory, not just its own
 // cluster's, and a free write lock looks like an abandoned ring.  But a ring is
 // routinely created for a writer in another process -- a userproc's rings are
 // made by its supervisor before the fork -- and the lock is taken only when that
@@ -261,7 +257,7 @@ static bool OrphanSegmentQ(int fd, algo::strptr path) {
 }
 #endif
 
-// Scan /dev/shm for orphaned ams segments and unlink them.  A segment is an
+// Scan the segment directory for orphaned ams segments and unlink them.  A segment is an
 // orphan when no process holds its write lock and it is no longer being created
 // (see OrphanSegmentQ) -- i.e. its writer crashed or was kill -9'd without
 // unlinking, or it was created but never claimed by a writer.  Orphans are
@@ -271,8 +267,8 @@ void lib_ams::CleanOldShmFiles() {
 #ifndef WIN32 // not needed on Windows as named shm segments are not persistent
     algo::cstring orphans;
     int nclean=0;
-    ind_beg(algo::Dir_curs,entry,"/dev/shm/*.ams") {
-        int fd=open(Zeroterm(entry.pathname), O_RDONLY);
+    ind_beg(algo::Dir_curs,entry,lib_ams::ShmPath("*.ams")) {
+        int fd=open(Zeroterm(entry.pathname), O_RDONLY | O_NOFOLLOW);
         if (fd != -1) {
             if (OrphanSegmentQ(fd, entry.pathname)) {
                 orphans << entry.pathname << eol;
@@ -285,7 +281,7 @@ void lib_ams::CleanOldShmFiles() {
         (void)unlink(Zeroterm(tempstr() << path));
     }ind_end;
     if (nclean>0) {
-        verblog("cleaned "<<nclean<<" orphaned .ams segments from /dev/shm");
+        verblog("cleaned "<<nclean<<" orphaned .ams segments from "<<algo_lib::ShmDir());
     }
 #endif
 }
@@ -390,8 +386,6 @@ bool lib_ams::ShmCreate(lib_ams::FShm &shm, ams::ShmFlags flags) {
     int create_flags = (write_Get(flags) ? (O_RDWR|O_CREAT) : O_RDWR);
     //int mode = write_Get(flags) ? S_IRUSR | S_IWUSR : S_IRUSR;
     int mode = S_IRUSR | S_IWUSR;
-    // POSIX says / character in argument to shm_open is implementation-defined
-    // Practically, shm_open fails on Linux if / is used.
     shm.filename = ShmFileName(shm.grp_id);
     // A ring's channel count is declared on the record and nowhere else, so the
     // creator adds the header pages past the first that the channels need to
@@ -404,8 +398,21 @@ bool lib_ams::ShmCreate(lib_ams::FShm &shm, ams::ShmFlags flags) {
         shm.created=true;
         ok = shm.shm_region.elems != NULL;
     } else {
-        shm.shm_file.fd.value = shm_open(Zeroterm(shm.filename), create_flags, mode);
+        // the descriptor closes on exec, so a child the process spawns does not
+        // inherit a hold on the segment; and it is opened only as a file of
+        // its own, never through a link: the directory is shared by every
+        // account on a Mac, so a link another account planted would have this
+        // process truncate and zero the file the link names, as shm_open's
+        // O_NOFOLLOW prevents on Linux
+        tempstr path(lib_ams::ShmPath(shm.filename));
+        shm.shm_file.fd.value = open(Zeroterm(path), create_flags | O_CLOEXEC | O_NOFOLLOW, mode);
         ok = ValidQ(shm.shm_file.fd);
+        if (!ok && errno == ENOENT && !DirectoryQ(algo_lib::ShmDir())) {
+            prerr("lib_ams.no_shmdir"
+                  <<Keyval("dir",algo_lib::ShmDir())
+                  <<Keyval("grp",shm.grp_id)
+                  <<Keyval("comment","the segment directory does not exist; on macOS mount the RAM disk (txt/rule/lib_ams.md)"));
+        }
         if (ok) {
             size = algo::GetFileSize(shm.shm_file.fd);
         }
@@ -535,26 +542,11 @@ bool lib_ams::ShmCreate(lib_ams::FShm &shm, ams::ShmFlags flags) {
 
 // -----------------------------------------------------------------------------
 
-// Claim this segment's one writer.  Linux shm descriptors are regular tmpfs
-// files and support flock.  Darwin's POSIX shm descriptors support neither
-// flock nor fcntl record locks, so claim the aligned writer pid in the shared
-// header atomically.  A dead owner may be replaced; a live one keeps the claim.
+// Claim this segment's one writer with an exclusive lock on its file.  The
+// kernel drops the lock when the writer exits however it exits, which is what
+// lets a sweep read a free lock as a writer that is gone.
 static bool LockWriter(lib_ams::FShm &shm) {
-#ifdef __APPLE__
-    i32 pid = getpid();
-    i32 *owner = &shm.c_shmhdr->writer_pid;
-    i32 found = __sync_val_compare_and_swap(owner, 0, pid);
-    bool ok = found == 0 || found == pid;
-    if (!ok && kill(found, 0) == -1 && errno == ESRCH) {
-        ok = __sync_bool_compare_and_swap(owner, found, pid);
-    }
-    if (!ok) {
-        errno = EWOULDBLOCK;
-    }
-    return ok;
-#else
     return flock(shm.shm_file.fd.value, LOCK_EX|LOCK_NB) == 0;
-#endif
 }
 
 // -----------------------------------------------------------------------------
@@ -601,8 +593,11 @@ bool lib_ams::ShmOpen(lib_ams::FShm &shm, ams::ShmFlags flags) {
         // arrived on.  So the reader maps the segment, reads it, and registers
         // on its read channel instead -- which is the lane, where its position
         // does mean something.  The board's member table is sized to zero to say
-        // so, which also refuses any later attempt to register in it.
+        // so, which also refuses any later attempt to register in it.  Every
+        // read mapping of a board passes here, a module's at startup and a
+        // reader's on the first reference, so this is where they are counted.
         read_Set(shm.flags,true);
+        lib_ams::_db.trace.n_board_open++;
     } else if (ok && read_Get(flags) && !read_Get(shm.flags)) {
         shm.c_reader = FindReadShmember(shm,lib_ams::_db.proc_id);
         if (!shm.c_reader && shm.created) {
@@ -867,13 +862,7 @@ bool lib_ams::WriteMsgBlock(lib_ams::FShm &shm, ams::MsgHeader &msg) {
 
 void lib_ams::shm_file_Cleanup(lib_ams::FShm &shm) {// fcleanup:lib_ams.FShm.shm_file
     if (shm.locked) {
-#ifdef __APPLE__
-        if (shm.c_shmhdr) {
-            (void)__sync_bool_compare_and_swap(&shm.c_shmhdr->writer_pid, i32(getpid()), 0);
-        }
-#else
         (void)flock(shm.shm_file.fd.value, LOCK_UN);
-#endif
         shm.locked=false;
     }
     // unmap section from process address space for reader and writer as well
@@ -899,7 +888,7 @@ void lib_ams::shm_file_Cleanup(lib_ams::FShm &shm) {// fcleanup:lib_ams.FShm.shm
     // ("Invalid segment format").
     if (shm.filename != "") {
         if (shm.created) {
-            shm_unlink(Zeroterm(shm.filename));
+            (void)unlink(Zeroterm(lib_ams::ShmPath(shm.filename)));
         }
         shm.filename = "";
     }
@@ -1101,7 +1090,7 @@ void lib_ams::cd_poll_read_Step() {
                 // A board reference stands in the ring for the message it names,
                 // and the handler is given the message rather than the reference,
                 // so nothing above this loop can tell which way a message
-                // travelled.  The ring still advances by the reference's own
+                // traveled.  The ring still advances by the reference's own
                 // length: what occupies the ring is the reference.
                 ams::BoardrefMsg *boardref = ams::BoardrefMsg_Castdown(*shm.c_cur_msg);
                 ams::MsgHeader *payload = boardref ? lib_ams::BoardResolve(shm,*boardref) : shm.c_cur_msg;

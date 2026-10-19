@@ -34,12 +34,12 @@ and each of those 36 tclasses runs for any field of its reftype.  The
 remaining tclasses are never named in user-written ssim at all.  They
 differ in *scope* — what amc is generating when they run:
 
-|Scope|Genctx|Tclasses|
-|---|---|---|
-|field|`p_field` set|the 36 reftype tclasses, the 12 option tclasses, `Field`, `Field2`|
-|pool field|`p_field` set|`Pool`, reached from the pool reftype's own generator|
-|ctype|`p_field` NULL|`Ctype`, `Ctype2`|
-|namespace|`p_ctype` and `p_field` NULL|`Ns`|
+| Scope      | Genctx                       | Tclasses |
+| ---------- | ---------------------------- | -------- |
+| field      | `p_field` set                | the 36 reftype tclasses, the 12 option tclasses, `Field`, `Field2` |
+| pool field | `p_field` set                | `Pool`, reached from the pool reftype's own generator |
+| ctype      | `p_field` NULL               | `Ctype`, `Ctype2` |
+| namespace  | `p_ctype` and `p_field` NULL | `Ns` |
 
 #### Tclass index
 <a href="#tclass-index"></a>
@@ -55,32 +55,32 @@ cursors and field prefixes.
 The 12 *option* tclasses run for a field that carries some other record
 besides `dmmeta.field`.  The record is the switch: no record, no tclass.
 
-|Tclass|Activated by|Documented in|
-|---|---|---|
-|`Bitset`|`dmmeta.fbitset` on the field|[Bitsets](/txt/exe/amc/bitset.md)|
-|`Cmp`|`dmmeta.fcmp` on the field|[Sorting](/txt/exe/amc/sort.md#fcmp)|
-|`Cppfunc`|`dmmeta.cppfunc` on the field|[Hooks](/txt/exe/amc/hook.md#hook-vs-cppfunc-vs-fcb)|
-|`Dec`|`dmmeta.fdec` on the field|[Decimals](/txt/exe/amc/decimal.md)|
-|`Fcast`|`dmmeta.fcast` on the field|[dmmeta.fcast](/txt/ssimdb/dmmeta/README.md#dmmeta-fcast); example in [Enums](/txt/exe/amc/enum.md)|
-|`Fconst`|`dmmeta.fconst` on the field|[Enums](/txt/exe/amc/enum.md)|
-|`Io`|`dmmeta.finput`, `dmmeta.foutput` or `dmmeta.gstatic` on the field|[I/O](/txt/exe/amc/io.md)|
-|`Numstr`|`dmmeta.numstr` on the field's `dmmeta.smallstr`|[Small strings](/txt/exe/amc/string.md#small-strings)|
-|`Pmask`|`dmmeta.pmaskfld` on the field's **ctype** — every field of that ctype gets the tclass|[Presence masks](/txt/exe/amc/pmask.md)|
-|`Sort`|`dmmeta.fsort` on the field|[Sorting](/txt/exe/amc/sort.md)|
-|`Step`|`dmmeta.fstep` on the field|[Runtime](/txt/exe/amc/runtime.md)|
-|`Substr`|`dmmeta.substr` on the field|[Substr](/txt/exe/amc/string.md#substr)|
+| Tclass    | Activated by                                                                           | Documented in |
+| --------- | -------------------------------------------------------------------------------------- | ------------- |
+| `Bitset`  | `dmmeta.fbitset` on the field                                                          | [Bitsets](/txt/exe/amc/bitset.md) |
+| `Cmp`     | `dmmeta.fcmp` on the field                                                             | [Sorting](/txt/exe/amc/sort.md#fcmp) |
+| `Cppfunc` | `dmmeta.cppfunc` on the field                                                          | [Hooks](/txt/exe/amc/hook.md#hook-vs-cppfunc-vs-fcb) |
+| `Dec`     | `dmmeta.fdec` on the field                                                             | [Decimals](/txt/exe/amc/decimal.md) |
+| `Fcast`   | `dmmeta.fcast` on the field                                                            | [dmmeta.fcast](/txt/ssimdb/dmmeta/README.md#dmmeta-fcast); example in [Enums](/txt/exe/amc/enum.md) |
+| `Fconst`  | `dmmeta.fconst` on the field                                                           | [Enums](/txt/exe/amc/enum.md) |
+| `Io`      | `dmmeta.finput`, `dmmeta.foutput` or `dmmeta.gstatic` on the field                     | [I/O](/txt/exe/amc/io.md) |
+| `Numstr`  | `dmmeta.numstr` on the field's `dmmeta.smallstr`                                       | [Small strings](/txt/exe/amc/string.md#small-strings) |
+| `Pmask`   | `dmmeta.pmaskfld` on the field's **ctype** — every field of that ctype gets the tclass | [Presence masks](/txt/exe/amc/pmask.md) |
+| `Sort`    | `dmmeta.fsort` on the field                                                            | [Sorting](/txt/exe/amc/sort.md) |
+| `Step`    | `dmmeta.fstep` on the field                                                            | [Runtime](/txt/exe/amc/runtime.md) |
+| `Substr`  | `dmmeta.substr` on the field                                                           | [Substr](/txt/exe/amc/string.md#substr) |
 
 The remaining tclasses have no switch — they run on every field, ctype or
 namespace amc reaches.  `Ctype` is counted among the 36 above because it has
 a `dmmeta.reftype` row, but no field is ever declared `reftype:Ctype`, so in
 practice it only ever runs per ctype.
 
-|Tclass|Scope and role|Documented in|
-|---|---|---|
-|`Field`, `Field2`|Every field, before and after everything else.  Owns the lifecycle callbacks a field can opt into — `Cleanup`, `Userinit`, `OnXref`, `OnUnref`, `Cascdel`, `Concat` — and `Field2.ReadStrptrMaybe`|[Ffunc](#ffunc), below|
-|`Pool`|A field that can allocate.  Called by the pool reftype's own generator (`Malloc`, `Sbrk`, `Tpool`, `Lpool`, `Blkpool`, `Lary`, `Inlary`) rather than by the field walk, so every pool presents the same `Alloc` / `Delete` surface|[Memory pools](/txt/exe/amc/pool.md)|
-|`Ctype`, `Ctype2`|Once per ctype, in two passes.  Owns the struct's own C++ interface: lifecycle, comparison, print/read, wire codecs, constructors|[Ctype](/txt/exe/amc/reftype/Ctype.md)|
-|`Ns`|Once per namespace, for a `nstype:protocol` namespace or one with a `globfld`.  Emits `StaticCheck()`, the size and field-offset assertions|[Size assertions](/txt/exe/amc/csize.md)|
+| Tclass            | Scope and role                                                                                                                                                                                                                     | Documented in |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
+| `Field`, `Field2` | Every field, before and after everything else.  Owns the lifecycle callbacks a field can opt into — `Cleanup`, `Userinit`, `OnXref`, `OnUnref`, `Cascdel`, `Concat` — and `Field2.ReadStrptrMaybe`                                 | [Ffunc](#ffunc), below |
+| `Pool`            | A field that can allocate.  Called by the pool reftype's own generator (`Malloc`, `Sbrk`, `Tpool`, `Lpool`, `Blkpool`, `Lary`, `Inlary`) rather than by the field walk, so every pool presents the same `Alloc` / `Delete` surface | [Memory pools](/txt/exe/amc/pool.md) |
+| `Ctype`, `Ctype2` | Once per ctype, in two passes.  Owns the struct's own C++ interface: lifecycle, comparison, print/read, wire codecs, constructors                                                                                                  | [Ctype](/txt/exe/amc/reftype/Ctype.md) |
+| `Ns`              | Once per namespace, for a `nstype:protocol` namespace or one with a `globfld`.  Emits `StaticCheck()`, the size and field-offset assertions                                                                                        | [Size assertions](/txt/exe/amc/csize.md) |
 
 ### Tfunc
 <a href="#tfunc"></a>
@@ -94,15 +94,15 @@ options don't call for it.
 
 Tfunc attributes set defaults on the function the generator produces:
 
-|Attribute|Effect|
-|---|---|
-|`hasthrow`|The function may throw.  The tfunc is skipped entirely in namespaces compiled without exceptions (`GenThrowQ` false).|
-|`leaf`|The function calls nothing that throws.  Combined with `!hasthrow` it makes the generated function `nothrow` (`__attribute__((nothrow))`).|
-|`inl`|Generate inline by default.|
-|`wur`|Generate `__attribute__((warn_unused_result))`.|
-|`pure`|The function may be called fewer times than written (no observable side effects).|
-|`ismacro`|Emit as a macro rather than a function.|
-|`poolfunc`|The function operates on the pool rather than a single row.|
+| Attribute  | Effect |
+| ---------- | ------ |
+| `hasthrow` | The function may throw.  The tfunc is skipped entirely in namespaces compiled without exceptions (`GenThrowQ` false). |
+| `leaf`     | The function calls nothing that throws.  Combined with `!hasthrow` it makes the generated function `nothrow` (`__attribute__((nothrow))`). |
+| `inl`      | Generate inline by default. |
+| `wur`      | Generate `__attribute__((warn_unused_result))`. |
+| `pure`     | The function may be called fewer times than written (no observable side effects). |
+| `ismacro`  | Emit as a macro rather than a function. |
+| `poolfunc` | The function operates on the pool rather than a single row. |
 
 ### Ffunc
 <a href="#ffunc"></a>

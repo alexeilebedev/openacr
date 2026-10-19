@@ -15588,7 +15588,7 @@ inline  atf_amc::Sep1::Sep1(u32 in_val1, u32 in_val2, u32 in_val3)
  {
 }
 
-// --- atf_amc.Seqmsg.msghdr.Castdown
+// --- atf_amc.Seqmsg.base.Castdown
 // Check if atf_amc::MsgHeader is an instance of Seqmsg by checking the type field
 // If it is, return the pointer of target type.
 // Additionally, check if the length field permits valid instance of Seqmsg.
@@ -15599,7 +15599,7 @@ inline atf_amc::Seqmsg* atf_amc::Seqmsg_Castdown(atf_amc::MsgHeader &hdr) {
     return cond ? reinterpret_cast<atf_amc::Seqmsg*>(&hdr) : NULL;
 }
 
-// --- atf_amc.Seqmsg.msghdr.Castbase
+// --- atf_amc.Seqmsg.base.Castbase
 inline atf_amc::MsgHeader& atf_amc::Castbase(atf_amc::Seqmsg& parent) {
     return reinterpret_cast<atf_amc::MsgHeader&>(parent);
 }
@@ -16170,7 +16170,7 @@ inline  atf_amc::TestRegx1::TestRegx1() {
 inline  atf_amc::TestType::TestType() {
 }
 
-// --- atf_amc.Text.msghdr.Castdown
+// --- atf_amc.Text.base.Castdown
 // Check if atf_amc::MsgHeader is an instance of Text by checking the type field
 // If it is, return the pointer of target type.
 // Additionally, check if the length field permits valid instance of Text.
@@ -16181,7 +16181,7 @@ inline atf_amc::Text* atf_amc::Text_Castdown(atf_amc::MsgHeader &hdr) {
     return cond ? reinterpret_cast<atf_amc::Text*>(&hdr) : NULL;
 }
 
-// --- atf_amc.Text.msghdr.Castbase
+// --- atf_amc.Text.base.Castbase
 inline atf_amc::MsgHeader& atf_amc::Castbase(atf_amc::Text& parent) {
     return reinterpret_cast<atf_amc::MsgHeader&>(parent);
 }

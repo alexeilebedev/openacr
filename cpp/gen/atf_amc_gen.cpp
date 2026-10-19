@@ -245,7 +245,7 @@ namespace atf_amc { // gen:ns_print_proto
     // func:atf_amc.FDb.cd_in_msg.UpdateCycles
     inline static void   cd_in_msg_UpdateCycles() __attribute__((nothrow));
     // func:atf_amc.FDb.cd_in_msg.Call
-    inline static void   cd_in_msg_Call() __attribute__((nothrow));
+    inline static void   cd_in_msg_Call();
     // func:atf_amc.FDb.amctest.LoadStatic
     static void          amctest_LoadStatic() __attribute__((nothrow));
     // Restore heights and balance upward until a subtree height is unchanged
@@ -282,7 +282,7 @@ namespace atf_amc { // gen:ns_print_proto
     // func:atf_amc.FDb.bh_time_entry.UpdateCycles
     static void          bh_time_entry_UpdateCycles() __attribute__((nothrow));
     // func:atf_amc.FDb.bh_time_entry.Call
-    static void          bh_time_entry_Call() __attribute__((nothrow));
+    static void          bh_time_entry_Call();
     // Return the address of a bucket's chain head
     // func:atf_amc.FDb.ind_blkhash_elem.Head
     static atf_amc::_db_ind_blkhash_elem_Blk** ind_blkhash_elem_Head(u32 index) __attribute__((nothrow));
@@ -414,7 +414,7 @@ namespace atf_amc { // gen:ns_print_proto
     // func:atf_amc.FDb.bh_time_entry_head.UpdateCycles
     static void          bh_time_entry_head_UpdateCycles() __attribute__((nothrow));
     // func:atf_amc.FDb.bh_time_entry_head.Call
-    static void          bh_time_entry_head_Call() __attribute__((nothrow));
+    static void          bh_time_entry_head_Call();
     // Find and return the slot for ROW, starting at the empty slot IDX of the heap.
     // func:atf_amc.FDb.bh_time_entry_recur.Downheap
     static int           bh_time_entry_recur_Downheap(atf_amc::FTimeEntry& row, int idx) __attribute__((nothrow));
@@ -456,7 +456,7 @@ namespace atf_amc { // gen:ns_print_proto
     // func:atf_amc.FDb.bh_time_entry_recur.UpdateCycles
     static void          bh_time_entry_recur_UpdateCycles() __attribute__((nothrow));
     // func:atf_amc.FDb.bh_time_entry_recur.Call
-    static void          bh_time_entry_recur_Call() __attribute__((nothrow));
+    static void          bh_time_entry_recur_Call();
     // Find and return the slot for ROW, starting at the empty slot IDX of the heap.
     // func:atf_amc.FDb.bh_time_entry_once.Downheap
     static int           bh_time_entry_once_Downheap(atf_amc::FTimeEntry& row, int idx) __attribute__((nothrow));
@@ -491,7 +491,7 @@ namespace atf_amc { // gen:ns_print_proto
     // func:atf_amc.FDb.bh_time_entry_once.UpdateCycles
     inline static void   bh_time_entry_once_UpdateCycles() __attribute__((nothrow));
     // func:atf_amc.FDb.bh_time_entry_once.Call
-    inline static void   bh_time_entry_once_Call() __attribute__((nothrow));
+    inline static void   bh_time_entry_once_Call();
     // Find and return the slot for ROW, starting at the empty slot IDX of the heap.
     // func:atf_amc.FDb.bh_condtest_heaped.Downheap
     static int           bh_condtest_heaped_Downheap(atf_amc::FCondtest& row, int idx) __attribute__((nothrow));
@@ -3294,14 +3294,14 @@ void atf_amc::DispType3_Print(atf_amc::DispType3& row, algo::cstring& str) {
     PrintAttrSpaceReset(str,"strval", temp);
 }
 
-// --- atf_amc.FAmctest.msghdr.CopyOut
+// --- atf_amc.FAmctest.base.CopyOut
 // Copy fields out of row
 void atf_amc::amctest_CopyOut(atf_amc::FAmctest &row, atfdb::Amctest &out) {
     out.amctest = row.amctest;
     out.comment = algo::Comment(row.comment);
 }
 
-// --- atf_amc.FAmctest.msghdr.CopyIn
+// --- atf_amc.FAmctest.base.CopyIn
 // Copy fields in to row
 void atf_amc::amctest_CopyIn(atf_amc::FAmctest &row, atfdb::Amctest &in) {
     row.amctest = in.amctest;
@@ -4973,13 +4973,13 @@ void atf_amc::FCondtest_Print(atf_amc::FCondtest& row, algo::cstring& str) {
     PrintAttrSpaceReset(str,"heaped", temp);
 }
 
-// --- atf_amc.FCstring.msghdr.CopyOut
+// --- atf_amc.FCstring.base.CopyOut
 // Copy fields out of row
 void atf_amc::cstring_CopyOut(atf_amc::FCstring &row, atf_amc::Cstring &out) {
     out.str = row.str;
 }
 
-// --- atf_amc.FCstring.msghdr.CopyIn
+// --- atf_amc.FCstring.base.CopyIn
 // Copy fields in to row
 void atf_amc::cstring_CopyIn(atf_amc::FCstring &row, atf_amc::Cstring &in) {
     row.str = in.str;
@@ -6998,7 +6998,7 @@ static void atf_amc::InitReflection() {
     algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'atf_amc.Disp2'  signature:'d11df8e45dfabb45e515398cd71d30a184879014'");
     algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'atf_amc.Msgs'  signature:'b98c58d33ee922a273e2b73b4ac96234dab71c81'");
     algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'atf_amc.Ssimfiles'  signature:'f2409fade5c9373dc13379fe888df9435e3c0987'");
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'atf_amc.Input'  signature:'034a4336d79796339c51bb5934d2f77cfa293b3f'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'atf_amc.Input'  signature:'33dd92e55c6594b2be62e97dcd18a938b2f610d8'");
 }
 
 // --- atf_amc.FDb._db.InsertStrptrMaybe
@@ -19576,13 +19576,13 @@ void atf_amc::FTimeEntry_Uninit(atf_amc::FTimeEntry& parent) {
     bh_time_entry_once_Remove(parent); // remove time_entry from index bh_time_entry_once
 }
 
-// --- atf_amc.FTypeC.msghdr.CopyOut
+// --- atf_amc.FTypeC.base.CopyOut
 // Copy fields out of row
 void atf_amc::type_c_CopyOut(atf_amc::FTypeC &row, atf_amc::TypeC &out) {
     out.typec = row.typec;
 }
 
-// --- atf_amc.FTypeC.msghdr.CopyIn
+// --- atf_amc.FTypeC.base.CopyIn
 // Copy fields in to row
 void atf_amc::type_c_CopyIn(atf_amc::FTypeC &row, atf_amc::TypeC &in) {
     row.typec = in.typec;
@@ -19610,13 +19610,13 @@ void atf_amc::FTypeC_Print(atf_amc::FTypeC& row, algo::cstring& str) {
     i32_Print(row.typec, str);
 }
 
-// --- atf_amc.FTypeA.msghdr.CopyOut
+// --- atf_amc.FTypeA.base.CopyOut
 // Copy fields out of row
 void atf_amc::type_a_CopyOut(atf_amc::FTypeA &row, atf_amc::TypeA &out) {
     out.typea = row.typea;
 }
 
-// --- atf_amc.FTypeA.msghdr.CopyIn
+// --- atf_amc.FTypeA.base.CopyIn
 // Copy fields in to row
 void atf_amc::type_a_CopyIn(atf_amc::FTypeA &row, atf_amc::TypeA &in) {
     row.typea = in.typea;
@@ -20106,14 +20106,14 @@ void atf_amc::FTypeA_Print(atf_amc::FTypeA& row, algo::cstring& str) {
     PrintAttrSpaceReset(str,"rowid", temp);
 }
 
-// --- atf_amc.FTypeB.msghdr.CopyOut
+// --- atf_amc.FTypeB.base.CopyOut
 // Copy fields out of row
 void atf_amc::type_b_CopyOut(atf_amc::FTypeB &row, atf_amc::TypeB &out) {
     out.typea = row.typea;
     out.j = row.j;
 }
 
-// --- atf_amc.FTypeB.msghdr.CopyIn
+// --- atf_amc.FTypeB.base.CopyIn
 // Copy fields in to row
 void atf_amc::type_b_CopyIn(atf_amc::FTypeB &row, atf_amc::TypeB &in) {
     row.typea = in.typea;
@@ -20145,13 +20145,13 @@ void atf_amc::FTypeB_Print(atf_amc::FTypeB& row, algo::cstring& str) {
     PrintAttrSpaceReset(str,"j", temp);
 }
 
-// --- atf_amc.FTypeD.msghdr.CopyOut
+// --- atf_amc.FTypeD.base.CopyOut
 // Copy fields out of row
 void atf_amc::type_d_CopyOut(atf_amc::FTypeD &row, atf_amc::TypeC &out) {
     out.typec = row.typec;
 }
 
-// --- atf_amc.FTypeD.msghdr.CopyIn
+// --- atf_amc.FTypeD.base.CopyIn
 // Copy fields in to row
 void atf_amc::type_d_CopyIn(atf_amc::FTypeD &row, atf_amc::TypeC &in) {
     row.typec = in.typec;
@@ -20171,14 +20171,14 @@ void atf_amc::FTypeD_Print(atf_amc::FTypeD& row, algo::cstring& str) {
     i32_Print(row.typec, str);
 }
 
-// --- atf_amc.FTypeS.msghdr.CopyOut
+// --- atf_amc.FTypeS.base.CopyOut
 // Copy fields out of row
 void atf_amc::type_s_CopyOut(atf_amc::FTypeS &row, atf_amc::TypeS &out) {
     out.types = row.types;
     out.comment = algo::Comment(row.comment);
 }
 
-// --- atf_amc.FTypeS.msghdr.CopyIn
+// --- atf_amc.FTypeS.base.CopyIn
 // Copy fields in to row
 void atf_amc::type_s_CopyIn(atf_amc::FTypeS &row, atf_amc::TypeS &in) {
     row.types = in.types;
@@ -20294,14 +20294,14 @@ void atf_amc::FTypeS_Print(atf_amc::FTypeS& row, algo::cstring& str) {
     PrintAttrSpaceReset(str,"comment", temp);
 }
 
-// --- atf_amc.FTypeT.msghdr.CopyOut
+// --- atf_amc.FTypeT.base.CopyOut
 // Copy fields out of row
 void atf_amc::type_t_CopyOut(atf_amc::FTypeT &row, atf_amc::TypeT &out) {
     out.types = row.types;
     out.j = row.j;
 }
 
-// --- atf_amc.FTypeT.msghdr.CopyIn
+// --- atf_amc.FTypeT.base.CopyIn
 // Copy fields in to row
 void atf_amc::type_t_CopyIn(atf_amc::FTypeT &row, atf_amc::TypeT &in) {
     row.types = in.types;
@@ -21292,7 +21292,6 @@ const char* atf_amc::value_ToCstr(const atf_amc::FieldId& parent) {
         case atf_amc_FieldId_val1          : ret = "val1";  break;
         case atf_amc_FieldId_val2          : ret = "val2";  break;
         case atf_amc_FieldId_val3          : ret = "val3";  break;
-        case atf_amc_FieldId_msghdr        : ret = "msghdr";  break;
         case atf_amc_FieldId_payload       : ret = "payload";  break;
         case atf_amc_FieldId_text          : ret = "text";  break;
         case atf_amc_FieldId_typea         : ret = "typea";  break;
@@ -21547,9 +21546,6 @@ bool atf_amc::value_SetStrptrMaybe(atf_amc::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR6('l','e','n','g','t','h'): {
                     value_SetEnum(parent,atf_amc_FieldId_length); ret = true; break;
-                }
-                case LE_STR6('m','s','g','h','d','r'): {
-                    value_SetEnum(parent,atf_amc_FieldId_msghdr); ret = true; break;
                 }
                 case LE_STR6('s','t','r','v','a','l'): {
                     value_SetEnum(parent,atf_amc_FieldId_strval); ret = true; break;
@@ -27833,7 +27829,7 @@ void atf_amc::Sep1_Print(atf_amc::Sep1 row, algo::cstring& str) {
     u32_Print(row.val3, str);
 }
 
-// --- atf_amc.Seqmsg.msghdr.CopyOut
+// --- atf_amc.Seqmsg.base.CopyOut
 // Copy fields out of row
 void atf_amc::seqmsg_CopyOut(atf_amc::Seqmsg &row, atf_amc::MsgHeader &out) {
     // type: field value is computed
@@ -27875,7 +27871,7 @@ bool atf_amc::Seqmsg_ReadFieldMaybe(atf_amc::Seqmsg& parent, algo::strptr field,
     atf_amc::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
     switch(field_id) {
-        case atf_amc_FieldId_msghdr: {
+        case atf_amc_FieldId_base: {
             retval = false;
         } break;
         case atf_amc_FieldId_type: {
@@ -28912,7 +28908,7 @@ void atf_amc::TestType_Print(atf_amc::TestType& row, algo::cstring& str) {
     (void)str;//only to avoid -Wunused-parameter
 }
 
-// --- atf_amc.Text.msghdr.CopyOut
+// --- atf_amc.Text.base.CopyOut
 // Copy fields out of row
 void atf_amc::text_CopyOut(atf_amc::Text &row, atf_amc::MsgHeader &out) {
     // type: field value is computed
@@ -28956,7 +28952,7 @@ bool atf_amc::Text_ReadFieldMaybe(atf_amc::Text& parent, algo::strptr field, alg
     atf_amc::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,algo::Pathcomp(field, ".LL"));
     switch(field_id) {
-        case atf_amc_FieldId_msghdr: {
+        case atf_amc_FieldId_base: {
             retval = false;
         } break;
         case atf_amc_FieldId_type: {

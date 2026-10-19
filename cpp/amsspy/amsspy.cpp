@@ -25,9 +25,9 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-// Scan /dev/shm for *.ams files, build FSession/FShm tables
+// Scan the segment directory for *.ams files, build FSession/FShm tables
 static void ScanSessions() {
-    ind_beg(algo::Dir_curs, entry, "/dev/shm/*.ams") {
+    ind_beg(algo::Dir_curs, entry, lib_ams::ShmPath("*.ams")) {
         algo::strptr shm = Pathcomp(entry.filename, ".RL");
         amsspy::FSession &session = amsspy::ind_session_GetOrCreate(Pathcomp(entry.filename, ".LL-RL-RL-RL"));
         if (!amsspy::ind_shm_Find(shm)) {
@@ -55,8 +55,7 @@ static void ListSessions() {
 static void SpySession() {
     ind_beg(amsspy::_db_shm_curs, fshm, amsspy::_db) {
         if (Regx_Match(amsspy::_db.cmdline.spy, fshm.shm)) {
-            tempstr filename;
-            filename << "/dev/shm/" << fshm.shm << ".ams";
+            tempstr filename(lib_ams::ShmPath(tempstr() << fshm.shm << ".ams"));
             int fd = open(Zeroterm(filename), O_RDONLY);
             if (fd < 0) {
                 prerr("amsspy.spy  cannot open" << Keyval("shm", filename));
@@ -138,10 +137,10 @@ void amsspy::cd_shm_poll_Step() {
     }
 }
 
-// Count *.ams segments currently in /dev/shm.
+// Count *.ams segments currently in the segment directory.
 static int NShmSegment() {
     int ret = 0;
-    ind_beg(algo::Dir_curs, entry, "/dev/shm/*.ams") {
+    ind_beg(algo::Dir_curs, entry, lib_ams::ShmPath("*.ams")) {
         if (ch_N(entry.filename)) {
             ret++;
         }
@@ -149,7 +148,7 @@ static int NShmSegment() {
     return ret;
 }
 
-// -clean: unlink orphaned /dev/shm ams segments (their writers are gone --
+// -clean: unlink orphaned ams segments (their writers are gone --
 // see lib_ams::CleanOldShmFiles) and report how many were reclaimed.  Used as
 // the first step of a CI job to reclaim segments leaked by a preempted or
 // kill -9'd predecessor before its shm exhausts the host.
@@ -164,7 +163,7 @@ static void Clean() {
 }
 
 // -dump: out-of-band snapshot of every segment's flow-control state, read
-// straight from /dev/shm without touching the cluster's command path (which
+// straight from the segment files without touching the cluster's command path (which
 // is exactly what a produce-path wedge stalls).  For each segment matching the
 // -session regex: print woff, the writer's budget (computed as the live
 // UpdateBudget does -- min reader offset + ring - 2*max_msg - woff), nnobudget,
@@ -176,8 +175,7 @@ static void Clean() {
 static void DumpSegments() {
     ind_beg(amsspy::_db_shm_curs, fshm, amsspy::_db) {
         if (Regx_Match(amsspy::_db.cmdline.session, fshm.p_session->session)) {
-            tempstr filename;
-            filename << "/dev/shm/" << fshm.shm << ".ams";
+            tempstr filename(lib_ams::ShmPath(tempstr() << fshm.shm << ".ams"));
             int fd = open(Zeroterm(filename), O_RDONLY);
             struct stat st;
             void *mem = MAP_FAILED;

@@ -184,6 +184,7 @@ enum dmmeta_FieldIdEnum {    // dmmeta.FieldId.value
     ,dmmeta_FieldId_bidir
     ,dmmeta_FieldId_versionsort
     ,dmmeta_FieldId_casesens
+    ,dmmeta_FieldId_dir
     ,dmmeta_FieldId_fcond
     ,dmmeta_FieldId_value
     ,dmmeta_FieldId_ins
@@ -319,7 +320,7 @@ enum dmmeta_FieldIdEnum {    // dmmeta.FieldId.value
     ,dmmeta_FieldId_keyfld
 };
 
-enum { dmmeta_FieldIdEnum_N = 218 };
+enum { dmmeta_FieldIdEnum_N = 219 };
 
 extern const char *  dmmeta_Hashtype_hashtype_Extern;   // Extern    fconst:dmmeta.Hashtype.hashtype/Extern
 extern const char *  dmmeta_Hashtype_hashtype_CRC32;    // CRC32     fconst:dmmeta.Hashtype.hashtype/CRC32
@@ -416,6 +417,7 @@ extern const char *  dmmeta_Nstype_nstype_lib;        // lib         fconst:dmme
 extern const char *  dmmeta_Nstype_nstype_none;       // none        fconst:dmmeta.Nstype.nstype/none
 extern const char *  dmmeta_Nstype_nstype_objlist;    // objlist     fconst:dmmeta.Nstype.nstype/objlist
 extern const char *  dmmeta_Nstype_nstype_protocol;   // protocol    fconst:dmmeta.Nstype.nstype/protocol
+extern const char *  dmmeta_Nstype_nstype_so;         // so          fconst:dmmeta.Nstype.nstype/so
 extern const char *  dmmeta_Nstype_nstype_ssimdb;     // ssimdb      fconst:dmmeta.Nstype.nstype/ssimdb
 extern const char *  dmmeta_Printfmt_printfmt_Auto;         // Auto          fconst:dmmeta.Printfmt.printfmt/Auto
 extern const char *  dmmeta_Printfmt_printfmt_Bitset;       // Bitset        fconst:dmmeta.Printfmt.printfmt/Bitset
@@ -515,6 +517,11 @@ extern const char *  dmmeta_Ssimfile_ssimfile_amcdb_curstype;              // am
 extern const char *  dmmeta_Ssimfile_ssimfile_amcdb_gen;                   // amcdb.gen                    fconst:dmmeta.Ssimfile.ssimfile/amcdb.gen
 extern const char *  dmmeta_Ssimfile_ssimfile_amcdb_lang;                  // amcdb.lang                   fconst:dmmeta.Ssimfile.ssimfile/amcdb.lang
 extern const char *  dmmeta_Ssimfile_ssimfile_amcdb_pbtype;                // amcdb.pbtype                 fconst:dmmeta.Ssimfile.ssimfile/amcdb.pbtype
+extern const char *  dmmeta_Ssimfile_ssimfile_amcdb_regxcase;              // amcdb.regxcase               fconst:dmmeta.Ssimfile.ssimfile/amcdb.regxcase
+extern const char *  dmmeta_Ssimfile_ssimfile_amcdb_regxlenient;           // amcdb.regxlenient            fconst:dmmeta.Ssimfile.ssimfile/amcdb.regxlenient
+extern const char *  dmmeta_Ssimfile_ssimfile_amcdb_regxmacro;             // amcdb.regxmacro              fconst:dmmeta.Ssimfile.ssimfile/amcdb.regxmacro
+extern const char *  dmmeta_Ssimfile_ssimfile_amcdb_regxrule;              // amcdb.regxrule               fconst:dmmeta.Ssimfile.ssimfile/amcdb.regxrule
+extern const char *  dmmeta_Ssimfile_ssimfile_amcdb_regxstyle;             // amcdb.regxstyle              fconst:dmmeta.Ssimfile.ssimfile/amcdb.regxstyle
 extern const char *  dmmeta_Ssimfile_ssimfile_amcdb_regxtype;              // amcdb.regxtype               fconst:dmmeta.Ssimfile.ssimfile/amcdb.regxtype
 extern const char *  dmmeta_Ssimfile_ssimfile_amcdb_stepband;              // amcdb.stepband               fconst:dmmeta.Ssimfile.ssimfile/amcdb.stepband
 extern const char *  dmmeta_Ssimfile_ssimfile_amcdb_tclass;                // amcdb.tclass                 fconst:dmmeta.Ssimfile.ssimfile/amcdb.tclass
@@ -527,6 +534,7 @@ extern const char *  dmmeta_Ssimfile_ssimfile_amsdb_proctype;              // am
 extern const char *  dmmeta_Ssimfile_ssimfile_amsdb_trafficclass;          // amsdb.trafficclass           fconst:dmmeta.Ssimfile.ssimfile/amsdb.trafficclass
 extern const char *  dmmeta_Ssimfile_ssimfile_atfdb_age;                   // atfdb.age                    fconst:dmmeta.Ssimfile.ssimfile/atfdb.age
 extern const char *  dmmeta_Ssimfile_ssimfile_atfdb_amctest;               // atfdb.amctest                fconst:dmmeta.Ssimfile.ssimfile/atfdb.amctest
+extern const char *  dmmeta_Ssimfile_ssimfile_atfdb_benchgate;             // atfdb.benchgate              fconst:dmmeta.Ssimfile.ssimfile/atfdb.benchgate
 extern const char *  dmmeta_Ssimfile_ssimfile_atfdb_benchprofile;          // atfdb.benchprofile           fconst:dmmeta.Ssimfile.ssimfile/atfdb.benchprofile
 extern const char *  dmmeta_Ssimfile_ssimfile_atfdb_cijob;                 // atfdb.cijob                  fconst:dmmeta.Ssimfile.ssimfile/atfdb.cijob
 extern const char *  dmmeta_Ssimfile_ssimfile_atfdb_citest;                // atfdb.citest                 fconst:dmmeta.Ssimfile.ssimfile/atfdb.citest
@@ -540,6 +548,9 @@ extern const char *  dmmeta_Ssimfile_ssimfile_atfdb_test_gsymbol_strptr;   // at
 extern const char *  dmmeta_Ssimfile_ssimfile_atfdb_testenv;               // atfdb.testenv                fconst:dmmeta.Ssimfile.ssimfile/atfdb.testenv
 extern const char *  dmmeta_Ssimfile_ssimfile_atfdb_tfilt;                 // atfdb.tfilt                  fconst:dmmeta.Ssimfile.ssimfile/atfdb.tfilt
 extern const char *  dmmeta_Ssimfile_ssimfile_atfdb_tifilt;                // atfdb.tifilt                 fconst:dmmeta.Ssimfile.ssimfile/atfdb.tifilt
+extern const char *  dmmeta_Ssimfile_ssimfile_atfdb_tlamodel;              // atfdb.tlamodel               fconst:dmmeta.Ssimfile.ssimfile/atfdb.tlamodel
+extern const char *  dmmeta_Ssimfile_ssimfile_atfdb_tlastrategy;           // atfdb.tlastrategy            fconst:dmmeta.Ssimfile.ssimfile/atfdb.tlastrategy
+extern const char *  dmmeta_Ssimfile_ssimfile_atfdb_tlaverdict;            // atfdb.tlaverdict             fconst:dmmeta.Ssimfile.ssimfile/atfdb.tlaverdict
 extern const char *  dmmeta_Ssimfile_ssimfile_atfdb_unittest;              // atfdb.unittest               fconst:dmmeta.Ssimfile.ssimfile/atfdb.unittest
 extern const char *  dmmeta_Ssimfile_ssimfile_atfdb_unstableattr;          // atfdb.unstableattr           fconst:dmmeta.Ssimfile.ssimfile/atfdb.unstableattr
 extern const char *  dmmeta_Ssimfile_ssimfile_atfdb_unstableline;          // atfdb.unstableline           fconst:dmmeta.Ssimfile.ssimfile/atfdb.unstableline
@@ -549,6 +560,7 @@ extern const char *  dmmeta_Ssimfile_ssimfile_creddb_credperm;             // cr
 extern const char *  dmmeta_Ssimfile_ssimfile_creddb_kind;                 // creddb.kind                  fconst:dmmeta.Ssimfile.ssimfile/creddb.kind
 extern const char *  dmmeta_Ssimfile_ssimfile_creddb_master;               // creddb.master                fconst:dmmeta.Ssimfile.ssimfile/creddb.master
 extern const char *  dmmeta_Ssimfile_ssimfile_creddb_perm;                 // creddb.perm                  fconst:dmmeta.Ssimfile.ssimfile/creddb.perm
+extern const char *  dmmeta_Ssimfile_ssimfile_creddb_role;                 // creddb.role                  fconst:dmmeta.Ssimfile.ssimfile/creddb.role
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_arch;                    // dev.arch                     fconst:dmmeta.Ssimfile.ssimfile/dev.arch
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_badline;                 // dev.badline                  fconst:dmmeta.Ssimfile.ssimfile/dev.badline
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_builddir;                // dev.builddir                 fconst:dmmeta.Ssimfile.ssimfile/dev.builddir
@@ -559,12 +571,16 @@ extern const char *  dmmeta_Ssimfile_ssimfile_dev_covfile;                 // de
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_covline;                 // dev.covline                  fconst:dmmeta.Ssimfile.ssimfile/dev.covline
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_covtarget;               // dev.covtarget                fconst:dmmeta.Ssimfile.ssimfile/dev.covtarget
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_cred;                    // dev.cred                     fconst:dmmeta.Ssimfile.ssimfile/dev.cred
+extern const char *  dmmeta_Ssimfile_ssimfile_dev_credperm;                // dev.credperm                 fconst:dmmeta.Ssimfile.ssimfile/dev.credperm
+extern const char *  dmmeta_Ssimfile_ssimfile_dev_credrole;                // dev.credrole                 fconst:dmmeta.Ssimfile.ssimfile/dev.credrole
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_dbgtarget;               // dev.dbgtarget                fconst:dmmeta.Ssimfile.ssimfile/dev.dbgtarget
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_docpage;                 // dev.docpage                  fconst:dmmeta.Ssimfile.ssimfile/dev.docpage
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_edaction;                // dev.edaction                 fconst:dmmeta.Ssimfile.ssimfile/dev.edaction
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_edacttype;               // dev.edacttype                fconst:dmmeta.Ssimfile.ssimfile/dev.edacttype
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_envvar;                  // dev.envvar                   fconst:dmmeta.Ssimfile.ssimfile/dev.envvar
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_extpkg;                  // dev.extpkg                   fconst:dmmeta.Ssimfile.ssimfile/dev.extpkg
+extern const char *  dmmeta_Ssimfile_ssimfile_dev_extpkgnoarch;            // dev.extpkgnoarch             fconst:dmmeta.Ssimfile.ssimfile/dev.extpkgnoarch
+extern const char *  dmmeta_Ssimfile_ssimfile_dev_extpkgprobe;             // dev.extpkgprobe              fconst:dmmeta.Ssimfile.ssimfile/dev.extpkgprobe
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_extpkgsrc;               // dev.extpkgsrc                fconst:dmmeta.Ssimfile.ssimfile/dev.extpkgsrc
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_extpkgver;               // dev.extpkgver                fconst:dmmeta.Ssimfile.ssimfile/dev.extpkgver
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_gitfile;                 // dev.gitfile                  fconst:dmmeta.Ssimfile.ssimfile/dev.gitfile
@@ -582,6 +598,7 @@ extern const char *  dmmeta_Ssimfile_ssimfile_dev_opt_type;                // de
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_package;                 // dev.package                  fconst:dmmeta.Ssimfile.ssimfile/dev.package
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_pkgdep;                  // dev.pkgdep                   fconst:dmmeta.Ssimfile.ssimfile/dev.pkgdep
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_pkgdeptype;              // dev.pkgdeptype               fconst:dmmeta.Ssimfile.ssimfile/dev.pkgdeptype
+extern const char *  dmmeta_Ssimfile_ssimfile_dev_pkgfile;                 // dev.pkgfile                  fconst:dmmeta.Ssimfile.ssimfile/dev.pkgfile
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_pkgkey;                  // dev.pkgkey                   fconst:dmmeta.Ssimfile.ssimfile/dev.pkgkey
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_pkgkeyword;              // dev.pkgkeyword               fconst:dmmeta.Ssimfile.ssimfile/dev.pkgkeyword
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_pkgupstream;             // dev.pkgupstream              fconst:dmmeta.Ssimfile.ssimfile/dev.pkgupstream
@@ -595,6 +612,7 @@ extern const char *  dmmeta_Ssimfile_ssimfile_dev_srcfile;                 // de
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_syscmd;                  // dev.syscmd                   fconst:dmmeta.Ssimfile.ssimfile/dev.syscmd
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_syscmddep;               // dev.syscmddep                fconst:dmmeta.Ssimfile.ssimfile/dev.syscmddep
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_syslib;                  // dev.syslib                   fconst:dmmeta.Ssimfile.ssimfile/dev.syslib
+extern const char *  dmmeta_Ssimfile_ssimfile_dev_syslibuname;             // dev.syslibuname              fconst:dmmeta.Ssimfile.ssimfile/dev.syslibuname
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_targdep;                 // dev.targdep                  fconst:dmmeta.Ssimfile.ssimfile/dev.targdep
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_target;                  // dev.target                   fconst:dmmeta.Ssimfile.ssimfile/dev.target
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_targsrc;                 // dev.targsrc                  fconst:dmmeta.Ssimfile.ssimfile/dev.targsrc
@@ -607,6 +625,9 @@ extern const char *  dmmeta_Ssimfile_ssimfile_dev_uname;                   // de
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_uncovfunc;               // dev.uncovfunc                fconst:dmmeta.Ssimfile.ssimfile/dev.uncovfunc
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_unstablefld;             // dev.unstablefld              fconst:dmmeta.Ssimfile.ssimfile/dev.unstablefld
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_upstreamtype;            // dev.upstreamtype             fconst:dmmeta.Ssimfile.ssimfile/dev.upstreamtype
+extern const char *  dmmeta_Ssimfile_ssimfile_dev_vendorlib;               // dev.vendorlib                fconst:dmmeta.Ssimfile.ssimfile/dev.vendorlib
+extern const char *  dmmeta_Ssimfile_ssimfile_dev_vulnaccept;              // dev.vulnaccept               fconst:dmmeta.Ssimfile.ssimfile/dev.vulnaccept
+extern const char *  dmmeta_Ssimfile_ssimfile_dev_vulnsev;                 // dev.vulnsev                  fconst:dmmeta.Ssimfile.ssimfile/dev.vulnsev
 extern const char *  dmmeta_Ssimfile_ssimfile_dmmeta_anonfld;              // dmmeta.anonfld               fconst:dmmeta.Ssimfile.ssimfile/dmmeta.anonfld
 extern const char *  dmmeta_Ssimfile_ssimfile_dmmeta_argvtype;             // dmmeta.argvtype              fconst:dmmeta.Ssimfile.ssimfile/dmmeta.argvtype
 extern const char *  dmmeta_Ssimfile_ssimfile_dmmeta_basepool;             // dmmeta.basepool              fconst:dmmeta.Ssimfile.ssimfile/dmmeta.basepool
@@ -656,6 +677,7 @@ extern const char *  dmmeta_Ssimfile_ssimfile_dmmeta_fcast;                // dm
 extern const char *  dmmeta_Ssimfile_ssimfile_dmmeta_fcmap;                // dmmeta.fcmap                 fconst:dmmeta.Ssimfile.ssimfile/dmmeta.fcmap
 extern const char *  dmmeta_Ssimfile_ssimfile_dmmeta_fcmp;                 // dmmeta.fcmp                  fconst:dmmeta.Ssimfile.ssimfile/dmmeta.fcmp
 extern const char *  dmmeta_Ssimfile_ssimfile_dmmeta_fcompact;             // dmmeta.fcompact              fconst:dmmeta.Ssimfile.ssimfile/dmmeta.fcompact
+extern const char *  dmmeta_Ssimfile_ssimfile_dmmeta_fcompldir;            // dmmeta.fcompldir             fconst:dmmeta.Ssimfile.ssimfile/dmmeta.fcompldir
 extern const char *  dmmeta_Ssimfile_ssimfile_dmmeta_fcond;                // dmmeta.fcond                 fconst:dmmeta.Ssimfile.ssimfile/dmmeta.fcond
 extern const char *  dmmeta_Ssimfile_ssimfile_dmmeta_fconst;               // dmmeta.fconst                fconst:dmmeta.Ssimfile.ssimfile/dmmeta.fconst
 extern const char *  dmmeta_Ssimfile_ssimfile_dmmeta_fcurs;                // dmmeta.fcurs                 fconst:dmmeta.Ssimfile.ssimfile/dmmeta.fcurs
@@ -888,6 +910,7 @@ namespace dmmeta { struct Fcast; }
 namespace dmmeta { struct Fcmap; }
 namespace dmmeta { struct Fcmp; }
 namespace dmmeta { struct Fcompact; }
+namespace dmmeta { struct Fcompldir; }
 namespace dmmeta { struct Fcond; }
 namespace dmmeta { struct Fconst; }
 namespace dmmeta { struct Fcurs; }
@@ -2284,6 +2307,28 @@ bool                 Fcompact_ReadStrptrMaybe(dmmeta::Fcompact &parent, algo::st
 // cfmt:dmmeta.Fcompact.String  printfmt:Tuple
 // func:dmmeta.Fcompact..Print
 void                 Fcompact_Print(dmmeta::Fcompact& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- dmmeta.Fcompldir
+struct Fcompldir { // dmmeta.Fcompldir: Complete a cmdline field with the subdirectory names of a directory
+    algo::Smallstr150   field;     //
+    algo::cstring       dir;       //   ""  Directory whose subdirectories complete the field, relative to cwd
+    algo::Comment       comment;   //
+    // func:dmmeta.Fcompldir..Ctor
+    inline               Fcompldir() __attribute__((nothrow));
+};
+// func:dmmeta.Fcompldir..ReadFieldMaybe
+bool                 Fcompldir_ReadFieldMaybe(dmmeta::Fcompldir& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of dmmeta::Fcompldir from an ascii string.
+// The format of the string is an ssim Tuple
+// func:dmmeta.Fcompldir..ReadStrptrMaybe
+bool                 Fcompldir_ReadStrptrMaybe(dmmeta::Fcompldir &parent, algo::strptr in_str) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:dmmeta.Fcompldir..Init
+inline void          Fcompldir_Init(dmmeta::Fcompldir& parent);
+// print string representation of ROW to string STR
+// cfmt:dmmeta.Fcompldir.String  printfmt:Tuple
+// func:dmmeta.Fcompldir..Print
+void                 Fcompldir_Print(dmmeta::Fcompldir& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- dmmeta.Fcond
 struct Fcond { // dmmeta.Fcond: List membership tied to a condition on a field
@@ -4568,6 +4613,7 @@ inline algo::cstring &operator <<(algo::cstring &str, const dmmeta::Fcast &row);
 inline algo::cstring &operator <<(algo::cstring &str, const dmmeta::Fcmap &row);// cfmt:dmmeta.Fcmap.String
 inline algo::cstring &operator <<(algo::cstring &str, const dmmeta::Fcmp &row);// cfmt:dmmeta.Fcmp.String
 inline algo::cstring &operator <<(algo::cstring &str, const dmmeta::Fcompact &row);// cfmt:dmmeta.Fcompact.String
+inline algo::cstring &operator <<(algo::cstring &str, const dmmeta::Fcompldir &row);// cfmt:dmmeta.Fcompldir.String
 inline algo::cstring &operator <<(algo::cstring &str, const dmmeta::Fcond &row);// cfmt:dmmeta.Fcond.String
 inline algo::cstring &operator <<(algo::cstring &str, const dmmeta::Fconst &row);// cfmt:dmmeta.Fconst.String
 inline algo::cstring &operator <<(algo::cstring &str, const dmmeta::Fcurs &row);// cfmt:dmmeta.Fcurs.String

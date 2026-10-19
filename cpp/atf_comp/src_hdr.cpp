@@ -29,35 +29,35 @@
 #include "include/algo.h"
 #include "include/atf_comp.h"
 
-// src_hdr -write twice over a headerless script: the first run adds the
-// header, and the second run must leave the file byte-identical -- a
-// rewrite that keeps changing its own output grows the header on every
+// Run src_hdr -write twice over a headerless script, and check that the second run
+// leaves the file byte-identical (second_run_noop).  The first run adds the header.
+// A rewrite that keeps changing its own output grows the header on every
 // update-hdr run.
 void atf_comp::comptest_src_hdr_Converge() {
     atf_comp::ProcStart("bash -c 'cd $tempdir && mkdir ro bin && echo \"echo hi\" > ro/x.sh && echo \"exit 0\" > bin/src_func && chmod +x bin/src_func && $$OLDPWD/$bindir/src_hdr -in:$$OLDPWD/test/src_hdr/onescript.ssim -write -scriptfile:% && cp ro/x.sh first && $$OLDPWD/$bindir/src_hdr -in:$$OLDPWD/test/src_hdr/onescript.ssim -write -scriptfile:% && cmp ro/x.sh first && echo second_run_noop'");
 }
 
-// src_hdr -write against a scriptfile row whose file does not exist (no
-// seed): the run must fail naming the path instead of exiting 0 with the
-// file silently skipped -- a stale scriptfile row would otherwise pass
-// every run unnoticed.
+// Run src_hdr -write against a scriptfile row whose file does not exist, and check
+// that the run fails naming the path.  A run that skipped the file silently and
+// exited 0 would let a stale scriptfile row pass every run unnoticed.
 void atf_comp::comptest_src_hdr_FileReadFail() {
     atf_comp::ProcStart("bash -c 'cd $tempdir && $$OLDPWD/$bindir/src_hdr -in:$$OLDPWD/test/src_hdr/onescript.ssim -write -scriptfile:%'");
 }
 
-// src_hdr -write against a script whose directory denies the write (the
-// DenyWriteCmd scaffold): the header rewrite fails, and the run must fail
-// naming the path instead of exiting 0 with the file silently unchanged.
+// Run src_hdr -write against a script whose directory denies the write, through the
+// DenyWriteCmd scaffold, and check that the failed header rewrite fails the run,
+// naming the path.  A run that exited 0 would leave the file silently unchanged.
 void atf_comp::comptest_src_hdr_FileWriteFail() {
     atf_comp::ProcStart(DenyWriteCmd("echo \"echo hi\" > ro/x.sh",
                                      "$$OLDPWD/$bindir/src_hdr -in:$$OLDPWD/test/src_hdr/onescript.ssim -write -scriptfile:%"));
 }
 
-// src_hdr -write against a scriptfile whose comment syntax is unknown (a
-// .json file; likewise an extensionless file with no shebang to guess from):
-// every line would parse as header comment and the rewrite would replace the
-// whole file with a bare separator, so the run must fail naming the file,
-// pinned byte-unchanged (cmp) next to exit code 1.
+// Run src_hdr -write against a .json scriptfile, whose comment syntax is unknown.
+// Check that the run exits 1 naming the file, and that cmp finds the file
+// byte-unchanged (file_unchanged).
+// Every line of such a file would parse as header comment, and the rewrite would
+// replace the whole file with a bare separator.  An extensionless file with no
+// shebang to guess from has an unknown comment syntax too.
 void atf_comp::comptest_src_hdr_NoCmtstring() {
     atf_comp::ProcStart("bash -c 'cd $tempdir && mkdir ro"
                         " && printf \"{}\\n\" > ro/x.json"
@@ -66,9 +66,9 @@ void atf_comp::comptest_src_hdr_NoCmtstring() {
                         " test $$? = 1 && cmp ro/x.json orig && echo file_unchanged'");
 }
 
-// src_hdr -write whose header write succeeds but whose trailing
-// src_func -updateproto step fails (the stub bin/src_func exits 1): the run
-// must fail naming the step, since the update-hdr blocks are left stale.
+// Run src_hdr -write with a stub bin/src_func that exits 1, so the header write
+// succeeds and the trailing src_func -updateproto step fails.  Check that the run
+// fails naming the step, because the update-hdr blocks stay stale.
 void atf_comp::comptest_src_hdr_UpdateprotoFail() {
     atf_comp::ProcStart("bash -c 'cd $tempdir && mkdir ro bin && echo \"echo hi\" > ro/x.sh && echo \"exit 1\" > bin/src_func && chmod +x bin/src_func && $$OLDPWD/$bindir/src_hdr -in:$$OLDPWD/test/src_hdr/onescript.ssim -write -scriptfile:%'");
 }

@@ -222,10 +222,10 @@ occurring at the far end with respect to the search direction, so
 `Pathcomp("abcd", ".LL")` is `abcd` and `Pathcomp("abcd", ".LR")` is
 empty.
 
-|Tfunc|Generated function|Emitted for|Effect|
-|---|---|---|---|
-|`Substr.Get`|`<Fldtype> <name>_Get(P& parent)`|every substr field|Cut `srcfield` out of the record and return it.  A string-typed result is a `strptr` view into the record; anything else is parsed with the target type's `ReadStrptrMaybe` and returned by value.|
-|`Substr.Get2`|`<Fldtype> <Ctype>_<name>_Get(strptr arg)`|ssimdb namespaces|The same cut applied to a bare key string, with no record needed — `dmmeta::Field_ctype_Get("amc.FDb.ind_ns")` returns `amc.FDb`.  The strptr-versus-by-value rule is the same as for `Get`, so this one returns `algo::strptr` into the caller's argument.|
+| Tfunc         | Generated function                         | Emitted for        | Effect |
+| ------------- | ------------------------------------------ | ------------------ | ------ |
+| `Substr.Get`  | `<Fldtype> <name>_Get(P& parent)`          | every substr field | Cut `srcfield` out of the record and return it.  A string-typed result is a `strptr` view into the record; anything else is parsed with the target type's `ReadStrptrMaybe` and returned by value. |
+| `Substr.Get2` | `<Fldtype> <Ctype>_<name>_Get(strptr arg)` | ssimdb namespaces  | The same cut applied to a bare key string, with no record needed — `dmmeta::Field_ctype_Get("amc.FDb.ind_ns")` returns `amc.FDb`.  The strptr-versus-by-value rule is the same as for `Get`, so this one returns `algo::strptr` into the caller's argument. |
 
 A substr field has no storage, so it cannot be assigned and is not
 printed as part of the record — the source field already carries the

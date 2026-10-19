@@ -11,12 +11,12 @@ freed slot.  Order is not preserved.  Ptrary backs both
 Ptrary has three variants, picked by flags on
 `dmmeta.ptrary`:
 
-| `unique` | `heaplike` | Membership tracking | Allowed |
-|---|---|---|---|
-| N | N | None — duplicates allowed, `_InAryQ` not generated | yes (default; **cannot** be `cascdel`) |
-| Y | N | `<xfname>_in_ary` bool on the element | yes |
-| Y | Y | `<xfname>_idx` i32 on the element (-1 = not in) | yes (Bheap requires this) |
-| N | Y | — | rejected: heaplike implies unique |
+| `unique` | `heaplike` | Membership tracking                                | Allowed |
+| -------- | ---------- | -------------------------------------------------- | ------- |
+| N        | N          | None — duplicates allowed, `_InAryQ` not generated | yes (default; **cannot** be `cascdel`) |
+| Y        | N          | `<xfname>_in_ary` bool on the element              | yes |
+| Y        | Y          | `<xfname>_idx` i32 on the element (-1 = not in)    | yes (Bheap requires this) |
+| N        | Y          | —                                                  | rejected: heaplike implies unique |
 
 ```ssim
 dmmeta.field  field:amc.FTarget.c_targdep  arg:amc.FTargdep  reftype:Ptrary  dflt:""  comment:""
@@ -29,18 +29,18 @@ dmmeta.field  field:amc.FTarget.c_targdep  arg:amc.FTargdep  reftype:Ptrary  dfl
 State in the **parent** ctype
 (see `tclass_Ptrary` in `cpp/amc/ptrary.cpp`):
 
-| Field          | Type   | Meaning                                |
-|----------------|--------|----------------------------------------|
-| `<name>_elems` | `T**`  | array of pointers; doubling growth     |
-| `<name>_n`     | `u64`  | current count                          |
-| `<name>_max`   | `u64`  | capacity in pointers                   |
+| Field          | Type  | Meaning |
+| -------------- | ----- | ------- |
+| `<name>_elems` | `T**` | array of pointers; doubling growth |
+| `<name>_n`     | `u64` | current count |
+| `<name>_max`   | `u64` | capacity in pointers |
 
 State in the **element** ctype (only with `unique`/`heaplike`):
 
-| Field              | Type    | `unique:Y` | `heaplike:Y` | Meaning |
-|--------------------|---------|------------|--------------|---------|
-| `<xfname>_in_ary`  | `bool`  | yes        | no           | True while the element is in the array. |
-| `<xfname>_idx`     | `i32`   | no         | yes          | Current position in the array; -1 = not in array. |
+| Field             | Type   | `unique:Y` | `heaplike:Y` | Meaning |
+| ----------------- | ------ | ---------- | ------------ | ------- |
+| `<xfname>_in_ary` | `bool` | yes        | no           | True while the element is in the array. |
+| `<xfname>_idx`    | `i32`  | no         | yes          | Current position in the array; -1 = not in array. |
 
 Heaplike uses the index to support O(log N) Remove from the
 backing array — that's why Bheap demands `heaplike:Y`.
@@ -85,27 +85,27 @@ the element type and refuses to modify a foreign namespace.
 
 Source: `cpp/amc/ptrary.cpp`.
 
-| Tfunc                  | Generated function                                 | Variant gating | Effect |
-|------------------------|----------------------------------------------------|----------------|--------|
-| `Ptrary.Init`          | `<name>_Init(P&)` (inline)                         | always         | Zero pointer, size, capacity. |
-| `Ptrary.Reserve`       | `void <name>_Reserve(P&, u64 n)`                   | always         | Grow capacity to ≥ `_n+n`. |
-| `Ptrary.N`             | `u64 <name>_N(P&)`                                 | always         | Count. |
-| `Ptrary.EmptyQ`        | `bool <name>_EmptyQ(P&)`                           | always         | `_n == 0`. |
-| `Ptrary.First`         | `T* <name>_First(P&)`                              | always         | First pointer (or NULL). |
-| `Ptrary.Last`          | `T* <name>_Last(P&)`                               | always         | Last pointer (or NULL). |
-| `Ptrary.qLast`         | `T& <name>_qLast(P&)`                              | always         | Unchecked. |
-| `Ptrary.Find`          | `T* <name>_Find(P&, Rowid t)`                      | always         | Bounded find by index; NULL if `t >= _n`. |
-| `Ptrary.qFind`         | `T& <name>_qFind(P&, Rowid t)`                     | always         | Unchecked. |
-| `Ptrary.Getary`        | `aryptr<T*> <name>_Getary(P&)`                     | always         | Span over the pointer array. |
-| `Ptrary.InAryQ`        | `bool <xfname>_InAryQ(T& row)`                     | `unique:Y`     | Membership predicate: reads `_in_ary` or `_idx`. |
-| `Ptrary.Insert`        | `void <name>_Insert(P&, T& row)`                   | always         | Append unconditionally (caller's responsibility to avoid duplicates). |
-| `Ptrary.InsertMaybe`   | `bool <name>_InsertMaybe(P&, T& row)`              | always         | Append if not present; sets the membership flag.  Returns false on duplicate (`unique:Y`). |
-| `Ptrary.ScanInsertMaybe` | (private)                                        | as needed      | Helper used by InsertMaybe. |
-| `Ptrary.Remove`        | `void <name>_Remove(P&, T& row)`                   | `unique:Y`     | Swap-with-last; clears the membership flag. |
-| `Ptrary.RemoveFirst`   | `T* <name>_RemoveFirst(P&)`                        | always         | Pop and return head. |
-| `Ptrary.RemoveLast`    | `void <name>_RemoveLast(P&)`                       | always         | Pop tail. |
-| `Ptrary.RemoveAll`     | `void <name>_RemoveAll(P&)`                        | always         | Clear flags on each element; set `_n=0`. |
-| `Ptrary.Cascdel`       | (private)                                          | `cascdel:Y`    | Delete every referenced row; requires `unique:Y`. |
+| Tfunc                    | Generated function                    | Variant gating | Effect |
+| ------------------------ | ------------------------------------- | -------------- | ------ |
+| `Ptrary.Init`            | `<name>_Init(P&)` (inline)            | always         | Zero pointer, size, capacity. |
+| `Ptrary.Reserve`         | `void <name>_Reserve(P&, u64 n)`      | always         | Grow capacity to ≥ `_n+n`. |
+| `Ptrary.N`               | `u64 <name>_N(P&)`                    | always         | Count. |
+| `Ptrary.EmptyQ`          | `bool <name>_EmptyQ(P&)`              | always         | `_n == 0`. |
+| `Ptrary.First`           | `T* <name>_First(P&)`                 | always         | First pointer (or NULL). |
+| `Ptrary.Last`            | `T* <name>_Last(P&)`                  | always         | Last pointer (or NULL). |
+| `Ptrary.qLast`           | `T& <name>_qLast(P&)`                 | always         | Unchecked. |
+| `Ptrary.Find`            | `T* <name>_Find(P&, Rowid t)`         | always         | Bounded find by index; NULL if `t >= _n`. |
+| `Ptrary.qFind`           | `T& <name>_qFind(P&, Rowid t)`        | always         | Unchecked. |
+| `Ptrary.Getary`          | `aryptr<T*> <name>_Getary(P&)`        | always         | Span over the pointer array. |
+| `Ptrary.InAryQ`          | `bool <xfname>_InAryQ(T& row)`        | `unique:Y`     | Membership predicate: reads `_in_ary` or `_idx`. |
+| `Ptrary.Insert`          | `void <name>_Insert(P&, T& row)`      | always         | Append unconditionally (caller's responsibility to avoid duplicates). |
+| `Ptrary.InsertMaybe`     | `bool <name>_InsertMaybe(P&, T& row)` | always         | Append if not present; sets the membership flag.  Returns false on duplicate (`unique:Y`). |
+| `Ptrary.ScanInsertMaybe` | (private)                             | as needed      | Helper used by InsertMaybe. |
+| `Ptrary.Remove`          | `void <name>_Remove(P&, T& row)`      | `unique:Y`     | Swap-with-last; clears the membership flag. |
+| `Ptrary.RemoveFirst`     | `T* <name>_RemoveFirst(P&)`           | always         | Pop and return head. |
+| `Ptrary.RemoveLast`      | `void <name>_RemoveLast(P&)`          | always         | Pop tail. |
+| `Ptrary.RemoveAll`       | `void <name>_RemoveAll(P&)`           | always         | Clear flags on each element; set `_n=0`. |
+| `Ptrary.Cascdel`         | (private)                             | `cascdel:Y`    | Delete every referenced row; requires `unique:Y`. |
 
 Plus two cursors.  `Ptrary.curs` generates `<P>_<name>_curs` for every
 Ptrary field and walks the array in order.  `Ptrary.oncecurs` generates

@@ -68,17 +68,17 @@ each of their generators calls one shared tclass, `Pool` (source
 `cpp/amc/pool.cpp`).  The functions are named after the pool field, not after
 the ctype being allocated: it is the pool's state that changes.
 
-|Tfunc|Generated function|Emitted for|Effect|
-|---|---|---|---|
-|`Pool.Alloc`|`T& <name>_Alloc()`|a fixed-size row type|Allocate one row.  Exits the process on out-of-memory.|
-|`Pool.AllocMaybe`|`T* <name>_AllocMaybe()`|a fixed-size row type|Allocate one row; returns NULL on out-of-memory.|
-|`Pool.AllocExtra`|`T& <name>_AllocExtra(void *extra, i32 nbyte_extra)`|a variable-size row type|Allocate a row plus `nbyte_extra` trailing bytes, copied from `extra`.  Fatal on out-of-memory.|
-|`Pool.AllocExtraMaybe`|`T* <name>_AllocExtraMaybe(void *extra, i32 nbyte_extra)`|a variable-size row type|Same, returning NULL instead of exiting.|
-|`Pool.AllocVarlen`|`T& <name>_AllocVarlen(aryptr<V> <varfld>)`|a row type with a `Varlen` field|Typed form of `AllocExtra`: sizes the trailing array from the passed span.|
-|`Pool.AllocVarlenMaybe`|`T* <name>_AllocVarlenMaybe(aryptr<V> <varfld>)`|a row type with a `Varlen` field|Same, returning NULL instead of exiting.|
-|`Pool.InsertMaybe`|`T* <name>_InsertMaybe(const Base &value)`|a copyable row type|Allocate a row from `value`, then cross-reference it.  NULL if the allocation failed or an index rejected the row (a duplicate key, say).|
-|`Pool.UpdateMaybe`|`T* <name>_UpdateMaybe(Base &value)`|`finput` with `update:Y`, a copyable ctype with a primary index|Find the row by primary key and overwrite it, or insert it if absent.  The row is removed from the secondary indexes first and re-inserted after, so a changed key lands in the right bucket.|
-|`Pool.Delete`|`void <name>_Delete(T& row)`|a reftype with `del:Y` — Malloc, Tpool, Lpool, Blkpool|Remove `row` from every index it sits in, then return its memory to the pool.|
+| Tfunc                   | Generated function                                        | Emitted for                                                     | Effect |
+| ----------------------- | --------------------------------------------------------- | --------------------------------------------------------------- | ------ |
+| `Pool.Alloc`            | `T& <name>_Alloc()`                                       | a fixed-size row type                                           | Allocate one row.  Exits the process on out-of-memory. |
+| `Pool.AllocMaybe`       | `T* <name>_AllocMaybe()`                                  | a fixed-size row type                                           | Allocate one row; returns NULL on out-of-memory. |
+| `Pool.AllocExtra`       | `T& <name>_AllocExtra(void *extra, i32 nbyte_extra)`      | a variable-size row type                                        | Allocate a row plus `nbyte_extra` trailing bytes, copied from `extra`.  Fatal on out-of-memory. |
+| `Pool.AllocExtraMaybe`  | `T* <name>_AllocExtraMaybe(void *extra, i32 nbyte_extra)` | a variable-size row type                                        | Same, returning NULL instead of exiting. |
+| `Pool.AllocVarlen`      | `T& <name>_AllocVarlen(aryptr<V> <varfld>)`               | a row type with a `Varlen` field                                | Typed form of `AllocExtra`: sizes the trailing array from the passed span. |
+| `Pool.AllocVarlenMaybe` | `T* <name>_AllocVarlenMaybe(aryptr<V> <varfld>)`          | a row type with a `Varlen` field                                | Same, returning NULL instead of exiting. |
+| `Pool.InsertMaybe`      | `T* <name>_InsertMaybe(const Base &value)`                | a copyable row type                                             | Allocate a row from `value`, then cross-reference it.  NULL if the allocation failed or an index rejected the row (a duplicate key, say). |
+| `Pool.UpdateMaybe`      | `T* <name>_UpdateMaybe(Base &value)`                      | `finput` with `update:Y`, a copyable ctype with a primary index | Find the row by primary key and overwrite it, or insert it if absent.  The row is removed from the secondary indexes first and re-inserted after, so a changed key lands in the right bucket. |
+| `Pool.Delete`           | `void <name>_Delete(T& row)`                              | a reftype with `del:Y` — Malloc, Tpool, Lpool, Blkpool          | Remove `row` from every index it sits in, then return its memory to the pool. |
 
 A row type is *variable-size* when it has a `dmmeta.lenfld` and either an
 `Opt` field or a `Varlen` field.  Such a row has no single size, so it gets

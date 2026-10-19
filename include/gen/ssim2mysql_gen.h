@@ -194,10 +194,10 @@ private:
     friend void                 cppfunc_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:ssim2mysql.FCppfunc.msghdr.CopyOut
+// func:ssim2mysql.FCppfunc.base.CopyOut
 void                 cppfunc_CopyOut(ssim2mysql::FCppfunc &row, dmmeta::Cppfunc &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:ssim2mysql.FCppfunc.msghdr.CopyIn
+// func:ssim2mysql.FCppfunc.base.CopyIn
 void                 cppfunc_CopyIn(ssim2mysql::FCppfunc &row, dmmeta::Cppfunc &in) __attribute__((nothrow));
 
 // Set all fields to initial values.
@@ -250,10 +250,10 @@ private:
     friend void                 ctype_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:ssim2mysql.FCtype.msghdr.CopyOut
+// func:ssim2mysql.FCtype.base.CopyOut
 void                 ctype_CopyOut(ssim2mysql::FCtype &row, dmmeta::Ctype &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:ssim2mysql.FCtype.msghdr.CopyIn
+// func:ssim2mysql.FCtype.base.CopyIn
 void                 ctype_CopyIn(ssim2mysql::FCtype &row, dmmeta::Ctype &in) __attribute__((nothrow));
 
 // func:ssim2mysql.FCtype.ns.Get
@@ -948,7 +948,7 @@ ssim2mysql::FCmd*    zs_cmd_RemoveFirst() __attribute__((nothrow));
 inline ssim2mysql::FCmd& zs_cmd_qLast() __attribute__((__warn_unused_result__, nothrow));
 // func:ssim2mysql.FDb.zs_cmd.Step
 // this function is 'extrn' and implemented by user
-void                 zs_cmd_Step() __attribute__((nothrow));
+void                 zs_cmd_Step();
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -1057,7 +1057,7 @@ ssim2mysql::FInput*  cd_input_line_RotateFirst() __attribute__((nothrow));
 inline ssim2mysql::FInput& cd_input_line_qLast() __attribute__((__warn_unused_result__, nothrow));
 // func:ssim2mysql.FDb.cd_input_line.Step
 // this function is 'extrn' and implemented by user
-void                 cd_input_line_Step() __attribute__((nothrow));
+void                 cd_input_line_Step();
 
 // cursor points to valid item
 // func:ssim2mysql.FDb.ns_curs.Reset
@@ -1242,10 +1242,10 @@ private:
     friend void                 field_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:ssim2mysql.FField.msghdr.CopyOut
+// func:ssim2mysql.FField.base.CopyOut
 void                 field_CopyOut(ssim2mysql::FField &row, dmmeta::Field &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:ssim2mysql.FField.msghdr.CopyIn
+// func:ssim2mysql.FField.base.CopyIn
 void                 field_CopyIn(ssim2mysql::FField &row, dmmeta::Field &in) __attribute__((nothrow));
 
 // func:ssim2mysql.FField.ctype.Get
@@ -1418,10 +1418,10 @@ private:
     friend void                 ns_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:ssim2mysql.FNs.msghdr.CopyOut
+// func:ssim2mysql.FNs.base.CopyOut
 void                 ns_CopyOut(ssim2mysql::FNs &row, dmmeta::Ns &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:ssim2mysql.FNs.msghdr.CopyIn
+// func:ssim2mysql.FNs.base.CopyIn
 void                 ns_CopyIn(ssim2mysql::FNs &row, dmmeta::Ns &in) __attribute__((nothrow));
 
 // Return true if index is empty
@@ -1507,10 +1507,10 @@ private:
     friend void                 sqltype_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:ssim2mysql.FSqltype.msghdr.CopyOut
+// func:ssim2mysql.FSqltype.base.CopyOut
 void                 sqltype_CopyOut(ssim2mysql::FSqltype &row, dmmeta::Sqltype &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:ssim2mysql.FSqltype.msghdr.CopyIn
+// func:ssim2mysql.FSqltype.base.CopyIn
 void                 sqltype_CopyIn(ssim2mysql::FSqltype &row, dmmeta::Sqltype &in) __attribute__((nothrow));
 
 // func:ssim2mysql.FSqltype..Uninit
@@ -1560,10 +1560,10 @@ private:
     friend void                 ssimfile_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:ssim2mysql.FSsimfile.msghdr.CopyOut
+// func:ssim2mysql.FSsimfile.base.CopyOut
 void                 ssimfile_CopyOut(ssim2mysql::FSsimfile &row, dmmeta::Ssimfile &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:ssim2mysql.FSsimfile.msghdr.CopyIn
+// func:ssim2mysql.FSsimfile.base.CopyIn
 void                 ssimfile_CopyIn(ssim2mysql::FSsimfile &row, dmmeta::Ssimfile &in) __attribute__((nothrow));
 
 // func:ssim2mysql.FSsimfile.ssimns.Get
@@ -1661,10 +1661,10 @@ private:
     friend void                 substr_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:ssim2mysql.FSubstr.msghdr.CopyOut
+// func:ssim2mysql.FSubstr.base.CopyOut
 void                 substr_CopyOut(ssim2mysql::FSubstr &row, dmmeta::Substr &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:ssim2mysql.FSubstr.msghdr.CopyIn
+// func:ssim2mysql.FSubstr.base.CopyIn
 void                 substr_CopyIn(ssim2mysql::FSubstr &row, dmmeta::Substr &in) __attribute__((nothrow));
 
 // Set all fields to initial values.

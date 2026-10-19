@@ -25,22 +25,22 @@ dmmeta.field  field:atf_unit.FDb.tr_number  arg:atf_unit.FNumber  reftype:Atree 
 State in the **parent** ctype (see `tclass_Atree` in
 `cpp/amc/avl.cpp`):
 
-| Field (parent)   | Type   | Meaning                            |
-|------------------|--------|------------------------------------|
-| `<name>_root`    | `T*`   | root of the AVL tree; NULL if empty |
-| `<name>_n`       | `i32`  | number of elements in the tree     |
-| `<name>_first`   | `T*`   | smallest element; NULL if empty    |
-| `<name>_last`    | `T*`   | largest element; NULL if empty     |
+| Field (parent) | Type  | Meaning |
+| -------------- | ----- | ------- |
+| `<name>_root`  | `T*`  | root of the AVL tree; NULL if empty |
+| `<name>_n`     | `i32` | number of elements in the tree |
+| `<name>_first` | `T*`  | smallest element; NULL if empty |
+| `<name>_last`  | `T*`  | largest element; NULL if empty |
 
 State in the **element** ctype (per indexed field; an element
 can be in multiple Atrees at once):
 
-| Field (element)    | Type   | Meaning                                          |
-|--------------------|--------|--------------------------------------------------|
-| `<xfname>_up`      | `T*`   | parent; `(T*)-1` means "not in tree"; NULL = root |
-| `<xfname>_left`    | `T*`   | left child (smaller keys)                        |
-| `<xfname>_right`   | `T*`   | right child (larger keys)                        |
-| `<xfname>_depth`   | `i32`  | height of the subtree, 1 for a leaf              |
+| Field (element)  | Type  | Meaning |
+| ---------------- | ----- | ------- |
+| `<xfname>_up`    | `T*`  | parent; `(T*)-1` means "not in tree"; NULL = root |
+| `<xfname>_left`  | `T*`  | left child (smaller keys) |
+| `<xfname>_right` | `T*`  | right child (larger keys) |
+| `<xfname>_depth` | `i32` | height of the subtree, 1 for a leaf |
 
 The element's `Init` is augmented to set
 `up = (T*)-1, left=NULL, right=NULL, depth=0`.
@@ -115,35 +115,35 @@ Source: `cpp/amc/avl.cpp`.
 #### Lifecycle
 <a href="#lifecycle"></a>
 
-| Tfunc            | Generated function                          | Effect |
-|------------------|---------------------------------------------|--------|
-| `Atree.Init`     | `<name>_Init(P&)` (macro)                   | Set `_root`, `_first` and `_last` to NULL and `_n` to 0.  No allocation. |
-| `Atree.RemoveAll`| `void <name>_RemoveAll(P&)`                 | Unlink every element without recursion and mark it not-in-tree; reset the parent's fields.  Rows themselves are not deleted. |
-| `Atree.Cascdel`  | (private)                                   | Unlink and `Delete` every element without recursion. Emitted when xref has `cascdel:Y`. |
+| Tfunc             | Generated function          | Effect |
+| ----------------- | --------------------------- | ------ |
+| `Atree.Init`      | `<name>_Init(P&)` (macro)   | Set `_root`, `_first` and `_last` to NULL and `_n` to 0.  No allocation. |
+| `Atree.RemoveAll` | `void <name>_RemoveAll(P&)` | Unlink every element without recursion and mark it not-in-tree; reset the parent's fields.  Rows themselves are not deleted. |
+| `Atree.Cascdel`   | (private)                   | Unlink and `Delete` every element without recursion. Emitted when xref has `cascdel:Y`. |
 
 #### Membership & access
 <a href="#membership-access"></a>
 
-| Tfunc            | Generated function                          | Effect |
-|------------------|---------------------------------------------|--------|
-| `Atree.EmptyQ`   | `bool <name>_EmptyQ(P&)`                    | `_root == NULL`. |
-| `Atree.InTreeQ`  | `bool <xfname>_InTreeQ(T& row)`             | `row.<xfname>_up != (T*)-1`. |
-| `Atree.First`    | `T* <name>_First(P&)`                       | Smallest element, read from `_first`; NULL if empty. |
-| `Atree.Last`     | `T* <name>_Last(P&)`                        | Largest element, read from `_last`; NULL if empty. |
-| `Atree.Next`     | `T* <xfname>_Next(T& row)`                  | In-order successor (or NULL). |
-| `Atree.Prev`     | `T* <xfname>_Prev(T& row)`                  | In-order predecessor (or NULL). |
-| `Atree.FirstGe`  | `T* <name>_FirstGe(P&, const K& key)`       | Smallest element with `sortfld ≥ key`; NULL if none.  Useful for ranged scans. |
-| `Atree.LastLt`   | `T* <name>_LastLt(P&, const K& key)`        | Largest element with `sortfld < key`; NULL if none. |
+| Tfunc           | Generated function                    | Effect |
+| --------------- | ------------------------------------- | ------ |
+| `Atree.EmptyQ`  | `bool <name>_EmptyQ(P&)`              | `_root == NULL`. |
+| `Atree.InTreeQ` | `bool <xfname>_InTreeQ(T& row)`       | `row.<xfname>_up != (T*)-1`. |
+| `Atree.First`   | `T* <name>_First(P&)`                 | Smallest element, read from `_first`; NULL if empty. |
+| `Atree.Last`    | `T* <name>_Last(P&)`                  | Largest element, read from `_last`; NULL if empty. |
+| `Atree.Next`    | `T* <xfname>_Next(T& row)`            | In-order successor (or NULL). |
+| `Atree.Prev`    | `T* <xfname>_Prev(T& row)`            | In-order predecessor (or NULL). |
+| `Atree.FirstGe` | `T* <name>_FirstGe(P&, const K& key)` | Smallest element with `sortfld ≥ key`; NULL if none.  Useful for ranged scans. |
+| `Atree.LastLt`  | `T* <name>_LastLt(P&, const K& key)`  | Largest element with `sortfld < key`; NULL if none. |
 
 #### Mutation
 <a href="#mutation"></a>
 
-| Tfunc              | Generated function                          | Effect |
-|--------------------|---------------------------------------------|--------|
-| `Atree.Insert`     | `void <name>_Insert(P&, T& row)`            | Insert `row` at the position dictated by its current sortfld.  No-op if already in this tree.  O(log N). |
-| `Atree.Remove`     | `void <name>_Remove(P&, T& row)`            | Remove `row`; rebalances the parent chain.  No-op if not in tree. |
-| `Atree.RemoveFirst`| `void <name>_RemoveFirst(P&)`               | Remove the smallest element, if any.  Read it with `First` first. |
-| `Atree.Reinsert`   | `void <name>_Reinsert(P&, T& row)`          | When the sortfld of `row` has changed in place: Remove then Insert (semantics of `Reheap` in [Bheap](/txt/exe/amc/reftype/Bheap.md)). |
+| Tfunc               | Generated function                 | Effect |
+| ------------------- | ---------------------------------- | ------ |
+| `Atree.Insert`      | `void <name>_Insert(P&, T& row)`   | Insert `row` at the position dictated by its current sortfld.  No-op if already in this tree.  O(log N). |
+| `Atree.Remove`      | `void <name>_Remove(P&, T& row)`   | Remove `row`; rebalances the parent chain.  No-op if not in tree. |
+| `Atree.RemoveFirst` | `void <name>_RemoveFirst(P&)`      | Remove the smallest element, if any.  Read it with `First` first. |
+| `Atree.Reinsert`    | `void <name>_Reinsert(P&, T& row)` | When the sortfld of `row` has changed in place: Remove then Insert (semantics of `Reheap` in [Bheap](/txt/exe/amc/reftype/Bheap.md)). |
 
 #### Internal helpers (private)
 <a href="#internal-helpers-private-"></a>
@@ -151,18 +151,18 @@ Source: `cpp/amc/avl.cpp`.
 These are emitted but marked private — they implement the AVL
 machinery.  You shouldn't call them directly.
 
-| Tfunc                | Effect |
-|----------------------|--------|
-| `Atree.ElemLt`       | Comparator (`a < b` by sortfld). |
+| Tfunc                              | Effect |
+| ---------------------------------- | ------ |
+| `Atree.ElemLt`                     | Comparator (`a < b` by sortfld). |
 | `Atree.RotateLeft` / `RotateRight` | Lift the right / left child into a node's place, recomputing the two moved heights. |
-| `Atree.Rebalance`    | Walk up from a changed node, rotating where needed, until a height is unchanged. |
+| `Atree.Rebalance`                  | Walk up from a changed node, rotating where needed, until a height is unchanged. |
 
 #### Iteration
 <a href="#iteration"></a>
 
-| Tfunc          | Generated function                                  | Effect |
-|----------------|-----------------------------------------------------|--------|
-| `Atree.curs`   | `<P>_<name>_curs` + `_Reset/_ValidQ/_Next/_Access`  | In-order forward cursor; uses `First` + `Next` internally, so no auxiliary stack. |
+| Tfunc        | Generated function                                 | Effect |
+| ------------ | -------------------------------------------------- | ------ |
+| `Atree.curs` | `<P>_<name>_curs` + `_Reset/_ValidQ/_Next/_Access` | In-order forward cursor; uses `First` + `Next` internally, so no auxiliary stack. |
 
 ### Memory model
 <a href="#memory-model"></a>

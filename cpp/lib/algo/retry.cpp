@@ -121,8 +121,11 @@ void algo::retry_curs_Next(algo::retry_curs &curs) {
         }
         curs.nsec = sec;
     }
+    // The pause doubles from 20 ms to 200 ms.  A condition that holds a moment
+    // after the first look is then seen within a few tens of milliseconds, and
+    // a long wait still polls no faster than five times a second.
     if (!curs.accept) {
-        usleep(200000);
+        usleep(u32(20000) << i32_Min(curs.niter - 1, 3));
     }
 }
 

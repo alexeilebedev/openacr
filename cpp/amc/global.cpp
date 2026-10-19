@@ -342,7 +342,7 @@ void amc::tfunc_Global_InitReflection() {
     tempstr text;// register own database
     Set(R, "$InsertStrptrMaybe", has_inputs ? "$ns::InsertStrptrMaybe" : "NULL");
     Set(R, "$RemoveStrptrMaybe", has_inputs ? "$ns::RemoveStrptrMaybe" : "NULL");
-    Set(R, "$Step", ExeQ(ns) && c_parentns_N(ns) > 0 ? "$ns::Steps" : "NULL");
+    Set(R, "$Step", ImageQ(ns) && c_parentns_N(ns) > 0 ? "$ns::Steps" : "NULL");
     Set(R, "$MainLoop", ns.c_main ? "$ns::MainLoop" : "NULL");
     Ins(&R, initrefl.body,"algo_lib::FImdb &row = algo_lib::imdb_Alloc();");
     Ins(&R, initrefl.body,"row.imdb               = \"$ns\";");
@@ -443,7 +443,7 @@ void amc::tfunc_Global_main() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FField &field = *amc::_db.genctx.p_field;
     amc::FNs &ns = *field.p_ctype->p_ns;
-    if (amc::c_fstep_N(ns) > 0 && !ns.c_main && ExeQ(ns)) {
+    if (amc::c_fstep_N(ns) > 0 && !ns.c_main && ImageQ(ns)) {
         prerr("amc.no_main"
               <<Keyval("ns",ns.ns)
               <<Keyval("comment","Add dmmeta.main record for this namespace"));
@@ -539,6 +539,64 @@ void amc::tfunc_Global_WinMain() {
 
 // -----------------------------------------------------------------------------
 
+// Generate Load() for a shared object with a main.  A host process calls it once
+// it has loaded the object, and it does what an executable's main() does before
+// the main loop: it initializes every library of the closure in dependency order,
+// stores ARGC and ARGV where an executable keeps its command line, starts the
+// clock and calls the user-defined Main.  The host drives the main loop after
+// that, so Load returns, and an exception goes to the host, which reports it as a
+// failed load.
+void amc::tfunc_Global_Load() {
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
+    amc::FNs &ns = *field.p_ctype->p_ns;
+    if (ns.c_main && ns.nstype == dmmeta_Nstype_nstype_so) {
+        amc::FFunc& load = amc::CreateCurFunc();
+        Ins(&R, load.ret  , "void", false);
+        Ins(&R, load.proto, "Load(int argc, char **argv)", false);
+        ind_beg(amc::ns_c_parentns_curs, parentns, ns) if (parentns.c_globfld) {
+            Ins(&R, load.body, tempstr()<<parentns.c_globfld->p_arg->cpp_type<<"_Init();");
+        }ind_end;
+        Ins(&R, load.body, "algo_lib::_db.argc = argc;");
+        Ins(&R, load.body, "algo_lib::_db.argv = argv;");
+        Ins(&R, load.body, "algo_lib::IohookInit();");
+        Ins(&R, load.body, "algo_lib::_db.clock = algo::CurrSchedTime(); // initialize clock");
+        if (CmdlineQ(ns)) {
+            Ins(&R, load.body, "$ns::ReadArgv(); // dmmeta.main:$ns");
+        }
+        Ins(&R, load.body, "$ns::Main(); // user-defined main");
+    }
+}
+
+// -----------------------------------------------------------------------------
+
+// Generate Unload() for a shared object with a main: uninitialize every library of
+// the closure in reverse dependency order, as an executable's main() does on its
+// way out.  The host is unloading the object and has nobody to report an error
+// to, so an error is dropped.
+void amc::tfunc_Global_Unload() {
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
+    amc::FNs &ns = *field.p_ctype->p_ns;
+    if (ns.c_main && ns.nstype == dmmeta_Nstype_nstype_so) {
+        amc::FFunc& unload = amc::CreateCurFunc();
+        Ins(&R, unload.ret  , "void", false);
+        Ins(&R, unload.proto, "Unload()", false);
+        Ins(&R, unload.body , "try {");
+        for (int i=c_parentns_N(ns)-1; i>=0; i--) {
+            amc::FNs &parentns = *c_parentns_Find(ns,i);
+            if (parentns.c_globfld) {
+                Ins(&R, unload.body, tempstr()<<"    "<<parentns.c_globfld->p_arg->cpp_type<<"_Uninit();");
+            }
+        }
+        Ins(&R, unload.body , "} catch(algo_lib::ErrorX &) {");
+        Ins(&R, unload.body , "    // don't print anything, might crash");
+        Ins(&R, unload.body , "}");
+    }
+}
+
+// -----------------------------------------------------------------------------
+
 void amc::tfunc_Global_MainLoop() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FField &field = *amc::_db.genctx.p_field;
@@ -609,7 +667,7 @@ void amc::tfunc_Global_Steps() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FField &field = *amc::_db.genctx.p_field;
     amc::FNs &ns = *field.p_ctype->p_ns;
-    if (ExeQ(ns) && c_parentns_N(ns) > 0) {
+    if (ImageQ(ns) && c_parentns_N(ns) > 0) {
         CheckClosureAliasStep(ns);
         amc::FFunc& steps = amc::CreateCurFunc();
         Ins(&R, steps.ret    , "void",false);

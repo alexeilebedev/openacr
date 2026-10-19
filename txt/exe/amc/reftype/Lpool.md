@@ -25,10 +25,10 @@ from 16 B (2^4) to 1 TB (2^40).
 State in the **parent** ctype
 (see `tclass_Lpool` in `cpp/amc/lpool.cpp`):
 
-| Field                | Type             | Always | Meaning                                |
-|----------------------|------------------|--------|----------------------------------------|
-| `<name>_free[36]`    | `<name>_Lpblock*[36]` | yes | freelist heads, one per size class |
-| `<name>_n`           | `i64`            | when `arg != u8` | live allocation count          |
+| Field             | Type                  | Always           | Meaning |
+| ----------------- | --------------------- | ---------------- | ------- |
+| `<name>_free[36]` | `<name>_Lpblock*[36]` | yes              | freelist heads, one per size class |
+| `<name>_n`        | `i64`                 | when `arg != u8` | live allocation count |
 
 A `struct <name>_Lpblock { <name>_Lpblock* next; };` is also
 emitted in the namespace header for the freelist nodes.
@@ -80,14 +80,14 @@ There is no `dmmeta.lpool` record.
 
 Source: `cpp/amc/lpool.cpp`.
 
-| Tfunc                  | Generated function                                                      | Effect |
-|------------------------|-------------------------------------------------------------------------|--------|
-| `Lpool.Init`           | `<name>_Init(P&)` (folded)                                              | NULL each freelist head, zero `_n`. |
-| `Lpool.N`              | `i64 <name>_N(P&)`                                                      | Live alloc count (only when `arg != u8`). |
-| `Lpool.AllocMem`       | `void* <name>_AllocMem(P&, u64 size)`                                   | Variable-size allocation; rounds up to power of 2. |
-| `Lpool.FreeMem`        | `void <name>_FreeMem(P&, void* mem, u64 size)`                          | Push back onto the matching freelist. |
-| `Lpool.ReallocMem`     | `void* <name>_ReallocMem(P&, void* old, u64 old_size, u64 new_size)`    | AllocMem + memcpy + FreeMem.  Returns NULL on OOM, leaving `old` intact. |
-| `Lpool.ReserveBuffers` | `bool <name>_ReserveBuffers(P&, u64 nbuf, u64 bufsize)`                 | Pull `nbuf` buffers of `bufsize` from the base pool up front. |
+| Tfunc                  | Generated function                                                   | Effect |
+| ---------------------- | -------------------------------------------------------------------- | ------ |
+| `Lpool.Init`           | `<name>_Init(P&)` (folded)                                           | NULL each freelist head, zero `_n`. |
+| `Lpool.N`              | `i64 <name>_N(P&)`                                                   | Live alloc count (only when `arg != u8`). |
+| `Lpool.AllocMem`       | `void* <name>_AllocMem(P&, u64 size)`                                | Variable-size allocation; rounds up to power of 2. |
+| `Lpool.FreeMem`        | `void <name>_FreeMem(P&, void* mem, u64 size)`                       | Push back onto the matching freelist. |
+| `Lpool.ReallocMem`     | `void* <name>_ReallocMem(P&, void* old, u64 old_size, u64 new_size)` | AllocMem + memcpy + FreeMem.  Returns NULL on OOM, leaving `old` intact. |
+| `Lpool.ReserveBuffers` | `bool <name>_ReserveBuffers(P&, u64 nbuf, u64 bufsize)`              | Pull `nbuf` buffers of `bufsize` from the base pool up front. |
 
 Plus the full `Pool.*` family (Alloc, AllocMaybe, AllocVarlen,
 Delete, …).

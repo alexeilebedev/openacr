@@ -79,6 +79,7 @@ dmmeta.ptrary  field:amc.FNs.c_outfile  unique:Y  heaplike:N
 dmmeta.ptrary  field:amc.FNs.c_parentns  unique:N  heaplike:N
 dmmeta.ptrary  field:amc.FNs.c_pnew  unique:Y  heaplike:N
 dmmeta.ptrary  field:amc.FPmaskfld.c_pmaskfld_member  unique:Y  heaplike:N
+dmmeta.ptrary  field:amc.FRegxstyle.c_regxrule  unique:Y  heaplike:N
 dmmeta.ptrary  field:amc.FTarget.c_targdep  unique:Y  heaplike:N
 dmmeta.ptrary  field:amc.FTclass.c_tcond  unique:Y  heaplike:N
 dmmeta.ptrary  field:amc.FTclass.c_tfunc  unique:Y  heaplike:N
@@ -94,10 +95,12 @@ dmmeta.ptrary  field:apm.FDb.c_srcref  unique:Y  heaplike:N
 dmmeta.ptrary  field:apm.FDb.c_srcreq  unique:Y  heaplike:N
 dmmeta.ptrary  field:apm.FPackage.c_pkgdep  unique:Y  heaplike:N
 dmmeta.ptrary  field:apm.FPackage.c_pkgdep_parent  unique:Y  heaplike:N
+dmmeta.ptrary  field:apm.FPackage.c_pkgfile  unique:Y  heaplike:N
 dmmeta.ptrary  field:apm.FPackage.c_pkgkeyword  unique:Y  heaplike:N
 dmmeta.ptrary  field:apm.FPackage.c_pkgupstream  unique:Y  heaplike:N
 dmmeta.ptrary  field:apm.FPkgkey.c_pkgrec  unique:Y  heaplike:N
 dmmeta.ptrary  field:apm.FRec.c_child  unique:N  heaplike:N
+dmmeta.ptrary  field:apm.FRec.c_def  unique:N  heaplike:N
 dmmeta.ptrary  field:apm.FRec.c_extrn  unique:N  heaplike:N
 dmmeta.ptrary  field:apm.FRec.c_parent  unique:N  heaplike:N
 dmmeta.ptrary  field:apm.FRec.c_ref  unique:N  heaplike:N
@@ -115,6 +118,7 @@ dmmeta.ptrary  field:credd.FCred.c_credperm  unique:Y  heaplike:N
 dmmeta.ptrary  field:credd.FDb.c_importfile  unique:Y  heaplike:N
 dmmeta.ptrary  field:credd.FKind.c_perm  unique:Y  heaplike:N
 dmmeta.ptrary  field:doc.FDb.c_match  unique:Y  heaplike:N
+dmmeta.ptrary  field:doc.FGstatic.c_hook  unique:Y  heaplike:N
 dmmeta.ptrary  field:doc.FMsg.c_msgfield  unique:Y  heaplike:N
 dmmeta.ptrary  field:lib_ams.FProc.c_shm  unique:Y  heaplike:Y
 dmmeta.ptrary  field:lib_ams.FShm.c_chunk  unique:Y  heaplike:N

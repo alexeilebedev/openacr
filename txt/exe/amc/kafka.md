@@ -66,35 +66,35 @@ manual editing.
 
 **`dmmeta.ckafka`** — per ctype:
 
-| Attribute            | Meaning |
-|----------------------|---------|
-| `kind`               | KafkaTypeKind — `field`, `field_array`, `messageType`, etc. |
-| `root`               | The outermost request or response message containing this type. |
-| `valid_versions`     | Range of Kafka protocol versions in which this ctype appears (e.g., `4-17`). |
-| `flexible_versions`  | Range of versions using compact (varint) encoding (e.g., `12+`). |
+| Attribute           | Meaning |
+| ------------------- | ------- |
+| `kind`              | KafkaTypeKind — `field`, `field_array`, `messageType`, etc. |
+| `root`              | The outermost request or response message containing this type. |
+| `valid_versions`    | Range of Kafka protocol versions in which this ctype appears (e.g., `4-17`). |
+| `flexible_versions` | Range of versions using compact (varint) encoding (e.g., `12+`). |
 
 **`dmmeta.fkafka`** — per field:
 
-| Attribute            | Meaning |
-|----------------------|---------|
-| `versions`           | Which Kafka versions include this field.  Outside the range, the codec skips it. |
-| `nullable_versions`  | Versions in which the field may be null/absent. |
-| `tagged_versions`    | Versions in which the field is encoded as a tagged optional rather than positionally. |
-| `tag`                | The numeric tag id (when tagged). |
+| Attribute           | Meaning |
+| ------------------- | ------- |
+| `versions`          | Which Kafka versions include this field.  Outside the range, the codec skips it. |
+| `nullable_versions` | Versions in which the field may be null/absent. |
+| `tagged_versions`   | Versions in which the field is encoded as a tagged optional rather than positionally. |
+| `tag`               | The numeric tag id (when tagged). |
 
 ### Version ranges
 <a href="#version-ranges"></a>
 
 Versions are encoded as strings:
 
-| String  | Meaning                              |
-|---------|--------------------------------------|
-| `0`     | Only version 0                       |
-| `4`     | Only version 4                       |
-| `4-17`  | Versions 4 through 17 inclusive     |
-| `0+`    | Version 0 and later                  |
-| `12+`   | Version 12 and later                 |
-| `""`    | Always present (no version gating)   |
+| String | Meaning |
+| ------ | ------- |
+| `0`    | Only version 0 |
+| `4`    | Only version 4 |
+| `4-17` | Versions 4 through 17 inclusive |
+| `0+`   | Version 0 and later |
+| `12+`  | Version 12 and later |
+| `""`   | Always present (no version gating) |
 
 amc's `FirstVer` / `LastVer` helpers in `cpp/amc/kafka.cpp`
 parse these and emit per-version branches in the encode and
@@ -139,10 +139,10 @@ fields to a stable schema.
 
 Source: `cpp/amc/kafka.cpp`.
 
-| Tfunc                  | Generated function                                                  | Effect |
-|------------------------|---------------------------------------------------------------------|--------|
-| `Ctype.KafkaEncode`    | `void <Msg>_KafkaEncode(<Msg>& msg, i16 version, cstring& out)`     | Serialize `msg` for the requested protocol version. |
-| `Ctype.KafkaDecode`    | `bool <Msg>_KafkaDecode(<Msg>& msg, i16 version, memptr in)`        | Deserialize bytes into `msg`; returns false on schema/truncation error. |
+| Tfunc               | Generated function                                              | Effect |
+| ------------------- | --------------------------------------------------------------- | ------ |
+| `Ctype.KafkaEncode` | `void <Msg>_KafkaEncode(<Msg>& msg, i16 version, cstring& out)` | Serialize `msg` for the requested protocol version. |
+| `Ctype.KafkaDecode` | `bool <Msg>_KafkaDecode(<Msg>& msg, i16 version, memptr in)`    | Deserialize bytes into `msg`; returns false on schema/truncation error. |
 
 For dispatched messages (Kafka request/response root types),
 amc also generates a top-level switch over the API key:

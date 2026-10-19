@@ -85,7 +85,7 @@ tempstr llmtool::Tildify(algo::strptr dir) {
 int llmtool::CountModified(algo::strptr dir) {
     tempstr cmd;
     cmd << "git -C " << algo::strptr_ToBash(dir) << " ls-files -m";
-    tempstr modified = algo::SysEval(cmd, algo::FailokQ(true), 1024 * 1024);
+    tempstr modified = algo::SysEval(cmd, algo::FailokQ(true));
     int ret = 0;
     ind_beg(algo::Line_curs, line, modified) {
         if (line != "") {

@@ -84,6 +84,23 @@ void credd::WarnOldBuild(lib_cred::Status &status) {
     }
 }
 
+// Refuse to go on when a daemon of another build than this binary serves the
+// store.  Called before a verb that changes the store asks for anything.
+//
+// The verb writes the files and then tells the daemon to read them again.  A
+// daemon from another build reads them under the tables it was built with, so a
+// row of a kind it does not know -- a gitlab_group token written by a newer
+// credd -- fails its reload.  The daemon then serves the store as it was before
+// the change, at best, so the change the person just made is not served until
+// a restart.  Refusing before the master password and the secret are asked
+// costs the person nothing, and the store and the daemon stay as they were.
+void credd::RefuseOldBuild() {
+    lib_cred::Status status;
+    bool old = credd::ProbeDaemon(status) && !credd::SameBuildQ(status);
+    vrfy(!old, tempstr() << "credd.oldbuild" << Keyval("dir", status.dir) << Keyval("daemon", status.build)
+         << Keyval("comment", "the daemon runs another build of credd and may not read what this change writes; credd -stop, then credd -start, then run this again"));
+}
+
 // Start an ssh agent on the agent socket, replacing whatever socket file was
 // there, and remember its pid.  Dies when ssh-agent does not start.
 static void StartAgent() {
@@ -147,8 +164,7 @@ static bool LoadAgent(algo::strptr want, algo::cstring &why) {
             int rc = command::bash_Start(bash);
             ssize_t nwrite = rc == 0 ? write(bash.to_stdin.value, key.ch_elems, key.ch_n) : -1;
             if (rc == 0) {
-                close(bash.to_stdin.value);
-                bash.to_stdin = algo::Fildes();
+                algo_lib::Close(bash.to_stdin);
             }
             algo::cstring said;
             if (rc == 0) {
@@ -422,8 +438,8 @@ void credd::RunDaemon() {
     // timeout expired while the agent was loading, or an ssh-add that exited
     // before reading the key on its stdin.  Under the default disposition that
     // write raises SIGPIPE and the process holding every key dies without a
-    // word.  Ignored, the same write answers EPIPE, an error each site reports.
-    signal(SIGPIPE, SIG_IGN);
+    // word.  Blocked, the same write answers EPIPE, an error each site reports.
+    algo_lib::BlockSigpipe();
     algo::tempstr sock = credd::DaemonSock();
     struct sockaddr_un addr;
     memset(&addr, 0, sizeof(addr));

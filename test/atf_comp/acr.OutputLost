@@ -1,0 +1,4 @@
+# start bash cmd:"bash -c '$bindir/acr -version >&-; echo acr_exit:$?'"
+# eof bash
+bash -> acr_exit:1
+# exit bash code:0

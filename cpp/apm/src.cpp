@@ -131,14 +131,24 @@ static tempstr StripUpdateHdr(algo::strptr text) {
 // -----------------------------------------------------------------------------
 
 // Add to c_srcref every record whose generated symbol TEXT, the body of a C++
-// source, names.  A `::` between two identifiers makes the second one
-// qualified by the first.  Hand-written sources have no namespace blocks, so a
-// name outside every brace is where a function is defined.
-static void ScanText(algo::strptr text) {
+// source in namespace NS, names.  A `::` between two identifiers makes the
+// second one qualified by the first.  Hand-written sources have no namespace
+// blocks, so a name outside every brace is where a function is defined.
+//
+// Two spellings name a symbol without its full name.  A function of NS uses
+// the symbols of NS unqualified: acr_ed sets a citest's job to
+// atfdb_cijob_normalize, acr_ed's string symbol for that row.  So an
+// unqualified name is also looked up in NS, spelled exactly, since a local
+// variable shares its spelling with many a symbol's prefix.  And prcat(lib_lst, ...) names the log category algo_lib_logcat_lib_lst
+// through the macro, so the first argument of prcat, or of amscat, which wraps
+// it, names a category.  A source that uses a third such macro fails the sdk
+// CI job's build, which names the category it lacks.
+static void ScanText(algo::strptr text, algo::strptr ns) {
     int n = elems_N(text);
     int i = 0;
     algo::strptr prev;
     bool qual = false;
+    bool catarg = false;
     int depth = 0;
     while (i < n) {
         char c = text[i];
@@ -149,6 +159,13 @@ static void ScanText(algo::strptr text) {
         if (ident) {
             NoteIdent(qual ? prev : algo::strptr(), token, depth == 0);
         }
+        if (ident && !qual && elems_N(ns) > 0) {
+            (void)NoteCppnameQ(tempstr() << ns << "." << token, depth == 0);
+        }
+        if (ident && catarg) {
+            (void)NoteCppnameQ(tempstr() << "algo_lib_logcat_" << token, false);
+        }
+        catarg = algo_lib::WhiteCharQ(c) ? catarg : c == '(' && (prev == "prcat" || prev == "amscat");
         depth += c == '{' ? 1 : 0;
         depth -= c == '}' && depth > 0 ? 1 : 0;
         if (c == ':' && next == ':') {
@@ -174,6 +191,26 @@ static void IndexCppname() {
     }ind_end;
 }
 
+// Point every source file at the dev.target row of the target that compiles it,
+// as dev.targsrc says.  A package needs a user function's definition only where
+// it builds the target whose generated code calls the function, and this is how
+// apm finds that target from the file that defines it.
+static void MarkSourceTarget() {
+    if (apm::FSsimfile *ssimfile = apm::ind_ssimfile_Find(dmmeta_Ssimfile_ssimfile_dev_targsrc)) {
+        ind_beg(apm::ssimfile_zd_ssimfile_rec_curs, rec, *ssimfile) {
+            dev::Targsrc targsrc;
+            if (dev::Targsrc_ReadStrptrMaybe(targsrc, tempstr() << rec.tuple)) {
+                apm::FRec *file = apm::ind_rec_Find(tempstr() << "dev.gitfile:" << src_Get(targsrc));
+                if (file) {
+                    file->p_target = apm::ind_rec_Find(tempstr() << "dev.target:" << target_Get(targsrc));
+                }
+            }
+        }ind_end;
+    }
+}
+
+// -----------------------------------------------------------------------------
+
 // Give every hand-written C++ file in the database a reference to each record
 // whose generated symbol its code names or whose user function it defines.
 // Take cpp/amc/ctype.cpp, which compares a field's reftype against
@@ -186,18 +223,25 @@ static void IndexCppname() {
 // atf_comp::comptest_apm_SrcScan needs atfdb.comptest:apm.SrcScan, or amc
 // generates no prototype for it and the definition fails to compile.  So the
 // file requires that record, and a package that lacks the record cannot carry
-// the file.  The record does not require the file in turn, since a package may
-// carry a row whose file the origin keeps.  The
-// edge is an ordinary reference: the ref closure brings the row with the file,
-// and apm -check reports it as dangling for a package that leaves it behind.
+// the file.  The record requires the file in turn: generated code calls the
+// function, so a package that carries atfdb.comptest:apm.SrcScan and not the
+// driver that defines it does not link, and the row leaves.  That holds only in
+// a package that builds the target compiling the driver, since only that
+// target's generated code calls the function.  A push makes the
+// origin equal to the projection, so no origin keeps a definition the projection
+// lacks.  The edge from the file is also an ordinary reference: the ref closure
+// brings the row with the file, and apm -check reports it as dangling for a
+// package that leaves it behind.
 void apm::ScanSources() {
     apm::FSsimfile *gitfile = apm::ind_ssimfile_Find("dev.gitfile");
     IndexCppname();
+    MarkSourceTarget();
     if (gitfile && apm::cppsym_N() > 0) {
         ind_beg(apm::ssimfile_zd_ssimfile_rec_curs, rec, *gitfile) {
             algo::strptr path = attrs_Find(rec.tuple, 0)->value;
             if (HandsrcQ(path)) {
-                ScanText(StripUpdateHdr(algo::FileToString(path)));
+                algo::strptr ns = rec.p_target ? Pathcomp(rec.p_target->rec, ":LR") : algo::strptr();
+                ScanText(StripUpdateHdr(algo::FileToString(path)), ns);
                 ind_beg(apm::_db_c_srcref_curs, target, apm::_db) {
                     if (&target != &rec) {
                         c_ref_Insert(rec, target);
@@ -207,6 +251,7 @@ void apm::ScanSources() {
                 ind_beg(apm::_db_c_srcreq_curs, target, apm::_db) {
                     if (&target != &rec) {
                         c_req_Insert(rec, target);
+                        c_def_Insert(target, rec);
                         c_extrn_Insert(rec, target);
                     }
                 }ind_end;

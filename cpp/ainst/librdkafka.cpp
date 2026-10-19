@@ -23,11 +23,11 @@
 
 // -----------------------------------------------------------------------------
 
-// Install librdkafka, the C kafka client library.
+// Install librdkafka, the C kafka client library, into $PREFIX.  On Linux the
+// distribution's copy is removed, so nothing links against a second version.
 void ainst::extpkg_librdkafka(ainst::FExtpkg &extpkg) {
     AddStage(extpkg,tempstr()<<"dir=$(ainst_unpack "<<GetExtpkgsrcVar(extpkg,"src")<<")/librdkafka-2.3.0");
-    AddStage(extpkg,"(cd \"$dir\" && ./configure --prefix=/usr && make -j\"$(nproc)\")");
+    AddStage(extpkg,"(cd \"$dir\" && ./configure --prefix=\"$PREFIX\" && make -j\"$(ainst_nproc)\")");
     AddStage(extpkg,"(cd \"$dir\" && make install DESTDIR=\"$ROOT\")");
-    AddPost(extpkg,"apt-get remove --purge -y \"librdkafka*\" || true");
-    AddPost(extpkg,"ldconfig");
+    AddPost(extpkg,"if [[ $DARWIN == N ]]; then apt-get remove --purge -y \"librdkafka*\" || true; ldconfig; fi");
 }

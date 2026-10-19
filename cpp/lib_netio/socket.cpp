@@ -283,7 +283,9 @@ bool lib_netio::ConnectUnix(algo::Fildes sock, strptr path) {
 // the caller for the whole retry window on the unanswered case, so the connect
 // is issued non-blocking and the socket polled for writability until the
 // deadline, which reports either negative promptly and reports success only
-// once the handshake has completed.
+// once the handshake has completed.  A deadline of 0 answers only for a handshake
+// the connect completes by itself, which Linux does over loopback and macOS does
+// not, so a caller that polls passes a deadline per probe.
 bool lib_netio::TcpUpQ(ietf::Ipport ipport, int msec) {
     bool ret = false;
     algo::Fildes sock = CreateTcpSocket();
@@ -623,12 +625,7 @@ int lib_netio::SendtoMulti(algo::Fildes sock, u8 *buf, u32 len, ietf::Ipport *ds
     // sendmmsg is Linux's, so elsewhere each destination costs one sendto.
     bool stop = false;
     for (int i = 0; i < n && !stop; i++) {
-        sockaddr_in sa;
-        algo::ZeroBytes(sa);
-        sa.sin_family = AF_INET;
-        sa.sin_addr.s_addr = htonl(dst[i].ip.ipv4);
-        sa.sin_port = htons(dst[i].port);
-        stop = sendto(sock.value, buf, len, 0, (sockaddr *)&sa, sizeof sa) != (ssize_t)len;
+        stop = !lib_netio::Sendto(sock, buf, len, dst[i]);
         sent += !stop;
     }
 #endif

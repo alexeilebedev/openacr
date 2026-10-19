@@ -120,6 +120,13 @@ static apm::FRec *GetCtypeSsimfileRec(apm::FRec &rec) {
 // A record that is already whole was expanded before, so the walk stops there.
 // The depth is the nesting of primary keys (ns, ctype, field, ...) plus one
 // step, a small constant.
+//
+// A target brings its namespace whole.  A package that builds lib_lst compiles
+// lib_lst's sources against the code amc generates from the namespace, and that
+// code is the whole schema: the pools of its FDb, its trace counters, its
+// constants, the names its sources use unqualified.  Reaching those records one
+// reference at a time misses whichever the source names in a way no scan reads,
+// so the namespace comes whole, as a key naming it with down:Y would bring it.
 static void SelectWhole(apm::FRec &rec) {
     if (!rec.whole) {
         rec.whole = true;
@@ -130,6 +137,10 @@ static void SelectWhole(apm::FRec &rec) {
         apm::FRec *ssimfile_rec = GetCtypeSsimfileRec(rec);
         if (ssimfile_rec) {
             SelectWhole(*ssimfile_rec);
+        }
+        apm::FRec *ns_rec = rec.p_ssimfile->ssimfile == dmmeta_Ssimfile_ssimfile_dev_target ? apm::ind_rec_Find(tempstr() << "dmmeta.ns:" << Pathcomp(rec.rec, ":LR")) : NULL;
+        if (ns_rec) {
+            SelectWhole(*ns_rec);
         }
     }
 }
@@ -144,16 +155,29 @@ static void SelectWhole(apm::FRec &rec) {
 // dmmeta.ctype:amc.FCtype is a separate entity the namespace owns.  A row of
 // another namespace that shares the key, such as dev.target:amc beside
 // dmmeta.ns:amc, is a separate table's entity and stays behind.
+//
+// An owner also comes with the files it owns through an ssimreq under txt/ and
+// include/.  Take dmmeta.ns:atfdb, which a package reaches through one of the
+// namespace's tables.  abt_md links every table to its namespace's page,
+// txt/ssimdb/atfdb/README.md, so a package carrying the namespace without the
+// page writes a dead link into every document that names one of its tables.  In
+// the same way an ssimdb namespace owns its include/<ns>.inl.h, which no target
+// holds, and brings it to a package whose generated code includes it through a
+// dmmeta.nsinclude row.
+// An owner already chosen was walked when it was chosen, so it is walked once.
 static void SelectOwner(apm::FRec &rec) {
     algo::strptr key = Pathcomp(rec.rec,":LR");
     algo::strptr ns = Pathcomp(rec.rec,".LL");
     if (rec.p_ssimfile->ssimfile == "dmmeta.ctype") {
         SelectWhole(rec);
-    } else {
+    } else if (!zd_chooserec_InLlistQ(rec)) {
         zd_chooserec_Insert(rec);
         ind_beg(apm::rec_c_child_curs, childrec, rec) {
-            if (Pathcomp(childrec.rec,":LR") == key && Pathcomp(childrec.rec,".LL") == ns) {
+            algo::strptr childkey = Pathcomp(childrec.rec,":LR");
+            if (childkey == key && Pathcomp(childrec.rec,".LL") == ns) {
                 zd_chooserec_Insert(childrec);
+            } else if (childrec.p_ssimfile->ssimfile == dmmeta_Ssimfile_ssimfile_dev_gitfile && (StartsWithQ(childkey, "txt/") || StartsWithQ(childkey, "include/"))) {
+                SelectWhole(childrec);
             }
         }ind_end;
     }
@@ -161,8 +185,23 @@ static void SelectOwner(apm::FRec &rec) {
 
 // -----------------------------------------------------------------------------
 
-// Evaluate regx in pkgkey, compute transitive closure according to pkgkey.up, pkgkey.down, pkgkey.ref, pkgkey.exclude
-// and add any selected records to global zd_selrec table
+// Return the pkgrec through which PACKAGE holds REC, or NULL when it does not.
+static apm::FPkgrec *FindPkgrec(apm::FRec &rec, apm::FPackage &package) {
+    apm::FPkgrec *ret = NULL;
+    ind_beg(apm::rec_zd_rec_pkgrec_curs, pkgrec, rec) {
+        if (!ret && pkgrec.p_package == &package) {
+            ret = &pkgrec;
+        }
+    }ind_end;
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
+// Evaluate regx in PKGKEY, compute transitive closure according to pkgkey.up, pkgkey.down, pkgkey.ref, pkgkey.exclude
+// and add the selected records to the empty global zd_selrec table.  The counts
+// PKGKEY records, and the records each closure starts from, are read off that
+// table, so it holds this key's records alone.
 static void SelectPkgkeyRecs(apm::FPkgkey &pkgkey) {
     tempstr key(key_Get(pkgkey));
     algo_lib::Regx ssimfile_regx;
@@ -170,6 +209,7 @@ static void SelectPkgkeyRecs(apm::FPkgkey &pkgkey) {
     Regx_ReadAcr(ssimfile_regx,Pathcomp(key,":LL"),true);
     Regx_ReadAcr(value_regx,Pathcomp(key,":LR"),true);
     vrfy_(!apm::zd_chooserec_N());
+    vrfy_(!apm::zd_selrec_N());
     // produce initial chooserec selection
     if (literal_Get(ssimfile_regx.flags)) {
         if (apm::FSsimfile *ssimfile=apm::ind_ssimfile_Find(ssimfile_regx.expr)) {
@@ -253,7 +293,7 @@ static void SelectPkgkeyRecs(apm::FPkgkey &pkgkey) {
     }
 
     // closure over references
-    // Take a field abt.FTarget.msghdr whose arg is dev.Target.  The package
+    // Take a field abt.FTarget.base whose arg is dev.Target.  The package
     // needs that ctype, and the ctype is useless without its fields, which it
     // owns.  It also needs the ctype's owner, dmmeta.ns:dev, and must not take
     // what the owner owns, which is every other dev ctype.  So a referenced record comes
@@ -281,6 +321,142 @@ static void SelectPkgkeyRecs(apm::FPkgkey &pkgkey) {
     }
 
     // clear zd_chooserec
+    apm::zd_chooserec_RemoveAll();
+}
+
+// -----------------------------------------------------------------------------
+
+// True when every record REC owns is a file.  A file owns no records, so such
+// a row is a leaf of the schema.  A dmmeta.nsinclude row owns nothing at all.
+static bool OwnsNoRecordQ(apm::FRec &rec) {
+    bool ret = true;
+    ind_beg(apm::rec_c_child_curs, childrec, rec) {
+        ret = ret && childrec.p_ssimfile->ssimfile == dmmeta_Ssimfile_ssimfile_dev_gitfile;
+    }ind_end;
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
+// True when REC references PARENT, rather than being owned by it.
+static bool RefQ(apm::FRec &rec, apm::FRec &parent) {
+    bool ret = false;
+    ind_beg(apm::rec_c_ref_curs, refrec, rec) {
+        ret = ret || &refrec == &parent;
+    }ind_end;
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
+// True when a package that extends PACKAGE holds REC, which takes REC out of
+// PACKAGE's content.
+static bool ExtenderHoldsQ(apm::FRec &rec, apm::FPackage &package) {
+    bool ret = false;
+    ind_beg(apm::rec_zd_rec_pkgrec_curs, pkgrec, rec) {
+        ind_beg(apm::package_c_pkgdep_curs, pkgdep, *pkgrec.p_package) {
+            ret = ret || (pkgdep.pkgdeptype == apm::dev_pkgdeptype_extend && pkgdep.p_parent == &package);
+        }ind_end;
+    }ind_end;
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
+// Return the pkgrec through which PACKAGE holds REC when no other package in the
+// carrier set holds it, and a key with ref:Y brought it, else NULL.  A key
+// without ref:Y asks for exactly what it names.
+static apm::FPkgrec *FindOwnPkgrec(apm::FRec &rec, apm::FPackage &package) {
+    apm::FPkgrec *ret = FindPkgrec(rec, package);
+    if (ret && !ret->p_pkgkey->ref) {
+        ret = NULL;
+    }
+    ind_beg(apm::rec_zd_rec_pkgrec_curs, pkgrec, rec) {
+        if (pkgrec.p_package != &package && pkgrec.p_package->visited) {
+            ret = NULL;
+        }
+    }ind_end;
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
+// Add to PACKAGE every row that configures a record the package holds.
+//
+// Take dev.syslibuname:ssl/Linux, which says Linux links OpenSSL as -lssl.  The
+// key begins with the library, so the row belongs to dev.syslib:ssl and
+// references dev.uname:Linux.  A package that carries the library would build on
+// Linux without knowing what to link, and the link fails.  The row exists for
+// the library, and the data says so in a form that needs no table named.  The record
+// it configures came through a key with ref:Y, the closure of what a build
+// needs; a key without ref:Y asks for exactly what it names.  The row
+// has an owner, the record its key begins with.  It references a record that
+// the package holds and no package it carries does.  And the package, or a
+// package it carries, holds every record the row names.  Such a row comes through the key that brought the record it
+// configures, whole, with any file it owns.  A row that owns nothing but files
+// configures its owner, when that owner is
+// the package's alone: dmmeta.nsinclude:kafka2/include/lib_kafka.h makes the
+// generated code of kafka2 see lib_kafka, and a package that reaches namespace
+// kafka2 needs it.  The row brings no header: lib_kafka.h reaches the package
+// through its library's target, as every header an nsinclude row names does.
+// A row that owns records, such as a ctype, is an entity of
+// its own, so an owner reached alone still does not bring its whole namespace.
+//
+// A row with no owner, such as a dev.syslib row naming its license, is a catalog
+// entry rather than configuration, and a package names the catalog entries it
+// needs.  A row that also names a record nobody here
+// carries, such as the targdep of a tool the package lacks, configures that
+// other record and stays behind.  A source file is not a configuring row, since
+// its references are the symbols its code names and it comes with its target.
+// A row that a package extending PACKAGE holds stays out, as the subtraction
+// left it, and so does a row the package's own exclusion keys take out.  A row
+// configuring a record the package shares with a package it carries is that
+// package's to carry or leave, so it stays behind too.
+static void SelectConfigRow(apm::FPackage &package) {
+    // what the package's exclusion keys take out stays out; each key is
+    // evaluated on its own, so its closure starts from the records it names
+    apm::zd_selrec_RemoveAll();
+    ind_beg(apm::package_zd_pkgkey_curs, pkgkey, package) if (pkgkey.exclude) {
+        SelectPkgkeyRecs(pkgkey);
+        ind_beg(apm::_db_zd_selrec_curs, rec, apm::_db) {
+            rec.exclude = true;
+        }ind_end;
+        apm::zd_selrec_RemoveAll();
+    }ind_end;
+    apm::SetCarrier(&package);
+    ind_beg(apm::_db_zd_rec_curs, rec, apm::_db) if (rec.p_ssimfile->ssimfile != dmmeta_Ssimfile_ssimfile_dev_gitfile && !apm::CarriedQ(rec) && !rec.exclude) {
+        apm::FPkgrec *via = NULL;
+        bool met = c_parent_N(rec) > c_ref_N(rec);
+        ind_beg(apm::rec_c_ref_curs, refrec, rec) {
+            via = via ? via : FindOwnPkgrec(refrec, package);
+        }ind_end;
+        // a leaf row configures its owner, when the owner is this package's
+        ind_beg(apm::rec_c_parent_curs, parentrec, rec) if (OwnsNoRecordQ(rec) && !RefQ(rec, parentrec)) {
+            via = via ? via : FindOwnPkgrec(parentrec, package);
+        }ind_end;
+        ind_beg(apm::rec_c_parent_curs, parentrec, rec) {
+            met = met && apm::CarriedQ(parentrec);
+        }ind_end;
+        if (via && met && !ExtenderHoldsQ(rec, package)) {
+            SelectWhole(rec);
+            ind_beg(apm::_db_zd_chooserec_curs, chosen, apm::_db) if (!chosen.p_via) {
+                chosen.p_via = via->p_pkgkey;
+            }ind_end;
+        }
+    }ind_end;
+    apm::SetCarrier(NULL);
+    ind_beg(apm::_db_zd_rec_curs, rec, apm::_db) {
+        rec.exclude = false;
+    }ind_end;
+    ind_beg(apm::_db_zd_chooserec_curs, rec, apm::_db) {
+        apm::FPkgrec& pkgrec = apm::pkgrec_Alloc();
+        pkgrec.p_package    = &package;
+        pkgrec.p_rec        = &rec;
+        pkgrec.p_pkgkey     = rec.p_via;
+        vrfy(pkgrec_XrefMaybe(pkgrec), algo_lib::_db.errtext);
+        rec.p_via = NULL;
+        rec.whole = false;
+    }ind_end;
     apm::zd_chooserec_RemoveAll();
 }
 
@@ -331,6 +507,15 @@ void apm::SetCarrier(apm::FPackage *package) {
     }
 }
 
+// Make the selected packages the carriers that CarriedQ asks about: the set a
+// push or a comparison with the origin sends together.
+void apm::SetCarrierSelected() {
+    SetCarrier(NULL);
+    ind_beg(apm::_db_zd_sel_package_curs, package, apm::_db) {
+        package.visited = true;
+    }ind_end;
+}
+
 // Return true if a carrier set by SetCarrier holds REC.
 bool apm::CarriedQ(apm::FRec &rec) {
     bool ret = false;
@@ -340,8 +525,69 @@ bool apm::CarriedQ(apm::FRec &rec) {
     return ret;
 }
 
+// True when the carrier set builds the target that compiles source file FILE,
+// so a record whose user function FILE defines needs FILE there.
+static bool BuildsDefinerQ(apm::FRec &file) {
+    return file.p_target && apm::CarriedQ(*file.p_target);
+}
+
+// -----------------------------------------------------------------------------
+
+// True when the carrier set lacks REC.  With SPREAD, REC must also be one of the
+// records the last round removed, in zd_droprec.
+static bool LostQ(apm::FRec &rec, bool spread) {
+    return !apm::CarriedQ(rec) && (!spread || apm::zd_droprec_InLlistQ(rec));
+}
+
+// -----------------------------------------------------------------------------
+
+// Insert REC into zd_selrec when PACKAGE cannot carry it, and report the record
+// it lacks.  REC is unmet when it requires a parent the package lacks, or when
+// the package builds a target that defines REC's user function in a file it
+// lacks and no file it carries defines the function.  With SPREAD only the
+// records the last round removed count, and a parent that REC references counts
+// as well, so a removal spreads and an absence the package never held does not.
+static void SelectUnmet(apm::FPackage &package, apm::FRec &rec, bool spread) {
+    apm::FRec *lack = NULL;
+    algo::strptr relation;
+    if (spread) {
+        ind_beg(apm::rec_c_parent_curs, parentrec, rec) if (!lack && LostQ(parentrec, spread)) {
+            lack = &parentrec;
+            relation = "references";
+        }ind_end;
+    }
+    ind_beg(apm::rec_c_req_curs, reqrec, rec) if (!lack && LostQ(reqrec, spread)) {
+        lack = &reqrec;
+        relation = "requires";
+    }ind_end;
+    apm::FRec *definer = NULL;
+    bool defined = false;
+    ind_beg(apm::rec_c_def_curs, defrec, rec) {
+        defined = defined || apm::CarriedQ(defrec);
+        if (!definer && LostQ(defrec, spread) && BuildsDefinerQ(defrec)) {
+            definer = &defrec;
+        }
+    }ind_end;
+    if (!lack && definer && !defined) {
+        lack = definer;
+        relation = "defined_in";
+    }
+    if (lack) {
+        prcat(verbose, "apm.unmet"
+              <<Keyval("package",package.package)
+              <<Keyval("rec",rec.rec)
+              <<Keyval(relation,lack->rec));
+        apm::zd_selrec_Insert(rec);
+    }
+}
+
+// -----------------------------------------------------------------------------
+
 // Remove from PACKAGE every record whose required parent the package does not
-// carry, then every record that references a removed one, until none is left.
+// carry, and every record whose user function no carried file defines in a
+// target the package builds.  Then
+// remove every record that references, requires or is defined by a removed one,
+// until none is left.
 // Take cpp/gen/sampdb_gen.cpp.  The file exists because namespace sampdb
 // exists, so a package without sampdb cannot regenerate it, and shipping it leaks what
 // the namespace holds.  The data says so: the file requires its namespace
@@ -353,15 +599,7 @@ static void DropUnmet(apm::FPackage &package) {
     apm::SetCarrier(&package);
     apm::zd_selrec_RemoveAll();
     ind_beg(apm::package_zd_pkgrec_curs, pkgrec, package) {
-        ind_beg(apm::rec_c_req_curs, reqrec, *pkgrec.p_rec) {
-            if (!apm::CarriedQ(reqrec)) {
-                prcat(verbose, "apm.unmet"
-                      <<Keyval("package",package.package)
-                      <<Keyval("rec",pkgrec.p_rec->rec)
-                      <<Keyval("requires",reqrec.rec));
-                apm::zd_selrec_Insert(*pkgrec.p_rec);
-            }
-        }ind_end;
+        SelectUnmet(package, *pkgrec.p_rec, false);
     }ind_end;
     while (apm::zd_selrec_N() > 0) {
         ind_beg(apm::_db_zd_selrec_curs, rec, apm::_db) {
@@ -370,15 +608,7 @@ static void DropUnmet(apm::FPackage &package) {
         apm::DropSelectedPkgrec(package);
         apm::zd_selrec_RemoveAll();
         ind_beg(apm::package_zd_pkgrec_curs, pkgrec, package) {
-            ind_beg(apm::rec_c_parent_curs, parentrec, *pkgrec.p_rec) {
-                if (apm::zd_droprec_InLlistQ(parentrec) && !apm::CarriedQ(parentrec)) {
-                    prcat(verbose, "apm.unmet"
-                          <<Keyval("package",package.package)
-                          <<Keyval("rec",pkgrec.p_rec->rec)
-                          <<Keyval("references",parentrec.rec));
-                    apm::zd_selrec_Insert(*pkgrec.p_rec);
-                }
-            }ind_end;
+            SelectUnmet(package, *pkgrec.p_rec, true);
         }ind_end;
     }
     apm::zd_droprec_RemoveAll();
@@ -413,6 +643,81 @@ static void KeepBaseOwned(apm::FPackage &base) {
     }ind_end;
     apm::zd_droprec_RemoveAll();
     apm::SetCarrier(NULL);
+}
+
+// -----------------------------------------------------------------------------
+
+// True when a key of PACKAGE other than a stub key names REC outright.
+static bool NamedByPackageQ(apm::FRec &rec, apm::FPackage &package) {
+    bool ret = false;
+    ind_beg(apm::package_zd_pkgkey_curs, pkgkey, package) if (!pkgkey.stub && !pkgkey.exclude) {
+        ret = ret || apm::NamesRecQ(pkgkey, rec);
+    }ind_end;
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
+// Mark the records of PACKAGE that its stub keys match, so the package carries
+// those files as stubs.  A stub key selects nothing by itself: it says how a file
+// the package already carries leaves, and a file the package names outright
+// leaves whole.
+static void MarkStub(apm::FPackage &package) {
+    ind_beg(apm::package_zd_pkgkey_curs, pkgkey, package) if (pkgkey.stub) {
+        apm::zd_selrec_RemoveAll();
+        SelectPkgkeyRecs(pkgkey);
+        ind_beg(apm::_db_zd_selrec_curs, rec, apm::_db) if (!NamedByPackageQ(rec, package)) {
+            // a package that holds the file through several keys holds it once
+            ind_beg(apm::rec_zd_rec_pkgrec_curs, pkgrec, rec) if (pkgrec.p_package == &package) {
+                pkgrec.stub = true;
+            }ind_end;
+        }ind_end;
+    }ind_end;
+    apm::zd_selrec_RemoveAll();
+}
+
+// -----------------------------------------------------------------------------
+
+// Return the text a package carries in place of the file PATH when it carries
+// the file as a stub.  A stub keeps the page's title and its anchor, so a link to
+// the page still lands on a page, and says in one sentence that the rest stays
+// with the tree the package came from.  A file that is not markdown is carried
+// empty.
+tempstr apm::GetStubText(algo::strptr path) {
+    tempstr ret;
+    if (EndsWithQ(path, ".md")) {
+        bool title = false;
+        bool done = false;
+        ind_beg(algo::FileLine_curs, line, path) if (!done) {
+            if (!title && StartsWithQ(line, "## ")) {
+                ret << line << eol;
+                title = true;
+            } else if (title && StartsWithQ(line, "<a href=")) {
+                ret << line << eol;
+                done = true;
+            } else if (title) {
+                done = true;
+            }
+        }ind_end;
+        ret << eol << "This page is not part of this distribution." << eol;
+    }
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
+// Return the text a package publishes for the file PATH: the stub text when
+// STUB, else the file itself.
+tempstr apm::GetPublishText(algo::strptr path, bool stub) {
+    return stub ? apm::GetStubText(path) : algo::FileToString(path);
+}
+
+// -----------------------------------------------------------------------------
+
+// Return true when PACKAGE carries REC as a stub.
+bool apm::StubQ(apm::FRec &rec, apm::FPackage &package) {
+    apm::FPkgrec *pkgrec = FindPkgrec(rec, package);
+    return pkgrec && pkgrec->stub;
 }
 
 // -----------------------------------------------------------------------------
@@ -502,7 +807,7 @@ void apm::LoadRecs() {
     // rec.zd_rec_pkgrec
     ind_beg(_db_zd_topo_package_curs, package, _db) {
         // included records
-        ind_beg(package_zd_pkgkey_curs, pkgkey, package) if (!pkgkey.exclude) {
+        ind_beg(package_zd_pkgkey_curs, pkgkey, package) if (!pkgkey.exclude && !pkgkey.stub) {
             zd_selrec_RemoveAll();
             SelectPkgkeyRecs(pkgkey);
             ind_beg(_db_zd_selrec_curs, rec, _db) {
@@ -546,10 +851,21 @@ void apm::LoadRecs() {
         DropSelectedPkgrec(*pkgdep.p_parent,true);
     }ind_end;
 
+    // Rows that configure a package's records come after the subtraction, since
+    // a row a base package matched by blanket and an extender claimed is held by
+    // neither until the subtraction has run.
+    ind_beg(_db_zd_topo_package_curs, package, _db) {
+        SelectConfigRow(package);
+    }ind_end;
+
     // A package carries no record whose requirement it lacks.  This runs last,
     // since an exclusion or a subtraction can take away a requirement.
     ind_beg(_db_package_curs, package, _db) {
         DropUnmet(package);
+    }ind_end;
+
+    ind_beg(_db_package_curs, package, _db) {
+        MarkStub(package);
     }ind_end;
     zd_selrec_RemoveAll();
 }

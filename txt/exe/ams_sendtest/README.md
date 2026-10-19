@@ -36,7 +36,7 @@ Usage: ams_sendtest [options]
     -parkwrite                       Send from a step that sleeps when refused; only a reader's wake resumes it
     -verbose         flag            Verbosity level (0..255); alias -v; cumulative
     -debug           flag            Debug level (0..255); alias -d; cumulative
-    -trace           string  ""      Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps
+    -trace           string  ""      Trace expression: log categories to enable, as category[:filter],...
     -help                            Print help and exit; alias -h
     -version                         Print version and exit
     -signature                       Show signatures and exit; alias -sig
@@ -46,7 +46,7 @@ Usage: ams_sendtest [options]
 <a href="#description"></a>
 
 You start the parent, and the parent does the rest.  It creates a shared memory segment
-under `/dev/shm`, named after `-file_prefix`, and registers `-nchild` readers on it.  It
+in the segment directory (`/dev/shm` on Linux, `/Volumes/shm` on macOS), named after `-file_prefix`, and registers `-nchild` readers on it.  It
 then starts one copy of itself per reader, with `-id` set to that reader's index.  Once
 every reader is attached, the parent writes `-nmsg` `ams.LogMsg` messages, each numbered
 and padded to a length between `-msgsize_min` and `-msgsize_max`.
@@ -122,7 +122,7 @@ reader's lag.
 
 - A run that has not finished by `-timeout` seconds fails, and on failure every process
   prints a dump of its segments.  Raise `-timeout` for large `-nmsg` with slow readers.
-- A parent that is killed leaves its segments in `/dev/shm`.  `amsspy -clean` removes
+- A parent that is killed leaves its segments in the segment directory.  `amsspy -clean` removes
   them.
 
 ### Options

@@ -20,11 +20,32 @@ would read to everyone else as input.
 read hand-written code learn which record a name stands for, so a symbol that
 was emitted and not registered is a dependency nobody can see.  Today that is
 ctype structs, `fconst` constants (a `gconst` constant names its value-table
-row, a message type its `dmmeta.msgtype` row), `gsymbol` strings, the named
+row and its `dmmeta.gconst` row, a message type its `dmmeta.msgtype` row), the
+constructors that `dmmeta.pnew` rows make, `gsymbol` strings, the named
 references of a `gstatic` table, and the user functions amc declares for a
 record to bind (`extrn:Y`: handlers, steps, citests), which `apm.mixedfile` and
 `src_func -createmissing` read.  A ctype or constant amc makes up has no
 record, and so no row.
+
+**A dispatch's trace fields and the code that increments them are decided by one
+predicate.**  `DispTraceQ` holds when the dispatch names a `dmmeta.disptrace` row and
+its namespace has the global record whose trace the counts are fields of.  The trace
+generator declares a count per message type, and one for the unknown messages, for
+every dispatch it holds for; the dispatch generator increments exactly those.  A
+dispatch with no message type of its own still counts the unknown ones.  Two
+conditions asked apart drifted once: an empty dispatch got the increment of a
+field that was never declared, and its namespace stopped compiling.
+
+**A generated function that runs a step or a hook may throw, and one that runs
+inside a mutation may not.**  amc declares a function `nothrow` when its
+`amcdb.tfunc` row is a leaf.  Clang reads that attribute as `noexcept`, so an
+exception that reaches such a function ends the process before any `catch`
+sees it, while GCC lets it through.  A step, `Step.Call` and `Hook.Call` run
+hand-written code between two transactions, and a `vrfy` there has to reach the
+caller that reports it, so their rows are not leaves.  `OnXref`, `OnUnref` and
+`Userinit` run in the middle of an insert, a remove or an allocation, where
+unwinding would leave a half-updated table behind.  They stay leaves, which makes
+not throwing part of their contract.
 
 **No block the memory checker holds contains another it holds.**  A pool marks
 each block or element it hands out, and a pool carving from a marking pool
@@ -79,12 +100,16 @@ prints and is skipped under either setting, and a value with no attribute name, 
 positional past the last anonymous field, is refused under either.  The amctest
 `ReadTupleUnknownAttr` holds the shape.
 
-**A varlen tail is representable whatever it holds, so a message carrying one still gets
+**A varlen is representable whatever it holds, so a message carrying one still gets
 its `gendb.msg` and `gendb.msgfield` rows.**  The walk that derives them refuses a field
-it cannot place, because a wrong offset decodes garbage -- but a varlen is the last field
-of its message, so nothing follows it to be misplaced.  What the row says is where the tail
-begins, and its arg says what the tail is made of: `char` for text, a message ctype for a
-run of framed messages.
+it cannot place, because a wrong offset decodes garbage.  The varlens share one area
+that begins at the message's full size, past the fixed fields and past the end field
+amc adds for every varlen but the last.  A varlen row's `offset` is that area, its
+`width` the end field it starts at (0 for the first), and its `aux` the end field it
+ends at (`varlen2`), or 0 for the last one (`varlen`), which ends with the message.  Its
+arg says what it is made of: `char` for text, a message ctype for a run of framed
+messages.  A row's `fldtype` (`algo.Fldtype`) says what its three integers mean, so a
+new layout is a new value and no new column.
 
 **A message with several varlen fields is refused before a handler reads it when the
 end offsets it carries are not monotone and inside the varlen area.**  A message
@@ -174,6 +199,13 @@ Rust is the exception, because a crate has one root.  The root is the namespace 
 holds a projected dispatch, so `lang_rs` walks every namespace to find it and to list
 the modules under it, and `amc.rs_root` refuses a second namespace holding one.
 
+**One TypeScript file comes from a gen step.**  `ns_regxstyle` writes
+`ts/gen/algo_lib_regx.ts` beside algo_lib's C++, from the global `amcdb.regx*` tables
+and the template in `cpp/amc/regxstyle.cpp`.  algo_lib has no `nslang` ts row, so
+`lang_ts` never sees it.  The browser matches a pattern with this file, so an edit to
+those tables or that template runs the TypeScript suites that read it, as a change to
+a projected ctype does.
+
 **A refused schema reaches no language emitter.**  The emitters walk every field the
 checks admit, and a field the checks refused has no form for an emitter to write, so
 walking it can crash `amc`.  `gen_check_proj` runs after every check of the schema's
@@ -212,11 +244,12 @@ this container, act on that record.
 
 Three functions produce these names, and each answers a different question.
 
-| function | question | value |
-|---|---|---|
-| `Instname(ctype)` | what does this ctype contribute to an identifier? | its own name in lower_under, leading `F` dropped |
-| `Varname(ctype)` | what variable holds a record of it? | `_db` for a global, the instname otherwise |
-| `Refname(ctype)` | what does a body call the container? | the Varname for a global, `parent` otherwise |
+- `Instname(ctype)`: what does this ctype contribute to an identifier?  Its own
+  name in lower_under, with the leading `F` dropped.
+- `Varname(ctype)`: what variable holds a record of it?  `_db` for a global, the
+  instname otherwise.
+- `Refname(ctype)`: what does a body call the container?  The Varname for a
+  global, `parent` otherwise.
 
 `Instname` is stored on `amc.FCtype.instname` and derived from the ctype's name
 alone -- `strptr_PrintInstname`, a leading-`F` strip in front of

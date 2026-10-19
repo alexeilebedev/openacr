@@ -440,6 +440,7 @@ inline  doc::FBlock::FBlock() {
 // Set all fields to initial values.
 inline void doc::FComptest_Init(doc::FComptest& parent) {
     parent.timeout = i32(10);
+    parent.cijob = algo::strptr("compB");
     parent.coverage = bool(true);
     parent.stablefld = bool(false);
 }
@@ -452,6 +453,7 @@ inline  doc::FComptest::FComptest() {
 // --- doc.FCtype..Init
 // Set all fields to initial values.
 inline void doc::FCtype_Init(doc::FCtype& parent) {
+    parent.c_base = NULL;
     parent.ind_ctype_next = (doc::FCtype*)-1; // (doc.FDb.ind_ctype) not-in-hash
     parent.ind_ctype_hashval = 0; // stored hash value
 }
@@ -2333,6 +2335,144 @@ inline doc::FSitechunk& doc::sitechunk_qFind(u64 t) {
     return _db.sitechunk_lary[bsr][index];
 }
 
+// --- doc.FDb.gist.EmptyQ
+// Return true if index is empty
+inline bool doc::gist_EmptyQ() {
+    return _db.gist_n == 0;
+}
+
+// --- doc.FDb.gist.Find
+// Look up row by row id. Return NULL if out of range
+inline doc::FGist* doc::gist_Find(u64 t) {
+    doc::FGist *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.gist_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.gist_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- doc.FDb.gist.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline doc::FGist* doc::gist_Last() {
+    return gist_Find(u64(_db.gist_n-1));
+}
+
+// --- doc.FDb.gist.N
+// Return number of items in the pool
+inline i64 doc::gist_N() {
+    return _db.gist_n;
+}
+
+// --- doc.FDb.gist.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline doc::FGist& doc::gist_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.gist_lary[bsr][index];
+}
+
+// --- doc.FDb.gistrec.EmptyQ
+// Return true if index is empty
+inline bool doc::gistrec_EmptyQ() {
+    return _db.gistrec_n == 0;
+}
+
+// --- doc.FDb.gistrec.Find
+// Look up row by row id. Return NULL if out of range
+inline doc::FGistrec* doc::gistrec_Find(u64 t) {
+    doc::FGistrec *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.gistrec_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.gistrec_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- doc.FDb.gistrec.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline doc::FGistrec* doc::gistrec_Last() {
+    return gistrec_Find(u64(_db.gistrec_n-1));
+}
+
+// --- doc.FDb.gistrec.N
+// Return number of items in the pool
+inline i64 doc::gistrec_N() {
+    return _db.gistrec_n;
+}
+
+// --- doc.FDb.gistrec.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline doc::FGistrec& doc::gistrec_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.gistrec_lary[bsr][index];
+}
+
+// --- doc.FDb.ind_gistrec.EmptyQ
+// Return true if hash is empty
+inline bool doc::ind_gistrec_EmptyQ() {
+    return _db.ind_gistrec_n == 0;
+}
+
+// --- doc.FDb.ind_gistrec.N
+// Return number of items in the hash
+inline i32 doc::ind_gistrec_N() {
+    return _db.ind_gistrec_n;
+}
+
+// --- doc.FDb.ssimreq.EmptyQ
+// Return true if index is empty
+inline bool doc::ssimreq_EmptyQ() {
+    return _db.ssimreq_n == 0;
+}
+
+// --- doc.FDb.ssimreq.Find
+// Look up row by row id. Return NULL if out of range
+inline doc::FSsimreq* doc::ssimreq_Find(u64 t) {
+    doc::FSsimreq *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.ssimreq_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.ssimreq_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- doc.FDb.ssimreq.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline doc::FSsimreq* doc::ssimreq_Last() {
+    return ssimreq_Find(u64(_db.ssimreq_n-1));
+}
+
+// --- doc.FDb.ssimreq.N
+// Return number of items in the pool
+inline i64 doc::ssimreq_N() {
+    return _db.ssimreq_n;
+}
+
+// --- doc.FDb.ssimreq.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline doc::FSsimreq& doc::ssimreq_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.ssimreq_lary[bsr][index];
+}
+
 // --- doc.FDb.readmefile_curs.Reset
 // cursor points to valid item
 inline void doc::_db_readmefile_curs_Reset(_db_readmefile_curs &curs, doc::FDb &parent) {
@@ -3258,6 +3398,81 @@ inline doc::FSitechunk& doc::_db_sitechunk_curs_Access(_db_sitechunk_curs &curs)
     return sitechunk_qFind(u64(curs.index));
 }
 
+// --- doc.FDb.gist_curs.Reset
+// cursor points to valid item
+inline void doc::_db_gist_curs_Reset(_db_gist_curs &curs, doc::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- doc.FDb.gist_curs.ValidQ
+// cursor points to valid item
+inline bool doc::_db_gist_curs_ValidQ(_db_gist_curs &curs) {
+    return curs.index < _db.gist_n;
+}
+
+// --- doc.FDb.gist_curs.Next
+// proceed to next item
+inline void doc::_db_gist_curs_Next(_db_gist_curs &curs) {
+    curs.index++;
+}
+
+// --- doc.FDb.gist_curs.Access
+// item access
+inline doc::FGist& doc::_db_gist_curs_Access(_db_gist_curs &curs) {
+    return gist_qFind(u64(curs.index));
+}
+
+// --- doc.FDb.gistrec_curs.Reset
+// cursor points to valid item
+inline void doc::_db_gistrec_curs_Reset(_db_gistrec_curs &curs, doc::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- doc.FDb.gistrec_curs.ValidQ
+// cursor points to valid item
+inline bool doc::_db_gistrec_curs_ValidQ(_db_gistrec_curs &curs) {
+    return curs.index < _db.gistrec_n;
+}
+
+// --- doc.FDb.gistrec_curs.Next
+// proceed to next item
+inline void doc::_db_gistrec_curs_Next(_db_gistrec_curs &curs) {
+    curs.index++;
+}
+
+// --- doc.FDb.gistrec_curs.Access
+// item access
+inline doc::FGistrec& doc::_db_gistrec_curs_Access(_db_gistrec_curs &curs) {
+    return gistrec_qFind(u64(curs.index));
+}
+
+// --- doc.FDb.ssimreq_curs.Reset
+// cursor points to valid item
+inline void doc::_db_ssimreq_curs_Reset(_db_ssimreq_curs &curs, doc::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- doc.FDb.ssimreq_curs.ValidQ
+// cursor points to valid item
+inline bool doc::_db_ssimreq_curs_ValidQ(_db_ssimreq_curs &curs) {
+    return curs.index < _db.ssimreq_n;
+}
+
+// --- doc.FDb.ssimreq_curs.Next
+// proceed to next item
+inline void doc::_db_ssimreq_curs_Next(_db_ssimreq_curs &curs) {
+    curs.index++;
+}
+
+// --- doc.FDb.ssimreq_curs.Access
+// item access
+inline doc::FSsimreq& doc::_db_ssimreq_curs_Access(_db_ssimreq_curs &curs) {
+    return ssimreq_qFind(u64(curs.index));
+}
+
 // --- doc.FDispatch..Ctor
 inline  doc::FDispatch::FDispatch() {
     doc::FDispatch_Init(*this);
@@ -3286,6 +3501,7 @@ inline void doc::FDocpage_Init(doc::FDocpage& parent) {
     parent.word = bool(false);
     parent.bare = bool(false);
     parent.bytable = bool(false);
+    parent.view = bool(false);
     parent.ind_docpage_next = (doc::FDocpage*)-1; // (doc.FDb.ind_docpage) not-in-hash
     parent.ind_docpage_hashval = 0; // stored hash value
     parent.step = NULL;
@@ -3309,6 +3525,7 @@ inline  doc::FFconst::FFconst() {
 // Set all fields to initial values.
 inline void doc::FField_Init(doc::FField& parent) {
     parent.reftype = algo::strptr("Val");
+    parent.gstatic_c_hook_in_ary = bool(false);
     parent.ind_field_next = (doc::FField*)-1; // (doc.FDb.ind_field) not-in-hash
     parent.ind_field_hashval = 0; // stored hash value
 }
@@ -3335,6 +3552,127 @@ inline  doc::FFinput::FFinput() {
     doc::FFinput_Init(*this);
 }
 
+// --- doc.FGist..Init
+// Set all fields to initial values.
+inline void doc::FGist_Init(doc::FGist& parent) {
+    parent.line = u32(0);
+    parent.p_gistrec = NULL;
+    parent.endline = u32(0);
+    parent.gistrec_zd_gist_next = (doc::FGist*)-1; // (doc.FGistrec.zd_gist) not-in-list
+    parent.gistrec_zd_gist_prev = NULL; // (doc.FGistrec.zd_gist)
+}
+
+// --- doc.FGist..Ctor
+inline  doc::FGist::FGist() {
+    doc::FGist_Init(*this);
+}
+
+// --- doc.FGist..Dtor
+inline  doc::FGist::~FGist() {
+    doc::FGist_Uninit(*this);
+}
+
+// --- doc.FGistrec.zd_gist.EmptyQ
+// Return true if index is empty
+inline bool doc::zd_gist_EmptyQ(doc::FGistrec& parent) {
+    return parent.zd_gist_head == NULL;
+}
+
+// --- doc.FGistrec.zd_gist.First
+// If index empty, return NULL. Otherwise return pointer to first element in index
+inline doc::FGist* doc::zd_gist_First(doc::FGistrec& parent) {
+    doc::FGist *row = NULL;
+    row = parent.zd_gist_head;
+    return row;
+}
+
+// --- doc.FGistrec.zd_gist.InLlistQ
+// Return true if row is in the linked list, false otherwise
+inline bool doc::gistrec_zd_gist_InLlistQ(doc::FGist& row) {
+    bool result = false;
+    result = !(row.gistrec_zd_gist_next == (doc::FGist*)-1);
+    return result;
+}
+
+// --- doc.FGistrec.zd_gist.Last
+// If index empty, return NULL. Otherwise return pointer to last element in index
+inline doc::FGist* doc::zd_gist_Last(doc::FGistrec& parent) {
+    doc::FGist *row = NULL;
+    row = parent.zd_gist_tail;
+    return row;
+}
+
+// --- doc.FGistrec.zd_gist.N
+// Return number of items in the linked list
+inline i32 doc::zd_gist_N(const doc::FGistrec& parent) {
+    return parent.zd_gist_n;
+}
+
+// --- doc.FGistrec.zd_gist.Next
+// Return pointer to next element in the list
+inline doc::FGist* doc::gistrec_zd_gist_Next(doc::FGist &row) {
+    return row.gistrec_zd_gist_next;
+}
+
+// --- doc.FGistrec.zd_gist.Prev
+// Return pointer to previous element in the list
+inline doc::FGist* doc::gistrec_zd_gist_Prev(doc::FGist &row) {
+    return row.gistrec_zd_gist_prev;
+}
+
+// --- doc.FGistrec.zd_gist.qLast
+// Return reference to last element in the index. No bounds checking.
+inline doc::FGist& doc::zd_gist_qLast(doc::FGistrec& parent) {
+    doc::FGist *row = NULL;
+    row = parent.zd_gist_tail;
+    return *row;
+}
+
+// --- doc.FGistrec..Init
+// Set all fields to initial values.
+inline void doc::FGistrec_Init(doc::FGistrec& parent) {
+    parent.zd_gist_head = NULL; // (doc.FGistrec.zd_gist)
+    parent.zd_gist_n = 0; // (doc.FGistrec.zd_gist)
+    parent.zd_gist_tail = NULL; // (doc.FGistrec.zd_gist)
+    parent.ind_gistrec_next = (doc::FGistrec*)-1; // (doc.FDb.ind_gistrec) not-in-hash
+    parent.ind_gistrec_hashval = 0; // stored hash value
+}
+
+// --- doc.FGistrec.zd_gist_curs.Reset
+// cursor points to valid item
+inline void doc::gistrec_zd_gist_curs_Reset(gistrec_zd_gist_curs &curs, doc::FGistrec &parent) {
+    curs.row = parent.zd_gist_head;
+}
+
+// --- doc.FGistrec.zd_gist_curs.ValidQ
+// cursor points to valid item
+inline bool doc::gistrec_zd_gist_curs_ValidQ(gistrec_zd_gist_curs &curs) {
+    return curs.row != NULL;
+}
+
+// --- doc.FGistrec.zd_gist_curs.Next
+// proceed to next item
+inline void doc::gistrec_zd_gist_curs_Next(gistrec_zd_gist_curs &curs) {
+    doc::FGist *next = (*curs.row).gistrec_zd_gist_next;
+    curs.row = next;
+}
+
+// --- doc.FGistrec.zd_gist_curs.Access
+// item access
+inline doc::FGist& doc::gistrec_zd_gist_curs_Access(gistrec_zd_gist_curs &curs) {
+    return *curs.row;
+}
+
+// --- doc.FGistrec..Ctor
+inline  doc::FGistrec::FGistrec() {
+    doc::FGistrec_Init(*this);
+}
+
+// --- doc.FGistrec..Dtor
+inline  doc::FGistrec::~FGistrec() {
+    doc::FGistrec_Uninit(*this);
+}
+
 // --- doc.FGitfile..Init
 // Set all fields to initial values.
 inline void doc::FGitfile_Init(doc::FGitfile& parent) {
@@ -3352,8 +3690,105 @@ inline  doc::FGitfile::~FGitfile() {
     doc::FGitfile_Uninit(*this);
 }
 
+// --- doc.FGstatic.c_hook.EmptyQ
+// Return true if index is empty
+inline bool doc::c_hook_EmptyQ(doc::FGstatic& parent) {
+    return parent.c_hook_n == 0;
+}
+
+// --- doc.FGstatic.c_hook.Find
+// Look up row by row id. Return NULL if out of range
+inline doc::FField* doc::c_hook_Find(doc::FGstatic& parent, u64 t) {
+    doc::FField *retval = NULL;
+    u64 idx = t;
+    u64 lim = parent.c_hook_n;
+    if (idx < lim) {
+        retval = parent.c_hook_elems[idx];
+    }
+    return retval;
+}
+
+// --- doc.FGstatic.c_hook.Getary
+// Return array of pointers
+inline algo::aryptr<doc::FField*> doc::c_hook_Getary(doc::FGstatic& parent) {
+    return algo::aryptr<doc::FField*>(parent.c_hook_elems, parent.c_hook_n);
+}
+
+// --- doc.FGstatic.c_hook.N
+// Return number of items in the pointer array
+inline i64 doc::c_hook_N(const doc::FGstatic& parent) {
+    return parent.c_hook_n;
+}
+
+// --- doc.FGstatic.c_hook.RemoveAll
+// Empty the index. (The rows are not deleted)
+inline void doc::c_hook_RemoveAll(doc::FGstatic& parent) {
+    for (u64 i = 0; i < parent.c_hook_n; i++) {
+        // mark all elements as not-in-array
+        parent.c_hook_elems[i]->gstatic_c_hook_in_ary = false;
+    }
+    parent.c_hook_n = 0;
+}
+
+// --- doc.FGstatic.c_hook.qFind
+// Return reference without bounds checking
+inline doc::FField& doc::c_hook_qFind(doc::FGstatic& parent, u64 idx) {
+    return *parent.c_hook_elems[idx];
+}
+
+// --- doc.FGstatic.c_hook.InAryQ
+// True if row is in any ptrary instance
+inline bool doc::gstatic_c_hook_InAryQ(doc::FField& row) {
+    return row.gstatic_c_hook_in_ary;
+}
+
+// --- doc.FGstatic.c_hook.qLast
+// Reference to last element without bounds checking
+inline doc::FField& doc::c_hook_qLast(doc::FGstatic& parent) {
+    return *parent.c_hook_elems[parent.c_hook_n-1];
+}
+
+// --- doc.FGstatic.c_hook_curs.Reset
+inline void doc::gstatic_c_hook_curs_Reset(gstatic_c_hook_curs &curs, doc::FGstatic &parent) {
+    curs.elems = parent.c_hook_elems;
+    curs.n_elems = parent.c_hook_n;
+    curs.index = 0;
+}
+
+// --- doc.FGstatic.c_hook_curs.ValidQ
+// cursor points to valid item
+inline bool doc::gstatic_c_hook_curs_ValidQ(gstatic_c_hook_curs &curs) {
+    return curs.index < curs.n_elems;
+}
+
+// --- doc.FGstatic.c_hook_curs.Next
+// proceed to next item
+inline void doc::gstatic_c_hook_curs_Next(gstatic_c_hook_curs &curs) {
+    curs.index++;
+}
+
+// --- doc.FGstatic.c_hook_curs.Access
+// item access
+inline doc::FField& doc::gstatic_c_hook_curs_Access(gstatic_c_hook_curs &curs) {
+    return *curs.elems[curs.index];
+}
+
+// --- doc.FGstatic..Init
+// Set all fields to initial values.
+inline void doc::FGstatic_Init(doc::FGstatic& parent) {
+    parent.c_hook_elems = NULL; // (doc.FGstatic.c_hook)
+    parent.c_hook_n = 0; // (doc.FGstatic.c_hook)
+    parent.c_hook_max = 0; // (doc.FGstatic.c_hook)
+}
+
 // --- doc.FGstatic..Ctor
 inline  doc::FGstatic::FGstatic() {
+    doc::FGstatic_Init(*this);
+}
+
+// --- doc.FGstatic..Dtor
+inline  doc::FGstatic::~FGstatic() {
+    doc::FGstatic_Uninit(*this);
 }
 
 // --- doc.FHist..Init
@@ -3503,6 +3938,15 @@ inline  doc::FMsg::~FMsg() {
     doc::FMsg_Uninit(*this);
 }
 
+// --- doc.FMsgfield..Init
+// Set all fields to initial values.
+inline void doc::FMsgfield_Init(doc::FMsgfield& parent) {
+    parent.offset = i32(0);
+    parent.width = i32(0);
+    parent.aux = i32(0);
+    parent.msg_c_msgfield_in_ary = bool(false);
+}
+
 // --- doc.FMsgfield..Ctor
 inline  doc::FMsgfield::FMsgfield() {
     doc::FMsgfield_Init(*this);
@@ -3571,7 +4015,9 @@ inline  doc::FReadmedir::~FReadmedir() {
 inline void doc::FReadmefile_Init(doc::FReadmefile& parent) {
     parent.inl = bool(false);
     parent.sandbox = bool(false);
+    parent.tut = bool(false);
     parent.publish = bool(false);
+    parent.narrow = bool(false);
     parent.c_match_in_ary = bool(false);
     parent.ind_readmefile_next = (doc::FReadmefile*)-1; // (doc.FDb.ind_readmefile) not-in-hash
     parent.ind_readmefile_hashval = 0; // stored hash value
@@ -3861,6 +4307,7 @@ inline  doc::FSpan::FSpan() {
 // --- doc.FSsimfile..Init
 // Set all fields to initial values.
 inline void doc::FSsimfile_Init(doc::FSsimfile& parent) {
+    parent.p_gstatic = NULL;
     parent.ind_ssimfile_next = (doc::FSsimfile*)-1; // (doc.FDb.ind_ssimfile) not-in-hash
     parent.ind_ssimfile_hashval = 0; // stored hash value
     parent.ind_ssimfile_ctype_next = (doc::FSsimfile*)-1; // (doc.FDb.ind_ssimfile_ctype) not-in-hash
@@ -3875,6 +4322,11 @@ inline  doc::FSsimfile::FSsimfile() {
 // --- doc.FSsimfile..Dtor
 inline  doc::FSsimfile::~FSsimfile() {
     doc::FSsimfile_Uninit(*this);
+}
+
+// --- doc.FSsimreq..Ctor
+inline  doc::FSsimreq::FSsimreq() {
+    doc::FSsimreq_Init(*this);
 }
 
 // --- doc.FSubject..Init

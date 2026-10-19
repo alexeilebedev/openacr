@@ -58,13 +58,14 @@ inline  dev::Compiler::Compiler() {
 }
 
 // --- dev.Compiler..FieldwiseCtor
-inline  dev::Compiler::Compiler(const algo::strptr& in_compiler, const algo::strptr& in_ranlib, const algo::strptr& in_ar, const algo::strptr& in_link, const algo::strptr& in_libext, const algo::strptr& in_exeext, const algo::strptr& in_pchext, const algo::strptr& in_objext, const algo::strptr& in_rc, const algo::Comment& in_comment)
+inline  dev::Compiler::Compiler(const algo::strptr& in_compiler, const algo::strptr& in_ranlib, const algo::strptr& in_ar, const algo::strptr& in_link, const algo::strptr& in_libext, const algo::strptr& in_exeext, const algo::strptr& in_soext, const algo::strptr& in_pchext, const algo::strptr& in_objext, const algo::strptr& in_rc, const algo::Comment& in_comment)
     : compiler(in_compiler)
     , ranlib(in_ranlib)
     , ar(in_ar)
     , link(in_link)
     , libext(in_libext)
     , exeext(in_exeext)
+    , soext(in_soext)
     , pchext(in_pchext)
     , objext(in_objext)
     , rc(in_rc)
@@ -139,6 +140,14 @@ inline  dev::Covtarget::Covtarget() {
 inline  dev::Cred::Cred() {
 }
 
+// --- dev.Credperm..Ctor
+inline  dev::Credperm::Credperm() {
+}
+
+// --- dev.Credrole..Ctor
+inline  dev::Credrole::Credrole() {
+}
+
 // --- dev.Dbgtarget..Ctor
 inline  dev::Dbgtarget::Dbgtarget() {
 }
@@ -149,6 +158,7 @@ inline void dev::Docpage_Init(dev::Docpage& parent) {
     parent.word = bool(false);
     parent.bare = bool(false);
     parent.bytable = bool(false);
+    parent.view = bool(false);
 }
 
 // --- dev.Docpage..Ctor
@@ -182,15 +192,16 @@ inline  dev::Envvar::Envvar() {
     dev::Envvar_Init(*this);
 }
 
-// --- dev.Extpkg..Init
-// Set all fields to initial values.
-inline void dev::Extpkg_Init(dev::Extpkg& parent) {
-    parent.probe = algo::strptr("");
-}
-
 // --- dev.Extpkg..Ctor
 inline  dev::Extpkg::Extpkg() {
-    dev::Extpkg_Init(*this);
+}
+
+// --- dev.Extpkgnoarch..Ctor
+inline  dev::Extpkgnoarch::Extpkgnoarch() {
+}
+
+// --- dev.Extpkgprobe..Ctor
+inline  dev::Extpkgprobe::Extpkgprobe() {
 }
 
 // --- dev.Extpkgsrc..Ctor
@@ -354,6 +365,7 @@ inline  dev::OptType::OptType(const algo::strptr& in_opt_type, const algo::strpt
 // Set all fields to initial values.
 inline void dev::Package_Init(dev::Package& parent) {
     parent.opensource = bool(false);
+    parent.readmefile = algo::strptr("txt/README.md");
 }
 
 // --- dev.Package..Ctor
@@ -362,9 +374,10 @@ inline  dev::Package::Package() {
 }
 
 // --- dev.Package..FieldwiseCtor
-inline  dev::Package::Package(const algo::strptr& in_package, bool in_opensource, const algo::Comment& in_comment)
+inline  dev::Package::Package(const algo::strptr& in_package, bool in_opensource, const algo::strptr& in_readmefile, const algo::Comment& in_comment)
     : package(in_package)
     , opensource(in_opensource)
+    , readmefile(in_readmefile)
     , comment(in_comment)
  {
 }
@@ -394,6 +407,10 @@ inline  dev::Pkgdep::Pkgdep(const algo::strptr& in_pkgdep, bool in_soft, const a
 inline  dev::Pkgdeptype::Pkgdeptype() {
 }
 
+// --- dev.Pkgfile..Ctor
+inline  dev::Pkgfile::Pkgfile() {
+}
+
 // --- dev.Pkgkey..Init
 // Set all fields to initial values.
 inline void dev::Pkgkey_Init(dev::Pkgkey& parent) {
@@ -401,6 +418,7 @@ inline void dev::Pkgkey_Init(dev::Pkgkey& parent) {
     parent.down = bool(false);
     parent.ref = bool(false);
     parent.exclude = bool(false);
+    parent.stub = bool(false);
 }
 
 // --- dev.Pkgkey..Ctor
@@ -409,12 +427,13 @@ inline  dev::Pkgkey::Pkgkey() {
 }
 
 // --- dev.Pkgkey..FieldwiseCtor
-inline  dev::Pkgkey::Pkgkey(const algo::strptr& in_pkgkey, bool in_up, bool in_down, bool in_ref, bool in_exclude, const algo::Comment& in_comment)
+inline  dev::Pkgkey::Pkgkey(const algo::strptr& in_pkgkey, bool in_up, bool in_down, bool in_ref, bool in_exclude, bool in_stub, const algo::Comment& in_comment)
     : pkgkey(in_pkgkey)
     , up(in_up)
     , down(in_down)
     , ref(in_ref)
     , exclude(in_exclude)
+    , stub(in_stub)
     , comment(in_comment)
  {
 }
@@ -443,7 +462,9 @@ inline  dev::Prototransport::Prototransport() {
 inline void dev::Readmefile_Init(dev::Readmefile& parent) {
     parent.inl = bool(false);
     parent.sandbox = bool(false);
+    parent.tut = bool(false);
     parent.publish = bool(false);
+    parent.narrow = bool(false);
 }
 
 // --- dev.Readmefile..Ctor
@@ -452,12 +473,14 @@ inline  dev::Readmefile::Readmefile() {
 }
 
 // --- dev.Readmefile..FieldwiseCtor
-inline  dev::Readmefile::Readmefile(const algo::strptr& in_gitfile, bool in_inl, bool in_sandbox, const algo::strptr& in_filter, bool in_publish, const algo::Comment& in_comment)
+inline  dev::Readmefile::Readmefile(const algo::strptr& in_gitfile, bool in_inl, bool in_sandbox, bool in_tut, const algo::strptr& in_filter, bool in_publish, bool in_narrow, const algo::Comment& in_comment)
     : gitfile(in_gitfile)
     , inl(in_inl)
     , sandbox(in_sandbox)
+    , tut(in_tut)
     , filter(in_filter)
     , publish(in_publish)
+    , narrow(in_narrow)
     , comment(in_comment)
  {
 }
@@ -549,6 +572,10 @@ inline  dev::Syslib::Syslib() {
     dev::Syslib_Init(*this);
 }
 
+// --- dev.Syslibuname..Ctor
+inline  dev::Syslibuname::Syslibuname() {
+}
+
 // --- dev.Targdep..Ctor
 inline  dev::Targdep::Targdep() {
 }
@@ -581,8 +608,15 @@ inline  dev::Targsrc::Targsrc(const algo::strptr& in_targsrc, const algo::Commen
  {
 }
 
+// --- dev.Targsyslib..Init
+// Set all fields to initial values.
+inline void dev::Targsyslib_Init(dev::Targsyslib& parent) {
+    parent.optional = bool(false);
+}
+
 // --- dev.Targsyslib..Ctor
 inline  dev::Targsyslib::Targsyslib() {
+    dev::Targsyslib_Init(*this);
 }
 
 // --- dev.Tgtcov..Ctor
@@ -645,6 +679,25 @@ inline  dev::Unstablefld::Unstablefld() {
 inline  dev::Upstreamtype::Upstreamtype() {
 }
 
+// --- dev.Vendorlib..Ctor
+inline  dev::Vendorlib::Vendorlib() {
+}
+
+// --- dev.Vulnaccept..Ctor
+inline  dev::Vulnaccept::Vulnaccept() {
+}
+
+// --- dev.Vulnsev..Init
+// Set all fields to initial values.
+inline void dev::Vulnsev_Init(dev::Vulnsev& parent) {
+    parent.fail = bool(false);
+}
+
+// --- dev.Vulnsev..Ctor
+inline  dev::Vulnsev::Vulnsev() {
+    dev::Vulnsev_Init(*this);
+}
+
 inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Badline &row) {// cfmt:dev.Badline.String
     dev::Badline_Print(const_cast<dev::Badline&>(row), str);
     return str;
@@ -675,6 +728,16 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Cred &row
     return str;
 }
 
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Credperm &row) {// cfmt:dev.Credperm.String
+    dev::Credperm_Print(const_cast<dev::Credperm&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Credrole &row) {// cfmt:dev.Credrole.String
+    dev::Credrole_Print(const_cast<dev::Credrole&>(row), str);
+    return str;
+}
+
 inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Dbgtarget &row) {// cfmt:dev.Dbgtarget.String
     dev::Dbgtarget_Print(const_cast<dev::Dbgtarget&>(row), str);
     return str;
@@ -702,6 +765,16 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Envvar &r
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Extpkg &row) {// cfmt:dev.Extpkg.String
     dev::Extpkg_Print(const_cast<dev::Extpkg&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Extpkgnoarch &row) {// cfmt:dev.Extpkgnoarch.String
+    dev::Extpkgnoarch_Print(const_cast<dev::Extpkgnoarch&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Extpkgprobe &row) {// cfmt:dev.Extpkgprobe.String
+    dev::Extpkgprobe_Print(const_cast<dev::Extpkgprobe&>(row), str);
     return str;
 }
 
@@ -785,6 +858,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Pkgdeptyp
     return str;
 }
 
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Pkgfile &row) {// cfmt:dev.Pkgfile.String
+    dev::Pkgfile_Print(const_cast<dev::Pkgfile&>(row), str);
+    return str;
+}
+
 inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Pkgkey &row) {// cfmt:dev.Pkgkey.String
     dev::Pkgkey_Print(const_cast<dev::Pkgkey&>(row), str);
     return str;
@@ -850,6 +928,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Syslib &r
     return str;
 }
 
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Syslibuname &row) {// cfmt:dev.Syslibuname.String
+    dev::Syslibuname_Print(const_cast<dev::Syslibuname&>(row), str);
+    return str;
+}
+
 inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Targdep &row) {// cfmt:dev.Targdep.String
     dev::Targdep_Print(const_cast<dev::Targdep&>(row), str);
     return str;
@@ -907,5 +990,20 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Unstablef
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Upstreamtype &row) {// cfmt:dev.Upstreamtype.String
     dev::Upstreamtype_Print(const_cast<dev::Upstreamtype&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Vendorlib &row) {// cfmt:dev.Vendorlib.String
+    dev::Vendorlib_Print(const_cast<dev::Vendorlib&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Vulnaccept &row) {// cfmt:dev.Vulnaccept.String
+    dev::Vulnaccept_Print(const_cast<dev::Vulnaccept&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Vulnsev &row) {// cfmt:dev.Vulnsev.String
+    dev::Vulnsev_Print(const_cast<dev::Vulnsev&>(row), str);
     return str;
 }

@@ -16,11 +16,11 @@ dmmeta.displang  displang:<dispatch>/py  comment:""
 ### Ssim inputs
 <a href="#ssim-inputs"></a>
 
-| Record | Role |
-|---|---|
-| `dmmeta.nslang  nslang:<ns>/<lang>` | Project every ctype of the namespace into the language. |
-| `dmmeta.ctypelang  ctypelang:<ctype>/<lang>` | Project one ctype, for a namespace only part of which is wanted. |
-| `dmmeta.displang  displang:<dispatch>/<lang>` | Write the dispatch's signature constant into the language, which a client sends to claim the schema it speaks.  In Rust the namespace holding the dispatch roots the crate.  Every message of the dispatch must already be projected. |
+| Record                                                      | Role |
+| ----------------------------------------------------------- | ---- |
+| `dmmeta.nslang  nslang:<ns>/<lang>`                         | Project every ctype of the namespace into the language. |
+| `dmmeta.ctypelang  ctypelang:<ctype>/<lang>`                | Project one ctype, for a namespace only part of which is wanted. |
+| `dmmeta.displang  displang:<dispatch>/<lang>`               | Write the dispatch's signature constant into the language, which a client sends to claim the schema it speaks.  In Rust the namespace holding the dispatch roots the crate.  Every message of the dispatch must already be projected. |
 | `amcdb.lang  lang:<lang>  linecomment:<marker>  nblank:<n>` | The language, with the line-comment marker and the blank-line spacing its formatter expects. |
 
 A projected ctype brings along every ctype it is made of: its base, and the
@@ -33,11 +33,11 @@ without writing the rest of `algo`.
 
 What a language gets for a ctype follows from the ctype's own schema.
 
-| The ctype is | The language gets |
-|---|---|
-| packed (`dmmeta.pack`) | the type, its schema defaults, and a codec that encodes and decodes the wire form byte for byte |
+| The ctype is                                              | The language gets |
+| --------------------------------------------------------- | ----------------- |
+| packed (`dmmeta.pack`)                                    | the type, its schema defaults, and a codec that encodes and decodes the wire form byte for byte |
 | unpacked plain data, its members scalars or nested ctypes | the type, its schema defaults, and its memory layout: a size constant and an offset constant per member, the offsets C++ is held to |
-| anything else | the type alone, every member starting at the language's zero |
+| anything else                                             | the type alone, every member starting at the language's zero |
 
 The first form is a message or a value on the wire.  The second is a struct that
 a foreign program shares with a C++ one in memory, such as the shm ring header
@@ -52,11 +52,11 @@ declared as the language's string in that form.
 Every language gets one file per namespace, written by one generation step per
 namespace (`lang_go`, `lang_py`, `lang_rs`, `lang_ts`):
 
-| Language | Output |
-|---|---|
-| Go | a package per namespace under `go/gen` |
-| Python | a module per namespace under `py/gen` |
-| Rust | a module per namespace in the crate under `rs/gen`, rooted at the namespace of the projected dispatch |
+| Language   | Output |
+| ---------- | ------ |
+| Go         | a package per namespace under `go/gen` |
+| Python     | a module per namespace under `py/gen` |
+| Rust       | a module per namespace in the crate under `rs/gen`, rooted at the namespace of the projected dispatch |
 | TypeScript | a module per namespace under `ts/gen`; see [JavaScript / TypeScript emission](/txt/exe/amc/js.md) |
 
 The Go and Rust emitters write final text, formatted as gofmt and rustfmt would

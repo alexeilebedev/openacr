@@ -59,7 +59,7 @@ static tempstr QueryRecords() {
         acr.report = false;
         cmd << acr_ToCmdline(acr);
     }
-    return SysEval(cmd, FailokQ(false),1024*1024);
+    return SysEval(cmd, FailokQ(false));
 }
 
 // -----------------------------------------------------------------------------
@@ -135,7 +135,7 @@ static int SandboxDeleteRec(strptr line, strptr pkey) {
 // -----------------------------------------------------------------------------
 
 static void PrintReport() {
-    amc_gc::_db.n_newcppline = n_cppline_Get(SysEval("amc",FailokQ(false),1024),0);
+    amc_gc::_db.n_newcppline = n_cppline_Get(SysEval("amc",FailokQ(false)),0);
     prlog("report.amc_gc"
           <<Keyval("key",amc_gc::_db.cmdline.key.expr)
           <<Keyval("n_match", amc_gc::_db.n_total)
@@ -183,7 +183,7 @@ static void Begin(strptr recs) {
         (void)line;
         amc_gc::_db.n_total++;
     }ind_end;
-    amc_gc::_db.n_cppline = n_cppline_Get(SysEval("amc",FailokQ(false),1024),0);
+    amc_gc::_db.n_cppline = n_cppline_Get(SysEval("amc",FailokQ(false)),0);
     amc_gc::_db.n_newcppline = amc_gc::_db.n_cppline;
     verblog(recs);
     prlog("amc_gc.begin"

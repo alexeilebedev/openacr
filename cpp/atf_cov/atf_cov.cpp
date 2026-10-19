@@ -262,8 +262,8 @@ void atf_cov::RunGcov(strptr covdir) {
         }ind_end;
     }ind_end;
     // Say what this directory contributed, on stderr, where a CI job log keeps
-    // it.  The directory is the unit of loss: each citest of the coverage cijob
-    // writes its profile data into a directory of its own, so a directory that
+    // it.  The directory is the unit of loss: each gcov citest of a coverage
+    // job writes its profile data into a directory of its own, so a directory that
     // gives nothing back takes with it every target only its citest exercises,
     // and the run ends reporting those targets as uncovered code.  A directory
     // holding profile data that yields no coverage is therefore an error here,
@@ -717,6 +717,43 @@ void atf_cov::SaveUncovfunc() {
     SysCmd(acr_ToCmdline(acr) << " <" << acr_in);
 }
 
+// Load the .cov.ssim files of directory DIR into the line table, adding the
+// counts to what is there.  Return the number of files read.
+static int LoadCovSsim(strptr dir) {
+    int n_file = 0;
+    ind_beg(algo::Dir_curs,ent,DirFileJoin(dir,"*.cov.ssim")) {
+        n_file += 1;
+        ind_beg(algo::FileLine_curs,line,ent.pathname) {
+            dev::Covline covline;
+            if (Covline_ReadStrptrMaybe(covline,line)) {
+                atf_cov::MergeCovline(covline);
+            }
+        }ind_end;
+    }ind_end;
+    return n_file;
+}
+
+// Merge the line counts another run wrote into DIR, and say what DIR gave, the
+// way a gcov merge does.  The directory is the unit of loss here too: line
+// counts reach a merge as the output of a job that ran elsewhere, and a
+// directory that holds none means that job's measurement never arrived.  Every
+// target only its tests exercised would then read as uncovered code, so an
+// empty directory is an error, and -check judges the run lost.
+void atf_cov::MergeSsimDir(strptr dir) {
+    int n_file = LoadCovSsim(dir);
+    bool success = n_file > 0;
+    _db.report.n_covdir += 1;
+    _db.report.n_covdir_empty += !success;
+    prerr("atf_cov.merge"
+          <<Keyval("covdir",dir)
+          <<Keyval("n_ssim",n_file)
+          <<Keyval("success",success ? "Y" : "N")
+          <<Keyval("comment",success ? "" : "no line counts here; every target only this directory's tests exercise is lost"));
+    if (!success) {
+        algo_lib::_db.exit_code=1;
+    }
+}
+
 void atf_cov::Main() {
     // prepare output dir
     CreateDirRecurse(_db.cmdline.covdir);
@@ -744,15 +781,7 @@ void atf_cov::Main() {
                 RunGcov(dir);
             } else {
                 // load from ready-made ssim files
-                ind_beg(algo::Dir_curs,ent,DirFileJoin(dir,"*.cov.ssim")) {
-                    //prlog(ent.pathname);
-                    ind_beg(algo::FileLine_curs,line,ent.pathname) {
-                        dev::Covline covline;
-                        if (Covline_ReadStrptrMaybe(covline,line)) {
-                            MergeCovline(covline);
-                        }
-                    }ind_end;
-                }ind_end;
+                MergeSsimDir(dir);
             }
         }
     } else if (_db.cmdline.gcov) {
@@ -761,15 +790,7 @@ void atf_cov::Main() {
         RunGcov(_db.cmdline.covdir);
     } else {
         // or just load ssim files
-        ind_beg(algo::Dir_curs,ent,DirFileJoin(_db.cmdline.covdir,"*.cov.ssim")) {
-            //prlog(ent.pathname);
-            ind_beg(algo::FileLine_curs,line,ent.pathname) {
-                dev::Covline covline;
-                if (Covline_ReadStrptrMaybe(covline,line)) {
-                    MergeCovline(covline);
-                }
-            }ind_end;
-        }ind_end;
+        LoadCovSsim(_db.cmdline.covdir);
     }
     // write out ssimfiles
     if (_db.cmdline.ssim) {

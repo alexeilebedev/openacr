@@ -294,7 +294,7 @@ void lib_ctype::FCdflt_Uninit(lib_ctype::FCdflt& parent) {
     }
 }
 
-// --- lib_ctype.FCfmt.msghdr.CopyOut
+// --- lib_ctype.FCfmt.base.CopyOut
 // Copy fields out of row
 void lib_ctype::cfmt_CopyOut(lib_ctype::FCfmt &row, dmmeta::Cfmt &out) {
     out.cfmt = row.cfmt;
@@ -306,7 +306,7 @@ void lib_ctype::cfmt_CopyOut(lib_ctype::FCfmt &row, dmmeta::Cfmt &out) {
     out.comment = algo::Comment(row.comment);
 }
 
-// --- lib_ctype.FCfmt.msghdr.CopyIn
+// --- lib_ctype.FCfmt.base.CopyIn
 // Copy fields in to row
 void lib_ctype::cfmt_CopyIn(lib_ctype::FCfmt &row, dmmeta::Cfmt &in) {
     row.cfmt = in.cfmt;
@@ -406,14 +406,14 @@ void lib_ctype::FCppfunc_Uninit(lib_ctype::FCppfunc& parent) {
     }
 }
 
-// --- lib_ctype.FCtype.msghdr.CopyOut
+// --- lib_ctype.FCtype.base.CopyOut
 // Copy fields out of row
 void lib_ctype::ctype_CopyOut(lib_ctype::FCtype &row, dmmeta::Ctype &out) {
     out.ctype = row.ctype;
     out.comment = algo::Comment(row.comment);
 }
 
-// --- lib_ctype.FCtype.msghdr.CopyIn
+// --- lib_ctype.FCtype.base.CopyIn
 // Copy fields in to row
 void lib_ctype::ctype_CopyIn(lib_ctype::FCtype &row, dmmeta::Ctype &in) {
     row.ctype = in.ctype;
@@ -1853,7 +1853,7 @@ static void lib_ctype::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'lib_ctype.Input'  signature:'a7c24d3093aa4687d3aa44dcadf80809337999c3'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'lib_ctype.Input'  signature:'437848f02d99453b03e22a2905087f55e344cf53'");
 }
 
 // --- lib_ctype.FDb._db.InsertStrptrMaybe
@@ -3180,7 +3180,7 @@ void lib_ctype::FDb_Uninit() {
     // skip destruction in global scope
 }
 
-// --- lib_ctype.FFconst.msghdr.CopyOut
+// --- lib_ctype.FFconst.base.CopyOut
 // Copy fields out of row
 void lib_ctype::fconst_CopyOut(lib_ctype::FFconst &row, dmmeta::Fconst &out) {
     out.fconst = row.fconst;
@@ -3188,7 +3188,7 @@ void lib_ctype::fconst_CopyOut(lib_ctype::FFconst &row, dmmeta::Fconst &out) {
     out.comment = algo::Comment(row.comment);
 }
 
-// --- lib_ctype.FFconst.msghdr.CopyIn
+// --- lib_ctype.FFconst.base.CopyIn
 // Copy fields in to row
 void lib_ctype::fconst_CopyIn(lib_ctype::FFconst &row, dmmeta::Fconst &in) {
     row.fconst = in.fconst;
@@ -3236,7 +3236,7 @@ void lib_ctype::FFconst_Print(lib_ctype::FFconst& row, algo::cstring& str) {
     PrintAttrSpaceReset(str,"key", temp);
 }
 
-// --- lib_ctype.FField.msghdr.CopyOut
+// --- lib_ctype.FField.base.CopyOut
 // Copy fields out of row
 void lib_ctype::field_CopyOut(lib_ctype::FField &row, dmmeta::Field &out) {
     out.field = row.field;
@@ -3246,7 +3246,7 @@ void lib_ctype::field_CopyOut(lib_ctype::FField &row, dmmeta::Field &out) {
     out.comment = algo::Comment(row.comment);
 }
 
-// --- lib_ctype.FField.msghdr.CopyIn
+// --- lib_ctype.FField.base.CopyIn
 // Copy fields in to row
 void lib_ctype::field_CopyIn(lib_ctype::FField &row, dmmeta::Field &in) {
     row.field = in.field;
@@ -3503,14 +3503,14 @@ void lib_ctype::FField_Print(lib_ctype::FField& row, algo::cstring& str) {
     PrintAttrSpaceReset(str,"ctype_c_field_in_ary", temp);
 }
 
-// --- lib_ctype.FFtuple.msghdr.CopyOut
+// --- lib_ctype.FFtuple.base.CopyOut
 // Copy fields out of row
 void lib_ctype::ftuple_CopyOut(lib_ctype::FFtuple &row, dmmeta::Ftuple &out) {
     out.field = row.field;
     out.comment = algo::Comment(row.comment);
 }
 
-// --- lib_ctype.FFtuple.msghdr.CopyIn
+// --- lib_ctype.FFtuple.base.CopyIn
 // Copy fields in to row
 void lib_ctype::ftuple_CopyIn(lib_ctype::FFtuple &row, dmmeta::Ftuple &in) {
     row.field = in.field;
@@ -3549,14 +3549,14 @@ void lib_ctype::FSqltype_Uninit(lib_ctype::FSqltype& parent) {
     }
 }
 
-// --- lib_ctype.FSsimfile.msghdr.CopyOut
+// --- lib_ctype.FSsimfile.base.CopyOut
 // Copy fields out of row
 void lib_ctype::ssimfile_CopyOut(lib_ctype::FSsimfile &row, dmmeta::Ssimfile &out) {
     out.ssimfile = row.ssimfile;
     out.ctype = row.ctype;
 }
 
-// --- lib_ctype.FSsimfile.msghdr.CopyIn
+// --- lib_ctype.FSsimfile.base.CopyIn
 // Copy fields in to row
 void lib_ctype::ssimfile_CopyIn(lib_ctype::FSsimfile &row, dmmeta::Ssimfile &in) {
     row.ssimfile = in.ssimfile;

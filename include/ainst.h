@@ -34,8 +34,8 @@ namespace ainst { // update-hdr
 
     // Select the installations, then do the one thing the command line asked for.
     // The actions share their whole body: each is the same generated script,
-    // printed whole or as its function library alone, run, or run under a
-    // buildroot and packaged.
+    // printed whole or as its function library alone, run, run under a buildroot
+    // and packaged, or staged under scratch roots to see which packages still build.
     //     (user-implemented function, prototype is in amc-generated header)
     // void Main(); // dmmeta.main:ainst
 
@@ -112,6 +112,10 @@ namespace ainst { // update-hdr
     //
 
     // Install glow, which renders markdown in a terminal.
+    // The release archive wraps its files in one directory named for the release
+    // and the architecture, glow_3.0.0_Linux_x86_64 for one, and the glob reaches
+    // the binary inside whichever directory the fetched archive carries, so the
+    // script spells neither and -update can move the version on its own.
     //     (user-implemented function, prototype is in amc-generated header)
     // void extpkg_glow(ainst::FExtpkg &extpkg); // dev.extpkg:glow
 
@@ -140,6 +144,35 @@ namespace ainst { // update-hdr
     // void extpkg_grpcurl(ainst::FExtpkg &extpkg); // dev.extpkg:grpcurl
 
     // -------------------------------------------------------------------
+    // cpp/ainst/java.cpp
+    //
+
+    // Install a Java runtime under /opt/java, point /opt/java/current at its home,
+    // and put its java on PATH.  The runtime is Temurin's build of the OpenJDK
+    // release the distribution ships, so Linux and macOS run the same one.  A macOS
+    // runtime is a bundle whose home is Contents/Home, so /opt/java/current names
+    // the home on both, and JAVA_HOME=/opt/java/current serves either.
+    //
+    // On Linux /usr/bin/java is the distribution's alternatives link, which a JDK
+    // deb also claims, and a build tool such as maven finds its javac through it.
+    // So the runtime joins the alternatives at the lowest priority: it is the java
+    // on PATH where nothing else provides one, and a JDK the host also carries stays
+    // the default.  On macOS $PREFIX is /usr/local, which no package manager owns,
+    // and the java there is a plain link.
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void extpkg_java(ainst::FExtpkg &extpkg); // dev.extpkg:java
+
+    // -------------------------------------------------------------------
+    // cpp/ainst/jq.cpp
+    //
+
+    // Install jq into $PREFIX/bin from the upstream release, a static binary per
+    // system and architecture.  The release replaces the distribution's package, so
+    // Linux and macOS run the same version.
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void extpkg_jq(ainst::FExtpkg &extpkg); // dev.extpkg:jq
+
+    // -------------------------------------------------------------------
     // cpp/ainst/kafka.cpp
     //
 
@@ -159,7 +192,11 @@ namespace ainst { // update-hdr
     // -SNAPSHOT -- so a tree at apache-iceberg-1.11.0 builds itself as
     // 1.12.0-SNAPSHOT, which is neither the release nor a name this can predict.
     // The apache source release carries version.txt for that reason, and so does
-    // this.
+    // this.  Gradle builds only the two outputs installed below: a whole-tree build
+    // also format-checks and tests every module, and opens more files than a
+    // container build allows.  The build writes git.properties into its jars from
+    // the .git directory of a checkout, and a tarball has none, so that task is
+    // skipped.
     //     (user-implemented function, prototype is in amc-generated header)
     // void extpkg_kafka_connectors(ainst::FExtpkg &extpkg); // dev.extpkg:kafka_connectors
 
@@ -195,7 +232,8 @@ namespace ainst { // update-hdr
     // cpp/ainst/librdkafka.cpp
     //
 
-    // Install librdkafka, the C kafka client library.
+    // Install librdkafka, the C kafka client library, into $PREFIX.  On Linux the
+    // distribution's copy is removed, so nothing links against a second version.
     //     (user-implemented function, prototype is in amc-generated header)
     // void extpkg_librdkafka(ainst::FExtpkg &extpkg); // dev.extpkg:librdkafka
 
@@ -230,13 +268,24 @@ namespace ainst { // update-hdr
     // void extpkg_minio(ainst::FExtpkg &extpkg); // dev.extpkg:minio
 
     // -------------------------------------------------------------------
+    // cpp/ainst/mosquitto.cpp
+    //
+
+    // Install the mosquitto command-line clients into $PREFIX/bin, built from source
+    // with TLS and linked against a static libmosquitto, so they need no library of
+    // their own at run time.  The broker is left out.
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void extpkg_mosquitto(ainst::FExtpkg &extpkg); // dev.extpkg:mosquitto
+
+    // -------------------------------------------------------------------
     // cpp/ainst/nats.cpp
     //
 
-    // Install the nats command line client.
-    // The release is a deb and it is unpacked rather than installed, because
+    // Install the nats command line client into $PREFIX/bin.
+    // The Linux release is a deb and it is unpacked rather than installed, because
     // dpkg-deb is present in every image this runs in while unzip is not, and
-    // because the package would otherwise land the binary in /usr/local/bin.
+    // because the package would otherwise land the binary in /usr/local/bin.  The
+    // macOS release is a zip, which macOS unpacks itself.
     //     (user-implemented function, prototype is in amc-generated header)
     // void extpkg_nats(ainst::FExtpkg &extpkg); // dev.extpkg:nats
 
@@ -244,10 +293,11 @@ namespace ainst { // update-hdr
     // cpp/ainst/nats_server.cpp
     //
 
-    // Install the nats-server broker from the upstream release deb.
-    // The deb is unpacked rather than installed, because dpkg-deb is present in
-    // every image this runs in while unzip is not, and because the package also
-    // carries a /usr/local/bin symlink of the same binary.
+    // Install the nats-server broker into $PREFIX/bin from the upstream release:
+    // a deb on Linux, a tarball on macOS.  The deb is unpacked rather than
+    // installed, because dpkg-deb is present in every image this runs in while
+    // unzip is not, and because the package also carries a /usr/local/bin symlink
+    // of the same binary.
     // natsusr owns the running broker: omcli reaches the node over ssh as that
     // account, and nats-server keeps its JetStream store under that home.
     //     (user-implemented function, prototype is in amc-generated header)
@@ -267,9 +317,13 @@ namespace ainst { // update-hdr
     // cpp/ainst/nodejs.cpp
     //
 
-    // Install node and pnpm from the nodesource apt repository.
-    // pnpm self-switches to the version each ts package's packageManager field
-    // names, so the global install only has to bootstrap the right major.
+    // Install node, npm and npx under /opt/node from the nodejs.org release, point
+    // /opt/node/current at it, and link each command into $PREFIX/bin.  The release
+    // tarball is the same build on Linux and macOS, so both run one version.  The
+    // post step removes a Debian nodejs and nodesource's apt line and keyring from the
+    // system it installs onto: the deb owns /usr/bin/node, and an upgrade of it, or
+    // an apt install that pulls nodejs in, would put its own node back over the link.
+    // Purging the deb deletes the paths it owned, so a purge links the commands again.
     //     (user-implemented function, prototype is in amc-generated header)
     // void extpkg_nodejs(ainst::FExtpkg &extpkg); // dev.extpkg:nodejs
 
@@ -285,12 +339,56 @@ namespace ainst { // update-hdr
     // cpp/ainst/ofed.cpp
     //
 
-    // Install the mellanox ofed user-space stack from the vendor bundle.
-    // The bundle's own installer runs as root and writes across the live system, so
-    // it cannot be staged; what the sha256 buys is that the bundle is identified
-    // before any of it runs.
+    // Add NVIDIA's DOCA apt repository for the release that EXTPKG's dev.extpkgver row
+    // pins, keyed by the keyring EXTPKG's "key" source fetches and checks.
+    // The repository path carries the release, so the version reaches apt from the
+    // table and from nowhere else; ofed and ofed_kernel each pin it, and a host that
+    // installs both reads one repository when the two rows agree.  An aarch64 machine
+    // reads NVIDIA's arm64-sbsa tree, which publishes the same packages.
+    void AddDocaRepo(ainst::FExtpkg &extpkg);
+
+    // Install the DOCA-OFED user space stack and xlio from NVIDIA's apt repository:
+    // rdma-core, the verbs providers and tools, and libxlio.  Every image that talks
+    // to a Mellanox card takes this package, a container as well as a host, since it
+    // carries no kernel driver; a host that runs OFED's drivers adds ofed_kernel.
     //     (user-implemented function, prototype is in amc-generated header)
     // void extpkg_ofed(ainst::FExtpkg &extpkg); // dev.extpkg:ofed
+
+    // -------------------------------------------------------------------
+    // cpp/ainst/ofed_kernel.cpp
+    //
+
+    // Install the DOCA-OFED kernel drivers on a host: mlx5, the RDMA core, srp, iser,
+    // xpmem and the mft driver, built by DKMS for every kernel whose headers the host
+    // holds, together with the user space they are released with.
+    // A container never takes this package, since it runs on its host's kernel.  A
+    // host with a Mellanox HCA runs OFED's drivers rather than the kernel's own, and
+    // a kernel the drivers do not build for fails this install, so a host's kernel
+    // moves only to a release whose DOCA-OFED builds for it.
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void extpkg_ofed_kernel(ainst::FExtpkg &extpkg); // dev.extpkg:ofed_kernel
+
+    // -------------------------------------------------------------------
+    // cpp/ainst/osv_scanner.cpp
+    //
+
+    // Install osv-scanner, the dependency scanner the depscan cijob runs.
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void extpkg_osv_scanner(ainst::FExtpkg &extpkg); // dev.extpkg:osv_scanner
+
+    // -------------------------------------------------------------------
+    // cpp/ainst/pnpm.cpp
+    //
+
+    // Install pnpm into $PREFIX with the npm of the nodejs package.  pnpm switches
+    // itself to the version each ts package's packageManager field names, so this
+    // copy only bootstraps it.  npm writes outside any staging root, so the install
+    // runs as a post step on the target system.  An earlier install put pnpm under
+    // /usr/local on Linux too, where it would stay first on PATH and answer the
+    // probe with its old version, so on a host whose prefix is elsewhere that copy
+    // is removed.
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void extpkg_pnpm(ainst::FExtpkg &extpkg); // dev.extpkg:pnpm
 
     // -------------------------------------------------------------------
     // cpp/ainst/postgresql.cpp
@@ -301,14 +399,28 @@ namespace ainst { // update-hdr
     // because postgresql-common runs initdb from its own postinst otherwise.
     // libpq-dev carries no version suffix: it tracks the distribution's libpq5, and
     // cpp/ctxledger/pg.cpp includes a header that ships in neither versioned package.
+    // On macOS the same server comes from Homebrew, as the mac image's postgresql@16
+    // formula, so the install stops there with a line that names it.
     //     (user-implemented function, prototype is in amc-generated header)
     // void extpkg_postgresql(ainst::FExtpkg &extpkg); // dev.extpkg:postgresql
+
+    // -------------------------------------------------------------------
+    // cpp/ainst/redis.cpp
+    //
+
+    // Install redis-cli and redis-benchmark into $PREFIX/bin, built from source with
+    // TLS.  The server is left out.
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void extpkg_redis(ainst::FExtpkg &extpkg); // dev.extpkg:redis
 
     // -------------------------------------------------------------------
     // cpp/ainst/redpanda.cpp
     //
 
-    // Install the redpanda broker from the vendor's apt repository.
+    // Install the redpanda broker from the vendor's apt repository, which Google
+    // Artifact Registry serves and signs.  The keyring and list keep the names an
+    // earlier repository used, so staging over an older install replaces its source
+    // line instead of leaving one apt can no longer reach.
     //     (user-implemented function, prototype is in amc-generated header)
     // void extpkg_redpanda(ainst::FExtpkg &extpkg); // dev.extpkg:redpanda
 
@@ -322,6 +434,16 @@ namespace ainst { // update-hdr
     // placed -- the same shell function produced both, called under a different
     // root.
     void WriteRpmScript(algo::cstring &out);
+
+    // -------------------------------------------------------------------
+    // cpp/ainst/rsync.cpp
+    //
+
+    // Install rsync into $PREFIX, built from source.  The optional checksum,
+    // compression and OpenSSL libraries are left out, so the build needs none of
+    // their headers and comes out the same on every system.
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void extpkg_rsync(ainst::FExtpkg &extpkg); // dev.extpkg:rsync
 
     // -------------------------------------------------------------------
     // cpp/ainst/rust.cpp
@@ -354,7 +476,9 @@ namespace ainst { // update-hdr
 
     // Shell expression for the local path of artifact NAME of INST, quoted.
     // The download step assigns the variable this names, so an install line reads
-    // bytes that already matched their sha256 and can reach nothing else.
+    // bytes that already matched their sha256 and can reach nothing else.  One
+    // variable serves every architecture: the download step picks the row of the
+    // machine it runs on.
     // An artifact the table does not carry is fatal here rather than an empty
     // string in the script: an empty path fails much later and says nothing about
     // which installation named it.
@@ -399,18 +523,31 @@ namespace ainst { // update-hdr
     // The frontend is set once here so that no apt call in any installation can stop
     // to ask: on a host that already carries a package's conffile, dpkg would
     // otherwise prompt, read end-of-file, and leave the package unconfigured.
-    // Six verbs carry the whole of it.  ainst_fetch answers with the path of one
-    // verified artifact and ainst_unpack with the directory an archive unpacks
-    // into; ainst_install places a file under the staging root, ainst_write writes
+    // Eight verbs carry the whole of it.  ainst_fetch answers with the path of one
+    // verified artifact, ainst_noarch stops an install whose artifact has no build
+    // for the machine, ainst_tmpdir answers with a fresh working directory, and
+    // ainst_unpack answers with the directory an archive unpacks into; ainst_install places a file under the staging root, ainst_write writes
     // one from stdin, ainst_mkdir creates a directory, and ainst_root turns a
     // destination into a path under that root.  Applying $ROOT in those four rather
     // than in each installation is what lets one function serve a live install and
     // an rpm build.
+    // Every working directory lives under one scratch directory, $AINST_TMP, which
+    // the script removes when it exits, however it exits.  An image build runs the
+    // script in one layer, so an unpacked source tree, a compiler toolchain or a
+    // cargo build left behind would ship in the image; removing them in one place
+    // covers every package, including the ones written later.
     void WritePreamble(algo::cstring &out);
 
     // Write the fetch of every artifact of INST, one shell variable per artifact.
     // Nothing else in the script reaches the network, so an installation's whole
     // download is these lines and its sha256 checks are all of them.
+    //
+    // An artifact built for any machine has one row and one fetch.  An artifact
+    // built per architecture has a row for each, keyed <name>.<arch>, and the fetch
+    // picks the row of the machine the script runs on, so one script serves every
+    // architecture.  A machine with no row of its own stops the install by name.
+    // Mixing the two would let an architecture nobody built for fetch another's
+    // bytes, so a name whose rows disagree is refused here.
     void WriteFetch(ainst::FExtpkg &extpkg, algo::cstring &out);
 
     // Write the preamble and the functions of every selected installation.
@@ -422,6 +559,18 @@ namespace ainst { // update-hdr
     // Assemble the script performing every selected installation, in table order.
     // The functions come first and the calls last, so the text reads as a program.
     void WriteScript(algo::cstring &out);
+
+    // Assemble the script that stages every selected installation under a scratch
+    // root of its own and reports which ones fail.
+    // A stage fetches the artifacts, checks their sha256 and builds, and writes only
+    // under $ROOT, so the check exercises everything an install depends on from
+    // outside while touching nothing on the host.  Each stage runs in a subshell
+    // with its own errexit and its own scratch directory, removed once the package
+    // is reported, so one failure ends that package alone and a large build does
+    // not hold its disk for the rest of the run.  The driver
+    // prints one ainst.check line per package, the log tail of a failure, and exits
+    // non-zero when any package failed.
+    void WriteCheckScript(algo::cstring &out);
 
     // -------------------------------------------------------------------
     // cpp/ainst/shfmt.cpp
@@ -451,8 +600,8 @@ namespace ainst { // update-hdr
     // libcunit1-dev, libnuma-dev, libssl-dev, uuid-dev, meson, python3-pyelftools
     // -- are debs of the image that names this package, as they are for nginx and
     // vma, so a host that builds it declares them the same way.  The clone and its
-    // build tree are removed once installed: they run to two gigabytes, and in an
-    // image build they would otherwise ride along in the layer.
+    // build tree, two gigabytes, live in a scratch directory that goes when the
+    // script exits.
     //     (user-implemented function, prototype is in amc-generated header)
     // void extpkg_spdk(ainst::FExtpkg &extpkg); // dev.extpkg:spdk
 
@@ -463,6 +612,17 @@ namespace ainst { // update-hdr
     // Install the aws session-manager-plugin, which "aws ssm start-session" drives.
     //     (user-implemented function, prototype is in amc-generated header)
     // void extpkg_ssm_plugin(ainst::FExtpkg &extpkg); // dev.extpkg:ssm_plugin
+
+    // -------------------------------------------------------------------
+    // cpp/ainst/tla.cpp
+    //
+
+    // Install the TLA+ tools jar as /opt/tla/tla2tools-<version>.jar and point
+    // /opt/tla/tla2tools.jar at it, so atla finds the pinned release at one path
+    // and the probe tells one release from another.  The jar runs on the runtime of
+    // the java package.
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void extpkg_tla(ainst::FExtpkg &extpkg); // dev.extpkg:tla
 
     // -------------------------------------------------------------------
     // cpp/ainst/tsc_freq_khz.cpp

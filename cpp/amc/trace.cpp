@@ -37,6 +37,17 @@ static void Main_Trace_Field(strptr field_key, strptr comment) {
 
 // -----------------------------------------------------------------------------
 
+// Return TRUE when DISPATCH counts the messages it dispatches: it names a
+// disptrace row, and its namespace has the global record whose trace the counts
+// are fields of.  gen_trace declares the fields and the dispatch code increments
+// them, and both ask this, so no increment names a field that was not declared.
+// A dispatch with no message type of its own still counts the unknown ones.
+bool amc::DispTraceQ(amc::FDispatch &dispatch) {
+    return dispatch.c_disptrace && dispatch.p_ns->c_globfld;
+}
+
+// -----------------------------------------------------------------------------
+
 void amc::gen_trace() {
     algo_lib::Replscope R;
 
@@ -73,14 +84,14 @@ void amc::gen_trace() {
     }ind_end;
 
     // dispatch/dispatchmsg
-    ind_beg(amc::_db_dispatch_curs,dispatch,amc::_db) if (dispatch.c_disptrace && c_dispatch_msg_N(dispatch) && dispatch.p_ns->c_globfld) {
+    ind_beg(amc::_db_dispatch_curs,dispatch,amc::_db) if (amc::DispTraceQ(dispatch)) {
         Set(R,"$ns", ns_Get(dispatch));
         Set(R,"$Dname", name_Get(dispatch));
         // counter fields
         ind_beg(amc::dispatch_c_dispatch_msg_curs,dispatch_msg,dispatch) {
             Set(R,"$Msgname",name_Get(*dispatch_msg.p_ctype));
             Main_Trace_Field(Subst(R,"$ns.trace.dispatch_$Dname_$Msgname"), algo::Comment(Subst(R,"Total number of $Msgname processed by $ns")));
-            if (dispatch.c_disptrace && dispatch.c_disptrace->cycle) {
+            if (dispatch.c_disptrace->cycle) {
                 Main_Trace_Field(Subst(R,"$ns.trace.dispatch_$Dname_$Msgname_cycles"), algo::Comment());
             }
         }ind_end;
@@ -88,7 +99,7 @@ void amc::gen_trace() {
             Main_Trace_Field(Subst(R,"$ns.trace.dispatch_$Dname_Unkmsg"), algo::Comment());
             // this trace field will never be incremented but it's created anyway for symmetry --
             // all trace fields that track steps are pairs of 2 u64's, N and total cycles.
-            if (dispatch.c_disptrace && dispatch.c_disptrace->cycle) {
+            if (dispatch.c_disptrace->cycle) {
                 Main_Trace_Field(Subst(R,"$ns.trace.dispatch_$Dname_Unkmsg_cycles"), algo::Comment());
             }
         }

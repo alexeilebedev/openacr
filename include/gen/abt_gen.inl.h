@@ -1265,6 +1265,60 @@ inline abt::FSrcfile& abt::zd_inclstack_qLast() {
     return *row;
 }
 
+// --- abt.FDb.syslibuname.EmptyQ
+// Return true if index is empty
+inline bool abt::syslibuname_EmptyQ() {
+    return _db.syslibuname_n == 0;
+}
+
+// --- abt.FDb.syslibuname.Find
+// Look up row by row id. Return NULL if out of range
+inline abt::FSyslibuname* abt::syslibuname_Find(u64 t) {
+    abt::FSyslibuname *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.syslibuname_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.syslibuname_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- abt.FDb.syslibuname.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline abt::FSyslibuname* abt::syslibuname_Last() {
+    return syslibuname_Find(u64(_db.syslibuname_n-1));
+}
+
+// --- abt.FDb.syslibuname.N
+// Return number of items in the pool
+inline i64 abt::syslibuname_N() {
+    return _db.syslibuname_n;
+}
+
+// --- abt.FDb.syslibuname.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline abt::FSyslibuname& abt::syslibuname_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.syslibuname_lary[bsr][index];
+}
+
+// --- abt.FDb.ind_syslibuname.EmptyQ
+// Return true if hash is empty
+inline bool abt::ind_syslibuname_EmptyQ() {
+    return _db.ind_syslibuname_n == 0;
+}
+
+// --- abt.FDb.ind_syslibuname.N
+// Return number of items in the hash
+inline i32 abt::ind_syslibuname_N() {
+    return _db.ind_syslibuname_n;
+}
+
 // --- abt.FDb.srcfile_curs.Reset
 // cursor points to valid item
 inline void abt::_db_srcfile_curs_Reset(_db_srcfile_curs &curs, abt::FDb &parent) {
@@ -1827,6 +1881,31 @@ inline abt::FSrcfile& abt::_db_zd_inclstack_curs_Access(_db_zd_inclstack_curs &c
     return *curs.row;
 }
 
+// --- abt.FDb.syslibuname_curs.Reset
+// cursor points to valid item
+inline void abt::_db_syslibuname_curs_Reset(_db_syslibuname_curs &curs, abt::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- abt.FDb.syslibuname_curs.ValidQ
+// cursor points to valid item
+inline bool abt::_db_syslibuname_curs_ValidQ(_db_syslibuname_curs &curs) {
+    return curs.index < _db.syslibuname_n;
+}
+
+// --- abt.FDb.syslibuname_curs.Next
+// proceed to next item
+inline void abt::_db_syslibuname_curs_Next(_db_syslibuname_curs &curs) {
+    curs.index++;
+}
+
+// --- abt.FDb.syslibuname_curs.Access
+// item access
+inline abt::FSyslibuname& abt::_db_syslibuname_curs_Access(_db_syslibuname_curs &curs) {
+    return syslibuname_qFind(u64(curs.index));
+}
+
 // --- abt.FFilestat..Init
 // Set all fields to initial values.
 inline void abt::FFilestat_Init(abt::FFilestat& parent) {
@@ -2190,6 +2269,24 @@ inline  abt::FSyslib::FSyslib() {
 // --- abt.FSyslib..Dtor
 inline  abt::FSyslib::~FSyslib() {
     abt::FSyslib_Uninit(*this);
+}
+
+// --- abt.FSyslibuname..Init
+// Set all fields to initial values.
+inline void abt::FSyslibuname_Init(abt::FSyslibuname& parent) {
+    parent.missing = bool(false);
+    parent.ind_syslibuname_next = (abt::FSyslibuname*)-1; // (abt.FDb.ind_syslibuname) not-in-hash
+    parent.ind_syslibuname_hashval = 0; // stored hash value
+}
+
+// --- abt.FSyslibuname..Ctor
+inline  abt::FSyslibuname::FSyslibuname() {
+    abt::FSyslibuname_Init(*this);
+}
+
+// --- abt.FSyslibuname..Dtor
+inline  abt::FSyslibuname::~FSyslibuname() {
+    abt::FSyslibuname_Uninit(*this);
 }
 
 // --- abt.FTargdep..Init
@@ -2636,6 +2733,7 @@ inline  abt::FTargsrc::~FTargsrc() {
 // --- abt.FTargsyslib..Init
 // Set all fields to initial values.
 inline void abt::FTargsyslib_Init(abt::FTargsyslib& parent) {
+    parent.optional = bool(false);
     parent.p_syslib = NULL;
     parent.target_c_targsyslib_in_ary = bool(false);
 }

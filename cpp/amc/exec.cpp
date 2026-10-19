@@ -137,15 +137,7 @@ void amc::tfunc_Exec_Start() {
     Ins(&R, start.body, "    $_pid = fork();");
     Ins(&R, start.body, "    if ($_pid == 0) { // child");
     Ins(&R, start.body, "        algo_lib::DieWithParent();");
-    Ins(&R, start.body, "        // inherited signal handlers stay live until exec, so a kill aimed at");
-    Ins(&R, start.body, "        // the child in the fork-to-exec window would run the parent's handler");
-    Ins(&R, start.body, "        // in the child and be consumed instead of killing; restore the default");
-    Ins(&R, start.body, "        // dispositions so the signal does what the sender means");
-    Ins(&R, start.body, "        (void)signal(SIGTERM, SIG_DFL);");
-    Ins(&R, start.body, "        (void)signal(SIGINT , SIG_DFL);");
-    Ins(&R, start.body, "        (void)signal(SIGHUP , SIG_DFL);");
-    Ins(&R, start.body, "        (void)signal(SIGQUIT, SIG_DFL);");
-    Ins(&R, start.body, "        (void)signal(SIGALRM, SIG_DFL);");
+    Ins(&R, start.body, "        algo_lib::ResetChildSignal();");
     Ins(&R, start.body, "        if ($_pgroup) {");
     Ins(&R, start.body, "            // own process group: a kill by the child's pid alone would");
     Ins(&R, start.body, "            // orphan its descendants alive; the group is one killable unit");

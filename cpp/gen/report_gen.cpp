@@ -89,6 +89,16 @@ const char* report::value_ToCstr(const report::FieldId& parent) {
         case report_FieldId_pch_file       : ret = "pch_file";  break;
         case report_FieldId_source         : ret = "source";  break;
         case report_FieldId_pch_source     : ret = "pch_source";  break;
+        case report_FieldId_name           : ret = "name";  break;
+        case report_FieldId_nmsg           : ret = "nmsg";  break;
+        case report_FieldId_min_usec       : ret = "min_usec";  break;
+        case report_FieldId_avg_usec       : ret = "avg_usec";  break;
+        case report_FieldId_p50_usec       : ret = "p50_usec";  break;
+        case report_FieldId_p90_usec       : ret = "p90_usec";  break;
+        case report_FieldId_p99_usec       : ret = "p99_usec";  break;
+        case report_FieldId_p999_usec      : ret = "p999_usec";  break;
+        case report_FieldId_p9999_usec     : ret = "p9999_usec";  break;
+        case report_FieldId_max_usec       : ret = "max_usec";  break;
         case report_FieldId_stat           : ret = "stat";  break;
         case report_FieldId_n_request      : ret = "n_request";  break;
         case report_FieldId_input          : ret = "input";  break;
@@ -151,6 +161,12 @@ bool report::value_SetStrptrMaybe(report::FieldId& parent, algo::strptr rhs) {
         }
         case 4: {
             switch (u64(algo::ReadLE32(rhs.elems))) {
+                case LE_STR4('n','a','m','e'): {
+                    value_SetEnum(parent,report_FieldId_name); ret = true; break;
+                }
+                case LE_STR4('n','m','s','g'): {
+                    value_SetEnum(parent,report_FieldId_nmsg); ret = true; break;
+                }
                 case LE_STR4('p','r','o','c'): {
                     value_SetEnum(parent,report_FieldId_proc); ret = true; break;
                 }
@@ -243,8 +259,17 @@ bool report::value_SetStrptrMaybe(report::FieldId& parent, algo::strptr rhs) {
         }
         case 8: {
             switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('a','v','g','_','u','s','e','c'): {
+                    value_SetEnum(parent,report_FieldId_avg_usec); ret = true; break;
+                }
+                case LE_STR8('m','a','x','_','u','s','e','c'): {
+                    value_SetEnum(parent,report_FieldId_max_usec); ret = true; break;
+                }
                 case LE_STR8('m','b','_','p','e','r','_','s'): {
                     value_SetEnum(parent,report_FieldId_mb_per_s); ret = true; break;
+                }
+                case LE_STR8('m','i','n','_','u','s','e','c'): {
+                    value_SetEnum(parent,report_FieldId_min_usec); ret = true; break;
                 }
                 case LE_STR8('n','_','c','o','v','d','i','r'): {
                     value_SetEnum(parent,report_FieldId_n_covdir); ret = true; break;
@@ -275,6 +300,15 @@ bool report::value_SetStrptrMaybe(report::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR8('n','_','u','p','d','a','t','e'): {
                     value_SetEnum(parent,report_FieldId_n_update); ret = true; break;
+                }
+                case LE_STR8('p','5','0','_','u','s','e','c'): {
+                    value_SetEnum(parent,report_FieldId_p50_usec); ret = true; break;
+                }
+                case LE_STR8('p','9','0','_','u','s','e','c'): {
+                    value_SetEnum(parent,report_FieldId_p90_usec); ret = true; break;
+                }
+                case LE_STR8('p','9','9','_','u','s','e','c'): {
+                    value_SetEnum(parent,report_FieldId_p99_usec); ret = true; break;
                 }
                 case LE_STR8('p','c','h','_','f','i','l','e'): {
                     value_SetEnum(parent,report_FieldId_pch_file); ret = true; break;
@@ -316,6 +350,10 @@ bool report::value_SetStrptrMaybe(report::FieldId& parent, algo::strptr rhs) {
                     if (memcmp(rhs.elems+8,"t",1)==0) { value_SetEnum(parent,report_FieldId_n_request); ret = true; break; }
                     break;
                 }
+                case LE_STR8('p','9','9','9','_','u','s','e'): {
+                    if (memcmp(rhs.elems+8,"c",1)==0) { value_SetEnum(parent,report_FieldId_p999_usec); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('s','t','a','r','t','t','i','m'): {
                     if (memcmp(rhs.elems+8,"e",1)==0) { value_SetEnum(parent,report_FieldId_starttime); ret = true; break; }
                     break;
@@ -351,6 +389,10 @@ bool report::value_SetStrptrMaybe(report::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR8('n','_','t','e','s','t','_','r'): {
                     if (memcmp(rhs.elems+8,"un",2)==0) { value_SetEnum(parent,report_FieldId_n_test_run); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('p','9','9','9','9','_','u','s'): {
+                    if (memcmp(rhs.elems+8,"ec",2)==0) { value_SetEnum(parent,report_FieldId_p9999_usec); ret = true; break; }
                     break;
                 }
                 case LE_STR8('p','c','h','_','s','o','u','r'): {
@@ -1267,6 +1309,119 @@ void report::gcache_hitrate_Print(report::gcache_hitrate& row, algo::cstring& st
 
     algo::Smallstr20_Print(row.pch_hitrate, temp);
     PrintAttrSpaceReset(str,"pch_hitrate", temp);
+}
+
+// --- report.lathist..ReadFieldMaybe
+bool report::lathist_ReadFieldMaybe(report::lathist& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    report::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case report_FieldId_name: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.name, strval);
+        } break;
+        case report_FieldId_nmsg: {
+            retval = u64_ReadStrptrMaybe(parent.nmsg, strval);
+        } break;
+        case report_FieldId_min_usec: {
+            retval = double_ReadStrptrMaybe(parent.min_usec, strval);
+        } break;
+        case report_FieldId_avg_usec: {
+            retval = double_ReadStrptrMaybe(parent.avg_usec, strval);
+        } break;
+        case report_FieldId_p50_usec: {
+            retval = double_ReadStrptrMaybe(parent.p50_usec, strval);
+        } break;
+        case report_FieldId_p90_usec: {
+            retval = double_ReadStrptrMaybe(parent.p90_usec, strval);
+        } break;
+        case report_FieldId_p99_usec: {
+            retval = double_ReadStrptrMaybe(parent.p99_usec, strval);
+        } break;
+        case report_FieldId_p999_usec: {
+            retval = double_ReadStrptrMaybe(parent.p999_usec, strval);
+        } break;
+        case report_FieldId_p9999_usec: {
+            retval = double_ReadStrptrMaybe(parent.p9999_usec, strval);
+        } break;
+        case report_FieldId_max_usec: {
+            retval = double_ReadStrptrMaybe(parent.max_usec, strval);
+        } break;
+        default: {
+            if (!ch_N(field) || (algo_lib::_db.strict_attr && field != "acr.rowid")) {
+                retval = false;
+                algo_lib::AppendErrtext("comment", "unrecognized attr");
+            }
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- report.lathist..ReadStrptrMaybe
+// Read fields of report::lathist from an ascii string.
+// The format of the string is an ssim Tuple
+bool report::lathist_ReadStrptrMaybe(report::lathist &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "report.lathist");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && lathist_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- report.lathist..Init
+// Set all fields to initial values.
+void report::lathist_Init(report::lathist& parent) {
+    parent.nmsg = u64(0);
+    parent.min_usec = double(0.0);
+    parent.avg_usec = double(0.0);
+    parent.p50_usec = double(0.0);
+    parent.p90_usec = double(0.0);
+    parent.p99_usec = double(0.0);
+    parent.p999_usec = double(0.0);
+    parent.p9999_usec = double(0.0);
+    parent.max_usec = double(0.0);
+}
+
+// --- report.lathist..Print
+// print string representation of ROW to string STR
+// cfmt:report.lathist.String  printfmt:Tuple
+void report::lathist_Print(report::lathist& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "report.lathist";
+
+    algo::cstring_Print(row.name, temp);
+    PrintAttrSpaceReset(str,"name", temp);
+
+    u64_Print(row.nmsg, temp);
+    PrintAttrSpaceReset(str,"nmsg", temp);
+
+    double_Print(row.min_usec, temp);
+    PrintAttrSpaceReset(str,"min_usec", temp);
+
+    double_Print(row.avg_usec, temp);
+    PrintAttrSpaceReset(str,"avg_usec", temp);
+
+    double_Print(row.p50_usec, temp);
+    PrintAttrSpaceReset(str,"p50_usec", temp);
+
+    double_Print(row.p90_usec, temp);
+    PrintAttrSpaceReset(str,"p90_usec", temp);
+
+    double_Print(row.p99_usec, temp);
+    PrintAttrSpaceReset(str,"p99_usec", temp);
+
+    double_Print(row.p999_usec, temp);
+    PrintAttrSpaceReset(str,"p999_usec", temp);
+
+    double_Print(row.p9999_usec, temp);
+    PrintAttrSpaceReset(str,"p9999_usec", temp);
+
+    double_Print(row.max_usec, temp);
+    PrintAttrSpaceReset(str,"max_usec", temp);
 }
 
 // --- report.llmtool..ReadFieldMaybe

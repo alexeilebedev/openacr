@@ -5,7 +5,7 @@ dev.syslib  syslib:execinfo  license:BSD  comment:"FreeBSD library providing bac
 dev.syslib  syslib:lz4  license:BSD  comment:"LZ4 - Extremely fast compression library"
 dev.syslib  syslib:m  license:LGPL  comment:""
 dev.syslib  syslib:mariadb  license:LGPL  comment:""
-dev.syslib  syslib:mysqlclient  license:GPL-FOSS  comment:""
+dev.syslib  syslib:python3  license:PSF  comment:"CPython headers, for an extension module the interpreter loads"
 dev.syslib  syslib:rt  license:LGPL  comment:"Object files for development using standard C libraries."
 dev.syslib  syslib:sqlite3  license:PublicDomain  comment:""
 dev.syslib  syslib:ssl  license:Apache  comment:"Files for development of applications which will use OpenSSL"

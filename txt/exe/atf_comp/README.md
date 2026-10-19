@@ -15,7 +15,7 @@ Usage: atf_comp [[-comptest:]<regx>] [options]
     OPTION      TYPE    DFLT       COMMENT
     -in         string  "data"     Input directory or filename, - for stdin
     [comptest]  regx    "%"        Select comptest (SQL regex)
-    -cijob      regx    "%"        (with -mode:memcheck) run only comptests whose memcheck cijob matches
+    -cijob      regx    "%"        Run only the comptests that the matched cijobs run
     -mode       enum    run        Test mode (run|capture|memcheck|valgrind|mdbg|edit|editsource|print|printinput|mdbgall|del)
     -capture                       Alias for -mode:capture
     -ee                            Alias for -mode:editsource
@@ -24,7 +24,7 @@ Usage: atf_comp [[-comptest:]<regx>] [options]
     -maxerr     int     3          Exit after this many errors
     -verbose    flag               Verbosity level (0..255); alias -v; cumulative
     -debug      flag               Debug level (0..255); alias -d; cumulative
-    -trace      string  ""         Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps
+    -trace      string  ""         Trace expression: log categories to enable, as category[:filter],...
     -help                          Print help and exit; alias -h
     -version                       Print version and exit
     -signature                     Show signatures and exit; alias -sig
@@ -51,14 +51,42 @@ with, since the table is compiled in.
 For each selected comptest, `atf_comp` empties the directory
 `temp/atf_comp/<name>`, calls the test's function, and waits for every process
 the function started.  It then compares the log with the reference and prints
-the colored diff when they differ.  A test that throws prints its log instead.
+the diff when they differ.  A test that throws prints its log instead.
 Each test reports an `atf_comp.begin` and an `atf_comp.end` line, each failure
 adds an `atf_comp.fail` line naming its reason, and a final `report.atf_comp`
 line counts the run.  The exit code is nonzero when any test failed.
 
+The fail lines print together at the end of the run, so the tail of a long CI
+log names every failed test.  An `output mismatch` repeats its diff under its
+fail line, at most forty lines of it, and an `atf_comp.mismatch` line follows
+with the diff's length and the file that holds all of it:
+`temp/atf_comp.<name>.mismatch.log`.  The CI jobs that run comptests upload
+`temp/*.log` as their artifact, so the file outlives the job.  The next run of
+the same test deletes it.
+
+```
+atf_comp.fail  comptest:acr.BadInsert  reason:"output mismatch"
+2c2
+< acr <- dmmeta.ns  ns:ns1        nstype:exe      license:xx   comment:"EDITED will be inserted"
+---
+> acr <- dmmeta.ns  ns:ns1        nstype:exe      license:xx   comment:"This record will be inserted"
+atf_comp.mismatch  comptest:acr.BadInsert  nline:4  nshown:4  file:temp/atf_comp.acr.BadInsert.mismatch.log
+```
+
+A `<` line is the reference and a `>` line is what the run printed.
+
+A test whose target this platform cannot build is skipped rather than run.
+`abt` drops such a target because the platform lacks a library it requires
+(`dev.targsyslib`, `dev.syslibuname`), so its binary never exists.  Before the run, `atf_comp` asks `abt` about the targets of the selected
+tests, prints an `atf_comp.skip` line naming each test it takes off and the
+library its target lacks, and counts them as `nskip` in the report.
+
 A command line names the build under test and the test's own directory through
 variables: `$bindir` is `build/<cfg>`, `$tempdir` is `temp/atf_comp/<name>`, and
-`$comptest` and `$timeout` are the test's name and budget.  Every row of
+`$comptest` and `$timeout` are the test's name and budget.  Three name tools by
+their path: `$kafkabin` holds the Kafka scripts, `$nginx` is the nginx that
+ainst installed, and `$gtimeout` is GNU timeout, since a test may narrow PATH.
+The last two differ between Linux and macOS.  Every row of
 `atfdb.testenv` goes into the environment as well.
 
 Here is `acr.BadInsert`, which starts `acr -insert` and writes two records
@@ -184,7 +212,7 @@ atf_comp.begin  comptest:acr.BadInsert
 atf_comp.end  comptest:acr.BadInsert  success:Y  nlines:7  duration:0.0243471
 --------------------------------------------------------------------------------
 
-report.atf_comp  nrun:1  npass:1  nerr:0
+report.atf_comp  nrun:1  npass:1  nerr:0  nskip:0
 ```
 
 ### Caveats
@@ -204,7 +232,8 @@ report.atf_comp  nrun:1  npass:1  nerr:0
   `atf_comp.noref` until you capture one.
 - A regex names the tests you thought of.  After a change that alters what many
   tests print, such as a new field in a ctype whose rows many references hold, run
-  `atf_ci -citest:atf_comp`, which is what the `comp` job runs.
+  `atf_ci -citest:'atf_compA|atf_compB'`, which is what the `compA` and `compB`
+  jobs run.
 - Masking reaches ssim tuples only.  No table can mask a column of a
   human-readable table, so add `-ssim` to the command where the tool has it.
 - The run stops after three failures by default.  Raise `-maxerr` to see them
@@ -227,12 +256,13 @@ Selects the comptests to run by name, as an SQL regex such as `'acr.%'`.  The
 default `%` selects all of them, and a pattern that matches nothing fails with
 `atf_comp.nomatch`.
 
-#### -cijob -- (with -mode:memcheck) run only comptests whose memcheck cijob matches
+#### -cijob -- Run only the comptests that the matched cijobs run
 <a href="#-cijob"></a>
 
-Narrows a memcheck run to the comptests whose `memcheck` column matches this
-regex, such as `memcheckA`.  CI splits the memcheck tests into shards this way.
-Other modes ignore it.
+Narrows the run to the comptests one CI job runs, as a regex over cijob names
+such as `compA` or `memcheckA`.  A memcheck run matches it against each test's
+`memcheck` column, and every other mode against its `cijob` column.  CI splits
+the comptests into jobs this way, and a test tagged `none` is left out.
 
 #### -mode -- Test mode
 <a href="#-mode"></a>

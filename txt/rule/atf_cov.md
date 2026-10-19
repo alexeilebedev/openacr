@@ -28,15 +28,33 @@ directory would lower the gate by exactly what went missing, and nothing would
 say so.  `-capture` therefore refuses with `atf_cov.capture_refused` on the same
 test `-check` uses.
 
+**A floor is judged only against the whole suite's measurement.**  Coverage runs
+as two CI jobs side by side, `coverageA` and `coverageB`, each measuring part of
+the suite on its own host.  A half's figures read low for every target the other
+half also exercises, so a half writes its line counts and checks nothing.  The
+`covfinal` job merges the two sets of counts, and only that merged measurement
+meets `dev.tgtcov`.
+
+**A merge reads line counts of one commit.**  Each coverage job stamps the commit
+it measured beside its line counts, and `covfinal` refuses with
+`atf_ci.cov_stale` a directory whose stamp is missing or names a commit other
+than its checkout's.  In CI the counts arrive as artifacts of the same pipeline,
+so the stamps always agree.  A local run finds whatever an earlier run left in
+`temp/cov`, and without the stamp it would report, and even capture, floors for
+a tree nobody measured.
+
 **A floor comes down only by a hand edit.**  The one way to lower a floor is a
 changed row in `data/dev/tgtcov.ssim`, in a commit somebody reads.  A target
 whose last test was deleted keeps failing `-check` until that edit is made.
 
-**The merge directory is the unit of loss.**  Each citest of the coverage cijob
-writes its profile data into a directory of its own.  One directory that comes
-back empty takes with it every target only that citest exercises, and those
+**The merge directory is the unit of loss.**  Each coverage citest writes its
+profile data into a directory of its own, and each coverage job turns its
+citests' data into line counts in a directory of its own.  One directory that
+comes back empty takes with it every target only its tests exercise, and those
 targets look exactly like untested code.  So every directory reports itself on
-an `atf_cov.merge` line, which names the citest whose data went missing.
+an `atf_cov.merge` line, which names the citest or the job whose data went
+missing, and a merge of saved line counts judges a directory with no files the
+way a gcov merge judges one with no output.
 
 **Profile files are named relative to the checkout.**  GCC names a `.gcda` file
 after its object's path, with each `/` spelled `#`.  The coverage build passes

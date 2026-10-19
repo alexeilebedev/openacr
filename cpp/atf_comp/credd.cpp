@@ -80,12 +80,24 @@ static void CreddSetup() {
 }
 
 // -----------------------------------------------------------------------------
-// The store without a daemon.  The first change to an empty store sets the
-// master password; a token's permissions are checked against its kind; a name
-// is taken once; a secret cannot be shown with no daemon; -check finds what
-// expires; a removed row is gone from the files; the password changes with the
-// old one, and the old one then no longer opens the store; -dump prints what
-// the files hold, and the json form has one array per table.
+// Drive the store without a daemon, and check each change that credd takes or
+// refuses:
+// 1. Add token gl to an empty store with password pw1, and check that the first
+//    change sets the master password.  List the store as a table, as ssim and as
+//    json.
+// 2. Add a github token with the permission bogus, add gl a second time, add a
+//    token with no kind, and add a token whose secret is on the command line.
+//    Check that credd refuses each.  It checks a token's permissions against its
+//    kind, and takes a name once.
+// 3. Show gl, and check that credd refuses to show a secret with no daemon.
+// 4. Run -check with a long window and with a short one, and check that it finds
+//    what expires.
+// 5. Add an aws credential, remove gl, and check that a second remove of gl fails.
+// 6. Change the password to pw2 with -passwd, which asks for the old one.  Check
+//    that pw1 then fails to open the store and pw2 opens it.
+// 7. Dump what the files hold, and dump it as json.  Check that the json form has
+//    one array per table, and that credd refuses -dump -format:text.
+// 8. List the store's files, and check that the removed row is gone from them.
 void atf_comp::comptest_credd_Store() {
     CreddSetup();
     CreddRun("pw1","-add:gl -kind:gitlab -server:https://gitlab.example.com -account:me -perm:api,read_api -expires:2026-12-31 -src:@$tempdir/tok",0);
@@ -130,7 +142,7 @@ void atf_comp::WaitCredd() {
     bool up = false;
     tempstr last;
     for (int i = 0; i < 200 && !up; i++) {
-        last = SysEval(CreddVal("$bindir/credd -status 2>&1"),FailokQ(true),4096);
+        last = SysEval(CreddVal("$bindir/credd -status 2>&1"),FailokQ(true));
         up = FindStr(last, "lib_cred.Status") != -1;
         if (!up) {
             usleep(20000);
@@ -147,21 +159,35 @@ void atf_comp::WaitCredd() {
                      "my $r = <$s>;\n"
                      "print defined $r ? \"reply: $r\" : \"noreply: $!\\n\";\n", CreddVal("$tempdir/probe.pl"));
         probe = SysEval(CreddVal("perl $tempdir/probe.pl $STORE/credd.sock 2>&1; ls -la $STORE 2>&1;"
-                                 " ps -axo pid,stat,time,command 2>&1 | grep '[c]redd -'; lsof -a -c credd 2>&1 | head -40"),FailokQ(true),16384);
+                                 " ps -axo pid,stat,time,command 2>&1 | grep '[c]redd -'; lsof -a -c credd 2>&1 | head -40"),FailokQ(true));
     }
     vrfy(up, tempstr() << "atf_comp: credd never answered on its socket" << Keyval("status", Trimmed(last))
          << Keyval("probe", Trimmed(probe)));
 }
 
 // -----------------------------------------------------------------------------
-// The daemon.  It is started in the foreground under the harness with the
-// password in its environment, so its pid is tracked and its exit asserted.
-// It opens a token on request and refuses an unknown one; a key made by
-// -keygen and one added from a file both reach its agent at the reload the
-// command line sends, and a removed one leaves it.  A link answers with its
-// target's secret, a link to a link is refused, a target with links stays,
-// and renewing through a link renews the target.  -stop ends the daemon and
-// the agent with it.
+// Run the credd daemon, and check that it serves tokens, survives a bad peer and a
+// bad reload, feeds its agent and follows links:
+// 1. Add token gl, and start credd -daemon in the foreground under the harness with
+//    the password in its environment.
+// 2. Show gl, and check that the daemon opens it.  Show nope, and check that the
+//    daemon refuses the unknown token.
+// 3. Send a request from a peer that closes before it reads the reply, and check
+//    that the daemon goes on answering.
+// 4. Put a row of an unknown kind in the store, and ask the daemon to reload.
+//    Check that the daemon refuses the reload and goes on serving gl.
+// 5. Make key k1 with -keygen, and add key k2 from a file.  Check that both reach
+//    the agent at the reload that the command line sends.  Remove k1, and check that
+//    it leaves the agent.
+// 6. Link gli-mr to gl.  Check that credd refuses a link to gli-mr and a link to an
+//    absent target.  Check that gli-mr answers with gl's secret, and that credd
+//    refuses to remove gl while a link points at it.
+// 7. Check that credd refuses to renew key k2 from the token file.  Renew gli-mr
+//    from stdin, and check that gl shows the renewed secret.
+// 8. Remove gli-mr and gl, and run -stop.  Check that the daemon exits 0, and that
+//    the agent socket and the daemon socket are gone.
+// The harness starts the daemon itself, so the test tracks its pid and asserts its
+// exit.  -stop ends the daemon and the agent with it.
 void atf_comp::comptest_credd_Daemon() {
     CreddSetup();
     atf_comp::SetVar("AGENT",CreddVal("$HOMEDIR/.ssh/ssh_auth_sock"));
@@ -182,6 +208,18 @@ void atf_comp::comptest_credd_Daemon() {
                  "print \"peer left before the reply\\n\";\n", CreddVal("$tempdir/peer.pl"));
     CreddSh("perl $tempdir/peer.pl $STORE/credd.sock",0);
     CreddRun("","-status",0);
+    // a row of a kind the daemon does not know reaches the store: the reload
+    // fails, and the daemon goes on serving every credential it held
+    CreddSh("cp $STORE/creddb/cred.ssim $tempdir/cred.ssim && sed -i '1i creddb.cred  cred:bad  kind:nosuchkind' $STORE/creddb/cred.ssim",0);
+    // the command line reads the store itself, so the daemon is asked directly
+    StringToFile("use IO::Socket::UNIX;\n"
+                 "my $sock = IO::Socket::UNIX->new(Peer => shift) or die;\n"
+                 "print $sock shift, \"\\n\";\n"
+                 "my $reply = <$sock>;\n"
+                 "print $reply =~ /^lib_cred.Error/ ? \"refused\\n\" : $reply;\n", CreddVal("$tempdir/ask.pl"));
+    CreddSh("perl $tempdir/ask.pl $STORE/credd.sock 'lib_cred.ReloadReq  client:test'",0);
+    CreddSh("perl $tempdir/ask.pl $STORE/credd.sock 'lib_cred.ShowReq  name:gl'",0);
+    CreddSh("cp $tempdir/cred.ssim $STORE/creddb/cred.ssim",0);
     atf_comp::SetEnv(algo_lib::dev_envvar_CREDD_PASSWORD,"pw");
     CreddSh("$bindir/credd -keygen:k1 -comment:'made here' | cut -d' ' -f1,3-",0);
     CreddRun("pw","-add:k2 -kind:sshkey -src:@$tempdir/imp -comment:'brought in'",0);
@@ -209,17 +247,27 @@ void atf_comp::comptest_credd_Daemon() {
     CreddSh("test -e $AGENT || echo agent socket gone; test -e $STORE/credd.sock || echo daemon socket gone",0);
 }
 
-// The daemon a service host runs: -nostore, so no store is read and none is
-// written, and the credentials it serves arrive over its socket from -seed.
+// Run the daemon that a service host runs, with -nostore, and check that it serves
+// what -seed sends over its socket and writes no table that holds a secret:
+// 1. Start credd -nostore -daemon with no password anywhere, and check its status.
+// 2. Seed key ci, and check that it reaches the agent.
+// 3. Seed ci again from another key, and check that the agent holds the new key
+//    alone.
+// 4. Seed a file that holds no key, and check that the seed exits 1 and that the
+//    agent still holds what it held.
+// 5. Seed ci under another kind, seed an empty file, and seed an unknown kind.
+//    Check that each seed exits 1.
+// 6. Run -add, and check that credd refuses it outright.
+// 7. Seed an openai credential of two lines from a pipe with -src:-, and check that
+//    -show answers with both lines.
+// 8. Check that the store holds no cred.ssim with content (no secret on disk).
+// 9. Stop the daemon, and check that it exits 0 and that both its sockets are gone.
 //
-// It comes up holding nothing and with no password anywhere.  A seeded key
-// reaches its agent, seeding the same name again replaces the secret, and
-// seeding it under another kind is refused.  A refusal is a reply, so the exit
-// code is what a caller reads: every refused seed exits 1, or a job would go on
-// believing it had an identity.  -add is refused outright, since honouring it
-// would ask for a new password and write the store -nostore exists to avoid.
-// When it stops, what is left in the directory is neither of its sockets, and no
-// table holding a secret was written at any point.
+// A -nostore daemon reads no store and writes none.  It comes up holding no
+// credential, and every credential it serves arrives over its socket.  A refusal is
+// a reply, so the exit code is what a caller reads.  Every refused seed exits 1.
+// Otherwise a job would go on believing it had an identity.  Honoring -add would ask
+// for a new password and write the store that -nostore exists to avoid.
 void atf_comp::comptest_credd_Nostore() {
     CreddSetup();
     atf_comp::SetVar("AGENT",CreddVal("$HOMEDIR/.ssh/ssh_auth_sock"));
@@ -262,20 +310,29 @@ void atf_comp::comptest_credd_Nostore() {
     CreddSh("test -e $AGENT || echo agent socket gone; test -e $STORE/credd.sock || echo daemon socket gone",0);
 }
 
-// The guided path: -add:% over a home holding gli.ssim with two token
-// records, an aws *.token file, a binary *.token file the walk passes over, a
-// plain key and a passphrase-protected key.
-// The first pass takes one gli record, the token and the plain key, declines
-// the other record, and fails the locked key on a wrong passphrase; the second
-// pass skips what the store holds and takes the locked key with the right
-// passphrase.  Then -add:<file> offers one token file, one key file and one
-// token file without a suffix that arrived after the walk, and refuses an
-// empty file, a public key and an option meant for -add:<name>; a gli record
-// naming no server is passed over with a line.  A third walk adds the declined
-// record and drops its token from the file, the bound record keeping its own.
-// A file whose content opens with a kind's prefix is offered as that kind's token.
-// gli.ssim gains a binding
-// line and keeps its token, in the shape an older gli reads.
+// Walk a home with the guided path -add:%, add single files with -add:<file>, and
+// check what credd offers, takes and refuses:
+// 1. Write a home that holds gli.ssim with two token records, a record naming no
+//    server and an unparsed line.  Add an aws *.token file, a binary *.token file,
+//    a plain key and a passphrase-protected key.
+// 2. Add the plain key's public half with no password, and check that credd refuses
+//    it and writes no store.
+// 3. Walk the home.  Take one gli record, the aws token and the plain key, and
+//    decline the other record.  Check that the locked key fails on a wrong
+//    passphrase, and that the walk passes over the binary file.  Check that the walk
+//    passes over the record naming no server, with a line.
+// 4. Walk again, and check that the walk skips what the store holds and takes the
+//    locked key with the right passphrase.
+// 5. Write a token file, a key file and a token file without a suffix.  Add each
+//    with -add:<file>, and check that credd offers it.
+// 6. Check that credd refuses an empty file, an option meant for -add:<name>, and
+//    a public key.
+// 7. Walk a third time.  Check that the walk adds the declined record and drops its
+//    token from gli.ssim, while the record bound in step 3 keeps its own.
+// 8. Add a file whose content opens with the github prefix, and check that credd
+//    offers it as a github token.
+// 9. List the store, and print gli.ssim and the directory.  Check that gli.ssim
+//    gains a binding line and keeps its token, in the shape an older gli reads.
 void atf_comp::comptest_credd_Import() {
     CreddSetup();
     tempstr gli;
@@ -358,4 +415,48 @@ void atf_comp::comptest_credd_Import() {
     CreddRun("pw","-list",0);
     CreddSh("cat $HOMEDIR/.ssh/gli.ssim",0);
     CreddSh("ls $HOMEDIR/.ssh",0);
+}
+
+// -----------------------------------------------------------------------------
+// Mint credentials that the tree declares, with no server to mint them at, and
+// check what -mint prints, takes and refuses:
+// 1. Write a tree under $tempdir/data that declares four credentials: bot, a group
+//    token acting as developer with two scopes; pat, a personal token; norole, a
+//    group token with no role; and acct, a group token that the test gives no
+//    group.
+// 2. Mint bot and pat.  Check that -mint prints the steps a person follows, with
+//    the name, role and scopes filled in, and takes the token per -src.
+// 3. Mint bot again, then ghost, norole and acct.  Check that credd refuses a name
+//    already taken, a name the tree does not declare, a group token with no role,
+//    and one with no group.
+// 4. List the store, and renew bot.  Check that -renew names the role the tree
+//    gives bot.
+// The store holds no gitlab token to ask with, so -mint prints the steps.
+void atf_comp::comptest_credd_Mint() {
+    CreddSetup();
+    CreddQuiet("mkdir -p $tempdir/data/dev");
+    tempstr cred;
+    cred << "dev.cred  cred:acct  kind:gitlab_group  envvar:GITLAB_API_TOKEN  comment:''" << eol;
+    cred << "dev.cred  cred:bot  kind:gitlab_group  envvar:GITLAB_API_TOKEN  comment:'the review bot'" << eol;
+    cred << "dev.cred  cred:norole  kind:gitlab_group  envvar:GITLAB_API_TOKEN  comment:''" << eol;
+    cred << "dev.cred  cred:pat  kind:gitlab  envvar:GITLAB_API_TOKEN  comment:'a person reading the api'" << eol;
+    algo::StringToFile(cred, CreddVal("$tempdir/data/dev/cred.ssim"));
+    tempstr credrole;
+    credrole << "dev.credrole  cred:acct  role:gitlab_group/reporter  comment:''" << eol;
+    credrole << "dev.credrole  cred:bot  role:gitlab_group/developer  comment:''" << eol;
+    algo::StringToFile(credrole, CreddVal("$tempdir/data/dev/credrole.ssim"));
+    tempstr credperm;
+    credperm << "dev.credperm  credperm:acct/read_api  comment:''" << eol;
+    credperm << "dev.credperm  credperm:bot/api  comment:''" << eol;
+    credperm << "dev.credperm  credperm:bot/read_repository  comment:''" << eol;
+    credperm << "dev.credperm  credperm:pat/read_api  comment:''" << eol;
+    algo::StringToFile(credperm, CreddVal("$tempdir/data/dev/credperm.ssim"));
+    CreddRun("pw1","-mint:bot -in:$tempdir/data -server:https://gitlab.example.com -account:algornd -src:@$tempdir/tok",0);
+    CreddRun("pw1","-mint:pat -in:$tempdir/data -server:https://gitlab.example.com -src:@$tempdir/tok",0);
+    CreddRun("pw1","-mint:bot -in:$tempdir/data -server:https://gitlab.example.com -account:algornd -src:@$tempdir/tok",1);
+    CreddRun("pw1","-mint:ghost -in:$tempdir/data -src:@$tempdir/tok",1);
+    CreddRun("pw1","-mint:norole -in:$tempdir/data -server:https://gitlab.example.com -account:algornd -src:@$tempdir/tok",1);
+    CreddRun("pw1","-mint:acct -in:$tempdir/data -server:https://gitlab.example.com -src:@$tempdir/tok",1);
+    CreddRun("pw1","-list -format:ssim",0);
+    CreddRun("pw1","-renew:bot -in:$tempdir/data -src:@$tempdir/tok",0);
 }

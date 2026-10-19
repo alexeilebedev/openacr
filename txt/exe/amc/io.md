@@ -8,11 +8,11 @@ infrastructure, and the runtime loads everything at startup
 from a directory of `.ssim` files.  Three related concepts
 cover the full life cycle:
 
-| Concept       | When                              | Where the data lives    |
-|---------------|-----------------------------------|--------------------------|
-| **finput**    | Loaded from disk at startup       | ssim file in `data/` (or wherever `-in` points) |
-| **gstatic**   | Compiled into the binary           | C++ array in the generated `.cpp` |
-| **foutput**   | Written back to disk on request   | ssim file in the `-out` directory  |
+| Concept     | When                            | Where the data lives |
+| ----------- | ------------------------------- | -------------------- |
+| **finput**  | Loaded from disk at startup     | ssim file in `data/` (or wherever `-in` points) |
+| **gstatic** | Compiled into the binary        | C++ array in the generated `.cpp` |
+| **foutput** | Written back to disk on request | ssim file in the `-out` directory |
 
 This page covers all three plus `LoadTuplesFile`,
 `LoadTuplesFd`, `LoadSsimfileMaybe`, and
@@ -36,15 +36,15 @@ the ssim declarations.
 amc emits a fixed family of loader functions on every
 namespace with finputs (see `cpp/amc/global.cpp`):
 
-| Function                                    | Effect |
-|---------------------------------------------|--------|
-| `bool <ns>::LoadTuplesMaybe(strptr root, bool recursive)` | Top-level entry: branch on `root` being a directory, file, or `"-"` (stdin). |
-| `bool <ns>::LoadTuplesFile(strptr fname, bool recursive)` | Open `fname`, hand to `LoadTuplesFd`.  Missing file = success (empty set). |
+| Function                                                           | Effect |
+| ------------------------------------------------------------------ | ------ |
+| `bool <ns>::LoadTuplesMaybe(strptr root, bool recursive)`          | Top-level entry: branch on `root` being a directory, file, or `"-"` (stdin). |
+| `bool <ns>::LoadTuplesFile(strptr fname, bool recursive)`          | Open `fname`, hand to `LoadTuplesFd`.  Missing file = success (empty set). |
 | `bool <ns>::LoadTuplesFd(Fildes fd, strptr fname, bool recursive)` | Walk the fd line-by-line, parse each line as a tuple, dispatch to `InsertStrptrMaybe`. |
-| `bool <ns>::LoadSsimfileMaybe(strptr ssimfile)` | Resolve `ssimfile` (e.g., `dmmeta.field`) against `algo_lib::_db.cmdline.in` and load it. |
-| `bool <ns>::InsertStrptrMaybe(strptr line)` | Parse the line's type tag, look up the matching finput, and insert. |
-| `bool <ns>::RemoveStrptrMaybe(strptr line)` | Inverse — removes a matching row. |
-| `u32  <ns>::SaveTuples(strptr root)`        | For each `foutput`-tagged pool, write `<root>/<ssimfile>.ssim`. |
+| `bool <ns>::LoadSsimfileMaybe(strptr ssimfile)`                    | Resolve `ssimfile` (e.g., `dmmeta.field`) against `algo_lib::_db.cmdline.in` and load it. |
+| `bool <ns>::InsertStrptrMaybe(strptr line)`                        | Parse the line's type tag, look up the matching finput, and insert. |
+| `bool <ns>::RemoveStrptrMaybe(strptr line)`                        | Inverse — removes a matching row. |
+| `u32  <ns>::SaveTuples(strptr root)`                               | For each `foutput`-tagged pool, write `<root>/<ssimfile>.ssim`. |
 
 The `recursive` parameter controls whether parent namespaces'
 finputs are also loaded — recursive=true is what `main()`
@@ -59,10 +59,10 @@ that the pool field receives rows of its element type from
 ssim input.  Required for amc to wire the table into the
 loader.
 
-| Attribute | Meaning |
-|-----------|---------|
-| `field`   | The FDb pool field that will hold the rows. |
-| `ns`      | Defining namespace (typically same as the field's). |
+| Attribute    | Meaning |
+| ------------ | ------- |
+| `field`      | The FDb pool field that will hold the rows. |
+| `ns`         | Defining namespace (typically same as the field's). |
 | `update:Y/N` | When `Y`, the generated `InputMaybe` uses `<pool>_UpdateMaybe` instead of `InsertMaybe` — duplicate pkeys update existing rows. |
 | `strict:Y/N` | When `Y` (default), a parse error fails `LoadTuplesMaybe`.  When `N`, errors are silently tolerated. |
 
@@ -70,10 +70,10 @@ By default amc generates `<pool>_InputMaybe` to call `InsertMaybe` (or
 `UpdateMaybe`).  To take over the input path, declare an
 [ffunc](/txt/exe/amc/backend/tclass-tfunc.md#ffunc) `extrn:Y`:
 
-| ffunc | Effect |
-|-------|--------|
+| ffunc                              | Effect |
+| ---------------------------------- | ------ |
 | `ffunc:<field>.InputMaybe extrn:Y` | amc emits only the `bool <pool>_InputMaybe(P&, elem&)` prototype; you implement it. |
-| `ffunc:<field>.Input extrn:Y` | you implement `void <pool>_Input(P&, elem&)`; amc generates `InputMaybe` to call it (wrapped in try/catch where exceptions are on). |
+| `ffunc:<field>.Input extrn:Y`      | you implement `void <pool>_Input(P&, elem&)`; amc generates `InputMaybe` to call it (wrapped in try/catch where exceptions are on). |
 
 The two are independent — externalize `Input`, `InputMaybe`, neither, or
 both.  (A `Val` finput target requires one of these, since `Val` has no
@@ -166,7 +166,7 @@ C++ function is the whole extension recipe.  No registration
 code, no `#include` plumbing.
 
 | Attribute | Meaning |
-|-----------|---------|
+| --------- | ------- |
 | `field`   | FDb pool field that will hold the static rows. |
 | `ns`      | Defining namespace (where the hook bodies live). |
 

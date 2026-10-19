@@ -1,0 +1,4 @@
+amcdb.regxstyle  regxstyle:acr  esc:Y  comment:"acr query: % is any run of characters"
+amcdb.regxstyle  regxstyle:default  esc:N  comment:"The default syntax, read as written"
+amcdb.regxstyle  regxstyle:shell  esc:N  comment:"Shell glob: * is any run of characters, ? at most one"
+amcdb.regxstyle  regxstyle:sql  esc:Y  comment:"SQL LIKE: % is any run of characters, _ any one"

@@ -15,18 +15,29 @@
 # from a cache hit exactly when gcache filed the entry in the coverage format.
 # An output named .gch is a precompiled header: it is written and no notes
 # are, since a header compiles to no object.
+# gcache asks a compiler whether it is clang with -dM, and the driver answers
+# with the macros it predefines: __clang__ among them when it is run through a
+# link named clang++.  Run that way it compiles from the source, as gcache has
+# clang do, and its object names the source.  A source named edit.cpp is edited
+# while it compiles, so the text the object comes from is not the text gcache
+# hashed, which is the case gcache must not file under the old key.
 mode=compile
 out=""
 src=""
 while test $# -gt 0; do
     case "$1" in
-        -E) mode=preprocess;;
+        -E) test "$mode" = macros || mode=preprocess;;
+        -dM) mode=macros;;
         -o) out="$2"; shift;;
         *.cpp) src="$1";;
     esac
     shift
 done
-if test "$mode" = preprocess; then
+if test "$mode" = macros; then
+    echo "#define __cplusplus 201703L"
+    test "$(basename "$0")" = clang++ && echo "#define __clang__ 1"
+    exit 0
+elif test "$mode" = preprocess; then
     awk -v src="$src" '
         BEGIN { print "# 1 \"" src "\"" }
         /^#include[ \t]+[<"][^>"]+[>"]/ {
@@ -43,6 +54,13 @@ if test "$mode" = preprocess; then
 else
     case "$out" in
         *.gch) echo pch > "$out";;
-        *) echo object > "$out"; echo notes > "${out%.*}.gcno";;
+        *)
+            if test "$(basename "$0")" = clang++; then
+                echo "object from $src" > "$out"
+            else
+                echo object > "$out"
+            fi
+            test "$(basename "$src")" = edit.cpp && echo "// edited during the compile" >> "$src"
+            echo notes > "${out%.*}.gcno";;
     esac
 fi

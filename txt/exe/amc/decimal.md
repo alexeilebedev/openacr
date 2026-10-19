@@ -90,15 +90,15 @@ amc time via `algo::I64Power10(nplace)`.
 Source: `cpp/amc/fdec.cpp`.  Function names are scoped under
 the field name (e.g., `price_GetDouble`).
 
-| Tfunc                  | Generated function                                            | Effect |
-|------------------------|----------------------------------------------------------------|--------|
-| `Dec.GetScale`         | `<arg> <Ctype>_GetScale()`                                     | Returns `10^nplace` — the multiplier converting raw → real value.  Named after the ctype and takes no argument, so it exists only for a ctype with one fdec field. |
-| `Dec.GetInt`           | `<arg> <name>_GetInt(P&)`                                      | Returns the integer portion: the raw storage divided by `10^nplace`, truncated toward zero. |
-| `Dec.GetDouble`        | `double <name>_GetDouble(P&)`                                  | Returns `field / 10^nplace` as a `double`. |
-| `Dec.qSetDouble`       | `void <name>_qSetDouble(P&, double rhs)`                       | Stores `i64(rhs * 10^nplace)`.  No overflow check; "q" = quick. |
-| `Dec.SetDoubleMaybe`   | `bool <name>_SetDoubleMaybe(P&, double rhs)`                   | Like qSetDouble but returns false if the converted value would overflow the integer storage. |
-| `Dec.ReadStrptrMaybe`  | `bool <name>_ReadStrptrMaybe(P&, strptr in)`                   | Parse decimal text (`"3.14"`, `"-0.0001"`) into the integer storage; returns false on parse error or overflow. |
-| `Dec.Print`            | `void <name>_Print(P&, cstring& out)`                          | Emit the value with `nplace` decimal places.  Strips trailing zeros unless `fixedfmt:Y`. |
+| Tfunc                 | Generated function                           | Effect |
+| --------------------- | -------------------------------------------- | ------ |
+| `Dec.GetScale`        | `<arg> <Ctype>_GetScale()`                   | Returns `10^nplace` — the multiplier converting raw → real value.  Named after the ctype and takes no argument, so it exists only for a ctype with one fdec field. |
+| `Dec.GetInt`          | `<arg> <name>_GetInt(P&)`                    | Returns the integer portion: the raw storage divided by `10^nplace`, truncated toward zero. |
+| `Dec.GetDouble`       | `double <name>_GetDouble(P&)`                | Returns `field / 10^nplace` as a `double`. |
+| `Dec.qSetDouble`      | `void <name>_qSetDouble(P&, double rhs)`     | Stores `i64(rhs * 10^nplace)`.  No overflow check; "q" = quick. |
+| `Dec.SetDoubleMaybe`  | `bool <name>_SetDoubleMaybe(P&, double rhs)` | Like qSetDouble but returns false if the converted value would overflow the integer storage. |
+| `Dec.ReadStrptrMaybe` | `bool <name>_ReadStrptrMaybe(P&, strptr in)` | Parse decimal text (`"3.14"`, `"-0.0001"`) into the integer storage; returns false on parse error or overflow. |
+| `Dec.Print`           | `void <name>_Print(P&, cstring& out)`        | Emit the value with `nplace` decimal places.  Strips trailing zeros unless `fixedfmt:Y`. |
 
 There is no `_Set` / `_Get` for the integer form because the
 scaled integer is the field's own storage, reached the same way
@@ -114,10 +114,10 @@ function in the table above — are called with no argument.
 ### Fixed-format mode
 <a href="#fixed-format-mode"></a>
 
-| `fixedfmt:N` (default) | `fixedfmt:Y`            |
-|------------------------|-------------------------|
-| `100_000_000_000` → `"100"`              | `100_000_000_000` → `"100.000000000"` |
-| `123_450_000_000` → `"123.45"`           | `123_450_000_000` → `"123.450000000"` |
+| `fixedfmt:N` (default)         | `fixedfmt:Y` |
+| ------------------------------ | ------------ |
+| `100_000_000_000` → `"100"`    | `100_000_000_000` → `"100.000000000"` |
+| `123_450_000_000` → `"123.45"` | `123_450_000_000` → `"123.450000000"` |
 
 `fixedfmt:Y` is useful for log lines and CSV exports where
 each row should have a stable column width.  `fixedfmt:N` is

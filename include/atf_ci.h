@@ -36,7 +36,15 @@ namespace atf_ci { // update-hdr
     //     To convert this section to a hand-written section, remove the word 'update-hdr' from namespace line.
 
     // -------------------------------------------------------------------
-    // cpp/atf_ci/comp.cpp
+    // cpp/atf_ci/compA.cpp
+    //
+
+    // Run the comptests tagged cijob:compA (see RunCompShard for how the suite is cut).
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void citest_atf_compA(); // atfdb.citest:atf_compA
+
+    // -------------------------------------------------------------------
+    // cpp/atf_ci/compB.cpp
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void citest_atf_amc(); // atfdb.citest:atf_amc
@@ -44,7 +52,20 @@ namespace atf_ci { // update-hdr
     // Indent any .json files under ts/.
     // void citest_check_json(); // atfdb.citest:check_json
     // void citest_atf_unit(); // atfdb.citest:atf_unit
-    // void citest_atf_comp(); // atfdb.citest:atf_comp
+
+    // Run the comptests whose cijob field names CIJOB, one half of the component
+    // tests, capturing their output instead when the run captures.
+    //
+    // The comptests ran as one job of twenty to thirty-eight minutes, while the jobs
+    // beside it in the pipeline finished sooner.  So each comptest's cijob field names
+    // one of two jobs that run side by side, compA and compB, and compB also runs the
+    // job's other citests.  The tests are assigned by their measured runtime, which
+    // leaves each job about a quarter hour.
+    void RunCompShard(strptr cijob);
+
+    // Run the comptests tagged cijob:compB (see RunCompShard for how the suite is cut).
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void citest_atf_compB(); // atfdb.citest:atf_compB
 
     // Move a numbered stream through every shape an ams lane can take, and then
     // through the same shapes past a reader too slow to keep up with it.
@@ -52,12 +73,12 @@ namespace atf_ci { // update-hdr
     // Three independent choices make a lane's shape, so the shapes are a cross
     // product rather than a list: where a message goes (one lane every reader shares,
     // or a lane per reader), how it travels (inline in those lanes, or as a reference
-    // to a slot on the writer's message board), and how a party that has to wait is
-    // woken (the poll loop finds the data, or a signal delivers it).  ams_sendtest
-    // numbers every message and checks each arrival against its position, so a
-    // reference resolved to the wrong slot, or a ring wrapped over bytes a reader had
-    // not yet consumed, surfaces as a payload mismatch rather than as a count that
-    // happens to add up.
+    // to a message in a chunk of the writer's message board), and how a party that
+    // has to wait is woken (the poll loop finds the data, or a signal delivers it).
+    // ams_sendtest numbers every message and checks each arrival against its
+    // position, so a reference resolved to the wrong place or into a reused chunk, or
+    // a ring wrapped over bytes a reader had not yet consumed, surfaces as a payload
+    // mismatch rather than as a count that happens to add up.
     //
     // A reader that pauses 200 microseconds per message is three orders slower than
     // the writer, so it falls behind and stays there.  The lane it reads is an order
@@ -115,17 +136,32 @@ namespace atf_ci { // update-hdr
     // void citest_readme_tut(); // atfdb.citest:readme_tut
 
     // -------------------------------------------------------------------
-    // cpp/atf_ci/coverage.cpp
+    // cpp/atf_ci/coverageA.cpp
     //
 
-    // First coverage citest: clear stale per-citest covdirs, then build every
-    // target with the coverage cfg.  atf_ci is the single place that builds the
-    // coverage binaries; the test tools never build.  No -install, so bin/ keeps
-    // pointing at the release build -- the citests reach the instrumented
-    // binaries through -bindir:build/coverage instead.  cov_prep runs no
-    // instrumented binary, so it needs no covdir of its own.
+    // Build every target with the coverage cfg, as the first citest of a coverage
+    // job.  atf_ci is the single place that builds the coverage binaries; the test
+    // tools never build.  No -install, so bin/ keeps pointing at the release build
+    // -- the citests reach the instrumented binaries through -bindir:build/coverage
+    // instead.
+    void BuildCoverage();
+
+    // Directory that holds the line counts of coverage job CIJOB: what its last
+    // citest writes, what CI uploads, and what covfinal merges.
+    tempstr CovJobDir(strptr cijob);
+
+    // Turn the profile data of the running citest's job into line counts, as the
+    // last citest of a coverage job.  Every citest of the job marked gcov left its
+    // data in temp/cov/<citest>.d; atf_cov runs gcov over each of those dirs, adds
+    // the counts up, and writes one .cov.ssim per source into CovJobDir.  Beside
+    // them goes the commit the counts measure, which covfinal compares with its
+    // own checkout before it merges anything.  The floors are not checked here,
+    // since a half measures a part of the suite and every target reads low.
+    void RunCovGcov();
+
+    // First citest of the coverageA job: build the coverage binaries.
     //     (user-implemented function, prototype is in amc-generated header)
-    // void citest_cov_prep(); // atfdb.citest:cov_prep
+    // void citest_cov_prepA(); // atfdb.citest:cov_prepA
 
     // Run the C++ unit-test suite against the coverage build so unit-tested
     // library functions are credited.  atf_unit spawns no children, so naming
@@ -138,10 +174,58 @@ namespace atf_ci { // update-hdr
     // RunCiTest exported via GCC_PROFILE_DIR.
     // void citest_atf_comp_cov(); // atfdb.citest:atf_comp_cov
 
-    // Last coverage citest: gcov + merge every per-citest covdir, write the
-    // reports, and check against dev.tgtcov (or, with -capture, rebaseline
-    // dev.tgtcov + dev.uncovfunc).
+    // Last citest of the coverageA job: its line counts, for covfinal.
+    // void citest_cov_gcovA(); // atfdb.citest:cov_gcovA
+
+    // -------------------------------------------------------------------
+    // cpp/atf_ci/coverageB.cpp
+    //
+
+    // First citest of the coverageB job: build the coverage binaries.
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void citest_cov_prepB(); // atfdb.citest:cov_prepB
+
+    // Last citest of the coverageB job: its line counts, for covfinal.
+    // void citest_cov_gcovB(); // atfdb.citest:cov_gcovB
+
+    // -------------------------------------------------------------------
+    // cpp/atf_ci/covfinal.cpp
+    //
+
+    // Merge the line counts of every coverage job into one measurement, write the
+    // reports, and check each target against dev.tgtcov (or, with -capture,
+    // rebaseline dev.tgtcov + dev.uncovfunc).  A coverage job is a cijob with a
+    // citest marked gcov, and its counts are in CovJobDir.
+    //
+    // In CI the counts arrive as the artifacts of the coverageA and coverageB jobs
+    // of the same pipeline.  A local run finds whatever an earlier run left in
+    // temp/cov, which may be another commit's: merged, it would report and even
+    // capture floors for a tree nobody measured.  So each job stamped the commit
+    // it measured, and a directory whose stamp is missing or names another commit
+    // fails the run before anything is merged.
+    //     (user-implemented function, prototype is in amc-generated header)
     // void citest_cov_finalize(); // atfdb.citest:cov_finalize
+
+    // -------------------------------------------------------------------
+    // cpp/atf_ci/depscan.cpp
+    //
+
+    // Scan every tracked lockfile and pom with osv-scanner, naming each file so the
+    // scan covers what version control holds and nothing a build installed.  The
+    // report is temp/depscan/osv.json.  The citest fails on an advisory whose
+    // dev.vulnsev band fails and that no dev.vulnaccept row accepts, and when
+    // osv-scanner cannot run.
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void citest_depscan_lockfile(); // atfdb.citest:depscan_lockfile
+
+    // Look up the release of each dev.vendorlib row in the NVD and print one
+    // atf_ci.vuln line per CVE that the NVD marks as vulnerable in that release.
+    // The NVD answers an unknown CPE name with no CVE at all, which would read as a
+    // clean library.  So the CPE dictionary is asked first, and a release missing
+    // from it fails the citest, as does an answer that holds no CVE list.  A CVE
+    // whose dev.vulnsev band fails also fails the citest, unless a dev.vulnaccept
+    // row accepts it and has not lapsed.
+    // void citest_depscan_vendorlib(); // atfdb.citest:depscan_vendorlib
 
     // -------------------------------------------------------------------
     // cpp/atf_ci/main.cpp
@@ -331,7 +415,10 @@ namespace atf_ci { // update-hdr
     // A reader who knows the installation knows which file to open, and an
     // installation whose steps are spread over two files has no such file.  The
     // pairing is not something the compiler can hold: amc binds a row to a function
-    // by name wherever that function is written.
+    // by name wherever that function is written.  The script ainst writes for every
+    // package, and the library form of it, must also parse: a step is shell text
+    // inside C++ strings, so a stray quote compiles and breaks the script of every
+    // package written with it, on every platform, with nothing else objecting.
     // void citest_check_ainst(); // atfdb.citest:check_ainst
 
     // Refuse a generated install script that cannot say what it installs.

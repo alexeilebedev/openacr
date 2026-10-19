@@ -33,6 +33,7 @@ jobs:
               libssl-dev\
               libcurl4-openssl-dev\
               liblz4-dev \
+              librocksdb-dev \
               cppcheck \
               valgrind
       - name: Setup developers tools
@@ -41,7 +42,7 @@ jobs:
           # mariadb for mysqld_safe, which acr_my starts itself; rsync because
           # the one Apple ships predates --ignore-missing-args, which wt needs
           # to copy a modified-file list that can name a deleted path.
-          brew install openssl@3 mariadb-connector-c mariadb readline rsync cppcheck
+          brew install openssl@3 mariadb-connector-c mariadb readline rsync cppcheck rocksdb
           brew --prefix openssl@3 mariadb-connector-c mariadb readline
           command -v mysqld_safe rsync
       - name: Build and test
@@ -58,7 +59,7 @@ jobs:
           log="${RUNNER_TEMP:-/tmp}/citest.log"
           set -o pipefail
           rc=0
-          { bin/normalize && bin/atf_ci -cijob:comp; } 2>&1 | tee "$log" || rc=$?
+          { bin/normalize && bin/atf_ci -cijob:'compA|compB'; } 2>&1 | tee "$log" || rc=$?
           if [ $rc -ne 0 ]; then
             # An annotation's message is capped at 4096 characters and is cut
             # from the end, so the encoded text is trimmed from the front here

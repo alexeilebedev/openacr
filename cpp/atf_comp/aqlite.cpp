@@ -67,7 +67,7 @@ void atf_comp::comptest_aqlite_Smoke() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/aqlite -in:- \"select rowid,* from ctype; select rowid,* from field\"");
     atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:i16                  comment:''");
     atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:i32                  comment:''");
-    atf_comp::ProcWrite(proc, "dmmeta.field  field:abt.FArch.msghdr      arg:dev.Arch        reftype:Base    dflt:''  comment:''");
-    atf_comp::ProcWrite(proc, "dmmeta.field  field:abt.FCfg.msghdr       arg:dev.Cfg         reftype:Base    dflt:''  comment:''");
-    atf_comp::ProcWrite(proc, "dmmeta.field  field:abt.FCompiler.msghdr  arg:dev.Compiler    reftype:Base    dflt:''  comment:''");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:abt.FArch.base        arg:dev.Arch        reftype:Base    dflt:''  comment:''");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:abt.FCfg.base         arg:dev.Cfg         reftype:Base    dflt:''  comment:''");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:abt.FCompiler.base    arg:dev.Compiler    reftype:Base    dflt:''  comment:''");
 }

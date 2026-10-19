@@ -199,7 +199,7 @@ void lib_ams::EmitMsg(ams::MsgHeader &msg) {
 // this walk, where the ring matches on writer_pid -- so unlinking every
 // segment the dead pid wrote would take that name away while the child still
 // owns it.  A child that has not yet opened the ring would then get ENOENT
-// out of its own shm_open and report a segment it never had the chance to
+// out of its own open and report a segment it never had the chance to
 // map, which is a startup failure invented by someone else's exit.
 //
 // A segment's name belongs to the proc its grp id names, and only that proc's
@@ -243,11 +243,11 @@ lib_ams::FProc *lib_ams::ProcExit(int pid, int status) {
             if (read_Get(shm.flags)) {
                 shm.c_shmhdr->eof = true;
             }
-            // The owner is gone — unlink the /dev/shm file now so it doesn't
+            // The owner is gone — unlink the segment file now so it doesn't
             // leak when it died without running its own cleanup.
             // Existing mappings stay valid until the last munmap.
             if (own && shm.filename != "") {
-                shm_unlink(Zeroterm(shm.filename));
+                (void)unlink(Zeroterm(lib_ams::ShmPath(shm.filename)));
                 shm.filename = "";
             }
         }

@@ -1,0 +1,2 @@
+dev.extpkgnoarch  extpkgnoarch:chrome/aarch64  comment:"Google publishes no Linux ARM build of Chrome"
+dev.extpkgnoarch  extpkgnoarch:tsc_freq_khz/aarch64  comment:"reads the x86 TSC rate; the ARM timer states its own rate in cntfrq_el0"

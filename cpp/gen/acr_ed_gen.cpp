@@ -41,8 +41,12 @@ algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
 acr_ed::FDb     acr_ed::_db;      // dependency found via dev.targdep
 
 namespace acr_ed { // gen:ns_gsymbol
-    const char* atfdb_cijob_comp("comp");
-    const char* atfdb_cijob_coverage("coverage");
+    const char* atfdb_cijob_compA("compA");
+    const char* atfdb_cijob_compB("compB");
+    const char* atfdb_cijob_coverageA("coverageA");
+    const char* atfdb_cijob_coverageB("coverageB");
+    const char* atfdb_cijob_covfinal("covfinal");
+    const char* atfdb_cijob_depscan("depscan");
     const char* atfdb_cijob_memcheckA("memcheckA");
     const char* atfdb_cijob_memcheckB("memcheckB");
     const char* atfdb_cijob_memcheckC("memcheckC");
@@ -167,7 +171,7 @@ void acr_ed::FCpptype_Uninit(acr_ed::FCpptype& parent) {
     }
 }
 
-// --- acr_ed.FCstr.msghdr.CopyOut
+// --- acr_ed.FCstr.base.CopyOut
 // Copy fields out of row
 void acr_ed::cstr_CopyOut(acr_ed::FCstr &row, dmmeta::Cstr &out) {
     out.ctype = row.ctype;
@@ -175,7 +179,7 @@ void acr_ed::cstr_CopyOut(acr_ed::FCstr &row, dmmeta::Cstr &out) {
     out.comment = algo::Comment(row.comment);
 }
 
-// --- acr_ed.FCstr.msghdr.CopyIn
+// --- acr_ed.FCstr.base.CopyIn
 // Copy fields in to row
 void acr_ed::cstr_CopyIn(acr_ed::FCstr &row, dmmeta::Cstr &in) {
     row.ctype = in.ctype;
@@ -191,14 +195,14 @@ void acr_ed::FCstr_Uninit(acr_ed::FCstr& parent) {
     }
 }
 
-// --- acr_ed.FCtype.msghdr.CopyOut
+// --- acr_ed.FCtype.base.CopyOut
 // Copy fields out of row
 void acr_ed::ctype_CopyOut(acr_ed::FCtype &row, dmmeta::Ctype &out) {
     out.ctype = row.ctype;
     out.comment = algo::Comment(row.comment);
 }
 
-// --- acr_ed.FCtype.msghdr.CopyIn
+// --- acr_ed.FCtype.base.CopyIn
 // Copy fields in to row
 void acr_ed::ctype_CopyIn(acr_ed::FCtype &row, dmmeta::Ctype &in) {
     row.ctype = in.ctype;
@@ -718,7 +722,7 @@ static void acr_ed::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_ed.Input'  signature:'daeac2d2282f270f8c759e047c45cceb0ff875b9'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_ed.Input'  signature:'fb807d008e26ea7b910e2e7624ba3addeb2020cf'");
 }
 
 // --- acr_ed.FDb._db.InsertStrptrMaybe
@@ -870,8 +874,8 @@ bool acr_ed::LoadTuplesMaybe(algo::strptr root, bool recursive) {
         retval = retval && acr_ed::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cstr"),recursive);
         retval = retval && acr_ed::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cpptype"),recursive);
         retval = retval && acr_ed::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cfmt"),recursive);
-        retval = retval && acr_ed::LoadTuplesFile(algo::SsimFname(root,"dev.target"),recursive);
         retval = retval && acr_ed::LoadTuplesFile(algo::SsimFname(root,"dev.gitfile"),recursive);
+        retval = retval && acr_ed::LoadTuplesFile(algo::SsimFname(root,"dev.target"),recursive);
         retval = retval && acr_ed::LoadTuplesFile(algo::SsimFname(root,"dev.targsrc"),recursive);
         retval = retval && acr_ed::LoadTuplesFile(algo::SsimFname(root,"dev.sbpath"),recursive);
     } else {
@@ -2766,15 +2770,7 @@ int acr_ed::abt_Start() {
         _db.abt_pid = fork();
         if (_db.abt_pid == 0) { // child
             algo_lib::DieWithParent();
-            // inherited signal handlers stay live until exec, so a kill aimed at
-            // the child in the fork-to-exec window would run the parent's handler
-            // in the child and be consumed instead of killing; restore the default
-            // dispositions so the signal does what the sender means
-            (void)signal(SIGTERM, SIG_DFL);
-            (void)signal(SIGINT , SIG_DFL);
-            (void)signal(SIGHUP , SIG_DFL);
-            (void)signal(SIGQUIT, SIG_DFL);
-            (void)signal(SIGALRM, SIG_DFL);
+            algo_lib::ResetChildSignal();
             if (_db.abt_pgroup) {
                 // own process group: a kill by the child's pid alone would
                 // orphan its descendants alive; the group is one killable unit
@@ -4912,7 +4908,7 @@ void acr_ed::FDb_Uninit() {
     // skip destruction in global scope
 }
 
-// --- acr_ed.FField.msghdr.CopyOut
+// --- acr_ed.FField.base.CopyOut
 // Copy fields out of row
 void acr_ed::field_CopyOut(acr_ed::FField &row, dmmeta::Field &out) {
     out.field = row.field;
@@ -4922,7 +4918,7 @@ void acr_ed::field_CopyOut(acr_ed::FField &row, dmmeta::Field &out) {
     out.comment = algo::Comment(row.comment);
 }
 
-// --- acr_ed.FField.msghdr.CopyIn
+// --- acr_ed.FField.base.CopyIn
 // Copy fields in to row
 void acr_ed::field_CopyIn(acr_ed::FField &row, dmmeta::Field &in) {
     row.field = in.field;
@@ -5013,7 +5009,7 @@ algo::strptr acr_ed::ext_Get(acr_ed::FGitfile& parent) {
     return algo::Pathcomp(parent.gitfile, "/RR.LR.RR");
 }
 
-// --- acr_ed.FListtype.msghdr.CopyOut
+// --- acr_ed.FListtype.base.CopyOut
 // Copy fields out of row
 void acr_ed::listtype_CopyOut(acr_ed::FListtype &row, dmmeta::Listtype &out) {
     out.listtype = row.listtype;
@@ -5023,7 +5019,7 @@ void acr_ed::listtype_CopyOut(acr_ed::FListtype &row, dmmeta::Listtype &out) {
     out.comment = algo::Comment(row.comment);
 }
 
-// --- acr_ed.FListtype.msghdr.CopyIn
+// --- acr_ed.FListtype.base.CopyIn
 // Copy fields in to row
 void acr_ed::listtype_CopyIn(acr_ed::FListtype &row, dmmeta::Listtype &in) {
     row.listtype = in.listtype;
@@ -5056,7 +5052,7 @@ void acr_ed::msgtype_CopyIn(acr_ed::FMsgtype &row, dmmeta::Msgtype &in) {
     row.heartbeat = in.heartbeat;
 }
 
-// --- acr_ed.FNs.msghdr.CopyOut
+// --- acr_ed.FNs.base.CopyOut
 // Copy fields out of row
 void acr_ed::ns_CopyOut(acr_ed::FNs &row, dmmeta::Ns &out) {
     out.ns = row.ns;
@@ -5065,7 +5061,7 @@ void acr_ed::ns_CopyOut(acr_ed::FNs &row, dmmeta::Ns &out) {
     out.comment = algo::Comment(row.comment);
 }
 
-// --- acr_ed.FNs.msghdr.CopyIn
+// --- acr_ed.FNs.base.CopyIn
 // Copy fields in to row
 void acr_ed::ns_CopyIn(acr_ed::FNs &row, dmmeta::Ns &in) {
     row.ns = in.ns;
@@ -5192,14 +5188,14 @@ void acr_ed::sbpath_CopyIn(acr_ed::FSbpath &row, dev::Sbpath &in) {
     row.comment = in.comment;
 }
 
-// --- acr_ed.FSsimfile.msghdr.CopyOut
+// --- acr_ed.FSsimfile.base.CopyOut
 // Copy fields out of row
 void acr_ed::ssimfile_CopyOut(acr_ed::FSsimfile &row, dmmeta::Ssimfile &out) {
     out.ssimfile = row.ssimfile;
     out.ctype = row.ctype;
 }
 
-// --- acr_ed.FSsimfile.msghdr.CopyIn
+// --- acr_ed.FSsimfile.base.CopyIn
 // Copy fields in to row
 void acr_ed::ssimfile_CopyIn(acr_ed::FSsimfile &row, dmmeta::Ssimfile &in) {
     row.ssimfile = in.ssimfile;

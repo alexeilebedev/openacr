@@ -63,12 +63,13 @@ namespace lib_ams { // update-hdr srcfile:"(cpp/lib_ams/(board|bridge|channel|du
     // The board of lane SHM's writer, or NULL when that process keeps none.
     // A process keeps one board, so the lookup is by the writer's proc id, and the
     // answer is cached on the lane so a lane opened before the board existed finds
-    // it on a later call.
+    // it on a later call.  The writer is the lane's owner unless the row names
+    // another (LaneWriter).
     //
     // A reader learns of a board by the first reference that reaches it, so on a
     // lane this process reads and does not write the board is opened here when it
     // is not mapped yet.  The open fails while the writer has not created its board,
-    // which costs one shm_open per reference until it has; a writer sends no
+    // which costs one open per reference until it has; a writer sends no
     // reference before its board exists, so in practice the first one succeeds.
     lib_ams::FShm *BoardOf(lib_ams::FShm &shm);
 
@@ -112,7 +113,7 @@ namespace lib_ams { // update-hdr srcfile:"(cpp/lib_ams/(board|bridge|channel|du
 
     // Create a message board of this process as a private mapping of this process
     // alone -- BODY bytes as chunks of CHUNK_SIZE, anonymous memory, no file under
-    // /dev/shm -- and open it for writing.  INDEX is the board's index among this
+    // the segment directory -- and open it for writing.  INDEX is the board's index among this
     // process's boards: index 0 is the one readers open (BoardOpen), so a private
     // board kept beside a shared one takes another index.  NULL when the memory
     // cannot be mapped.
@@ -238,7 +239,9 @@ namespace lib_ams { // update-hdr srcfile:"(cpp/lib_ams/(board|bridge|channel|du
     // The LENGTH bytes at board OFFSET on lane SHM's writer's board, or NULL when
     // they do not lie inside the board's body.  A module that carries several
     // messages under one reference walks them from here; a single message is
-    // BoardResolve, which also checks the header at the offset.
+    // BoardResolve, which also checks the header at the offset.  A lane whose
+    // writer's board this process has not mapped resolves nothing, and says so in
+    // n_board_noboard; every span resolved counts in n_board_resolve.
     u8 *BoardSpan(lib_ams::FShm &shm, u64 offset, u32 length);
 
     // -------------------------------------------------------------------
@@ -255,8 +258,8 @@ namespace lib_ams { // update-hdr srcfile:"(cpp/lib_ams/(board|bridge|channel|du
 
     // Allocate FProc + both shm files (writable) for a bridged user process at
     // GRPIDX (use NextBridgeGrpidx to pick one). On success the inbound and
-    // outbound shm files exist on disk so the forked child can find them via
-    // shm_open. The child is pre-registered as a reader of shm_out so its
+    // outbound shm files exist on disk so the forked child can find them by
+    // name. The child is pre-registered as a reader of shm_out so its
     // ShmOpen(read) succeeds.  READER_PROC_ID is pre-registered as a reader of
     // shm_in (the child->parent ring) so the ring is bounded from the start:
     // a child that writes before the real reader (gateway/txn) opens the ring
@@ -275,6 +278,10 @@ namespace lib_ams { // update-hdr srcfile:"(cpp/lib_ams/(board|bridge|channel|du
     // own side: it reads `in`, the parent's BridgeOutGrp, and writes `out`, the
     // parent's BridgeInGrp.  NICKNAME, the child's human-facing name (the userproc
     // name), prefixes its published metrics in place of the proc id.
+    //
+    // The prefix is a path, the segment directory and then the file prefix, so a
+    // child finds its rings from the spec alone.  A child in Python or Rust has no
+    // algo_lib::ShmDir to ask, and the directory differs between Linux and macOS.
     tempstr ChildProcStr(ams::ProcId child_proc_id, int grpidx, algo::strptr nickname = algo::strptr());
 
     // -------------------------------------------------------------------
@@ -503,7 +510,7 @@ namespace lib_ams { // update-hdr srcfile:"(cpp/lib_ams/(board|bridge|channel|du
     // this walk, where the ring matches on writer_pid -- so unlinking every
     // segment the dead pid wrote would take that name away while the child still
     // owns it.  A child that has not yet opened the ring would then get ENOENT
-    // out of its own shm_open and report a segment it never had the chance to
+    // out of its own open and report a segment it never had the chance to
     // map, which is a startup failure invented by someone else's exit.
     //
     // A segment's name belongs to the proc its grp id names, and only that proc's
@@ -570,15 +577,23 @@ namespace lib_ams { // update-hdr srcfile:"(cpp/lib_ams/(board|bridge|channel|du
     // cpp/lib_ams/shm.cpp
     //
 
-    // Free bytes on the tmpfs backing /dev/shm.  INT64_MAX on statvfs
-    // failure (treated as "no limit" by callers comparing against a need),
-    // so chroots or platforms without /dev/shm don't hard-fail callers.
+    // Free bytes on the filesystem under the segment directory (algo_lib::ShmDir).
+    // INT64_MAX on statvfs failure (treated as "no limit" by callers comparing
+    // against a need), so a chroot without the directory doesn't hard-fail callers.
     i64 GetShmAvail();
 
-    // Size in bytes of the tmpfs backing /dev/shm, and 0 when statvfs cannot
+    // Size in bytes of the filesystem under the segment directory, and 0 when statvfs cannot
     // answer, so a reserve derived from it is nothing where the filesystem is
     // unknown.
     i64 GetShmTotal();
+
+    // The path of the segment file FILENAME: the segment directory, then the name.
+    // Every segment is a file there on every platform, so a process creates, opens,
+    // lists and unlinks segments as files.  A FILENAME that is already a path is
+    // its own answer.  That is how a bridged child reads a file prefix that names
+    // the directory too (ChildProcStr), which every client of the -proc spec does
+    // the same way, whatever language it is written in.
+    algo::tempstr ShmPath(algo::strptr filename);
 
     // Bytes the segment belonging to GRP_ID already occupies on the tmpfs, and zero
     // when no such segment exists yet.
@@ -604,7 +619,7 @@ namespace lib_ams { // update-hdr srcfile:"(cpp/lib_ams/(board|bridge|channel|du
     // made it and whether or not this process has opened it.
     bool ShmExistsQ(ams::GrpId grp_id);
 
-    // Scan /dev/shm for orphaned ams segments and unlink them.  A segment is an
+    // Scan the segment directory for orphaned ams segments and unlink them.  A segment is an
     // orphan when no process holds its write lock and it is no longer being created
     // (see OrphanSegmentQ) -- i.e. its writer crashed or was kill -9'd without
     // unlinking, or it was created but never claimed by a writer.  Orphans are
@@ -967,6 +982,15 @@ namespace lib_ams { // update-hdr srcfile:"(cpp/lib_ams/(board|bridge|channel|du
     inline u64 AddOffset(u64 offset, int n);
     inline ams::MsgHeader *MsgAtOffset(lib_ams::FShm &shm, u64 offset);
     inline ams::ProcId MakeProcId(ams::Proctype proctype, int node, int index);
+
+    // The process that writes lane SHM: the writer stamped on the row, else the
+    // lane's owner.  A lane is keyed by its owner, and most owners write their own
+    // lanes; where the writer is another process -- a bridge-out ring, keyed by
+    // the child and written by the parent, or a userproc's delivery lane, keyed by
+    // the child and written by its txn -- the writer stamps the row when it opens
+    // the lane, and a reader that knows who writes stamps its own.  Return the
+    // writer's proc id.
+    inline ams::ProcId LaneWriter(lib_ams::FShm &shm);
 
     // Inbound shm group for a bridged user process: child writes, parent reads.
     // GRPIDX disambiguates multiple bridges between the same proc pair.

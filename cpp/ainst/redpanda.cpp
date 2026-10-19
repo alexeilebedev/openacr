@@ -23,13 +23,16 @@
 
 // -----------------------------------------------------------------------------
 
-// Install the redpanda broker from the vendor's apt repository.
+// Install the redpanda broker from the vendor's apt repository, which Google
+// Artifact Registry serves and signs.  The keyring and list keep the names an
+// earlier repository used, so staging over an older install replaces its source
+// line instead of leaving one apt can no longer reach.
 void ainst::extpkg_redpanda(ainst::FExtpkg &extpkg) {
     AddStage(extpkg,tempstr()<<"gpg --dearmor --yes --batch -o \"$(ainst_root /usr/share/keyrings/redpanda-redpanda-archive-keyring.gpg)\" < "<<GetExtpkgsrcVar(extpkg,"key"));
     AddStage(extpkg,"chmod 644 \"$(ainst_root /usr/share/keyrings/redpanda-redpanda-archive-keyring.gpg)\"");
     AddStageFile(extpkg,"/etc/apt/sources.list.d/redpanda-redpanda.list",
                  "deb [signed-by=/usr/share/keyrings/redpanda-redpanda-archive-keyring.gpg]"
-                 " https://dl.redpanda.com/public/redpanda/deb/ubuntu noble main\n");
+                 " https://linux.pkg.redpanda.com/apt redpanda-apt main\n");
     AddPost(extpkg,"useradd rdpusr -u 1082 -d /opt/redpanda -U -m -s /bin/bash || true");
     AddPost(extpkg,"apt-get update -q");
     AddPost(extpkg,"apt-get install -y -o Dpkg::Options::=--force-confold redpanda");

@@ -48,7 +48,7 @@ namespace doc { // update-hdr
     // A location carrying a colon is answered from the ssim database, and the word before
     // that colon says which answer.  A table's full name is a namespace and a name with a
     // dot between them, so a word with no dot in it is not a table, and that is the whole
-    // of the discrimination: func:dmmeta.ctype:lib_x2.FStream is the page doc builds about
+    // of the discrimination: func:dmmeta.ctype:amc.FCtype is the page doc builds about
     // those records, while dmmeta.func:x is the row acr answers with.
     //
     // The vocabulary is closed and every word in it has a page.  It is dev.docpage that says
@@ -58,6 +58,12 @@ namespace doc { // update-hdr
     // a table's short name instead, which ExpandQuery turns into the full one, so nothing a
     // reader can type is left without an answer.
     tempstr ViewWord(algo::strptr loc);
+
+    // Return true when LOC names a view of the records its word is handed: the functions a
+    // selection is about, the code amc generated for it, its gist.  The selection is what the
+    // page shows a view of, so it is what a link back from the word leads to and what an edit
+    // of the page edits.  Which words are views is `view` on their `dev.docpage` rows.
+    bool QueryviewQ(algo::strptr loc);
 
     // Return the query the location LOC means when its word was handed a pattern, and the
     // empty string when it was not.
@@ -90,11 +96,64 @@ namespace doc { // update-hdr
     // would give a reader two histories of the same walk -- so the short name is expanded
     // here, and every location that reaches a link, a history or a URL carries the full one.
     //
-    // Ten short names in the tree name two tables each, gitfile and target and user among
-    // them, and one of those is left exactly as the reader wrote it.  Choosing between two
-    // tables is acr's business rather than this tool's.
+    // A short name that several tables share, gitfile and target and user among them, is left
+    // exactly as the reader wrote it.  Choosing between those tables is acr's business.
     tempstr ExpandQuery(algo::strptr query);
+
+    // Return the one table whose short name is WORD, and NULL when no table or more than one
+    // answers to it.
+    //
+    // A table's short name is its full name with the namespace taken off, so `gen` names
+    // amcdb.gen.  A short name that several tables share names none of them.
+    doc::FSsimfile *Shortssimfile(algo::strptr word);
+
+    // Return the table the key KEY names, by its full name or by its short name, and NULL when
+    // KEY names no table.
+    doc::FSsimfile *Keyssimfile(algo::strptr key);
+
+    // Return the first function the record the location LOC selects stands for, and NULL when
+    // no function does.
+    //
+    // A table a dmmeta.gstatic row names is compiled into the program that reads it, and amc
+    // binds each of its rows to one function of that program per hook of the program's ctype.
+    // A dmmeta.dispatch_msg record is bound the same way, to the handler its dispatch calls
+    // for its message.  amc names each function after the record's key, and src_func reports
+    // every function with the key that caused it, so the function comes from src_func: the
+    // comptest `doc.Fold` is `atf_comp.comptest_doc_Fold`, and the dispatch_msg
+    // `lib_ws.FrameLen/ws.Frame16` is `lib_ws.FrameLen_Frame16`.  A row of a table whose ctype
+    // has no hook is a constant compiled in and stands for no function.  A row with several
+    // hooks answers with the first of them, and its gist shows all of them.
+    //
+    // A location selecting a pattern rather than one key answers with NULL.  A page of forty
+    // tests is about forty functions, and a section showing one of them would be picking a row
+    // out of the page for no reason the reader gave.  The gist of that page shows all forty.
+    doc::FGist *Recgist(algo::strptr loc);
+
+    // Return the name of the function the record the location LOC selects stands for, and the
+    // empty string when no function does.
     tempstr Recfunc(algo::strptr loc);
+
+    // Return the path of the source file that the function of the record at LOC lives in,
+    // when a dmmeta.ssimreq requires that file for that record, and the empty string otherwise.
+    //
+    // A test bound to one function often has a file of its own, and the file around the
+    // function holds the comment that says what the test proves and the static helpers that
+    // drive the scenario.  A reader shown the function alone gets the steps without the story.
+    // The schema already says which records own a file this way: a ssimreq whose child is a
+    // dev.gitfile spelled with the table's key, such as `cpp/<dir>/$<key>.cpp`, requires one
+    // file per record.  Such a file is the record's documentation as a whole.
+    //
+    // The key is substituted for the variable that names the table's primary key, which is
+    // what a location carries.  A requirement spelled with any other attribute of the row
+    // answers nothing, and so does a required file that the function does not live in.
+    tempstr Recfile(algo::strptr loc);
+
+    // Return the heading of the section that shows the source of the record at LOC: the whole
+    // file when a ssimreq requires it for the record (Recfile), the function otherwise.
+    tempstr Rechead(algo::strptr loc);
+
+    // Return the anchor of the section Rechead names for the record at LOC.
+    tempstr Recanchor(algo::strptr loc);
 
     // Return the transcript the page at LOC is about, and the empty string when the page is
     // about no single comptest.
@@ -125,7 +184,7 @@ namespace doc { // update-hdr
     // nothing this tool can open.
     //
     // A word in backticks is the name of something more often than not, and in this tree those
-    // names are recognizable: `dmmeta.thash` is a table, `lib_x2.FStream` is a ctype, `amc` is a
+    // names are recognizable: `dmmeta.thash` is a table, `amc.FCtype` is a ctype, `amc` is a
     // namespace, and `dmmeta.ctype:doc.FSpan` is a selection of records.  A table leads to its
     // rows rather than to the page about it: a reader who wrote a table's name in a sentence is
     // pointing at what is in it.  Each becomes a link
@@ -399,8 +458,8 @@ namespace doc { // update-hdr
     //
     // A location carries only the flags it honours, and each of the three tests here is the
     // one the emitter itself branches on: the tabs belong to a page acr answered, the two
-    // folds to a ctype's page and a namespace's page, and the data fold to a page about one
-    // table.  Testing them any other way is how `ns:abt` came to draw an Access Paths fold
+    // folds to a ctype's page and a namespace's page, the data fold to a page about one
+    // table, and the directory fold to a document.  Testing them any other way is how `ns:abt` came to draw an Access Paths fold
     // whose link carried no `-vis`, so following it redrew the page with the fold still shut.
     tempstr PageFlag(algo::strptr loc);
 
@@ -786,11 +845,11 @@ namespace doc { // update-hdr
     // A document is half of what this tool reads and the database is the other half, so
     // a key that matched no document has only been half looked for.  A table whose name
     // carries the key leads to the whole of that table, and a ctype whose name carries it
-    // leads to its record -- which is what a reader typing `FStream` is after, since no
-    // document is named that and eight ctypes are.
+    // leads to its record -- which is what a reader typing `FCtype` is after, since no
+    // document is named that and more than a dozen ctypes are.
     //
     // A dotted key whose namespace exists offers that namespace's ctypes as well.  The
-    // key that prompts this is the near miss: `lib_x2.FCtype` names nothing at all, and
+    // key that prompts this is the near miss: `algo_lib.FCtype` names nothing at all, and
     // the useful answer is not silence but the list its author was picking from.
     tempstr GuessLoc(algo::strptr key, int nmax, int &nfound);
 
@@ -806,8 +865,8 @@ namespace doc { // update-hdr
     // name is arbitrary, so the regex goes to src_func as it stands.
     //
     // This is what a view of a query resolves its key with, and it prefers records where
-    // resolving a key on its own prefers documents.  `func:lib_x2` asks about the
-    // functions of that library, where a bare `lib_x2` opens the library's README --
+    // resolving a key on its own prefers documents.  `func:algo_lib` asks about the
+    // functions of that library, where a bare `algo_lib` opens the library's README --
     // which is right both times, because a view is a view of records and there is nothing
     // else for it to be a view of.
     tempstr KeyQuery(algo::strptr key);
@@ -848,6 +907,14 @@ namespace doc { // update-hdr
     // file under txt/ssimdb that holds the prose is still a document and still opens when it
     // is named by its path.
     //
+    // A table whose rows a program binds to functions is the exception, and its name is its
+    // gist.  Each row of amcdb.gen is a step of amc, and what a reader typing `gen` wants is
+    // what the steps do, which the comments of their functions say and the rows do not.
+    //
+    // A table's short name names it as the full name does, once the path conventions have had
+    // their turn.  `gen` is amcdb.gen, where a substring match over the documents would
+    // offer every page whose path mentions it.
+    //
     // A word doc does not synthesize a page for is a table's short name, and it is expanded
     // to the full one here.  So `ssimfile:dmmeta.ctype` and `dmmeta.ssimfile:dmmeta.ctype`
     // are one page rather than two, and the location a link or a history carries is the
@@ -865,9 +932,9 @@ namespace doc { // update-hdr
     // whatever it is handed.
     //
     // A key naming a view of a query carries a key of its own, and that inner key is
-    // resolved to records rather than to a document.  So `func:lib_x2.FStream` is the
-    // functions of that ctype and `code:lib_x2` the generated code of that namespace,
-    // while what comes back is spelled out in full -- `func:dmmeta.ctype:lib_x2.FStream`
+    // resolved to records rather than to a document.  So `func:amc.FCtype` is the
+    // functions of that ctype and `code:algo_lib` the generated code of that namespace,
+    // while what comes back is spelled out in full -- `func:dmmeta.ctype:amc.FCtype`
     // -- because one page has one canonical text and the short form is a way of typing
     // it rather than a second name for it.
     tempstr ResolveLoc(algo::strptr want);
@@ -930,7 +997,7 @@ namespace doc { // update-hdr
     // still lists every document.
     //
     // A key that names no document at all may still name a ctype, and `doc
-    // lib_x2.FStream` then opens that ctype's record.  Most of the tree's types have
+    // amc.FCtype` then opens that ctype's record.  Most of the tree's types have
     // no document of their own, and the record is what there is to read about one:
     // its fields, and from there the functions that take it.
     //
@@ -956,6 +1023,9 @@ namespace doc { // update-hdr
 
     // Lay the functions a selection is about, or one function's source, onto the page.
     // void docpage_func(); // dev.docpage:func
+
+    // Lay a gstatic table onto the page as a document: each record and the function it stands for.
+    // void docpage_gist(); // dev.docpage:gist
 
     // Lay the page of keys onto the page.
     // void docpage_help(); // dev.docpage:help
@@ -1085,7 +1155,7 @@ namespace doc { // update-hdr
     // a builtin type, which belongs to no namespace and so to no generated header.
     //
     // amc divides a generated header into sections and opens each one with a comment naming
-    // what the section is for, so the span from `// --- lib_x2.FStream` onward is that ctype's
+    // what the section is for, so the span from `// --- amc.FCtype` onward is that ctype's
     // generated code: where the records live, the struct itself, and then the accessor of every
     // field of it.
     //
@@ -1098,7 +1168,7 @@ namespace doc { // update-hdr
     // its namespace's generated header carries none.
     //
     // amc divides a generated header into sections and opens each one with a comment
-    // naming what the section is for, so the span from `// --- lib_x2.FStream` to the
+    // naming what the section is for, so the span from `// --- amc.FCtype` to the
     // next such comment is exactly that ctype's generated code: where the records
     // live, the struct itself, and the accessor of every field of it.  Reading amc's
     // own boundary is what keeps the extraction one rule, where matching the struct
@@ -1116,6 +1186,18 @@ namespace doc { // update-hdr
     // so a reader who wants the surroundings can have the whole header instead.
     void RenderCode(algo::strptr query);
 
+    // Return the line of TEXT the comment block ending just above line AT begins at, or AT
+    // itself when the line above it is not a comment.
+    //
+    // Every function in this tree is introduced by a comment saying what calling it does
+    // and what it achieves, so that block is half of what a reader came for and src_func
+    // reports the line below it.  The run ends at the first line that is not a comment,
+    // which keeps the function above from being dragged in with it.
+    int CommentTop(algo::strptr text, int at);
+
+    // Return the lines FIRST through LAST of TEXT, both included.
+    tempstr Lines(algo::strptr text, int first, int last);
+
     // Ask src_func where the function NAME lives and read its source into _db.funcsrc.
     //
     // NAME is either what the function is called or the line it starts on, and a link built
@@ -1132,13 +1214,26 @@ namespace doc { // update-hdr
     // what it does, and the file around them is thousands of lines nobody asked for.
     void ReadFuncsrc(algo::strptr name, algo::strptr src);
 
-    // Lay the source of the function NAME onto the page, under a link to the file at the
-    // line the function starts on.
+    // Read the source of the function the record at LOC stands for into _db.funcsrc, and
+    // return true when one answered.
     //
-    // The listing carries the file's own line numbers, so a link naming L and a number
-    // lands on the line it names here exactly as it does on the page showing the whole
-    // file.  The head is a link, so a reader who wants the surroundings after all is one
-    // Enter from them.
+    // The gist of the record already asked src_func where the function lives, so the listing
+    // comes from that answer and its command line, and src_func runs once per page.  When a
+    // dmmeta.ssimreq requires the function's file for the record (Recfile), the listing is the
+    // whole file below its header: the file comment and the static helpers are documentation
+    // of the record as much as the function is.
+    bool ReadRecfunc(algo::strptr loc);
+
+    // Lay the source held in _db.funcsrc onto the page, under a link to the file at the line
+    // the function starts on.
+    //
+    // The listing carries the file's own line numbers, so a link naming L and a number lands
+    // on the line it names here exactly as it does on the page showing the whole file.  The
+    // head is a link, so a reader who wants the surroundings after all is one Enter from them.
+    void RenderFuncsrcText();
+
+    // Lay the source of the function NAME onto the page, under a link to the file at the
+    // line the function starts on.  SRC narrows the search to one file, as ReadFuncsrc says.
     void RenderFuncsrc(algo::strptr name, algo::strptr src);
 
     // Read what the page at LOC is about and return amc_vis's drawing of the access paths of
@@ -1189,6 +1284,61 @@ namespace doc { // update-hdr
     // because a reader sometimes wants the drawing and nothing else -- a whole namespace's
     // paths at once, say, which no single record page is about.
     void RenderAccesspath(algo::strptr regx);
+
+    // -------------------------------------------------------------------
+    // cpp/doc/gist.cpp
+    //
+
+    // Return true when LOC names the gist of a selection.
+    bool GistQ(algo::strptr loc);
+
+    // Point every ctype at its field of reftype Base, the one naming the ctype it projects.
+    //
+    // A program does not hold ssim rows as they are written; it holds a ctype of its own that
+    // carries the table's ctype as its Base field.  The field's name is whatever its author
+    // chose, so the reftype is what says which field it is.
+    void BaseRead();
+
+    // Return the table whose rows the program ctype CTYPE holds a projection of, and NULL when
+    // CTYPE projects no table.
+    doc::FSsimfile *Basessimfile(algo::strptr ctype);
+
+    // Record, for every table whose rows a program binds to functions, the gstatic that binds
+    // them, and on each gstatic the hook fields of its ctype.
+    //
+    // amc gives each row of a gstatic one function per hook field of the program's ctype, so a
+    // table compiled in with no hook is a list of constants and stands for no function.  A
+    // gstatic names a field, and that field's ctype is the program's projection of the table.  A
+    // table that two programs compile in is bound by the one carrying hooks.
+    void GstaticRead();
+
+    // Return the gstatic binding the rows of the table TABLE to functions, and NULL when no
+    // program does.
+    doc::FGstatic *Tablegstatic(algo::strptr table);
+
+    // Return the gist location of the selection QUERY, and the empty string when QUERY selects
+    // rows of no table that a program binds to functions.
+    tempstr Gistloc(algo::strptr query);
+
+    // Ask src_func for the functions the records QUERY selects stand for, and hold each in
+    // doc.FDb.gist under the record it stands for, in place of whatever an earlier selection
+    // left there, with the command line that asked in doc.FDb.gistcmd.
+    //
+    // src_func reports with every function the acr key that caused it -- `amcdb.gen:prep_ctype`
+    // for amc.gen_prep_ctype -- so one question about the whole selection answers for every
+    // row of it, and the selection is itself a pattern over those keys.  A row whose ctype has
+    // several hooks has several functions, and each reports the same key.
+    void GistRead(algo::strptr query);
+
+    // Return the gist of the selection QUERY as markdown, and the empty string when QUERY
+    // selects rows of no table that a program binds to functions.
+    //
+    // The title is the table and what its ctype says it is.  The sections follow in the order
+    // the table holds its rows, which is the order somebody chose when they wrote them.
+    tempstr GistText(algo::strptr query);
+
+    // Lay the gist at the location LOC onto the page.
+    void RenderGist(algo::strptr loc);
 
     // -------------------------------------------------------------------
     // cpp/doc/hilite.cpp
@@ -1322,6 +1472,12 @@ namespace doc { // update-hdr
     // written for the namespace page is a real table here and a link in it is followed like
     // any other.  Nothing about the page knows which device is asking.
     void PutNs(algo::cstring &out, algo::strptr ns);
+
+    // Append the gist at the location LOC to OUT: the tab strip, then the document.
+    //
+    // The text is markdown and goes through the parser a document goes through, so its
+    // headings are the pane's entries and its links are followed like any other.
+    void PutGist(algo::cstring &out, algo::strptr loc);
 
     // Append the page about the message location LOC to OUT: the roots of every protocol when
     // LOC names none, and otherwise one message -- its declaration, then what begins with it
@@ -1477,7 +1633,8 @@ namespace doc { // update-hdr
     //
     // Which documents go is dev.readmefile.publish, so the module carries a chosen set
     // rather than a copy of the tree -- the schema references and the rule files are
-    // documents too, and an operator has no use for them.
+    // documents too, and an operator has no use for them.  Each row carries the
+    // document's title and its body after the title heading (CatalogBody).
     void WriteCatalog(algo::strptr path);
 
     // -------------------------------------------------------------------
@@ -1622,7 +1779,7 @@ namespace doc { // update-hdr
     // Return the link to the internals of the namespace the document at PATH is about, as
     // markdown, and the empty string when the document is about no namespace.
     //
-    // A README under txt/exe, txt/lib, txt/protocol or txt/ssimdb sits in a directory named
+    // A README under txt/exe, txt/so, txt/lib, txt/protocol or txt/ssimdb sits in a directory named
     // after a namespace, and that is the whole of what says which document is about which
     // namespace.  What the link opens is the namespace page doc computes, so it says what
     // the tree holds now rather than what it held when a generator last ran.
@@ -1635,10 +1792,11 @@ namespace doc { // update-hdr
     // Return the namespace the document at PATH is about, and the empty string when it is
     // about none.
     //
-    // A README under txt/exe, txt/lib, txt/protocol or txt/ssimdb sits in a directory named
-    // after a namespace, and that path is the whole of what says which document is about
-    // which one.  Reading it off the path rather than out of the file is what lets a
-    // namespace nobody has written a word about carry the same page as one they have.
+    // A namespace's README is txt/<nstype>/<ns>/README.md -- txt/exe, txt/so, txt/lib,
+    // txt/protocol or txt/ssimdb, as the namespace's nstype says -- and that path is the
+    // whole of what says which document is about which one.  Reading it off the path rather
+    // than out of the file is what lets a namespace nobody has written a word about carry
+    // the same page as one they have.
     tempstr Docns(algo::strptr path);
 
     // Return the ssimfile whose prose the heading anchored at FRAG opens, or the empty
@@ -1685,9 +1843,13 @@ namespace doc { // update-hdr
     // declares none.
     //
     // The name is the identifier just before the argument list, and the namespace in front
-    // of it comes off -- a pane full of `lib_x2::` says nothing, since every entry on a
+    // of it comes off -- a pane full of `amc::` says nothing, since every entry on a
     // file's page shares it.
     tempstr Funcname(algo::strptr proto);
+
+    // Return true when the page at LOC is a markdown document of the tree, whose pane lists
+    // the documents of its directory (PutNavdoc).
+    bool DocpageQ(algo::strptr loc);
 
     // Return the pane of the page at LOC, as markdown, and the empty string when the page has
     // no map worth drawing.
@@ -1711,7 +1873,11 @@ namespace doc { // update-hdr
     // A fourth-level heading keeps its anchor in the file, since a document elsewhere may link
     // to it; what it does not get is an entry here, where it would bury the sections it sits
     // under.
-    tempstr NavText(algo::strptr loc);
+    //
+    // BESIDE says where the pane goes: beside the page in a browser, above it at the terminal.
+    // The map is the same either way, except that above the page a document's directory is a
+    // fold (PutNavdoc).
+    tempstr NavText(algo::strptr loc, bool beside);
 
     // -------------------------------------------------------------------
     // cpp/doc/parse.cpp
@@ -1771,6 +1937,20 @@ namespace doc { // update-hdr
     // blocks its markers name; anything else is a listing, whose every line means
     // itself and is carried through unexamined.
     void ParseFile(algo::strptr path);
+
+    // Append TEXT to OUT as markdown that the parser reads back as TEXT, with a line of
+    // markdown for each line of TEXT.
+    //
+    // A comment in this tree is plain text.  `1K*scale` in one is a number and a word, `<ns>`
+    // is a name, and a line opening with `#` or `|` is a line about a flag or a column.  Read
+    // as markdown, the star opens an emphasis, the name is dropped as a tag, and the line
+    // becomes a heading or a table.  So every character that opens an inline span is escaped,
+    // and so is the first character of a line when it is not a letter.  The backquote is the
+    // exception inside a line, since the authors of these comments write it to mean a name.
+    //
+    // A line indented four spaces that no line of prose leads into is a listing, which the
+    // parser copies as it stands, so it is copied here as it stands too.
+    void PutPlain(algo::cstring &out, algo::strptr text);
 
     // Read the markdown inline markup of IN into _db.span, one span per run of text that
     // carries one style.

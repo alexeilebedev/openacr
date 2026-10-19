@@ -155,11 +155,11 @@ static bool RunCiTest(atf_ci::FCitest &citest) {
         wt_ExecX(wt);
         algo_lib::PushDir(algo_lib::WtDir(dev_Sandbox_sandbox_atf_ci));
     }
-    // a coverage citest writes its .gcda into its own dir; GCC_PROFILE_DIR is
-    // resolved at runtime by every coverage-built binary and inherited down
-    // the whole spawn tree, so cov_finalize can merge the per-citest dirs.
-    // Absolute path -- subprocesses chdir into tempdirs / the sandbox.
-    bool cov = citest.cijob == atf_ci::atfdb_cijob_coverage;
+    // a citest marked gcov writes its .gcda into its own dir; GCC_PROFILE_DIR
+    // is resolved at runtime by every coverage-built binary and inherited down
+    // the whole spawn tree, so the last citest of its job can gcov the dirs one
+    // by one.  Absolute path -- subprocesses chdir into tempdirs / the sandbox.
+    bool cov = citest.gcov;
     if (cov) {
         tempstr covdir = tempstr() << "temp/cov/" << citest.citest << ".d";
         algo::RemDirRecurse(covdir, true);

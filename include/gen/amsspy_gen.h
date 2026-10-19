@@ -294,7 +294,7 @@ amsspy::FShm*        cd_shm_poll_RotateFirst() __attribute__((nothrow));
 inline amsspy::FShm& cd_shm_poll_qLast() __attribute__((__warn_unused_result__, nothrow));
 // func:amsspy.FDb.cd_shm_poll.Step
 // this function is 'extrn' and implemented by user
-void                 cd_shm_poll_Step() __attribute__((nothrow));
+void                 cd_shm_poll_Step();
 
 // cursor points to valid item
 // func:amsspy.FDb.session_curs.Reset

@@ -87,6 +87,14 @@ namespace atf_cov { // update-hdr
     // Persist the uncovfunc pool to its committed ssimfile, replacing prior
     // contents -- the same acr -replace -trunc path SaveCov uses for tgtcov.
     void SaveUncovfunc();
+
+    // Merge the line counts another run wrote into DIR, and say what DIR gave, the
+    // way a gcov merge does.  The directory is the unit of loss here too: line
+    // counts reach a merge as the output of a job that ran elsewhere, and a
+    // directory that holds none means that job's measurement never arrived.  Every
+    // target only its tests exercised would then read as uncovered code, so an
+    // empty directory is an error, and -check judges the run lost.
+    void MergeSsimDir(strptr dir);
     //     (user-implemented function, prototype is in amc-generated header)
     // void Main(); // dmmeta.main:atf_cov
 }

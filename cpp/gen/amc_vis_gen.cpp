@@ -92,14 +92,14 @@ namespace amc_vis { // gen:ns_print_proto
     inline static void   SizeCheck();
 } // gen:ns_print_proto
 
-// --- amc_vis.FCtype.msghdr.CopyOut
+// --- amc_vis.FCtype.base.CopyOut
 // Copy fields out of row
 void amc_vis::ctype_CopyOut(amc_vis::FCtype &row, dmmeta::Ctype &out) {
     out.ctype = row.ctype;
     out.comment = algo::Comment(row.comment);
 }
 
-// --- amc_vis.FCtype.msghdr.CopyIn
+// --- amc_vis.FCtype.base.CopyIn
 // Copy fields in to row
 void amc_vis::ctype_CopyIn(amc_vis::FCtype &row, dmmeta::Ctype &in) {
     row.ctype = in.ctype;
@@ -720,7 +720,7 @@ static void amc_vis::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'amc_vis.Input'  signature:'26977645615fc5990f8402112565332eb0b76112'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'amc_vis.Input'  signature:'f143f47b6711d7e4cdf02ea1e4a10dc9f493a420'");
 }
 
 // --- amc_vis.FDb._db.InsertStrptrMaybe
@@ -3060,7 +3060,7 @@ void amc_vis::FDb_Uninit() {
     // skip destruction in global scope
 }
 
-// --- amc_vis.FField.msghdr.CopyOut
+// --- amc_vis.FField.base.CopyOut
 // Copy fields out of row
 void amc_vis::field_CopyOut(amc_vis::FField &row, dmmeta::Field &out) {
     out.field = row.field;
@@ -3070,7 +3070,7 @@ void amc_vis::field_CopyOut(amc_vis::FField &row, dmmeta::Field &out) {
     out.comment = algo::Comment(row.comment);
 }
 
-// --- amc_vis.FField.msghdr.CopyIn
+// --- amc_vis.FField.base.CopyIn
 // Copy fields in to row
 void amc_vis::field_CopyIn(amc_vis::FField &row, dmmeta::Field &in) {
     row.field = in.field;
@@ -3117,7 +3117,7 @@ void amc_vis::FField_Uninit(amc_vis::FField& parent) {
     }
 }
 
-// --- amc_vis.FFinput.msghdr.CopyOut
+// --- amc_vis.FFinput.base.CopyOut
 // Copy fields out of row
 void amc_vis::finput_CopyOut(amc_vis::FFinput &row, dmmeta::Finput &out) {
     out.field = row.field;
@@ -3126,7 +3126,7 @@ void amc_vis::finput_CopyOut(amc_vis::FFinput &row, dmmeta::Finput &out) {
     out.comment = algo::Comment(row.comment);
 }
 
-// --- amc_vis.FFinput.msghdr.CopyIn
+// --- amc_vis.FFinput.base.CopyIn
 // Copy fields in to row
 void amc_vis::finput_CopyIn(amc_vis::FFinput &row, dmmeta::Finput &in) {
     row.field = in.field;
@@ -4081,7 +4081,7 @@ amc_vis::FOutrow& amc_vis::FOutrow::operator =(const amc_vis::FOutrow &rhs) {
     text_Setary(*this, text_Getary(const_cast<amc_vis::FOutrow&>(rhs)));
 }
 
-// --- amc_vis.FReftype.msghdr.CopyOut
+// --- amc_vis.FReftype.base.CopyOut
 // Copy fields out of row
 void amc_vis::reftype_CopyOut(amc_vis::FReftype &row, dmmeta::Reftype &out) {
     out.reftype = row.reftype;
@@ -4098,7 +4098,7 @@ void amc_vis::reftype_CopyOut(amc_vis::FReftype &row, dmmeta::Reftype &out) {
     out.varlen = row.varlen;
 }
 
-// --- amc_vis.FReftype.msghdr.CopyIn
+// --- amc_vis.FReftype.base.CopyIn
 // Copy fields in to row
 void amc_vis::reftype_CopyIn(amc_vis::FReftype &row, dmmeta::Reftype &in) {
     row.reftype = in.reftype;

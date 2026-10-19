@@ -41,6 +41,9 @@ void apm::Main_Check() {
     if (CheckLink() > 0) {
         algo_lib::_db.exit_code=1;
     }
+    if (CheckPkgfile() > 0) {
+        algo_lib::_db.exit_code=1;
+    }
     // Each pkgkey must match at least one record.  The test is what the key's
     // query matched, before closure, exclusion or subtraction: an exclusion
     // keeps no pkgrec by construction, and a key whose records an extender
@@ -72,6 +75,20 @@ void apm::Main_Check() {
                 dev::Pkgkey out;
                 pkgkey_CopyOut(pkgkey,out);
                 prlog("acr.delete  "<<out);
+                algo_lib::_db.exit_code=1;
+            }
+        }ind_end;
+    }ind_end;
+
+    // A stub key says how a file the package already carries leaves.  It selects
+    // nothing, so a closure on it or an exclusion would be a second meaning that
+    // the key silently drops.
+    ind_beg(_db_zd_sel_package_curs,package,_db) {
+        ind_beg(package_zd_pkgkey_curs,pkgkey,package) {
+            if (pkgkey.stub && (pkgkey.up || pkgkey.down || pkgkey.ref || pkgkey.exclude)) {
+                prlog("apm.badkey"
+                      <<Keyval("pkgkey",pkgkey.pkgkey)
+                      <<Keyval("comment","a stub key takes no closure and excludes nothing; set up, down, ref and exclude to N"));
                 algo_lib::_db.exit_code=1;
             }
         }ind_end;
@@ -275,60 +292,78 @@ int apm::CheckMixedFile() {
 
 // -----------------------------------------------------------------------------
 
-// Report every file on which the projection of this tree at a selected package's
-// localref and the origin at its baseref disagree, and return how many there are.
-// A sync is a pair of commits, one per repository, and the origin's commit is
-// the projection of this tree's: that is what lets a push take the whole origin
-// as its base.  A file only one side holds means the pair does not correspond,
-// and the next push would treat the difference as a change nobody made.  File
-// contents are not compared, since each tree regenerates its own generated files;
-// ssimfiles are records, and data/ is left out.
+// Report every file on which the projection of this tree at LOCALREF and the
+// origin ORIGIN at BASEREF disagree, for PACKAGE's destination PKGUPSTREAM, and
+// return how many there are.  A sync is a pair of commits, one per repository,
+// and the origin's commit is the projection of this tree's: that is what lets a
+// push take the whole origin as its base.  A file only one side holds means the
+// pair does not correspond, and the next push would treat the difference as a
+// change nobody made.  File contents are not compared, since each tree
+// regenerates its own generated files; ssimfiles are records, and data/ is left
+// out.  A path that a mapping of the package fills is a file of the projection,
+// and the mappings are this tree's current ones, which a mapping added since
+// LOCALREF makes disagree with the origin until the next sync.
+int apm::CountSyncDrift(apm::FPackage &package, algo::strptr pkgupstream, algo::strptr origin, algo::strptr baseref, algo::strptr localref) {
+    int ret = 0;
+    tempstr base = FetchPackageOrigin(pkgupstream,origin,baseref);
+    vrfy(base != "", tempstr() << "apm.syncpair  comment:'the baseref could not be fetched'" << Keyval("baseref",baseref));
+    vrfy(CreatePackageSandbox(_db.base_sandbox,localref)==0, "apm.syncpair  comment:'the localref could not be checked out'");
+    mergefile_RemoveAll();
+    // the push publishes the package with the packages it contains and the
+    // ones it builds on, and the carrier set is exactly those
+    SetCarrier(&package);
+    algo::ListSep ls("|");
+    tempstr expr;
+    ind_beg(_db_package_curs,carrier,_db) if (carrier.visited) {
+        expr << ls << carrier.package;
+    }ind_end;
+    (void)ResolvePkgfile(&package);
+    SetCarrier(NULL);
+    command::apm_proc apm;
+    apm.path = GetOurApmPath();
+    apm.cmd.package.expr = tempstr() << "(" << expr << ")";
+    apm.cmd.showfile = true;
+    apm.fstdout = "|";
+    algo_lib::PushDir(algo_lib::WtDir(_db.base_sandbox));
+    apm_Start(apm);
+    algo_lib::PopDir();
+    ind_beg(algo::FileLine_curs,line,apm.from_stdout) {
+        dev::Gitfile gitfile;
+        if (Gitfile_ReadStrptrMaybe(gitfile,line) && !StartsWithQ(gitfile.gitfile,"data/")) {
+            ind_mergefile_GetOrCreate(gitfile.gitfile).ours_mode = 1;
+        }
+    }ind_end;
+    apm_Wait(apm);
+    vrfy(apm.status == 0, "apm.syncpair  comment:'the projection at localref could not be evaluated'");
+    ind_beg(_db_pkgdest_curs,pkgdest,_db) {
+        ind_mergefile_GetOrCreate(pkgdest.pkgdest).ours_mode = 1;
+    }ind_end;
+    tempstr tree(SysEval(tempstr() << "git ls-tree -r --name-only " << strptr_ToBash(base), FailokQ(false), 1024*1024*64));
+    ind_beg(algo::Line_curs,path,tree) if (ch_N(path) > 0 && !StartsWithQ(path,"data/")) {
+        ind_mergefile_GetOrCreate(path).base_mode = 1;
+    }ind_end;
+    ind_beg(_db_mergefile_curs,mergefile,_db) if ((mergefile.ours_mode != 0) != (mergefile.base_mode != 0)) {
+        prerr("apm.syncdrift"
+              <<Keyval("pkgupstream",pkgupstream)
+              <<Keyval("file",mergefile.mergefile)
+              <<Keyval("only_in",mergefile.ours_mode ? "projection" : "origin")
+              <<Keyval("comment","the origin at baseref is not the projection of localref"));
+        ret++;
+    }ind_end;
+    mergefile_RemoveAll();
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
+// Report every file on which a selected package's recorded sync pair, its
+// localref and baseref, disagree, and return how many there are.  A row with
+// either half empty records no pair and is skipped.
 int apm::CheckSyncPair() {
     int ret = 0;
     ind_beg(_db_zd_sel_package_curs,package,_db) {
         ind_beg(package_c_pkgupstream_curs,pkgupstream,package) if (pkgupstream.localref != "" && pkgupstream.baseref != "") {
-            tempstr base = FetchPackageOrigin(pkgupstream.pkgupstream,pkgupstream.origin,pkgupstream.baseref);
-            vrfy(base != "", tempstr() << "apm.syncpair  comment:'the baseref could not be fetched'" << Keyval("baseref",pkgupstream.baseref));
-            vrfy(CreatePackageSandbox(_db.base_sandbox,pkgupstream.localref)==0, "apm.syncpair  comment:'the localref could not be checked out'");
-            mergefile_RemoveAll();
-            // the push publishes the package with the packages it contains and the
-            // ones it builds on, and the carrier set is exactly those
-            SetCarrier(&package);
-            algo::ListSep ls("|");
-            tempstr expr;
-            ind_beg(_db_package_curs,carrier,_db) if (carrier.visited) {
-                expr << ls << carrier.package;
-            }ind_end;
-            SetCarrier(NULL);
-            command::apm_proc apm;
-            apm.path = DirFileJoin(algo::GetCurDir(),"bin/apm");
-            apm.cmd.package.expr = tempstr() << "(" << expr << ")";
-            apm.cmd.showfile = true;
-            apm.fstdout = "|";
-            algo_lib::PushDir(algo_lib::WtDir(_db.base_sandbox));
-            apm_Start(apm);
-            algo_lib::PopDir();
-            ind_beg(algo::FileLine_curs,line,apm.from_stdout) {
-                dev::Gitfile gitfile;
-                if (Gitfile_ReadStrptrMaybe(gitfile,line) && !StartsWithQ(gitfile.gitfile,"data/")) {
-                    ind_mergefile_GetOrCreate(gitfile.gitfile).ours_mode = 1;
-                }
-            }ind_end;
-            apm_Wait(apm);
-            vrfy(apm.status == 0, "apm.syncpair  comment:'the projection at localref could not be evaluated'");
-            tempstr tree(SysEval(tempstr() << "git ls-tree -r --name-only " << strptr_ToBash(base), FailokQ(false), 1024*1024*64));
-            ind_beg(algo::Line_curs,path,tree) if (ch_N(path) > 0 && !StartsWithQ(path,"data/")) {
-                ind_mergefile_GetOrCreate(path).base_mode = 1;
-            }ind_end;
-            ind_beg(_db_mergefile_curs,mergefile,_db) if ((mergefile.ours_mode != 0) != (mergefile.base_mode != 0)) {
-                prerr("apm.syncdrift"
-                      <<Keyval("pkgupstream",pkgupstream.pkgupstream)
-                      <<Keyval("file",mergefile.mergefile)
-                      <<Keyval("only_in",mergefile.ours_mode ? "projection" : "origin")
-                      <<Keyval("comment","the origin at baseref is not the projection of localref"));
-                ret++;
-            }ind_end;
-            mergefile_RemoveAll();
+            ret += CountSyncDrift(package,pkgupstream.pkgupstream,pkgupstream.origin,pkgupstream.baseref,pkgupstream.localref);
         }ind_end;
     }ind_end;
     return ret;

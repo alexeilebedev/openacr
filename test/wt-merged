@@ -1,0 +1,106 @@
+#!/bin/bash
+# Build a scratch checkout whose branch worktrees cover each merge verdict, and
+# reclaim the merged ones with wt.
+# Usage: test/wt-merged <wt-binary>
+#
+# The checkout pushes master to a bare origin beside it.  Branches done,
+# team/done, dirty, edited and busy each merged fast-forward with a footer
+# naming them.  done carries an edit that makes its file match origin/master,
+# dirty keeps an untracked file, edited carries an edit that origin/master
+# lacks, and a sleep runs inside busy's worktree while wt looks; the listing
+# names the sleep under wt.busy.  Branch fresh
+# was cut from master and never committed, so its tip's footer names busy.
+# Branches live and axb carry a commit master lacks.  The two agent-a
+# branches stand for worktrees Claude Code made for subagents, cut from master
+# and never committed: the clean one reads Y, since Claude Code never removes
+# a hook-made agent worktree, and the one with an untracked file reads dirty.
+# A listing that a shell in done's worktree runs from the checkout reads done
+# busy, since that shell works there and a removal would take its directory,
+# and it names that shell under wt.busy.
+#
+# The name a_b selects no worktree, since _ in a name is itself: -list -b
+# prints no row and -del -b removes nothing, axb and its edit included.  -clean -b and
+# -del -b on % without -merged refuse and touch nothing.  -del -b on live
+# removes that one worktree by name, and -merged then removes done and
+# team/done.
+#
+# The directory wt/scratch stands for an anonymous sandbox that exists: -list
+# shows it, and -list -b does not, since git lists no branch worktree there.
+#
+# done holds a detached worktree of its own at wt/done/wt/nest, the way a
+# branch worktree holds the sandboxes its tools reset.  The nested one gets no
+# row, and removing done takes it along with its registration.
+#
+# The listing drops the size column, which depends on the filesystem, and the
+# sleep's age.  The sleep's pid prints as sleeper and its parent pid, this
+# script's, as test, so a listing that swapped the two would fail.  The shell
+# in done's worktree is a subshell of this script, so its pid prints as shell,
+# and its command line, which is this script's, as -.  wt reads
+# dev.sandbox from the repo's own data/, since no sandbox row is involved.
+. "$(dirname "${BASH_SOURCE[0]}")/proc.sh"
+set -e
+wt="$PWD/$1"
+data="$PWD/data"
+dir=temp/wt_merged
+export GIT_AUTHOR_NAME=wt GIT_AUTHOR_EMAIL=wt@scratch GIT_COMMITTER_NAME=wt GIT_COMMITTER_EMAIL=wt@scratch
+rm -rf $dir
+mkdir -p $dir/co
+cd $dir
+git init -q --bare origin.git
+cd co
+git init -q
+git symbolic-ref HEAD refs/heads/master
+echo base > file
+echo wt/ > .gitignore
+git add file .gitignore
+git commit -qm base
+for b in done team/done dirty edited busy; do
+  git checkout -q -b $b master
+  echo $b >> file
+  git commit -qam "finish $b" -m "closes #1 ($b)"
+  git checkout -q master
+  git merge -q --ff-only $b
+done
+git branch fresh
+git branch agent-a0123456789abcdef
+git branch agent-afedcba9876543210
+git checkout -q -b live
+echo live >> file
+git commit -qam "start live" -m "closes #2 (live)"
+git checkout -q master
+git branch axb live
+git remote add origin ../origin.git
+git push -q origin master
+for b in agent-a0123456789abcdef agent-afedcba9876543210 axb busy dirty done edited fresh live team/done; do
+  git worktree add -q wt/$b $b
+done
+touch wt/dirty/untracked wt/agent-afedcba9876543210/untracked
+mkdir wt/scratch
+git -C wt/done worktree add -q --detach wt/nest
+git show master:file > wt/done/file
+echo junk >> wt/edited/file
+echo junk >> wt/axb/file
+(cd wt/busy && exec sleep 60) &
+sleeper=$!
+trap 'kill $sleeper' EXIT
+busy=$(cd wt/busy && pwd -P)
+for i in $(seq 50); do
+  [ "$(proc_cwd $sleeper)" = "$busy" ] && break
+  sleep 0.1
+done
+"$wt" -in:"$data" % -list -b | cut -f1,3,4 | sed -E "s/pid:$sleeper  ppid:$$  age:[0-9:-]+/pid:sleeper  ppid:test  age:-/"
+(cd wt/done && sh -c 'cd ../.. && exec "$0" -in:"$1" done -list -b' "$wt" "$data"; :) | cut -f1,3,4 \
+  | sed -E "s/pid:[0-9]+  ppid:$$  age:[0-9:-]+  cmd:.*/pid:shell  ppid:test  age:-  cmd:-/"
+"$wt" -in:"$data" a_b -list -b
+"$wt" -in:"$data" scratch -list -q | cut -f1,5
+"$wt" -in:"$data" scratch -list -b
+"$wt" -in:"$data" a_b -del -b
+"$wt" -in:"$data" % -clean -b 2>&1 || echo "exit:$?"
+"$wt" -in:"$data" % -del -b 2>&1 || echo "exit:$?"
+"$wt" -in:"$data" live -del -b
+git worktree list --porcelain | grep -c /nest || true
+"$wt" -in:"$data" % -del -b -merged
+ls wt
+git worktree list --porcelain | grep -c /nest || true
+git -C wt/axb status --short
+git branch --format='%(refname:short)'

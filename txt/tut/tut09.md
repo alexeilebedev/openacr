@@ -59,18 +59,18 @@ We will record the facts into [ssim tuples](/txt/ssimdb/sampdb/README.md) datase
 <a href="#list-of-targets"></a>
 First, there is a list of targets - all left-aligned names in Makefile. Lets' define a table named [sampdb.target](/txt/ssimdb/sampdb/README.md). It will contain all targets from the Makefile. Targets are unique by definition, so the first column of our table is the primary key.
 
-|TARGET|
-|---|
-|clean
-|command.o
-|display.o
-|edit
-|files.o
-|insert.o
-|kbd.o
-|main.o
-|search.o
-|utils.o
+| TARGET |
+| ------ |
+| clean |
+| command.o |
+| display.o |
+| edit |
+| files.o |
+| insert.o |
+| kbd.o |
+| main.o |
+| search.o |
+| utils.o |
 
 ### List of Targets combined with the ``precondition`` Sources
 <a href="#list-of-targets-combined-with-the-precondition-sources"></a>
@@ -78,98 +78,98 @@ Next, we want to record what source files correspond to each target. Here we wan
 
 italicised fields: *target, src* are [*Ssim Fundamentals*](/txt/openacr/ssim.md) fields
 
-|Field|[Type](/txt/ssimdb/dmmeta/README.md)|[Reftype](/txt/ssimdb/dmmeta/README.md#dmmeta-reftype)|Default|Comment|
-|---|---|---|---|---|
-|targsrc|algo.Smallstr50|Val|||
-|*target*|*[sampdb.Target](/txt/ssimdb/sampdb/README.md)*|*Pkey*||*<br>/LL of targsrc*|
-|*src*|*[sampdb.Gitfile](/txt/ssimdb/sampdb/README.md)*|*Pkey*||*<br>/LR of targsrc*|
+| Field    | [Type](/txt/ssimdb/dmmeta/README.md)             | [Reftype](/txt/ssimdb/dmmeta/README.md#dmmeta-reftype) | Default | Comment |
+| -------- | ------------------------------------------------ | ------------------------------------------------------ | ------- | ------- |
+| targsrc  | algo.Smallstr50                                  | Val                                                    |         |  |
+| *target* | *[sampdb.Target](/txt/ssimdb/sampdb/README.md)*  | *Pkey*                                                 |         | *<br>/LL of targsrc* |
+| *src*    | *[sampdb.Gitfile](/txt/ssimdb/sampdb/README.md)* | *Pkey*                                                 |         | *<br>/LR of targsrc* |
 
  The table [sampdb.targsrc](/txt/ssimdb/sampdb/README.md) records will look like this:
 
-|TARGSRC|
-|---|
-|command.o/command.c
-|command.o/command.h
-|command.o/defs.h
-|display.o/buffer.h
-|display.o/defs.h
-|display.o/display.c
-|files.o/buffer.h
-|files.o/command.h
-|files.o/defs.h
-|files.o/files.c
-|insert.o/buffer.h
-|insert.o/defs.h
-|insert.o/insert.c
-|kbd.o/command.h
-|kbd.o/defs.h
-|kbd.o/kbd.c
-|main.o/defs.h
-|main.o/main.c
-|search.o/buffer.h
-|search.o/defs.h
-|search.o/search.c
-|utils.o/defs.h
-|utils.o/utils.c
+| TARGSRC |
+| ------- |
+| command.o/command.c |
+| command.o/command.h |
+| command.o/defs.h |
+| display.o/buffer.h |
+| display.o/defs.h |
+| display.o/display.c |
+| files.o/buffer.h |
+| files.o/command.h |
+| files.o/defs.h |
+| files.o/files.c |
+| insert.o/buffer.h |
+| insert.o/defs.h |
+| insert.o/insert.c |
+| kbd.o/command.h |
+| kbd.o/defs.h |
+| kbd.o/kbd.c |
+| main.o/defs.h |
+| main.o/main.c |
+| search.o/buffer.h |
+| search.o/defs.h |
+| search.o/search.c |
+| utils.o/defs.h |
+| utils.o/utils.c |
 
 ### List of Sources
 <a href="#list-of-sources"></a>
 We will have a table of all sources. We can match it to git controlled files: [samdb.gitfile](/txt/ssimdb/sampdb/README.md). This table is the **foreign** key to [List of Targets with Sources](#list-of-targets-combined-with-the-precondition-sources) - it validates the **src** ***fldfunc*** key there.
 
-|GITFILE|COMMENT|
-|---|---|
-|buffer.h||
-|command.c||
-|command.h||
-|defs.h||
-|display.c||
-|files.c||
-|insert.c||
-|kbd.c||
-|main.c||
-|search.c||
-|utils.c||
+| GITFILE   | COMMENT |
+| --------- | ------- |
+| buffer.h  |  |
+| command.c |  |
+| command.h |  |
+| defs.h    |  |
+| display.c |  |
+| files.c   |  |
+| insert.c  |  |
+| kbd.c     |  |
+| main.c    |  |
+| search.c  |  |
+| utils.c   |  |
 
 ### List of Targets combined with ``precondition`` Targets
 <a href="#list-of-targets-combined-with-precondition-targets"></a>
 Targets dependance on each other, as in preconditions, will be expressed by a table [samp.targdep](/txt/ssimdb/sampdb/README.md).  Here we use the same **fldfunc** approach, with "." as the separator. Our **fdlfunc** here are *Target* and *Parent*, both referring to our [List of Targets](#list-of-targets). For the precise table definition see reference [samp.targdep](/txt/ssimdb/sampdb/README.md). 
 
-|TARGDEP|
-|---|
-|clean.command.o
-|clean.display.o
-|clean.edit
-|clean.files.o
-|clean.insert.o
-|clean.kbd.o
-|clean.main.o
-|clean.search.o
-|clean.utils.o
-|edit.command.o
-|edit.display.o
-|edit.files.o
-|edit.insert.o
-|edit.kbd.o
-|edit.main.o
-|edit.search.o
-|edit.utils.o
+| TARGDEP |
+| ------- |
+| clean.command.o |
+| clean.display.o |
+| clean.edit |
+| clean.files.o |
+| clean.insert.o |
+| clean.kbd.o |
+| clean.main.o |
+| clean.search.o |
+| clean.utils.o |
+| edit.command.o |
+| edit.display.o |
+| edit.files.o |
+| edit.insert.o |
+| edit.kbd.o |
+| edit.main.o |
+| edit.search.o |
+| edit.utils.o |
 
 ### List of Recipes for each Target
 <a href="#list-of-recipes-for-each-target"></a>
 Finally, we will have a recipe table for each target: [sampdb.targrec](/txt/ssimdb/sampdb/README.md). Again we are tying [List of Targets](#list-of-targets) to the columns, this time directly, without **fldfunc**.
 
-|TARGET|RECIPE|COMMENT|
-|---|---|---|
-|clean|rm||
-|command.o|cc -c||
-|display.o|cc -c||
-|edit|cc -o edit||
-|files.o|cc -c||
-|insert.o|cc -c||
-|kbd.o|cc -c||
-|main.o|cc -c||
-|search.o|cc -c||
-|utils.o|cc -c||
+| TARGET    | RECIPE     | COMMENT |
+| --------- | ---------- | ------- |
+| clean     | rm         |  |
+| command.o | cc -c      |  |
+| display.o | cc -c      |  |
+| edit      | cc -o edit |  |
+| files.o   | cc -c      |  |
+| insert.o  | cc -c      |  |
+| kbd.o     | cc -c      |  |
+| main.o    | cc -c      |  |
+| search.o  | cc -c      |  |
+| utils.o   | cc -c      |  |
 
 ### All data dependencies visualized
 <a href="#all-data-dependencies-visualized"></a>

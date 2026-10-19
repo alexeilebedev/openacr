@@ -1,0 +1,177 @@
+#!/bin/bash
+# Drive wt's Claude Code worktree hooks against a scratch checkout, and show
+# that a remove takes exactly the worktree it names.
+# Usage: test/wt-hook <wt-binary>
+#
+# The checkout pushes master to a bare origin beside it, since the create
+# hook fetches origin/master and starts the branch there.  It lives in a
+# temporary directory outside the repo's tree: wt refuses to make a branch
+# worktree from inside a worktree, and it tells a worktree by the wt/
+# component of the current path, so a scratch checkout under temp/ of a
+# branch worktree would be refused.
+#
+# -hook:create for team/x makes wt/team/x, with a scratch link that climbs out
+# of team/ too.  The branch file that the checkout's .branch/team/x.md held
+# moves into the worktree, as wt/team/x/.branch/team/x.md, and the checkout's
+# path becomes a link to it; a second create of the same name leaves it as it
+# is and answers the same path.  `sed -i` through the link turns the
+# checkout's path back into a file with the edit, and a create then refuses
+# the two files that differ and keeps both; once they hold the same text, a
+# create links the checkout's path again.  A create of team, whose directory is the
+# parent of team/x and no worktree, fails, and so does a create of plain, a
+# directory that is no checkout, since wt refuses a directory at which git
+# registers no worktree.  -hook:remove on wt/a_b refuses, since the name is
+# literal and axb is another worktree; on a path outside the checkout's wt/
+# it refuses; on wt/team, the parent directory, and on wt/plain, a directory
+# that is no checkout, it refuses and leaves them, team/x and its file
+# included, as does `wt team -del -b` from the command line.  On wt/team/x it
+# refuses while the worktree holds an untracked file, and again while it
+# holds an edit to file, since a remove would lose either, and again while a
+# sleep runs inside it.  Once all three are gone, a remove run from inside the
+# worktree, where Claude Code runs it, takes that worktree although the shell
+# that started wt sits there, and the link to its branch file with it, and
+# leaves wt/x with its untracked file and its link; the branch team/x stays.  A worktree det whose HEAD is detached, as in the
+# middle of a rebase, is still a branch worktree: a create answers its path,
+# and `wt det -del -b` removes it.  A sandbox anon made with no dev.sandbox row
+# is a detached worktree too, but no branch anon exists, so a create of anon
+# refuses it and `% -list -b` leaves it out.  A hook value other than create,
+# remove or sessionstart, empty stdin, and JSON that names no worktree are
+# refused.  A name `<name>--<ref>` starts the branch at the ref:
+# feat--origin/feat makes wt/feat on branch feat at the remote branch, fetched
+# first, and loc--master at the local master; a name whose `--` is followed by
+# nothing is refused.
+#
+# -hook:sessionstart titles a session after its worktree: a startup with no
+# session_title in wt/team/x, or in a directory below wt/x, answers JSON that
+# names team/x or x.  A startup that carries a title, a resume, and a startup
+# in the checkout itself, in wt/team, in wt/plain or outside the checkout
+# answer nothing.  A startup in det, a detached worktree whose branch exists,
+# is titled det; one in anon, which no branch names, is not.
+#
+# The checkout ignores .branch and scratch, as the repo does, so the links
+# wt plants in a worktree are no uncommitted work.
+#
+# The checkout's path is replaced by CO in the output, since it is a
+# temporary directory.  The refusal names the sleep with its pid as sleeper,
+# its parent pid, this script's, as test, and no age.
+. "$(dirname "${BASH_SOURCE[0]}")/proc.sh"
+set -eo pipefail
+wt="$PWD/$1"
+data="$PWD/data"
+export GIT_AUTHOR_NAME=wt GIT_AUTHOR_EMAIL=wt@scratch GIT_COMMITTER_NAME=wt GIT_COMMITTER_EMAIL=wt@scratch
+dir=$(mktemp -d "${TMPDIR:-/tmp}/wt_hook.XXXXXX")
+trap 'rm -rf "$dir"' EXIT
+mkdir -p $dir/co
+cd $dir
+git init -q --bare origin.git
+cd co
+git init -q
+git symbolic-ref HEAD refs/heads/master
+echo base > file
+printf '.branch\nscratch\n' > .gitignore
+git add file .gitignore
+git commit -qm base
+git remote add origin ../origin.git
+git push -q origin master
+mkdir .branch scratch
+co=$(pwd -P)
+# run the hook MODE with JSON on stdin; the checkout's path reads CO
+hook() {
+  mode=$1
+  json=$2
+  echo "$mode: ${json//$co/CO}"
+  echo -n "$json" | "$wt" -in:"$data" -hook:$mode 2>&1 | sed "s#$co#CO#g" || echo "exit:$?"
+}
+# run the remove hook on worktree DIR from inside it, as Claude Code runs it:
+# the shell that starts wt waits in DIR while wt works
+hookin() {
+  json="{\"worktree_path\":\"$co/$1\"}"
+  echo "remove from inside: ${json//$co/CO}"
+  (cd $1 && "$wt" -in:"$data" -hook:remove <<< "$json" > $dir/out 2>&1 || echo "exit:$?" >> $dir/out)
+  sed "s#$co#CO#g" $dir/out
+}
+mkdir -p .branch/team
+echo 'the branch file of team/x' > .branch/team/x.md
+hook create '{"name":"team/x"}'
+readlink .branch/team/x.md | sed "s#$co#CO#g"
+[ -d wt/team/x/.branch ] && [ ! -L wt/team/x/.branch ] && echo 'wt/team/x/.branch is a directory'
+cat wt/team/x/.branch/team/x.md
+readlink wt/team/x/scratch
+git -C wt/team/x branch --show-current
+hook create '{"name":"team/x"}'
+sed -i 's/$/, edited in the checkout/' .branch/team/x.md
+hook create '{"name":"team/x"}'
+cat .branch/team/x.md wt/team/x/.branch/team/x.md
+cp .branch/team/x.md wt/team/x/.branch/team/x.md
+hook create '{"name":"team/x"}'
+readlink .branch/team/x.md | sed "s#$co#CO#g"
+cat wt/team/x/.branch/team/x.md
+hook create '{"name":"team"}'
+hook create '{"name":"axb"}'
+hook create '{"name":"x"}'
+touch wt/axb/untracked wt/x/untracked wt/team/x/untracked
+mkdir wt/plain
+touch wt/plain/keep
+hook create '{"name":"plain"}'
+mkdir wt/x/sub
+hook sessionstart "{\"source\":\"startup\",\"cwd\":\"$co/wt/team/x\"}"
+hook sessionstart "{\"source\":\"startup\",\"cwd\":\"$co/wt/x/sub\"}"
+hook sessionstart "{\"source\":\"startup\",\"cwd\":\"$co/wt/team/x\",\"session_title\":\"mine\"}"
+hook sessionstart "{\"source\":\"resume\",\"cwd\":\"$co/wt/team/x\"}"
+hook sessionstart "{\"source\":\"startup\",\"cwd\":\"$co\"}"
+hook sessionstart "{\"source\":\"startup\",\"cwd\":\"$co/wt/team\"}"
+hook sessionstart "{\"source\":\"startup\",\"cwd\":\"$co/wt/plain\"}"
+hook sessionstart "{\"source\":\"startup\",\"cwd\":\"/elsewhere\"}"
+rmdir wt/x/sub
+hook remove "{\"worktree_path\":\"$co/wt/a_b\"}"
+hook remove '{"worktree_path":"/elsewhere/wt/x"}'
+hook remove "{\"worktree_path\":\"$co/wt\"}"
+hook remove "{\"worktree_path\":\"$co/wt/team\"}"
+hook remove "{\"worktree_path\":\"$co/wt/plain\"}"
+"$wt" -in:"$data" team -del -b || echo "exit:$?"
+ls wt/team wt/team/x
+hook remove "{\"worktree_path\":\"$co/wt/team/x\"}"
+rm wt/team/x/untracked
+echo edit >> wt/team/x/file
+hook remove "{\"worktree_path\":\"$co/wt/team/x\"}"
+git -C wt/team/x checkout -q file
+(cd wt/team/x && exec sleep 60) &
+sleeper=$!
+x=$(cd wt/team/x && pwd -P)
+for i in $(seq 50); do
+  [ "$(proc_cwd $sleeper)" = "$x" ] && break
+  sleep 0.1
+done
+hook remove "{\"worktree_path\":\"$co/wt/team/x\"}" | sed -E "s/pid:$sleeper  ppid:$$  age:[0-9:-]+/pid:sleeper  ppid:test  age:-/"
+{ kill $sleeper && wait $sleeper; } 2>/dev/null || true
+[ -L .branch/team/x.md ] && echo 'a refused remove keeps .branch/team/x.md'
+hookin wt/team/x
+[ -e .branch/team/x.md ] || [ -L .branch/team/x.md ] || echo '.branch/team/x.md went with its worktree'
+readlink .branch/x.md | sed "s#$co#CO#g"
+hook create '{"name":"det"}'
+git -C wt/det checkout -q --detach
+hook create '{"name":"det"}'
+hook sessionstart "{\"source\":\"startup\",\"cwd\":\"$co/wt/det\"}"
+"$wt" -in:"$data" det -del -b || echo "exit:$?"
+"$wt" -in:"$data" anon -q true || echo "exit:$?"
+hook create '{"name":"anon"}'
+hook sessionstart "{\"source\":\"startup\",\"cwd\":\"$co/wt/anon\"}"
+hook bogus '{}'
+hook create ''
+hook create '{}'
+git checkout -q -b feat
+echo feat > feat
+git add feat
+git commit -qm "feat: a commit only origin/feat holds"
+git push -q origin feat
+git checkout -q master
+git branch -q -D feat
+hook create '{"name":"feat--origin/feat"}'
+git -C wt/feat branch --show-current
+git -C wt/feat log -1 --format=%s
+hook create '{"name":"loc--master"}'
+git -C wt/loc log -1 --format=%s
+hook create '{"name":"bad--"}'
+"$wt" -in:"$data" % -list -b | cut -f1,3,4
+ls wt wt/axb wt/plain wt/x
+git branch --format='%(refname:short)'

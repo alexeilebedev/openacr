@@ -33,6 +33,8 @@
 #include "include/gen/lib_prot_gen.inl.h"
 #include "include/gen/lib_cred_gen.h"
 #include "include/gen/lib_cred_gen.inl.h"
+#include "include/gen/lib_curl_gen.h"
+#include "include/gen/lib_curl_gen.inl.h"
 #include "include/gen/lib_json_gen.h"
 #include "include/gen/lib_json_gen.inl.h"
 //#pragma endinclude
@@ -41,6 +43,7 @@
 // in dependency order
 algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
 lib_cred::FDb   lib_cred::_db;    // dependency found via dev.targdep
+lib_curl::FDb   lib_curl::_db;    // dependency found via dev.targdep
 lib_json::FDb   lib_json::_db;    // dependency found via dev.targdep
 credd::FDb      credd::_db;       // dependency found via dev.targdep
 
@@ -52,6 +55,8 @@ namespace credd { // gen:ns_print_proto
     static void          kind_LoadStatic() __attribute__((nothrow));
     // func:credd.FDb.perm.LoadStatic
     static void          perm_LoadStatic() __attribute__((nothrow));
+    // func:credd.FDb.role.LoadStatic
+    static void          role_LoadStatic() __attribute__((nothrow));
     // func:credd.FDb.cred.InputMaybe
     static bool          cred_InputMaybe(creddb::Cred &elem) __attribute__((nothrow));
     // func:credd.FDb.credperm.InputMaybe
@@ -567,14 +572,16 @@ static void credd::kind_LoadStatic() {
     static struct _t {
         const char *s;
     } data[] = {
-        { "creddb.kind  kind:aws  tokenurl:\"https://console.aws.amazon.com/iam/home#/security_credentials\"  howto:\"Sign in to the AWS console as $account and open Security credentials at $server. Under Access keys, create an access key. Copy the access key id and the secret access key; the secret is shown once. Paste them below as the lines a shell sources: export AWS_ACCESS_KEY_ID=..., export AWS_SECRET_ACCESS_KEY=..., and export AWS_SESSION_TOKEN=... when there is one. Then deactivate the old key in the console.\"  prefix:\"\"  multiline:Y  comment:\"AWS access key id, secret and session token, held as one shell fragment\"" }
-        ,{ "creddb.kind  kind:cloudflare  tokenurl:https://dash.cloudflare.com/profile/api-tokens  howto:\"Sign in to Cloudflare as $account and open $tokenurl, or the account's own API Tokens page for a token the account owns. Create a custom token named $name with the permissions $perm, then Continue to summary and Create Token. Copy the token; Cloudflare shows it once. Paste it below. Delete the old token on the same page once the new one works.\"  prefix:\"cfut_ cfat_\"  multiline:N  comment:\"Cloudflare API token, a user's or an account's\"" }
-        ,{ "creddb.kind  kind:github  tokenurl:\"https://github.com/settings/tokens/new?description=$name&scopes=$perm\"  howto:\"Sign in to GitHub as $account and open $tokenurl, which is the new-token page with the name $name and the scopes $perm filled in. Set an expiration, then Generate token. Copy the token; GitHub shows it once. Paste it below. Delete the old token on the tokens page once the new one works.\"  prefix:\"ghp_ github_pat_\"  multiline:N  comment:\"GitHub classic personal access token\"" }
-        ,{ "creddb.kind  kind:gitlab  tokenurl:\"$server/-/user_settings/personal_access_tokens?name=$name&scopes=$perm\"  howto:\"Sign in to $server as $account and open $tokenurl, which is the access-tokens page with the name $name and the scopes $perm filled in. Set an expiration, then Create personal access token. Copy the token; GitLab shows it once. Paste it below. Revoke the old token on the same page once the new one works.\"  prefix:glpat-  multiline:N  comment:\"GitLab personal access token\"" }
-        ,{ "creddb.kind  kind:latitude  tokenurl:https://www.latitude.sh/dashboard  howto:\"Sign in to Latitude.sh as $account and open $tokenurl. Under the project's API keys, create a key named $name. Copy the key; Latitude shows it once. Paste it below as the line a shell sources: BEARER=<key>. Delete the old key on the same page once the new one works.\"  prefix:\"\"  multiline:N  comment:\"Latitude.sh API key, held as one shell fragment\"" }
-        ,{ "creddb.kind  kind:link  tokenurl:\"\"  howto:\"\"  prefix:\"\"  multiline:N  comment:\"A name that stands for another credential; the linkto column names it, and there is no secret\"" }
-        ,{ "creddb.kind  kind:openai  tokenurl:https://platform.openai.com/api-keys  howto:\"Sign in to OpenAI as $account and open $tokenurl. Create a project key named $name, and an admin key under the organization's Admin keys. Copy both; OpenAI shows each once. Paste them below as the lines a shell sources: OPENAI_ORG=..., OPENAI_PROJ=..., OPENAI_TOKEN=<project key> and OPENAI_ADMIN=<admin key>. Revoke the old keys once the new ones work.\"  prefix:\"\"  multiline:Y  comment:\"OpenAI organization, project, project key and admin key, held as one shell fragment\"" }
-        ,{ "creddb.kind  kind:sshkey  tokenurl:\"\"  howto:\"\"  prefix:\"\"  multiline:Y  comment:\"An ssh key pair; the public half is the pubkey column, the private half the secret\"" }
+        { "creddb.kind  kind:aws  tokenurl:\"https://console.aws.amazon.com/iam/home#/security_credentials\"  howto:\"Sign in to the AWS console as $account and open Security credentials at $server. Under Access keys, create an access key. Copy the access key id and the secret access key; the secret is shown once. Paste them below as the lines a shell sources: export AWS_ACCESS_KEY_ID=..., export AWS_SECRET_ACCESS_KEY=..., and export AWS_SESSION_TOKEN=... when there is one. Then deactivate the old key in the console.\"  minturl:\"\"  rotateurl:\"\"  prefix:\"\"  multiline:Y  comment:\"AWS access key id, secret and session token, held as one shell fragment\"" }
+        ,{ "creddb.kind  kind:cloudflare  tokenurl:https://dash.cloudflare.com/profile/api-tokens  howto:\"Sign in to Cloudflare as $account and open $tokenurl, or the account's own API Tokens page for a token the account owns. Create a custom token named $name with the permissions $perm, then Continue to summary and Create Token. Copy the token; Cloudflare shows it once. Paste it below. Delete the old token on the same page once the new one works.\"  minturl:\"\"  rotateurl:\"\"  prefix:\"cfut_ cfat_\"  multiline:N  comment:\"Cloudflare API token, a user's or an account's\"" }
+        ,{ "creddb.kind  kind:github  tokenurl:\"https://github.com/settings/tokens/new?description=$name&scopes=$perm\"  howto:\"Sign in to GitHub as $account and open $tokenurl, which is the new-token page with the name $name and the scopes $perm filled in. Set an expiration, then Generate token. Copy the token; GitHub shows it once. Paste it below. Delete the old token on the tokens page once the new one works.\"  minturl:\"\"  rotateurl:\"\"  prefix:\"ghp_ github_pat_\"  multiline:N  comment:\"GitHub classic personal access token\"" }
+        ,{ "creddb.kind  kind:gitlab  tokenurl:\"$server/-/user_settings/personal_access_tokens?name=$name&scopes=$perm\"  howto:\"Sign in to $server as $account and open $tokenurl, which is the access-tokens page with the name $name and the scopes $perm filled in. Set an expiration, then Create personal access token. Copy the token; GitLab shows it once. Paste it below. Revoke the old token on the same page once the new one works.\"  minturl:\"\"  rotateurl:$server/api/v4/personal_access_tokens/self/rotate  prefix:glpat-  multiline:N  comment:\"GitLab personal access token\"" }
+        ,{ "creddb.kind  kind:gitlab_group  tokenurl:$server/groups/$account/-/settings/access_tokens  howto:\"Only an Owner of the group $account can make this token. Send an Owner this request, or do it yourself if you are one: open $tokenurl and choose Add new token, with the name $name, the role $role, the scopes $perm, and the latest expiration date the form allows. Then Create group access token. Copy the token; GitLab shows it once. Paste it below. Revoke the old token on the same page once the new one works.\"  minturl:$server/api/v4/groups/$account/access_tokens  rotateurl:$server/api/v4/groups/$account/access_tokens/self/rotate  prefix:\"\"  multiline:N  comment:\"GitLab group access token, acting as a bot member of every project in the group\"" }
+        ,{ "creddb.kind  kind:gitlab_project  tokenurl:$server/$account/-/settings/access_tokens  howto:\"Only a Maintainer or Owner of the project $account can make this token. Send one of them this request, or do it yourself if you are one: open $tokenurl and choose Add new token, with the name $name, the role $role, the scopes $perm, and the latest expiration date the form allows. Then Create project access token. Copy the token; GitLab shows it once. Paste it below. Revoke the old token on the same page once the new one works.\"  minturl:$server/api/v4/projects/$account/access_tokens  rotateurl:$server/api/v4/projects/$account/access_tokens/self/rotate  prefix:\"\"  multiline:N  comment:\"GitLab project access token, acting as a bot member of one project\"" }
+        ,{ "creddb.kind  kind:latitude  tokenurl:https://www.latitude.sh/dashboard  howto:\"Sign in to Latitude.sh as $account and open $tokenurl. Under the project's API keys, create a key named $name. Copy the key; Latitude shows it once. Paste it below as the line a shell sources: BEARER=<key>. Delete the old key on the same page once the new one works.\"  minturl:\"\"  rotateurl:\"\"  prefix:\"\"  multiline:N  comment:\"Latitude.sh API key, held as one shell fragment\"" }
+        ,{ "creddb.kind  kind:link  tokenurl:\"\"  howto:\"\"  minturl:\"\"  rotateurl:\"\"  prefix:\"\"  multiline:N  comment:\"A name that stands for another credential; the linkto column names it, and there is no secret\"" }
+        ,{ "creddb.kind  kind:openai  tokenurl:https://platform.openai.com/api-keys  howto:\"Sign in to OpenAI as $account and open $tokenurl. Create a project key named $name, and an admin key under the organization's Admin keys. Copy both; OpenAI shows each once. Paste them below as the lines a shell sources: OPENAI_ORG=..., OPENAI_PROJ=..., OPENAI_TOKEN=<project key> and OPENAI_ADMIN=<admin key>. Revoke the old keys once the new ones work.\"  minturl:\"\"  rotateurl:\"\"  prefix:\"\"  multiline:Y  comment:\"OpenAI organization, project, project key and admin key, held as one shell fragment\"" }
+        ,{ "creddb.kind  kind:sshkey  tokenurl:\"\"  howto:\"\"  minturl:\"\"  rotateurl:\"\"  prefix:\"\"  multiline:Y  comment:\"An ssh key pair; the public half is the pubkey column, the private half the secret\"" }
         ,{NULL}
     };
     (void)data;
@@ -843,6 +850,24 @@ static void credd::perm_LoadStatic() {
         ,{ "creddb.perm  perm:gitlab/sudo  comment:\"Perform API actions as any user, when the token holder is an administrator\"" }
         ,{ "creddb.perm  perm:gitlab/write_registry  comment:\"Read and write container registry images\"" }
         ,{ "creddb.perm  perm:gitlab/write_repository  comment:\"Read and write repositories over git and through the API\"" }
+        ,{ "creddb.perm  perm:gitlab_group/api  comment:\"Full read and write access to the API for the group's projects, as far as the role allows\"" }
+        ,{ "creddb.perm  perm:gitlab_group/create_runner  comment:\"Create runners\"" }
+        ,{ "creddb.perm  perm:gitlab_group/manage_runner  comment:\"Manage runners\"" }
+        ,{ "creddb.perm  perm:gitlab_group/read_api  comment:\"Read access to the API for the group's projects\"" }
+        ,{ "creddb.perm  perm:gitlab_group/read_registry  comment:\"Read container registry images\"" }
+        ,{ "creddb.perm  perm:gitlab_group/read_repository  comment:\"Read repositories over git and through the API\"" }
+        ,{ "creddb.perm  perm:gitlab_group/self_rotate  comment:\"Rotate this token through the API, so credd can renew it without a browser\"" }
+        ,{ "creddb.perm  perm:gitlab_group/write_registry  comment:\"Read and write container registry images\"" }
+        ,{ "creddb.perm  perm:gitlab_group/write_repository  comment:\"Read and write repositories over git and through the API\"" }
+        ,{ "creddb.perm  perm:gitlab_project/api  comment:\"Full read and write access to the API for the project, as far as the role allows\"" }
+        ,{ "creddb.perm  perm:gitlab_project/create_runner  comment:\"Create runners\"" }
+        ,{ "creddb.perm  perm:gitlab_project/manage_runner  comment:\"Manage runners\"" }
+        ,{ "creddb.perm  perm:gitlab_project/read_api  comment:\"Read access to the API for the project\"" }
+        ,{ "creddb.perm  perm:gitlab_project/read_registry  comment:\"Read container registry images\"" }
+        ,{ "creddb.perm  perm:gitlab_project/read_repository  comment:\"Read repositories over git and through the API\"" }
+        ,{ "creddb.perm  perm:gitlab_project/self_rotate  comment:\"Rotate this token through the API, so credd can renew it without a browser\"" }
+        ,{ "creddb.perm  perm:gitlab_project/write_registry  comment:\"Read and write container registry images\"" }
+        ,{ "creddb.perm  perm:gitlab_project/write_repository  comment:\"Read and write repositories over git and through the API\"" }
         ,{NULL}
     };
     (void)data;
@@ -1005,6 +1030,257 @@ void credd::ind_perm_AbsReserve(int n) {
         algo_lib::malloc_FreeMem(_db.ind_perm_buckets_elems, old_size);
         _db.ind_perm_buckets_elems = new_buckets;
         _db.ind_perm_buckets_n = new_nbuckets;
+    }
+}
+
+// --- credd.FDb.role.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+credd::FRole& credd::role_Alloc() {
+    credd::FRole* row = role_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("credd.out_of_mem  field:credd.FDb.role  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- credd.FDb.role.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+credd::FRole* credd::role_AllocMaybe() {
+    credd::FRole *row = (credd::FRole*)role_AllocMem();
+    if (row) {
+        new (row) credd::FRole; // call constructor
+    }
+    return row;
+}
+
+// --- credd.FDb.role.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+credd::FRole* credd::role_InsertMaybe(const creddb::Role &value) {
+    credd::FRole *row = &role_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    role_CopyIn(*row,const_cast<creddb::Role&>(value));
+    bool ok = role_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        role_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- credd.FDb.role.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* credd::role_AllocMem() {
+    u64 new_nelems     = _db.role_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    credd::FRole*  lev   = NULL;
+    if (bsr < 36) {
+        lev = _db.role_lary[bsr];
+        if (!lev) {
+            lev=(credd::FRole*)algo_lib::malloc_AllocMem(sizeof(credd::FRole) * (u64(1)<<bsr));
+            _db.role_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.role_n = i64(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- credd.FDb.role.RemoveAll
+// Remove all elements from Lary
+void credd::role_RemoveAll() {
+    for (u64 n = _db.role_n; n>0; ) {
+        n--;
+        role_qFind(u64(n)).~FRole(); // destroy last element
+        _db.role_n = i64(n);
+    }
+}
+
+// --- credd.FDb.role.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void credd::role_RemoveLast() {
+    u64 n = _db.role_n;
+    if (n > 0) {
+        n -= 1;
+        role_qFind(u64(n)).~FRole();
+        _db.role_n = i64(n);
+    }
+}
+
+// --- credd.FDb.role.LoadStatic
+static void credd::role_LoadStatic() {
+    static struct _t {
+        const char *s;
+    } data[] = {
+        { "creddb.role  role:gitlab_group/developer  level:30  comment:\"Push branches, run and retry pipelines, approve and resolve threads\"" }
+        ,{ "creddb.role  role:gitlab_group/guest  level:10  comment:\"Read issues and leave comments\"" }
+        ,{ "creddb.role  role:gitlab_group/maintainer  level:40  comment:\"Merge to protected branches and manage the project's settings\"" }
+        ,{ "creddb.role  role:gitlab_group/owner  level:50  comment:\"Everything, including the group's members and its access tokens\"" }
+        ,{ "creddb.role  role:gitlab_group/planner  level:15  comment:\"Plan: edit issues, epics and milestones\"" }
+        ,{ "creddb.role  role:gitlab_group/reporter  level:20  comment:\"Read code and CI, set labels, assignees and reviewers\"" }
+        ,{ "creddb.role  role:gitlab_project/developer  level:30  comment:\"Push branches, run and retry pipelines, approve and resolve threads\"" }
+        ,{ "creddb.role  role:gitlab_project/guest  level:10  comment:\"Read issues and leave comments\"" }
+        ,{ "creddb.role  role:gitlab_project/maintainer  level:40  comment:\"Merge to protected branches and manage the project's settings\"" }
+        ,{ "creddb.role  role:gitlab_project/planner  level:15  comment:\"Plan: edit issues, epics and milestones\"" }
+        ,{ "creddb.role  role:gitlab_project/reporter  level:20  comment:\"Read code and CI, set labels, assignees and reviewers\"" }
+        ,{NULL}
+    };
+    (void)data;
+    for (int i=0; data[i].s; i++) {
+        creddb::Role role;
+        (void)creddb::Role_ReadStrptrMaybe(role, algo::strptr(data[i].s));
+        credd::FRole *elem = role_InsertMaybe(role);
+        (void)elem;
+    }
+}
+
+// --- credd.FDb.role.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool credd::role_XrefMaybe(credd::FRole &row) {
+    bool retval = true;
+    (void)row;
+    // insert role into index ind_role
+    if (true) { // user-defined insert condition
+        bool success = ind_role_InsertMaybe(row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "credd.duplicate_key  xref:credd.FDb.ind_role"; // check for duplicate key
+            return false;
+        }
+    }
+    return retval;
+}
+
+// --- credd.FDb.ind_role.Find
+// Find row by key. Return NULL if not found.
+credd::FRole* credd::ind_role_Find(const algo::strptr& key) {
+    u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_role_buckets_n - 1);
+    credd::FRole *ret = _db.ind_role_buckets_elems[index];
+    for (; ret && !((*ret).role == key); ret = ret->ind_role_next) {
+    }
+    return ret;
+}
+
+// --- credd.FDb.ind_role.FindX
+// Look up row by key and return reference. Throw exception if not found
+credd::FRole& credd::ind_role_FindX(const algo::strptr& key) {
+    credd::FRole* ret = ind_role_Find(key);
+    vrfy(ret, tempstr() << "credd.key_error  table:ind_role  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
+}
+
+// --- credd.FDb.ind_role.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+credd::FRole& credd::ind_role_GetOrCreate(const algo::strptr& key) {
+    credd::FRole* ret = ind_role_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &role_Alloc();
+        (*ret).role = key;
+        bool good = role_XrefMaybe(*ret);
+        if (!good) {
+            role_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
+    }
+    vrfy(ret, tempstr() << "credd.create_error  table:ind_role  key:'"<<key<<"'  comment:'bad xref'");
+    return *ret;
+}
+
+// --- credd.FDb.ind_role.InsertMaybe
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+bool credd::ind_role_InsertMaybe(credd::FRole& row) {
+    bool retval = true; // if already in hash, InsertMaybe returns true
+    if (LIKELY(row.ind_role_next == (credd::FRole*)-1)) {// check if in hash already
+        row.ind_role_hashval = algo::Smallstr100_Hash(0, row.role);
+        ind_role_Reserve(1);
+        u32 index = row.ind_role_hashval & (_db.ind_role_buckets_n - 1);
+        credd::FRole* *prev = &_db.ind_role_buckets_elems[index];
+        do {
+            credd::FRole* ret = *prev;
+            if (!ret) { // exit condition 1: reached the end of the list
+                break;
+            }
+            if ((*ret).role == row.role) { // exit condition 2: found matching key
+                retval = false;
+                break;
+            }
+            prev = &ret->ind_role_next;
+        } while (true);
+        if (retval) {
+            row.ind_role_next = *prev;
+            _db.ind_role_n++;
+            *prev = &row;
+        }
+    }
+    return retval;
+}
+
+// --- credd.FDb.ind_role.Remove
+// Remove reference to element from hash index. If element is not in hash, do nothing
+void credd::ind_role_Remove(credd::FRole& row) {
+    if (LIKELY(row.ind_role_next != (credd::FRole*)-1)) {// check if in hash already
+        u32 index = row.ind_role_hashval & (_db.ind_role_buckets_n - 1);
+        credd::FRole* *prev = &_db.ind_role_buckets_elems[index]; // addr of pointer to current element
+        while (credd::FRole *next = *prev) {                          // scan the collision chain for our element
+            if (next == &row) {        // found it?
+                *prev = next->ind_role_next; // unlink (singly linked list)
+                _db.ind_role_n--;
+                row.ind_role_next = (credd::FRole*)-1;// not-in-hash
+                break;
+            }
+            prev = &next->ind_role_next;
+        }
+    }
+}
+
+// --- credd.FDb.ind_role.Reserve
+// Reserve enough room in the hash for N more elements. Return success code.
+void credd::ind_role_Reserve(int n) {
+    ind_role_AbsReserve(_db.ind_role_n + n);
+}
+
+// --- credd.FDb.ind_role.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void credd::ind_role_AbsReserve(int n) {
+    u32 old_nbuckets = _db.ind_role_buckets_n;
+    u32 new_nelems   = n;
+    // # of elements has to be roughly equal to the number of buckets
+    if (new_nelems > old_nbuckets) {
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
+        u32 old_size = old_nbuckets * sizeof(credd::FRole*);
+        u32 new_size = new_nbuckets * sizeof(credd::FRole*);
+        // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
+        // means new memory will have to be allocated anyway
+        credd::FRole* *new_buckets = (credd::FRole**)algo_lib::malloc_AllocMem(new_size);
+        if (UNLIKELY(!new_buckets)) {
+            FatalErrorExit("credd.out_of_memory  field:credd.FDb.ind_role");
+        }
+        memset(new_buckets, 0, new_size); // clear pointers
+        // rehash all entries
+        for (int i = 0; i < _db.ind_role_buckets_n; i++) {
+            credd::FRole* elem = _db.ind_role_buckets_elems[i];
+            while (elem) {
+                credd::FRole &row        = *elem;
+                credd::FRole* next       = row.ind_role_next;
+                u32 index          = row.ind_role_hashval & (new_nbuckets-1);
+                row.ind_role_next     = new_buckets[index];
+                new_buckets[index] = &row;
+                elem               = next;
+            }
+        }
+        // free old array
+        algo_lib::malloc_FreeMem(_db.ind_role_buckets_elems, old_size);
+        _db.ind_role_buckets_elems = new_buckets;
+        _db.ind_role_buckets_n = new_nbuckets;
     }
 }
 
@@ -1948,6 +2224,25 @@ void credd::FDb_Init() {
         FatalErrorExit("out of memory"); // (credd.FDb.ind_perm)
     }
     memset(_db.ind_perm_buckets_elems, 0, sizeof(credd::FPerm*)*_db.ind_perm_buckets_n); // (credd.FDb.ind_perm)
+    // initialize LAry role (credd.FDb.role)
+    _db.role_n = 0;
+    memset(_db.role_lary, 0, sizeof(_db.role_lary)); // zero out all level pointers
+    credd::FRole* role_first = (credd::FRole*)algo_lib::malloc_AllocMem(sizeof(credd::FRole) * (u64(1)<<4));
+    if (!role_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.role_lary[i]  = role_first;
+        role_first    += 1ULL<<i;
+    }
+    // initialize hash table for credd::FRole;
+    _db.ind_role_n             	= 0; // (credd.FDb.ind_role)
+    _db.ind_role_buckets_n     	= 4; // (credd.FDb.ind_role)
+    _db.ind_role_buckets_elems 	= (credd::FRole**)algo_lib::malloc_AllocMem(sizeof(credd::FRole*)*_db.ind_role_buckets_n); // initial buckets (credd.FDb.ind_role)
+    if (!_db.ind_role_buckets_elems) {
+        FatalErrorExit("out of memory"); // (credd.FDb.ind_role)
+    }
+    memset(_db.ind_role_buckets_elems, 0, sizeof(credd::FRole*)*_db.ind_role_buckets_n); // (credd.FDb.ind_role)
     // initialize LAry cred (credd.FDb.cred)
     _db.cred_n = 0;
     memset(_db.cred_lary, 0, sizeof(_db.cred_lary)); // zero out all level pointers
@@ -2017,6 +2312,7 @@ void credd::FDb_Init() {
     credd::InitReflection();
     kind_LoadStatic(); // gen:ns_gstatic  gstatic:credd.FDb.kind  load credd.FKind records
     perm_LoadStatic(); // gen:ns_gstatic  gstatic:credd.FDb.perm  load credd.FPerm records
+    role_LoadStatic(); // gen:ns_gstatic  gstatic:credd.FDb.role  load credd.FRole records
 }
 
 // --- credd.FDb..Uninit
@@ -2043,6 +2339,12 @@ void credd::FDb_Uninit() {
     // credd.FDb.cred.Uninit (Lary)  //
     // skip destruction in global scope
 
+    // credd.FDb.ind_role.Uninit (Thash)  //
+    // skip destruction of ind_role in global scope
+
+    // credd.FDb.role.Uninit (Lary)  //
+    // skip destruction in global scope
+
     // credd.FDb.ind_perm.Uninit (Thash)  //
     // skip destruction of ind_perm in global scope
 
@@ -2067,6 +2369,8 @@ void credd::kind_CopyOut(credd::FKind &row, creddb::Kind &out) {
     out.kind = row.kind;
     out.tokenurl = row.tokenurl;
     out.howto = row.howto;
+    out.minturl = row.minturl;
+    out.rotateurl = row.rotateurl;
     out.prefix = row.prefix;
     out.multiline = row.multiline;
     out.comment = algo::Comment(row.comment);
@@ -2078,6 +2382,8 @@ void credd::kind_CopyIn(credd::FKind &row, creddb::Kind &in) {
     row.kind = in.kind;
     row.tokenurl = in.tokenurl;
     row.howto = in.howto;
+    row.minturl = in.minturl;
+    row.rotateurl = in.rotateurl;
     row.prefix = in.prefix;
     row.multiline = in.multiline;
     row.comment = in.comment;
@@ -2200,6 +2506,37 @@ void credd::FPerm_Uninit(credd::FPerm& parent) {
         c_perm_Remove(*p_kind, parent);// remove perm from index c_perm
     }
     ind_perm_Remove(parent); // remove perm from index ind_perm
+}
+
+// --- credd.FRole.base.CopyOut
+// Copy fields out of row
+void credd::role_CopyOut(credd::FRole &row, creddb::Role &out) {
+    out.role = row.role;
+    out.level = row.level;
+    out.comment = algo::Comment(row.comment);
+}
+
+// --- credd.FRole.base.CopyIn
+// Copy fields in to row
+void credd::role_CopyIn(credd::FRole &row, creddb::Role &in) {
+    row.role = in.role;
+    row.level = in.level;
+    row.comment = in.comment;
+}
+
+// --- credd.FRole.kind.Get
+algo::strptr credd::kind_Get(credd::FRole& parent) {
+    return algo::Pathcomp(parent.role, "/RL");
+}
+
+// --- credd.FRole.name.Get
+algo::strptr credd::name_Get(credd::FRole& parent) {
+    return algo::Pathcomp(parent.role, "/RR");
+}
+
+// --- credd.FRole..Uninit
+void credd::FRole_Uninit(credd::FRole& parent) {
+    ind_role_Remove(parent); // remove role from index ind_role
 }
 
 // --- credd.FieldId.value.ToCstr
@@ -2401,6 +2738,7 @@ int main(int argc, char **argv) {
     try {
         algo_lib::FDb_Init();
         lib_cred::FDb_Init();
+        lib_curl::FDb_Init();
         lib_json::FDb_Init();
         credd::FDb_Init();
         algo_lib::_db.argc = argc;
@@ -2419,6 +2757,7 @@ int main(int argc, char **argv) {
     try {
         credd::FDb_Uninit();
         lib_json::FDb_Uninit();
+        lib_curl::FDb_Uninit();
         lib_cred::FDb_Uninit();
         algo_lib::FDb_Uninit();
     } catch(algo_lib::ErrorX &) {

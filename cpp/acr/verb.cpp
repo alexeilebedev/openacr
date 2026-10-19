@@ -102,7 +102,7 @@ void acr::Main_Regxof() {
     ind_beg(acr::_db_tempkey_curs, tempkey,acr::_db) if (ch_N(tempkey.tempkey)) {
         n++;
         out<<ls;
-        strptr_PrintRegxSql(tempkey.tempkey,out);
+        strptr_PrintRegxAcr(tempkey.tempkey,out);
     }ind_end;
     if (n>0) {
         out = tempstr()<<"("<<out<<")";
@@ -400,16 +400,20 @@ void acr::DelChildRecords(acr::FRec &rec) {
     }ind_end;
 }
 
-// Start with selected records
-// Find all dependent records and delete them as well
-// In the end, de-select records that were both inserted and deleted
+// Mark deleted every record that refers to a selected deleted record, and
+// select it, recursively.  A record inserted earlier in the same run takes its
+// children with it as a record read from the dataset does, so a run that
+// inserts a namespace with its ctypes and then deletes the namespace leaves no
+// ctype behind.  With -x the cascade also reaches the records that ssimreq rules
+// tie to a deleted record.  In the end, de-select records that were both
+// inserted and deleted.
 void acr::CascadeDelete() {
     for (acr::FRec *rec=zd_all_selrec_First(); rec; rec=zd_all_selrec_Next(*rec)) {
         c_ctype_front_RemoveAll();
         // scan all selected records since the last one
         // collect a list of child tables to scan
         for (; rec; rec=zd_all_selrec_Next(*rec)) {
-            if (rec->del && !rec->isnew) {
+            if (rec->del) {
                 if (_db.cmdline.x) {
                     DelChildRecords(*rec);
                 }

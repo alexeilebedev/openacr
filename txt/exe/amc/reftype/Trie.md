@@ -26,18 +26,18 @@ their slot with one compare.
 
 h is the trie's height and F = 2^`nbit`.
 
-| function | effect | cost |
-|---|---|---|
-| `<name>_Find(parent, key)` | the value at KEY, or NULL when the slot is empty | 1 compare on the cached leaf, else h+1 loads |
-| `<name>_Alloc(parent, key)` | the value at KEY, constructed with the field's `dflt` in an empty slot | as Find; a new leaf is 2 allocations and a new level 1 |
-| `<name>_Remove(parent, key)` | destroy the value at KEY | as RemoveRange |
+| function                             | effect                                                                   | cost |
+| ------------------------------------ | ------------------------------------------------------------------------ | ---- |
+| `<name>_Find(parent, key)`           | the value at KEY, or NULL when the slot is empty                         | 1 compare on the cached leaf, else h+1 loads |
+| `<name>_Alloc(parent, key)`          | the value at KEY, constructed with the field's `dflt` in an empty slot   | as Find; a new leaf is 2 allocations and a new level 1 |
+| `<name>_Remove(parent, key)`         | destroy the value at KEY                                                 | as RemoveRange |
 | `<name>_RemoveRange(parent, lo, hi)` | destroy the values at LO..HI−1; a covered leaf or subtree is freed whole | (HI−LO)/F leaf frees, plus 2 edge leaves slot by slot |
-| `<name>_NextKey(parent, from, out)` | the lowest held key at or above FROM | as Find, plus a scan of occupancy words |
-| `<name>_PrevKey(parent, from, out)` | the highest held key at or below FROM | as NextKey |
-| `<name>_RemoveAll(parent)` | destroy every value and free every node | O(nodes) |
-| `<name>_N`, `<name>_EmptyQ` | the number of held values, and whether it is zero | O(1) |
-| `<name>_Bytes(parent)` | the memory its resident leaves and interior nodes hold | O(1) |
-| cursor (`dmmeta.fcurs <field>/curs`) | the held values in key order | O(1) amortized per value |
+| `<name>_NextKey(parent, from, out)`  | the lowest held key at or above FROM                                     | as Find, plus a scan of occupancy words |
+| `<name>_PrevKey(parent, from, out)`  | the highest held key at or below FROM                                    | as NextKey |
+| `<name>_RemoveAll(parent)`           | destroy every value and free every node                                  | O(nodes) |
+| `<name>_N`, `<name>_EmptyQ`          | the number of held values, and whether it is zero                        | O(1) |
+| `<name>_Bytes(parent)`               | the memory its resident leaves and interior nodes hold                   | O(1) |
+| cursor (`dmmeta.fcurs <field>/curs`) | the held values in key order                                             | O(1) amortized per value |
 
 The parent carries `<name>_nleaf` and `<name>_nnode`, the resident leaves and
 interior nodes, from which the trie's memory follows.  A parent holding a trie

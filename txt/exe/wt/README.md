@@ -10,12 +10,14 @@ its commands one after another, and `-verbose` echoes each as it runs.
 <a href="#syntax"></a>
 ```usage
 wt: Worktree manager - reset, run, diff, delete
-Usage: wt [-name:]<regx> [[-cmd:]<string>] [options]
+Usage: wt [[-name:]<regx>] [[-cmd:]<string>] [options]
     OPTION       TYPE    DFLT    COMMENT
     -in          string  "data"  Input directory or filename, - for stdin
-    [name]       regx            Sandbox name
+    [name]       regx    ""      Sandbox name; under -hook it comes from the hook's JSON
+    -hook        string  ""      Claude Code hook, create, remove or sessionstart: reads the hook's JSON on stdin
     -create                      Create new sandbox and register in dev.sandbox
     -b                           Branch worktree: create on new branch NAME; git-registered, no dev.sandbox row
+    -merged                      Select branch worktrees whose branch merged into the upstream branch
     -cow                         Sandbox is a copy-on-write farm (with -create/anon name)
     -list                        List existing sandboxes
     -reset                       Reset sandbox to match current directory
@@ -32,7 +34,7 @@ Usage: wt [-name:]<regx> [[-cmd:]<string>] [options]
     -pull                        Pull changes from sandbox to main repo
     -verbose     flag            Verbosity level (0..255); alias -v; cumulative
     -debug       flag            Debug level (0..255); alias -d; cumulative
-    -trace       string  ""      Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps
+    -trace       string  ""      Trace expression: log categories to enable, as category[:filter],...
     -help                        Print help and exit; alias -h
     -version                     Print version and exit
     -signature                   Show signatures and exit; alias -sig
@@ -97,8 +99,12 @@ the same path, and only the reset is slower.
 <a href="#branch-worktrees"></a>
 
 `wt <name> -create -b` creates `wt/<name>` on a new branch `<name>`, starting
-at `-ref`.  It plants a `.branch` symlink to the shared branch-control
-directory when the checkout has one.  It gives the worktree its own empty
+at `-ref`.  When the checkout has a `.branch` directory, the branch file lives
+in the worktree, at `wt/<name>/.branch/<name>.md`, and the checkout's
+`.branch/<name>.md` is a link to it.  A file the checkout holds there moves in
+on this or a later `-create` or `-claudesess`, and a file that differs from
+the worktree's is refused, with both kept.  `-del -b` removes the link with the
+worktree.  It gives the worktree its own empty
 `build/<cfg>` directories, with `abt`, `gcache` and `llmtool` linked from the
 checkout, and enables the shared compiler cache, so the first build is served
 from the cache.  The `llmtool` link gives a session started in the worktree a
@@ -107,15 +113,60 @@ status line before anything is built there.  It copies the cppcheck build direct
 checkout has an inventory attached under `run/`, the worktree gets a symlink
 to the same dataset.
 
-`wt <name> -del -b` removes the directory and prunes git's registration.  The
-branch stays.
+`wt <name> -del -b` removes the directory, with every worktree nested inside it,
+and prunes git's registration of each.  The branch stays.
+
+#### Reclaiming merged worktrees
+<a href="#reclaiming-merged-worktrees"></a>
+
+A worktree stays after its branch merges, since work often continues there.  It
+keeps its build, a `temp/` that can hold gigabytes of benchmark data, and the
+`abt_md` sandbox nested under its own `wt/`.
+
+`wt % -list -b` prints each branch worktree with its size and a `Merged`
+column.  The verdict compares each worktree with the upstream branch,
+`master@{u}`.  Its remote is the one that the local `master` tracks, as `git config
+branch.master.remote` prints it, and `origin` when `master` tracks none.  `Y`
+means removing the worktree loses nothing that git tracks: its branch merged
+into the upstream branch, it holds no change that the upstream branch lacks,
+and no process runs in it.  The ignored `build/` and `temp/` go with it,
+and the size says how much they hold.  Any other value is the reason it stays:
+
+| Merged      | the worktree |
+| ----------- | ------------ |
+| `unmerged`  | its HEAD is not in the upstream branch |
+| `unstarted` | its branch never committed and sits on a master commit that another branch made |
+| `dirty`     | holds an untracked file, or a change that the upstream branch lacks |
+| `busy`      | has a process working in it, or running a binary built in it |
+
+A worktree Claude Code made for a subagent, named `agent-a<16 hex digits>`,
+skips the `unstarted` row: Claude Code keeps it when the agent ends, so a
+clean one reads `Y`.
+
+After the table, a `wt.busy` line names each process in a `busy` worktree with
+its pid, parent pid, age and command line.  A parent pid of 1 and an age of days
+mark a process whose shell is gone, such as a daemon that a comptest left
+running.  wt kills none of them.
+
+```
+wt.busy  worktree:old-branch  pid:81234  ppid:1  age:03:18:07  cmd:"sleep 86400"
+```
+
+In Claude Code, `/wt-reclaim` runs the listing and the removal below.
+
+`-merged` narrows a branch selection to the `Y` rows.  So `wt % -list -b
+-merged` shows what `wt % -del -b -merged` removes, and the branches stay.
+Without `-merged`, `-del -b` and `-clean -b` act on one worktree by name and
+refuse a pattern that selects several, with `wt.refuse`.
 
 ### Examples
 <a href="#examples"></a>
 
 ```bash
 wt % -list                              # every sandbox, its size and whether it is clean
-wt % -list -b                           # every git worktree of this checkout
+wt % -list -b                           # every branch worktree, its size and whether it merged
+wt % -list -b -merged                   # the merged worktrees, which the next line removes
+wt % -del -b -merged                    # remove every merged worktree and keep the branches
 wt test -create                         # register sandbox test and reset it to this tree
 wt test "acr sandbox:test"              # run a command in sandbox test
 wt amc -reset "amc && ai"               # try amc and a full build on a copy of this tree
@@ -163,7 +214,9 @@ A farm keeps what a command wrote until its next reset, so a later `wt scratch
   `-ref:origin/master` for fresh work.
 - When the branch named already exists, `-create -b` checks it out as it is
   and ignores `-ref`.
-- `-clean` on a branch worktree discards its uncommitted changes.
+- `-clean -b` discards a worktree's uncommitted changes, and `-del -b` takes
+  them with the worktree.  Either acts on several worktrees at once only under
+  `-merged`.
 - A farm goes stale as the checkout changes, and `-reset` brings it up to
   date.  A farm has no baseline commit, so `-diff` prints `wt.diff` and shows
   nothing.
@@ -171,7 +224,7 @@ A farm keeps what a command wrote until its next reset, so a later `wt scratch
   write through the hardlinks into the checkout.  wt refuses to run a command
   in a farm when `libcowdancer` is missing, with `wt.nocowdancer`, and
   `-reset` then rebuilds the sandbox as a worktree.
-- wt reads stdin only under `-i`.
+- wt reads stdin only under `-i` and `-hook`.
 
 ### Options
 <a href="#options"></a>
@@ -181,13 +234,97 @@ A farm keeps what a command wrote until its next reset, so a later `wt scratch
 The directory wt reads `dev.sandbox` and `dev.sbpath` from.  Leave it at `data`
 unless you are testing wt against another data set.
 
-#### -name -- Sandbox name
+#### -name -- Sandbox name; under -hook it comes from the hook's JSON
 <a href="#-name"></a>
 
-A regx over sandbox names, so `%` selects every sandbox and `'abt_md|amc'`
-selects two.  A name that matches no `dev.sandbox` row makes an anonymous
-sandbox of that name, and wt prints `wt.anon`.  With `-b` the name is also the
-branch name.
+An acr regx over sandbox names, so `%` selects every sandbox and
+`'abt_md|amc'` selects two.  `_` is an ordinary character, so `a_b` selects
+the sandbox `a_b` and never `axb`.  A name that matches no `dev.sandbox` row
+makes an anonymous sandbox of that name for an action that enters or deletes
+it, and wt prints `wt.anon`.  `-list` prints only what exists, so it shows an
+anonymous sandbox whose directory is there.  With `-b` the name selects among
+the branch worktrees under `wt/`, and it is also the branch name.
+
+#### -hook -- Claude Code hook, create, remove or sessionstart: reads the hook's JSON on stdin
+<a href="#-hook"></a>
+
+Serve Claude Code's `WorktreeCreate`, `WorktreeRemove` or `SessionStart`
+hook.  Claude Code
+makes a worktree when a session asks for one with `EnterWorktree name:<name>`,
+when a subagent runs with `isolation: worktree`, and when `claude -w <name>`
+starts; through the hook, the worktree it makes is one wt made, at `wt/<name>`
+under the main checkout, with the branch file, the `scratch` symlink and the
+isolated build in place.  The repo's `.claude/settings.json` installs the three
+hooks:
+
+```json
+"hooks": {
+  "WorktreeCreate": [{"hooks": [{"type": "command", "command": "d=\"${CLAUDE_PROJECT_DIR:-.}\"; \"$d/bin/wt\" -hook:create"}]}],
+  "WorktreeRemove": [{"hooks": [{"type": "command", "command": "d=\"${CLAUDE_PROJECT_DIR:-.}\"; \"$d/bin/wt\" -hook:remove"}]}],
+  "SessionStart": [{"matcher": "startup", "hooks": [{"type": "command", "command": "d=\"${CLAUDE_PROJECT_DIR:-.}\"; \"$d/bin/wt\" -hook:sessionstart 2>/dev/null || true"}]}]
+}
+```
+
+The hook's JSON arrives on stdin.  `-hook:create` reads its `name`, fetches
+the upstream branch, and runs `wt <name> -create -b -ref:<remote>/master` from
+the main checkout, with the remote that the local `master` tracks, then prints the worktree's absolute path, which Claude Code
+reads from the last line of stdout.  A name whose worktree exists is left as
+it is and answered with its path, so `EnterWorktree name:` also returns a
+session to a worktree made earlier.  A branch that starts elsewhere than
+the upstream branch names its start in the same field, after `--`:
+`feat--origin/gli-issue-files-push` makes `wt/feat` on branch `feat` at that
+remote branch, fetched first when `origin` is the remote that `master` tracks, and the ref may also be a local branch or a sha.
+`-hook:remove` reads its
+`worktree_path`, which must lie under the main checkout's `wt/`, and runs
+`wt <name> -del -b` on that worktree alone, which keeps the branch; a path
+elsewhere, and a path git registers no branch worktree at, such as the
+parent directory of a nested worktree, is refused with `wt.badhook` and
+removes nothing.  A worktree that holds an edited or untracked file, or one
+that a process works in, is refused the same way, since the hook is the only
+check before the directory goes.  The session that asks for the remove, and
+the hook's own shell, do not count.  Commit the work and stop the process, or
+remove the worktree with `wt <name> -del -b`.
+Under `-hook` the name is read
+literally, where the command line reads it in acr style.  Both move to the
+main checkout first, so the hook works from a session that sits in a
+worktree, and every branch worktree links the main checkout's `wt` into its
+build directory, so the hook runs there before anything is built.  Creation
+through `EnterWorktree name:` asks the user nothing, where `EnterWorktree
+path:` into an existing worktree asks every time; removing a hook-made
+worktree through `ExitWorktree` needs `discard_changes:true`, since Claude
+Code cannot count its changes.
+
+A name Claude Code passes is at most 64 characters of `/`-separated segments
+of letters, digits, `.`, `_` and `-`, so it may name a nested worktree such as
+`team/x`.  The hook runs in the session's current directory with
+`CLAUDE_PROJECT_DIR` naming the directory the session started in; wt uses
+neither, since it finds the main checkout through git.  A worktree Claude
+Code made for a subagent, named `agent-a<16 hex digits>`, is kept when the
+agent ends, since Claude Code runs no remove hook for a hook-made one; the
+`-merged` verdict reads such a worktree like a merged branch's, so
+`wt % -merged -del -b` reclaims it once it is clean.
+
+`-hook:sessionstart` titles a session after the branch worktree it starts in.
+It reads the event's `source`, `cwd` and `session_title`.  A `startup` with no
+title, in a worktree under the main checkout's `wt/`, is answered with JSON
+that sets the session's title to the worktree's name, `team/x` for a nested
+one; a resumed, forked or compacted session, a session titled by `--name` or
+`/rename`, and a session anywhere else are answered with nothing.  So
+`claude -w <name>` from the main checkout gets `wt/<name>` through the create
+hook and a session titled `<name>` in it, as `/rename <name>` would title it,
+and the resume picker lists it by that name.  The name a background session
+answers to in `claude agents` is another thing: `--name` gives it, as
+`-claudesess` does, and titles the session with it too, so the hook leaves
+such a session alone; a background session without `--name` gets a generated
+name, and the hook sets none.  The settings run the hook as
+`wt -hook:sessionstart 2>/dev/null || true`, so a checkout whose `bin/wt` is
+unbuilt or older than the hook stays quiet.
+
+A session that Claude Code puts in a worktree, by `EnterWorktree name:` or
+`claude -w`, is isolated there: Claude Code refuses its Edit and Write at any
+path outside the worktree, the `scratch` link included.  A session launched in
+the worktree, by `-claudesess` or `gli -start`, is not.  The branch file is
+inside the worktree, so an isolated session edits it in place.
 
 #### -create -- Create new sandbox and register in dev.sandbox
 <a href="#-create"></a>
@@ -200,8 +337,19 @@ row.
 <a href="#-b"></a>
 
 Work on a branch worktree.  With `-create` it makes `wt/<name>` on a new branch
-`<name>`; with `-del` it removes the worktree and keeps the branch; with `-list`
-it prints `git worktree list`.
+`<name>`, with its branch file inside it and linked from the main checkout's
+`.branch/`, and a `scratch` symlink to the main checkout's `scratch/`, so the
+files a session keeps outside git read the same from every worktree; on an
+existing worktree it, and `-claudesess`, move the branch file in; with `-del` it removes the
+worktree and the link to its branch file and keeps the branch; with `-list` it prints the branch worktrees.
+
+#### -merged -- Select branch worktrees whose branch merged into the upstream branch
+<a href="#-merged"></a>
+
+Narrow the selection to the branch worktrees whose `Merged` verdict is `Y`, as
+[Reclaiming merged worktrees](#reclaiming-merged-worktrees) describes.  wt
+fetches the upstream branch first.  `-merged` implies `-b`, and a name that selects
+nothing under it makes no new worktree.
 
 #### -cow -- Sandbox is a copy-on-write farm (with -create/anon name)
 <a href="#-cow"></a>
@@ -214,8 +362,9 @@ takes its `cow` flag from its row.
 <a href="#-list"></a>
 
 Print the selected sandboxes after every other action has run: name, cow flag,
-size, whether `git diff` is empty, path and comment.  With `-b` it prints every
-git worktree of the checkout, whatever the name.
+size, whether `git diff` is empty, path and comment.  With `-b` it prints each
+selected branch worktree: name, size, the `Merged` verdict and path, then a
+`wt.busy` line for each process in a busy one.
 
 #### -reset -- Reset sandbox to match current directory
 <a href="#-reset"></a>
@@ -228,16 +377,20 @@ use without it.
 <a href="#-claudesess"></a>
 
 Start a background claude session in the worktree, named after it.  The session
-reads `CLAUDE.md` and `.branch/<name>.md` and stands by, and `claude agents`
+reads `AGENTS.md` and `.branch/<name>.md` and stands by, and `claude agents`
 lists it.  Combine it with `-create -b` to hand a task to a helper session; it
-refuses to run from inside a worktree.
+refuses to run from inside a worktree.  For a session of your own in a
+worktree, run `claude -w <name>` from the main checkout: the hooks make the
+worktree and title the session (see `-hook`).
 
 #### -clean -- Remove sandbox contents to save space
 <a href="#-clean"></a>
 
 Return a worktree sandbox to its baseline by discarding every change since the
 reset.  A farm has no baseline, so its directory is removed and the next use
-rebuilds it.  On a branch worktree it discards uncommitted work.
+rebuilds it.  On a branch worktree it discards uncommitted work, and without
+`-merged` a name that selects several makes it print `wt.refuse` and clean
+none.
 
 #### -shell -- Open interactive shell inside sandbox
 <a href="#-shell"></a>
@@ -250,6 +403,8 @@ runs after any `-reset` given on the same line.
 
 Delete the sandbox directory and prune git's worktree list.  On a registered
 sandbox it also removes the `dev.sandbox` row; with `-b` it keeps the branch.
+With `-b` and no `-merged` it removes one worktree, and a name that selects
+several makes it print `wt.refuse` and remove none.
 
 #### -i -- Read the command script from stdin, one command per line
 <a href="#-i"></a>

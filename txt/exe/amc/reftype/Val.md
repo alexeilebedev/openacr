@@ -18,9 +18,9 @@ dmmeta.field  field:algo.UnTime.value  arg:i64  reftype:Val  dflt:""  comment:"u
 A single member field is added to the parent ctype
 (see `tclass_Val` in `cpp/amc/val.cpp`):
 
-| Field           | Type | Notes |
-|-----------------|------|-------|
-| `<name>` (or `<name>_be` if `fbigend`) | `T` | The default value, if any, is applied at parent's `_Init` time |
+| Field                                  | Type | Notes |
+| -------------------------------------- | ---- | ----- |
+| `<name>` (or `<name>_be` if `fbigend`) | `T`  | The default value, if any, is applied at parent's `_Init` time |
 
 When `dmmeta.fbigend` is set on a Val of an integer type, amc
 renames the storage to `<name>_be` so accessors must go through
@@ -49,13 +49,13 @@ Optional:
 
 Source: `cpp/amc/val.cpp`.
 
-| Tfunc          | Generated function                  | When emitted | Effect |
-|----------------|-------------------------------------|--------------|--------|
-| `Val.Init`     | (folded into parent's `_Init`)      | always, if `dflt` non-empty | Assign the default.  For external types with `initmemset`, does `memset(&field, dflt, sizeof field)`. |
-| `Val.Get`      | `T <name>_Get(const P&)`            | `fbigend:Y`  | `be<W>toh(parent.<name>_be)` |
-| `Val.Set`      | `void <name>_Set(P&, T rhs)`        | when `fbigend` or `pmaskfld_member` present | Write the value; for big-endian fields swap; for pmask members flip the presence bit. |
-| `Val.RowidFind`| `algo::ImrowPtr <name>_RowidFind(int t)` | `reflect:Y` | Reflection helper (returns the address of the single value when `t==0`). |
-| `Val.N`        | `i32 <name>_N()` returning 1        | `reflect:Y`  | Reflection helper. |
+| Tfunc           | Generated function                       | When emitted                                | Effect |
+| --------------- | ---------------------------------------- | ------------------------------------------- | ------ |
+| `Val.Init`      | (folded into parent's `_Init`)           | always, if `dflt` non-empty                 | Assign the default.  For external types with `initmemset`, does `memset(&field, dflt, sizeof field)`. |
+| `Val.Get`       | `T <name>_Get(const P&)`                 | `fbigend:Y`                                 | `be<W>toh(parent.<name>_be)` |
+| `Val.Set`       | `void <name>_Set(P&, T rhs)`             | when `fbigend` or `pmaskfld_member` present | Write the value; for big-endian fields swap; for pmask members flip the presence bit. |
+| `Val.RowidFind` | `algo::ImrowPtr <name>_RowidFind(int t)` | `reflect:Y`                                 | Reflection helper (returns the address of the single value when `t==0`). |
+| `Val.N`         | `i32 <name>_N()` returning 1             | `reflect:Y`                                 | Reflection helper. |
 
 A regular Val without big-endian / pmask attachments produces
 *only* `Init`.  Reads and writes go through the field

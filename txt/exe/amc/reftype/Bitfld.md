@@ -61,11 +61,11 @@ storage type.
 
 Source: `cpp/amc/bitfld.cpp`.
 
-| Tfunc          | Generated function                              | Effect |
-|----------------|-------------------------------------------------|--------|
-| `Bitfld.Init`  | (folded into parent's `_Init`)                  | Calls `_Set(parent, dflt)` when a default is specified; otherwise emits nothing. |
-| `Bitfld.Get`   | `T <name>_Get(const P&)`                        | `return T((srcfldval >> offset) & mask);` |
-| `Bitfld.Set`   | `void <name>_Set(P&, T rhs)`                    | `srcfldval = (srcfldval & ~(mask<<offset)) | ((rhs & mask) << offset);` |
+| Tfunc         | Generated function             | Effect                                                                           |
+| ------------- | ------------------------------ | -------------------------------------------------------------------------------- |
+| `Bitfld.Init` | (folded into parent's `_Init`) | Calls `_Set(parent, dflt)` when a default is specified; otherwise emits nothing. |
+| `Bitfld.Get`  | `T <name>_Get(const P&)`       | `return T((srcfldval >> offset) & mask);`                                        |
+| `Bitfld.Set`  | `void <name>_Set(P&, T rhs)`   | `srcfldval = (srcfldval & ~(mask<<offset))                                       | ((rhs & mask) << offset);` |
 
 For single-field struct values (e.g., a typed wrapper around a
 `u8`), `_Set` automatically extracts the underlying scalar

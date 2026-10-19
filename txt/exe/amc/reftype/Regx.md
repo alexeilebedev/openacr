@@ -24,9 +24,9 @@ dmmeta.field   field:command.abt.target  arg:dev.Target  reftype:Regx  dflt:""  
 One field on the parent (see `tclass_Regx` in
 `cpp/amc/regx.cpp`):
 
-| Field        | Type             | Meaning |
-|--------------|------------------|---------|
-| `<name>`     | `algo_lib::Regx` | compiled regex state |
+| Field    | Type             | Meaning |
+| -------- | ---------------- | ------- |
+| `<name>` | `algo_lib::Regx` | compiled regex state |
 
 Init compiles the `dflt:` pattern (if any) at parent
 construction time using `Regx_Read<Regxtype>`.  The `partial`
@@ -37,12 +37,12 @@ semantics (passed as the third argument to
 ### Regx vs RegxSql
 <a href="#regx-vs-regxsql"></a>
 
-|              | **Regx**                          | **RegxSql**                  |
-|--------------|-----------------------------------|------------------------------|
-| `regxtype`   | default `Normal`                  | always `Sql`                  |
-| Syntax       | classic regex (`.`, `*`, `+`, `[]`, `^$`, …) | SQL-style (`%`, `_`, escapes) |
-| Use case     | text matching                     | acr queries, pkey patterns    |
-| Code path    | `tfunc_Regx_*`                    | identical (RegxSql delegates) |
+|            | **Regx**                                     | **RegxSql** |
+| ---------- | -------------------------------------------- | ----------- |
+| `regxtype` | default `Normal`                             | always `Sql` |
+| Syntax     | classic regex (`.`, `*`, `+`, `[]`, `^$`, …) | SQL-style (`%`, `_`, escapes) |
+| Use case   | text matching                                | acr queries, pkey patterns |
+| Code path  | `tfunc_Regx_*`                               | identical (RegxSql delegates) |
 
 In `amcdb.gen:rewrite_regx`, every `RegxSql` field is rewritten to
 plain `Regx` with `regxtype:Sql` before code generation —
@@ -71,10 +71,10 @@ Optional:
 
 Source: `cpp/amc/regx.cpp`.
 
-| Tfunc                     | Generated function                                  | Effect |
-|---------------------------|-----------------------------------------------------|--------|
-| `Regx.Init` / `RegxSql.Init`               | (folded into parent's `_Init`) | Compile `dflt` pattern via `Regx_Read<Regxtype>`. |
-| `Regx.Print` / `RegxSql.Print`             | `void <name>_Print(P&, cstring& out)` | `Regx_Print(...)` — emits the source pattern. |
+| Tfunc                                              | Generated function                           | Effect |
+| -------------------------------------------------- | -------------------------------------------- | ------ |
+| `Regx.Init` / `RegxSql.Init`                       | (folded into parent's `_Init`)               | Compile `dflt` pattern via `Regx_Read<Regxtype>`. |
+| `Regx.Print` / `RegxSql.Print`                     | `void <name>_Print(P&, cstring& out)`        | `Regx_Print(...)` — emits the source pattern. |
 | `Regx.ReadStrptrMaybe` / `RegxSql.ReadStrptrMaybe` | `bool <name>_ReadStrptrMaybe(P&, strptr in)` | Compile `in` into the field via `Regx_Read<Regxtype>`. |
 
 At runtime, matching is done via the algo `Regx_Match(regx, str)`

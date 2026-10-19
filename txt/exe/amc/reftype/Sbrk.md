@@ -19,11 +19,11 @@ dmmeta.field  field:algo_lib.FDb.sbrk  arg:u8  reftype:Sbrk  dflt:""  comment:"B
 Three tunables in the **parent** ctype
 (see `tclass_Sbrk` in `cpp/amc/sbrk.cpp`):
 
-| Field                | Type   | Meaning                                                              |
-|----------------------|--------|----------------------------------------------------------------------|
-| `<name>_huge_limit`  | `u64`  | Max bytes that may use huge pages; 0 disables huge pages.  Must be 0 across `fork()`. |
-| `<name>_huge_alloc`  | `u64`  | Bytes currently mapped with huge pages (running total).              |
-| `<name>_zeromem`     | `bool` | If true, freshly-returned memory is zeroed (`memset(0)`) before return. |
+| Field               | Type   | Meaning |
+| ------------------- | ------ | ------- |
+| `<name>_huge_limit` | `u64`  | Max bytes that may use huge pages; 0 disables huge pages.  Must be 0 across `fork()`. |
+| `<name>_huge_alloc` | `u64`  | Bytes currently mapped with huge pages (running total). |
+| `<name>_zeromem`    | `bool` | If true, freshly-returned memory is zeroed (`memset(0)`) before return. |
 
 Init sets all three to 0/false; tune them before any allocation
 to enable huge pages.
@@ -81,11 +81,11 @@ No spec table.
 
 Source: `cpp/amc/sbrk.cpp`.
 
-| Tfunc            | Generated function                                          | Effect |
-|------------------|-------------------------------------------------------------|--------|
-| `Sbrk.Init`      | `<name>_Init(P&)` (folded)                                  | Zero tunables. |
-| `Sbrk.AllocMem`  | `void* <name>_AllocMem(P&, u64 size)`                       | sbrk / mmap (huge-page-aware). |
-| `Sbrk.FreeMem`   | `void <name>_FreeMem(P&, void* mem, u64 size)`              | munmap for big allocs; no-op for small. |
+| Tfunc           | Generated function                             | Effect |
+| --------------- | ---------------------------------------------- | ------ |
+| `Sbrk.Init`     | `<name>_Init(P&)` (folded)                     | Zero tunables. |
+| `Sbrk.AllocMem` | `void* <name>_AllocMem(P&, u64 size)`          | sbrk / mmap (huge-page-aware). |
+| `Sbrk.FreeMem`  | `void <name>_FreeMem(P&, void* mem, u64 size)` | munmap for big allocs; no-op for small. |
 
 Plus the full `Pool.*` family.
 

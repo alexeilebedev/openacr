@@ -15,26 +15,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-# use git-rebase-remote <remote> [<default_branch>]
+# usage: git-rebase-remote [<remote> [<branch>]]
+# Squash the current branch into one commit and rebase it onto <remote>/<branch>.
+# The commit carries the messages of the squashed commits, oldest first.  The
+# remote and branch default to what master tracks, and to origin/master when
+# master tracks nothing.  On a terminal the squashed message opens in the
+# editor; anywhere else the script runs without asking.  A conflict stops the
+# rebase and the script exits non-zero.
 
-ORIGIN=("${@:1}")
-BRANCH=master
-if (( $# >= 2 )); then
-    BRANCH=("${@:2}")
-fi
-# if no params are specified, get it from git
-if (( $# == 0 )); then
-    OB=$(git status -b --porcelain | head -1 | cut -d'.' -f5 | cut -d' ' -f1)
-    ORIGIN=$(echo $OB | cut -d'/' -f1-2)
-    BRANCH=$(echo $OB | cut -d'/' -f3)
-fi
-echo "rebasing to remote:"$ORIGIN "branch:"$BRANCH
+set -e
+ORIGIN=${1:-$(git config branch.master.remote || echo origin)}
+BRANCH=${2:-$(git config branch.master.merge | sed 's|^refs/heads/||')}
+BRANCH=${BRANCH:-master}
+echo "rebasing to remote:$ORIGIN branch:$BRANCH"
 
-git fetch $ORIGIN
-# do this as a single command so that if reset fails, there is no commit attempt.
-git reset --soft $(git merge-base HEAD $ORIGIN/$BRANCH) && (
+git fetch "$ORIGIN"
+BASE=$(git merge-base HEAD "$ORIGIN/$BRANCH")
+if (( $(git rev-list --count "$BASE..HEAD") >= 2 )); then
+    git reset --soft "$BASE"
     git commit --allow-empty -m "$(git log --format=%B --reverse HEAD..HEAD@{1})"
-    git commit --allow-empty --amend # allow editing comment
-)
+    if [ -t 0 ] && [ -t 1 ]; then
+        git commit --allow-empty --amend
+    fi
+fi
 # keep-empty is needed so that base commit gets integrated
-git rebase --keep-empty --strategy=recursive  $ORIGIN/$BRANCH
+git rebase --keep-empty "$ORIGIN/$BRANCH"

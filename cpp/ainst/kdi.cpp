@@ -29,7 +29,7 @@
 // The rust toolchain is fetched, used, and removed again: nothing downstream of
 // this installation wants cargo on the machine.
 void ainst::extpkg_kdi(ainst::FExtpkg &extpkg) {
-    AddStage(extpkg,"src=$(mktemp -d)");
+    AddStage(extpkg,"src=$(ainst_tmpdir)");
     AddStage(extpkg,tempstr()<<"cp "<<GetExtpkgsrcVar(extpkg,"rustup")<<" \"$src/rustup-init\"");
     AddStage(extpkg,"chmod +x \"$src/rustup-init\"");
     AddStage(extpkg,"CARGO_HOME=\"$src/cargo\" RUSTUP_HOME=\"$src/rustup\" \"$src/rustup-init\" -y --no-modify-path");

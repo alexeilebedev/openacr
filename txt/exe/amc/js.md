@@ -31,12 +31,12 @@ the C++ ↔ browser boundary.
 ### Ssim inputs
 <a href="#ssim-inputs"></a>
 
-| Record         | Role |
-|----------------|------|
+| Record                                                                    | Role |
+| ------------------------------------------------------------------------- | ---- |
 | `dmmeta.nslang  nslang:<ns>/ts`, `dmmeta.ctypelang  ctypelang:<ctype>/ts` | Project a namespace, or one ctype, into TypeScript.  See [foreign-language projection](/txt/exe/amc/lang.md). |
-| `dmmeta.cjsbltin  ctype:<T>  jsbltin:<B>` | Map a C++ built-in to a JS primitive: `u32 → number`, `Smallstr → string`, etc. |
-| `dmmeta.jsbltin  jsbltin:<name>  cons:<ctor>  dflt:<expr>` | The table of JS primitives (TypeScript: `number`, `string`, `boolean`, `bigint`, `Uint8Array`, `Array`, `Map`, `object`, `undefined`). |
-| `dmmeta.cjson  ctype:<T>  jsbltin:<custom>` | Customize the JSON representation of a ctype (e.g., emit a string instead of a struct). |
+| `dmmeta.cjsbltin  ctype:<T>  jsbltin:<B>`                                 | Map a C++ built-in to a JS primitive: `u32 → number`, `Smallstr → string`, etc. |
+| `dmmeta.jsbltin  jsbltin:<name>  cons:<ctor>  dflt:<expr>`                | The table of JS primitives (TypeScript: `number`, `string`, `boolean`, `bigint`, `Uint8Array`, `Array`, `Map`, `object`, `undefined`). |
+| `dmmeta.cjson  ctype:<T>  jsbltin:<custom>`                               | Customize the JSON representation of a ctype (e.g., emit a string instead of a struct). |
 
 ### What gets emitted
 <a href="#what-gets-emitted"></a>
@@ -75,18 +75,18 @@ dispatch gets its signature.
 The `dmmeta.cjsbltin` table maps each C++ built-in to a JS
 primitive.  The default mapping:
 
-| C++ type        | TypeScript type   | JS primitive (`jsbltin`) |
-|-----------------|-------------------|--------------------------|
-| `bool`          | `boolean`         | `boolean`                |
-| `i8..i32`       | `number`          | `number`                 |
-| `u8..u32`       | `number`          | `number`                 |
-| `i64` / `u64`   | `bigint`          | `bigint`                 |
-| `float` / `double` | `number`       | `number`                 |
-| `algo.Smallstr*` | `string`         | `string`                 |
-| `algo.Charset`  | `string` (set as chars) | `string`           |
-| `algo.aryptr<u8>` | `Uint8Array`    | `Uint8Array`             |
-| Tary of `T`     | `T[]`             | `Array`                  |
-| Thash of `T`    | `Map<K, T>`       | `Map`                    |
+| C++ type           | TypeScript type         | JS primitive (`jsbltin`) |
+| ------------------ | ----------------------- | ------------------------ |
+| `bool`             | `boolean`               | `boolean` |
+| `i8..i32`          | `number`                | `number` |
+| `u8..u32`          | `number`                | `number` |
+| `i64` / `u64`      | `bigint`                | `bigint` |
+| `float` / `double` | `number`                | `number` |
+| `algo.Smallstr*`   | `string`                | `string` |
+| `algo.Charset`     | `string` (set as chars) | `string` |
+| `algo.aryptr<u8>`  | `Uint8Array`            | `Uint8Array` |
+| Tary of `T`        | `T[]`                   | `Array` |
+| Thash of `T`       | `Map<K, T>`             | `Map` |
 
 `bigint` for 64-bit ints because JS numbers lose precision
 beyond 2^53.  Tools that round-trip 64-bit values through
@@ -184,15 +184,15 @@ offending field is named in one run, and a run that names any
 of them writes no output at all, so a refused schema yields
 no codec rather than a silently wrong one.
 
-| reftype    | occupies                        | condition |
-|------------|---------------------------------|-----------|
-| `Base`     | nothing of its own              | the base's fields appear individually |
-| `Bitfld`   | nothing of its own              | carried by the source word |
-| `Val`      | the arg type's width            | the arg must carry no tail of its own |
-| `Varlen`   | the frame's tail                | text tail for an arg of `char`, byte tail for an arg projecting as `Uint8Array` |
-| `Opt`      | the frame's tail                | the arg must project as `Uint8Array` |
-| `Inlary`   | `max` × the arg type's width    | the arg must project as `Uint8Array`, and the array must be fixed (`min` = `max`) |
-| any other  | —                               | refused |
+| reftype   | occupies                     | condition |
+| --------- | ---------------------------- | --------- |
+| `Base`    | nothing of its own           | the base's fields appear individually |
+| `Bitfld`  | nothing of its own           | carried by the source word |
+| `Val`     | the arg type's width         | the arg must carry no tail of its own |
+| `Varlen`  | the frame's tail             | text tail for an arg of `char`, byte tail for an arg projecting as `Uint8Array` |
+| `Opt`     | the frame's tail             | the arg must project as `Uint8Array` |
+| `Inlary`  | `max` × the arg type's width | the arg must project as `Uint8Array`, and the array must be fixed (`min` = `max`) |
+| any other | —                            | refused |
 
 `Opt` and `Inlary` are byte copies in both directions, which
 is why each requires a `Uint8Array` arg: an arg of `char`, or

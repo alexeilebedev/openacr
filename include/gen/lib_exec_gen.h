@@ -457,10 +457,10 @@ private:
     friend void                 syscmd_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:lib_exec.FSyscmd.msghdr.CopyOut
+// func:lib_exec.FSyscmd.base.CopyOut
 void                 syscmd_CopyOut(lib_exec::FSyscmd &row, dev::Syscmd &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:lib_exec.FSyscmd.msghdr.CopyIn
+// func:lib_exec.FSyscmd.base.CopyIn
 void                 syscmd_CopyIn(lib_exec::FSyscmd &row, dev::Syscmd &in) __attribute__((nothrow));
 
 // func:lib_exec.FSyscmd.execkey.Get
@@ -610,10 +610,10 @@ private:
     friend void                 syscmddep_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:lib_exec.FSyscmddep.msghdr.CopyOut
+// func:lib_exec.FSyscmddep.base.CopyOut
 void                 syscmddep_CopyOut(lib_exec::FSyscmddep &row, dev::Syscmddep &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:lib_exec.FSyscmddep.msghdr.CopyIn
+// func:lib_exec.FSyscmddep.base.CopyIn
 void                 syscmddep_CopyIn(lib_exec::FSyscmddep &row, dev::Syscmddep &in) __attribute__((nothrow));
 
 // Set all fields to initial values.

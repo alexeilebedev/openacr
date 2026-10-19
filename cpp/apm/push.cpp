@@ -70,19 +70,21 @@ static bool CollectOriginRecs(algo::strptr base_dir) {
         acr.cmd.query = "%";
         acr.cmd.loose = true;
         acr.cmd.report = false;
-        acr.fstdout << ">" << full_recfile;
-        ok = acr_Exec(acr) == 0;
+        acr.fstdout = "|";
+        acr_Start(acr);
+        cstring base;
+        ind_beg(algo::FileLine_curs, line, acr.from_stdout) {
+            if (!LocalTableQ(algo::Pathcomp(line, " LL"))) {
+                base << line << eol;
+            }
+        }ind_end;
+        acr_Wait(acr);
+        ok = acr.status == 0;
         if (!ok) {
             prerr("apm.pkgrec_read"
                   <<Keyval("dir",base_dir)
                   <<Keyval("comment","the origin's records could not be read"));
         } else {
-            cstring base;
-            ind_beg(algo::FileLine_curs, line, full_recfile) {
-                if (!LocalTableQ(algo::Pathcomp(line, " LL"))) {
-                    base << line << eol;
-                }
-            }ind_end;
             ok = SafeStringToFile(base, full_recfile);
         }
     }
@@ -100,12 +102,28 @@ static void AddOriginFiles(algo::strptr base_dir) {
         tempstr out(SysEval(tempstr() << "git -C " << strptr_ToBash(base_dir) << " ls-files", FailokQ(false), 1024*1024*64));
         ind_beg(algo::Line_curs, path, out) {
             if (ch_N(path) > 0 && !algo::StartsWithQ(path, "data/")) {
-                apm::FMergefile &mergefile = apm::ind_mergefile_GetOrCreate(path);
-                mergefile.base_file = DirFileJoin(base_dir, path);
-                mergefile.base_mode = apm::GetFileMode(mergefile.base_file);
+                apm::SetMergeSide(apm::ind_mergefile_GetOrCreate(path), 1, DirFileJoin(base_dir, path));
             }
         }ind_end;
     }
+}
+
+// -----------------------------------------------------------------------------
+
+// True when every selected package that carries file PATH carries it as a stub.
+// A push of several packages sends the file whole when any of them carries it
+// whole.
+static bool StubFileQ(algo::strptr path) {
+    apm::FRec *rec = apm::ind_rec_Find(tempstr() << "dev.gitfile:" << path);
+    bool carried = false;
+    bool whole = false;
+    if (rec) {
+        ind_beg(apm::rec_zd_rec_pkgrec_curs, pkgrec, *rec) if (apm::zd_sel_package_InLlistQ(*pkgrec.p_package)) {
+            carried = true;
+            whole = whole || !pkgrec.stub;
+        }ind_end;
+    }
+    return carried && !whole;
 }
 
 // -----------------------------------------------------------------------------
@@ -179,9 +197,15 @@ void apm::PushDiff(algo::strptr base_dir) {
     }
 
     mergefile_RemoveAll();
+    // the packages this push sends map files to paths of the projection
+    SetCarrierSelected();
+    int nconflict = ResolvePkgfile(NULL);
+    SetCarrier(NULL);
+    vrfy(nconflict == 0, "apm.pkgfile_conflict  comment:'two packages of the push map different files to one path'");
     vrfy(CreateMergeFiles(regx_package,"",""),// ours
          "failed to collect the package file list");
     AddOriginFiles(base_dir);
+    ShipPkgdest();
     if (algo_lib::_db.cmdline.verbose>1) {
         _db.script << "set -x"<<eol;
     }
@@ -195,11 +219,19 @@ void apm::PushDiff(algo::strptr base_dir) {
         Xargs(cmd_mkdir, "mkdir -p", mkdir.mkdir, _db.script);
     }ind_end;
     _db.script << cmd_mkdir << eol;// flush the rest
+    // A file carried as a stub is written under temp/apm.stub now, and the
+    // script copies that in its place.  A mapped path is copied from its source.
     ind_beg(_db_mergefile_curs,mergefile,_db) {
         if (mergefile.ours_mode != 0) {
+            tempstr src(mergefile.ours_file);
+            if (StubFileQ(mergefile.mergefile)) {
+                src = DirFileJoin("temp/apm.stub", mergefile.mergefile);
+                CreateDirRecurse(GetDirName(src));
+                StringToFile(GetStubText(mergefile.mergefile), src);
+            }
             // -P = preserve soft link
             // -p = preserve mode/permissions
-            _db.script << "cp -P -p " << strptr_ToBash(mergefile.mergefile)
+            _db.script << "cp -P -p " << strptr_ToBash(src)
                        << " " << strptr_ToBash(DirFileJoin(base_dir,mergefile.mergefile))<< eol;
         }
     }ind_end;
@@ -262,7 +294,7 @@ void apm::Main_Push() {
     vrfy(base_dir!="", "-push requires -origin");
 
     // check that origin directory is clean
-    vrfy(Trimmed(algo::SysEval(tempstr()<<"cd "<<base_dir<<" && git ls-files -m",FailokQ(false),1024*100))==""
+    vrfy(Trimmed(algo::SysEval(tempstr()<<"cd "<<base_dir<<" && git ls-files -m",FailokQ(false)))==""
          , "origin directory not clean");
 
     vrfy(CheckLicense()==0, "apm.license  comment:'an open-source package holds proprietary content or links a copyleft library'");

@@ -77,6 +77,15 @@ void doc::docpage_func() {
     }
 }
 
+// Lay a gstatic table onto the page as a document: each record and the function it stands for.
+void doc::docpage_gist() {
+    if (doc::_db.p_out) {
+        doc::PutGist(*doc::_db.p_out, doc::_db.page);
+    } else {
+        doc::RenderGist(doc::_db.page);
+    }
+}
+
 // Lay the page of keys onto the page.
 void doc::docpage_help() {
     if (doc::_db.p_out) {

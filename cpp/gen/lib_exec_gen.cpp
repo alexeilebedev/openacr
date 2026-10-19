@@ -1201,7 +1201,7 @@ void lib_exec::FDb_Uninit() {
     // skip destruction in global scope
 }
 
-// --- lib_exec.FSyscmd.msghdr.CopyOut
+// --- lib_exec.FSyscmd.base.CopyOut
 // Copy fields out of row
 void lib_exec::syscmd_CopyOut(lib_exec::FSyscmd &row, dev::Syscmd &out) {
     out.syscmd = row.syscmd;
@@ -1214,7 +1214,7 @@ void lib_exec::syscmd_CopyOut(lib_exec::FSyscmd &row, dev::Syscmd &out) {
     out.maxtime = row.maxtime;
 }
 
-// --- lib_exec.FSyscmd.msghdr.CopyIn
+// --- lib_exec.FSyscmd.base.CopyIn
 // Copy fields in to row
 void lib_exec::syscmd_CopyIn(lib_exec::FSyscmd &row, dev::Syscmd &in) {
     row.syscmd = in.syscmd;
@@ -1450,14 +1450,14 @@ void lib_exec::FSyscmd_Print(lib_exec::FSyscmd& row, algo::cstring& str) {
     PrintAttrSpaceReset(str,"args", temp);
 }
 
-// --- lib_exec.FSyscmddep.msghdr.CopyOut
+// --- lib_exec.FSyscmddep.base.CopyOut
 // Copy fields out of row
 void lib_exec::syscmddep_CopyOut(lib_exec::FSyscmddep &row, dev::Syscmddep &out) {
     out.child = row.child;
     out.parent = row.parent;
 }
 
-// --- lib_exec.FSyscmddep.msghdr.CopyIn
+// --- lib_exec.FSyscmddep.base.CopyIn
 // Copy fields in to row
 void lib_exec::syscmddep_CopyIn(lib_exec::FSyscmddep &row, dev::Syscmddep &in) {
     row.child = in.child;

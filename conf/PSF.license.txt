@@ -1,0 +1,2 @@
+Licensed under the Python Software Foundation License Version 2.
+See https://docs.python.org/3/license.html

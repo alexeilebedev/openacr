@@ -1455,8 +1455,16 @@ void amc::TopoSortVisit(amc::FNs& ns, amc::FCtype& ctype) {
     }
 }
 
+// True when NS is an executable.
 bool amc::ExeQ(amc::FNs &ns) {
     return ns.nstype == dmmeta_Nstype_nstype_exe;
+}
+
+// True when NS is the root of an image: an executable, or a shared object that a
+// host process loads.  An image links the whole closure of NS, so it holds the
+// FDb of every library in it, and its Steps() runs the steps of all of them.
+bool amc::ImageQ(amc::FNs &ns) {
+    return ns.nstype == dmmeta_Nstype_nstype_exe || ns.nstype == dmmeta_Nstype_nstype_so;
 }
 
 // -----------------------------------------------------------------------------

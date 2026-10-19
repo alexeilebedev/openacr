@@ -117,6 +117,8 @@ namespace apm { // gen:ns_print_proto
     static bool          pkgupstream_InputMaybe(dev::Pkgupstream &elem) __attribute__((nothrow));
     // func:apm.FDb.pkgkeyword.InputMaybe
     static bool          pkgkeyword_InputMaybe(dev::Pkgkeyword &elem) __attribute__((nothrow));
+    // func:apm.FDb.pkgfile.InputMaybe
+    static bool          pkgfile_InputMaybe(dev::Pkgfile &elem) __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
     // func:apm.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
@@ -500,7 +502,7 @@ static void apm::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'apm.Input'  signature:'a01e06cf83ffaac38c9159fdf6fb679ca5a620ce'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'apm.Input'  signature:'b2901fa89bfe0df2dcf2f85b60a0ccc5a39b62d2'");
 }
 
 // --- apm.FDb._db.InsertStrptrMaybe
@@ -605,6 +607,12 @@ bool apm::InsertStrptrMaybe(algo::strptr str) {
             retval = retval && pkgkeyword_InputMaybe(elem);
             break;
         }
+        case apm_TableId_dev_Pkgfile: { // finput:apm.FDb.pkgfile
+            dev::Pkgfile elem;
+            retval = dev::Pkgfile_ReadStrptrMaybe(elem, str);
+            retval = retval && pkgfile_InputMaybe(elem);
+            break;
+        }
         default:
         break;
     } //switch
@@ -643,6 +651,7 @@ bool apm::LoadTuplesMaybe(algo::strptr root, bool recursive) {
         retval = retval && apm::LoadTuplesFile(algo::SsimFname(root,"dev.pkgupstream"),recursive);
         retval = retval && apm::LoadTuplesFile(algo::SsimFname(root,"dev.pkgkeyword"),recursive);
         retval = retval && apm::LoadTuplesFile(algo::SsimFname(root,"dev.pkgkey"),recursive);
+        retval = retval && apm::LoadTuplesFile(algo::SsimFname(root,"dev.pkgfile"),recursive);
         retval = retval && apm::LoadTuplesFile(algo::SsimFname(root,"dev.pkgdep"),recursive);
         retval = retval && apm::LoadTuplesFile(algo::SsimFname(root,"amcdb.bltin"),recursive);
     } else {
@@ -798,6 +807,12 @@ bool apm::RemoveStrptrMaybe(algo::strptr str) {
         }
         case apm_TableId_dev_Pkgkeyword: { // finput:apm.FDb.pkgkeyword
             // finput apm.FDb.pkgkeyword: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case apm_TableId_dev_Pkgfile: { // finput:apm.FDb.pkgfile
+            // finput apm.FDb.pkgfile: random delete unsupported
             // (need reftype del:Y plus a Thash on the pkey)
             retval = false;
             break;
@@ -5308,6 +5323,455 @@ void apm::ind_delta_AbsReserve(int n) {
     }
 }
 
+// --- apm.FDb.pkgfile.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+apm::FPkgfile& apm::pkgfile_Alloc() {
+    apm::FPkgfile* row = pkgfile_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("apm.out_of_mem  field:apm.FDb.pkgfile  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- apm.FDb.pkgfile.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+apm::FPkgfile* apm::pkgfile_AllocMaybe() {
+    apm::FPkgfile *row = (apm::FPkgfile*)pkgfile_AllocMem();
+    if (row) {
+        new (row) apm::FPkgfile; // call constructor
+    }
+    return row;
+}
+
+// --- apm.FDb.pkgfile.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+apm::FPkgfile* apm::pkgfile_InsertMaybe(const dev::Pkgfile &value) {
+    apm::FPkgfile *row = &pkgfile_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    pkgfile_CopyIn(*row,const_cast<dev::Pkgfile&>(value));
+    bool ok = pkgfile_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        pkgfile_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- apm.FDb.pkgfile.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* apm::pkgfile_AllocMem() {
+    u64 new_nelems     = _db.pkgfile_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    apm::FPkgfile*  lev   = NULL;
+    if (bsr < 36) {
+        lev = _db.pkgfile_lary[bsr];
+        if (!lev) {
+            lev=(apm::FPkgfile*)algo_lib::malloc_AllocMem(sizeof(apm::FPkgfile) * (u64(1)<<bsr));
+            _db.pkgfile_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.pkgfile_n = i64(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- apm.FDb.pkgfile.RemoveAll
+// Remove all elements from Lary
+void apm::pkgfile_RemoveAll() {
+    for (u64 n = _db.pkgfile_n; n>0; ) {
+        n--;
+        pkgfile_qFind(u64(n)).~FPkgfile(); // destroy last element
+        _db.pkgfile_n = i64(n);
+    }
+}
+
+// --- apm.FDb.pkgfile.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void apm::pkgfile_RemoveLast() {
+    u64 n = _db.pkgfile_n;
+    if (n > 0) {
+        n -= 1;
+        pkgfile_qFind(u64(n)).~FPkgfile();
+        _db.pkgfile_n = i64(n);
+    }
+}
+
+// --- apm.FDb.pkgfile.InputMaybe
+static bool apm::pkgfile_InputMaybe(dev::Pkgfile &elem) {
+    bool retval = true;
+    retval = pkgfile_InsertMaybe(elem) != nullptr;
+    return retval;
+}
+
+// --- apm.FDb.pkgfile.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool apm::pkgfile_XrefMaybe(apm::FPkgfile &row) {
+    bool retval = true;
+    (void)row;
+    // insert pkgfile into index ind_pkgfile
+    if (true) { // user-defined insert condition
+        bool success = ind_pkgfile_InsertMaybe(row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "apm.duplicate_key  xref:apm.FDb.ind_pkgfile"; // check for duplicate key
+            return false;
+        }
+    }
+    apm::FPackage* p_package = apm::ind_package_Find(package_Get(row));
+    if (UNLIKELY(!p_package)) {
+        algo_lib::ResetErrtext() << "apm.bad_xref  index:apm.FDb.ind_package" << Keyval("key", package_Get(row));
+        return false;
+    }
+    // insert pkgfile into index c_pkgfile
+    if (true) { // user-defined insert condition
+        c_pkgfile_Insert(*p_package, row);
+    }
+    return retval;
+}
+
+// --- apm.FDb.ind_pkgfile.Find
+// Find row by key. Return NULL if not found.
+apm::FPkgfile* apm::ind_pkgfile_Find(const algo::strptr& key) {
+    u32 index = algo::Smallstr200_Hash(0, key) & (_db.ind_pkgfile_buckets_n - 1);
+    apm::FPkgfile *ret = _db.ind_pkgfile_buckets_elems[index];
+    for (; ret && !((*ret).pkgfile == key); ret = ret->ind_pkgfile_next) {
+    }
+    return ret;
+}
+
+// --- apm.FDb.ind_pkgfile.FindX
+// Look up row by key and return reference. Throw exception if not found
+apm::FPkgfile& apm::ind_pkgfile_FindX(const algo::strptr& key) {
+    apm::FPkgfile* ret = ind_pkgfile_Find(key);
+    vrfy(ret, tempstr() << "apm.key_error  table:ind_pkgfile  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
+}
+
+// --- apm.FDb.ind_pkgfile.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+apm::FPkgfile* apm::ind_pkgfile_GetOrCreate(const algo::strptr& key) {
+    apm::FPkgfile* ret = ind_pkgfile_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &pkgfile_Alloc();
+        (*ret).pkgfile = key;
+        bool good = pkgfile_XrefMaybe(*ret);
+        if (!good) {
+            pkgfile_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
+    }
+    return ret;
+}
+
+// --- apm.FDb.ind_pkgfile.InsertMaybe
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+bool apm::ind_pkgfile_InsertMaybe(apm::FPkgfile& row) {
+    bool retval = true; // if already in hash, InsertMaybe returns true
+    if (LIKELY(row.ind_pkgfile_next == (apm::FPkgfile*)-1)) {// check if in hash already
+        row.ind_pkgfile_hashval = algo::Smallstr200_Hash(0, row.pkgfile);
+        ind_pkgfile_Reserve(1);
+        u32 index = row.ind_pkgfile_hashval & (_db.ind_pkgfile_buckets_n - 1);
+        apm::FPkgfile* *prev = &_db.ind_pkgfile_buckets_elems[index];
+        do {
+            apm::FPkgfile* ret = *prev;
+            if (!ret) { // exit condition 1: reached the end of the list
+                break;
+            }
+            if ((*ret).pkgfile == row.pkgfile) { // exit condition 2: found matching key
+                retval = false;
+                break;
+            }
+            prev = &ret->ind_pkgfile_next;
+        } while (true);
+        if (retval) {
+            row.ind_pkgfile_next = *prev;
+            _db.ind_pkgfile_n++;
+            *prev = &row;
+        }
+    }
+    return retval;
+}
+
+// --- apm.FDb.ind_pkgfile.Remove
+// Remove reference to element from hash index. If element is not in hash, do nothing
+void apm::ind_pkgfile_Remove(apm::FPkgfile& row) {
+    if (LIKELY(row.ind_pkgfile_next != (apm::FPkgfile*)-1)) {// check if in hash already
+        u32 index = row.ind_pkgfile_hashval & (_db.ind_pkgfile_buckets_n - 1);
+        apm::FPkgfile* *prev = &_db.ind_pkgfile_buckets_elems[index]; // addr of pointer to current element
+        while (apm::FPkgfile *next = *prev) {                          // scan the collision chain for our element
+            if (next == &row) {        // found it?
+                *prev = next->ind_pkgfile_next; // unlink (singly linked list)
+                _db.ind_pkgfile_n--;
+                row.ind_pkgfile_next = (apm::FPkgfile*)-1;// not-in-hash
+                break;
+            }
+            prev = &next->ind_pkgfile_next;
+        }
+    }
+}
+
+// --- apm.FDb.ind_pkgfile.Reserve
+// Reserve enough room in the hash for N more elements. Return success code.
+void apm::ind_pkgfile_Reserve(int n) {
+    ind_pkgfile_AbsReserve(_db.ind_pkgfile_n + n);
+}
+
+// --- apm.FDb.ind_pkgfile.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void apm::ind_pkgfile_AbsReserve(int n) {
+    u32 old_nbuckets = _db.ind_pkgfile_buckets_n;
+    u32 new_nelems   = n;
+    // # of elements has to be roughly equal to the number of buckets
+    if (new_nelems > old_nbuckets) {
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
+        u32 old_size = old_nbuckets * sizeof(apm::FPkgfile*);
+        u32 new_size = new_nbuckets * sizeof(apm::FPkgfile*);
+        // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
+        // means new memory will have to be allocated anyway
+        apm::FPkgfile* *new_buckets = (apm::FPkgfile**)algo_lib::malloc_AllocMem(new_size);
+        if (UNLIKELY(!new_buckets)) {
+            FatalErrorExit("apm.out_of_memory  field:apm.FDb.ind_pkgfile");
+        }
+        memset(new_buckets, 0, new_size); // clear pointers
+        // rehash all entries
+        for (int i = 0; i < _db.ind_pkgfile_buckets_n; i++) {
+            apm::FPkgfile* elem = _db.ind_pkgfile_buckets_elems[i];
+            while (elem) {
+                apm::FPkgfile &row        = *elem;
+                apm::FPkgfile* next       = row.ind_pkgfile_next;
+                u32 index          = row.ind_pkgfile_hashval & (new_nbuckets-1);
+                row.ind_pkgfile_next     = new_buckets[index];
+                new_buckets[index] = &row;
+                elem               = next;
+            }
+        }
+        // free old array
+        algo_lib::malloc_FreeMem(_db.ind_pkgfile_buckets_elems, old_size);
+        _db.ind_pkgfile_buckets_elems = new_buckets;
+        _db.ind_pkgfile_buckets_n = new_nbuckets;
+    }
+}
+
+// --- apm.FDb.pkgdest.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+apm::FPkgdest& apm::pkgdest_Alloc() {
+    apm::FPkgdest* row = pkgdest_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("apm.out_of_mem  field:apm.FDb.pkgdest  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- apm.FDb.pkgdest.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+apm::FPkgdest* apm::pkgdest_AllocMaybe() {
+    apm::FPkgdest *row = (apm::FPkgdest*)pkgdest_AllocMem();
+    if (row) {
+        new (row) apm::FPkgdest; // call constructor
+    }
+    return row;
+}
+
+// --- apm.FDb.pkgdest.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* apm::pkgdest_AllocMem() {
+    u64 new_nelems     = _db.pkgdest_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    apm::FPkgdest*  lev   = NULL;
+    if (bsr < 36) {
+        lev = _db.pkgdest_lary[bsr];
+        if (!lev) {
+            lev=(apm::FPkgdest*)algo_lib::malloc_AllocMem(sizeof(apm::FPkgdest) * (u64(1)<<bsr));
+            _db.pkgdest_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.pkgdest_n = i64(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- apm.FDb.pkgdest.RemoveAll
+// Remove all elements from Lary
+void apm::pkgdest_RemoveAll() {
+    for (u64 n = _db.pkgdest_n; n>0; ) {
+        n--;
+        pkgdest_qFind(u64(n)).~FPkgdest(); // destroy last element
+        _db.pkgdest_n = i64(n);
+    }
+}
+
+// --- apm.FDb.pkgdest.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void apm::pkgdest_RemoveLast() {
+    u64 n = _db.pkgdest_n;
+    if (n > 0) {
+        n -= 1;
+        pkgdest_qFind(u64(n)).~FPkgdest();
+        _db.pkgdest_n = i64(n);
+    }
+}
+
+// --- apm.FDb.pkgdest.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool apm::pkgdest_XrefMaybe(apm::FPkgdest &row) {
+    bool retval = true;
+    (void)row;
+    // insert pkgdest into index ind_pkgdest
+    if (true) { // user-defined insert condition
+        bool success = ind_pkgdest_InsertMaybe(row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "apm.duplicate_key  xref:apm.FDb.ind_pkgdest"; // check for duplicate key
+            return false;
+        }
+    }
+    return retval;
+}
+
+// --- apm.FDb.ind_pkgdest.Find
+// Find row by key. Return NULL if not found.
+apm::FPkgdest* apm::ind_pkgdest_Find(const algo::strptr& key) {
+    u32 index = algo::cstring_Hash(0, key) & (_db.ind_pkgdest_buckets_n - 1);
+    apm::FPkgdest *ret = _db.ind_pkgdest_buckets_elems[index];
+    for (; ret && !((*ret).pkgdest == key); ret = ret->ind_pkgdest_next) {
+    }
+    return ret;
+}
+
+// --- apm.FDb.ind_pkgdest.FindX
+// Look up row by key and return reference. Throw exception if not found
+apm::FPkgdest& apm::ind_pkgdest_FindX(const algo::strptr& key) {
+    apm::FPkgdest* ret = ind_pkgdest_Find(key);
+    vrfy(ret, tempstr() << "apm.key_error  table:ind_pkgdest  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
+}
+
+// --- apm.FDb.ind_pkgdest.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+apm::FPkgdest& apm::ind_pkgdest_GetOrCreate(const algo::strptr& key) {
+    apm::FPkgdest* ret = ind_pkgdest_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &pkgdest_Alloc();
+        (*ret).pkgdest = key;
+        bool good = pkgdest_XrefMaybe(*ret);
+        if (!good) {
+            pkgdest_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
+    }
+    vrfy(ret, tempstr() << "apm.create_error  table:ind_pkgdest  key:'"<<key<<"'  comment:'bad xref'");
+    return *ret;
+}
+
+// --- apm.FDb.ind_pkgdest.InsertMaybe
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+bool apm::ind_pkgdest_InsertMaybe(apm::FPkgdest& row) {
+    bool retval = true; // if already in hash, InsertMaybe returns true
+    if (LIKELY(row.ind_pkgdest_next == (apm::FPkgdest*)-1)) {// check if in hash already
+        row.ind_pkgdest_hashval = algo::cstring_Hash(0, row.pkgdest);
+        ind_pkgdest_Reserve(1);
+        u32 index = row.ind_pkgdest_hashval & (_db.ind_pkgdest_buckets_n - 1);
+        apm::FPkgdest* *prev = &_db.ind_pkgdest_buckets_elems[index];
+        do {
+            apm::FPkgdest* ret = *prev;
+            if (!ret) { // exit condition 1: reached the end of the list
+                break;
+            }
+            if ((*ret).pkgdest == row.pkgdest) { // exit condition 2: found matching key
+                retval = false;
+                break;
+            }
+            prev = &ret->ind_pkgdest_next;
+        } while (true);
+        if (retval) {
+            row.ind_pkgdest_next = *prev;
+            _db.ind_pkgdest_n++;
+            *prev = &row;
+        }
+    }
+    return retval;
+}
+
+// --- apm.FDb.ind_pkgdest.Remove
+// Remove reference to element from hash index. If element is not in hash, do nothing
+void apm::ind_pkgdest_Remove(apm::FPkgdest& row) {
+    if (LIKELY(row.ind_pkgdest_next != (apm::FPkgdest*)-1)) {// check if in hash already
+        u32 index = row.ind_pkgdest_hashval & (_db.ind_pkgdest_buckets_n - 1);
+        apm::FPkgdest* *prev = &_db.ind_pkgdest_buckets_elems[index]; // addr of pointer to current element
+        while (apm::FPkgdest *next = *prev) {                          // scan the collision chain for our element
+            if (next == &row) {        // found it?
+                *prev = next->ind_pkgdest_next; // unlink (singly linked list)
+                _db.ind_pkgdest_n--;
+                row.ind_pkgdest_next = (apm::FPkgdest*)-1;// not-in-hash
+                break;
+            }
+            prev = &next->ind_pkgdest_next;
+        }
+    }
+}
+
+// --- apm.FDb.ind_pkgdest.Reserve
+// Reserve enough room in the hash for N more elements. Return success code.
+void apm::ind_pkgdest_Reserve(int n) {
+    ind_pkgdest_AbsReserve(_db.ind_pkgdest_n + n);
+}
+
+// --- apm.FDb.ind_pkgdest.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void apm::ind_pkgdest_AbsReserve(int n) {
+    u32 old_nbuckets = _db.ind_pkgdest_buckets_n;
+    u32 new_nelems   = n;
+    // # of elements has to be roughly equal to the number of buckets
+    if (new_nelems > old_nbuckets) {
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
+        u32 old_size = old_nbuckets * sizeof(apm::FPkgdest*);
+        u32 new_size = new_nbuckets * sizeof(apm::FPkgdest*);
+        // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
+        // means new memory will have to be allocated anyway
+        apm::FPkgdest* *new_buckets = (apm::FPkgdest**)algo_lib::malloc_AllocMem(new_size);
+        if (UNLIKELY(!new_buckets)) {
+            FatalErrorExit("apm.out_of_memory  field:apm.FDb.ind_pkgdest");
+        }
+        memset(new_buckets, 0, new_size); // clear pointers
+        // rehash all entries
+        for (int i = 0; i < _db.ind_pkgdest_buckets_n; i++) {
+            apm::FPkgdest* elem = _db.ind_pkgdest_buckets_elems[i];
+            while (elem) {
+                apm::FPkgdest &row        = *elem;
+                apm::FPkgdest* next       = row.ind_pkgdest_next;
+                u32 index          = row.ind_pkgdest_hashval & (new_nbuckets-1);
+                row.ind_pkgdest_next     = new_buckets[index];
+                new_buckets[index] = &row;
+                elem               = next;
+            }
+        }
+        // free old array
+        algo_lib::malloc_FreeMem(_db.ind_pkgdest_buckets_elems, old_size);
+        _db.ind_pkgdest_buckets_elems = new_buckets;
+        _db.ind_pkgdest_buckets_n = new_nbuckets;
+    }
+}
+
 // --- apm.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
 static algo::ImrowPtr apm::trace_RowidFind(int t) {
@@ -5645,12 +6109,62 @@ void apm::FDb_Init() {
         FatalErrorExit("out of memory"); // (apm.FDb.ind_delta)
     }
     memset(_db.ind_delta_buckets_elems, 0, sizeof(apm::FDelta*)*_db.ind_delta_buckets_n); // (apm.FDb.ind_delta)
+    // initialize LAry pkgfile (apm.FDb.pkgfile)
+    _db.pkgfile_n = 0;
+    memset(_db.pkgfile_lary, 0, sizeof(_db.pkgfile_lary)); // zero out all level pointers
+    apm::FPkgfile* pkgfile_first = (apm::FPkgfile*)algo_lib::malloc_AllocMem(sizeof(apm::FPkgfile) * (u64(1)<<4));
+    if (!pkgfile_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.pkgfile_lary[i]  = pkgfile_first;
+        pkgfile_first    += 1ULL<<i;
+    }
+    // initialize hash table for apm::FPkgfile;
+    _db.ind_pkgfile_n             	= 0; // (apm.FDb.ind_pkgfile)
+    _db.ind_pkgfile_buckets_n     	= 4; // (apm.FDb.ind_pkgfile)
+    _db.ind_pkgfile_buckets_elems 	= (apm::FPkgfile**)algo_lib::malloc_AllocMem(sizeof(apm::FPkgfile*)*_db.ind_pkgfile_buckets_n); // initial buckets (apm.FDb.ind_pkgfile)
+    if (!_db.ind_pkgfile_buckets_elems) {
+        FatalErrorExit("out of memory"); // (apm.FDb.ind_pkgfile)
+    }
+    memset(_db.ind_pkgfile_buckets_elems, 0, sizeof(apm::FPkgfile*)*_db.ind_pkgfile_buckets_n); // (apm.FDb.ind_pkgfile)
+    // initialize LAry pkgdest (apm.FDb.pkgdest)
+    _db.pkgdest_n = 0;
+    memset(_db.pkgdest_lary, 0, sizeof(_db.pkgdest_lary)); // zero out all level pointers
+    apm::FPkgdest* pkgdest_first = (apm::FPkgdest*)algo_lib::malloc_AllocMem(sizeof(apm::FPkgdest) * (u64(1)<<4));
+    if (!pkgdest_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.pkgdest_lary[i]  = pkgdest_first;
+        pkgdest_first    += 1ULL<<i;
+    }
+    // initialize hash table for apm::FPkgdest;
+    _db.ind_pkgdest_n             	= 0; // (apm.FDb.ind_pkgdest)
+    _db.ind_pkgdest_buckets_n     	= 4; // (apm.FDb.ind_pkgdest)
+    _db.ind_pkgdest_buckets_elems 	= (apm::FPkgdest**)algo_lib::malloc_AllocMem(sizeof(apm::FPkgdest*)*_db.ind_pkgdest_buckets_n); // initial buckets (apm.FDb.ind_pkgdest)
+    if (!_db.ind_pkgdest_buckets_elems) {
+        FatalErrorExit("out of memory"); // (apm.FDb.ind_pkgdest)
+    }
+    memset(_db.ind_pkgdest_buckets_elems, 0, sizeof(apm::FPkgdest*)*_db.ind_pkgdest_buckets_n); // (apm.FDb.ind_pkgdest)
 
     apm::InitReflection();
 }
 
 // --- apm.FDb..Uninit
 void apm::FDb_Uninit() {
+
+    // apm.FDb.ind_pkgdest.Uninit (Thash)  //
+    // skip destruction of ind_pkgdest in global scope
+
+    // apm.FDb.pkgdest.Uninit (Lary)  //Paths the selected packages' mappings fill
+    // skip destruction in global scope
+
+    // apm.FDb.ind_pkgfile.Uninit (Thash)  //
+    // skip destruction of ind_pkgfile in global scope
+
+    // apm.FDb.pkgfile.Uninit (Lary)  //
+    // skip destruction in global scope
 
     // apm.FDb.ind_delta.Uninit (Thash)  //
     // skip destruction of ind_delta in global scope
@@ -5875,6 +6389,7 @@ void apm::ns_CopyIn(apm::FNs &row, dmmeta::Ns &in) {
 void apm::package_CopyOut(apm::FPackage &row, dev::Package &out) {
     out.package = row.package;
     out.opensource = row.opensource;
+    out.readmefile = row.readmefile;
     out.comment = algo::Comment(row.comment);
 }
 
@@ -5883,6 +6398,7 @@ void apm::package_CopyOut(apm::FPackage &row, dev::Package &out) {
 void apm::package_CopyIn(apm::FPackage &row, dev::Package &in) {
     row.package = in.package;
     row.opensource = in.opensource;
+    row.readmefile = in.readmefile;
     row.comment = in.comment;
 }
 
@@ -6306,10 +6822,71 @@ void apm::c_pkgkeyword_Reserve(apm::FPackage& parent, u64 n) {
     }
 }
 
+// --- apm.FPackage.c_pkgfile.Insert
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
+void apm::c_pkgfile_Insert(apm::FPackage& parent, apm::FPkgfile& row) {
+    if (!row.package_c_pkgfile_in_ary) {
+        c_pkgfile_Reserve(parent, 1);
+        u64 n  = parent.c_pkgfile_n++;
+        parent.c_pkgfile_elems[n] = &row;
+        row.package_c_pkgfile_in_ary = true;
+    }
+}
+
+// --- apm.FPackage.c_pkgfile.InsertMaybe
+// Insert pointer to row in array.
+// If row is already in the array, do nothing.
+// Return value: whether element was inserted into array.
+bool apm::c_pkgfile_InsertMaybe(apm::FPackage& parent, apm::FPkgfile& row) {
+    bool retval = !package_c_pkgfile_InAryQ(row);
+    c_pkgfile_Insert(parent,row); // check is performed in _Insert again
+    return retval;
+}
+
+// --- apm.FPackage.c_pkgfile.Remove
+// Find element using linear scan. If element is in array, remove, otherwise do nothing
+void apm::c_pkgfile_Remove(apm::FPackage& parent, apm::FPkgfile& row) {
+    i64 n = parent.c_pkgfile_n;
+    if (bool_Update(row.package_c_pkgfile_in_ary,false)) {
+        apm::FPkgfile* *elems = parent.c_pkgfile_elems;
+        // search backward, so that most recently added element is found first.
+        // if found, shift array.
+        for (i64 i = n-1; i>=0; i--) {
+            apm::FPkgfile* elem = elems[i]; // fetch element
+            if (elem == &row) {
+                i64 j = i + 1;
+                size_t nbytes = sizeof(apm::FPkgfile*) * (n - j);
+                memmove(elems + i, elems + j, nbytes);
+                parent.c_pkgfile_n = n - 1;
+                break;
+            }
+        }
+    }
+}
+
+// --- apm.FPackage.c_pkgfile.Reserve
+// Reserve space in index for N more elements;
+void apm::c_pkgfile_Reserve(apm::FPackage& parent, u64 n) {
+    u64 old_max = parent.c_pkgfile_max;
+    if (UNLIKELY(parent.c_pkgfile_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_pkgfile_n + n), 4);
+        u64 old_size = old_max * sizeof(apm::FPkgfile*);
+        u64 new_size = new_max * sizeof(apm::FPkgfile*);
+        void *new_mem = algo_lib::malloc_ReallocMem(parent.c_pkgfile_elems, old_size, new_size);
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("apm.out_of_memory  field:apm.FPackage.c_pkgfile");
+        }
+        parent.c_pkgfile_elems = (apm::FPkgfile**)new_mem;
+        parent.c_pkgfile_max = new_max;
+    }
+}
+
 // --- apm.FPackage..Init
 // Set all fields to initial values.
 void apm::FPackage_Init(apm::FPackage& parent) {
     parent.opensource = bool(false);
+    parent.readmefile = algo::strptr("txt/README.md");
     parent.zd_pkgkey_head = NULL; // (apm.FPackage.zd_pkgkey)
     parent.zd_pkgkey_n = 0; // (apm.FPackage.zd_pkgkey)
     parent.zd_pkgkey_tail = NULL; // (apm.FPackage.zd_pkgkey)
@@ -6329,6 +6906,9 @@ void apm::FPackage_Init(apm::FPackage& parent) {
     parent.c_pkgkeyword_elems = NULL; // (apm.FPackage.c_pkgkeyword)
     parent.c_pkgkeyword_n = 0; // (apm.FPackage.c_pkgkeyword)
     parent.c_pkgkeyword_max = 0; // (apm.FPackage.c_pkgkeyword)
+    parent.c_pkgfile_elems = NULL; // (apm.FPackage.c_pkgfile)
+    parent.c_pkgfile_n = 0; // (apm.FPackage.c_pkgfile)
+    parent.c_pkgfile_max = 0; // (apm.FPackage.c_pkgfile)
     parent.zd_sel_package_next = (apm::FPackage*)-1; // (apm.FDb.zd_sel_package) not-in-list
     parent.zd_sel_package_prev = NULL; // (apm.FDb.zd_sel_package)
     parent.ind_package_next = (apm::FPackage*)-1; // (apm.FDb.ind_package) not-in-hash
@@ -6342,6 +6922,9 @@ void apm::FPackage_Uninit(apm::FPackage& parent) {
     zd_sel_package_Remove(parent); // remove package from index zd_sel_package
     ind_package_Remove(parent); // remove package from index ind_package
     zd_topo_package_Remove(parent); // remove package from index zd_topo_package
+
+    // apm.FPackage.c_pkgfile.Uninit (Ptrary)  //Files the package ships at another path of its projection
+    algo_lib::malloc_FreeMem(parent.c_pkgfile_elems, sizeof(apm::FPkgfile*)*parent.c_pkgfile_max); // (apm.FPackage.c_pkgfile)
 
     // apm.FPackage.c_pkgkeyword.Uninit (Ptrary)  //Words the package's keyword rows name
     algo_lib::malloc_FreeMem(parent.c_pkgkeyword_elems, sizeof(apm::FPkgkeyword*)*parent.c_pkgkeyword_max); // (apm.FPackage.c_pkgkeyword)
@@ -6407,6 +6990,46 @@ void apm::FPkgdep_Uninit(apm::FPkgdep& parent) {
     }
 }
 
+// --- apm.FPkgdest..Uninit
+void apm::FPkgdest_Uninit(apm::FPkgdest& parent) {
+    ind_pkgdest_Remove(parent); // remove pkgdest from index ind_pkgdest
+}
+
+// --- apm.FPkgfile.base.CopyOut
+// Copy fields out of row
+void apm::pkgfile_CopyOut(apm::FPkgfile &row, dev::Pkgfile &out) {
+    out.pkgfile = row.pkgfile;
+    out.gitfile = row.gitfile;
+    out.comment = algo::Comment(row.comment);
+}
+
+// --- apm.FPkgfile.base.CopyIn
+// Copy fields in to row
+void apm::pkgfile_CopyIn(apm::FPkgfile &row, dev::Pkgfile &in) {
+    row.pkgfile = in.pkgfile;
+    row.gitfile = in.gitfile;
+    row.comment = in.comment;
+}
+
+// --- apm.FPkgfile.package.Get
+algo::strptr apm::package_Get(apm::FPkgfile& parent) {
+    return algo::Pathcomp(parent.pkgfile, "/LL");
+}
+
+// --- apm.FPkgfile.dest.Get
+algo::strptr apm::dest_Get(apm::FPkgfile& parent) {
+    return algo::Pathcomp(parent.pkgfile, "/LR");
+}
+
+// --- apm.FPkgfile..Uninit
+void apm::FPkgfile_Uninit(apm::FPkgfile& parent) {
+    ind_pkgfile_Remove(parent); // remove pkgfile from index ind_pkgfile
+    apm::FPackage* p_package = apm::ind_package_Find(package_Get(parent));
+    if (p_package)  {
+        c_pkgfile_Remove(*p_package, parent);// remove pkgfile from index c_pkgfile
+    }
+}
+
 // --- apm.FPkgkey.base.CopyOut
 // Copy fields out of row
 void apm::pkgkey_CopyOut(apm::FPkgkey &row, dev::Pkgkey &out) {
@@ -6415,6 +7038,7 @@ void apm::pkgkey_CopyOut(apm::FPkgkey &row, dev::Pkgkey &out) {
     out.down = row.down;
     out.ref = row.ref;
     out.exclude = row.exclude;
+    out.stub = row.stub;
     out.comment = algo::Comment(row.comment);
 }
 
@@ -6426,6 +7050,7 @@ void apm::pkgkey_CopyIn(apm::FPkgkey &row, dev::Pkgkey &in) {
     row.down = in.down;
     row.ref = in.ref;
     row.exclude = in.exclude;
+    row.stub = in.stub;
     row.comment = in.comment;
 }
 
@@ -6506,6 +7131,7 @@ void apm::FPkgkey_Init(apm::FPkgkey& parent) {
     parent.down = bool(false);
     parent.ref = bool(false);
     parent.exclude = bool(false);
+    parent.stub = bool(false);
     parent.n_explicit = u32(0);
     parent.n_up = u32(0);
     parent.n_down = u32(0);
@@ -7034,6 +7660,69 @@ void apm::c_extrn_Reserve(apm::FRec& parent, u64 n) {
     }
 }
 
+// --- apm.FRec.c_def.Insert
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
+void apm::c_def_Insert(apm::FRec& parent, apm::FRec& row) {
+    c_def_Reserve(parent, 1);
+    u64 n  = parent.c_def_n++;
+    parent.c_def_elems[n] = &row;
+}
+
+// --- apm.FRec.c_def.ScanInsertMaybe
+// Insert pointer to row in array.
+// If row is already in the array, do nothing.
+// Linear search is used to locate the element.
+// Return value: whether element was inserted into array.
+bool apm::c_def_ScanInsertMaybe(apm::FRec& parent, apm::FRec& row) {
+    bool retval = true;
+    u64 n  = parent.c_def_n;
+    for (u64 i = 0; i < n; i++) {
+        if (parent.c_def_elems[i] == &row) {
+            retval = false;
+            break;
+        }
+    }
+    if (retval) {
+        c_def_Insert(parent,row); // row known absent; the append is Insert's
+    }
+    return retval;
+}
+
+// --- apm.FRec.c_def.Remove
+// Find element using linear scan. If element is in array, remove, otherwise do nothing
+void apm::c_def_Remove(apm::FRec& parent, apm::FRec& row) {
+    i64 n = parent.c_def_n;
+    i64 j=0;
+    for (i64 i=0; i<n; i++) {
+        if (parent.c_def_elems[i] == &row) {
+        } else {
+            if (j != i) {
+                parent.c_def_elems[j] = parent.c_def_elems[i];
+            }
+            j++;
+        }
+    }
+    parent.c_def_n = j;
+}
+
+// --- apm.FRec.c_def.Reserve
+// Reserve space in index for N more elements;
+void apm::c_def_Reserve(apm::FRec& parent, u64 n) {
+    u64 old_max = parent.c_def_max;
+    if (UNLIKELY(parent.c_def_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_def_n + n), 4);
+        u64 old_size = old_max * sizeof(apm::FRec*);
+        u64 new_size = new_max * sizeof(apm::FRec*);
+        void *new_mem = algo_lib::malloc_ReallocMem(parent.c_def_elems, old_size, new_size);
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("apm.out_of_memory  field:apm.FRec.c_def");
+        }
+        parent.c_def_elems = (apm::FRec**)new_mem;
+        parent.c_def_max = new_max;
+    }
+}
+
 // --- apm.FRec..Init
 // Set all fields to initial values.
 void apm::FRec_Init(apm::FRec& parent) {
@@ -7055,9 +7744,15 @@ void apm::FRec_Init(apm::FRec& parent) {
     parent.c_req_n = 0; // (apm.FRec.c_req)
     parent.c_req_max = 0; // (apm.FRec.c_req)
     parent.whole = bool(false);
+    parent.exclude = bool(false);
     parent.c_extrn_elems = NULL; // (apm.FRec.c_extrn)
     parent.c_extrn_n = 0; // (apm.FRec.c_extrn)
     parent.c_extrn_max = 0; // (apm.FRec.c_extrn)
+    parent.c_def_elems = NULL; // (apm.FRec.c_def)
+    parent.c_def_n = 0; // (apm.FRec.c_def)
+    parent.c_def_max = 0; // (apm.FRec.c_def)
+    parent.p_via = NULL;
+    parent.p_target = NULL;
     parent.c_srcref_in_ary = bool(false);
     parent.c_srcreq_in_ary = bool(false);
     parent.rec_next = (apm::FRec*)-1; // (apm.FDb.rec) not-in-tpool's freelist
@@ -7087,6 +7782,9 @@ void apm::FRec_Uninit(apm::FRec& parent) {
     zd_selrec_Remove(parent); // remove rec from index zd_selrec
     zd_chooserec_Remove(parent); // remove rec from index zd_chooserec
     zd_droprec_Remove(parent); // remove rec from index zd_droprec
+
+    // apm.FRec.c_def.Uninit (Ptrary)  //(source scan) files that define this record's user function
+    algo_lib::malloc_FreeMem(parent.c_def_elems, sizeof(apm::FRec*)*parent.c_def_max); // (apm.FRec.c_def)
 
     // apm.FRec.c_extrn.Uninit (Ptrary)  //(source scan) records whose user function this file defines
     algo_lib::malloc_FreeMem(parent.c_extrn_elems, sizeof(apm::FRec*)*parent.c_extrn_max); // (apm.FRec.c_extrn)
@@ -7435,6 +8133,7 @@ const char* apm::value_ToCstr(const apm::TableId& parent) {
         case apm_TableId_dmmeta_Ns         : ret = "dmmeta.Ns";  break;
         case apm_TableId_dev_Package       : ret = "dev.Package";  break;
         case apm_TableId_dev_Pkgdep        : ret = "dev.Pkgdep";  break;
+        case apm_TableId_dev_Pkgfile       : ret = "dev.Pkgfile";  break;
         case apm_TableId_dev_Pkgkey        : ret = "dev.Pkgkey";  break;
         case apm_TableId_dev_Pkgkeyword    : ret = "dev.Pkgkeyword";  break;
         case apm_TableId_dev_Pkgupstream   : ret = "dev.Pkgupstream";  break;
@@ -7513,8 +8212,16 @@ bool apm::value_SetStrptrMaybe(apm::TableId& parent, algo::strptr rhs) {
                     if (memcmp(rhs.elems+8,"age",3)==0) { value_SetEnum(parent,apm_TableId_dev_Package); ret = true; break; }
                     break;
                 }
+                case LE_STR8('d','e','v','.','P','k','g','f'): {
+                    if (memcmp(rhs.elems+8,"ile",3)==0) { value_SetEnum(parent,apm_TableId_dev_Pkgfile); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('d','e','v','.','p','a','c','k'): {
                     if (memcmp(rhs.elems+8,"age",3)==0) { value_SetEnum(parent,apm_TableId_dev_package); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('d','e','v','.','p','k','g','f'): {
+                    if (memcmp(rhs.elems+8,"ile",3)==0) { value_SetEnum(parent,apm_TableId_dev_pkgfile); ret = true; break; }
                     break;
                 }
             }

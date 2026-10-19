@@ -39,6 +39,8 @@
 #include "include/gen/lib_ctype_gen.inl.h"
 #include "include/gen/lib_git_gen.h"
 #include "include/gen/lib_git_gen.inl.h"
+#include "include/gen/lib_json_gen.h"
+#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/lib_prot_gen.h"
 #include "include/gen/lib_prot_gen.inl.h"
 //#pragma endinclude
@@ -48,11 +50,16 @@
 algo_lib::FDb    algo_lib::_db;     // dependency found via dev.targdep
 lib_ctype::FDb   lib_ctype::_db;    // dependency found via dev.targdep
 lib_git::FDb     lib_git::_db;      // dependency found via dev.targdep
+lib_json::FDb    lib_json::_db;     // dependency found via dev.targdep
 atf_ci::FDb      atf_ci::_db;       // dependency found via dev.targdep
 
 namespace atf_ci { // gen:ns_gsymbol
-    const atfdb::CijobPkey atfdb_cijob_comp("comp");
-    const atfdb::CijobPkey atfdb_cijob_coverage("coverage");
+    const atfdb::CijobPkey atfdb_cijob_compA("compA");
+    const atfdb::CijobPkey atfdb_cijob_compB("compB");
+    const atfdb::CijobPkey atfdb_cijob_coverageA("coverageA");
+    const atfdb::CijobPkey atfdb_cijob_coverageB("coverageB");
+    const atfdb::CijobPkey atfdb_cijob_covfinal("covfinal");
+    const atfdb::CijobPkey atfdb_cijob_depscan("depscan");
     const atfdb::CijobPkey atfdb_cijob_memcheckA("memcheckA");
     const atfdb::CijobPkey atfdb_cijob_memcheckB("memcheckB");
     const atfdb::CijobPkey atfdb_cijob_memcheckC("memcheckC");
@@ -99,6 +106,12 @@ namespace atf_ci { // gen:ns_print_proto
     static bool          extpkgver_InputMaybe(dev::Extpkgver &elem) __attribute__((nothrow));
     // func:atf_ci.FDb.gitpath.InputMaybe
     static bool          gitpath_InputMaybe(dev::Gitpath &elem) __attribute__((nothrow));
+    // func:atf_ci.FDb.vendorlib.InputMaybe
+    static bool          vendorlib_InputMaybe(dev::Vendorlib &elem) __attribute__((nothrow));
+    // func:atf_ci.FDb.vulnaccept.InputMaybe
+    static bool          vulnaccept_InputMaybe(dev::Vulnaccept &elem) __attribute__((nothrow));
+    // func:atf_ci.FDb.vulnsev.InputMaybe
+    static bool          vulnsev_InputMaybe(dev::Vulnsev &elem) __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
     // func:atf_ci.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
@@ -172,6 +185,7 @@ void atf_ci::citest_CopyOut(atf_ci::FCitest &row, atfdb::Citest &out) {
     out.sandbox = row.sandbox;
     out.timeout = row.timeout;
     out.failfast = row.failfast;
+    out.gcov = row.gcov;
     out.comment = algo::Comment(row.comment);
 }
 
@@ -183,7 +197,22 @@ void atf_ci::citest_CopyIn(atf_ci::FCitest &row, atfdb::Citest &in) {
     row.sandbox = in.sandbox;
     row.timeout = in.timeout;
     row.failfast = in.failfast;
+    row.gcov = in.gcov;
     row.comment = in.comment;
+}
+
+// --- atf_ci.FCitest..Init
+// Set all fields to initial values.
+void atf_ci::FCitest_Init(atf_ci::FCitest& parent) {
+    parent.cijob = algo::strptr("normalize");
+    parent.sandbox = bool(false);
+    parent.timeout = i32(600);
+    parent.failfast = bool(false);
+    parent.gcov = bool(false);
+    parent.nerr = i32(0);
+    parent.step = NULL;
+    parent.ind_citest_next = (atf_ci::FCitest*)-1; // (atf_ci.FDb.ind_citest) not-in-hash
+    parent.ind_citest_hashval = 0; // stored hash value
 }
 
 // --- atf_ci.FCitest..Uninit
@@ -289,7 +318,7 @@ static void atf_ci::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'atf_ci.Input'  signature:'d334b5526c904ee29224cf7b6e96d2af1a4ad959'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'atf_ci.Input'  signature:'60a39c6ffcc42d6bd9b09d6310f1360d35249c87'");
 }
 
 // --- atf_ci.FDb._db.InsertStrptrMaybe
@@ -378,6 +407,24 @@ bool atf_ci::InsertStrptrMaybe(algo::strptr str) {
             retval = retval && gitpath_InputMaybe(elem);
             break;
         }
+        case atf_ci_TableId_dev_Vendorlib: { // finput:atf_ci.FDb.vendorlib
+            dev::Vendorlib elem;
+            retval = dev::Vendorlib_ReadStrptrMaybe(elem, str);
+            retval = retval && vendorlib_InputMaybe(elem);
+            break;
+        }
+        case atf_ci_TableId_dev_Vulnaccept: { // finput:atf_ci.FDb.vulnaccept
+            dev::Vulnaccept elem;
+            retval = dev::Vulnaccept_ReadStrptrMaybe(elem, str);
+            retval = retval && vulnaccept_InputMaybe(elem);
+            break;
+        }
+        case atf_ci_TableId_dev_Vulnsev: { // finput:atf_ci.FDb.vulnsev
+            dev::Vulnsev elem;
+            retval = dev::Vulnsev_ReadStrptrMaybe(elem, str);
+            retval = retval && vulnsev_InputMaybe(elem);
+            break;
+        }
         default:
         break;
     } //switch
@@ -408,8 +455,11 @@ bool atf_ci::LoadTuplesMaybe(algo::strptr root, bool recursive) {
         retval = retval && atf_ci::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cppfunc"),recursive);
         retval = retval && atf_ci::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cfmt"),recursive);
         retval = retval && atf_ci::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cdflt"),recursive);
-        retval = retval && atf_ci::LoadTuplesFile(algo::SsimFname(root,"dev.unstablefld"),recursive);
+        retval = retval && atf_ci::LoadTuplesFile(algo::SsimFname(root,"dev.vulnsev"),recursive);
+        retval = retval && atf_ci::LoadTuplesFile(algo::SsimFname(root,"dev.vulnaccept"),recursive);
         retval = retval && atf_ci::LoadTuplesFile(algo::SsimFname(root,"dev.gitfile"),recursive);
+        retval = retval && atf_ci::LoadTuplesFile(algo::SsimFname(root,"dev.vendorlib"),recursive);
+        retval = retval && atf_ci::LoadTuplesFile(algo::SsimFname(root,"dev.unstablefld"),recursive);
         retval = retval && atf_ci::LoadTuplesFile(algo::SsimFname(root,"dev.targsrc"),recursive);
         retval = retval && atf_ci::LoadTuplesFile(algo::SsimFname(root,"dev.scriptfile"),recursive);
         retval = retval && atf_ci::LoadTuplesFile(algo::SsimFname(root,"dev.readmefile"),recursive);
@@ -572,6 +622,24 @@ bool atf_ci::RemoveStrptrMaybe(algo::strptr str) {
             retval = false;
             break;
         }
+        case atf_ci_TableId_dev_Vendorlib: { // finput:atf_ci.FDb.vendorlib
+            // finput atf_ci.FDb.vendorlib: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case atf_ci_TableId_dev_Vulnaccept: { // finput:atf_ci.FDb.vulnaccept
+            // finput atf_ci.FDb.vulnaccept: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case atf_ci_TableId_dev_Vulnsev: { // finput:atf_ci.FDb.vulnsev
+            // finput atf_ci.FDb.vulnsev: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
         default:
         retval = false;
         break;
@@ -675,57 +743,63 @@ static void atf_ci::citest_LoadStatic() {
         const char *s;
         void (*step)();
     } data[] = {
-        { "atfdb.citest  citest:checkclean  cijob:normalize  sandbox:N  timeout:600  failfast:N  comment:\"Check that no files are modified\"", atf_ci::citest_checkclean }
-        ,{ "atfdb.citest  citest:cleantemp  cijob:normalize  sandbox:N  timeout:600  failfast:N  comment:\"Clean out temp directory every once in a while\"", atf_ci::citest_cleantemp }
-        ,{ "atfdb.citest  citest:gitfile  cijob:normalize  sandbox:N  timeout:600  failfast:N  comment:\"Update gitfile table; check each tracked file against dev.gitpath\"", atf_ci::citest_gitfile }
-        ,{ "atfdb.citest  citest:scanreadme  cijob:normalize  sandbox:N  timeout:600  failfast:N  comment:\"Update readme tables by scanning filesystem\"", atf_ci::citest_scanreadme }
-        ,{ "atfdb.citest  citest:quickreadme  cijob:normalize  sandbox:N  timeout:600  failfast:N  comment:\"Quick re-generate of readmes (without evaluation)\"", atf_ci::citest_quickreadme }
-        ,{ "atfdb.citest  citest:ssimfile  cijob:normalize  sandbox:N  timeout:600  failfast:N  comment:\"Check for .ssim files with no corresponding ssimfile entry\"", atf_ci::citest_ssimfile }
-        ,{ "atfdb.citest  citest:normalize_acr  cijob:normalize  sandbox:N  timeout:600  failfast:N  comment:\"Read ssim databases into memory and write back\"", atf_ci::citest_normalize_acr }
-        ,{ "atfdb.citest  citest:normalize_amc_vis  cijob:normalize  sandbox:N  timeout:600  failfast:N  comment:\"Check that amc_vis doesn't see any circular dependencies\"", atf_ci::citest_normalize_amc_vis }
-        ,{ "atfdb.citest  citest:src_lim  cijob:normalize  sandbox:N  timeout:600  failfast:N  comment:\"Source code police\"", atf_ci::citest_src_lim }
-        ,{ "atfdb.citest  citest:amc  cijob:normalize  sandbox:N  timeout:600  failfast:N  comment:\"Run amc\"", atf_ci::citest_amc }
-        ,{ "atfdb.citest  citest:bootstrap  cijob:normalize  sandbox:N  timeout:600  failfast:N  comment:\"Re-generate bootstrap files\"", atf_ci::citest_bootstrap }
-        ,{ "atfdb.citest  citest:shebang  cijob:normalize  sandbox:N  timeout:600  failfast:N  comment:\"\"", atf_ci::citest_shebang }
-        ,{ "atfdb.citest  citest:encoding  cijob:normalize  sandbox:N  timeout:600  failfast:N  comment:\"Check Encoding of h/cpp files\"", atf_ci::citest_encoding }
-        ,{ "atfdb.citest  citest:file_header  cijob:normalize  sandbox:N  timeout:600  failfast:N  comment:\"Update headers in source files\"", atf_ci::citest_file_header }
-        ,{ "atfdb.citest  citest:non_copyrighted  cijob:normalize  sandbox:N  timeout:600  failfast:N  comment:\"Find non-copyrighted files\"", atf_ci::citest_non_copyrighted }
-        ,{ "atfdb.citest  citest:iffy_src  cijob:normalize  sandbox:N  timeout:600  failfast:N  comment:\"Check for iffy source constructs with src_func\"", atf_ci::citest_iffy_src }
-        ,{ "atfdb.citest  citest:stray_gen  cijob:normalize  sandbox:N  timeout:600  failfast:N  comment:\"*/gen/* file that doesn't appear to be generated by amc\"", atf_ci::citest_stray_gen }
-        ,{ "atfdb.citest  citest:tempcode  cijob:normalize  sandbox:N  timeout:600  failfast:N  comment:\"Check for temp code inserted for testing only\"", atf_ci::citest_tempcode }
-        ,{ "atfdb.citest  citest:lineendings  cijob:normalize  sandbox:N  timeout:600  failfast:N  comment:\"Correct windows-style line endings in known text files\"", atf_ci::citest_lineendings }
-        ,{ "atfdb.citest  citest:update_script  cijob:normalize  sandbox:N  timeout:600  failfast:N  comment:\"Update scriptfile table\"", atf_ci::citest_update_script }
-        ,{ "atfdb.citest  citest:install_script  cijob:normalize  sandbox:N  timeout:600  failfast:N  comment:\"Check that install scripts pin a version and verify what they fetch\"", atf_ci::citest_install_script }
-        ,{ "atfdb.citest  citest:indent_script  cijob:normalize  sandbox:N  timeout:600  failfast:N  comment:\"Indent any bash script file\"", atf_ci::citest_indent_script }
-        ,{ "atfdb.citest  citest:normalize_acr_my  cijob:normalize  sandbox:N  timeout:600  failfast:N  comment:\"Round trip ssim databases through MariaDB and back\"", atf_ci::citest_normalize_acr_my }
-        ,{ "atfdb.citest  citest:cppcheck  cijob:normalize  sandbox:N  timeout:600  failfast:N  comment:\"Cppcheck static code analysis\"", atf_ci::citest_cppcheck }
-        ,{ "atfdb.citest  citest:indent_srcfile  cijob:normalize  sandbox:N  timeout:600  failfast:N  comment:\"Indent any source files modified in last commit\"", atf_ci::citest_indent_srcfile }
-        ,{ "atfdb.citest  citest:copyright_srcfile  cijob:normalize  sandbox:N  timeout:600  failfast:N  comment:\"Give the current holder this year on each source the last commit really changed\"", atf_ci::citest_copyright_srcfile }
-        ,{ "atfdb.citest  citest:readme  cijob:normalize  sandbox:N  timeout:600  failfast:N  comment:\"Re-generate readme files\"", atf_ci::citest_readme }
-        ,{ "atfdb.citest  citest:apm_check  cijob:normalize  sandbox:N  timeout:600  failfast:N  comment:\"\"", atf_ci::citest_apm_check }
-        ,{ "atfdb.citest  citest:atf_amc  cijob:comp  sandbox:N  timeout:600  failfast:N  comment:\"Test amc (run atf_amc)\"", atf_ci::citest_atf_amc }
-        ,{ "atfdb.citest  citest:check_json  cijob:comp  sandbox:N  timeout:600  failfast:N  comment:\"Check .json files for syntax errs\"", atf_ci::citest_check_json }
-        ,{ "atfdb.citest  citest:atf_unit  cijob:comp  sandbox:N  timeout:600  failfast:N  comment:\"Run unit tests\"", atf_ci::citest_atf_unit }
-        ,{ "atfdb.citest  citest:atf_comp  cijob:comp  sandbox:N  timeout:1800  failfast:N  comment:\"Run component tests\"", atf_ci::citest_atf_comp }
-        ,{ "atfdb.citest  citest:cov_prep  cijob:coverage  sandbox:N  timeout:600  failfast:N  comment:\"Build coverage binaries; clear covdir tree (must run first)\"", atf_ci::citest_cov_prep }
-        ,{ "atfdb.citest  citest:atf_unit_cov  cijob:coverage  sandbox:N  timeout:600  failfast:N  comment:\"Run C++ unit tests against the coverage build\"", atf_ci::citest_atf_unit_cov }
-        ,{ "atfdb.citest  citest:atf_comp_cov  cijob:coverage  sandbox:N  timeout:2400  failfast:N  comment:\"Check component test coverage\"", atf_ci::citest_atf_comp_cov }
-        ,{ "atfdb.citest  citest:acr_ed_ssimfile  cijob:comp  sandbox:Y  timeout:600  failfast:N  comment:\"Create a new ssimfile\"", atf_ci::citest_acr_ed_ssimfile }
-        ,{ "atfdb.citest  citest:acr_ed_ssimdb  cijob:comp  sandbox:Y  timeout:600  failfast:N  comment:\"Create a new ssimdb\"", atf_ci::citest_acr_ed_ssimdb }
-        ,{ "atfdb.citest  citest:acr_ed_unittest  cijob:comp  sandbox:Y  timeout:600  failfast:N  comment:\"Create a new unit test\"", atf_ci::citest_acr_ed_unittest }
-        ,{ "atfdb.citest  citest:acr_ed_target  cijob:comp  sandbox:Y  timeout:600  failfast:N  comment:\"Takes a while - do it last\"", atf_ci::citest_acr_ed_target }
-        ,{ "atfdb.citest  citest:doc_after_ssimfile_is_added  cijob:comp  sandbox:Y  timeout:600  failfast:N  comment:\"A table created now is listed by its namespace page, with nothing regenerated\"", atf_ci::citest_doc_after_ssimfile_is_added }
-        ,{ "atfdb.citest  citest:check_citest  cijob:comp  sandbox:N  timeout:600  failfast:N  comment:\"Check whether citests are correctly placed\"", atf_ci::citest_check_citest }
-        ,{ "atfdb.citest  citest:cov_finalize  cijob:coverage  sandbox:N  timeout:600  failfast:N  comment:\"gcov-merge per-citest covdirs into dev.tgtcov (must run last)\"", atf_ci::citest_cov_finalize }
-        ,{ "atfdb.citest  citest:ams_sendtest  cijob:comp  sandbox:N  timeout:600  failfast:N  comment:\"Move data through every ams lane shape, past a slow reader, and on channels\"", atf_ci::citest_ams_sendtest }
-        ,{ "atfdb.citest  citest:check_ainst  cijob:normalize  sandbox:N  timeout:600  failfast:N  comment:\"Check that each package function is alone in its file and pins a release\"", atf_ci::citest_check_ainst }
-        ,{ "atfdb.citest  citest:mem_prepA  cijob:memcheckA  sandbox:N  timeout:1200  failfast:Y  comment:\"Build the memcheck binaries (must run first)\"", atf_ci::citest_mem_prepA }
-        ,{ "atfdb.citest  citest:atf_comp_memA  cijob:memcheckA  sandbox:N  timeout:1800  failfast:N  comment:\"Run the comptests tagged memcheck:memcheckA under valgrind against cfg:memcheck\"", atf_ci::citest_atf_comp_memA }
-        ,{ "atfdb.citest  citest:mem_prepB  cijob:memcheckB  sandbox:N  timeout:1200  failfast:Y  comment:\"Build the memcheck binaries (must run first)\"", atf_ci::citest_mem_prepB }
-        ,{ "atfdb.citest  citest:atf_comp_memB  cijob:memcheckB  sandbox:N  timeout:1800  failfast:N  comment:\"Run the comptests tagged memcheck:memcheckB under valgrind against cfg:memcheck\"", atf_ci::citest_atf_comp_memB }
-        ,{ "atfdb.citest  citest:mem_prepC  cijob:memcheckC  sandbox:N  timeout:1200  failfast:Y  comment:\"Build the memcheck binaries (must run first)\"", atf_ci::citest_mem_prepC }
-        ,{ "atfdb.citest  citest:atf_comp_memC  cijob:memcheckC  sandbox:N  timeout:1800  failfast:N  comment:\"Run the comptests tagged memcheck:memcheckC under valgrind against cfg:memcheck\"", atf_ci::citest_atf_comp_memC }
-        ,{ "atfdb.citest  citest:readme_tut  cijob:comp  sandbox:N  timeout:600  failfast:N  comment:\"Evaluate the tutorials' inline commands (abt_md -tut)\"", atf_ci::citest_readme_tut }
+        { "atfdb.citest  citest:checkclean  cijob:normalize  sandbox:N  timeout:600  failfast:N  gcov:N  comment:\"Check that no files are modified\"", atf_ci::citest_checkclean }
+        ,{ "atfdb.citest  citest:cleantemp  cijob:normalize  sandbox:N  timeout:600  failfast:N  gcov:N  comment:\"Clean out temp directory every once in a while\"", atf_ci::citest_cleantemp }
+        ,{ "atfdb.citest  citest:gitfile  cijob:normalize  sandbox:N  timeout:600  failfast:N  gcov:N  comment:\"Update gitfile table; check each tracked file against dev.gitpath\"", atf_ci::citest_gitfile }
+        ,{ "atfdb.citest  citest:scanreadme  cijob:normalize  sandbox:N  timeout:600  failfast:N  gcov:N  comment:\"Update readme tables by scanning filesystem\"", atf_ci::citest_scanreadme }
+        ,{ "atfdb.citest  citest:quickreadme  cijob:normalize  sandbox:N  timeout:600  failfast:N  gcov:N  comment:\"Quick re-generate of readmes (without evaluation)\"", atf_ci::citest_quickreadme }
+        ,{ "atfdb.citest  citest:ssimfile  cijob:normalize  sandbox:N  timeout:600  failfast:N  gcov:N  comment:\"Check for .ssim files with no corresponding ssimfile entry\"", atf_ci::citest_ssimfile }
+        ,{ "atfdb.citest  citest:normalize_acr  cijob:normalize  sandbox:N  timeout:600  failfast:N  gcov:N  comment:\"Read ssim databases into memory and write back\"", atf_ci::citest_normalize_acr }
+        ,{ "atfdb.citest  citest:normalize_amc_vis  cijob:normalize  sandbox:N  timeout:600  failfast:N  gcov:N  comment:\"Check that amc_vis doesn't see any circular dependencies\"", atf_ci::citest_normalize_amc_vis }
+        ,{ "atfdb.citest  citest:src_lim  cijob:normalize  sandbox:N  timeout:600  failfast:N  gcov:N  comment:\"Source code police\"", atf_ci::citest_src_lim }
+        ,{ "atfdb.citest  citest:amc  cijob:normalize  sandbox:N  timeout:600  failfast:N  gcov:N  comment:\"Run amc\"", atf_ci::citest_amc }
+        ,{ "atfdb.citest  citest:bootstrap  cijob:normalize  sandbox:N  timeout:600  failfast:N  gcov:N  comment:\"Re-generate bootstrap files\"", atf_ci::citest_bootstrap }
+        ,{ "atfdb.citest  citest:shebang  cijob:normalize  sandbox:N  timeout:600  failfast:N  gcov:N  comment:\"\"", atf_ci::citest_shebang }
+        ,{ "atfdb.citest  citest:encoding  cijob:normalize  sandbox:N  timeout:600  failfast:N  gcov:N  comment:\"Check Encoding of h/cpp files\"", atf_ci::citest_encoding }
+        ,{ "atfdb.citest  citest:file_header  cijob:normalize  sandbox:N  timeout:600  failfast:N  gcov:N  comment:\"Update headers in source files\"", atf_ci::citest_file_header }
+        ,{ "atfdb.citest  citest:non_copyrighted  cijob:normalize  sandbox:N  timeout:600  failfast:N  gcov:N  comment:\"Find non-copyrighted files\"", atf_ci::citest_non_copyrighted }
+        ,{ "atfdb.citest  citest:iffy_src  cijob:normalize  sandbox:N  timeout:600  failfast:N  gcov:N  comment:\"Check for iffy source constructs with src_func\"", atf_ci::citest_iffy_src }
+        ,{ "atfdb.citest  citest:stray_gen  cijob:normalize  sandbox:N  timeout:600  failfast:N  gcov:N  comment:\"*/gen/* file that doesn't appear to be generated by amc\"", atf_ci::citest_stray_gen }
+        ,{ "atfdb.citest  citest:tempcode  cijob:normalize  sandbox:N  timeout:600  failfast:N  gcov:N  comment:\"Check for temp code inserted for testing only\"", atf_ci::citest_tempcode }
+        ,{ "atfdb.citest  citest:lineendings  cijob:normalize  sandbox:N  timeout:600  failfast:N  gcov:N  comment:\"Correct windows-style line endings in known text files\"", atf_ci::citest_lineendings }
+        ,{ "atfdb.citest  citest:update_script  cijob:normalize  sandbox:N  timeout:600  failfast:N  gcov:N  comment:\"Update scriptfile table\"", atf_ci::citest_update_script }
+        ,{ "atfdb.citest  citest:install_script  cijob:normalize  sandbox:N  timeout:600  failfast:N  gcov:N  comment:\"Check that install scripts pin a version and verify what they fetch\"", atf_ci::citest_install_script }
+        ,{ "atfdb.citest  citest:indent_script  cijob:normalize  sandbox:N  timeout:600  failfast:N  gcov:N  comment:\"Indent any bash script file\"", atf_ci::citest_indent_script }
+        ,{ "atfdb.citest  citest:normalize_acr_my  cijob:normalize  sandbox:N  timeout:600  failfast:N  gcov:N  comment:\"Round trip ssim databases through MariaDB and back\"", atf_ci::citest_normalize_acr_my }
+        ,{ "atfdb.citest  citest:cppcheck  cijob:normalize  sandbox:N  timeout:600  failfast:N  gcov:N  comment:\"Cppcheck static code analysis\"", atf_ci::citest_cppcheck }
+        ,{ "atfdb.citest  citest:indent_srcfile  cijob:normalize  sandbox:N  timeout:600  failfast:N  gcov:N  comment:\"Indent any source files modified in last commit\"", atf_ci::citest_indent_srcfile }
+        ,{ "atfdb.citest  citest:copyright_srcfile  cijob:normalize  sandbox:N  timeout:600  failfast:N  gcov:N  comment:\"Give the current holder this year on each source the last commit really changed\"", atf_ci::citest_copyright_srcfile }
+        ,{ "atfdb.citest  citest:readme  cijob:normalize  sandbox:N  timeout:600  failfast:N  gcov:N  comment:\"Re-generate readme files\"", atf_ci::citest_readme }
+        ,{ "atfdb.citest  citest:apm_check  cijob:normalize  sandbox:N  timeout:600  failfast:N  gcov:N  comment:\"\"", atf_ci::citest_apm_check }
+        ,{ "atfdb.citest  citest:atf_amc  cijob:compB  sandbox:N  timeout:600  failfast:N  gcov:N  comment:\"Test amc (run atf_amc)\"", atf_ci::citest_atf_amc }
+        ,{ "atfdb.citest  citest:check_json  cijob:compB  sandbox:N  timeout:600  failfast:N  gcov:N  comment:\"Check .json files for syntax errs\"", atf_ci::citest_check_json }
+        ,{ "atfdb.citest  citest:atf_unit  cijob:compB  sandbox:N  timeout:600  failfast:N  gcov:N  comment:\"Run unit tests\"", atf_ci::citest_atf_unit }
+        ,{ "atfdb.citest  citest:atf_compB  cijob:compB  sandbox:N  timeout:1800  failfast:N  gcov:N  comment:\"Run the comptests tagged cijob:compB\"", atf_ci::citest_atf_compB }
+        ,{ "atfdb.citest  citest:cov_prepA  cijob:coverageA  sandbox:N  timeout:600  failfast:N  gcov:N  comment:\"Build the coverage binaries (must run first)\"", atf_ci::citest_cov_prepA }
+        ,{ "atfdb.citest  citest:atf_unit_cov  cijob:coverageA  sandbox:N  timeout:600  failfast:N  gcov:Y  comment:\"Run C++ unit tests against the coverage build\"", atf_ci::citest_atf_unit_cov }
+        ,{ "atfdb.citest  citest:atf_comp_cov  cijob:coverageA  sandbox:N  timeout:2400  failfast:N  gcov:Y  comment:\"Check component test coverage\"", atf_ci::citest_atf_comp_cov }
+        ,{ "atfdb.citest  citest:cov_gcovA  cijob:coverageA  sandbox:N  timeout:600  failfast:N  gcov:N  comment:\"gcov this job's profile dirs into temp/cov/coverageA (must run last)\"", atf_ci::citest_cov_gcovA }
+        ,{ "atfdb.citest  citest:cov_prepB  cijob:coverageB  sandbox:N  timeout:600  failfast:N  gcov:N  comment:\"Build the coverage binaries (must run first)\"", atf_ci::citest_cov_prepB }
+        ,{ "atfdb.citest  citest:cov_gcovB  cijob:coverageB  sandbox:N  timeout:600  failfast:N  gcov:N  comment:\"gcov this job's profile dirs into temp/cov/coverageB (must run last)\"", atf_ci::citest_cov_gcovB }
+        ,{ "atfdb.citest  citest:cov_finalize  cijob:covfinal  sandbox:N  timeout:600  failfast:N  gcov:N  comment:\"Merge coverageA and coverageB into one measurement; check dev.tgtcov\"", atf_ci::citest_cov_finalize }
+        ,{ "atfdb.citest  citest:acr_ed_ssimfile  cijob:compB  sandbox:Y  timeout:600  failfast:N  gcov:N  comment:\"Create a new ssimfile\"", atf_ci::citest_acr_ed_ssimfile }
+        ,{ "atfdb.citest  citest:acr_ed_ssimdb  cijob:compB  sandbox:Y  timeout:600  failfast:N  gcov:N  comment:\"Create a new ssimdb\"", atf_ci::citest_acr_ed_ssimdb }
+        ,{ "atfdb.citest  citest:acr_ed_unittest  cijob:compB  sandbox:Y  timeout:600  failfast:N  gcov:N  comment:\"Create a new unit test\"", atf_ci::citest_acr_ed_unittest }
+        ,{ "atfdb.citest  citest:acr_ed_target  cijob:compB  sandbox:Y  timeout:600  failfast:N  gcov:N  comment:\"Takes a while - do it last\"", atf_ci::citest_acr_ed_target }
+        ,{ "atfdb.citest  citest:doc_after_ssimfile_is_added  cijob:compB  sandbox:Y  timeout:600  failfast:N  gcov:N  comment:\"A table created now is listed by its namespace page, with nothing regenerated\"", atf_ci::citest_doc_after_ssimfile_is_added }
+        ,{ "atfdb.citest  citest:check_citest  cijob:compB  sandbox:N  timeout:600  failfast:N  gcov:N  comment:\"Check whether citests are correctly placed\"", atf_ci::citest_check_citest }
+        ,{ "atfdb.citest  citest:ams_sendtest  cijob:compB  sandbox:N  timeout:600  failfast:N  gcov:N  comment:\"Move data through every ams lane shape, past a slow reader, and on channels\"", atf_ci::citest_ams_sendtest }
+        ,{ "atfdb.citest  citest:check_ainst  cijob:normalize  sandbox:N  timeout:600  failfast:N  gcov:N  comment:\"Check that each package function is alone in its file and pins a release\"", atf_ci::citest_check_ainst }
+        ,{ "atfdb.citest  citest:mem_prepA  cijob:memcheckA  sandbox:N  timeout:1200  failfast:Y  gcov:N  comment:\"Build the memcheck binaries (must run first)\"", atf_ci::citest_mem_prepA }
+        ,{ "atfdb.citest  citest:atf_comp_memA  cijob:memcheckA  sandbox:N  timeout:1800  failfast:N  gcov:N  comment:\"Run the comptests tagged memcheck:memcheckA under valgrind against cfg:memcheck\"", atf_ci::citest_atf_comp_memA }
+        ,{ "atfdb.citest  citest:mem_prepB  cijob:memcheckB  sandbox:N  timeout:1200  failfast:Y  gcov:N  comment:\"Build the memcheck binaries (must run first)\"", atf_ci::citest_mem_prepB }
+        ,{ "atfdb.citest  citest:atf_comp_memB  cijob:memcheckB  sandbox:N  timeout:1800  failfast:N  gcov:N  comment:\"Run the comptests tagged memcheck:memcheckB under valgrind against cfg:memcheck\"", atf_ci::citest_atf_comp_memB }
+        ,{ "atfdb.citest  citest:mem_prepC  cijob:memcheckC  sandbox:N  timeout:1200  failfast:Y  gcov:N  comment:\"Build the memcheck binaries (must run first)\"", atf_ci::citest_mem_prepC }
+        ,{ "atfdb.citest  citest:atf_comp_memC  cijob:memcheckC  sandbox:N  timeout:1800  failfast:N  gcov:N  comment:\"Run the comptests tagged memcheck:memcheckC under valgrind against cfg:memcheck\"", atf_ci::citest_atf_comp_memC }
+        ,{ "atfdb.citest  citest:readme_tut  cijob:compB  sandbox:N  timeout:600  failfast:N  gcov:N  comment:\"Evaluate the tutorials' inline commands (abt_md -tut)\"", atf_ci::citest_readme_tut }
+        ,{ "atfdb.citest  citest:atf_compA  cijob:compA  sandbox:N  timeout:1800  failfast:N  gcov:N  comment:\"Run the comptests tagged cijob:compA\"", atf_ci::citest_atf_compA }
+        ,{ "atfdb.citest  citest:depscan_lockfile  cijob:depscan  sandbox:N  timeout:600  failfast:N  gcov:N  comment:\"Scan every lockfile and pom with osv-scanner\"", atf_ci::citest_depscan_lockfile }
+        ,{ "atfdb.citest  citest:depscan_vendorlib  cijob:depscan  sandbox:N  timeout:300  failfast:N  gcov:N  comment:\"Look up each dev.vendorlib release in the NVD\"", atf_ci::citest_depscan_vendorlib }
         ,{NULL, NULL}
     };
     (void)data;
@@ -3328,6 +3402,433 @@ bool atf_ci::gitpath_XrefMaybe(atf_ci::FGitpath &row) {
     return retval;
 }
 
+// --- atf_ci.FDb.vendorlib.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+atf_ci::FVendorlib& atf_ci::vendorlib_Alloc() {
+    atf_ci::FVendorlib* row = vendorlib_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("atf_ci.out_of_mem  field:atf_ci.FDb.vendorlib  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- atf_ci.FDb.vendorlib.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+atf_ci::FVendorlib* atf_ci::vendorlib_AllocMaybe() {
+    atf_ci::FVendorlib *row = (atf_ci::FVendorlib*)vendorlib_AllocMem();
+    if (row) {
+        new (row) atf_ci::FVendorlib; // call constructor
+    }
+    return row;
+}
+
+// --- atf_ci.FDb.vendorlib.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+atf_ci::FVendorlib* atf_ci::vendorlib_InsertMaybe(const dev::Vendorlib &value) {
+    atf_ci::FVendorlib *row = &vendorlib_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    vendorlib_CopyIn(*row,const_cast<dev::Vendorlib&>(value));
+    bool ok = vendorlib_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        vendorlib_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- atf_ci.FDb.vendorlib.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* atf_ci::vendorlib_AllocMem() {
+    u64 new_nelems     = _db.vendorlib_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    atf_ci::FVendorlib*  lev   = NULL;
+    if (bsr < 36) {
+        lev = _db.vendorlib_lary[bsr];
+        if (!lev) {
+            lev=(atf_ci::FVendorlib*)algo_lib::malloc_AllocMem(sizeof(atf_ci::FVendorlib) * (u64(1)<<bsr));
+            _db.vendorlib_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.vendorlib_n = i64(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- atf_ci.FDb.vendorlib.RemoveAll
+// Remove all elements from Lary
+void atf_ci::vendorlib_RemoveAll() {
+    for (u64 n = _db.vendorlib_n; n>0; ) {
+        n--;
+        vendorlib_qFind(u64(n)).~FVendorlib(); // destroy last element
+        _db.vendorlib_n = i64(n);
+    }
+}
+
+// --- atf_ci.FDb.vendorlib.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void atf_ci::vendorlib_RemoveLast() {
+    u64 n = _db.vendorlib_n;
+    if (n > 0) {
+        n -= 1;
+        vendorlib_qFind(u64(n)).~FVendorlib();
+        _db.vendorlib_n = i64(n);
+    }
+}
+
+// --- atf_ci.FDb.vendorlib.InputMaybe
+static bool atf_ci::vendorlib_InputMaybe(dev::Vendorlib &elem) {
+    bool retval = true;
+    retval = vendorlib_InsertMaybe(elem) != nullptr;
+    return retval;
+}
+
+// --- atf_ci.FDb.vendorlib.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool atf_ci::vendorlib_XrefMaybe(atf_ci::FVendorlib &row) {
+    bool retval = true;
+    (void)row;
+    return retval;
+}
+
+// --- atf_ci.FDb.vulnaccept.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+atf_ci::FVulnaccept& atf_ci::vulnaccept_Alloc() {
+    atf_ci::FVulnaccept* row = vulnaccept_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("atf_ci.out_of_mem  field:atf_ci.FDb.vulnaccept  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- atf_ci.FDb.vulnaccept.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+atf_ci::FVulnaccept* atf_ci::vulnaccept_AllocMaybe() {
+    atf_ci::FVulnaccept *row = (atf_ci::FVulnaccept*)vulnaccept_AllocMem();
+    if (row) {
+        new (row) atf_ci::FVulnaccept; // call constructor
+    }
+    return row;
+}
+
+// --- atf_ci.FDb.vulnaccept.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+atf_ci::FVulnaccept* atf_ci::vulnaccept_InsertMaybe(const dev::Vulnaccept &value) {
+    atf_ci::FVulnaccept *row = &vulnaccept_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    vulnaccept_CopyIn(*row,const_cast<dev::Vulnaccept&>(value));
+    bool ok = vulnaccept_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        vulnaccept_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- atf_ci.FDb.vulnaccept.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* atf_ci::vulnaccept_AllocMem() {
+    u64 new_nelems     = _db.vulnaccept_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    atf_ci::FVulnaccept*  lev   = NULL;
+    if (bsr < 36) {
+        lev = _db.vulnaccept_lary[bsr];
+        if (!lev) {
+            lev=(atf_ci::FVulnaccept*)algo_lib::malloc_AllocMem(sizeof(atf_ci::FVulnaccept) * (u64(1)<<bsr));
+            _db.vulnaccept_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.vulnaccept_n = i64(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- atf_ci.FDb.vulnaccept.RemoveAll
+// Remove all elements from Lary
+void atf_ci::vulnaccept_RemoveAll() {
+    for (u64 n = _db.vulnaccept_n; n>0; ) {
+        n--;
+        vulnaccept_qFind(u64(n)).~FVulnaccept(); // destroy last element
+        _db.vulnaccept_n = i64(n);
+    }
+}
+
+// --- atf_ci.FDb.vulnaccept.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void atf_ci::vulnaccept_RemoveLast() {
+    u64 n = _db.vulnaccept_n;
+    if (n > 0) {
+        n -= 1;
+        vulnaccept_qFind(u64(n)).~FVulnaccept();
+        _db.vulnaccept_n = i64(n);
+    }
+}
+
+// --- atf_ci.FDb.vulnaccept.InputMaybe
+static bool atf_ci::vulnaccept_InputMaybe(dev::Vulnaccept &elem) {
+    bool retval = true;
+    retval = vulnaccept_InsertMaybe(elem) != nullptr;
+    return retval;
+}
+
+// --- atf_ci.FDb.vulnaccept.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool atf_ci::vulnaccept_XrefMaybe(atf_ci::FVulnaccept &row) {
+    bool retval = true;
+    (void)row;
+    // insert vulnaccept into index ind_vulnaccept
+    if (true) { // user-defined insert condition
+        bool success = ind_vulnaccept_InsertMaybe(row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "atf_ci.duplicate_key  xref:atf_ci.FDb.ind_vulnaccept"; // check for duplicate key
+            return false;
+        }
+    }
+    return retval;
+}
+
+// --- atf_ci.FDb.ind_vulnaccept.Find
+// Find row by key. Return NULL if not found.
+atf_ci::FVulnaccept* atf_ci::ind_vulnaccept_Find(const algo::strptr& key) {
+    u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_vulnaccept_buckets_n - 1);
+    atf_ci::FVulnaccept *ret = _db.ind_vulnaccept_buckets_elems[index];
+    for (; ret && !((*ret).vulnaccept == key); ret = ret->ind_vulnaccept_next) {
+    }
+    return ret;
+}
+
+// --- atf_ci.FDb.ind_vulnaccept.FindX
+// Look up row by key and return reference. Throw exception if not found
+atf_ci::FVulnaccept& atf_ci::ind_vulnaccept_FindX(const algo::strptr& key) {
+    atf_ci::FVulnaccept* ret = ind_vulnaccept_Find(key);
+    vrfy(ret, tempstr() << "atf_ci.key_error  table:ind_vulnaccept  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
+}
+
+// --- atf_ci.FDb.ind_vulnaccept.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+atf_ci::FVulnaccept& atf_ci::ind_vulnaccept_GetOrCreate(const algo::strptr& key) {
+    atf_ci::FVulnaccept* ret = ind_vulnaccept_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &vulnaccept_Alloc();
+        (*ret).vulnaccept = key;
+        bool good = vulnaccept_XrefMaybe(*ret);
+        if (!good) {
+            vulnaccept_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
+    }
+    vrfy(ret, tempstr() << "atf_ci.create_error  table:ind_vulnaccept  key:'"<<key<<"'  comment:'bad xref'");
+    return *ret;
+}
+
+// --- atf_ci.FDb.ind_vulnaccept.InsertMaybe
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+bool atf_ci::ind_vulnaccept_InsertMaybe(atf_ci::FVulnaccept& row) {
+    bool retval = true; // if already in hash, InsertMaybe returns true
+    if (LIKELY(row.ind_vulnaccept_next == (atf_ci::FVulnaccept*)-1)) {// check if in hash already
+        row.ind_vulnaccept_hashval = algo::Smallstr50_Hash(0, row.vulnaccept);
+        ind_vulnaccept_Reserve(1);
+        u32 index = row.ind_vulnaccept_hashval & (_db.ind_vulnaccept_buckets_n - 1);
+        atf_ci::FVulnaccept* *prev = &_db.ind_vulnaccept_buckets_elems[index];
+        do {
+            atf_ci::FVulnaccept* ret = *prev;
+            if (!ret) { // exit condition 1: reached the end of the list
+                break;
+            }
+            if ((*ret).vulnaccept == row.vulnaccept) { // exit condition 2: found matching key
+                retval = false;
+                break;
+            }
+            prev = &ret->ind_vulnaccept_next;
+        } while (true);
+        if (retval) {
+            row.ind_vulnaccept_next = *prev;
+            _db.ind_vulnaccept_n++;
+            *prev = &row;
+        }
+    }
+    return retval;
+}
+
+// --- atf_ci.FDb.ind_vulnaccept.Remove
+// Remove reference to element from hash index. If element is not in hash, do nothing
+void atf_ci::ind_vulnaccept_Remove(atf_ci::FVulnaccept& row) {
+    if (LIKELY(row.ind_vulnaccept_next != (atf_ci::FVulnaccept*)-1)) {// check if in hash already
+        u32 index = row.ind_vulnaccept_hashval & (_db.ind_vulnaccept_buckets_n - 1);
+        atf_ci::FVulnaccept* *prev = &_db.ind_vulnaccept_buckets_elems[index]; // addr of pointer to current element
+        while (atf_ci::FVulnaccept *next = *prev) {                          // scan the collision chain for our element
+            if (next == &row) {        // found it?
+                *prev = next->ind_vulnaccept_next; // unlink (singly linked list)
+                _db.ind_vulnaccept_n--;
+                row.ind_vulnaccept_next = (atf_ci::FVulnaccept*)-1;// not-in-hash
+                break;
+            }
+            prev = &next->ind_vulnaccept_next;
+        }
+    }
+}
+
+// --- atf_ci.FDb.ind_vulnaccept.Reserve
+// Reserve enough room in the hash for N more elements. Return success code.
+void atf_ci::ind_vulnaccept_Reserve(int n) {
+    ind_vulnaccept_AbsReserve(_db.ind_vulnaccept_n + n);
+}
+
+// --- atf_ci.FDb.ind_vulnaccept.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void atf_ci::ind_vulnaccept_AbsReserve(int n) {
+    u32 old_nbuckets = _db.ind_vulnaccept_buckets_n;
+    u32 new_nelems   = n;
+    // # of elements has to be roughly equal to the number of buckets
+    if (new_nelems > old_nbuckets) {
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
+        u32 old_size = old_nbuckets * sizeof(atf_ci::FVulnaccept*);
+        u32 new_size = new_nbuckets * sizeof(atf_ci::FVulnaccept*);
+        // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
+        // means new memory will have to be allocated anyway
+        atf_ci::FVulnaccept* *new_buckets = (atf_ci::FVulnaccept**)algo_lib::malloc_AllocMem(new_size);
+        if (UNLIKELY(!new_buckets)) {
+            FatalErrorExit("atf_ci.out_of_memory  field:atf_ci.FDb.ind_vulnaccept");
+        }
+        memset(new_buckets, 0, new_size); // clear pointers
+        // rehash all entries
+        for (int i = 0; i < _db.ind_vulnaccept_buckets_n; i++) {
+            atf_ci::FVulnaccept* elem = _db.ind_vulnaccept_buckets_elems[i];
+            while (elem) {
+                atf_ci::FVulnaccept &row        = *elem;
+                atf_ci::FVulnaccept* next       = row.ind_vulnaccept_next;
+                u32 index          = row.ind_vulnaccept_hashval & (new_nbuckets-1);
+                row.ind_vulnaccept_next     = new_buckets[index];
+                new_buckets[index] = &row;
+                elem               = next;
+            }
+        }
+        // free old array
+        algo_lib::malloc_FreeMem(_db.ind_vulnaccept_buckets_elems, old_size);
+        _db.ind_vulnaccept_buckets_elems = new_buckets;
+        _db.ind_vulnaccept_buckets_n = new_nbuckets;
+    }
+}
+
+// --- atf_ci.FDb.vulnsev.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+atf_ci::FVulnsev& atf_ci::vulnsev_Alloc() {
+    atf_ci::FVulnsev* row = vulnsev_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("atf_ci.out_of_mem  field:atf_ci.FDb.vulnsev  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- atf_ci.FDb.vulnsev.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+atf_ci::FVulnsev* atf_ci::vulnsev_AllocMaybe() {
+    atf_ci::FVulnsev *row = (atf_ci::FVulnsev*)vulnsev_AllocMem();
+    if (row) {
+        new (row) atf_ci::FVulnsev; // call constructor
+    }
+    return row;
+}
+
+// --- atf_ci.FDb.vulnsev.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+atf_ci::FVulnsev* atf_ci::vulnsev_InsertMaybe(const dev::Vulnsev &value) {
+    atf_ci::FVulnsev *row = &vulnsev_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    vulnsev_CopyIn(*row,const_cast<dev::Vulnsev&>(value));
+    bool ok = vulnsev_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        vulnsev_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- atf_ci.FDb.vulnsev.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* atf_ci::vulnsev_AllocMem() {
+    u64 new_nelems     = _db.vulnsev_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    atf_ci::FVulnsev*  lev   = NULL;
+    if (bsr < 36) {
+        lev = _db.vulnsev_lary[bsr];
+        if (!lev) {
+            lev=(atf_ci::FVulnsev*)algo_lib::malloc_AllocMem(sizeof(atf_ci::FVulnsev) * (u64(1)<<bsr));
+            _db.vulnsev_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.vulnsev_n = i64(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- atf_ci.FDb.vulnsev.RemoveAll
+// Remove all elements from Lary
+void atf_ci::vulnsev_RemoveAll() {
+    for (u64 n = _db.vulnsev_n; n>0; ) {
+        n--;
+        vulnsev_qFind(u64(n)).~FVulnsev(); // destroy last element
+        _db.vulnsev_n = i64(n);
+    }
+}
+
+// --- atf_ci.FDb.vulnsev.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void atf_ci::vulnsev_RemoveLast() {
+    u64 n = _db.vulnsev_n;
+    if (n > 0) {
+        n -= 1;
+        vulnsev_qFind(u64(n)).~FVulnsev();
+        _db.vulnsev_n = i64(n);
+    }
+}
+
+// --- atf_ci.FDb.vulnsev.InputMaybe
+static bool atf_ci::vulnsev_InputMaybe(dev::Vulnsev &elem) {
+    bool retval = true;
+    retval = vulnsev_InsertMaybe(elem) != nullptr;
+    return retval;
+}
+
+// --- atf_ci.FDb.vulnsev.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool atf_ci::vulnsev_XrefMaybe(atf_ci::FVulnsev &row) {
+    bool retval = true;
+    (void)row;
+    return retval;
+}
+
 // --- atf_ci.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
 static algo::ImrowPtr atf_ci::trace_RowidFind(int t) {
@@ -3583,6 +4084,47 @@ void atf_ci::FDb_Init() {
         _db.gitpath_lary[i]  = gitpath_first;
         gitpath_first    += 1ULL<<i;
     }
+    // initialize LAry vendorlib (atf_ci.FDb.vendorlib)
+    _db.vendorlib_n = 0;
+    memset(_db.vendorlib_lary, 0, sizeof(_db.vendorlib_lary)); // zero out all level pointers
+    atf_ci::FVendorlib* vendorlib_first = (atf_ci::FVendorlib*)algo_lib::malloc_AllocMem(sizeof(atf_ci::FVendorlib) * (u64(1)<<4));
+    if (!vendorlib_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.vendorlib_lary[i]  = vendorlib_first;
+        vendorlib_first    += 1ULL<<i;
+    }
+    // initialize LAry vulnaccept (atf_ci.FDb.vulnaccept)
+    _db.vulnaccept_n = 0;
+    memset(_db.vulnaccept_lary, 0, sizeof(_db.vulnaccept_lary)); // zero out all level pointers
+    atf_ci::FVulnaccept* vulnaccept_first = (atf_ci::FVulnaccept*)algo_lib::malloc_AllocMem(sizeof(atf_ci::FVulnaccept) * (u64(1)<<4));
+    if (!vulnaccept_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.vulnaccept_lary[i]  = vulnaccept_first;
+        vulnaccept_first    += 1ULL<<i;
+    }
+    // initialize hash table for atf_ci::FVulnaccept;
+    _db.ind_vulnaccept_n             	= 0; // (atf_ci.FDb.ind_vulnaccept)
+    _db.ind_vulnaccept_buckets_n     	= 4; // (atf_ci.FDb.ind_vulnaccept)
+    _db.ind_vulnaccept_buckets_elems 	= (atf_ci::FVulnaccept**)algo_lib::malloc_AllocMem(sizeof(atf_ci::FVulnaccept*)*_db.ind_vulnaccept_buckets_n); // initial buckets (atf_ci.FDb.ind_vulnaccept)
+    if (!_db.ind_vulnaccept_buckets_elems) {
+        FatalErrorExit("out of memory"); // (atf_ci.FDb.ind_vulnaccept)
+    }
+    memset(_db.ind_vulnaccept_buckets_elems, 0, sizeof(atf_ci::FVulnaccept*)*_db.ind_vulnaccept_buckets_n); // (atf_ci.FDb.ind_vulnaccept)
+    // initialize LAry vulnsev (atf_ci.FDb.vulnsev)
+    _db.vulnsev_n = 0;
+    memset(_db.vulnsev_lary, 0, sizeof(_db.vulnsev_lary)); // zero out all level pointers
+    atf_ci::FVulnsev* vulnsev_first = (atf_ci::FVulnsev*)algo_lib::malloc_AllocMem(sizeof(atf_ci::FVulnsev) * (u64(1)<<4));
+    if (!vulnsev_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.vulnsev_lary[i]  = vulnsev_first;
+        vulnsev_first    += 1ULL<<i;
+    }
 
     atf_ci::InitReflection();
     citest_LoadStatic(); // gen:ns_gstatic  gstatic:atf_ci.FDb.citest  load atf_ci.FCitest records
@@ -3590,6 +4132,18 @@ void atf_ci::FDb_Init() {
 
 // --- atf_ci.FDb..Uninit
 void atf_ci::FDb_Uninit() {
+
+    // atf_ci.FDb.vulnsev.Uninit (Lary)  //
+    // skip destruction in global scope
+
+    // atf_ci.FDb.ind_vulnaccept.Uninit (Thash)  //
+    // skip destruction of ind_vulnaccept in global scope
+
+    // atf_ci.FDb.vulnaccept.Uninit (Lary)  //
+    // skip destruction in global scope
+
+    // atf_ci.FDb.vendorlib.Uninit (Lary)  //
+    // skip destruction in global scope
 
     // atf_ci.FDb.gitpath.Uninit (Lary)  //
     // skip destruction in global scope
@@ -3668,7 +4222,6 @@ void atf_ci::FDb_Uninit() {
 // Copy fields out of row
 void atf_ci::extpkg_CopyOut(atf_ci::FExtpkg &row, dev::Extpkg &out) {
     out.extpkg = row.extpkg;
-    out.probe = row.probe;
     out.comment = algo::Comment(row.comment);
 }
 
@@ -3676,7 +4229,6 @@ void atf_ci::extpkg_CopyOut(atf_ci::FExtpkg &row, dev::Extpkg &out) {
 // Copy fields in to row
 void atf_ci::extpkg_CopyIn(atf_ci::FExtpkg &row, dev::Extpkg &in) {
     row.extpkg = in.extpkg;
-    row.probe = in.probe;
     row.comment = in.comment;
 }
 
@@ -3817,8 +4369,10 @@ void atf_ci::readmefile_CopyOut(atf_ci::FReadmefile &row, dev::Readmefile &out) 
     out.gitfile = row.gitfile;
     out.inl = row.inl;
     out.sandbox = row.sandbox;
+    out.tut = row.tut;
     out.filter = row.filter;
     out.publish = row.publish;
+    out.narrow = row.narrow;
     out.comment = algo::Comment(row.comment);
 }
 
@@ -3828,8 +4382,10 @@ void atf_ci::readmefile_CopyIn(atf_ci::FReadmefile &row, dev::Readmefile &in) {
     row.gitfile = in.gitfile;
     row.inl = in.inl;
     row.sandbox = in.sandbox;
+    row.tut = in.tut;
     row.filter = in.filter;
     row.publish = in.publish;
+    row.narrow = in.narrow;
     row.comment = in.comment;
 }
 
@@ -3934,6 +4490,65 @@ void atf_ci::FTargsrc_Uninit(atf_ci::FTargsrc& parent) {
     }
 }
 
+// --- atf_ci.FVendorlib.base.CopyOut
+// Copy fields out of row
+void atf_ci::vendorlib_CopyOut(atf_ci::FVendorlib &row, dev::Vendorlib &out) {
+    out.vendorlib = row.vendorlib;
+    out.gitfile = row.gitfile;
+    out.version = row.version;
+    out.cpe = row.cpe;
+    out.comment = algo::Comment(row.comment);
+}
+
+// --- atf_ci.FVendorlib.base.CopyIn
+// Copy fields in to row
+void atf_ci::vendorlib_CopyIn(atf_ci::FVendorlib &row, dev::Vendorlib &in) {
+    row.vendorlib = in.vendorlib;
+    row.gitfile = in.gitfile;
+    row.version = in.version;
+    row.cpe = in.cpe;
+    row.comment = in.comment;
+}
+
+// --- atf_ci.FVulnaccept.base.CopyOut
+// Copy fields out of row
+void atf_ci::vulnaccept_CopyOut(atf_ci::FVulnaccept &row, dev::Vulnaccept &out) {
+    out.vulnaccept = row.vulnaccept;
+    out.until = row.until;
+    out.comment = algo::Comment(row.comment);
+}
+
+// --- atf_ci.FVulnaccept.base.CopyIn
+// Copy fields in to row
+void atf_ci::vulnaccept_CopyIn(atf_ci::FVulnaccept &row, dev::Vulnaccept &in) {
+    row.vulnaccept = in.vulnaccept;
+    row.until = in.until;
+    row.comment = in.comment;
+}
+
+// --- atf_ci.FVulnaccept..Uninit
+void atf_ci::FVulnaccept_Uninit(atf_ci::FVulnaccept& parent) {
+    ind_vulnaccept_Remove(parent); // remove vulnaccept from index ind_vulnaccept
+}
+
+// --- atf_ci.FVulnsev.base.CopyOut
+// Copy fields out of row
+void atf_ci::vulnsev_CopyOut(atf_ci::FVulnsev &row, dev::Vulnsev &out) {
+    out.vulnsev = row.vulnsev;
+    out.cvss = row.cvss;
+    out.fail = row.fail;
+    out.comment = algo::Comment(row.comment);
+}
+
+// --- atf_ci.FVulnsev.base.CopyIn
+// Copy fields in to row
+void atf_ci::vulnsev_CopyIn(atf_ci::FVulnsev &row, dev::Vulnsev &in) {
+    row.vulnsev = in.vulnsev;
+    row.cvss = in.cvss;
+    row.fail = in.fail;
+    row.comment = in.comment;
+}
+
 // --- atf_ci.FieldId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
@@ -4034,6 +4649,9 @@ const char* atf_ci::value_ToCstr(const atf_ci::TableId& parent) {
         case atf_ci_TableId_dev_Scriptfile : ret = "dev.Scriptfile";  break;
         case atf_ci_TableId_dmmeta_Ssimfile: ret = "dmmeta.Ssimfile";  break;
         case atf_ci_TableId_dev_Targsrc    : ret = "dev.Targsrc";  break;
+        case atf_ci_TableId_dev_Vendorlib  : ret = "dev.Vendorlib";  break;
+        case atf_ci_TableId_dev_Vulnaccept : ret = "dev.Vulnaccept";  break;
+        case atf_ci_TableId_dev_Vulnsev    : ret = "dev.Vulnsev";  break;
     }
     return ret;
 }
@@ -4112,6 +4730,10 @@ bool atf_ci::value_SetStrptrMaybe(atf_ci::TableId& parent, algo::strptr rhs) {
                     if (memcmp(rhs.elems+8,"src",3)==0) { value_SetEnum(parent,atf_ci_TableId_dev_Targsrc); ret = true; break; }
                     break;
                 }
+                case LE_STR8('d','e','v','.','V','u','l','n'): {
+                    if (memcmp(rhs.elems+8,"sev",3)==0) { value_SetEnum(parent,atf_ci_TableId_dev_Vulnsev); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('d','e','v','.','g','i','t','f'): {
                     if (memcmp(rhs.elems+8,"ile",3)==0) { value_SetEnum(parent,atf_ci_TableId_dev_gitfile); ret = true; break; }
                     break;
@@ -4126,6 +4748,10 @@ bool atf_ci::value_SetStrptrMaybe(atf_ci::TableId& parent, algo::strptr rhs) {
                 }
                 case LE_STR8('d','e','v','.','t','a','r','g'): {
                     if (memcmp(rhs.elems+8,"src",3)==0) { value_SetEnum(parent,atf_ci_TableId_dev_targsrc); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('d','e','v','.','v','u','l','n'): {
+                    if (memcmp(rhs.elems+8,"sev",3)==0) { value_SetEnum(parent,atf_ci_TableId_dev_vulnsev); ret = true; break; }
                     break;
                 }
             }
@@ -4158,8 +4784,16 @@ bool atf_ci::value_SetStrptrMaybe(atf_ci::TableId& parent, algo::strptr rhs) {
                     if (memcmp(rhs.elems+8,"kgver",5)==0) { value_SetEnum(parent,atf_ci_TableId_dev_Extpkgver); ret = true; break; }
                     break;
                 }
+                case LE_STR8('d','e','v','.','V','e','n','d'): {
+                    if (memcmp(rhs.elems+8,"orlib",5)==0) { value_SetEnum(parent,atf_ci_TableId_dev_Vendorlib); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('d','e','v','.','e','x','t','p'): {
                     if (memcmp(rhs.elems+8,"kgver",5)==0) { value_SetEnum(parent,atf_ci_TableId_dev_extpkgver); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('d','e','v','.','v','e','n','d'): {
+                    if (memcmp(rhs.elems+8,"orlib",5)==0) { value_SetEnum(parent,atf_ci_TableId_dev_vendorlib); ret = true; break; }
                     break;
                 }
             }
@@ -4175,12 +4809,20 @@ bool atf_ci::value_SetStrptrMaybe(atf_ci::TableId& parent, algo::strptr rhs) {
                     if (memcmp(rhs.elems+8,"ptfile",6)==0) { value_SetEnum(parent,atf_ci_TableId_dev_Scriptfile); ret = true; break; }
                     break;
                 }
+                case LE_STR8('d','e','v','.','V','u','l','n'): {
+                    if (memcmp(rhs.elems+8,"accept",6)==0) { value_SetEnum(parent,atf_ci_TableId_dev_Vulnaccept); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('d','e','v','.','r','e','a','d'): {
                     if (memcmp(rhs.elems+8,"mefile",6)==0) { value_SetEnum(parent,atf_ci_TableId_dev_readmefile); ret = true; break; }
                     break;
                 }
                 case LE_STR8('d','e','v','.','s','c','r','i'): {
                     if (memcmp(rhs.elems+8,"ptfile",6)==0) { value_SetEnum(parent,atf_ci_TableId_dev_scriptfile); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('d','e','v','.','v','u','l','n'): {
+                    if (memcmp(rhs.elems+8,"accept",6)==0) { value_SetEnum(parent,atf_ci_TableId_dev_vulnaccept); ret = true; break; }
                     break;
                 }
             }
@@ -4253,6 +4895,7 @@ int main(int argc, char **argv) {
         algo_lib::FDb_Init();
         lib_ctype::FDb_Init();
         lib_git::FDb_Init();
+        lib_json::FDb_Init();
         atf_ci::FDb_Init();
         algo_lib::_db.argc = argc;
         algo_lib::_db.argv = argv;
@@ -4269,6 +4912,7 @@ int main(int argc, char **argv) {
     }
     try {
         atf_ci::FDb_Uninit();
+        lib_json::FDb_Uninit();
         lib_git::FDb_Uninit();
         lib_ctype::FDb_Uninit();
         algo_lib::FDb_Uninit();

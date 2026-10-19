@@ -136,8 +136,12 @@ static void GenPrintFmtCase(algo_lib::Replscope &R, amc::FDispatch &disp, amc::F
     Ins(&R, body, "    if ($Ctype *castrow = $Fns::$Msgname_Castdown(msg)) {");
     Ins(&R, body, "        $Ctype &row = *castrow;");
     if (strippable) {
+        // Stripping a layer shows what it nests, so a layer nesting nothing --
+        // a keyed message's tombstone, which carries no payload by design --
+        // prints whole instead, where its own fields say what it is.
         Set(R, "$nested", name_Get(*nested));
-        Set(R, "$stripcond", always ? "fmt.strip > 0" : "fmt.strip > 0 && fmt.pretty && fmt.format != algo_MsgFmt_format_bin");
+        Set(R, "$present", nested->reftype == dmmeta_Reftype_reftype_Opt ? "$Fns::$nested_Get(row) != NULL" : "$Fns::$nested_N(row) > 0");
+        Set(R, "$stripcond", always ? "fmt.strip > 0 && $present" : "fmt.strip > 0 && fmt.pretty && fmt.format != algo_MsgFmt_format_bin && $present");
         Ins(&R, body, "        if ($stripcond) {");
         bool before = true;
         ind_beg(amc::ctype_c_field_curs, field, ctype) {
@@ -150,15 +154,8 @@ static void GenPrintFmtCase(algo_lib::Replscope &R, amc::FDispatch &disp, amc::F
         }ind_end;
         Ins(&R, body, "            fmt.strip--;");
         if (nested->reftype == dmmeta_Reftype_reftype_Opt) {
-            Ins(&R, body, "            if ($Hdrtype *sub = $Fns::$nested_Get(row)) {");
-            Ins(&R, body, "                $Dname_PrintFmt(fmt, *sub, out);");
-            Ins(&R, body, "            } else {");
-            Ins(&R, body, "                out << \"[MALFORMED] \";");
-            Ins(&R, body, "            }");
+            Ins(&R, body, "            $Dname_PrintFmt(fmt, *$Fns::$nested_Get(row), out);");
         } else {
-            Ins(&R, body, "            if ($Fns::$nested_N(row) == 0) {");
-            Ins(&R, body, "                out << \"[MALFORMED] \";");
-            Ins(&R, body, "            }");
             Ins(&R, body, "            ind_beg($Fns::$Msgname_$nested_curs, sub, row) {");
             Ins(&R, body, "                if (ind_curs(sub).index > 0 && fmt.format != algo_MsgFmt_format_bin) {");
             Ins(&R, body, "                    out << eol;");
@@ -179,7 +176,10 @@ static void GenPrintFmtCase(algo_lib::Replscope &R, amc::FDispatch &disp, amc::F
     Ins(&R, body, "        } else if (!fmt.pretty) {");
     Ins(&R, body, "            $Fns::$Msgname_Print(row, out);");
     Ins(&R, body, "        } else {");
-    if (keepwhole) {
+    // a layer printed whole shows its own fields, whether it is never stripped
+    // or nests nothing to strip to
+    bool whole_header = keepwhole || strippable;
+    if (whole_header) {
         Ins(&R, body, "            i32 strip = fmt.strip;");
         Ins(&R, body, "            fmt.strip = 0;");
     }
@@ -224,7 +224,7 @@ static void GenPrintFmtCase(algo_lib::Replscope &R, amc::FDispatch &disp, amc::F
             Ins(&R, body, "            }ind_end;");
         }
     }ind_end;
-    if (keepwhole) {
+    if (whole_header) {
         Ins(&R, body, "            fmt.strip = strip;");
     }
     Ins(&R, body, "        }");

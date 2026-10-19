@@ -33,12 +33,12 @@ void ainst::extpkg_rust(ainst::FExtpkg &extpkg) {
     tempstr prefix;
     prefix << "/opt/rust/versions/" << GetExtpkgVersion(extpkg);
     tempstr top;
-    top << "rust-" << GetExtpkgVersion(extpkg) << "-x86_64-unknown-linux-gnu";
+    top << "rust-" << GetExtpkgVersion(extpkg) << "-$(uname -m)-unknown-linux-gnu";
     AddStage(extpkg,tempstr()<<"dir=$(ainst_unpack "<<GetExtpkgsrcVar(extpkg,"rust")<<")");
     AddStage(extpkg,tempstr()<<"ainst_mkdir "<<prefix);
     AddStage(extpkg,tempstr()<<"\"$dir/"<<top<<"/install.sh\" --prefix="<<prefix
              <<" --destdir=\"$ROOT\" --disable-ldconfig"
-             " --components=rustc,rust-std-x86_64-unknown-linux-gnu,cargo,rustfmt-preview,clippy-preview");
+             " --components=rustc,rust-std-$(uname -m)-unknown-linux-gnu,cargo,rustfmt-preview,clippy-preview");
     AddStage(extpkg,tempstr()<<"ln -sfn "<<prefix<<" \"$(ainst_root /opt/rust/current)\"");
     strptr bin("cargo\nrustc\nrustdoc\nrustfmt\ncargo-fmt\ncargo-clippy\nclippy-driver");
     ind_beg(algo::Line_curs,name,bin) {

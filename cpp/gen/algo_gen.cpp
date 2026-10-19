@@ -1549,6 +1549,125 @@ algo::strptr algo::FileFlags_GetAnon(algo::FileFlags &parent, i32 idx) {
     }
 }
 
+// --- algo.Fldtype.value.ToCstr
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+const char* algo::value_ToCstr(const algo::Fldtype& parent) {
+    const char *ret = NULL;
+    switch(value_GetEnum(parent)) {
+        case algo_Fldtype_fixed            : ret = "fixed";  break;
+        case algo_Fldtype_fixed_be         : ret = "fixed_be";  break;
+        case algo_Fldtype_rpascal          : ret = "rpascal";  break;
+        case algo_Fldtype_rightpad         : ret = "rightpad";  break;
+        case algo_Fldtype_varlen           : ret = "varlen";  break;
+        case algo_Fldtype_varlen2          : ret = "varlen2";  break;
+        case algo_Fldtype_cppfunc          : ret = "cppfunc";  break;
+        case algo_Fldtype_leftpad          : ret = "leftpad";  break;
+    }
+    return ret;
+}
+
+// --- algo.Fldtype.value.Print
+// Convert value to a string. First, attempt conversion to a known string.
+// If no string matches, print value as a numeric value.
+void algo::value_Print(const algo::Fldtype& parent, algo::cstring &lhs) {
+    const char *strval = value_ToCstr(parent);
+    if (strval) {
+        lhs << strval;
+    } else {
+        lhs << parent.value;
+    }
+}
+
+// --- algo.Fldtype.value.SetStrptrMaybe
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+bool algo::value_SetStrptrMaybe(algo::Fldtype& parent, algo::strptr rhs) {
+    bool ret = false;
+    switch (elems_N(rhs)) {
+        case 5: {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
+                case LE_STR5('f','i','x','e','d'): {
+                    value_SetEnum(parent,algo_Fldtype_fixed); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 6: {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)) {
+                case LE_STR6('v','a','r','l','e','n'): {
+                    value_SetEnum(parent,algo_Fldtype_varlen); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 7: {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)|(u64(rhs[6])<<48)) {
+                case LE_STR7('c','p','p','f','u','n','c'): {
+                    value_SetEnum(parent,algo_Fldtype_cppfunc); ret = true; break;
+                }
+                case LE_STR7('l','e','f','t','p','a','d'): {
+                    value_SetEnum(parent,algo_Fldtype_leftpad); ret = true; break;
+                }
+                case LE_STR7('r','p','a','s','c','a','l'): {
+                    value_SetEnum(parent,algo_Fldtype_rpascal); ret = true; break;
+                }
+                case LE_STR7('v','a','r','l','e','n','2'): {
+                    value_SetEnum(parent,algo_Fldtype_varlen2); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 8: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('f','i','x','e','d','_','b','e'): {
+                    value_SetEnum(parent,algo_Fldtype_fixed_be); ret = true; break;
+                }
+                case LE_STR8('r','i','g','h','t','p','a','d'): {
+                    value_SetEnum(parent,algo_Fldtype_rightpad); ret = true; break;
+                }
+            }
+            break;
+        }
+    }
+    return ret;
+}
+
+// --- algo.Fldtype.value.SetStrptr
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+void algo::value_SetStrptr(algo::Fldtype& parent, algo::strptr rhs, algo_FldtypeEnum dflt) {
+    if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
+}
+
+// --- algo.Fldtype.value.ReadStrptrMaybe
+// Convert string to field. Return success value
+bool algo::value_ReadStrptrMaybe(algo::Fldtype& parent, algo::strptr rhs) {
+    bool retval = false;
+    retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
+    if (!retval) { // didn't work? try reading as underlying type
+        retval = u8_ReadStrptrMaybe(parent.value,rhs);
+    }
+    return retval;
+}
+
+// --- algo.Fldtype..ReadStrptrMaybe
+// Read fields of algo::Fldtype from an ascii string.
+// The format of the string is the format of the algo::Fldtype's only field
+bool algo::Fldtype_ReadStrptrMaybe(algo::Fldtype &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = retval && value_ReadStrptrMaybe(parent, in_str);
+    return retval;
+}
+
+// --- algo.Fldtype..Print
+// print string representation of ROW to string STR
+// cfmt:algo.Fldtype.String  printfmt:Raw
+void algo::Fldtype_Print(algo::Fldtype row, algo::cstring& str) {
+    algo::value_Print(row, str);
+}
+
 // --- algo.I32Dec1.value.SetDoubleMaybe
 // Set value of field value, using rounding.
 // If value is out of range for the target type, return false.
@@ -16814,6 +16933,7 @@ void algo::StaticCheck() {
     // check that bitfield fits width
     algo_assert(sizeof(((algo::FileFlags*)0)->value)*8 >= 10);
     algo_assert(_offset_of(algo::FileFlags, value) + sizeof(((algo::FileFlags*)0)->value) == sizeof(algo::FileFlags));
+    algo_assert(_offset_of(algo::Fldtype, value) + sizeof(((algo::Fldtype*)0)->value) == sizeof(algo::Fldtype));
     algo_assert(_offset_of(algo::I64Dec4, value) + sizeof(((algo::I64Dec4*)0)->value) == sizeof(algo::I64Dec4));
     algo_assert(_offset_of(algo::I64Dec5, value) + sizeof(((algo::I64Dec5*)0)->value) == sizeof(algo::I64Dec5));
     algo_assert(_offset_of(algo::I64Dec8, value) + sizeof(((algo::I64Dec8*)0)->value) == sizeof(algo::I64Dec8));

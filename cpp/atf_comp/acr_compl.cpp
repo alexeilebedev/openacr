@@ -320,7 +320,7 @@ void atf_comp::comptest_acr_compl_OptH() {
 }
 
 void atf_comp::comptest_acr_compl_OptHList() {
-    atf_comp::ProcStart("$bindir/acr_compl -line:'atf_cmdline -h -type:63'");
+    atf_comp::ProcStart("$bindir/acr_compl -line:'atf_cmdline -h' -type:63");
 }
 
 void atf_comp::comptest_acr_compl_OptNonCumul() {
@@ -348,7 +348,7 @@ void atf_comp::comptest_acr_compl_OptPkeyColonList() {
 }
 
 void atf_comp::comptest_acr_compl_OptPkeyColonPrefix() {
-    atf_comp::ProcStart("$bindir/acr_compl -schema:test/acr_compl.schema.ssim -data:test/acr_compl.schema.ssim -line:'atf_cmdline -dpkey:garden.Fruit'");
+    atf_comp::ProcStart("$bindir/acr_compl -schema:test/acr_compl.schema.ssim -data:test/acr_compl.schema.ssim -line:'atf_cmdline -dpkey:garden.F'");
 }
 
 void atf_comp::comptest_acr_compl_OptPkeyColonPrefixList() {
@@ -380,11 +380,11 @@ void atf_comp::comptest_acr_compl_OptPkeySpaceList() {
 }
 
 void atf_comp::comptest_acr_compl_OptPkeySpacePrefix() {
-    atf_comp::ProcStart("$bindir/acr_compl -schema:test/acr_compl.schema.ssim -data:test/acr_compl.schema.ssim -line:'atf_cmdline -dpkey garden.Fruit'");
+    atf_comp::ProcStart("$bindir/acr_compl -schema:test/acr_compl.schema.ssim -data:test/acr_compl.schema.ssim -line:'atf_cmdline -dpkey garden.F'");
 }
 
 void atf_comp::comptest_acr_compl_OptPkeySpacePrefixList() {
-    atf_comp::ProcStart("$bindir/acr_compl -schema:test/acr_compl.schema.ssim -data:test/acr_compl.schema.ssim -line:'atf_cmdline -dpkey garden.Fruit' -type:63");
+    atf_comp::ProcStart("$bindir/acr_compl -schema:test/acr_compl.schema.ssim -data:test/acr_compl.schema.ssim -line:'atf_cmdline -dpkey garden.F' -type:63");
 }
 
 void atf_comp::comptest_acr_compl_OptPkeySpaceSubstr() {
@@ -464,7 +464,7 @@ void atf_comp::comptest_acr_compl_OptSig() {
 }
 
 void atf_comp::comptest_acr_compl_OptSigList() {
-    atf_comp::ProcStart("$bindir/acr_compl -line:'atf_cmdline -sig -type:63'");
+    atf_comp::ProcStart("$bindir/acr_compl -line:'atf_cmdline -sig' -type:63");
 }
 
 void atf_comp::comptest_acr_compl_OptV() {
@@ -563,24 +563,28 @@ void atf_comp::comptest_acr_compl_T10() {
     atf_comp::ProcStart("$bindir/acr_compl -line:'atf_cmdline -astr: -anum: -adbl: -str: -num: -dbl: -aflag -' -type:63");
 }
 
-// valid command line with named option
+// Validate `atf_cmdline -str:hello`, a command line with a named option, with
+// acr_compl -check, and check that it passes with exit 0.
 void atf_comp::comptest_acr_compl_CheckValid() {
     atf_comp::ProcStart("$bindir/acr_compl -check -line:'atf_cmdline -str:hello'");
 }
 
-// unknown option
+// Validate `atf_cmdline -blah` with acr_compl -check, and check that it reports the
+// unknown option and exits 1.
 void atf_comp::comptest_acr_compl_CheckUnknownOpt() {
     atf_comp::ProcStart("$bindir/acr_compl -check -line:'atf_cmdline -blah'");
 }
 
-// unknown command
+// Validate `nonexistent_tool -x` with acr_compl -check, and check that it reports
+// the unknown command and exits 1.
 void atf_comp::comptest_acr_compl_CheckUnknownCmd() {
     atf_comp::ProcStart("$bindir/acr_compl -check -line:'nonexistent_tool -x'");
 }
 
-// batch-mode validation: pipe acr_compl.checkreq rows in via stdin;
-// expect one acr_compl.checkerr per failing line, silence on success,
-// and a non-zero exit code if any line failed.
+// Pipe three acr_compl.checkreq rows into acr_compl -check_batch: a valid line, an
+// unknown command and an unknown option.  Check that the batch prints one
+// acr_compl.checkerr per failing line, stays silent on the valid line, and exits
+// nonzero.
 void atf_comp::comptest_acr_compl_CheckBatch() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/acr_compl -check_batch");
     atf_comp::ProcWrite(proc, "acr_compl.checkreq  id:1  line:'acr ssimfile:%'");
@@ -589,14 +593,18 @@ void atf_comp::comptest_acr_compl_CheckBatch() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// batch-mode validation of a line whose -- ends its named options: every
-// word after -- is a positional value of that line, so g++ and -c are not
-// checked against gcache's option names. The next line in the batch is
-// parsed from scratch and its unknown option is still reported -- an anon
-// flag left set from the previous line would route every word of every
-// later line down the positional branch, which never reaches the
-// unknown-option check, and a whole documentation corpus would validate
-// clean after one line carrying --.
+// Validate in batch a line whose -- ends its named options, then a line with an
+// unknown option, and check that the batch reports the second line alone:
+// 1. Validate `gcache -- g++ -c x.cpp`, and check that g++ and -c pass as
+//    positional values.
+// 2. Validate `acr -nosuchflag`, and check that the batch still reports its
+//    unknown option.
+// Every word after -- is a positional value of its line, so acr_compl leaves g++
+// and -c unchecked against gcache's option names.  The batch parses each line from
+// scratch.  An anon flag left set from the previous line would route every word of
+// every later line down the positional branch, which never reaches the
+// unknown-option check.  A whole documentation corpus would then validate clean
+// after one line that carries --.
 void atf_comp::comptest_acr_compl_CheckBatchAnon() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/acr_compl -check_batch");
     atf_comp::ProcWrite(proc, "acr_compl.checkreq  id:1  line:'gcache -- g++ -c x.cpp'");
@@ -604,12 +612,17 @@ void atf_comp::comptest_acr_compl_CheckBatchAnon() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// batch-mode validation fed a request row it cannot parse: an unknown attr
-// (a version-skewed producer) and a line that is not a checkreq tuple at
-// all. A dropped request is indistinguishable from one that validated
-// clean, so every unparsed line is reported and fails the run; the
-// surrounding requests are still validated, and an empty line carries no
-// request and is not an error.
+// Feed acr_compl -check_batch request rows it fails to parse among valid ones, and
+// check that the batch reports each one and fails the run:
+// 1. Send a request with an unknown option, and check that the batch reports it.
+// 2. Send a request with the unknown attr zzz, as a version-skewed producer would,
+//    and a line that is no checkreq tuple at all.  Check that the batch reports
+//    each as acr_compl.badreq.
+// 3. Send an empty line, and check that the batch reads it as no request and no
+//    error.
+// 4. Send another request with an unknown option, and check that the batch still
+//    validates it, reports it, and exits 1.
+// A dropped request would look the same as one that validated clean.
 void atf_comp::comptest_acr_compl_CheckBatchBadReq() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/acr_compl -check_batch");
     atf_comp::ProcWrite(proc, "acr_compl.checkreq  id:1  line:'acr -nosuch_flag'");
@@ -620,14 +633,17 @@ void atf_comp::comptest_acr_compl_CheckBatchBadReq() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// batch-mode validation of consecutive lines naming different commands. Each
-// line is checked against its own command's option names, so -write, which
-// belongs to acr and not to amc, is reported on the amc line even though an
-// earlier line used it legally. An option-name index accumulated across the
-// batch would hold the union of every command seen so far and accept the
-// flag. A bare command name with no argument leaves a completion offer behind
-// it; a repeat of that line must be parsed against an empty completion set,
-// since the leading offer of the previous line names no option field.
+// Validate in batch consecutive lines that name different commands, and check that
+// acr_compl checks each line against its own command's option names:
+// 1. Validate the bare command amc twice, and check that both lines pass.
+// 2. Validate `acr -write`, and check that it passes.
+// 3. Validate `amc -write x`, and check that the batch reports -write as an
+//    unknown option of amc, though an earlier line used it legally.
+// -write belongs to acr and is missing from amc.  An option-name index accumulated
+// across the batch would hold the union of every command seen so far and accept
+// the flag.  A bare command name with no argument leaves a completion offer behind
+// it.  The repeat of that line must parse against an empty completion set, because
+// the leading offer of the previous line names no option field.
 void atf_comp::comptest_acr_compl_CheckBatchCmd() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/acr_compl -check_batch");
     atf_comp::ProcWrite(proc, "acr_compl.checkreq  id:1  line:'amc'");
@@ -637,14 +653,15 @@ void atf_comp::comptest_acr_compl_CheckBatchCmd() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// batch-mode validation started from a shell that exported the bash
-// completion environment. COMP_LINE names the line bash asked to complete and
-// says nothing about the command line this process was given, so a validator
-// spawned from such a shell inherits it. Read as the entrypoint selector, it
-// discarded the process's own argv: -check_batch was never parsed, fd 0 was
-// never read, and the run exited 0, which the caller reads as every queued
-// command validated clean. The command line decides what runs; the inherited
-// variable does not.
+// Export the bash completion variables COMP_LINE, COMP_POINT and COMP_TYPE, then
+// run acr_compl -check_batch with a valid and an invalid request.  Check that the
+// batch reports the invalid request and exits 1.
+// COMP_LINE names the line bash asked to complete, a line unrelated to the command
+// line this process was given.  A validator spawned from a shell that exported it
+// inherits it.  Read as the entrypoint selector, it would discard the process's own
+// argv.  The process would then leave -check_batch unparsed and fd 0 unread, and
+// exit 0, which the caller reads as every queued command validated clean.  The
+// command line decides what runs.
 void atf_comp::comptest_acr_compl_CheckBatchCompLine() {
     atf_comp::SetEnv(algo_lib::dev_envvar_COMP_LINE, "acr ");
     atf_comp::SetEnv(algo_lib::dev_envvar_COMP_POINT, "4");
@@ -656,11 +673,11 @@ void atf_comp::comptest_acr_compl_CheckBatchCompLine() {
     atf_comp::ProcWait(proc, 1);
 }
 
-// batch-mode validation asked to read the schema or the data from stdin as
-// well: the requests and the ssim tuples would both arrive on fd 0, and the
-// loader that runs first consumes the whole stream, leaving the batch with
-// zero requests to validate. The combination is rejected before either
-// reader opens fd 0, so a batch is never reported clean because the schema
+// Run acr_compl -check_batch with -schema:- and -data:-, and check that acr_compl
+// rejects the combination before either reader opens fd 0.
+// The requests and the ssim tuples would both arrive on fd 0.  The loader that runs
+// first would consume the whole stream and leave the batch with zero requests to
+// validate.  The rejection keeps a batch from passing clean because the schema
 // loader ate its requests.
 void atf_comp::comptest_acr_compl_CheckBatchSchemaStdin() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/acr_compl -check_batch -schema:- -data:-");
@@ -675,63 +692,92 @@ void atf_comp::comptest_acr_compl_CheckBatchSchemaStdin() {
     atf_comp::ProcWriteEof(proc);
 }
 
-// batch-mode validation asked to print the completion installation script as
-// well: the `complete` command goes to the same stdout that carries the
-// response rows, ahead of them and not a response row, and a consumer reading
-// the stream as tuples has no way to tell the difference. The combination is
-// rejected, so nothing but responses ever reaches the response stream.
+// Run acr_compl -check_batch with -install, and check that acr_compl rejects the
+// combination, so the response stream carries responses alone.
+// The installation script's `complete` command would go to the same stdout as the
+// response rows, ahead of them.  A consumer reading the stream as tuples would have
+// no way to tell the command from a response row.
 void atf_comp::comptest_acr_compl_CheckBatchInstall() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/acr_compl -check_batch -install");
     atf_comp::ProcWrite(proc, "acr_compl.checkreq  id:1  line:'acr -nosuch_flag'");
     atf_comp::ProcWriteEof(proc);
 }
 
-// batch-mode validation asked to check a single line as well: -check and
-// -check_batch are two validation modes, only one of them runs, and the
-// single-line check would be dropped without a word -- a validation silently
-// not performed is what this mode exists to prevent. The combination is
-// rejected instead.
+// Run acr_compl -check_batch with -check and a line, and check that acr_compl
+// rejects the combination.
+// -check and -check_batch are two validation modes, of which only one runs.  The
+// single-line check would drop without a word.  A validation silently skipped is
+// what this mode exists to prevent.
 void atf_comp::comptest_acr_compl_CheckBatchCheck() {
     atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/acr_compl -check_batch -check -line:'acr -another_nosuch_flag'");
     atf_comp::ProcWrite(proc, "acr_compl.checkreq  id:1  line:'acr -nosuch_flag'");
     atf_comp::ProcWriteEof(proc);
 }
 
-// valid command with boolean flag
+// Validate `acr % -t`, a command line with a boolean flag, with acr_compl -check,
+// and check that it passes with exit 0.
 void atf_comp::comptest_acr_compl_CheckValidFlag() {
     atf_comp::ProcStart("$bindir/acr_compl -check -line:'acr % -t'");
 }
 
-// valid command with anonymous arg
+// Validate `acr %`, a command line with an anonymous arg, with acr_compl -check, and
+// check that it passes with exit 0.
 void atf_comp::comptest_acr_compl_CheckValidAnon() {
     atf_comp::ProcStart("$bindir/acr_compl -check -line:'acr %'");
 }
 
-// valid command with multiple options
+// Validate `atf_cmdline -str:hello -num:5 -dbl:1.0 -flag`, a command line with
+// several options, with acr_compl -check, and check that it passes with exit 0.
 void atf_comp::comptest_acr_compl_CheckMultiOpt() {
     atf_comp::ProcStart("$bindir/acr_compl -check -line:'atf_cmdline -str:hello -num:5 -dbl:1.0 -flag'");
 }
 
-// dmmeta.finsertwhen: composite Pkey flag falls through to the existing-pkey
-// lookup when its trigger flag is absent
+// Complete -dvariety: without -create, the trigger flag that its dmmeta.finsertwhen
+// row names, and check that the composite Pkey flag falls through to the lookup of
+// existing pkeys.
 void atf_comp::comptest_acr_compl_InsertWhenLookup() {
     atf_comp::ProcStart("$bindir/acr_compl -schema:test/acr_compl.schema.ssim -data:test/acr_compl.schema.ssim -line:'atf_cmdline -dvariety:'");
 }
 
-// trigger flag present, empty value: insert mode offers the LEFT component
-// (flower) values, each suffixed with the / separator
+// Complete -dvariety: with the trigger flag -create and an empty value, and check
+// that insert mode offers the LEFT component values (flowers), each suffixed with
+// the / separator.
 void atf_comp::comptest_acr_compl_InsertWhenLeft() {
     atf_comp::ProcStart("$bindir/acr_compl -schema:test/acr_compl.schema.ssim -data:test/acr_compl.schema.ssim -line:'atf_cmdline -create -dvariety:'");
 }
 
-// trigger flag present, value contains the separator: insert mode offers
-// the RIGHT component (fruit) values, with the typed left half as a prefix
+// Complete -dvariety:rose/, a value that holds the separator, with the trigger flag
+// -create.  Check that insert mode offers the RIGHT component values (fruits), with
+// the typed left half as a prefix.
 void atf_comp::comptest_acr_compl_InsertWhenRight() {
     atf_comp::ProcStart("$bindir/acr_compl -schema:test/acr_compl.schema.ssim -data:test/acr_compl.schema.ssim -line:'atf_cmdline -create -dvariety:rose/'");
 }
 
-// trigger flag present, partially-typed left component: insert mode filters
-// flowers by prefix
+// Complete -dvariety:tu, a partly typed left component, with the trigger flag
+// -create, and check that insert mode filters the flowers by the typed prefix.
 void atf_comp::comptest_acr_compl_InsertWhenLeftPrefix() {
     atf_comp::ProcStart("$bindir/acr_compl -schema:test/acr_compl.schema.ssim -data:test/acr_compl.schema.ssim -line:'atf_cmdline -create -dvariety:tu'");
+}
+
+// Make the directories rose, rosemary and 1511-userproc-pidns and the file roseleaf
+// under bed/, and complete -dflower:ro.  Check that the typed prefix completes to a
+// flower row and to a directory under bed/ alike, and that acr_compl offers rose,
+// which is both, once.  The dmmeta.fcompldir row of -dflower names the directory
+// bed.
+void atf_comp::comptest_acr_compl_DirPrefix() {
+    atf_comp::ProcStart("bash -c 'cd $tempdir && mkdir -p bed/rose bed/rosemary bed/1511-userproc-pidns && touch bed/roseleaf && $$OLDPWD/$bindir/acr_compl -schema:$$OLDPWD/test/acr_compl.schema.ssim -data:$$OLDPWD/test/acr_compl.schema.ssim -line:\"atf_cmdline -dflower:ro\" -type:63'");
+}
+
+// Make the directories rose, 1511-userproc-pidns and the hidden .pidns under bed/,
+// and complete -dflower:pid%ns.  Check that the directory name that the SQL pattern
+// matches only in the middle completes, because no name starts with the value, and
+// that the hidden directory stays out.
+void atf_comp::comptest_acr_compl_DirSubstr() {
+    atf_comp::ProcStart("bash -c 'cd $tempdir && mkdir -p bed/rose bed/1511-userproc-pidns bed/.pidns && $$OLDPWD/$bindir/acr_compl -schema:$$OLDPWD/test/acr_compl.schema.ssim -data:$$OLDPWD/test/acr_compl.schema.ssim -line:\"atf_cmdline -dflower:pid%ns\"'");
+}
+
+// Complete -dflower:ro in a tempdir that lacks the directory bed/, and check that
+// the field completes from its table's keys alone.
+void atf_comp::comptest_acr_compl_DirMissing() {
+    atf_comp::ProcStart("bash -c 'cd $tempdir && $$OLDPWD/$bindir/acr_compl -schema:$$OLDPWD/test/acr_compl.schema.ssim -data:$$OLDPWD/test/acr_compl.schema.ssim -line:\"atf_cmdline -dflower:ro\"'");
 }

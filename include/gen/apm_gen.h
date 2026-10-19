@@ -55,23 +55,25 @@ enum apm_TableIdEnum {                    // apm.TableId.value
     ,apm_TableId_dev_package       = 5    // dev.package -> apm.FPackage
     ,apm_TableId_dev_Pkgdep        = 6    // dev.Pkgdep -> apm.FPkgdep
     ,apm_TableId_dev_pkgdep        = 6    // dev.pkgdep -> apm.FPkgdep
-    ,apm_TableId_dev_Pkgkey        = 7    // dev.Pkgkey -> apm.FPkgkey
-    ,apm_TableId_dev_pkgkey        = 7    // dev.pkgkey -> apm.FPkgkey
-    ,apm_TableId_dev_Pkgkeyword    = 8    // dev.Pkgkeyword -> apm.FPkgkeyword
-    ,apm_TableId_dev_pkgkeyword    = 8    // dev.pkgkeyword -> apm.FPkgkeyword
-    ,apm_TableId_dev_Pkgupstream   = 9    // dev.Pkgupstream -> apm.FPkgupstream
-    ,apm_TableId_dev_pkgupstream   = 9    // dev.pkgupstream -> apm.FPkgupstream
-    ,apm_TableId_dmmeta_Ssimfile   = 10   // dmmeta.Ssimfile -> apm.FSsimfile
-    ,apm_TableId_dmmeta_ssimfile   = 10   // dmmeta.ssimfile -> apm.FSsimfile
-    ,apm_TableId_dmmeta_Ssimreq    = 11   // dmmeta.Ssimreq -> apm.FSsimreq
-    ,apm_TableId_dmmeta_ssimreq    = 11   // dmmeta.ssimreq -> apm.FSsimreq
-    ,apm_TableId_dmmeta_Ssimsort   = 12   // dmmeta.Ssimsort -> apm.FSsimsort
-    ,apm_TableId_dmmeta_ssimsort   = 12   // dmmeta.ssimsort -> apm.FSsimsort
-    ,apm_TableId_dmmeta_Substr     = 13   // dmmeta.Substr -> apm.FSubstr
-    ,apm_TableId_dmmeta_substr     = 13   // dmmeta.substr -> apm.FSubstr
+    ,apm_TableId_dev_Pkgfile       = 7    // dev.Pkgfile -> apm.FPkgfile
+    ,apm_TableId_dev_pkgfile       = 7    // dev.pkgfile -> apm.FPkgfile
+    ,apm_TableId_dev_Pkgkey        = 8    // dev.Pkgkey -> apm.FPkgkey
+    ,apm_TableId_dev_pkgkey        = 8    // dev.pkgkey -> apm.FPkgkey
+    ,apm_TableId_dev_Pkgkeyword    = 9    // dev.Pkgkeyword -> apm.FPkgkeyword
+    ,apm_TableId_dev_pkgkeyword    = 9    // dev.pkgkeyword -> apm.FPkgkeyword
+    ,apm_TableId_dev_Pkgupstream   = 10   // dev.Pkgupstream -> apm.FPkgupstream
+    ,apm_TableId_dev_pkgupstream   = 10   // dev.pkgupstream -> apm.FPkgupstream
+    ,apm_TableId_dmmeta_Ssimfile   = 11   // dmmeta.Ssimfile -> apm.FSsimfile
+    ,apm_TableId_dmmeta_ssimfile   = 11   // dmmeta.ssimfile -> apm.FSsimfile
+    ,apm_TableId_dmmeta_Ssimreq    = 12   // dmmeta.Ssimreq -> apm.FSsimreq
+    ,apm_TableId_dmmeta_ssimreq    = 12   // dmmeta.ssimreq -> apm.FSsimreq
+    ,apm_TableId_dmmeta_Ssimsort   = 13   // dmmeta.Ssimsort -> apm.FSsimsort
+    ,apm_TableId_dmmeta_ssimsort   = 13   // dmmeta.ssimsort -> apm.FSsimsort
+    ,apm_TableId_dmmeta_Substr     = 14   // dmmeta.Substr -> apm.FSubstr
+    ,apm_TableId_dmmeta_substr     = 14   // dmmeta.substr -> apm.FSubstr
 };
 
-enum { apm_TableIdEnum_N = 28 };
+enum { apm_TableIdEnum_N = 30 };
 
 namespace apm { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
@@ -86,6 +88,7 @@ namespace dmmeta { struct Ns; }
 namespace dev { struct Package; }
 namespace dev { struct Pkgdep; }
 namespace apm { struct FPackage; }
+namespace dev { struct Pkgfile; }
 namespace dev { struct Pkgkey; }
 namespace dev { struct Pkgkeyword; }
 namespace apm { struct FRec; }
@@ -129,12 +132,15 @@ namespace apm { struct _db_pkgupstream_curs; }
 namespace apm { struct _db_pkgkeyword_curs; }
 namespace apm { struct _db_c_keyword_curs; }
 namespace apm { struct _db_delta_curs; }
+namespace apm { struct _db_pkgfile_curs; }
+namespace apm { struct _db_pkgdest_curs; }
 namespace apm { struct package_zd_pkgkey_curs; }
 namespace apm { struct package_c_pkgdep_curs; }
 namespace apm { struct package_c_pkgdep_parent_curs; }
 namespace apm { struct package_zd_pkgrec_curs; }
 namespace apm { struct package_c_pkgupstream_curs; }
 namespace apm { struct package_c_pkgkeyword_curs; }
+namespace apm { struct package_c_pkgfile_curs; }
 namespace apm { struct pkgkey_c_pkgrec_curs; }
 namespace apm { struct rec_c_parent_curs; }
 namespace apm { struct rec_c_child_curs; }
@@ -142,6 +148,7 @@ namespace apm { struct rec_zd_rec_pkgrec_curs; }
 namespace apm { struct rec_c_ref_curs; }
 namespace apm { struct rec_c_req_curs; }
 namespace apm { struct rec_c_extrn_curs; }
+namespace apm { struct rec_c_def_curs; }
 namespace apm { struct ssimfile_zd_ssimfile_rec_curs; }
 namespace apm { struct FBltin; }
 namespace apm { struct FCppname; }
@@ -153,6 +160,8 @@ namespace apm { struct FMergefile; }
 namespace apm { struct FMkdir; }
 namespace apm { struct FNs; }
 namespace apm { struct FPkgdep; }
+namespace apm { struct FPkgdest; }
+namespace apm { struct FPkgfile; }
 namespace apm { struct FPkgkeyword; }
 namespace apm { struct FPkgrec; }
 namespace apm { struct FPkgupstream; }
@@ -634,6 +643,16 @@ struct FDb { // apm.FDb: In-memory database for apm
     apm::FDelta**        ind_delta_buckets_elems;       // pointer to bucket array
     i32                  ind_delta_buckets_n;           // number of elements in bucket array
     i32                  ind_delta_n;                   // number of elements in the hash table
+    apm::FPkgfile*       pkgfile_lary[36];              // level array
+    i64                  pkgfile_n;                     // number of elements in array
+    apm::FPkgfile**      ind_pkgfile_buckets_elems;     // pointer to bucket array
+    i32                  ind_pkgfile_buckets_n;         // number of elements in bucket array
+    i32                  ind_pkgfile_n;                 // number of elements in the hash table
+    apm::FPkgdest*       pkgdest_lary[36];              // level array
+    i64                  pkgdest_n;                     // number of elements in array
+    apm::FPkgdest**      ind_pkgdest_buckets_elems;     // pointer to bucket array
+    i32                  ind_pkgdest_buckets_n;         // number of elements in bucket array
+    i32                  ind_pkgdest_n;                 // number of elements in the hash table
     apm::trace           trace;                         //
 };
 // Read argc,argv into the fields of apm.FDb.cmdline (and any base command line)
@@ -2162,6 +2181,138 @@ void                 ind_delta_Reserve(int n) __attribute__((nothrow));
 // func:apm.FDb.ind_delta.AbsReserve
 void                 ind_delta_AbsReserve(int n) __attribute__((nothrow));
 
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:apm.FDb.pkgfile.Alloc
+apm::FPkgfile&       pkgfile_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:apm.FDb.pkgfile.AllocMaybe
+apm::FPkgfile*       pkgfile_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:apm.FDb.pkgfile.InsertMaybe
+apm::FPkgfile*       pkgfile_InsertMaybe(const dev::Pkgfile &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+// func:apm.FDb.pkgfile.AllocMem
+void*                pkgfile_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:apm.FDb.pkgfile.EmptyQ
+inline bool          pkgfile_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+// func:apm.FDb.pkgfile.Find
+inline apm::FPkgfile* pkgfile_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+// func:apm.FDb.pkgfile.Last
+inline apm::FPkgfile* pkgfile_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+// func:apm.FDb.pkgfile.N
+inline i64           pkgfile_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+// func:apm.FDb.pkgfile.RemoveAll
+void                 pkgfile_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:apm.FDb.pkgfile.RemoveLast
+void                 pkgfile_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:apm.FDb.pkgfile.qFind
+inline apm::FPkgfile& pkgfile_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:apm.FDb.pkgfile.XrefMaybe
+bool                 pkgfile_XrefMaybe(apm::FPkgfile &row);
+
+// Return true if hash is empty
+// func:apm.FDb.ind_pkgfile.EmptyQ
+inline bool          ind_pkgfile_EmptyQ() __attribute__((nothrow));
+// Find row by key. Return NULL if not found.
+// func:apm.FDb.ind_pkgfile.Find
+apm::FPkgfile*       ind_pkgfile_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:apm.FDb.ind_pkgfile.FindX
+apm::FPkgfile&       ind_pkgfile_FindX(const algo::strptr& key);
+// Find row by key. If not found, create and x-reference a new row with with this key.
+// func:apm.FDb.ind_pkgfile.GetOrCreate
+apm::FPkgfile*       ind_pkgfile_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
+// Return number of items in the hash
+// func:apm.FDb.ind_pkgfile.N
+inline i32           ind_pkgfile_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:apm.FDb.ind_pkgfile.InsertMaybe
+bool                 ind_pkgfile_InsertMaybe(apm::FPkgfile& row) __attribute__((nothrow));
+// Remove reference to element from hash index. If element is not in hash, do nothing
+// func:apm.FDb.ind_pkgfile.Remove
+void                 ind_pkgfile_Remove(apm::FPkgfile& row) __attribute__((nothrow));
+// Reserve enough room in the hash for N more elements. Return success code.
+// func:apm.FDb.ind_pkgfile.Reserve
+void                 ind_pkgfile_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:apm.FDb.ind_pkgfile.AbsReserve
+void                 ind_pkgfile_AbsReserve(int n) __attribute__((nothrow));
+
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:apm.FDb.pkgdest.Alloc
+apm::FPkgdest&       pkgdest_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:apm.FDb.pkgdest.AllocMaybe
+apm::FPkgdest*       pkgdest_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+// func:apm.FDb.pkgdest.AllocMem
+void*                pkgdest_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:apm.FDb.pkgdest.EmptyQ
+inline bool          pkgdest_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+// func:apm.FDb.pkgdest.Find
+inline apm::FPkgdest* pkgdest_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+// func:apm.FDb.pkgdest.Last
+inline apm::FPkgdest* pkgdest_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+// func:apm.FDb.pkgdest.N
+inline i64           pkgdest_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+// func:apm.FDb.pkgdest.RemoveAll
+void                 pkgdest_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:apm.FDb.pkgdest.RemoveLast
+void                 pkgdest_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:apm.FDb.pkgdest.qFind
+inline apm::FPkgdest& pkgdest_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:apm.FDb.pkgdest.XrefMaybe
+bool                 pkgdest_XrefMaybe(apm::FPkgdest &row);
+
+// Return true if hash is empty
+// func:apm.FDb.ind_pkgdest.EmptyQ
+inline bool          ind_pkgdest_EmptyQ() __attribute__((nothrow));
+// Find row by key. Return NULL if not found.
+// func:apm.FDb.ind_pkgdest.Find
+apm::FPkgdest*       ind_pkgdest_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:apm.FDb.ind_pkgdest.FindX
+apm::FPkgdest&       ind_pkgdest_FindX(const algo::strptr& key);
+// Find row by key. If not found, create and x-reference a new row with with this key.
+// func:apm.FDb.ind_pkgdest.GetOrCreate
+apm::FPkgdest&       ind_pkgdest_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
+// Return number of items in the hash
+// func:apm.FDb.ind_pkgdest.N
+inline i32           ind_pkgdest_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:apm.FDb.ind_pkgdest.InsertMaybe
+bool                 ind_pkgdest_InsertMaybe(apm::FPkgdest& row) __attribute__((nothrow));
+// Remove reference to element from hash index. If element is not in hash, do nothing
+// func:apm.FDb.ind_pkgdest.Remove
+void                 ind_pkgdest_Remove(apm::FPkgdest& row) __attribute__((nothrow));
+// Reserve enough room in the hash for N more elements. Return success code.
+// func:apm.FDb.ind_pkgdest.Reserve
+void                 ind_pkgdest_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:apm.FDb.ind_pkgdest.AbsReserve
+void                 ind_pkgdest_AbsReserve(int n) __attribute__((nothrow));
+
 // cursor points to valid item
 // func:apm.FDb.package_curs.Reset
 inline void          _db_package_curs_Reset(_db_package_curs &curs, apm::FDb &parent) __attribute__((nothrow));
@@ -2506,6 +2657,30 @@ inline void          _db_delta_curs_Next(_db_delta_curs &curs) __attribute__((no
 // item access
 // func:apm.FDb.delta_curs.Access
 inline apm::FDelta&  _db_delta_curs_Access(_db_delta_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:apm.FDb.pkgfile_curs.Reset
+inline void          _db_pkgfile_curs_Reset(_db_pkgfile_curs &curs, apm::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:apm.FDb.pkgfile_curs.ValidQ
+inline bool          _db_pkgfile_curs_ValidQ(_db_pkgfile_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:apm.FDb.pkgfile_curs.Next
+inline void          _db_pkgfile_curs_Next(_db_pkgfile_curs &curs) __attribute__((nothrow));
+// item access
+// func:apm.FDb.pkgfile_curs.Access
+inline apm::FPkgfile& _db_pkgfile_curs_Access(_db_pkgfile_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:apm.FDb.pkgdest_curs.Reset
+inline void          _db_pkgdest_curs_Reset(_db_pkgdest_curs &curs, apm::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:apm.FDb.pkgdest_curs.ValidQ
+inline bool          _db_pkgdest_curs_ValidQ(_db_pkgdest_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:apm.FDb.pkgdest_curs.Next
+inline void          _db_pkgdest_curs_Next(_db_pkgdest_curs &curs) __attribute__((nothrow));
+// item access
+// func:apm.FDb.pkgdest_curs.Access
+inline apm::FPkgdest& _db_pkgdest_curs_Access(_db_pkgdest_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:apm.FDb..Init
 void                 FDb_Init();
@@ -2719,6 +2894,7 @@ struct FPackage { // apm.FPackage
     apm::FPackage*        zd_topo_package_prev;    // previous element
     algo::Smallstr50      package;                 // Package name
     bool                  opensource;              //   false  Published openly; apm refuses content under a proprietary license
+    algo::Smallstr200     readmefile;              //   "txt/README.md"  Front page of the package: its projection's txt/README.md
     algo::cstring         comment;                 //
     apm::FPkgkey*         zd_pkgkey_head;          // zero-terminated doubly linked list
     i32                   zd_pkgkey_n;             // zero-terminated doubly linked list
@@ -2739,12 +2915,16 @@ struct FPackage { // apm.FPackage
     apm::FPkgkeyword**    c_pkgkeyword_elems;      // array of pointers
     u64                   c_pkgkeyword_n;          // current size
     u64                   c_pkgkeyword_max;        // capacity of allocated array
+    apm::FPkgfile**       c_pkgfile_elems;         // array of pointers
+    u64                   c_pkgfile_n;             // current size
+    u64                   c_pkgfile_max;           // capacity of allocated array
     // reftype Llist of apm.FPackage.zd_pkgkey prohibits copy
     // reftype Ptrary of apm.FPackage.c_pkgdep prohibits copy
     // reftype Ptrary of apm.FPackage.c_pkgdep_parent prohibits copy
     // reftype Llist of apm.FPackage.zd_pkgrec prohibits copy
     // reftype Ptrary of apm.FPackage.c_pkgupstream prohibits copy
     // reftype Ptrary of apm.FPackage.c_pkgkeyword prohibits copy
+    // reftype Ptrary of apm.FPackage.c_pkgfile prohibits copy
     // func:apm.FPackage..AssignOp
     apm::FPackage&       operator =(const apm::FPackage &rhs) = delete;
     // reftype Llist of apm.FPackage.zd_pkgkey prohibits copy
@@ -2753,6 +2933,7 @@ struct FPackage { // apm.FPackage
     // reftype Llist of apm.FPackage.zd_pkgrec prohibits copy
     // reftype Ptrary of apm.FPackage.c_pkgupstream prohibits copy
     // reftype Ptrary of apm.FPackage.c_pkgkeyword prohibits copy
+    // reftype Ptrary of apm.FPackage.c_pkgfile prohibits copy
     // func:apm.FPackage..CopyCtor
     FPackage(const apm::FPackage &rhs) = delete;
 private:
@@ -3012,6 +3193,46 @@ inline bool          package_c_pkgkeyword_InAryQ(apm::FPkgkeyword& row) __attrib
 // func:apm.FPackage.c_pkgkeyword.qLast
 inline apm::FPkgkeyword& c_pkgkeyword_qLast(apm::FPackage& parent) __attribute__((nothrow));
 
+// Return true if index is empty
+// func:apm.FPackage.c_pkgfile.EmptyQ
+inline bool          c_pkgfile_EmptyQ(apm::FPackage& parent) __attribute__((nothrow));
+// Look up row by row id. Return NULL if out of range
+// func:apm.FPackage.c_pkgfile.Find
+inline apm::FPkgfile* c_pkgfile_Find(apm::FPackage& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
+// Return array of pointers
+// func:apm.FPackage.c_pkgfile.Getary
+inline algo::aryptr<apm::FPkgfile*> c_pkgfile_Getary(apm::FPackage& parent) __attribute__((nothrow));
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
+// func:apm.FPackage.c_pkgfile.Insert
+void                 c_pkgfile_Insert(apm::FPackage& parent, apm::FPkgfile& row) __attribute__((nothrow));
+// Insert pointer to row in array.
+// If row is already in the array, do nothing.
+// Return value: whether element was inserted into array.
+// func:apm.FPackage.c_pkgfile.InsertMaybe
+bool                 c_pkgfile_InsertMaybe(apm::FPackage& parent, apm::FPkgfile& row) __attribute__((nothrow));
+// Return number of items in the pointer array
+// func:apm.FPackage.c_pkgfile.N
+inline i64           c_pkgfile_N(const apm::FPackage& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+// Find element using linear scan. If element is in array, remove, otherwise do nothing
+// func:apm.FPackage.c_pkgfile.Remove
+void                 c_pkgfile_Remove(apm::FPackage& parent, apm::FPkgfile& row) __attribute__((nothrow));
+// Empty the index. (The rows are not deleted)
+// func:apm.FPackage.c_pkgfile.RemoveAll
+inline void          c_pkgfile_RemoveAll(apm::FPackage& parent) __attribute__((nothrow));
+// Reserve space in index for N more elements;
+// func:apm.FPackage.c_pkgfile.Reserve
+void                 c_pkgfile_Reserve(apm::FPackage& parent, u64 n) __attribute__((nothrow));
+// Return reference without bounds checking
+// func:apm.FPackage.c_pkgfile.qFind
+inline apm::FPkgfile& c_pkgfile_qFind(apm::FPackage& parent, u64 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+// func:apm.FPackage.c_pkgfile.InAryQ
+inline bool          package_c_pkgfile_InAryQ(apm::FPkgfile& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+// func:apm.FPackage.c_pkgfile.qLast
+inline apm::FPkgfile& c_pkgfile_qLast(apm::FPackage& parent) __attribute__((nothrow));
+
 // Set all fields to initial values.
 // func:apm.FPackage..Init
 void                 FPackage_Init(apm::FPackage& parent);
@@ -3083,6 +3304,17 @@ inline void          package_c_pkgkeyword_curs_Next(package_c_pkgkeyword_curs &c
 // item access
 // func:apm.FPackage.c_pkgkeyword_curs.Access
 inline apm::FPkgkeyword& package_c_pkgkeyword_curs_Access(package_c_pkgkeyword_curs &curs) __attribute__((nothrow));
+// func:apm.FPackage.c_pkgfile_curs.Reset
+inline void          package_c_pkgfile_curs_Reset(package_c_pkgfile_curs &curs, apm::FPackage &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:apm.FPackage.c_pkgfile_curs.ValidQ
+inline bool          package_c_pkgfile_curs_ValidQ(package_c_pkgfile_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:apm.FPackage.c_pkgfile_curs.Next
+inline void          package_c_pkgfile_curs_Next(package_c_pkgfile_curs &curs) __attribute__((nothrow));
+// item access
+// func:apm.FPackage.c_pkgfile_curs.Access
+inline apm::FPkgfile& package_c_pkgfile_curs_Access(package_c_pkgfile_curs &curs) __attribute__((nothrow));
 // func:apm.FPackage..Uninit
 void                 FPackage_Uninit(apm::FPackage& parent) __attribute__((nothrow));
 
@@ -3137,12 +3369,88 @@ void                 FPkgdep_Init(apm::FPkgdep& parent);
 // func:apm.FPkgdep..Uninit
 void                 FPkgdep_Uninit(apm::FPkgdep& parent) __attribute__((nothrow));
 
+// --- apm.FPkgdest
+// create: apm.FDb.pkgdest (Lary)
+// global access: pkgdest (Lary, by rowid)
+// global access: ind_pkgdest (Thash, hash field pkgdest)
+struct FPkgdest { // apm.FPkgdest: A path of the projection that a dev.pkgfile row fills, with the row that wins it
+    apm::FPkgdest*   ind_pkgdest_next;      // hash next
+    u32              ind_pkgdest_hashval;   // hash value
+    algo::cstring    pkgdest;               // Path in the projection
+    apm::FPkgfile*   p_pkgfile;             // The mapping that ships a file of this tree at the path. optional pointer
+    // func:apm.FPkgdest..AssignOp
+    inline apm::FPkgdest& operator =(const apm::FPkgdest &rhs) = delete;
+    // func:apm.FPkgdest..CopyCtor
+    inline               FPkgdest(const apm::FPkgdest &rhs) = delete;
+private:
+    // func:apm.FPkgdest..Ctor
+    inline               FPkgdest() __attribute__((nothrow));
+    // func:apm.FPkgdest..Dtor
+    inline               ~FPkgdest() __attribute__((nothrow));
+    friend apm::FPkgdest&       pkgdest_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend apm::FPkgdest*       pkgdest_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 pkgdest_RemoveAll() __attribute__((nothrow));
+    friend void                 pkgdest_RemoveLast() __attribute__((nothrow));
+};
+// Set all fields to initial values.
+// func:apm.FPkgdest..Init
+inline void          FPkgdest_Init(apm::FPkgdest& parent);
+// func:apm.FPkgdest..Uninit
+void                 FPkgdest_Uninit(apm::FPkgdest& parent) __attribute__((nothrow));
+
+// --- apm.FPkgfile
+// create: apm.FDb.pkgfile (Lary)
+// global access: pkgfile (Lary, by rowid)
+// global access: ind_pkgfile (Thash, hash field pkgfile)
+// access: apm.FPackage.c_pkgfile (Ptrary)
+// access: apm.FPkgdest.p_pkgfile (Ptr)
+struct FPkgfile { // apm.FPkgfile
+    apm::FPkgfile*      ind_pkgfile_next;           // hash next
+    u32                 ind_pkgfile_hashval;        // hash value
+    algo::Smallstr200   pkgfile;                    // Package and the path of the file in its projection
+    algo::Smallstr200   gitfile;                    // File of this tree that the projection carries at dest
+    algo::cstring       comment;                    //
+    bool                package_c_pkgfile_in_ary;   //   false  membership flag
+    // func:apm.FPkgfile..AssignOp
+    inline apm::FPkgfile& operator =(const apm::FPkgfile &rhs) = delete;
+    // func:apm.FPkgfile..CopyCtor
+    inline               FPkgfile(const apm::FPkgfile &rhs) = delete;
+private:
+    // func:apm.FPkgfile..Ctor
+    inline               FPkgfile() __attribute__((nothrow));
+    // func:apm.FPkgfile..Dtor
+    inline               ~FPkgfile() __attribute__((nothrow));
+    friend apm::FPkgfile&       pkgfile_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend apm::FPkgfile*       pkgfile_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 pkgfile_RemoveAll() __attribute__((nothrow));
+    friend void                 pkgfile_RemoveLast() __attribute__((nothrow));
+};
+// Copy fields out of row
+// func:apm.FPkgfile.base.CopyOut
+void                 pkgfile_CopyOut(apm::FPkgfile &row, dev::Pkgfile &out) __attribute__((nothrow));
+// Copy fields in to row
+// func:apm.FPkgfile.base.CopyIn
+void                 pkgfile_CopyIn(apm::FPkgfile &row, dev::Pkgfile &in) __attribute__((nothrow));
+
+// func:apm.FPkgfile.package.Get
+algo::strptr         package_Get(apm::FPkgfile& parent) __attribute__((__warn_unused_result__, nothrow));
+
+// func:apm.FPkgfile.dest.Get
+algo::strptr         dest_Get(apm::FPkgfile& parent) __attribute__((__warn_unused_result__, nothrow));
+
+// Set all fields to initial values.
+// func:apm.FPkgfile..Init
+inline void          FPkgfile_Init(apm::FPkgfile& parent);
+// func:apm.FPkgfile..Uninit
+void                 FPkgfile_Uninit(apm::FPkgfile& parent) __attribute__((nothrow));
+
 // --- apm.FPkgkey
 // create: apm.FDb.pkgkey (Lary)
 // global access: pkgkey (Lary, by rowid)
 // global access: ind_pkgkey (Thash, hash field pkgkey)
 // access: apm.FPackage.zd_pkgkey (Llist)
 // access: apm.FPkgrec.p_pkgkey (Upptr)
+// access: apm.FRec.p_via (Ptr)
 struct FPkgkey { // apm.FPkgkey
     apm::FPkgkey*       ind_pkgkey_next;          // hash next
     u32                 ind_pkgkey_hashval;       // hash value
@@ -3153,6 +3461,7 @@ struct FPkgkey { // apm.FPkgkey
     bool                down;                     //   false  perform transitive closure downwards (via the leftmost parent link)
     bool                ref;                      //   false  select what the selection references; a referenced record comes with what it owns
     bool                exclude;                  //   false  exclude selected records from the package
+    bool                stub;                     //   false  carry the matched files as stubs: title and one sentence
     algo::cstring       comment;                  //
     u32                 n_explicit;               //   0  # of explicitly matched records
     u32                 n_up;                     //   0  # of records connected upwards
@@ -3303,6 +3612,7 @@ struct FPkgrec { // apm.FPkgrec
     apm::FPackage*   p_package;                // reference to parent row
     apm::FRec*       p_rec;                    // reference to parent row
     apm::FPkgkey*    p_pkgkey;                 // reference to parent row
+    bool             stub;                     //   false  The package carries the file as a stub (a stub:Y key matched it)
     bool             pkgkey_c_pkgrec_in_ary;   //   false  membership flag
     apm::FPkgrec*    rec_zd_rec_pkgrec_next;   // zslist link; -1 means not-in-list
     apm::FPkgrec*    rec_zd_rec_pkgrec_prev;   // previous element
@@ -3386,6 +3696,8 @@ void                 FPkgupstream_Uninit(apm::FPkgupstream& parent) __attribute_
 // access: apm.FRec.c_ref (Ptrary)
 // access: apm.FRec.c_req (Ptrary)
 // access: apm.FRec.c_extrn (Ptrary)
+// access: apm.FRec.c_def (Ptrary)
+// access: apm.FRec.p_target (Ptr)
 // access: apm.FSsimfile.zd_ssimfile_rec (Llist)
 struct FRec { // apm.FRec
     apm::FRec*             rec_next;                        // Pointer to next free element int tpool
@@ -3420,9 +3732,15 @@ struct FRec { // apm.FRec
     u64                    c_req_n;                         // current size
     u64                    c_req_max;                       // capacity of allocated array
     bool                   whole;                           //   false  (ref closure) the record comes with what it owns
+    bool                   exclude;                         //   false  (config rows) a key of the package being evaluated excludes the record
     apm::FRec**            c_extrn_elems;                   // array of pointers
     u64                    c_extrn_n;                       // current size
     u64                    c_extrn_max;                     // capacity of allocated array
+    apm::FRec**            c_def_elems;                     // array of pointers
+    u64                    c_def_n;                         // current size
+    u64                    c_def_max;                       // capacity of allocated array
+    apm::FPkgkey*          p_via;                           // (config rows) the key that brought the record this row configures. optional pointer
+    apm::FRec*             p_target;                        // (source file) the dev.target row of the target that compiles it. optional pointer
     bool                   c_srcref_in_ary;                 //   false  membership flag
     bool                   c_srcreq_in_ary;                 //   false  membership flag
     apm::FRec*             ssimfile_zd_ssimfile_rec_next;   // zslist link; -1 means not-in-list
@@ -3433,6 +3751,7 @@ struct FRec { // apm.FRec
     // reftype Ptrary of apm.FRec.c_ref prohibits copy
     // reftype Ptrary of apm.FRec.c_req prohibits copy
     // reftype Ptrary of apm.FRec.c_extrn prohibits copy
+    // reftype Ptrary of apm.FRec.c_def prohibits copy
     // func:apm.FRec..AssignOp
     apm::FRec&           operator =(const apm::FRec &rhs) = delete;
     // reftype Ptrary of apm.FRec.c_parent prohibits copy
@@ -3441,6 +3760,7 @@ struct FRec { // apm.FRec
     // reftype Ptrary of apm.FRec.c_ref prohibits copy
     // reftype Ptrary of apm.FRec.c_req prohibits copy
     // reftype Ptrary of apm.FRec.c_extrn prohibits copy
+    // reftype Ptrary of apm.FRec.c_def prohibits copy
     // func:apm.FRec..CopyCtor
     FRec(const apm::FRec &rhs) = delete;
 private:
@@ -3685,6 +4005,44 @@ inline apm::FRec&    c_extrn_qFind(apm::FRec& parent, u64 idx) __attribute__((no
 // func:apm.FRec.c_extrn.qLast
 inline apm::FRec&    c_extrn_qLast(apm::FRec& parent) __attribute__((nothrow));
 
+// Return true if index is empty
+// func:apm.FRec.c_def.EmptyQ
+inline bool          c_def_EmptyQ(apm::FRec& parent) __attribute__((nothrow));
+// Look up row by row id. Return NULL if out of range
+// func:apm.FRec.c_def.Find
+inline apm::FRec*    c_def_Find(apm::FRec& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
+// Return array of pointers
+// func:apm.FRec.c_def.Getary
+inline algo::aryptr<apm::FRec*> c_def_Getary(apm::FRec& parent) __attribute__((nothrow));
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
+// func:apm.FRec.c_def.Insert
+void                 c_def_Insert(apm::FRec& parent, apm::FRec& row) __attribute__((nothrow));
+// Insert pointer to row in array.
+// If row is already in the array, do nothing.
+// Linear search is used to locate the element.
+// Return value: whether element was inserted into array.
+// func:apm.FRec.c_def.ScanInsertMaybe
+bool                 c_def_ScanInsertMaybe(apm::FRec& parent, apm::FRec& row) __attribute__((nothrow));
+// Return number of items in the pointer array
+// func:apm.FRec.c_def.N
+inline i64           c_def_N(const apm::FRec& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+// Find element using linear scan. If element is in array, remove, otherwise do nothing
+// func:apm.FRec.c_def.Remove
+void                 c_def_Remove(apm::FRec& parent, apm::FRec& row) __attribute__((nothrow));
+// Empty the index. (The rows are not deleted)
+// func:apm.FRec.c_def.RemoveAll
+inline void          c_def_RemoveAll(apm::FRec& parent) __attribute__((nothrow));
+// Reserve space in index for N more elements;
+// func:apm.FRec.c_def.Reserve
+void                 c_def_Reserve(apm::FRec& parent, u64 n) __attribute__((nothrow));
+// Return reference without bounds checking
+// func:apm.FRec.c_def.qFind
+inline apm::FRec&    c_def_qFind(apm::FRec& parent, u64 idx) __attribute__((nothrow));
+// Reference to last element without bounds checking
+// func:apm.FRec.c_def.qLast
+inline apm::FRec&    c_def_qLast(apm::FRec& parent) __attribute__((nothrow));
+
 // Set all fields to initial values.
 // func:apm.FRec..Init
 void                 FRec_Init(apm::FRec& parent);
@@ -3755,6 +4113,17 @@ inline void          rec_c_extrn_curs_Next(rec_c_extrn_curs &curs) __attribute__
 // item access
 // func:apm.FRec.c_extrn_curs.Access
 inline apm::FRec&    rec_c_extrn_curs_Access(rec_c_extrn_curs &curs) __attribute__((nothrow));
+// func:apm.FRec.c_def_curs.Reset
+inline void          rec_c_def_curs_Reset(rec_c_def_curs &curs, apm::FRec &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:apm.FRec.c_def_curs.ValidQ
+inline bool          rec_c_def_curs_ValidQ(rec_c_def_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:apm.FRec.c_def_curs.Next
+inline void          rec_c_def_curs_Next(rec_c_def_curs &curs) __attribute__((nothrow));
+// item access
+// func:apm.FRec.c_def_curs.Access
+inline apm::FRec&    rec_c_def_curs_Access(rec_c_def_curs &curs) __attribute__((nothrow));
 // func:apm.FRec..Uninit
 void                 FRec_Uninit(apm::FRec& parent) __attribute__((nothrow));
 
@@ -4394,6 +4763,22 @@ struct _db_delta_curs {// cursor
 };
 
 
+struct _db_pkgfile_curs {// cursor
+    typedef apm::FPkgfile ChildType;
+    apm::FDb *parent;
+    i64 index;
+    _db_pkgfile_curs(){ parent=NULL; index=0; }
+};
+
+
+struct _db_pkgdest_curs {// cursor
+    typedef apm::FPkgdest ChildType;
+    apm::FDb *parent;
+    i64 index;
+    _db_pkgdest_curs(){ parent=NULL; index=0; }
+};
+
+
 struct package_zd_pkgkey_curs {// fcurs:apm.FPackage.zd_pkgkey/curs
     typedef apm::FPkgkey ChildType;
     apm::FPkgkey* row;
@@ -4445,6 +4830,15 @@ struct package_c_pkgkeyword_curs {// fcurs:apm.FPackage.c_pkgkeyword/curs
     u64 n_elems;
     u64 index;
     package_c_pkgkeyword_curs() { elems=NULL; n_elems=0; index=0; }
+};
+
+
+struct package_c_pkgfile_curs {// fcurs:apm.FPackage.c_pkgfile/curs
+    typedef apm::FPkgfile ChildType;
+    apm::FPkgfile** elems;
+    u64 n_elems;
+    u64 index;
+    package_c_pkgfile_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
 
@@ -4508,6 +4902,15 @@ struct rec_c_extrn_curs {// fcurs:apm.FRec.c_extrn/curs
     u64 n_elems;
     u64 index;
     rec_c_extrn_curs() { elems=NULL; n_elems=0; index=0; }
+};
+
+
+struct rec_c_def_curs {// fcurs:apm.FRec.c_def/curs
+    typedef apm::FRec ChildType;
+    apm::FRec** elems;
+    u64 n_elems;
+    u64 index;
+    rec_c_def_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
 

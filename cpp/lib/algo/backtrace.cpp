@@ -312,6 +312,8 @@ static uintptr_t GetIp(ucontext_t *uc) {
 #elif defined(WIN32)
     (void)uc;
     ret = 0;
+#elif defined(__aarch64__)
+    ret = uc->uc_mcontext.pc;
 #else
     ret = uc->uc_mcontext.gregs[REG_RIP];
 #endif

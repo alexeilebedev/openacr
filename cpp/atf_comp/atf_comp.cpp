@@ -132,10 +132,11 @@ static tempstr SortUnorderedRun(strptr text) {
     return ret;
 }
 
-// Diff filtered output against reference file, print the colored diff,
-// and return true if the files differ.  The single producer/consumer of
-// the `diff` shell invocation in this file.
-static bool ShowRefDiff(strptr refpath, strptr filtered, strptr comptest_name) {
+// Diff FILTERED, the output of comptest COMPTEST_NAME, against the reference
+// file REFPATH, print the diff, and return true when the two differ.  A
+// complete diff is also left in DIFF, so the caller can repeat it under the
+// test's fail line.  This is the only `diff` that atf_comp runs.
+static bool ShowRefDiff(strptr refpath, strptr filtered, strptr comptest_name, algo::cstring &diff) {
     tempstr tmppath;
     tmppath << "temp/atf_comp." << comptest_name << ".diff";
     algo::StringToFile(SortUnorderedRun(filtered), tmppath);
@@ -143,10 +144,10 @@ static bool ShowRefDiff(strptr refpath, strptr filtered, strptr comptest_name) {
     refsorted << "temp/atf_comp." << comptest_name << ".ref";
     algo::StringToFile(SortUnorderedRun(algo::FileToString(refpath, algo::FileFlags())), refsorted);
     tempstr diffcmd;
-    diffcmd << "diff --color=always " << strptr_ToBash(refsorted) << " " << strptr_ToBash(tmppath);
+    diffcmd << "diff " << strptr_ToBash(refsorted) << " " << strptr_ToBash(tmppath);
     int status = 0;
-    tempstr diff = SysEval(diffcmd, FailokQ(true), 1024*1024, false, &status);
-    bool changed = ch_N(diff) > 0;
+    tempstr out = SysEval(diffcmd, FailokQ(true), 1024*1024, false, &status);
+    bool changed = ch_N(out) > 0;
     bool complete = (status == 0) || (changed && WIFEXITED(status) && WEXITSTATUS(status) == 1);
     if (!complete) {
         prlog("atf_comp.diff_error"
@@ -158,18 +159,75 @@ static bool ShowRefDiff(strptr refpath, strptr filtered, strptr comptest_name) {
         DeleteFile(tmppath);
         DeleteFile(refsorted);
         if (changed) {
-            prlog(diff);
+            prlog(Trimmed(out));
+            diff = out;
         }
     }
     return changed;
 }
 
+// Return the path of the file that keeps the mismatch diff of COMPTEST_NAME.
+// The CI jobs that run comptests upload `temp/*.log` as their artifact, so the
+// name ends in `.log`.
+static tempstr GetMismatchPath(strptr comptest_name) {
+    tempstr ret;
+    ret << "temp/atf_comp." << comptest_name << ".mismatch.log";
+    return ret;
+}
+
+// Keep DIFF, the mismatch diff of COMPTEST_NAME, in its mismatch file, and
+// repeat its first lines in the fail summary under the test's fail line.
+//
+// A CI job log runs to thousands of lines.  The diff prints at the test's own
+// place, often far above the end of the log, where the fail summary stands.  A
+// reader who opens only the tail of the log, as `gli -job -log -limit` shows it,
+// then sees the fail line and no diff.  So the summary carries the diff as well.
+// It shows forty lines at most, because a test that fails wholesale differs on
+// every line.  The last line of the entry names the mismatch file, which holds
+// the whole diff.
+static void AddMismatchDiff(strptr comptest_name, strptr diff) {
+    tempstr path = GetMismatchPath(comptest_name);
+    algo::StringToFile(diff, path, algo::FileFlags());
+    int nline = 0;
+    ind_beg(algo::Line_curs, line, diff) {
+        nline++;
+        if (nline <= 40) {
+            atf_comp::_db.fail_summary << line << "\n";
+        }
+    }ind_end;
+    atf_comp::_db.fail_summary << "atf_comp.mismatch"
+                               << Keyval("comptest", comptest_name)
+                               << Keyval("nline", nline)
+                               << Keyval("nshown", i32_Min(nline, 40))
+                               << Keyval("file", path) << "\n";
+}
+
+// -----------------------------------------------------------------------------
+
+// The first of the space-separated PATHS that exists on this host, or the first
+// of them when none does, so a test that runs it fails naming where it looked.
+static tempstr FirstPath(strptr paths) {
+    tempstr ret;
+    ind_beg(algo::Word_curs, path, paths) {
+        if (ret == "" && (algo::FileQ(path) || algo::DirectoryQ(path))) {
+            ret = path;
+        }
+    }ind_end;
+    if (ret == "") {
+        ret = algo::Pathcomp(paths, " LL");
+    }
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
 // Compare or capture test log against reference file, and name the reason the
 // comparison failed; an empty reason is a pass.  The reason is this function's
 // to state because it is the only one that knows which of the two ways a
 // comparison fails happened.
-// Apply tfilt filter once on the complete log if specified.
-static tempstr CheckOutput(atf_comp::FComptest &comptest) {
+// Apply tfilt filter once on the complete log if specified.  A mismatch leaves
+// its diff in DIFF.
+static tempstr CheckOutput(atf_comp::FComptest &comptest, algo::cstring &diff) {
     tempstr filtered;
     if (comptest.c_tfilt && ch_N(comptest.c_tfilt->filter) > 0) {
         tempstr tmpfile;
@@ -177,7 +235,7 @@ static tempstr CheckOutput(atf_comp::FComptest &comptest) {
         algo::StringToFile(atf_comp::_db.log, tmpfile);
         tempstr cmd;
         cmd << "( " << comptest.c_tfilt->filter << " ) < " << strptr_ToBash(tmpfile);
-        filtered = SysEval(cmd, FailokQ(true), 1024*1024);
+        filtered = SysEval(cmd, FailokQ(true));
         algo::DeleteFile(tmpfile);
     } else {
         filtered = atf_comp::_db.log;
@@ -194,7 +252,7 @@ static tempstr CheckOutput(atf_comp::FComptest &comptest) {
         if (!is_new) {
             // diff existing reference vs new content before overwriting,
             // so the user can see what's being captured
-            changed = ShowRefDiff(refpath, filtered, comptest.comptest);
+            changed = ShowRefDiff(refpath, filtered, comptest.comptest, diff);
         }
         algo::StringToFile(filtered, refpath);
         if (is_new) {
@@ -216,28 +274,87 @@ static tempstr CheckOutput(atf_comp::FComptest &comptest) {
               <<Keyval("file", refpath)
               <<Keyval("comment", "capture the reference with -capture"));
         fail_reason << "reference file absent";
-    } else if (ShowRefDiff(refpath, filtered, comptest.comptest)) {
+    } else if (ShowRefDiff(refpath, filtered, comptest.comptest, diff)) {
         fail_reason << "output mismatch";
     }
     return fail_reason;
 }
 
-// Reclaim /dev/shm segments left behind by an earlier cluster, and say so only
+// Take every selected comptest whose target this platform cannot build off the
+// selection, print an atf_comp.skip line for each, and return how many were
+// taken.
+//
+// A target that needs a library the platform lacks is not built there, so its
+// binary never exists, and each of its tests would fail for a reason that says
+// nothing about the test.  abt holds the rule that drops such a target
+// (dev.targsyslib, dev.syslibuname), so the run asks abt about the targets of
+// the selected tests and applies its answer.  A test named after a namespace
+// that is not a build target is never taken.
+static int SkipUnavailable() {
+    tempstr regx;
+    tempstr seen("\n");
+    ind_beg(atf_comp::_db_zd_select_curs, comptest, atf_comp::_db) {
+        tempstr key;
+        key << target_Get(comptest) << "\n";
+        if (algo::FindStr(seen, tempstr() << "\n" << key) < 0) {
+            seen << key;
+            regx << (ch_N(regx) ? "|" : "") << target_Get(comptest);
+        }
+    }ind_end;
+    tempstr out;
+    if (ch_N(regx) > 0) {
+        out = SysEval(tempstr() << "abt " << algo::strptr_ToBash(regx) << " -list -report:N", FailokQ(true), 1024*1024);
+    }
+    int ret = 0;
+    ind_beg(algo::Line_curs, line, out) {
+        algo::Tuple tuple;
+        if (StartsWithQ(line, "abt.unavailable") && algo::Tuple_ReadStrptrMaybe(tuple, line)) {
+            strptr target = attr_GetString(tuple, "target");
+            ind_beg(atf_comp::_db_comptest_curs, comptest, atf_comp::_db) {
+                if (atf_comp::zd_select_InLlistQ(comptest) && target_Get(comptest) == target) {
+                    atf_comp::zd_select_Remove(comptest);
+                    prlog("atf_comp.skip"
+                          <<Keyval("comptest", comptest.comptest)
+                          <<Keyval("target", target)
+                          <<Keyval("syslib", attr_GetString(tuple, "syslib"))
+                          <<Keyval("comment", "abt does not build this target on this platform"));
+                    ret++;
+                }
+            }ind_end;
+        }
+    }ind_end;
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
+// Reclaim the segments an earlier cluster left in the segment directory, and say so only
 // when there were any.
 //
 // A comptest that times out has its cluster killed, and a killed process unlinks
-// nothing, so its segments hold their share of the tmpfs until some later process
+// nothing, so its segments hold their share of the segment directory until some later process
 // sweeps.  The next test that wants a large topology then starts with that much
 // less room and fails for a reason that belongs to the test before it, which is
 // how one failure becomes several.  The sweep unlinks only segments whose writer
 // or creator is gone, so a cluster running elsewhere on the host keeps its own.
 static void SweepShm() {
     tempstr out;
-    out << Trimmed(SysEval("amsspy -clean", FailokQ(true), 1024));
+    out << Trimmed(SysEval("amsspy -clean", FailokQ(true)));
     if (ch_N(out) > 0 && !EndsWithQ(out, "removed:0")) {
         prlog(out);
     }
 }
+
+// Remove the links /tmp/atfpg.<uid>.<pid>.<name> that PgStart made for this
+// run's PostgreSQL servers, whose tests have ended.  The uid and pid make them
+// this run's, so a run beside it keeps its own.
+static void UnlinkPg() {
+    ind_beg(algo::Dir_curs, entry, tempstr() << "/tmp/atfpg." << getuid() << "." << getpid() << ".*") {
+        algo::DeleteFile(entry.pathname);
+    }ind_end;
+}
+
+// -----------------------------------------------------------------------------
 
 // Print the log a failed comptest accumulated, under the name of that comptest.
 static void ShowLog(atf_comp::FComptest &comptest) {
@@ -267,6 +384,10 @@ static void ProcTeardownSignal(int sig) {
 void atf_comp::Main() {
     algo::SetupTeardownSignal(ProcTeardownSignal);
     algo::CreateDirRecurse("temp");
+    // the clusters and segments a test makes are files in the segment directory
+    vrfy(algo_lib::ShmDirMount(), tempstr() << "atf_comp.no_shmdir"
+         << Keyval("dir", algo_lib::ShmDir())
+         << Keyval("comment", "the segment directory is missing and could not be mounted"));
     if (_db.cmdline.capture) {
         _db.cmdline.mode = command_atf_comp_mode_capture;
     }
@@ -277,25 +398,25 @@ void atf_comp::Main() {
         _db.cmdline.mode = command_atf_comp_mode_edit;
     }
     u8 mode = _db.cmdline.mode;
-    // -cfg:coverage (set by atf_ci's coverage cijob) selects the curated
+    // -cfg:coverage (set by atf_ci's coverageA citest) selects the curated
     // coverage comptest subset; atf_ci owns the covdir and the gcov/merge.
     bool coverage = _db.cmdline.cfg == dev_Cfg_cfg_coverage;
     if (mode == command_atf_comp_mode_mdbg || mode == command_atf_comp_mode_mdbgall) {
         _db.cmdline.cfg = dev_Cfg_cfg_debug;
     }
     // select matching comptests.  A name pattern that matches no comptest is a
-    // mistake and is refused; a memcheck shard or the coverage subset that holds
-    // none of the named tests is empty, as a package that carries none of that
+    // mistake and is refused; a CI shard or the coverage subset that holds none
+    // of the named tests is empty, as a package that carries none of that
     // shard's tests legitimately is, and runs nothing.
     int nname = 0;
     ind_beg(_db_comptest_curs, comptest, _db) {
         bool match = Regx_Match(_db.cmdline.comptest, comptest.comptest);
         nname += match;
-        // comptest.memcheck names the cijob that runs the test under
-        // valgrind, or none; -cijob picks the shard (default % selects all)
-        if (mode == command_atf_comp_mode_memcheck) {
-            match = match && algo::strptr(comptest.memcheck) != atfdb_cijob_none && Regx_Match(_db.cmdline.cijob, comptest.memcheck);
-        }
+        // -cijob picks the tests one CI job runs, or none: comptest.memcheck
+        // names the cijob that runs the test under valgrind, and comptest.cijob
+        // the one that runs it in every other mode (default % selects all)
+        algo::strptr cijob = mode == command_atf_comp_mode_memcheck ? algo::strptr(comptest.memcheck) : algo::strptr(comptest.cijob);
+        match = match && cijob != atfdb_cijob_none && Regx_Match(_db.cmdline.cijob, cijob);
         if (coverage) {
             match = match && comptest.coverage;
         }
@@ -379,6 +500,7 @@ void atf_comp::Main() {
         int nrun = 0;
         int npass = 0;
         int nerr = 0;
+        int nskip = SkipUnavailable();
         // derive bindir from cfg
         tempstr bindir;
         bindir << "build/" << _db.cmdline.cfg;
@@ -412,13 +534,23 @@ void atf_comp::Main() {
             algo::Refurbish(_db.R);
             ch_RemoveAll(_db.log);
             SweepShm();
+            UnlinkPg();
             tempstr tempdir;
             tempdir << "temp/atf_comp/" << comptest.comptest;
             algo::RemDirRecurse(tempdir, true);
             algo::CreateDirRecurse(tempdir);
+            algo::DeleteFile(GetMismatchPath(comptest.comptest));
             SetVar("tempdir", tempdir);
             SetTestenv(timeout_scale > 1);
             SetVar("bindir", bindir);
+            // ainst installs nginx under its prefix, which is /usr on Linux and
+            // /usr/local on macOS, where /usr is read-only
+            SetVar("kafkabin", "/opt/kafka/current/bin");
+            SetVar("nginx", FirstPath("/usr/sbin/nginx /usr/local/sbin/nginx"));
+            // GNU timeout by its path, since a test may narrow PATH to the
+            // system's directories, and macOS's hold none: Homebrew's coreutils
+            // installs it as gtimeout
+            SetVar("gtimeout", FirstPath("/usr/bin/timeout /opt/homebrew/bin/gtimeout /usr/local/bin/gtimeout"));
             SetVar("comptest", comptest.comptest);
             comptest.timeout = comptest.timeout * timeout_scale;
             SetVar("timeout", tempstr() << comptest.timeout);
@@ -438,6 +570,7 @@ void atf_comp::Main() {
             prlog("atf_comp.begin"<<Keyval("comptest", comptest.comptest));
             bool ok = true;
             tempstr fail_reason;
+            algo::cstring diff;
             try {
                 comptest.step();
             } catch (algo_lib::ErrorX &x) {
@@ -453,7 +586,7 @@ void atf_comp::Main() {
             ClearEnv();
             ProcWaitAll();
             if (ok) {
-                fail_reason = CheckOutput(comptest);
+                fail_reason = CheckOutput(comptest, diff);
                 ok = ch_N(fail_reason) == 0;
             } else {
                 ShowLog(comptest);
@@ -471,6 +604,9 @@ void atf_comp::Main() {
                 _db.fail_summary << "atf_comp.fail"
                                  << Keyval("comptest", comptest.comptest)
                                  << Keyval("reason", fail_reason) << "\n";
+                if (ch_N(diff) > 0) {
+                    AddMismatchDiff(comptest.comptest, diff);
+                }
             }
             prlog("atf_comp.end"
                   <<Keyval("comptest", comptest.comptest)
@@ -483,13 +619,15 @@ void atf_comp::Main() {
                 break;
             }
         }ind_end;
+        UnlinkPg();
         if (ch_N(_db.fail_summary) > 0) {
             prlog(Trimmed(_db.fail_summary));
         }
         prlog("report.atf_comp"
               <<Keyval("nrun", nrun)
               <<Keyval("npass", npass)
-              <<Keyval("nerr", nerr));
+              <<Keyval("nerr", nerr)
+              <<Keyval("nskip", nskip));
         algo_lib::_db.exit_code = nerr > 0;
         if (_db.n_capture > 0) {
             SysCmd("update-gitfile", FailokQ(true), DryrunQ(false));

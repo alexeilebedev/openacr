@@ -75,14 +75,22 @@ namespace apm { // update-hdr
     // each.
     int CheckMixedFile();
 
-    // Report every file on which the projection of this tree at a selected package's
-    // localref and the origin at its baseref disagree, and return how many there are.
-    // A sync is a pair of commits, one per repository, and the origin's commit is
-    // the projection of this tree's: that is what lets a push take the whole origin
-    // as its base.  A file only one side holds means the pair does not correspond,
-    // and the next push would treat the difference as a change nobody made.  File
-    // contents are not compared, since each tree regenerates its own generated files;
-    // ssimfiles are records, and data/ is left out.
+    // Report every file on which the projection of this tree at LOCALREF and the
+    // origin ORIGIN at BASEREF disagree, for PACKAGE's destination PKGUPSTREAM, and
+    // return how many there are.  A sync is a pair of commits, one per repository,
+    // and the origin's commit is the projection of this tree's: that is what lets a
+    // push take the whole origin as its base.  A file only one side holds means the
+    // pair does not correspond, and the next push would treat the difference as a
+    // change nobody made.  File contents are not compared, since each tree
+    // regenerates its own generated files; ssimfiles are records, and data/ is left
+    // out.  A path that a mapping of the package fills is a file of the projection,
+    // and the mappings are this tree's current ones, which a mapping added since
+    // LOCALREF makes disagree with the origin until the next sync.
+    int CountSyncDrift(apm::FPackage &package, algo::strptr pkgupstream, algo::strptr origin, algo::strptr baseref, algo::strptr localref);
+
+    // Report every file on which a selected package's recorded sync pair, its
+    // localref and baseref, disagree, and return how many there are.  A row with
+    // either half empty records no pair and is skipped.
     int CheckSyncPair();
 
     // -------------------------------------------------------------------
@@ -119,7 +127,8 @@ namespace apm { // update-hdr
     //
     // What is checked is the package's evaluation, records and files alike, since
     // that is exactly what a push carries, so a downstream table named in a
-    // published document is reported in the commit that writes it.
+    // published document is reported in the commit that writes it.  A file the
+    // package maps to another path is checked under that path's name too.
     //
     // Only the first ten findings of a package are printed, because a package that
     // has gone wrong tends to go wrong in bulk, and -v prints them all.  The summary reports how many there
@@ -128,11 +137,12 @@ namespace apm { // update-hdr
     int CheckKeyword();
 
     // Report every link of a selected package's published markdown that names a
-    // tracked file the package does not carry, and return how many there are.  The
+    // tracked file the package does not carry, and return how many there are.  A
+    // markdown file the package maps to another path is published too.  The
     // carrier set is the package and every package it carries, the files a push
     // sends together, so a link from a contained package into its parent's docs
-    // resolves.  A package with no dev.pkgupstream row has no downstream for a
-    // link to dangle in, and the check starts with its first destination.
+    // resolves.  Every package is checked, whether or not it has a destination yet,
+    // so a link that would dangle downstream fails the commit that writes it.
     int CheckLink();
 
     // -------------------------------------------------------------------
@@ -179,6 +189,15 @@ namespace apm { // update-hdr
 
     // Bring ORIGIN into this repo under refs/apm/REFNAME and resolve REF to a commit
     // id there.
+    // Return the start of a git command line that talks to an origin.  When
+    // APM_TOKEN holds a destination's token, git gets a credential helper that
+    // answers with it, so every command that reaches a token destination -- the
+    // clone, the push, and the fetch of a reset after it -- authenticates the same
+    // way.  The token reaches git through the environment, so it never appears on a
+    // command line, in a URL, in a clone's config or in a log.  Without a token the
+    // command is plain git, which uses whatever the user's own setup provides.
+    tempstr GitCmd();
+
     // Return the commit, or the empty string when the origin cannot be reached or
     // REF names nothing in it.
     //
@@ -215,6 +234,10 @@ namespace apm { // update-hdr
     // Command line field BINPATH names the subdirectory the binaries sit in.
     tempstr GetApmPath(algo::strptr dir);
 
+    // Return the absolute path of this tree's apm, in the subdirectory that command
+    // line field BINPATH names.
+    tempstr GetOurApmPath();
+
     // Return the mode bits of FILENAME, which are zero when it does not exist.  A
     // symbolic link reports its own mode, because git tracks the link: a link whose
     // target is not built yet still exists, and one whose target is a binary is
@@ -236,32 +259,109 @@ namespace apm { // update-hdr
     // void Main(); // dmmeta.main:apm
 
     // -------------------------------------------------------------------
+    // cpp/apm/pkgfile.cpp
+    //
+
+    // Add to table pkgfile the mapping that each package's readmefile implies.  A
+    // package whose front page is R ships R as its projection's txt/README.md, so its
+    // readmefile stands for the row <package>/txt/README.md naming R, and the rest of
+    // apm reads the two forms the same way.  A readmefile of txt/README.md, the
+    // default, names the file at its own path and implies nothing.  A row the definition already holds
+    // for that path stays, and a row naming another file contradicts the readmefile:
+    // the run reports it as apm.readmefile and fails.
+    void DerivePkgfile();
+
+    // Fill table pkgdest with the paths that the mappings of the carriers fill, the
+    // packages SetCarrier marked, each with the mapping that wins it, and return the
+    // number of conflicts found.
+    //
+    // Take a push of an SDK package that builds on openacr, so the push carries
+    // openacr as well.  Say both packages map a file to txt/README.md: the SDK its
+    // front page, openacr a page of its own.  The projection has one file at that
+    // path, so one of the two mappings has to lose.  The push is about the SDK, and
+    // openacr comes along because the SDK needs it, so the SDK's mapping is the one
+    // the push means.  So a mapping of a package the action is for, NAMED or else
+    // the command line's -package, wins over a mapping of a package that is merely
+    // carried, and the named packages are resolved first.  Two mappings that name
+    // the same file agree.  Two mappings of one path that name different files, of
+    // packages of the same rank, cannot be ordered, and each such pair is reported
+    // as apm.pkgfile_conflict.
+    int ResolvePkgfile(apm::FPackage *named);
+
+    // Make each path of table pkgdest a file of the projection, so that a push writes
+    // the content of its mapping's source there.  The path replaces whatever file of a
+    // carried package the projection held at it: an SDK's front page replaces
+    // openacr's txt/README.md.  The source still goes out at its own path when a key
+    // of the package carries it.  A source that is not in this tree stops the push
+    // with apm.pkgfile_nosrc, since the push would otherwise delete the path in the
+    // origin.
+    void ShipPkgdest();
+
+    // Make the origin's copy of each mapped file side SIDE of the source's merge
+    // entry, where SIDE is 1 for the base and 2 for the incoming version, and DIR is
+    // that version's checkout.  The source here is the entry's own side, whether or
+    // not a key of the package carries it.  The merge then compares the origin's
+    // copy with the source, and this tree's own file at the mapped path stays out of
+    // it: openacr's txt/README.md is never merged with an SDK's front page.
+    //
+    // The origin holds the mapped file twice when the package also carries the
+    // source at its own path.  An SDK holds its front page as txt/README.md and at
+    // the path of its source, and a contributor may edit either copy.  The base holds
+    // the two copies equal, since one push wrote both.  So the incoming side takes
+    // the copy at the mapped path when that copy changed since the base, and
+    // otherwise the copy at the source's own path, which carries whatever change was
+    // made there.  When both copies changed, differently, the copy at the mapped path
+    // is merged and the other is reported as apm.pkgfile_diverge.
+    void MapOriginCopy(int side, algo::strptr dir);
+
+    // Report every mapping of a selected package that a push of it cannot carry out,
+    // and return how many were found.  The mappings of a package and the packages it
+    // carries must not collide (apm.pkgfile_conflict).  A mapping must name a file of
+    // this tree (apm.pkgfile_nosrc).  And the package must not carry the mapped path
+    // whole from its own keys, since the projection would then hold two different
+    // files at one path (apm.pkgfile_ambiguous).
+    int CheckPkgfile();
+
+    // -------------------------------------------------------------------
     // cpp/apm/publish.cpp
     //
 
     // Publish the selected package to its destination, the dev.pkgupstream row -dest
     // names: produce it in a fresh clone of the destination's origin, regenerate,
-    // verify, show the maintainer what goes out, and push it after two yeses.
+    // verify, show the maintainer what goes out, and push it after a yes.
     //
     // Each stage prints a heading and stops the run when it fails, so the clone under
     // temp/apm-publish is left as the stage found it for the maintainer to look at.
-    // -dry_run stops after the delta is shown.  The stages, in order:
+    // -dry_run runs every stage up to and including the CI, and stops before the
+    // question.  The stages, in order:
     //
     // - check: apm -check over this tree, which refuses a word the package must not
     // carry, a dangling record, or proprietary content in an open-source package;
     // - clone: the origin, fresh, which must sit at the destination's baseref, since a
     // push replaces what the origin holds and anything newer there would be lost;
     // - produce: apm -push of this tree's projection into the clone;
-    // - regenerate: amc and update-hdr in the clone, with this tree's binaries, since
-    // a generated file holds the output over the database that wrote it;
+    // - regenerate: amc, update-hdr and, for a package with a front page of its own,
+    // the front page's README.md copy in the clone, with this tree's binaries,
+    // since a generated file holds the output over the database that wrote it;
     // - build: ai in the clone, which builds the clone's own binaries;
     // - docs: the clone's abt_md, which regenerates and checks every document;
     // - secrets: the clone's secret badlines over every file of the clone;
-    // - comptests: the clone's atf_comp, which is what says the package works;
     // - show: the size of the tree and the delta against the origin's head;
-    // - commit and push, each after a yes, with the destination's credd token;
+    // - commit: a local commit in the clone, which sends nothing;
+    // - ci: the destination's own CI on that commit, which says the package works;
+    // - push, after a yes, with the destination's credd token;
     // - reset: this tree records the pushed commit as the destination's baseref.
     void Main_Publish();
+
+    // Build each selected package from nothing: produce it in an empty repository of
+    // its own under temp/apm-build/<package>, regenerate it and build it there, with
+    // the same stages as -publish.  The CI job sdk runs this for every package that
+    // leaves this tree, so a change that breaks a distribution's build fails here.
+    // A package that fails sets the exit code, and the others still build.  A
+    // selection that matches no package fails, so a renamed package cannot pass the
+    // job by building nothing.  With -dry_run each package's line is the plan, and
+    // nothing runs.
+    void Main_Build();
 
     // -------------------------------------------------------------------
     // cpp/apm/push.cpp
@@ -288,8 +388,26 @@ namespace apm { // update-hdr
     // With PACKAGE NULL there is no carrier.
     void SetCarrier(apm::FPackage *package);
 
+    // Make the selected packages the carriers that CarriedQ asks about: the set a
+    // push or a comparison with the origin sends together.
+    void SetCarrierSelected();
+
     // Return true if a carrier set by SetCarrier holds REC.
     bool CarriedQ(apm::FRec &rec);
+
+    // Return the text a package carries in place of the file PATH when it carries
+    // the file as a stub.  A stub keeps the page's title and its anchor, so a link to
+    // the page still lands on a page, and says in one sentence that the rest stays
+    // with the tree the package came from.  A file that is not markdown is carried
+    // empty.
+    tempstr GetStubText(algo::strptr path);
+
+    // Return the text a package publishes for the file PATH: the stub text when
+    // STUB, else the file itself.
+    tempstr GetPublishText(algo::strptr path, bool stub);
+
+    // Return true when PACKAGE carries REC as a stub.
+    bool StubQ(apm::FRec &rec, apm::FPackage &package);
 
     // Load all records (FRec) from dataset _db.cmdline.data_in)
     // For each record (FRec), compute p_ssimfile, pkey, tuple
@@ -337,8 +455,12 @@ namespace apm { // update-hdr
     //
 
     // Set the selected package's origin and baseref from the command line, and
-    // record this tree's HEAD as localref: -reset with -ref closes the sync loop
-    // after a push, when the origin's new commit is the projection of HEAD.
+    // record this tree's HEAD as localref when the origin's commit is the
+    // projection of HEAD: -reset with -ref closes the sync loop after a push.
+    // When the two disagree on a file -- this tree gained one after the
+    // publication, or the destination dropped one that this tree still has -- no
+    // pair exists, and localref is left empty, with each such file reported as
+    // apm.syncdrift and the row as apm.unpaired.
     // The three values form the dev.pkgupstream row of the destination -dest names,
     // which the reset creates when the package has no such row; the destination
     // defaults to the package's only one, or to "origin" for a package with none.
@@ -424,15 +546,25 @@ namespace apm { // update-hdr
     // atf_comp::comptest_apm_SrcScan needs atfdb.comptest:apm.SrcScan, or amc
     // generates no prototype for it and the definition fails to compile.  So the
     // file requires that record, and a package that lacks the record cannot carry
-    // the file.  The record does not require the file in turn, since a package may
-    // carry a row whose file the origin keeps.  The
-    // edge is an ordinary reference: the ref closure brings the row with the file,
-    // and apm -check reports it as dangling for a package that leaves it behind.
+    // the file.  The record requires the file in turn: generated code calls the
+    // function, so a package that carries atfdb.comptest:apm.SrcScan and not the
+    // driver that defines it does not link, and the row leaves.  That holds only in
+    // a package that builds the target compiling the driver, since only that
+    // target's generated code calls the function.  A push makes the
+    // origin equal to the projection, so no origin keeps a definition the projection
+    // lacks.  The edge from the file is also an ordinary reference: the ref closure
+    // brings the row with the file, and apm -check reports it as dangling for a
+    // package that leaves it behind.
     void ScanSources();
 
     // -------------------------------------------------------------------
     // cpp/apm/update.cpp
     //
+
+    // Record FILE as side SIDE of MERGEFILE, where SIDE is 0 for this tree, 1 for
+    // the base and 2 for the incoming version, together with the file's mode, which
+    // is zero when FILE does not exist.
+    void SetMergeSide(apm::FMergefile &mergefile, int side, algo::strptr file);
 
     // Populate table MERGEFILE with up to 3 lists of files:
     // ours, base and theirs (0,1,2)
@@ -448,6 +580,10 @@ namespace apm { // update-hdr
     // fails contributes no file rather than an error, and a file the child never
     // named is a file the merge leaves at the version it already had. The failure is
     // reported per directory and the caller decides what an incomplete table means.
+    // The table is keyed by the path in this tree.  A file of the origin at a path
+    // that a mapping fills (table pkgdest, which the caller resolves) is the
+    // origin's copy of the mapping's source, so it is entered under the source's
+    // path (MapOriginCopy).
     bool CreateMergeFiles(algo::strptr regx_package, algo::strptr base_dir, algo::strptr theirs_dir);
 
     // Scan mergefile table and perform per-file 3-way non-history-aware merge

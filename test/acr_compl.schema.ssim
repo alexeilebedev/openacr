@@ -12,6 +12,7 @@ dmmeta.ctype  ctype:dmmeta.Ctype
 dmmeta.ctype  ctype:dmmeta.Ssimfile
 dmmeta.ctype  ctype:dmmeta.Substr
 dmmeta.ctype  ctype:dmmeta.Finsertwhen
+dmmeta.ctype  ctype:dmmeta.Fcompldir
 dmmeta.ctype  ctype:garden.Flower
 dmmeta.ctype  ctype:garden.Fruit
 dmmeta.ctype  ctype:garden.Variety
@@ -35,11 +36,14 @@ dmmeta.substr field:garden.Variety.fruit    srcfield:garden.Variety.variety  exp
 dmmeta.field  field:command.atf_cmdline.create    arg:bool            reftype:Val   dflt:false  comment:"Trigger insert-completion"
 dmmeta.field  field:command.atf_cmdline.dvariety  arg:garden.Variety  reftype:Pkey  dflt:'""'   comment:"Composite-pkey flag"
 dmmeta.finsertwhen finsertwhen:command.atf_cmdline.dvariety  when:command.atf_cmdline.create
+dmmeta.field  field:command.atf_cmdline.dflower  arg:garden.Flower  reftype:Pkey  dflt:'""'  comment:"Flower row or flower bed directory"
+dmmeta.fcompldir  field:command.atf_cmdline.dflower  dir:bed  comment:""
 
 dmmeta.ssimfile ssimfile:dmmeta.ctype  ctype:dmmeta.Ctype
 dmmeta.ssimfile ssimfile:dmmeta.ssimfile  ctype:dmmeta.Ssimfile
 dmmeta.ssimfile ssimfile:dmmeta.substr  ctype:dmmeta.Substr
 dmmeta.ssimfile ssimfile:dmmeta.finsertwhen  ctype:dmmeta.Finsertwhen
+dmmeta.ssimfile ssimfile:dmmeta.fcompldir  ctype:dmmeta.Fcompldir
 dmmeta.ssimfile ssimfile:garden.flower  ctype:garden.Flower
 dmmeta.ssimfile ssimfile:garden.fruit  ctype:garden.Fruit
 dmmeta.ssimfile ssimfile:garden.variety  ctype:garden.Variety

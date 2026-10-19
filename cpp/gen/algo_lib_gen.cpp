@@ -41,6 +41,7 @@ namespace algo_lib { // gen:ns_gsymbol
 namespace algo_lib { // gen:ns_gsymbol
     const char* dev_envvar_ACR_COMPL_DEBUG_LOG("ACR_COMPL_DEBUG_LOG");
     const char* dev_envvar_ALGOFATALDIR("ALGOFATALDIR");
+    const char* dev_envvar_ALGO_DIE_WITH("ALGO_DIE_WITH");
     const char* dev_envvar_ATF_UNIT_TSCFREQKHZ("ATF_UNIT_TSCFREQKHZ");
     const char* dev_envvar_AWS_ACCESS_KEY_ID("AWS_ACCESS_KEY_ID");
     const char* dev_envvar_AWS_SECRET_ACCESS_KEY("AWS_SECRET_ACCESS_KEY");
@@ -65,6 +66,7 @@ namespace algo_lib { // gen:ns_gsymbol
     const char* dev_envvar_GIT_COMMITTER_EMAIL("GIT_COMMITTER_EMAIL");
     const char* dev_envvar_GIT_COMMITTER_NAME("GIT_COMMITTER_NAME");
     const char* dev_envvar_GIT_DIR("GIT_DIR");
+    const char* dev_envvar_GIT_SSH_COMMAND("GIT_SSH_COMMAND");
     const char* dev_envvar_GIT_WORK_TREE("GIT_WORK_TREE");
     const char* dev_envvar_HOME("HOME");
     const char* dev_envvar_LD_PRELOAD("LD_PRELOAD");
@@ -73,12 +75,28 @@ namespace algo_lib { // gen:ns_gsymbol
     const char* dev_envvar_PATH("PATH");
     const char* dev_envvar_PORT("PORT");
     const char* dev_envvar_SSH_AUTH_SOCK("SSH_AUTH_SOCK");
+    const char* dev_envvar_STUB_AI_CMD("STUB_AI_CMD");
     const char* dev_envvar_STUB_AI_MSG("STUB_AI_MSG");
     const char* dev_envvar_STUB_AI_RC("STUB_AI_RC");
     const char* dev_envvar_STUB_AI_SLEEP("STUB_AI_SLEEP");
+    const char* dev_envvar_STUB_CLAUDE_BLOCKED("STUB_CLAUDE_BLOCKED");
     const char* dev_envvar_STUB_CLAUDE_CLOSE("STUB_CLAUDE_CLOSE");
+    const char* dev_envvar_STUB_CLAUDE_FAILED("STUB_CLAUDE_FAILED");
+    const char* dev_envvar_STUB_CLAUDE_NOLIST("STUB_CLAUDE_NOLIST");
+    const char* dev_envvar_STUB_CLAUDE_PROMPT("STUB_CLAUDE_PROMPT");
+    const char* dev_envvar_STUB_CLAUDE_RETRO("STUB_CLAUDE_RETRO");
+    const char* dev_envvar_STUB_CLAUDE_SETTINGS("STUB_CLAUDE_SETTINGS");
+    const char* dev_envvar_STUB_CLAUDE_STALE("STUB_CLAUDE_STALE");
     const char* dev_envvar_STUB_CLAUDE_SUMMARY("STUB_CLAUDE_SUMMARY");
+    const char* dev_envvar_STUB_CLAUDE_TRIAGE("STUB_CLAUDE_TRIAGE");
     const char* dev_envvar_STUB_FLOCK_RC("STUB_FLOCK_RC");
+    const char* dev_envvar_STUB_GLI_LOST("STUB_GLI_LOST");
+    const char* dev_envvar_STUB_GLI_NODISCUSS("STUB_GLI_NODISCUSS");
+    const char* dev_envvar_STUB_GLI_NOME("STUB_GLI_NOME");
+    const char* dev_envvar_STUB_GLI_REAL("STUB_GLI_REAL");
+    const char* dev_envvar_STUB_GLI_SEEN("STUB_GLI_SEEN");
+    const char* dev_envvar_STUB_GLI_TIMEOUT("STUB_GLI_TIMEOUT");
+    const char* dev_envvar_STUB_SSH_ROOT("STUB_SSH_ROOT");
     const char* dev_envvar_SUDO_USER("SUDO_USER");
     const char* dev_envvar_TERM("TERM");
     const char* dev_envvar_TMPDIR("TMPDIR");
@@ -86,6 +104,436 @@ namespace algo_lib { // gen:ns_gsymbol
     const char* dev_envvar_USER("USER");
     const char* dev_envvar_VISUAL("VISUAL");
 } // gen:ns_gsymbol
+
+// --- algo_lib.RegxPunctQ
+bool algo_lib::RegxPunctQ(char c) {
+    return (c >= '!' && c <= '/') || (c >= ':' && c <= '@') || (c >= '[' && c <= '`') || (c >= '{' && c <= '~');
+}
+
+// --- algo_lib.RegxMacroQ
+bool algo_lib::RegxMacroQ(char c) {
+    bool ret = false;
+    switch (c) {
+        case 'D':
+        case 'S':
+        case 'W':
+        case 'a':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'n':
+        case 'r':
+        case 's':
+        case 't':
+        case 'v':
+        case 'w':
+        ret = true;
+        break;
+        default:
+        break;
+    }
+    return ret;
+}
+
+// --- algo_lib.RegxMacroClass
+algo::strptr algo_lib::RegxMacroClass(char c, bool &neg) {
+    algo::strptr ret;
+    neg = false;
+    switch (c) {
+    case 'D':
+        ret = algo::strptr("09", 2);
+        neg = true;
+        break;
+    case 'S':
+        ret = algo::strptr("\t\r  ", 4);
+        neg = true;
+        break;
+    case 'W':
+        ret = algo::strptr("09AZ__az", 8);
+        neg = true;
+        break;
+    case 'a':
+        ret = algo::strptr("\007\007", 2);
+        neg = false;
+        break;
+    case 'd':
+        ret = algo::strptr("09", 2);
+        neg = false;
+        break;
+    case 'e':
+        ret = algo::strptr("\033\033", 2);
+        neg = false;
+        break;
+    case 'f':
+        ret = algo::strptr("\014\014", 2);
+        neg = false;
+        break;
+    case 'n':
+        ret = algo::strptr("\n\n", 2);
+        neg = false;
+        break;
+    case 'r':
+        ret = algo::strptr("\r\r", 2);
+        neg = false;
+        break;
+    case 's':
+        ret = algo::strptr("\t\r  ", 4);
+        neg = false;
+        break;
+    case 't':
+        ret = algo::strptr("\t\t", 2);
+        neg = false;
+        break;
+    case 'v':
+        ret = algo::strptr("\013\013", 2);
+        neg = false;
+        break;
+    case 'w':
+        ret = algo::strptr("09AZ__az", 8);
+        neg = false;
+        break;
+    default:
+        break;
+    }
+    return ret;
+}
+
+// --- algo_lib.RegxRewrite
+void algo_lib::RegxRewrite(algo::strptr str, algo_lib::RegxStyle style, algo::cstring &out) {
+    switch (style.value) {
+    case algo_lib_RegxStyle_acr: {
+        bool esc = false;
+        for (int i = 0; i < str.n_elems; i++) {
+            char c = str[i];
+            if (esc) {
+                esc = false;
+                switch (c) {
+                    case '%': {
+                        out << "%";
+                    } break;
+                    default: {
+                        out << "\\";
+                        out << c;
+                    } break;
+                }
+            } else if (c == '\\') {
+                esc = true;
+            } else {
+                switch (c) {
+                    case '$': {
+                        out << "\\$";
+                    } break;
+                    case '%': {
+                        out << ".*";
+                    } break;
+                    case '*': {
+                        out << "\\*";
+                    } break;
+                    case '+': {
+                        out << "\\+";
+                    } break;
+                    case '.': {
+                        out << "\\.";
+                    } break;
+                    case '?': {
+                        out << "\\?";
+                    } break;
+                    case '^': {
+                        out << "\\^";
+                    } break;
+                    default: {
+                        out << c;
+                    } break;
+                }
+            }
+        }
+    } break;
+    case algo_lib_RegxStyle_default: {
+        for (int i = 0; i < str.n_elems; i++) {
+            char c = str[i];
+            switch (c) {
+                default: {
+                    out << c;
+                } break;
+            }
+        }
+    } break;
+    case algo_lib_RegxStyle_shell: {
+        for (int i = 0; i < str.n_elems; i++) {
+            char c = str[i];
+            switch (c) {
+                case '$': {
+                    out << "\\$";
+                } break;
+                case '(': {
+                    out << "\\(";
+                } break;
+                case ')': {
+                    out << "\\)";
+                } break;
+                case '*': {
+                    out << ".*";
+                } break;
+                case '.': {
+                    out << "\\.";
+                } break;
+                case '?': {
+                    out << ".?";
+                } break;
+                case '[': {
+                    out << "\\[";
+                } break;
+                case '\\': {
+                    out << "\\\\";
+                } break;
+                case ']': {
+                    out << "\\]";
+                } break;
+                case '^': {
+                    out << "\\^";
+                } break;
+                default: {
+                    out << c;
+                } break;
+            }
+        }
+    } break;
+    case algo_lib_RegxStyle_sql: {
+        bool esc = false;
+        for (int i = 0; i < str.n_elems; i++) {
+            char c = str[i];
+            if (esc) {
+                esc = false;
+                switch (c) {
+                    case '%': {
+                        out << "%";
+                    } break;
+                    case '_': {
+                        out << "_";
+                    } break;
+                    default: {
+                        out << "\\";
+                        out << c;
+                    } break;
+                }
+            } else if (c == '\\') {
+                esc = true;
+            } else {
+                switch (c) {
+                    case '$': {
+                        out << "\\$";
+                    } break;
+                    case '%': {
+                        out << ".*";
+                    } break;
+                    case '*': {
+                        out << "\\*";
+                    } break;
+                    case '+': {
+                        out << "\\+";
+                    } break;
+                    case '.': {
+                        out << "\\.";
+                    } break;
+                    case '?': {
+                        out << "\\?";
+                    } break;
+                    case '^': {
+                        out << "\\^";
+                    } break;
+                    case '_': {
+                        out << ".";
+                    } break;
+                    default: {
+                        out << c;
+                    } break;
+                }
+            }
+        }
+    } break;
+    default: {
+        out << str;
+    } break;
+    }
+}
+
+// --- algo_lib.RegxNormalize
+bool algo_lib::RegxNormalize(algo::strptr str, algo::cstring &out) {
+    bool valid = true;
+    int depth = 0;
+    bool term = false;
+    bool atom = false;
+    char quant = 0;
+    int i = 0;
+    while (i < str.n_elems) {
+        char c = str[i];
+        int step = 1;
+        bool lit = false;
+        if (c == '\\' && i + 1 < str.n_elems) {
+            char n = str[i + 1];
+            if (algo_lib::RegxMacroQ(n)) {
+                out << '\\'; out << n;
+            } else {
+                if (algo_lib::RegxPunctQ(n)) {
+                    out << '\\';
+                }
+                out << n;
+            }
+            step = 2;
+            term = true;
+            atom = true;
+            quant = 0;
+        } else if (c == '[') {
+            int j = i + 1;
+            if (j < str.n_elems && str[j] == '^') {
+                j++;
+            }
+            bool closed = false;
+            while (j < str.n_elems && !closed) {
+                if (str[j] == '\\') {
+                    j += 2;
+                } else if (str[j] == ']') {
+                    closed = true;
+                } else {
+                    j++;
+                }
+            }
+            if (closed) {
+                out << '[';
+                int k = i + 1;
+                if (str[k] == '^') {
+                    out << '^';
+                    k++;
+                }
+                while (k < j) {
+                    char m = str[k];
+                    if (m == '\\' && algo_lib::RegxMacroQ(str[k + 1])) {
+                        char n = str[k + 1];
+                        out << '\\'; out << n;
+                        k += 2;
+                    } else {
+                        char lo = m;
+                        int kk = k + 1;
+                        if (m == '\\') {
+                            lo = str[k + 1];
+                            kk = k + 2;
+                        }
+                        char hi = lo;
+                        if (kk + 1 < j && str[kk] == '-') {
+                            char e = str[kk + 1];
+                            if (e != '\\') {
+                                hi = e;
+                                kk = kk + 2;
+                            } else if (!algo_lib::RegxMacroQ(str[kk + 2])) {
+                                hi = str[kk + 2];
+                                kk = kk + 3;
+                            }
+                        }
+                        if (u8(hi) < u8(lo)) {
+                            hi = lo;
+                        }
+                        if (algo_lib::RegxPunctQ(lo)) {
+                            out << '\\';
+                        }
+                        out << lo;
+                        if (hi != lo) {
+                            out << '-';
+                            if (algo_lib::RegxPunctQ(hi)) {
+                                out << '\\';
+                            }
+                            out << hi;
+                        }
+                        k = kk;
+                    }
+                }
+                out << ']';
+                step = j + 1 - i;
+                term = true;
+                atom = true;
+                quant = 0;
+            } else {
+                lit = true;
+            }
+        } else if (c == '(') {
+            out << c;
+            depth++;
+            term = false;
+            atom = false;
+            quant = 0;
+        } else if (c == ')' && depth > 0) {
+            out << c;
+            depth--;
+            term = true;
+            atom = true;
+            quant = 0;
+        } else if (c == ')') {
+            lit = true;
+        } else if (c == '|') {
+            if (!term) {
+                out << "()";
+            }
+            out << c;
+            if (i + 1 == str.n_elems || (str[i + 1] == ')' && depth > 0)) {
+                out << "()";
+            }
+            term = false;
+            atom = false;
+            quant = 0;
+        } else if ((c == '*' || c == '+' || c == '?') && !atom) {
+            lit = true;
+        } else if (c == '*' || c == '+' || c == '?') {
+            if (quant == 0) {
+                quant = c;
+            } else {
+                out.ch_n--;
+                if (quant != c) {
+                    quant = '*';
+                }
+            }
+            out << quant;
+        } else if (c == '.') {
+            out << c;
+            term = true;
+            atom = true;
+            quant = 0;
+        } else if (c == '^' || c == '$') {
+            out << c;
+            term = true;
+            atom = false;
+            quant = 0;
+        } else {
+            lit = true;
+        }
+        if (lit) {
+            if (algo_lib::RegxPunctQ(c)) {
+                out << '\\';
+            }
+            out << c;
+            term = true;
+            atom = true;
+            quant = 0;
+        }
+        i = i + step;
+    }
+    valid = valid && depth == 0;
+    return valid;
+}
+
+// --- algo_lib.RegxQuoteQ
+bool algo_lib::RegxQuoteQ(char c, algo_lib::RegxStyle style) {
+    bool ret = false;
+    switch (style.value) {
+    case algo_lib_RegxStyle_acr:
+        ret = c == '%' || c == '(' || c == ')' || c == '[' || c == '\\' || c == '|';
+        break;
+    case algo_lib_RegxStyle_sql:
+        ret = c == '%' || c == '(' || c == ')' || c == '[' || c == '\\' || c == '_' || c == '|';
+        break;
+    default:
+        break;
+    }
+    return ret;
+}
 namespace algo_lib { // gen:ns_print_proto
     // func:algo_lib.Cmdline.verbose.ReadStrptrMaybe
     inline static bool   verbose_ReadStrptrMaybe(algo_lib::Cmdline& parent, algo::strptr in_str) __attribute__((nothrow));
@@ -448,7 +896,7 @@ const char *algo_lib::Cmdline_help = "Cmdline: *can't move this to command names
 "    OPTION      TYPE    DFLT  COMMENT\n"
 "    -verbose    flag          Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug      flag          Debug level (0..255); alias -d; cumulative\n"
-"    -trace      string  \"\"    Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps\n"
+"    -trace      string  \"\"    Trace expression: log categories to enable, as category[:filter],...\n"
 "    -help                     Print help and exit; alias -h\n"
 "    -version                  Print version and exit\n"
 "    -signature                Show signatures and exit; alias -sig\n";
@@ -1328,7 +1776,7 @@ void algo_lib::FTimehook_Print(algo_lib::FTimehook& row, algo::cstring& str) {
     PrintAttrSpaceReset(str,"recurrent", temp);
 }
 
-// --- algo_lib.FImdb.msghdr.CopyOut
+// --- algo_lib.FImdb.base.CopyOut
 // Copy fields out of row
 void algo_lib::imdb_CopyOut(algo_lib::FImdb &row, algo::Imdb &out) {
     out.imdb = row.imdb;
@@ -1340,7 +1788,7 @@ void algo_lib::imdb_CopyOut(algo_lib::FImdb &row, algo::Imdb &out) {
     out.comment = algo::Comment(row.comment);
 }
 
-// --- algo_lib.FImdb.msghdr.CopyIn
+// --- algo_lib.FImdb.base.CopyIn
 // Copy fields in to row
 void algo_lib::imdb_CopyIn(algo_lib::FImdb &row, algo::Imdb &in) {
     row.imdb = in.imdb;
@@ -2631,7 +3079,7 @@ static void algo_lib::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'algo_lib.Input'  signature:'ded1f2c4444bff5374f0a8197c7bd1bb0ba8cb8f'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'algo_lib.Input'  signature:'54d779e98fff5106a125e301a4022c20ffcea845'");
 }
 
 // --- algo_lib.FDb._db.InsertStrptrMaybe
@@ -4655,7 +5103,6 @@ void algo_lib::FDb_Init() {
     _db.cpu_hz = u64(0);
     (void)Charset_ReadStrptrMaybe(_db.ArgvIdent, "a-zA-Z0-9_");
     (void)Charset_ReadStrptrMaybe(_db.BashQuotesafe, "a-zA-Z0-9_^%@:./-");
-    (void)Charset_ReadStrptrPlain(_db.RegxSqlSpecial, "$.|?*+(){}^\\[]#");
     (void)Charset_ReadStrptrPlain(_db.SsimBreakName, "[]{}()\t \r\n:");
     (void)Charset_ReadStrptrPlain(_db.SsimBreakValue, "[]{}()\t \r\n");
     (void)Charset_ReadStrptrMaybe(_db.SsimQuotesafe, "a-zA-Z0-9_;&*^%$@.!:,+/-");
@@ -4757,6 +5204,7 @@ void algo_lib::FDb_Init() {
     _db.bh_timehook_idle_n     	= 0; // (algo_lib.FDb.bh_timehook_idle)
     _db.bh_timehook_idle_elems 	= NULL; // (algo_lib.FDb.bh_timehook_idle)
     _db.dotline = bool(false);
+    _db.die_with = i32(0);
 
     algo_lib::InitReflection();
     _db.h_fatalerror = NULL;
@@ -4891,14 +5339,14 @@ void algo_lib::FDb_Uninit() {
     // skip destruction in global scope
 }
 
-// --- algo_lib.FDispsigcheck.msghdr.CopyOut
+// --- algo_lib.FDispsigcheck.base.CopyOut
 // Copy fields out of row
 void algo_lib::dispsigcheck_CopyOut(algo_lib::FDispsigcheck &row, dmmeta::Dispsigcheck &out) {
     out.dispsig = row.dispsig;
     out.signature = row.signature;
 }
 
-// --- algo_lib.FDispsigcheck.msghdr.CopyIn
+// --- algo_lib.FDispsigcheck.base.CopyIn
 // Copy fields in to row
 void algo_lib::dispsigcheck_CopyIn(algo_lib::FDispsigcheck &row, dmmeta::Dispsigcheck &in) {
     row.dispsig = in.dispsig;
@@ -4924,7 +5372,7 @@ void algo_lib::FDispsigcheck_Print(algo_lib::FDispsigcheck& row, algo::cstring& 
     PrintAttrSpaceReset(str,"signature", temp);
 }
 
-// --- algo_lib.FImtable.msghdr.CopyOut
+// --- algo_lib.FImtable.base.CopyOut
 // Copy fields out of row
 void algo_lib::imtable_CopyOut(algo_lib::FImtable &row, algo::Imtable &out) {
     out.imtable = row.imtable;
@@ -4938,7 +5386,7 @@ void algo_lib::imtable_CopyOut(algo_lib::FImtable &row, algo::Imtable &out) {
     out.comment = algo::Comment(row.comment);
 }
 
-// --- algo_lib.FImtable.msghdr.CopyIn
+// --- algo_lib.FImtable.base.CopyIn
 // Copy fields in to row
 void algo_lib::imtable_CopyIn(algo_lib::FImtable &row, algo::Imtable &in) {
     row.imtable = in.imtable;

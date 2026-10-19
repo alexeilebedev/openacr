@@ -66,12 +66,10 @@ inline bool _LowerCharQ(char i) {
 // --------------------------------------------------------------------------------
 
 void atf_unit::unittest_algo_lib_Charset() {
-    Charset RegxSqlSpecialChars;
     Charset  SsimBreakCharsName;
     Charset  SsimBreakCharsValue;
     Charset BashQuotesafeChars;
     Charset SsimQuotesafeChars;
-    (void)Charset_ReadStrptrPlain(RegxSqlSpecialChars,"$.|?*+(){}^\\[]#");
     (void)Charset_ReadStrptrMaybe(SsimQuotesafeChars, "a-zA-Z0-9_;&*^%$@.!:,+/-");
     (void)Charset_ReadStrptrMaybe(BashQuotesafeChars, "a-zA-Z0-9_^%@:./-");
     (void)Charset_ReadStrptrPlain(SsimBreakCharsName, "[]{}()\t \r\n:");
@@ -92,7 +90,6 @@ void atf_unit::unittest_algo_lib_Charset() {
 
     for (int i=0; i<256; i++) {
         vrfy_(ch_GetBit(BashQuotesafeChars,i) == algo_lib::BashQuotesafeQ(i));
-        vrfy_(ch_GetBit(RegxSqlSpecialChars,i) == algo_lib::RegxSqlSpecialQ(i));
         vrfy_(ch_GetBit(SsimBreakCharsName,i) == algo_lib::SsimBreakNameQ(i));
         vrfy_(ch_GetBit(SsimBreakCharsValue,i) == algo_lib::SsimBreakValueQ(i));
         vrfy_(ch_GetBit(SsimQuotesafeChars,i) == algo_lib::SsimQuotesafeQ(i));

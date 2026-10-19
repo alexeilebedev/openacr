@@ -21,7 +21,7 @@ Usage: atf_fuzz [[-target:]<string>] [[-args:]<string>] [options]
     -testprob   double  1                      Run each case with this probability
     -verbose    flag                           Verbosity level (0..255); alias -v; cumulative
     -debug      flag                           Debug level (0..255); alias -d; cumulative
-    -trace      string  ""                     Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps
+    -trace      string  ""                     Trace expression: log categories to enable, as category[:filter],...
     -help                                      Print help and exit; alias -h
     -version                                   Print version and exit
     -signature                                 Show signatures and exit; alias -sig

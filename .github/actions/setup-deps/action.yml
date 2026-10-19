@@ -14,6 +14,7 @@ runs:
           libssl-dev \
           libcurl4-openssl-dev \
           liblz4-dev \
+          librocksdb-dev \
           llvm \
           cppcheck \
           valgrind

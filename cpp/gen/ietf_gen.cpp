@@ -389,6 +389,65 @@ inline static bool ietf::addr_ReadStrptrMaybe(ietf::Ipv4Addr& parent, algo::strp
     return retval;
 }
 
+// --- ietf.Pcaphdr.linktype.ToCstr
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+const char* ietf::linktype_ToCstr(const ietf::Pcaphdr& parent) {
+    const char *ret = NULL;
+    switch(linktype_GetEnum(parent)) {
+        case ietf_Pcaphdr_linktype_ethernet: ret = "ethernet";  break;
+        case ietf_Pcaphdr_linktype_linux_sll2: ret = "linux_sll2";  break;
+    }
+    return ret;
+}
+
+// --- ietf.Pcaphdr.linktype.Print
+// Convert linktype to a string. First, attempt conversion to a known string.
+// If no string matches, print linktype as a numeric value.
+void ietf::linktype_Print(const ietf::Pcaphdr& parent, algo::cstring &lhs) {
+    const char *strval = linktype_ToCstr(parent);
+    if (strval) {
+        lhs << strval;
+    } else {
+        lhs << parent.linktype;
+    }
+}
+
+// --- ietf.Pcaphdr.linktype.SetStrptrMaybe
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+bool ietf::linktype_SetStrptrMaybe(ietf::Pcaphdr& parent, algo::strptr rhs) {
+    bool ret = false;
+    switch (elems_N(rhs)) {
+        case 8: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('e','t','h','e','r','n','e','t'): {
+                    linktype_SetEnum(parent,ietf_Pcaphdr_linktype_ethernet); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 10: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('l','i','n','u','x','_','s','l'): {
+                    if (memcmp(rhs.elems+8,"l2",2)==0) { linktype_SetEnum(parent,ietf_Pcaphdr_linktype_linux_sll2); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+    }
+    return ret;
+}
+
+// --- ietf.Pcaphdr.linktype.SetStrptr
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+void ietf::linktype_SetStrptr(ietf::Pcaphdr& parent, algo::strptr rhs, ietf_Pcaphdr_linktype_Enum dflt) {
+    if (!linktype_SetStrptrMaybe(parent,rhs)) linktype_SetEnum(parent,dflt);
+}
+
 // --- ietf.Tcphdr..Init
 // Set all fields to initial values.
 void ietf::Tcphdr_Init(ietf::Tcphdr& parent) {
@@ -433,6 +492,19 @@ inline static void ietf::SizeCheck() {
     algo_assert(sizeof(ietf::Ipport) == 6);
     algo_assert(_offset_of(ietf::Ipv4Addr,addr_be) == 0);
     algo_assert(sizeof(ietf::Ipv4Addr) == 4);
+    algo_assert(_offset_of(ietf::Pcaphdr,magic) == 0);
+    algo_assert(_offset_of(ietf::Pcaphdr,version_major) == 4);
+    algo_assert(_offset_of(ietf::Pcaphdr,version_minor) == 6);
+    algo_assert(_offset_of(ietf::Pcaphdr,thiszone) == 8);
+    algo_assert(_offset_of(ietf::Pcaphdr,sigfigs) == 12);
+    algo_assert(_offset_of(ietf::Pcaphdr,snaplen) == 16);
+    algo_assert(_offset_of(ietf::Pcaphdr,linktype) == 20);
+    algo_assert(sizeof(ietf::Pcaphdr) == 24);
+    algo_assert(_offset_of(ietf::Pcaprec,ts_sec) == 0);
+    algo_assert(_offset_of(ietf::Pcaprec,ts_usec) == 4);
+    algo_assert(_offset_of(ietf::Pcaprec,caplen) == 8);
+    algo_assert(_offset_of(ietf::Pcaprec,len) == 12);
+    algo_assert(sizeof(ietf::Pcaprec) == 16);
     algo_assert(_offset_of(ietf::Tcphdr,source_be) == 0);
     algo_assert(_offset_of(ietf::Tcphdr,dest_be) == 2);
     algo_assert(_offset_of(ietf::Tcphdr,seq_be) == 4);
@@ -469,6 +541,8 @@ void ietf::StaticCheck() {
     algo_assert(_offset_of(ietf::Ipv4, ipv4) + sizeof(((ietf::Ipv4*)0)->ipv4) == sizeof(ietf::Ipv4));
     algo_assert(_offset_of(ietf::Ipport, port) + sizeof(((ietf::Ipport*)0)->port) == sizeof(ietf::Ipport));
     algo_assert(_offset_of(ietf::Ipv4Addr, addr_be) + sizeof(((ietf::Ipv4Addr*)0)->addr_be) == sizeof(ietf::Ipv4Addr));
+    algo_assert(_offset_of(ietf::Pcaphdr, linktype) + sizeof(((ietf::Pcaphdr*)0)->linktype) == sizeof(ietf::Pcaphdr));
+    algo_assert(_offset_of(ietf::Pcaprec, len) + sizeof(((ietf::Pcaprec*)0)->len) == sizeof(ietf::Pcaprec));
     // check that bitfield fits width
     algo_assert(sizeof(((ietf::Tcphdr*)0)->doff_flags_be)*8 >= 16);
     algo_assert(_offset_of(ietf::Tcphdr, urg_ptr_be) + sizeof(((ietf::Tcphdr*)0)->urg_ptr_be) == sizeof(ietf::Tcphdr));

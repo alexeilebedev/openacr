@@ -36,12 +36,60 @@
 
 // -----------------------------------------------------------------------------
 
+// Watch PARENT on this process's queue, so that the wait loop kills this process
+// with SIGKILL when PARENT exits, as Linux's PR_SET_PDEATHSIG would.  Return
+// false when the queue refuses: PARENT is already gone, or the process is a
+// child between fork and exec, whose parent's kqueue did not survive the fork.
+// Only macOS watches; elsewhere the call returns false.
+bool algo_lib::DieWithWatchQ(i32 parent) {
+    bool ret = false;
+#if defined(__MACH__)
+    struct kevent ev;
+    EV_SET(&ev, pid_t(parent), EVFILT_PROC, EV_ADD, NOTE_EXIT, 0, NULL);
+    ret = algo_lib::_db.epoll_fd >= 0 && kevent(algo_lib::_db.epoll_fd, &ev, 1, NULL, 0, NULL) == 0;
+    if (ret) {
+        algo_lib::_db.die_with = parent;
+    }
+#else
+    (void)parent;
+#endif
+    return ret;
+}
+
 void algo_lib::IohookInit() {
+    // a forked child that opens its own queue closes the one it inherited: an
+    // epoll survives fork and would stay open beside the new one, and a kqueue
+    // does not, so there the close finds nothing.  A die-with watch lived on the
+    // old queue and ends with it, as a fork clears PR_SET_PDEATHSIG on Linux
+    if (algo_lib::_db.epoll_fd >= 0) {
+        (void)close(algo_lib::_db.epoll_fd);
+        algo_lib::_db.epoll_fd = -1;
+    }
+    algo_lib::_db.die_with = 0;
 #if defined(__MACH__) || __FreeBSD__>0
     algo_lib::_db.epoll_fd = kqueue();
     if (algo_lib::_db.epoll_fd == -1) {
         FatalErrorExit("kqueue");
     }
+#if defined(__MACH__)
+    // ALGO_DIE_WITH is <child>:<parent>, set by DieWithParent in a forked child.
+    // The watch belongs to the child alone, as PR_SET_PDEATHSIG does on Linux: it
+    // holds across an exec, which keeps the pid, and a process with another pid
+    // inherited the variable through a fork and ignores it.  So a shell that
+    // execs its one command passes the watch on, and a detached descendant runs
+    // normally.  A parent already gone kills this process now.  The variable is
+    // cleared, so this process's own children start without it
+    const char *die_with = getenv(algo_lib::dev_envvar_ALGO_DIE_WITH);
+    if (die_with) {
+        char *rest = NULL;
+        i32 child = i32(strtol(die_with, &rest, 10));
+        i32 parent = *rest == ':' ? i32(strtol(rest + 1, NULL, 10)) : 0;
+        (void)unsetenv(algo_lib::dev_envvar_ALGO_DIE_WITH);
+        if (child == i32(getpid()) && !DieWithWatchQ(parent)) {
+            (void)kill(getpid(), SIGKILL);
+        }
+    }
+#endif
 #elif defined(__CYGWIN__)
 #elif defined(WIN32)
 #else
@@ -63,15 +111,30 @@ void algo_lib::IohookAdd(algo_lib::FIohook& iohook, algo::IOEvtFlags inflags) NO
     bool isnew = !iohook.in_epoll;
     iohook.evt_flags = inflags;// flags we're now subscribed to
 #if defined(__MACH__) || __FreeBSD__>0
-    struct kevent ev;
-    int flags=0;
-    if (read_Get(inflags)) {
-        EV_SET(&ev, iohook.fildes.value, EVFILT_READ, EV_ADD | EV_CLEAR, 0, 0, &iohook);
-        (void)kevent(algo_lib::_db.epoll_fd, &ev, 1, NULL, 0, NULL);
+    // a kqueue keeps one filter per direction, so the new flag set adds each
+    // direction it names and deletes each it drops, as EPOLL_CTL_MOD replaces
+    // epoll's whole set.  Deleting a filter that is not there fails harmlessly
+    //
+    // A regular file never blocks, and epoll refuses one, so it is marked ready
+    // at once and never reaches the queue.  kqueue would accept it and fire a read
+    // only while the offset is short of the end, so a hook on an empty file, or
+    // on one read to its end, would wait forever.
+    struct stat st;
+    bool regular = fstat(iohook.fildes.value, &st) == 0 && S_ISREG(st.st_mode);
+    bool refused = false;
+    int filter[2] = {EVFILT_READ, EVFILT_WRITE};
+    bool want[2] = {read_Get(inflags), write_Get(inflags)};
+    frep_(i, 2) {
+        if (!regular) {
+            struct kevent ev;
+            EV_SET(&ev, iohook.fildes.value, filter[i], want[i] ? EV_ADD | EV_CLEAR : EV_DELETE, 0, 0, &iohook);
+            refused = (kevent(algo_lib::_db.epoll_fd, &ev, 1, NULL, 0, NULL) < 0 && want[i] && errno == EINVAL) || refused;
+        }
     }
-    if (write_Get(inflags)) {
-        EV_SET(&ev, iohook.fildes.value, EVFILT_WRITE, EV_ADD | EV_CLEAR, 0, 0, &iohook);
-        (void)kevent(algo_lib::_db.epoll_fd, &ev, 1, NULL, 0, NULL);
+    // kqueue refuses a device it cannot watch, such as /dev/null, with EINVAL.
+    // Such a device never blocks either, so it too is marked ready at once.
+    if (refused || regular) {
+        callback_Call(iohook,iohook);// immediate callback
     }
 #elif defined(WIN32)
     // TODO: windows
@@ -130,14 +193,12 @@ void algo_lib::IohookRemove(algo_lib::FIohook& iohook) NOTHROW {
         algo_lib::_db.n_iohook -= 1;
         iohook.in_epoll = false;
 #if defined(__MACH__) || __FreeBSD__>0
-        struct kevent ev;
-        int flags=0;
-        if (read_Get(iohook.evt_flags)) {
-            EV_SET(&ev, iohook.fildes.value, EVFILT_READ, EV_DELETE, 0, 0, &iohook);
-            (void)kevent(algo_lib::_db.epoll_fd, &ev, 1, NULL, 0, NULL);
-        }
-        if (write_Get(iohook.evt_flags)) {
-            EV_SET(&ev, iohook.fildes.value, EVFILT_WRITE, EV_DELETE, 0, 0, &iohook);
+        // both directions, whatever the flags last named, so no filter is left
+        // pointing at a hook that may be freed
+        int filter[2] = {EVFILT_READ, EVFILT_WRITE};
+        frep_(i, 2) {
+            struct kevent ev;
+            EV_SET(&ev, iohook.fildes.value, filter[i], EV_DELETE, 0, 0, &iohook);
             (void)kevent(algo_lib::_db.epoll_fd, &ev, 1, NULL, 0, NULL);
         }
 #elif defined(WIN32)
@@ -216,20 +277,30 @@ static inline void IohookWaitClocks_Kqueue(u64 wait_clocks) {
                    , NULL, 0
                    , events, _array_count(events)
                    , &timeout);
+    // a queue this process did not open, such as one inherited through a fork
+    // without IohookInit, fails every wait at once, and the loop would spin
+    if (n < 0 && errno == EBADF) {
+        FatalErrorExit("algo_lib.kqueue_closed  comment:\"the event queue is not open in this process; a forked child calls IohookInit\"");
+    }
     for (int i=0; i<n; i++) {
         struct kevent &ev = events[i];
-        algo_lib::FIohook *iohook = (algo_lib::FIohook*)ev.udata;
-        iohook->flags.value = 0;
-        if (ev.flags & EV_EOF) {
-            eof_Set(iohook->flags, true);
+        if (ev.filter == EVFILT_PROC) {
+            // the parent DieWithParent named has exited (IohookInit)
+            (void)kill(getpid(), SIGKILL);
+        } else {
+            algo_lib::FIohook *iohook = (algo_lib::FIohook*)ev.udata;
+            iohook->flags.value = 0;
+            if (ev.flags & EV_EOF) {
+                eof_Set(iohook->flags, true);
+            }
+            if (ev.filter == EVFILT_READ) {
+                read_Set(iohook->flags, true);
+            }
+            if (ev.filter == EVFILT_WRITE) {
+                write_Set(iohook->flags, true);
+            }
+            callback_Call(*iohook,*iohook);// immediate callback
         }
-        if (ev.filter == EVFILT_READ) {
-            read_Set(iohook->flags, true);
-        }
-        if (ev.filter == EVFILT_WRITE) {
-            write_Set(iohook->flags, true);
-        }
-        callback_Call(*iohook,*iohook);// immediate callback
     }
 }
 #endif
@@ -299,20 +370,24 @@ void algo_lib::giveup_time_Step() {
     u64 limit = algo_lib::_db.limit;
     u64 slack = u64_SubClip(u64_Min(algo_lib::_db.next_loop, limit), algo_lib::_db.clock);
     u64 wait_clocks = algo_lib::_db.last_sleep_clocks == 0 ? 0 : slack;
-    if (algo_lib::_db.n_iohook > 0) {
+    // A process with i/o in progress waits on the queue.  So does one that
+    // watches the process it dies with (DieWithParent), or it would never read
+    // that exit; its wait leaves the loop free to end at its limit.  Any other
+    // process gives up time with nanosleep, unless next_loop equals limit and
+    // the loop is about to exit.
+    bool io = algo_lib::_db.n_iohook > 0;
+    bool waitq = io || (algo_lib::_db.next_loop < limit && algo_lib::_db.die_with != 0);
+    if (waitq) {
         algo_lib::_db.giveup_count++;
         _IohookWaitClocks(wait_clocks);
+    } else if (algo_lib::_db.next_loop < limit) {
+        SleepClocks(wait_clocks);
+    }
+    if (io) {
         // at this point, next_loop could be equal to _db.limit
         // which would cause the main loop to exit; since we just executed
         // an io wait, prevent that
         algo_lib::_db.next_loop = algo_lib::_db.clock;
-    } else {
-        // no i/o is in progress, just give up time using nanosleep.
-        // however if next_loop is equal to limit, the loop is about to exit,
-        // so do nothing.
-        if (algo_lib::_db.next_loop < limit) {
-            SleepClocks(wait_clocks);
-        }
     }
     algo_lib::_db.last_sleep_clocks = slack;
     algo_lib::giveup_time_UpdateCycles();

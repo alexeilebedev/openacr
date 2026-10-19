@@ -18,11 +18,11 @@ Usage: amsspy [options]
     -shm                        List shms
     -spy        regx    ""      Spy on named shared memory segment
     -f          enum    decode  (output) Output format (decode|raw|text|json)
-    -clean                      Unlink orphaned /dev/shm ams segments and exit
+    -clean                      Unlink orphaned ams segments and exit
     -dump                       Dump every segment's header + reader offsets/lag (out-of-band) and exit
     -verbose    flag            Verbosity level (0..255); alias -v; cumulative
     -debug      flag            Debug level (0..255); alias -d; cumulative
-    -trace      string  ""      Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps
+    -trace      string  ""      Trace expression: log categories to enable, as category[:filter],...
     -help                       Print help and exit; alias -h
     -version                    Print version and exit
     -signature                  Show signatures and exit; alias -sig
@@ -31,7 +31,8 @@ Usage: amsspy [options]
 ### Description
 <a href="#description"></a>
 
-Each AMS segment is a file `/dev/shm/<shm>.ams`.  Its name starts with the file prefix
+Each AMS segment is a file `<shm>.ams` in the segment directory, `/dev/shm` on Linux
+and `/Volumes/shm` on macOS.  Its name starts with the file prefix
 its owner was given, and amsspy calls the processes sharing one prefix a session.  A run
 of [ams_sendtest](/txt/exe/ams_sendtest/README.md) with `-file_prefix:demo` is the session
 `demo`, and its lane is the segment `demo-ams_sendtest-0-0.log-0`.
@@ -119,7 +120,7 @@ The format `-spy` prints messages in:
 - `raw`: the message bytes, unchanged, for piping into another AMS tool.
 - `json`: prints nothing.
 
-#### -clean -- Unlink orphaned /dev/shm ams segments and exit
+#### -clean -- Unlink orphaned ams segments and exit
 <a href="#-clean"></a>
 
 Removes every segment whose writer has exited without removing it.  The line it prints,

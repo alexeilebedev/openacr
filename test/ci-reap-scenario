@@ -11,8 +11,8 @@
 #
 # The shapes are the two ends of the ancestry walk.  A plain background child
 # of this script descends from it, so its walk meets this script's own chain.
-# A child of setsid loses its parent as soon as setsid exits and is reparented
-# to init, so its walk reaches PID 1 -- which is what every process an earlier
+# A child of a subshell that has already exited lost its parent at that exit
+# and was reparented to init, so its walk reaches PID 1 -- which is what every process an earlier
 # job left behind looks like.
 #
 # Only -dry_run is ever exercised: a real sweep in a CI job would reap that
@@ -26,11 +26,13 @@ rm -f "$pidfile"
 
 sleep 60 &
 child=$!
-setsid --fork bash -c "echo \$\$ > $pidfile; exec sleep 60" >/dev/null 2>&1
+# the subshell starts the sleeper and exits at once, so the sleeper's parent is
+# gone and the system reparents it, which is what makes it an orphan
+( bash -c "echo \$\$ > $pidfile; exec sleep 60" >/dev/null 2>&1 & )
 orphan=""
 for _ in $(seq 100); do
     orphan=$(cat "$pidfile" 2>/dev/null)
-    if [ -n "$orphan" ] && [ -e "/proc/$orphan" ]; then
+    if [ -n "$orphan" ] && ps -p "$orphan" >/dev/null 2>&1; then
         break
     fi
     sleep 0.1
@@ -47,7 +49,9 @@ case "$out" in
     *)                echo 'ci_reap_scenario.orphan  listed:N  comment:"reparented to init"';;
 esac
 
+# waiting reaps the child, so the shell reports no termination of it
 kill "$child" 2>/dev/null
+wait "$child" 2>/dev/null
 if [ -n "$orphan" ]; then
     kill "$orphan" 2>/dev/null
 fi

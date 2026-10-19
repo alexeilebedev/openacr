@@ -40,13 +40,13 @@ The pkey of a cfmt row is `<ctype>.<strfmt>` — a ctype can
 have at most one cfmt per strfmt.  The strfmt is a pkey of
 `dmmeta.strfmt`:
 
-| `strfmt`     | Conversion target |
-|--------------|--------------------|
-| `String`     | Generic text form (`_Print`, `_ReadStrptrMaybe`) — the default. |
-| `Tuple`      | Attrs of an already-parsed `algo::Tuple` (`_ReadTupleMaybe`) — read only. |
-| `Json`       | JSON node tree (`_FmtJson`) — print only. |
-| `Argv`       | Unix command line argv array. |
-| `ArgvGnu`    | GNU-style argv (`--name value` instead of `-name value`). |
+| `strfmt`  | Conversion target |
+| --------- | ----------------- |
+| `String`  | Generic text form (`_Print`, `_ReadStrptrMaybe`) — the default. |
+| `Tuple`   | Attrs of an already-parsed `algo::Tuple` (`_ReadTupleMaybe`) — read only. |
+| `Json`    | JSON node tree (`_FmtJson`) — print only. |
+| `Argv`    | Unix command line argv array. |
+| `ArgvGnu` | GNU-style argv (`--name value` instead of `-name value`). |
 
 The `printfmt` field further refines the layout for the
 String strfmt; see below.
@@ -57,15 +57,15 @@ String strfmt; see below.
 For `strfmt:String`, the `printfmt` decides how the fields
 are laid out in the resulting string:
 
-| `printfmt`    | Output shape                                                |
-|---------------|--------------------------------------------------------------|
-| `Tuple`       | `ctype  key1:value1  key2:value2  ...`  — ssim form. |
-| `Sep`         | `value1<sep>value2<sep>...`  — one-char-per-gap separator. |
-| `CompactSep`  | Declared but not generated; a `print:Y` cfmt using it is rejected. |
-| `Raw`         | Concatenated fields with no separator (for single-field wrappers and binary-format displays). |
-| `Auto`        | Same shape as `Tuple`, for printing and for reading alike. |
-| `Bitset`      | Comma-separated names of set bits (only for `fbitset` fields). |
-| `Extern`      | User-implements the body; amc emits only the prototype. |
+| `printfmt`   | Output shape |
+| ------------ | ------------ |
+| `Tuple`      | `ctype  key1:value1  key2:value2  ...`  — ssim form. |
+| `Sep`        | `value1<sep>value2<sep>...`  — one-char-per-gap separator. |
+| `CompactSep` | Declared but not generated; a `print:Y` cfmt using it is rejected. |
+| `Raw`        | Concatenated fields with no separator (for single-field wrappers and binary-format displays). |
+| `Auto`       | Same shape as `Tuple`, for printing and for reading alike. |
+| `Bitset`     | Comma-separated names of set bits (only for `fbitset` fields). |
+| `Extern`     | User-implements the body; amc emits only the prototype. |
 
 For non-String strfmts (`Json`, `Argv`, …), only `Extern`
 changes what is printed: it hands the body to the user as it

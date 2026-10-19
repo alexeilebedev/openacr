@@ -361,7 +361,9 @@ void abt_md::Main_XrefNs() {
             }
         } else if (dir1 == "gen" && ind_ns_Find(dir2)) {
             abt_md::FNs *ns = ind_ns_Find(dir2);
-            bool genns = ns->nstype == dmmeta_Nstype_nstype_exe || ns->nstype == dmmeta_Nstype_nstype_lib;
+            bool genns = ns->nstype == dmmeta_Nstype_nstype_exe
+                || ns->nstype == dmmeta_Nstype_nstype_so
+                || ns->nstype == dmmeta_Nstype_nstype_lib;
             if (genns && ns->ns != "") {
                 readmefile.p_ns = ns;
                 // don't set ns->c_readmefile: that should point to README.md, not internals
@@ -383,7 +385,7 @@ void abt_md::Main_XrefNs() {
                 } else {
                     stray_error<<Keyval("no such ssimfile",ssimfile_key);
                 }
-            } else if (dir1==dmmeta_Nstype_nstype_lib || dir1==dmmeta_Nstype_nstype_protocol) {
+            } else if (dir1==dmmeta_Nstype_nstype_lib || dir1==dmmeta_Nstype_nstype_so || dir1==dmmeta_Nstype_nstype_protocol) {
                 tempstr ctype_key(tempstr()<<dir2<<"."<<filename);
                 if (filename == "README") {
                     readmefile.p_ns = ns;
@@ -883,11 +885,10 @@ void abt_md::Main() {
         readmefile.select = _db.cmdline.ns.expr != ""
             ? (readmefile.p_ns && Regx_Match(_db.cmdline.ns,readmefile.p_ns->ns))
             : Regx_Match(_db.cmdline.readmefile,readmefile.gitfile);
-        // A tutorial under txt/tut builds a sample program with acr_ed -write, and
-        // evaluating the tutorials takes most of a whole-tree pass, so a plain run
-        // regenerates their sections and leaves their output blocks as they are.
-        readmefile.evalcmd = _db.cmdline.evalcmd
-            && (_db.cmdline.tut || !StartsWithQ(readmefile.gitfile,"txt/tut/"));
+        // A tutorial builds a sample program with acr_ed -write or starts a server,
+        // and evaluating the tutorials takes most of a whole-tree pass.  So a plain
+        // run regenerates their sections and leaves their output blocks as they are.
+        readmefile.evalcmd = _db.cmdline.evalcmd && (_db.cmdline.tut || !readmefile.tut);
 
         if (readmefile.select) {
             verblog("abt_md: select "<<readmefile.gitfile);
@@ -962,6 +963,8 @@ void abt_md::Main() {
         // the mdsection check reads the whole readmefile pool rather than the
         // selection, so it is valid whichever readmes this run asked to process
         Main_CheckMdsection();
+        // the width check reads the rule files as written, after this run saved them
+        Main_CheckTableWidth();
         if (wholetree) {
             CheckLinks();
         } else {

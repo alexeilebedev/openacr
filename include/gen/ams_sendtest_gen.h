@@ -253,9 +253,9 @@ bool                 child_XrefMaybe(ams_sendtest::FChild &row);
 void                 send_UpdateCycles() __attribute__((nothrow));
 // func:ams_sendtest.FDb.send.Step
 // this function is 'extrn' and implemented by user
-void                 send_Step() __attribute__((nothrow));
+void                 send_Step();
 // func:ams_sendtest.FDb.send.Call
-inline void          send_Call() __attribute__((nothrow));
+inline void          send_Call();
 
 // cursor points to valid item
 // func:ams_sendtest.FDb.child_curs.Reset

@@ -128,7 +128,7 @@ numeric field, an inline array (`Inlary`) or a `Tary`. It generates standard bit
 Here is an example:
 
 ```ssim
-inline-command: acr -t field:atf_amc.Bitset.fld8 | egrep Bitset
+inline-command: acr -t field:atf_amc.Bitset.fld8 | grep -E Bitset
     dmmeta.ctype  ctype:atf_amc.Bitset  comment:"Test bitset"
       dmmeta.field  field:atf_amc.Bitset.fld8  arg:u8  reftype:Val  dflt:""  comment:"Bitset field"
         dmmeta.fbitset  field:atf_amc.Bitset.fld8  comment:""
@@ -376,7 +376,7 @@ and generates generates usual pool functions `Alloc`, `RemoveLast`, `RemoveAll`.
 Here is an example:
 
 ```ssim
-inline-command: acr -t field:algo_lib.FDb.temp_strings | egrep algo_lib.FDb
+inline-command: acr -t field:algo_lib.FDb.temp_strings | grep -E algo_lib.FDb
     dmmeta.ctype  ctype:algo_lib.FDb  comment:"In-memory database for algo_lib"
       dmmeta.field  field:algo_lib.FDb.temp_strings  arg:algo.cstring  reftype:Inlary  dflt:""  comment:""
         dmmeta.inlary  field:algo_lib.FDb.temp_strings  min:8  max:8  comment:""

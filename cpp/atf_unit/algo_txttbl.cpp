@@ -53,10 +53,10 @@ void atf_unit::unittest_algo_lib_Txttbl(){
     cstring out;
     FTxttbl_Markdown(tbl,out);
     Check(out,
-          "|col1...|col2|col3<br>|\n"
-          "|---|---|---|\n"
-          "|-|-|-|\n"
-          "|val3|val2|val1|\n"
+          "| col1... | col2 | col3<br> |\n"
+          "| ------: | ---- | -------- |\n"
+          "|       - |  -   | - |\n"
+          "| val3    | val2 | val1 |\n"
           );
 
     Refurbish(out);

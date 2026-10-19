@@ -296,6 +296,9 @@ void amc::JsGenField() {
         // ignore - injection point
     } else if (field.c_bitfld) {
         // bitfields are not initialized
+    } else if (amc::FldfuncQ(field) && amc::ProjCodecQ(*field.p_ctype)) {
+        // a computed field has no bytes on the wire, so a decoded value has
+        // nothing to hold for it
     } else if (field.p_ctype->c_msgtype ? (!field.c_typefld && !field.c_lenfld) : true) {
         if (amc::ProjCodecQ(*field.p_ctype)) {
             MaybeSep(tsctype->args);
@@ -480,7 +483,8 @@ static int TsFixedSlotBytes(amc::FField &field) {
     bool bytecopy = amc::GetJsBltin(field)->jsbltin == amc::dmmeta_jsbltin_Uint8Array;
     bool argtail = amc::RuntimeFrameLenQ(*field.p_arg);
     if (field.reftype == dmmeta_Reftype_reftype_Base
-        || field.reftype == dmmeta_Reftype_reftype_Bitfld) {
+        || field.reftype == dmmeta_Reftype_reftype_Bitfld
+        || amc::FldfuncQ(field)) {
         ret = 0;
     } else if (field.reftype == dmmeta_Reftype_reftype_Varlen && (bytecopy || field.arg == "char")) {
         ret = 0;
@@ -550,7 +554,9 @@ void amc::gen_check_ts() {
 // from the field's offset to the end of the frame.
 static void TsGenFixedField(algo_lib::Replscope &R, cstring &out, amc::FCtype &ctype, amc::FField &field, bool encode) {
     tempstr jsclass = amc::GetJsClass(field,false);
-    if (field.reftype == dmmeta_Reftype_reftype_Val) {
+    if (amc::FldfuncQ(field)) {
+        // a computed field has no bytes on the wire
+    } else if (field.reftype == dmmeta_Reftype_reftype_Val) {
         bool lenfld = field.c_lenfld != NULL;
         bool typefld = field.c_typefld && ctype.c_msgtype;
         bool wideword = lenfld && JsBigintFieldQ(field);
@@ -712,11 +718,24 @@ void amc::TsGenEncode() {
     }
 }
 
+// Return the field of the inline-string ctype ARG that holds its characters,
+// whose smallstr row says how the string lies in the ctype's bytes: the ch of
+// algo.Smallstr50.  Return NULL for a ctype that holds no inline string.
+static amc::FField *TsSmallstrCh(amc::FCtype &arg) {
+    amc::FField *ret = NULL;
+    ind_beg(amc::ctype_c_field_curs, f, arg) if (f.c_smallstr) {
+        ret = &f;
+    }ind_end;
+    return ret;
+}
+
 // Emit into OUT the TS statement writing (ENCODE) or reading (!ENCODE)
-// FIELD's fixed-size wire form at $offset: DataView get/set for scalars,
-// a NUL-padded byte window for a fixed-length string, and a nested
-// $jsclass_Encode/_Decode call for a ctype-valued field.
+// FIELD's fixed-size wire form at $offset: DataView get/set for scalars, a
+// byte window for a fixed-length string laid out as its smallstr row says
+// (rpascal, rightpad, else NUL-padded), and a nested $jsclass_Encode/_Decode
+// call for a ctype-valued field.
 void amc::TsSerdeSimpleType(algo_lib::Replscope &R, cstring &out, amc::FField &field, bool encode) {
+    amc::FField *ch = field.p_arg ? TsSmallstrCh(*field.p_arg) : NULL;
     if (field.arg == "u8") {
         if (encode) {
             Ins(&R,out,"    view.setUint8($offset,$value);");
@@ -771,6 +790,37 @@ void amc::TsSerdeSimpleType(algo_lib::Replscope &R, cstring &out, amc::FField &f
             Ins(&R,out,"    view.setUint8($offset,$value ? 1 : 0);");
         } else {
             Ins(&R,out,"    $value = view.getUint8($offset) !== 0;");
+        }
+    } else if (GetJsBltin(field) == &amc_jsbltin_string && ch && amc::ProjRpascalQ(*ch)) {
+        // an rpascal inline string: the characters, a spare byte, and the count
+        // in the byte after them, which is all the C++ side reads the length from
+        Set(R,"$nbyte", tempstr() << field.p_arg->totsize_byte);
+        Set(R,"$nchar", tempstr() << ch->c_smallstr->length);
+        if (encode) {
+            Ins(&R,out,"    let _a_$name = new Uint8Array(view.buffer,view.byteOffset+$offset,$nbyte);");
+            Ins(&R,out,"    _a_$name.fill(0);");
+            Ins(&R,out,"    let _n_$name = _g_text_encoder.encodeInto($value,_a_$name.subarray(0,$nchar)).written;");
+            Ins(&R,out,"    _a_$name[$nchar+1] = _n_$name;");
+        } else {
+            Ins(&R,out,"    let _n_$name = Math.min(view.getUint8($offset+$nchar+1),$nchar);");
+            Ins(&R,out,"    $value = _g_text_decoder.decode(new Uint8Array(view.buffer,view.byteOffset+$offset,_n_$name));");
+        }
+    } else if (GetJsBltin(field) == &amc_jsbltin_string && ch && amc::ProjRightpadQ(*ch)) {
+        // a rightpad inline string: the characters, padded on the right with
+        // the string's own pad byte, which the decoder trims
+        Set(R,"$nchar", tempstr() << ch->c_smallstr->length);
+        Set(R,"$pad", tempstr() << amc::ProjPadByte(*ch));
+        if (encode) {
+            Ins(&R,out,"    let _a_$name = new Uint8Array(view.buffer,view.byteOffset+$offset,$nchar);");
+            Ins(&R,out,"    _a_$name.fill($pad);");
+            Ins(&R,out,"    _g_text_encoder.encodeInto($value,_a_$name);");
+        } else {
+            Ins(&R,out,"    let _s_$name = new Uint8Array(view.buffer,view.byteOffset+$offset,$nchar);");
+            Ins(&R,out,"    let _e_$name = $nchar;");
+            Ins(&R,out,"    while (_e_$name > 0 && _s_$name[_e_$name-1] === $pad) {");
+            Ins(&R,out,"        _e_$name--;");
+            Ins(&R,out,"    }");
+            Ins(&R,out,"    $value = _g_text_decoder.decode(_s_$name.subarray(0,_e_$name));");
         }
     } else if (GetJsBltin(field) == &amc_jsbltin_string) {
         // fixed-length, NUL-padded string: read/write totsize_byte bytes, trim pad on decode.
@@ -840,6 +890,7 @@ void amc::TsGenDecode() {
 static bool TsPrintFieldQ(amc::FField &field) {
     bool skip = field.reftype == dmmeta_Reftype_reftype_Base
         || field.c_bitfld != NULL
+        || (amc::FldfuncQ(field) && amc::ProjCodecQ(*field.p_ctype))
         || (field.p_ctype->c_msgtype && (field.c_typefld || field.c_lenfld));
     return !skip;
 }
@@ -915,6 +966,8 @@ void amc::TsGenJsonInterface() {
         ind_beg(ctype_c_field_curs,field,ctype) {
             if (ctype.c_msgtype && field.c_typefld) {
                 // type field in a message
+            } else if (amc::FldfuncQ(field) && amc::ProjCodecQ(ctype)) {
+                // a computed field, which the wire does not carry
             } else if (ctype.c_msgtype && field.c_lenfld) {
                 // length field in a message
             } else if (field.reftype != dmmeta_Reftype_reftype_Val && !amc::ProjStringQ(field)) {

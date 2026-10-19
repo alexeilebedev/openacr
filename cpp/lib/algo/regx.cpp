@@ -48,7 +48,6 @@
 #include <algorithm>
 
 static int RegxState_ReadStrptrChClass(algo_lib::RegxState &state, strptr str, int i); // ignore:static_fwd_decl
-static void RewriteRegx(algo::strptr input, algo_lib::RegxStyle style, algo::cstring &out); // ignore:static_fwd_decl
 static int SingleOutput(algo_lib::Bitset &bitset); // ignore:static_fwd_decl
 
 // -----------------------------------------------------------------------------
@@ -239,27 +238,25 @@ static void KeepGroupArc(algo_lib::Regx &regx) {
 
 // -----------------------------------------------------------------------------
 
-// Negate the character ranges matched by STATE.CH_CLASS
-// For instance, if CH_CLASS matches a..z, then after this function
-// it will match anything BUT a..z
+// Replace the ranges of CH_CLASS with their complement over 0..255, so that a
+// class matching a..z matches every other byte.  The ranges may arrive in any
+// order and may overlap, as the members of a class such as [^\da-f0] do, so
+// the complement is built from a sorted copy.
 static void Negate(algo::U16Ary &ch_class) {
-    // replace list of ranges with a complementary one over 0..255
-    // this may add or remove a state.
-    int k = 0;
+    algo::U16Ary sorted;
+    ary_Setary(sorted, ary_Getary(ch_class));
+    std::sort(sorted.ary_elems, sorted.ary_elems + sorted.ary_n);
+    ary_RemoveAll(ch_class);
     int L = 0;
-    frep_(idx, ary_N(ch_class)) {
-        u16 R = ary_qFind(ch_class, idx);
+    ind_beg(algo::U16Ary_ary_curs, R, sorted) {
         if (L < ChRangeBeg(R)) {
-            ary_qFind(ch_class, k) = ChRange(L,ChRangeBeg(R));
-            k++;
+            ary_Alloc(ch_class) = ChRange(L,ChRangeBeg(R));
         }
-        L = ChRangeEnd(R);
-    }
+        L = i32_Max(L, ChRangeEnd(R));
+    }ind_end;
     if (L < 256) {
         ary_Alloc(ch_class) = ChRange(L,256);
-        k++;
     }
-    ch_class.ary_n = k; // trim
 }
 
 // -----------------------------------------------------------------------------
@@ -322,103 +319,58 @@ static void AddCharRange(algo::U16Ary &ch_class, int beg, int end=0) {
     ary_Alloc(ch_class) = ChRange(beg,end+1);
 }
 
-// C           escaped character
-// STATE       out char class.
-// Parses escaped chars such as
-//    n->newline
-//    d->digit
-//    w->word
-//    s->space etc.
-// Non-macro characters are read verbatim (i.e. the leading backslash is ignored).
+// Add to STATE the characters the escape \C stands for, and return true.
+// An escape that amcdb.regxmacro declares stands for its class of characters,
+// such as \d for a digit; any other escape stands for C itself.
 static bool RegxState_ReadMacro(algo_lib::RegxState &state, char c) {
     algo::U16Ary temp;
-    bool neg=false;
-    switch (c) {
-    case 'n': AddCharRange(temp,'\n'); break;
-    case 'r': AddCharRange(temp,'\r'); break;
-    case 't': AddCharRange(temp,'\t'); break;
-    case 'a': AddCharRange(temp,'\a'); break;
-    case 'e': AddCharRange(temp,'\x1b'); break;
-    case 'v': AddCharRange(temp,'\v'); break;
-    case 'f': AddCharRange(temp,'\f'); break;
-    case 'D':
-        neg=true;
-        AddCharRange(temp,'0','9');
-        break;
-    case 'd':
-        AddCharRange(temp,'0','9');
-        break;
-    case 'W':
-        neg=true;
-        AddCharRange(temp,'a','z');
-        AddCharRange(temp,'A','Z');
-        AddCharRange(temp,'0','9');
-        AddCharRange(temp,'_');
-        break;
-    case 'w':
-        AddCharRange(temp,'a','z');
-        AddCharRange(temp,'A','Z');
-        AddCharRange(temp,'0','9');
-        AddCharRange(temp,'_');
-        break;
-    case 'S':
-        neg=true;
-        AddCharRange(temp,'\n');
-        AddCharRange(temp,'\r');
-        AddCharRange(temp,'\t');
-        AddCharRange(temp,'\v');
-        AddCharRange(temp,' ');
-        AddCharRange(temp,'\f');
-        break;
-    case 's':
-        AddCharRange(temp,'\n');
-        AddCharRange(temp,'\r');
-        AddCharRange(temp,'\t');
-        AddCharRange(temp,'\v');
-        AddCharRange(temp,' ');
-        AddCharRange(temp,'\f');
-        break;
-    default:
-        AddCharRange(temp,c);
+    bool neg = false;
+    algo::strptr pair = algo_lib::RegxMacroClass(c, neg);
+    if (elems_N(pair) == 0) {
+        AddCharRange(temp, u8(c));
+    }
+    for (int i = 0; i + 1 < elems_N(pair); i += 2) {
+        AddCharRange(temp, u8(pair[i]), u8(pair[i+1]));
     }
     if (neg) {
         Negate(temp);
     }
-    ary_Addary(state.ch_class,ary_Getary(temp));
+    ary_Addary(state.ch_class, ary_Getary(temp));
     return true;
 }
 
 // -----------------------------------------------------------------------------
 
-// STR         char range string in the form  \^?(A(-B)?)+
-// STATE       output char class
-// I           starting char index
-// RETURN      ending char index
-// function stops at ] (DOESN'T SKIP) or end of string
+// Read the class that STR holds from index I, after its '[', into STATE, and
+// return the index of the ']' that closes it.  The class is in the canonical
+// form RegxNormalize writes: an optional '^', then members, each a character
+// or a backslash and a character, and each optionally the start of a range
+// '-' to another such character.  An escape amcdb.regxmacro declares is a
+// member of its own, and the class is always closed.
 static int RegxState_ReadStrptrChClass(algo_lib::RegxState &state, strptr str, int i) {
     bool neg = false;
-    if (i<str.n_elems && str[i]=='^') {
-        neg=true;
+    int n = elems_N(str);
+    if (i < n && str[i] == '^') {
+        neg = true;
         i++;
     }
-    algo::U16Ary &ch_class=state.ch_class;
-    for (; i < elems_N(str); i++) {
-        int c    = u8(str[i]);
-        int next = i < elems_N(str)-1 ? u8(str[i+1]) : 0;
-        int c2   = c+1;
-        if (c==']') {
-            break;
+    algo::U16Ary &ch_class = state.ch_class;
+    while (i < n && str[i] != ']') {
+        if (str[i] == '\\' && i + 1 < n && algo_lib::RegxMacroQ(str[i+1])) {
+            RegxState_ReadMacro(state, str[i+1]);
+            i += 2;
+        } else {
+            bool esc = str[i] == '\\' && i + 1 < n;
+            int lo = u8(str[esc ? i + 1 : i]);
+            i += esc ? 2 : 1;
+            int hi = lo;
+            if (i + 1 < n && str[i] == '-' && str[i+1] != ']') {
+                bool hiesc = str[i+1] == '\\' && i + 2 < n;
+                hi = u8(str[hiesc ? i + 2 : i + 1]);
+                i += hiesc ? 3 : 2;
+            }
+            AddCharRange(ch_class, lo, i32_Max(hi, lo));
         }
-        if (next && c=='\\' && RegxState_ReadMacro(state, (char)next)) {
-            i++;
-            continue;
-        }
-        if (i < elems_N(str)-2 && next=='-') {
-            c2=u8(str[i+2])+1;
-            i+=2;
-        }
-        c2=u32_Max(c2,c+1);
-        ary_Alloc(ch_class) = ChRange(c,c2);
     }
     if (neg) {
         Negate(ch_class);
@@ -590,16 +542,11 @@ static bool ZeroOrOne(algo_lib::RegxParse &regxparse) {
 
 // -----------------------------------------------------------------------------
 
+// Read the class that opens at index I into a new state, and advance I to the
+// ']' that closes it.  RegxNormalize closes every class it writes.
 static bool LeftBracket(algo_lib::RegxParse &regxparse, int &i) {
     algo_lib::RegxState &state = NewExprState(regxparse);
-    int j = RegxState_ReadStrptrChClass(state, regxparse.input, i+1);
-    if (j<elems_N(regxparse.input) && regxparse.input[j]==']') {
-        // accept string so far
-        i = j;
-    } else { // take '[' char verbatim -- ignore built up char class
-        ary_RemoveAll(state.ch_class);
-        state.op = algo_lib::RegxOp(algo_lib_RegxOp_char,1,'[');
-    }
+    i = RegxState_ReadStrptrChClass(state, regxparse.input, i+1);
     return true;
 }
 
@@ -648,19 +595,9 @@ static bool SingleCharEscapeQ(char c, char &out) {
 
 // -----------------------------------------------------------------------------
 
-// True when C is a character the default style reads as an operator rather than
-// as itself.
-static bool RegxMetaQ(char c) {
-    return c=='.' || c=='*' || c=='+' || c=='?' || c=='|'
-        || c=='(' || c==')' || c=='[' || c==']'
-        || c=='^' || c=='$' || c=='\\';
-}
-
-// -----------------------------------------------------------------------------
-
-// Read BODY -- an expression already translated to the default style -- as a
-// fixed string with an optional ".*" at either end, and return the string
-// through LIT.  BEG and END report whether a ".*" stood at that end.
+// Read BODY -- an expression in the canonical form, where every bare punctuation
+// character is an operator -- as a fixed string with an optional ".*" at either
+// end, and return the string through LIT.  BEG and END report whether a ".*" stood at that end.
 // Most expressions this codebase compiles have this shape: an acr or sql
 // pattern is a piece of text with % where anything may go, so "%Regx%" arrives
 // here as ".*Regx.*" and reduces to a search for four characters.  Recognizing
@@ -684,7 +621,7 @@ static bool FixedStringQ(algo::strptr body, algo::cstring &lit, bool &beg, bool 
         } else if (c=='\\' && i+1 < n && SingleCharEscapeQ(body[i+1],single)) {
             lit << single;
             i += 2;
-        } else if (RegxMetaQ(c)) {
+        } else if (algo_lib::RegxPunctQ(c)) {
             ret = false;
         } else {
             lit << c;
@@ -823,7 +760,7 @@ static void Parse(algo_lib::RegxParse &regxparse) {
         }
         if (!processed) {// don't know what to do with this char -- take it verbatim
             Reduce(regxparse,algo_lib_RegxToken_type_expr);
-            NewExprState(regxparse,algo_lib::RegxOp(algo_lib_RegxOp_char,1,c));
+            NewExprState(regxparse,algo_lib::RegxOp(algo_lib_RegxOp_char,1,u8(c)));
         }
         if (trace_Get(regx.flags)) {
             TraceParse(regxparse,i,0);
@@ -1125,6 +1062,15 @@ algo::i32_Range algo_lib::Regx_Find(algo_lib::Regx &regx, algo::strptr text, int
 
 // -----------------------------------------------------------------------------
 
+// Compile INPUT, a pattern of regx style STYLE, into REGX.  FULL makes the
+// pattern match a whole subject, and a pattern read without it matches any part.
+// The pattern passes through the two translators amc writes from amcdb: the
+// rewrite of its style into the default syntax, and the normalizer, which
+// escapes every character that means itself and settles each malformed shape.
+// A browser runs the same two translators in TypeScript (ts/gen/algo_lib_regx.ts),
+// so the pattern compiled here and the RegExp built there match the same strings.
+// A pattern the normalizer finds invalid, such as one with an unclosed group,
+// leaves REGX marked invalid, and it matches nothing.
 void algo_lib::Regx_ReadStyle(algo_lib::Regx &regx, algo::strptr input, algo_lib::RegxStyle style, bool full) {
     valid_Set(regx.flags,true);
     literal_Set(regx.flags,false);
@@ -1139,8 +1085,14 @@ void algo_lib::Regx_ReadStyle(algo_lib::Regx &regx, algo::strptr input, algo_lib
         literal_Set(regx.flags,full);
         SetFixed(regx,input,false,false,full);
     } else {
+        tempstr dflt;
+        RegxRewrite(input,style,dflt);
         tempstr body;
-        RewriteRegx(input,style,body);
+        valid_Set(regx.flags,RegxNormalize(dflt,body));
+        if (!valid_Get(regx.flags)) {
+            // an invalid pattern compiles to an empty class, which matches nothing
+            body = "[]";
+        }
         tempstr lit;
         bool beg = false;
         bool end = false;
@@ -1273,121 +1225,4 @@ tempstr algo_lib::ToDbgString(algo_lib::RegxParse &regxparse) {
         out<<"expr #"<<ind_curs(expr).index<<": "<<algo_lib::ToDbgString(&expr)<<eol;
     }ind_end;
     return out;
-}
-
-// -----------------------------------------------------------------------------
-
-// Rewrite string INPUT into OUT (appending to OUT)
-// translating from STYLE to default style.
-static void RewriteRegx(algo::strptr input, algo_lib::RegxStyle style, algo::cstring &out) {
-    switch (style.value) {
-    case algo_lib_RegxStyle_acr: {
-        // % is rewritten as .*
-        // (, ), [, ], _ are passed through
-        // ., *, ?, + are escaped
-        bool escape = false;
-        frep_(i,elems_N(input)) {
-            if (escape) {
-                escape = false;
-                switch(input[i]) {
-                case '%' : out<<"%"           ; break; // \% -> %
-                case '\\':
-                case '(' :
-                case ')' :
-                case '|' :
-                default  : out<<'\\'<<input[i]; break; // \$X -> \$X
-                }
-            } else {
-                switch(input[i]) {
-                case '\\': escape = true           ; break; //
-                case '%' : out<<".*"          ; break; // % -> .*
-                case '.' :
-                case '*' :
-                case '?' :
-                case '^' :
-                case '$' :
-                case '+' : out<<'\\'<<input[i]; break; // + -> \+, etc.
-                case '|' :
-                case '(' :
-                case ')' :
-                case '[' :
-                case ']' : out<<input[i]      ; break; // + -> \+
-                default  : out<<input[i]      ; break; // $X -> $X
-                }
-            }
-        }
-    }break;
-    case algo_lib_RegxStyle_sql: {
-        // % is rewritten as .*
-        // _ is rewritten as .
-        // (, ), [, ] are passed through
-        // ., *, ?, + are escaped
-        bool escape = false;
-        frep_(i,elems_N(input)) {
-            if (escape) {
-                escape = false;
-                switch(input[i]) {
-                case '%' : out<<"%"           ; break; // \% -> %
-                case '_' : out<<"_"           ; break; // \_ -> _
-                case '\\': out<<'\\'<<input[i]; break; // \\ -> \\ ...
-                case '(' : out<<'\\'<<input[i]; break; // \( -> \(
-                case ')' : out<<'\\'<<input[i]; break; // \) -> \)
-                case '|' : out<<'\\'<<input[i]; break; // \| -> \|
-                default  : out<<'\\'<<input[i]; break; // \$X -> \$X
-                }
-            } else {
-                switch(input[i]) {
-                case '\\': escape = true           ; break; //
-                case '%' : out<<".*"          ; break; // % -> .*
-                case '_' : out<<"."           ; break; // _ -> .
-                case '.' :
-                case '*' :
-                case '?' :
-                case '^' :
-                case '$' :
-                case '+' : out<<'\\'<<input[i]; break; // + -> \+, etc.
-                case '|' :
-                case '(' :
-                case ')' :
-                case '[' :
-                case ']' : out<<input[i]      ; break; // + -> \+
-                default  : out<<input[i]      ; break; // $X -> $X
-                }
-            }
-        }
-    }break;
-    case algo_lib_RegxStyle_shell: {
-        // * -> .*
-        // ? -> .?
-        // All other regx chars are escaped away
-        frep_(i,elems_N(input)) {
-            switch(input[i]) {
-            case '*':
-                out<<".*";
-                break;
-            case '?':
-                out<<".?";
-                break;
-            case '.':
-            case '\\':
-            case '[':
-            case ']':
-            case '(':
-            case ')':
-            case '^':// anchors
-            case '$':
-                out<<'\\'<<input[i];
-                break;
-            default:
-                out<<input[i];
-            }
-        }
-    }break;
-    case algo_lib_RegxStyle_literal: {
-        out << input;
-    }break;
-    case algo_lib_RegxStyle_default: {
-        out << input;
-    }break;
-    }
 }

@@ -22,6 +22,7 @@
 #include "include/gen/algo_gen.inl.h"
 #include "include/gen/command_gen.inl.h"
 #include "include/gen/report_gen.inl.h"
+#include "include/gen/amcdb_gen.inl.h"
 #include "include/gen/atfdb_gen.inl.h"
 #include "include/gen/lib_exec_gen.inl.h"
 //#pragma endinclude
@@ -316,6 +317,48 @@ inline atf_unit::FMsg& atf_unit::msg_AllocVarlen(algo::aryptr<u8> msg) {
     return msg_AllocExtra(msg.elems, msg.n_elems * sizeof(u8));
 }
 
+// --- atf_unit.FDb.regxcase.EmptyQ
+// Return true if index is empty
+inline bool atf_unit::regxcase_EmptyQ() {
+    return _db.regxcase_n == 0;
+}
+
+// --- atf_unit.FDb.regxcase.Find
+// Look up row by row id. Return NULL if out of range
+inline atf_unit::FRegxcase* atf_unit::regxcase_Find(u64 t) {
+    atf_unit::FRegxcase *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.regxcase_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.regxcase_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- atf_unit.FDb.regxcase.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline atf_unit::FRegxcase* atf_unit::regxcase_Last() {
+    return regxcase_Find(u64(_db.regxcase_n-1));
+}
+
+// --- atf_unit.FDb.regxcase.N
+// Return number of items in the pool
+inline i64 atf_unit::regxcase_N() {
+    return _db.regxcase_n;
+}
+
+// --- atf_unit.FDb.regxcase.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline atf_unit::FRegxcase& atf_unit::regxcase_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.regxcase_lary[bsr][index];
+}
+
 // --- atf_unit.FDb.tr_number_curs.Reset
 // cursor points to valid item
 inline void atf_unit::_db_tr_number_curs_Reset(_db_tr_number_curs &curs, atf_unit::FDb& ) {
@@ -363,6 +406,31 @@ inline void atf_unit::_db_unittest_curs_Next(_db_unittest_curs &curs) {
 // item access
 inline atf_unit::FUnittest& atf_unit::_db_unittest_curs_Access(_db_unittest_curs &curs) {
     return unittest_qFind(u64(curs.index));
+}
+
+// --- atf_unit.FDb.regxcase_curs.Reset
+// cursor points to valid item
+inline void atf_unit::_db_regxcase_curs_Reset(_db_regxcase_curs &curs, atf_unit::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- atf_unit.FDb.regxcase_curs.ValidQ
+// cursor points to valid item
+inline bool atf_unit::_db_regxcase_curs_ValidQ(_db_regxcase_curs &curs) {
+    return curs.index < _db.regxcase_n;
+}
+
+// --- atf_unit.FDb.regxcase_curs.Next
+// proceed to next item
+inline void atf_unit::_db_regxcase_curs_Next(_db_regxcase_curs &curs) {
+    curs.index++;
+}
+
+// --- atf_unit.FDb.regxcase_curs.Access
+// item access
+inline atf_unit::FRegxcase& atf_unit::_db_regxcase_curs_Access(_db_regxcase_curs &curs) {
+    return regxcase_qFind(u64(curs.index));
 }
 
 // --- atf_unit.FMsg.msg.N
@@ -822,6 +890,18 @@ inline  atf_unit::FPerfSort::~FPerfSort() {
     atf_unit::FPerfSort_Uninit(*this);
 }
 
+// --- atf_unit.FRegxcase..Init
+// Set all fields to initial values.
+inline void atf_unit::FRegxcase_Init(atf_unit::FRegxcase& parent) {
+    parent.full = bool(true);
+    parent.match = bool(false);
+}
+
+// --- atf_unit.FRegxcase..Ctor
+inline  atf_unit::FRegxcase::FRegxcase() {
+    atf_unit::FRegxcase_Init(*this);
+}
+
 // --- atf_unit.FUnittest.step.Call
 // Invoke function by pointer
 inline void atf_unit::step_Call(atf_unit::FUnittest& parent) {
@@ -1001,6 +1081,45 @@ inline  atf_unit::JsonAry::~JsonAry() {
 inline  atf_unit::JsonAry::JsonAry(const atf_unit::JsonAry &rhs) {
     name_n = 0; // name: initialize count
     name_Setary(*this, name_Getary(const_cast<atf_unit::JsonAry&>(rhs)));
+}
+
+// --- atf_unit.TableId.value.GetEnum
+// Get value of field as enum type
+inline atf_unit_TableIdEnum atf_unit::value_GetEnum(const atf_unit::TableId& parent) {
+    return atf_unit_TableIdEnum(parent.value);
+}
+
+// --- atf_unit.TableId.value.SetEnum
+// Set value of field from enum type.
+inline void atf_unit::value_SetEnum(atf_unit::TableId& parent, atf_unit_TableIdEnum rhs) {
+    parent.value = i32(rhs);
+}
+
+// --- atf_unit.TableId.value.Cast
+inline  atf_unit::TableId::operator atf_unit_TableIdEnum() const {
+    return atf_unit_TableIdEnum((*this).value);
+}
+
+// --- atf_unit.TableId..Init
+// Set all fields to initial values.
+inline void atf_unit::TableId_Init(atf_unit::TableId& parent) {
+    parent.value = i32(-1);
+}
+
+// --- atf_unit.TableId..Ctor
+inline  atf_unit::TableId::TableId() {
+    atf_unit::TableId_Init(*this);
+}
+
+// --- atf_unit.TableId..FieldwiseCtor
+inline  atf_unit::TableId::TableId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- atf_unit.TableId..EnumCtor
+inline  atf_unit::TableId::TableId(atf_unit_TableIdEnum arg) {
+    this->value = i32(arg);
 }
 
 // --- atf_unit.TypeA..Hash
@@ -1377,6 +1496,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const atf_unit::FUni
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const atf_unit::FieldId &row) {// cfmt:atf_unit.FieldId.String
     atf_unit::FieldId_Print(const_cast<atf_unit::FieldId&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const atf_unit::TableId &row) {// cfmt:atf_unit.TableId.String
+    atf_unit::TableId_Print(const_cast<atf_unit::TableId&>(row), str);
     return str;
 }
 

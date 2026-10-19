@@ -1,3 +1,4 @@
+// Copyright (C) 2026 AlgoX2 Corp
 // Copyright (C) 2024 AlgoRND
 //
 // License: Apache
@@ -83,13 +84,13 @@ static void ComputeSysincl() {
         tempstr text;
         if (compiler_Get(builddir) == dev_Compiler_compiler_cl) {
             text = tempstr() << "#include <...>\n"
-                             << algo::SysEval("cygpath -u -p \"\\$INCLUDE\"",FailokQ(true),1024*1024)
+                             << algo::SysEval("cygpath -u -p \"\\$INCLUDE\"",FailokQ(true))
                              << "\n"
                              << "End of search list\n";
         } else {
             tempstr cmd;
             cmd << compiler_Get(builddir) << " -x c++ -E -v - </dev/null 2>&1";
-            text = SysEval(cmd,FailokQ(true),1024*1024);
+            text = SysEval(cmd,FailokQ(true));
         }
         // parse it for the paths...
         bool inside = false;

@@ -1325,6 +1325,48 @@ inline i32 acr_compl::ind_floadtuples_N() {
     return _db.ind_floadtuples_n;
 }
 
+// --- acr_compl.FDb.fcompldir.EmptyQ
+// Return true if index is empty
+inline bool acr_compl::fcompldir_EmptyQ() {
+    return _db.fcompldir_n == 0;
+}
+
+// --- acr_compl.FDb.fcompldir.Find
+// Look up row by row id. Return NULL if out of range
+inline acr_compl::FFcompldir* acr_compl::fcompldir_Find(u64 t) {
+    acr_compl::FFcompldir *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.fcompldir_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.fcompldir_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- acr_compl.FDb.fcompldir.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline acr_compl::FFcompldir* acr_compl::fcompldir_Last() {
+    return fcompldir_Find(u64(_db.fcompldir_n-1));
+}
+
+// --- acr_compl.FDb.fcompldir.N
+// Return number of items in the pool
+inline i64 acr_compl::fcompldir_N() {
+    return _db.fcompldir_n;
+}
+
+// --- acr_compl.FDb.fcompldir.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline acr_compl::FFcompldir& acr_compl::fcompldir_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.fcompldir_lary[bsr][index];
+}
+
 // --- acr_compl.FDb.word_curs.Next
 // proceed to next item
 inline void acr_compl::_db_word_curs_Next(_db_word_curs &curs) {
@@ -1762,6 +1804,31 @@ inline acr_compl::FFloadtuples& acr_compl::_db_floadtuples_curs_Access(_db_fload
     return floadtuples_qFind(u64(curs.index));
 }
 
+// --- acr_compl.FDb.fcompldir_curs.Reset
+// cursor points to valid item
+inline void acr_compl::_db_fcompldir_curs_Reset(_db_fcompldir_curs &curs, acr_compl::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- acr_compl.FDb.fcompldir_curs.ValidQ
+// cursor points to valid item
+inline bool acr_compl::_db_fcompldir_curs_ValidQ(_db_fcompldir_curs &curs) {
+    return curs.index < _db.fcompldir_n;
+}
+
+// --- acr_compl.FDb.fcompldir_curs.Next
+// proceed to next item
+inline void acr_compl::_db_fcompldir_curs_Next(_db_fcompldir_curs &curs) {
+    curs.index++;
+}
+
+// --- acr_compl.FDb.fcompldir_curs.Access
+// item access
+inline acr_compl::FFcompldir& acr_compl::_db_fcompldir_curs_Access(_db_fcompldir_curs &curs) {
+    return fcompldir_qFind(u64(curs.index));
+}
+
 // --- acr_compl.FFalias..Init
 // Set all fields to initial values.
 inline void acr_compl::FFalias_Init(acr_compl::FFalias& parent) {
@@ -1777,6 +1844,22 @@ inline  acr_compl::FFalias::FFalias() {
 // --- acr_compl.FFalias..Dtor
 inline  acr_compl::FFalias::~FFalias() {
     acr_compl::FFalias_Uninit(*this);
+}
+
+// --- acr_compl.FFcompldir..Init
+// Set all fields to initial values.
+inline void acr_compl::FFcompldir_Init(acr_compl::FFcompldir& parent) {
+    parent.dir = algo::strptr("");
+}
+
+// --- acr_compl.FFcompldir..Ctor
+inline  acr_compl::FFcompldir::FFcompldir() {
+    acr_compl::FFcompldir_Init(*this);
+}
+
+// --- acr_compl.FFcompldir..Dtor
+inline  acr_compl::FFcompldir::~FFcompldir() {
+    acr_compl::FFcompldir_Uninit(*this);
 }
 
 // --- acr_compl.FFconst..Init
@@ -1907,6 +1990,26 @@ inline void acr_compl::c_fflag_Remove(acr_compl::FField& parent, acr_compl::FFfl
     acr_compl::FFflag *ptr = parent.c_fflag;
     if (LIKELY(ptr == &row)) {
         parent.c_fflag = NULL;
+    }
+}
+
+// --- acr_compl.FField.c_fcompldir.InsertMaybe
+// Insert row into pointer index. Return final membership status.
+inline bool acr_compl::c_fcompldir_InsertMaybe(acr_compl::FField& parent, acr_compl::FFcompldir& row) {
+    acr_compl::FFcompldir* ptr = parent.c_fcompldir;
+    bool retval = (ptr == NULL) | (ptr == &row);
+    if (retval) {
+        parent.c_fcompldir = &row;
+    }
+    return retval;
+}
+
+// --- acr_compl.FField.c_fcompldir.Remove
+// Remove element from index. If element is not in index, do nothing.
+inline void acr_compl::c_fcompldir_Remove(acr_compl::FField& parent, acr_compl::FFcompldir& row) {
+    acr_compl::FFcompldir *ptr = parent.c_fcompldir;
+    if (LIKELY(ptr == &row)) {
+        parent.c_fcompldir = NULL;
     }
 }
 

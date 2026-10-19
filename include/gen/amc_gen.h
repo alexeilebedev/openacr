@@ -363,45 +363,53 @@ enum amc_TableIdEnum {                            // amc.TableId.value
     ,amc_TableId_dmmeta_pnew              = 94    // dmmeta.pnew -> amc.FPnew
     ,amc_TableId_dmmeta_Ptrary            = 95    // dmmeta.Ptrary -> amc.FPtrary
     ,amc_TableId_dmmeta_ptrary            = 95    // dmmeta.ptrary -> amc.FPtrary
-    ,amc_TableId_dmmeta_Rowid             = 96    // dmmeta.Rowid -> amc.FRowid
-    ,amc_TableId_dmmeta_rowid             = 96    // dmmeta.rowid -> amc.FRowid
-    ,amc_TableId_dmmeta_Smallstr          = 97    // dmmeta.Smallstr -> amc.FSmallstr
-    ,amc_TableId_dmmeta_smallstr          = 97    // dmmeta.smallstr -> amc.FSmallstr
-    ,amc_TableId_dmmeta_Sortfld           = 98    // dmmeta.Sortfld -> amc.FSortfld
-    ,amc_TableId_dmmeta_sortfld           = 98    // dmmeta.sortfld -> amc.FSortfld
-    ,amc_TableId_dmmeta_Ssimfile          = 99    // dmmeta.Ssimfile -> amc.FSsimfile
-    ,amc_TableId_dmmeta_ssimfile          = 99    // dmmeta.ssimfile -> amc.FSsimfile
-    ,amc_TableId_dmmeta_Ssimsort          = 100   // dmmeta.Ssimsort -> amc.FSsimsort
-    ,amc_TableId_dmmeta_ssimsort          = 100   // dmmeta.ssimsort -> amc.FSsimsort
-    ,amc_TableId_dmmeta_Ssimvolatile      = 101   // dmmeta.Ssimvolatile -> amc.FSsimvolatile
-    ,amc_TableId_dmmeta_ssimvolatile      = 101   // dmmeta.ssimvolatile -> amc.FSsimvolatile
-    ,amc_TableId_amcdb_Stepband           = 102   // amcdb.Stepband -> amc.FStepband
-    ,amc_TableId_amcdb_stepband           = 102   // amcdb.stepband -> amc.FStepband
-    ,amc_TableId_dmmeta_Steptype          = 103   // dmmeta.Steptype -> amc.FSteptype
-    ,amc_TableId_dmmeta_steptype          = 103   // dmmeta.steptype -> amc.FSteptype
-    ,amc_TableId_dmmeta_Substr            = 104   // dmmeta.Substr -> amc.FSubstr
-    ,amc_TableId_dmmeta_substr            = 104   // dmmeta.substr -> amc.FSubstr
-    ,amc_TableId_dev_Targdep              = 105   // dev.Targdep -> amc.FTargdep
-    ,amc_TableId_dev_targdep              = 105   // dev.targdep -> amc.FTargdep
-    ,amc_TableId_dev_Target               = 106   // dev.Target -> amc.FTarget
-    ,amc_TableId_dev_target               = 106   // dev.target -> amc.FTarget
-    ,amc_TableId_dmmeta_Tary              = 107   // dmmeta.Tary -> amc.FTary
-    ,amc_TableId_dmmeta_tary              = 107   // dmmeta.tary -> amc.FTary
-    ,amc_TableId_amcdb_Tcurs              = 108   // amcdb.Tcurs -> amc.FTcurs
-    ,amc_TableId_amcdb_tcurs              = 108   // amcdb.tcurs -> amc.FTcurs
-    ,amc_TableId_dmmeta_Thash             = 109   // dmmeta.Thash -> amc.FThash
-    ,amc_TableId_dmmeta_thash             = 109   // dmmeta.thash -> amc.FThash
-    ,amc_TableId_dmmeta_Trie              = 110   // dmmeta.Trie -> amc.FTrie
-    ,amc_TableId_dmmeta_trie              = 110   // dmmeta.trie -> amc.FTrie
-    ,amc_TableId_dmmeta_Typefld           = 111   // dmmeta.Typefld -> amc.FTypefld
-    ,amc_TableId_dmmeta_typefld           = 111   // dmmeta.typefld -> amc.FTypefld
-    ,amc_TableId_dmmeta_Usertracefld      = 112   // dmmeta.Usertracefld -> amc.FUsertracefld
-    ,amc_TableId_dmmeta_usertracefld      = 112   // dmmeta.usertracefld -> amc.FUsertracefld
-    ,amc_TableId_dmmeta_Xref              = 113   // dmmeta.Xref -> amc.FXref
-    ,amc_TableId_dmmeta_xref              = 113   // dmmeta.xref -> amc.FXref
+    ,amc_TableId_amcdb_Regxlenient        = 96    // amcdb.Regxlenient -> amc.FRegxlenient
+    ,amc_TableId_amcdb_regxlenient        = 96    // amcdb.regxlenient -> amc.FRegxlenient
+    ,amc_TableId_amcdb_Regxmacro          = 97    // amcdb.Regxmacro -> amc.FRegxmacro
+    ,amc_TableId_amcdb_regxmacro          = 97    // amcdb.regxmacro -> amc.FRegxmacro
+    ,amc_TableId_amcdb_Regxrule           = 98    // amcdb.Regxrule -> amc.FRegxrule
+    ,amc_TableId_amcdb_regxrule           = 98    // amcdb.regxrule -> amc.FRegxrule
+    ,amc_TableId_amcdb_Regxstyle          = 99    // amcdb.Regxstyle -> amc.FRegxstyle
+    ,amc_TableId_amcdb_regxstyle          = 99    // amcdb.regxstyle -> amc.FRegxstyle
+    ,amc_TableId_dmmeta_Rowid             = 100   // dmmeta.Rowid -> amc.FRowid
+    ,amc_TableId_dmmeta_rowid             = 100   // dmmeta.rowid -> amc.FRowid
+    ,amc_TableId_dmmeta_Smallstr          = 101   // dmmeta.Smallstr -> amc.FSmallstr
+    ,amc_TableId_dmmeta_smallstr          = 101   // dmmeta.smallstr -> amc.FSmallstr
+    ,amc_TableId_dmmeta_Sortfld           = 102   // dmmeta.Sortfld -> amc.FSortfld
+    ,amc_TableId_dmmeta_sortfld           = 102   // dmmeta.sortfld -> amc.FSortfld
+    ,amc_TableId_dmmeta_Ssimfile          = 103   // dmmeta.Ssimfile -> amc.FSsimfile
+    ,amc_TableId_dmmeta_ssimfile          = 103   // dmmeta.ssimfile -> amc.FSsimfile
+    ,amc_TableId_dmmeta_Ssimsort          = 104   // dmmeta.Ssimsort -> amc.FSsimsort
+    ,amc_TableId_dmmeta_ssimsort          = 104   // dmmeta.ssimsort -> amc.FSsimsort
+    ,amc_TableId_dmmeta_Ssimvolatile      = 105   // dmmeta.Ssimvolatile -> amc.FSsimvolatile
+    ,amc_TableId_dmmeta_ssimvolatile      = 105   // dmmeta.ssimvolatile -> amc.FSsimvolatile
+    ,amc_TableId_amcdb_Stepband           = 106   // amcdb.Stepband -> amc.FStepband
+    ,amc_TableId_amcdb_stepband           = 106   // amcdb.stepband -> amc.FStepband
+    ,amc_TableId_dmmeta_Steptype          = 107   // dmmeta.Steptype -> amc.FSteptype
+    ,amc_TableId_dmmeta_steptype          = 107   // dmmeta.steptype -> amc.FSteptype
+    ,amc_TableId_dmmeta_Substr            = 108   // dmmeta.Substr -> amc.FSubstr
+    ,amc_TableId_dmmeta_substr            = 108   // dmmeta.substr -> amc.FSubstr
+    ,amc_TableId_dev_Targdep              = 109   // dev.Targdep -> amc.FTargdep
+    ,amc_TableId_dev_targdep              = 109   // dev.targdep -> amc.FTargdep
+    ,amc_TableId_dev_Target               = 110   // dev.Target -> amc.FTarget
+    ,amc_TableId_dev_target               = 110   // dev.target -> amc.FTarget
+    ,amc_TableId_dmmeta_Tary              = 111   // dmmeta.Tary -> amc.FTary
+    ,amc_TableId_dmmeta_tary              = 111   // dmmeta.tary -> amc.FTary
+    ,amc_TableId_amcdb_Tcurs              = 112   // amcdb.Tcurs -> amc.FTcurs
+    ,amc_TableId_amcdb_tcurs              = 112   // amcdb.tcurs -> amc.FTcurs
+    ,amc_TableId_dmmeta_Thash             = 113   // dmmeta.Thash -> amc.FThash
+    ,amc_TableId_dmmeta_thash             = 113   // dmmeta.thash -> amc.FThash
+    ,amc_TableId_dmmeta_Trie              = 114   // dmmeta.Trie -> amc.FTrie
+    ,amc_TableId_dmmeta_trie              = 114   // dmmeta.trie -> amc.FTrie
+    ,amc_TableId_dmmeta_Typefld           = 115   // dmmeta.Typefld -> amc.FTypefld
+    ,amc_TableId_dmmeta_typefld           = 115   // dmmeta.typefld -> amc.FTypefld
+    ,amc_TableId_dmmeta_Usertracefld      = 116   // dmmeta.Usertracefld -> amc.FUsertracefld
+    ,amc_TableId_dmmeta_usertracefld      = 116   // dmmeta.usertracefld -> amc.FUsertracefld
+    ,amc_TableId_dmmeta_Xref              = 117   // dmmeta.Xref -> amc.FXref
+    ,amc_TableId_dmmeta_xref              = 117   // dmmeta.xref -> amc.FXref
 };
 
-enum { amc_TableIdEnum_N = 228 };
+enum { amc_TableIdEnum_N = 236 };
 
 namespace amc { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
@@ -543,6 +551,10 @@ namespace dmmeta { struct Pnew; }
 namespace dmmeta { struct Ptrary; }
 namespace dmmeta { struct Reftype; }
 namespace amc { struct FTclass; }
+namespace amcdb { struct Regxlenient; }
+namespace amcdb { struct Regxmacro; }
+namespace amcdb { struct Regxrule; }
+namespace amcdb { struct Regxstyle; }
 namespace dmmeta { struct Rowid; }
 namespace dmmeta { struct Smallstr; }
 namespace dmmeta { struct Sortfld; }
@@ -736,6 +748,10 @@ namespace amc { struct _db_ctypelang_curs; }
 namespace amc { struct _db_trie_curs; }
 namespace amc { struct _db_cppsym_curs; }
 namespace amc { struct _db_bheap_curs; }
+namespace amc { struct _db_regxstyle_curs; }
+namespace amc { struct _db_regxlenient_curs; }
+namespace amc { struct _db_regxrule_curs; }
+namespace amc { struct _db_regxmacro_curs; }
 namespace amc { struct dispatch_c_dispatch_msg_curs; }
 namespace amc { struct dispatch_c_displang_curs; }
 namespace amc { struct enumstr_c_fconst_curs; }
@@ -769,6 +785,7 @@ namespace amc { struct ns_c_gsymbol_curs; }
 namespace amc { struct ns_c_nsinclude_curs; }
 namespace amc { struct pmaskfld_c_pmaskfld_member_curs; }
 namespace amc { struct reftype_zs_fprefix_curs; }
+namespace amc { struct regxstyle_c_regxrule_curs; }
 namespace amc { struct target_c_targdep_curs; }
 namespace amc { struct BltinId; }
 namespace amc { struct CppkeywordId; }
@@ -876,6 +893,10 @@ namespace amc { struct FPbtype; }
 namespace amc { struct FPmaskfldMember; }
 namespace amc { struct FPnew; }
 namespace amc { struct FPtrary; }
+namespace amc { struct FRegxlenient; }
+namespace amc { struct FRegxmacro; }
+namespace amc { struct FRegxrule; }
+namespace amc { struct FRegxstyle; }
 namespace amc { struct FRowid; }
 namespace amc { struct FSmallstr; }
 namespace amc { struct FSortfld; }
@@ -1128,10 +1149,10 @@ private:
     friend void                 anonfld_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc.FAnonfld.msghdr.CopyOut
+// func:amc.FAnonfld.base.CopyOut
 void                 anonfld_CopyOut(amc::FAnonfld &row, dmmeta::Anonfld &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc.FAnonfld.msghdr.CopyIn
+// func:amc.FAnonfld.base.CopyIn
 void                 anonfld_CopyIn(amc::FAnonfld &row, dmmeta::Anonfld &in) __attribute__((nothrow));
 
 // Set all fields to initial values.
@@ -1277,10 +1298,10 @@ private:
     friend void                 bitfld_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc.FBitfld.msghdr.CopyOut
+// func:amc.FBitfld.base.CopyOut
 void                 bitfld_CopyOut(amc::FBitfld &row, dmmeta::Bitfld &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc.FBitfld.msghdr.CopyIn
+// func:amc.FBitfld.base.CopyIn
 void                 bitfld_CopyIn(amc::FBitfld &row, dmmeta::Bitfld &in) __attribute__((nothrow));
 
 // func:amc.FBitfld.name.Get
@@ -1326,10 +1347,10 @@ private:
     friend void                 blkhash_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc.FBlkhash.msghdr.CopyOut
+// func:amc.FBlkhash.base.CopyOut
 void                 blkhash_CopyOut(amc::FBlkhash &row, dmmeta::Blkhash &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc.FBlkhash.msghdr.CopyIn
+// func:amc.FBlkhash.base.CopyIn
 void                 blkhash_CopyIn(amc::FBlkhash &row, dmmeta::Blkhash &in) __attribute__((nothrow));
 
 // Set all fields to initial values.
@@ -1365,10 +1386,10 @@ private:
     friend void                 bltin_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc.FBltin.msghdr.CopyOut
+// func:amc.FBltin.base.CopyOut
 void                 bltin_CopyOut(amc::FBltin &row, amcdb::Bltin &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc.FBltin.msghdr.CopyIn
+// func:amc.FBltin.base.CopyIn
 void                 bltin_CopyIn(amc::FBltin &row, amcdb::Bltin &in) __attribute__((nothrow));
 
 // Set all fields to initial values.
@@ -1403,10 +1424,10 @@ private:
     friend void                 cafter_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc.FCafter.msghdr.CopyOut
+// func:amc.FCafter.base.CopyOut
 void                 cafter_CopyOut(amc::FCafter &row, dmmeta::Cafter &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc.FCafter.msghdr.CopyIn
+// func:amc.FCafter.base.CopyIn
 void                 cafter_CopyIn(amc::FCafter &row, dmmeta::Cafter &in) __attribute__((nothrow));
 
 // func:amc.FCafter.ctype.Get
@@ -1445,10 +1466,10 @@ private:
     friend void                 cascdel_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc.FCascdel.msghdr.CopyOut
+// func:amc.FCascdel.base.CopyOut
 void                 cascdel_CopyOut(amc::FCascdel &row, dmmeta::Cascdel &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc.FCascdel.msghdr.CopyIn
+// func:amc.FCascdel.base.CopyIn
 void                 cascdel_CopyIn(amc::FCascdel &row, dmmeta::Cascdel &in) __attribute__((nothrow));
 
 // Set all fields to initial values.
@@ -1527,10 +1548,10 @@ private:
     friend void                 ccmp_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc.FCcmp.msghdr.CopyOut
+// func:amc.FCcmp.base.CopyOut
 void                 ccmp_CopyOut(amc::FCcmp &row, dmmeta::Ccmp &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc.FCcmp.msghdr.CopyIn
+// func:amc.FCcmp.base.CopyIn
 void                 ccmp_CopyIn(amc::FCcmp &row, dmmeta::Ccmp &in) __attribute__((nothrow));
 
 // Set all fields to initial values.
@@ -1595,10 +1616,10 @@ private:
     friend void                 cextern_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc.FCextern.msghdr.CopyOut
+// func:amc.FCextern.base.CopyOut
 void                 cextern_CopyOut(amc::FCextern &row, dmmeta::Cextern &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc.FCextern.msghdr.CopyIn
+// func:amc.FCextern.base.CopyIn
 void                 cextern_CopyIn(amc::FCextern &row, dmmeta::Cextern &in) __attribute__((nothrow));
 
 // Set all fields to initial values.
@@ -1677,10 +1698,10 @@ private:
     friend void                 cfmt_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc.FCfmt.msghdr.CopyOut
+// func:amc.FCfmt.base.CopyOut
 void                 cfmt_CopyOut(amc::FCfmt &row, dmmeta::Cfmt &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc.FCfmt.msghdr.CopyIn
+// func:amc.FCfmt.base.CopyIn
 void                 cfmt_CopyIn(amc::FCfmt &row, dmmeta::Cfmt &in) __attribute__((nothrow));
 
 // func:amc.FCfmt.ctype.Get
@@ -1783,10 +1804,10 @@ private:
     friend void                 chash_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc.FChash.msghdr.CopyOut
+// func:amc.FChash.base.CopyOut
 void                 chash_CopyOut(amc::FChash &row, dmmeta::Chash &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc.FChash.msghdr.CopyIn
+// func:amc.FChash.base.CopyIn
 void                 chash_CopyIn(amc::FChash &row, dmmeta::Chash &in) __attribute__((nothrow));
 
 // Set all fields to initial values.
@@ -1961,10 +1982,10 @@ private:
     friend void                 cppfunc_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc.FCppfunc.msghdr.CopyOut
+// func:amc.FCppfunc.base.CopyOut
 void                 cppfunc_CopyOut(amc::FCppfunc &row, dmmeta::Cppfunc &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc.FCppfunc.msghdr.CopyIn
+// func:amc.FCppfunc.base.CopyIn
 void                 cppfunc_CopyIn(amc::FCppfunc &row, dmmeta::Cppfunc &in) __attribute__((nothrow));
 
 // Set all fields to initial values.
@@ -2042,10 +2063,10 @@ private:
     friend void                 cpptype_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc.FCpptype.msghdr.CopyOut
+// func:amc.FCpptype.base.CopyOut
 void                 cpptype_CopyOut(amc::FCpptype &row, dmmeta::Cpptype &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc.FCpptype.msghdr.CopyIn
+// func:amc.FCpptype.base.CopyIn
 void                 cpptype_CopyIn(amc::FCpptype &row, dmmeta::Cpptype &in) __attribute__((nothrow));
 
 // Set all fields to initial values.
@@ -2077,10 +2098,10 @@ private:
     friend void                 csize_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc.FCsize.msghdr.CopyOut
+// func:amc.FCsize.base.CopyOut
 void                 csize_CopyOut(amc::FCsize &row, dmmeta::Csize &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc.FCsize.msghdr.CopyIn
+// func:amc.FCsize.base.CopyIn
 void                 csize_CopyIn(amc::FCsize &row, dmmeta::Csize &in) __attribute__((nothrow));
 
 // Set all fields to initial values.
@@ -2111,10 +2132,10 @@ private:
     friend void                 cstr_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc.FCstr.msghdr.CopyOut
+// func:amc.FCstr.base.CopyOut
 void                 cstr_CopyOut(amc::FCstr &row, dmmeta::Cstr &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc.FCstr.msghdr.CopyIn
+// func:amc.FCstr.base.CopyIn
 void                 cstr_CopyIn(amc::FCstr &row, dmmeta::Cstr &in) __attribute__((nothrow));
 
 // Set all fields to initial values.
@@ -2374,10 +2395,10 @@ private:
     friend void                 ctype_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc.FCtype.msghdr.CopyOut
+// func:amc.FCtype.base.CopyOut
 void                 ctype_CopyOut(amc::FCtype &row, dmmeta::Ctype &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc.FCtype.msghdr.CopyIn
+// func:amc.FCtype.base.CopyIn
 void                 ctype_CopyIn(amc::FCtype &row, dmmeta::Ctype &in) __attribute__((nothrow));
 
 // func:amc.FCtype.ns.Get
@@ -3651,10 +3672,10 @@ struct FTclass { // amc.FTclass
     inline               FTclass(const amc::FTclass &rhs) = delete;
 };
 // Copy fields out of row
-// func:amc.FTclass.msghdr.CopyOut
+// func:amc.FTclass.base.CopyOut
 void                 tclass_CopyOut(amc::FTclass &row, amcdb::Tclass &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc.FTclass.msghdr.CopyIn
+// func:amc.FTclass.base.CopyIn
 void                 tclass_CopyIn(amc::FTclass &row, amcdb::Tclass &in) __attribute__((nothrow));
 
 // Return true if index is empty
@@ -3699,7 +3720,7 @@ inline amc::FTfunc&  c_tfunc_qLast(amc::FTclass& parent) __attribute__((nothrow)
 
 // Invoke function by pointer
 // func:amc.FTclass.step.Call
-inline void          step_Call(amc::FTclass& parent) __attribute__((nothrow));
+inline void          step_Call(amc::FTclass& parent);
 
 // Return true if index is empty
 // func:amc.FTclass.c_tcond.EmptyQ
@@ -4252,6 +4273,20 @@ struct FDb { // amc.FDb: In-memory database for amc
     bool                        proj_refuse;                                //   false  A check refused the schema, so no language emitter writes a module
     amc::FBheap*                bheap_lary[36];                             // level array
     i64                         bheap_n;                                    // number of elements in array
+    amc::FRegxstyle*            regxstyle_lary[36];                         // level array
+    i64                         regxstyle_n;                                // number of elements in array
+    amc::FRegxstyle**           ind_regxstyle_buckets_elems;                // pointer to bucket array
+    i32                         ind_regxstyle_buckets_n;                    // number of elements in bucket array
+    i32                         ind_regxstyle_n;                            // number of elements in the hash table
+    amc::FRegxlenient*          regxlenient_lary[36];                       // level array
+    i64                         regxlenient_n;                              // number of elements in array
+    amc::FRegxlenient**         ind_regxlenient_buckets_elems;              // pointer to bucket array
+    i32                         ind_regxlenient_buckets_n;                  // number of elements in bucket array
+    i32                         ind_regxlenient_n;                          // number of elements in the hash table
+    amc::FRegxrule*             regxrule_lary[36];                          // level array
+    i64                         regxrule_n;                                 // number of elements in array
+    amc::FRegxmacro*            regxmacro_lary[36];                         // level array
+    i64                         regxmacro_n;                                // number of elements in array
     amc::trace                  trace;                                      //
 };
 // Free block of memory previously returned by Lpool.
@@ -11330,6 +11365,222 @@ inline amc::FBheap&  bheap_qFind(u64 t) __attribute__((nothrow, pure));
 // func:amc.FDb.bheap.XrefMaybe
 bool                 bheap_XrefMaybe(amc::FBheap &row);
 
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:amc.FDb.regxstyle.Alloc
+amc::FRegxstyle&     regxstyle_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:amc.FDb.regxstyle.AllocMaybe
+amc::FRegxstyle*     regxstyle_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:amc.FDb.regxstyle.InsertMaybe
+amc::FRegxstyle*     regxstyle_InsertMaybe(const amcdb::Regxstyle &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+// func:amc.FDb.regxstyle.AllocMem
+void*                regxstyle_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:amc.FDb.regxstyle.EmptyQ
+inline bool          regxstyle_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+// func:amc.FDb.regxstyle.Find
+inline amc::FRegxstyle* regxstyle_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+// func:amc.FDb.regxstyle.Last
+inline amc::FRegxstyle* regxstyle_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+// func:amc.FDb.regxstyle.N
+inline i64           regxstyle_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+// func:amc.FDb.regxstyle.RemoveAll
+void                 regxstyle_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:amc.FDb.regxstyle.RemoveLast
+void                 regxstyle_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:amc.FDb.regxstyle.qFind
+inline amc::FRegxstyle& regxstyle_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:amc.FDb.regxstyle.XrefMaybe
+bool                 regxstyle_XrefMaybe(amc::FRegxstyle &row);
+
+// Return true if hash is empty
+// func:amc.FDb.ind_regxstyle.EmptyQ
+inline bool          ind_regxstyle_EmptyQ() __attribute__((nothrow));
+// Find row by key. Return NULL if not found.
+// func:amc.FDb.ind_regxstyle.Find
+amc::FRegxstyle*     ind_regxstyle_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:amc.FDb.ind_regxstyle.FindX
+amc::FRegxstyle&     ind_regxstyle_FindX(const algo::strptr& key);
+// Find row by key. If not found, create and x-reference a new row with with this key.
+// func:amc.FDb.ind_regxstyle.GetOrCreate
+amc::FRegxstyle&     ind_regxstyle_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
+// Return number of items in the hash
+// func:amc.FDb.ind_regxstyle.N
+inline i32           ind_regxstyle_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:amc.FDb.ind_regxstyle.InsertMaybe
+bool                 ind_regxstyle_InsertMaybe(amc::FRegxstyle& row) __attribute__((nothrow));
+// Remove reference to element from hash index. If element is not in hash, do nothing
+// func:amc.FDb.ind_regxstyle.Remove
+void                 ind_regxstyle_Remove(amc::FRegxstyle& row) __attribute__((nothrow));
+// Reserve enough room in the hash for N more elements. Return success code.
+// func:amc.FDb.ind_regxstyle.Reserve
+void                 ind_regxstyle_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:amc.FDb.ind_regxstyle.AbsReserve
+void                 ind_regxstyle_AbsReserve(int n) __attribute__((nothrow));
+
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:amc.FDb.regxlenient.Alloc
+amc::FRegxlenient&   regxlenient_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:amc.FDb.regxlenient.AllocMaybe
+amc::FRegxlenient*   regxlenient_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:amc.FDb.regxlenient.InsertMaybe
+amc::FRegxlenient*   regxlenient_InsertMaybe(const amcdb::Regxlenient &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+// func:amc.FDb.regxlenient.AllocMem
+void*                regxlenient_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:amc.FDb.regxlenient.EmptyQ
+inline bool          regxlenient_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+// func:amc.FDb.regxlenient.Find
+inline amc::FRegxlenient* regxlenient_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+// func:amc.FDb.regxlenient.Last
+inline amc::FRegxlenient* regxlenient_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+// func:amc.FDb.regxlenient.N
+inline i64           regxlenient_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+// func:amc.FDb.regxlenient.RemoveAll
+void                 regxlenient_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:amc.FDb.regxlenient.RemoveLast
+void                 regxlenient_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:amc.FDb.regxlenient.qFind
+inline amc::FRegxlenient& regxlenient_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:amc.FDb.regxlenient.XrefMaybe
+bool                 regxlenient_XrefMaybe(amc::FRegxlenient &row);
+
+// Return true if hash is empty
+// func:amc.FDb.ind_regxlenient.EmptyQ
+inline bool          ind_regxlenient_EmptyQ() __attribute__((nothrow));
+// Find row by key. Return NULL if not found.
+// func:amc.FDb.ind_regxlenient.Find
+amc::FRegxlenient*   ind_regxlenient_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:amc.FDb.ind_regxlenient.FindX
+amc::FRegxlenient&   ind_regxlenient_FindX(const algo::strptr& key);
+// Find row by key. If not found, create and x-reference a new row with with this key.
+// func:amc.FDb.ind_regxlenient.GetOrCreate
+amc::FRegxlenient&   ind_regxlenient_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
+// Return number of items in the hash
+// func:amc.FDb.ind_regxlenient.N
+inline i32           ind_regxlenient_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:amc.FDb.ind_regxlenient.InsertMaybe
+bool                 ind_regxlenient_InsertMaybe(amc::FRegxlenient& row) __attribute__((nothrow));
+// Remove reference to element from hash index. If element is not in hash, do nothing
+// func:amc.FDb.ind_regxlenient.Remove
+void                 ind_regxlenient_Remove(amc::FRegxlenient& row) __attribute__((nothrow));
+// Reserve enough room in the hash for N more elements. Return success code.
+// func:amc.FDb.ind_regxlenient.Reserve
+void                 ind_regxlenient_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:amc.FDb.ind_regxlenient.AbsReserve
+void                 ind_regxlenient_AbsReserve(int n) __attribute__((nothrow));
+
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:amc.FDb.regxrule.Alloc
+amc::FRegxrule&      regxrule_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:amc.FDb.regxrule.AllocMaybe
+amc::FRegxrule*      regxrule_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:amc.FDb.regxrule.InsertMaybe
+amc::FRegxrule*      regxrule_InsertMaybe(const amcdb::Regxrule &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+// func:amc.FDb.regxrule.AllocMem
+void*                regxrule_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:amc.FDb.regxrule.EmptyQ
+inline bool          regxrule_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+// func:amc.FDb.regxrule.Find
+inline amc::FRegxrule* regxrule_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+// func:amc.FDb.regxrule.Last
+inline amc::FRegxrule* regxrule_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+// func:amc.FDb.regxrule.N
+inline i64           regxrule_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+// func:amc.FDb.regxrule.RemoveAll
+void                 regxrule_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:amc.FDb.regxrule.RemoveLast
+void                 regxrule_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:amc.FDb.regxrule.qFind
+inline amc::FRegxrule& regxrule_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:amc.FDb.regxrule.XrefMaybe
+bool                 regxrule_XrefMaybe(amc::FRegxrule &row);
+
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:amc.FDb.regxmacro.Alloc
+amc::FRegxmacro&     regxmacro_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:amc.FDb.regxmacro.AllocMaybe
+amc::FRegxmacro*     regxmacro_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:amc.FDb.regxmacro.InsertMaybe
+amc::FRegxmacro*     regxmacro_InsertMaybe(const amcdb::Regxmacro &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+// func:amc.FDb.regxmacro.AllocMem
+void*                regxmacro_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:amc.FDb.regxmacro.EmptyQ
+inline bool          regxmacro_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+// func:amc.FDb.regxmacro.Find
+inline amc::FRegxmacro* regxmacro_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+// func:amc.FDb.regxmacro.Last
+inline amc::FRegxmacro* regxmacro_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+// func:amc.FDb.regxmacro.N
+inline i64           regxmacro_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+// func:amc.FDb.regxmacro.RemoveAll
+void                 regxmacro_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:amc.FDb.regxmacro.RemoveLast
+void                 regxmacro_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:amc.FDb.regxmacro.qFind
+inline amc::FRegxmacro& regxmacro_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:amc.FDb.regxmacro.XrefMaybe
+bool                 regxmacro_XrefMaybe(amc::FRegxmacro &row);
+
 // cursor points to valid item
 // func:amc.FDb.fsort_curs.Reset
 inline void          _db_fsort_curs_Reset(_db_fsort_curs &curs, amc::FDb &parent) __attribute__((nothrow));
@@ -13090,6 +13341,54 @@ inline void          _db_bheap_curs_Next(_db_bheap_curs &curs) __attribute__((no
 // item access
 // func:amc.FDb.bheap_curs.Access
 inline amc::FBheap&  _db_bheap_curs_Access(_db_bheap_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:amc.FDb.regxstyle_curs.Reset
+inline void          _db_regxstyle_curs_Reset(_db_regxstyle_curs &curs, amc::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:amc.FDb.regxstyle_curs.ValidQ
+inline bool          _db_regxstyle_curs_ValidQ(_db_regxstyle_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:amc.FDb.regxstyle_curs.Next
+inline void          _db_regxstyle_curs_Next(_db_regxstyle_curs &curs) __attribute__((nothrow));
+// item access
+// func:amc.FDb.regxstyle_curs.Access
+inline amc::FRegxstyle& _db_regxstyle_curs_Access(_db_regxstyle_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:amc.FDb.regxlenient_curs.Reset
+inline void          _db_regxlenient_curs_Reset(_db_regxlenient_curs &curs, amc::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:amc.FDb.regxlenient_curs.ValidQ
+inline bool          _db_regxlenient_curs_ValidQ(_db_regxlenient_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:amc.FDb.regxlenient_curs.Next
+inline void          _db_regxlenient_curs_Next(_db_regxlenient_curs &curs) __attribute__((nothrow));
+// item access
+// func:amc.FDb.regxlenient_curs.Access
+inline amc::FRegxlenient& _db_regxlenient_curs_Access(_db_regxlenient_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:amc.FDb.regxrule_curs.Reset
+inline void          _db_regxrule_curs_Reset(_db_regxrule_curs &curs, amc::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:amc.FDb.regxrule_curs.ValidQ
+inline bool          _db_regxrule_curs_ValidQ(_db_regxrule_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:amc.FDb.regxrule_curs.Next
+inline void          _db_regxrule_curs_Next(_db_regxrule_curs &curs) __attribute__((nothrow));
+// item access
+// func:amc.FDb.regxrule_curs.Access
+inline amc::FRegxrule& _db_regxrule_curs_Access(_db_regxrule_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:amc.FDb.regxmacro_curs.Reset
+inline void          _db_regxmacro_curs_Reset(_db_regxmacro_curs &curs, amc::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:amc.FDb.regxmacro_curs.ValidQ
+inline bool          _db_regxmacro_curs_ValidQ(_db_regxmacro_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:amc.FDb.regxmacro_curs.Next
+inline void          _db_regxmacro_curs_Next(_db_regxmacro_curs &curs) __attribute__((nothrow));
+// item access
+// func:amc.FDb.regxmacro_curs.Access
+inline amc::FRegxmacro& _db_regxmacro_curs_Access(_db_regxmacro_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:amc.FDb..Init
 void                 FDb_Init();
@@ -13159,10 +13458,10 @@ private:
     friend void                 dispatch_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc.FDispatch.msghdr.CopyOut
+// func:amc.FDispatch.base.CopyOut
 void                 dispatch_CopyOut(amc::FDispatch &row, dmmeta::Dispatch &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc.FDispatch.msghdr.CopyIn
+// func:amc.FDispatch.base.CopyIn
 void                 dispatch_CopyIn(amc::FDispatch &row, dmmeta::Dispatch &in) __attribute__((nothrow));
 
 // func:amc.FDispatch.ns.Get
@@ -13329,10 +13628,10 @@ private:
     friend void                 dispatch_msg_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc.FDispatchmsg.msghdr.CopyOut
+// func:amc.FDispatchmsg.base.CopyOut
 void                 dispatchmsg_CopyOut(amc::FDispatchmsg &row, dmmeta::DispatchMsg &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc.FDispatchmsg.msghdr.CopyIn
+// func:amc.FDispatchmsg.base.CopyIn
 void                 dispatchmsg_CopyIn(amc::FDispatchmsg &row, dmmeta::DispatchMsg &in) __attribute__((nothrow));
 
 // func:amc.FDispatchmsg.dispatch.Get
@@ -13372,10 +13671,10 @@ private:
     friend void                 dispctx_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc.FDispctx.msghdr.CopyOut
+// func:amc.FDispctx.base.CopyOut
 void                 dispctx_CopyOut(amc::FDispctx &row, dmmeta::Dispctx &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc.FDispctx.msghdr.CopyIn
+// func:amc.FDispctx.base.CopyIn
 void                 dispctx_CopyIn(amc::FDispctx &row, dmmeta::Dispctx &in) __attribute__((nothrow));
 
 // Set all fields to initial values.
@@ -13406,10 +13705,10 @@ private:
     friend void                 dispfilter_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc.FDispfilter.msghdr.CopyOut
+// func:amc.FDispfilter.base.CopyOut
 void                 dispfilter_CopyOut(amc::FDispfilter &row, dmmeta::Dispfilter &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc.FDispfilter.msghdr.CopyIn
+// func:amc.FDispfilter.base.CopyIn
 void                 dispfilter_CopyIn(amc::FDispfilter &row, dmmeta::Dispfilter &in) __attribute__((nothrow));
 
 // Set all fields to initial values.
@@ -13488,10 +13787,10 @@ private:
     friend void                 dispsig_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc.FDispsig.msghdr.CopyOut
+// func:amc.FDispsig.base.CopyOut
 void                 dispsig_CopyOut(amc::FDispsig &row, gendb::Dispsig &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc.FDispsig.msghdr.CopyIn
+// func:amc.FDispsig.base.CopyIn
 void                 dispsig_CopyIn(amc::FDispsig &row, gendb::Dispsig &in) __attribute__((nothrow));
 
 // func:amc.FDispsig.ns.Get
@@ -13531,10 +13830,10 @@ private:
     friend void                 disptrace_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc.FDisptrace.msghdr.CopyOut
+// func:amc.FDisptrace.base.CopyOut
 void                 disptrace_CopyOut(amc::FDisptrace &row, dmmeta::Disptrace &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc.FDisptrace.msghdr.CopyIn
+// func:amc.FDisptrace.base.CopyIn
 void                 disptrace_CopyIn(amc::FDisptrace &row, dmmeta::Disptrace &in) __attribute__((nothrow));
 
 // Set all fields to initial values.
@@ -13778,10 +14077,10 @@ private:
     friend void                 fbigend_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc.FFbigend.msghdr.CopyOut
+// func:amc.FFbigend.base.CopyOut
 void                 fbigend_CopyOut(amc::FFbigend &row, dmmeta::Fbigend &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc.FFbigend.msghdr.CopyIn
+// func:amc.FFbigend.base.CopyIn
 void                 fbigend_CopyIn(amc::FFbigend &row, dmmeta::Fbigend &in) __attribute__((nothrow));
 
 // Set all fields to initial values.
@@ -13817,10 +14116,10 @@ private:
     friend void                 fbitset_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc.FFbitset.msghdr.CopyOut
+// func:amc.FFbitset.base.CopyOut
 void                 fbitset_CopyOut(amc::FFbitset &row, dmmeta::Fbitset &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc.FFbitset.msghdr.CopyIn
+// func:amc.FFbitset.base.CopyIn
 void                 fbitset_CopyIn(amc::FFbitset &row, dmmeta::Fbitset &in) __attribute__((nothrow));
 
 // Set all fields to initial values.
@@ -13863,10 +14162,10 @@ private:
     friend void                 fbuf_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc.FFbuf.msghdr.CopyOut
+// func:amc.FFbuf.base.CopyOut
 void                 fbuf_CopyOut(amc::FFbuf &row, dmmeta::Fbuf &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc.FFbuf.msghdr.CopyIn
+// func:amc.FFbuf.base.CopyIn
 void                 fbuf_CopyIn(amc::FFbuf &row, dmmeta::Fbuf &in) __attribute__((nothrow));
 
 // func:amc.FFbuf.fbufdir.Get
@@ -13938,10 +14237,10 @@ private:
     friend void                 fcast_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc.FFcast.msghdr.CopyOut
+// func:amc.FFcast.base.CopyOut
 void                 fcast_CopyOut(amc::FFcast &row, dmmeta::Fcast &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc.FFcast.msghdr.CopyIn
+// func:amc.FFcast.base.CopyIn
 void                 fcast_CopyIn(amc::FFcast &row, dmmeta::Fcast &in) __attribute__((nothrow));
 
 // func:amc.FFcast..Uninit
@@ -14028,10 +14327,10 @@ private:
     friend void                 fcmp_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc.FFcmp.msghdr.CopyOut
+// func:amc.FFcmp.base.CopyOut
 void                 fcmp_CopyOut(amc::FFcmp &row, dmmeta::Fcmp &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc.FFcmp.msghdr.CopyIn
+// func:amc.FFcmp.base.CopyIn
 void                 fcmp_CopyIn(amc::FFcmp &row, dmmeta::Fcmp &in) __attribute__((nothrow));
 
 // Set all fields to initial values.
@@ -14155,10 +14454,10 @@ private:
     friend void                 fconst_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc.FFconst.msghdr.CopyOut
+// func:amc.FFconst.base.CopyOut
 void                 fconst_CopyOut(amc::FFconst &row, dmmeta::Fconst &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc.FFconst.msghdr.CopyIn
+// func:amc.FFconst.base.CopyIn
 void                 fconst_CopyIn(amc::FFconst &row, dmmeta::Fconst &in) __attribute__((nothrow));
 
 // func:amc.FFconst.field.Get
@@ -14254,10 +14553,10 @@ private:
     friend void                 fdec_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc.FFdec.msghdr.CopyOut
+// func:amc.FFdec.base.CopyOut
 void                 fdec_CopyOut(amc::FFdec &row, dmmeta::Fdec &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc.FFdec.msghdr.CopyIn
+// func:amc.FFdec.base.CopyIn
 void                 fdec_CopyIn(amc::FFdec &row, dmmeta::Fdec &in) __attribute__((nothrow));
 
 // Set all fields to initial values.
@@ -14289,10 +14588,10 @@ private:
     friend void                 fdelay_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc.FFdelay.msghdr.CopyOut
+// func:amc.FFdelay.base.CopyOut
 void                 fdelay_CopyOut(amc::FFdelay &row, dmmeta::Fdelay &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc.FFdelay.msghdr.CopyIn
+// func:amc.FFdelay.base.CopyIn
 void                 fdelay_CopyIn(amc::FFdelay &row, dmmeta::Fdelay &in) __attribute__((nothrow));
 
 // Set all fields to initial values.
@@ -14751,10 +15050,10 @@ private:
     friend void                 field_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc.FField.msghdr.CopyOut
+// func:amc.FField.base.CopyOut
 void                 field_CopyOut(amc::FField &row, dmmeta::Field &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc.FField.msghdr.CopyIn
+// func:amc.FField.base.CopyIn
 void                 field_CopyIn(amc::FField &row, dmmeta::Field &in) __attribute__((nothrow));
 
 // func:amc.FField.ctype.Get
@@ -15588,10 +15887,10 @@ private:
     friend void                 finput_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc.FFinput.msghdr.CopyOut
+// func:amc.FFinput.base.CopyOut
 void                 finput_CopyOut(amc::FFinput &row, dmmeta::Finput &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc.FFinput.msghdr.CopyIn
+// func:amc.FFinput.base.CopyIn
 void                 finput_CopyIn(amc::FFinput &row, dmmeta::Finput &in) __attribute__((nothrow));
 
 // func:amc.FFinput.ns.Get
@@ -15665,10 +15964,10 @@ private:
     friend void                 fldoffset_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc.FFldoffset.msghdr.CopyOut
+// func:amc.FFldoffset.base.CopyOut
 void                 fldoffset_CopyOut(amc::FFldoffset &row, dmmeta::Fldoffset &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc.FFldoffset.msghdr.CopyIn
+// func:amc.FFldoffset.base.CopyIn
 void                 fldoffset_CopyIn(amc::FFldoffset &row, dmmeta::Fldoffset &in) __attribute__((nothrow));
 
 // Set all fields to initial values.
@@ -15772,10 +16071,10 @@ private:
     friend void                 foutput_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc.FFoutput.msghdr.CopyOut
+// func:amc.FFoutput.base.CopyOut
 void                 foutput_CopyOut(amc::FFoutput &row, dmmeta::Foutput &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc.FFoutput.msghdr.CopyIn
+// func:amc.FFoutput.base.CopyIn
 void                 foutput_CopyIn(amc::FFoutput &row, dmmeta::Foutput &in) __attribute__((nothrow));
 
 // func:amc.FFoutput.ns.Get
@@ -15937,10 +16236,10 @@ private:
     friend void                 fregx_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc.FFregx.msghdr.CopyOut
+// func:amc.FFregx.base.CopyOut
 void                 fregx_CopyOut(amc::FFregx &row, dmmeta::Fregx &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc.FFregx.msghdr.CopyIn
+// func:amc.FFregx.base.CopyIn
 void                 fregx_CopyIn(amc::FFregx &row, dmmeta::Fregx &in) __attribute__((nothrow));
 
 // Set all fields to initial values.
@@ -15978,10 +16277,10 @@ private:
     friend void                 fsort_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc.FFsort.msghdr.CopyOut
+// func:amc.FFsort.base.CopyOut
 void                 fsort_CopyOut(amc::FFsort &row, dmmeta::Fsort &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc.FFsort.msghdr.CopyIn
+// func:amc.FFsort.base.CopyIn
 void                 fsort_CopyIn(amc::FFsort &row, dmmeta::Fsort &in) __attribute__((nothrow));
 
 // Set all fields to initial values.
@@ -16033,10 +16332,10 @@ private:
     friend void                 fstep_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc.FFstep.msghdr.CopyOut
+// func:amc.FFstep.base.CopyOut
 void                 fstep_CopyOut(amc::FFstep &row, dmmeta::Fstep &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc.FFstep.msghdr.CopyIn
+// func:amc.FFstep.base.CopyIn
 void                 fstep_CopyIn(amc::FFstep &row, dmmeta::Fstep &in) __attribute__((nothrow));
 
 // func:amc.FFstep.field.Get
@@ -16201,10 +16500,10 @@ private:
     friend void                 func_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc.FFunc.msghdr.CopyOut
+// func:amc.FFunc.base.CopyOut
 void                 func_CopyOut(amc::FFunc &row, dmmeta::Func &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc.FFunc.msghdr.CopyIn
+// func:amc.FFunc.base.CopyIn
 void                 func_CopyIn(amc::FFunc &row, dmmeta::Func &in) __attribute__((nothrow));
 
 // func:amc.FFunc.field.Get
@@ -16375,10 +16674,10 @@ private:
     friend void                 fwddecl_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc.FFwddecl.msghdr.CopyOut
+// func:amc.FFwddecl.base.CopyOut
 void                 fwddecl_CopyOut(amc::FFwddecl &row, dmmeta::Fwddecl &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc.FFwddecl.msghdr.CopyIn
+// func:amc.FFwddecl.base.CopyIn
 void                 fwddecl_CopyIn(amc::FFwddecl &row, dmmeta::Fwddecl &in) __attribute__((nothrow));
 
 // func:amc.FFwddecl.ns.Get
@@ -16422,10 +16721,10 @@ private:
     friend void                 gconst_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc.FGconst.msghdr.CopyOut
+// func:amc.FGconst.base.CopyOut
 void                 gconst_CopyOut(amc::FGconst &row, dmmeta::Gconst &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc.FGconst.msghdr.CopyIn
+// func:amc.FGconst.base.CopyIn
 void                 gconst_CopyIn(amc::FGconst &row, dmmeta::Gconst &in) __attribute__((nothrow));
 
 // func:amc.FGconst.namefldctyp.Get
@@ -16465,15 +16764,15 @@ private:
     friend void                 gen_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc.FGen.msghdr.CopyOut
+// func:amc.FGen.base.CopyOut
 void                 gen_CopyOut(amc::FGen &row, amcdb::Gen &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc.FGen.msghdr.CopyIn
+// func:amc.FGen.base.CopyIn
 void                 gen_CopyIn(amc::FGen &row, amcdb::Gen &in) __attribute__((nothrow));
 
 // Invoke function by pointer
 // func:amc.FGen.step.Call
-inline void          step_Call(amc::FGen& parent) __attribute__((nothrow));
+inline void          step_Call(amc::FGen& parent);
 
 // Set all fields to initial values.
 // func:amc.FGen..Init
@@ -16620,10 +16919,10 @@ private:
     friend void                 gstatic_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc.FGstatic.msghdr.CopyOut
+// func:amc.FGstatic.base.CopyOut
 void                 gstatic_CopyOut(amc::FGstatic &row, dmmeta::Gstatic &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc.FGstatic.msghdr.CopyIn
+// func:amc.FGstatic.base.CopyIn
 void                 gstatic_CopyIn(amc::FGstatic &row, dmmeta::Gstatic &in) __attribute__((nothrow));
 
 // func:amc.FGstatic.ns.Get
@@ -16747,10 +17046,10 @@ private:
     friend void                 inlary_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc.FInlary.msghdr.CopyOut
+// func:amc.FInlary.base.CopyOut
 void                 inlary_CopyOut(amc::FInlary &row, dmmeta::Inlary &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc.FInlary.msghdr.CopyIn
+// func:amc.FInlary.base.CopyIn
 void                 inlary_CopyIn(amc::FInlary &row, dmmeta::Inlary &in) __attribute__((nothrow));
 
 // Set all fields to initial values.
@@ -16827,10 +17126,10 @@ private:
     friend void                 lenfld_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc.FLenfld.msghdr.CopyOut
+// func:amc.FLenfld.base.CopyOut
 void                 lenfld_CopyOut(amc::FLenfld &row, dmmeta::Lenfld &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc.FLenfld.msghdr.CopyIn
+// func:amc.FLenfld.base.CopyIn
 void                 lenfld_CopyIn(amc::FLenfld &row, dmmeta::Lenfld &in) __attribute__((nothrow));
 
 // func:amc.FLenfld.ctype.Get
@@ -16909,10 +17208,10 @@ private:
     friend void                 listtype_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc.FListtype.msghdr.CopyOut
+// func:amc.FListtype.base.CopyOut
 void                 listtype_CopyOut(amc::FListtype &row, dmmeta::Listtype &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc.FListtype.msghdr.CopyIn
+// func:amc.FListtype.base.CopyIn
 void                 listtype_CopyIn(amc::FListtype &row, dmmeta::Listtype &in) __attribute__((nothrow));
 
 // Set all fields to initial values.
@@ -16947,10 +17246,10 @@ private:
     friend void                 llist_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc.FLlist.msghdr.CopyOut
+// func:amc.FLlist.base.CopyOut
 void                 llist_CopyOut(amc::FLlist &row, dmmeta::Llist &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc.FLlist.msghdr.CopyIn
+// func:amc.FLlist.base.CopyIn
 void                 llist_CopyIn(amc::FLlist &row, dmmeta::Llist &in) __attribute__((nothrow));
 
 // func:amc.FLlist.listtype.Get
@@ -16986,10 +17285,10 @@ private:
     friend void                 main_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc.FMain.msghdr.CopyOut
+// func:amc.FMain.base.CopyOut
 void                 main_CopyOut(amc::FMain &row, dmmeta::Main &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc.FMain.msghdr.CopyIn
+// func:amc.FMain.base.CopyIn
 void                 main_CopyIn(amc::FMain &row, dmmeta::Main &in) __attribute__((nothrow));
 
 // Set all fields to initial values.
@@ -17044,14 +17343,11 @@ void                 FMsg_Uninit(amc::FMsg& parent) __attribute__((nothrow));
 // global access: msgfield (Lary, by rowid)
 struct FMsgfield { // amc.FMsgfield: Derived leaf field layout row
     algo::Smallstr100   msgfield;   //
-    i32                 offset;     //   0  Absolute byte offset in the message
-    algo::Smallstr100   arg;        // Leaf scalar ctype (u8..u64, char, bool, f32, f64)
-    i32                 width;      //   0  Byte width; for a char array the array length
-    bool                bigend;     //   false  Field is big-endian
-    bool                varlen;     //   false  Varlen tail: extends to the end of the message
-    algo::Smallstr50    strtype;    // Inline-string format (dmmeta.strtype): rpascal, leftpad, rightpad; empty when the field is not an inline string
-    algo::Smallstr10    pad;        // Padding character of a padded inline string, as a byte value; empty when it has none
-    algo::cstring       comment;    //
+    algo::Fldtype       fldtype;    // How the field is laid out; it says what offset, width and aux mean
+    algo::Smallstr100   arg;        // Scalar ctype (u8..u64, char, bool, f32, f64), or a varlen's element ctype
+    i32                 offset;     //   0  Byte offset in the message
+    i32                 width;      //   0  Byte width; for a varlen the offset of the end field it starts at, 0 for none
+    i32                 aux;        //   0  rightpad: the pad byte; varlen2: the offset of the end field it ends at
 private:
     // func:amc.FMsgfield..Ctor
     inline               FMsgfield() __attribute__((nothrow));
@@ -17075,7 +17371,7 @@ algo::strptr         name_Get(amc::FMsgfield& parent) __attribute__((__warn_unus
 
 // Set all fields to initial values.
 // func:amc.FMsgfield..Init
-void                 FMsgfield_Init(amc::FMsgfield& parent);
+inline void          FMsgfield_Init(amc::FMsgfield& parent);
 
 // --- amc.FMsgtype
 // create: amc.FDb.msgtype (Lary)
@@ -17103,10 +17399,10 @@ private:
     friend void                 msgtype_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc.FMsgtype.msghdr.CopyOut
+// func:amc.FMsgtype.base.CopyOut
 void                 msgtype_CopyOut(amc::FMsgtype &row, dmmeta::Msgtype &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc.FMsgtype.msghdr.CopyIn
+// func:amc.FMsgtype.base.CopyIn
 void                 msgtype_CopyIn(amc::FMsgtype &row, dmmeta::Msgtype &in) __attribute__((nothrow));
 
 // Set all fields to initial values.
@@ -17136,10 +17432,10 @@ private:
     friend void                 nocascdel_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc.FNocascdel.msghdr.CopyOut
+// func:amc.FNocascdel.base.CopyOut
 void                 nocascdel_CopyOut(amc::FNocascdel &row, dmmeta::Nocascdel &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc.FNocascdel.msghdr.CopyIn
+// func:amc.FNocascdel.base.CopyIn
 void                 nocascdel_CopyIn(amc::FNocascdel &row, dmmeta::Nocascdel &in) __attribute__((nothrow));
 
 // func:amc.FNocascdel..Uninit
@@ -17328,10 +17624,10 @@ private:
     friend void                 ns_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc.FNs.msghdr.CopyOut
+// func:amc.FNs.base.CopyOut
 void                 ns_CopyOut(amc::FNs &row, dmmeta::Ns &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc.FNs.msghdr.CopyIn
+// func:amc.FNs.base.CopyIn
 void                 ns_CopyIn(amc::FNs &row, dmmeta::Ns &in) __attribute__((nothrow));
 
 // Return true if index is empty
@@ -18567,10 +18863,10 @@ private:
     friend void                 pack_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc.FPack.msghdr.CopyOut
+// func:amc.FPack.base.CopyOut
 void                 pack_CopyOut(amc::FPack &row, dmmeta::Pack &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc.FPack.msghdr.CopyIn
+// func:amc.FPack.base.CopyIn
 void                 pack_CopyIn(amc::FPack &row, dmmeta::Pack &in) __attribute__((nothrow));
 
 // Set all fields to initial values.
@@ -18739,10 +19035,10 @@ private:
     friend void                 pmaskfld_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc.FPmaskfld.msghdr.CopyOut
+// func:amc.FPmaskfld.base.CopyOut
 void                 pmaskfld_CopyOut(amc::FPmaskfld &row, dmmeta::Pmaskfld &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc.FPmaskfld.msghdr.CopyIn
+// func:amc.FPmaskfld.base.CopyIn
 void                 pmaskfld_CopyIn(amc::FPmaskfld &row, dmmeta::Pmaskfld &in) __attribute__((nothrow));
 
 // func:amc.FPmaskfld.ctype.Get
@@ -18888,10 +19184,10 @@ private:
     friend void                 pnew_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc.FPnew.msghdr.CopyOut
+// func:amc.FPnew.base.CopyOut
 void                 pnew_CopyOut(amc::FPnew &row, dmmeta::Pnew &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc.FPnew.msghdr.CopyIn
+// func:amc.FPnew.base.CopyIn
 void                 pnew_CopyIn(amc::FPnew &row, dmmeta::Pnew &in) __attribute__((nothrow));
 
 // func:amc.FPnew.ns.Get
@@ -18934,10 +19230,10 @@ private:
     friend void                 ptrary_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc.FPtrary.msghdr.CopyOut
+// func:amc.FPtrary.base.CopyOut
 void                 ptrary_CopyOut(amc::FPtrary &row, dmmeta::Ptrary &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc.FPtrary.msghdr.CopyIn
+// func:amc.FPtrary.base.CopyIn
 void                 ptrary_CopyIn(amc::FPtrary &row, dmmeta::Ptrary &in) __attribute__((nothrow));
 
 // Set all fields to initial values.
@@ -18989,10 +19285,10 @@ private:
     friend void                 reftype_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc.FReftype.msghdr.CopyOut
+// func:amc.FReftype.base.CopyOut
 void                 reftype_CopyOut(amc::FReftype &row, dmmeta::Reftype &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc.FReftype.msghdr.CopyIn
+// func:amc.FReftype.base.CopyIn
 void                 reftype_CopyIn(amc::FReftype &row, dmmeta::Reftype &in) __attribute__((nothrow));
 
 // Return true if index is empty
@@ -19045,6 +19341,205 @@ inline amc::FFprefix& reftype_zs_fprefix_curs_Access(reftype_zs_fprefix_curs &cu
 // func:amc.FReftype..Uninit
 void                 FReftype_Uninit(amc::FReftype& parent) __attribute__((nothrow));
 
+// --- amc.FRegxlenient
+// create: amc.FDb.regxlenient (Lary)
+// global access: regxlenient (Lary, by rowid)
+// global access: ind_regxlenient (Thash, hash field regxlenient)
+struct FRegxlenient { // amc.FRegxlenient
+    amc::FRegxlenient*   ind_regxlenient_next;      // hash next
+    u32                  ind_regxlenient_hashval;   // hash value
+    algo::Smallstr50     regxlenient;               //
+    bool                 invalid;                   //   false  The shape makes the pattern invalid; otherwise its character is literal
+    algo::cstring        comment;                   //
+    // func:amc.FRegxlenient..AssignOp
+    inline amc::FRegxlenient& operator =(const amc::FRegxlenient &rhs) = delete;
+    // func:amc.FRegxlenient..CopyCtor
+    inline               FRegxlenient(const amc::FRegxlenient &rhs) = delete;
+private:
+    // func:amc.FRegxlenient..Ctor
+    inline               FRegxlenient() __attribute__((nothrow));
+    // func:amc.FRegxlenient..Dtor
+    inline               ~FRegxlenient() __attribute__((nothrow));
+    friend amc::FRegxlenient&   regxlenient_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend amc::FRegxlenient*   regxlenient_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 regxlenient_RemoveAll() __attribute__((nothrow));
+    friend void                 regxlenient_RemoveLast() __attribute__((nothrow));
+};
+// Copy fields out of row
+// func:amc.FRegxlenient.base.CopyOut
+void                 regxlenient_CopyOut(amc::FRegxlenient &row, amcdb::Regxlenient &out) __attribute__((nothrow));
+// Copy fields in to row
+// func:amc.FRegxlenient.base.CopyIn
+void                 regxlenient_CopyIn(amc::FRegxlenient &row, amcdb::Regxlenient &in) __attribute__((nothrow));
+
+// Set all fields to initial values.
+// func:amc.FRegxlenient..Init
+inline void          FRegxlenient_Init(amc::FRegxlenient& parent);
+// func:amc.FRegxlenient..Uninit
+void                 FRegxlenient_Uninit(amc::FRegxlenient& parent) __attribute__((nothrow));
+
+// --- amc.FRegxmacro
+// create: amc.FDb.regxmacro (Lary)
+// global access: regxmacro (Lary, by rowid)
+struct FRegxmacro { // amc.FRegxmacro
+    algo::Smallstr50   regxmacro;   //
+    algo::Smallstr50   chclass;     // Characters the escape matches, as single characters and ranges a-b
+    bool               neg;         //   false  The escape matches every character outside chclass
+    algo::cstring      comment;     //
+private:
+    // func:amc.FRegxmacro..Ctor
+    inline               FRegxmacro() __attribute__((nothrow));
+    friend amc::FRegxmacro&     regxmacro_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend amc::FRegxmacro*     regxmacro_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 regxmacro_RemoveAll() __attribute__((nothrow));
+    friend void                 regxmacro_RemoveLast() __attribute__((nothrow));
+};
+// Copy fields out of row
+// func:amc.FRegxmacro.base.CopyOut
+void                 regxmacro_CopyOut(amc::FRegxmacro &row, amcdb::Regxmacro &out) __attribute__((nothrow));
+// Copy fields in to row
+// func:amc.FRegxmacro.base.CopyIn
+void                 regxmacro_CopyIn(amc::FRegxmacro &row, amcdb::Regxmacro &in) __attribute__((nothrow));
+
+// Set all fields to initial values.
+// func:amc.FRegxmacro..Init
+inline void          FRegxmacro_Init(amc::FRegxmacro& parent);
+
+// --- amc.FRegxrule
+// create: amc.FDb.regxrule (Lary)
+// global access: regxrule (Lary, by rowid)
+// access: amc.FRegxstyle.c_regxrule (Ptrary)
+struct FRegxrule { // amc.FRegxrule
+    algo::Smallstr50   regxrule;                      //
+    algo::Smallstr50   out;                           // Default-syntax text of the token; a catch-all token prefixes it to the character
+    algo::cstring      comment;                       //
+    bool               regxstyle_c_regxrule_in_ary;   //   false  membership flag
+    // func:amc.FRegxrule..AssignOp
+    inline amc::FRegxrule& operator =(const amc::FRegxrule &rhs) = delete;
+    // func:amc.FRegxrule..CopyCtor
+    inline               FRegxrule(const amc::FRegxrule &rhs) = delete;
+private:
+    // func:amc.FRegxrule..Ctor
+    inline               FRegxrule() __attribute__((nothrow));
+    // func:amc.FRegxrule..Dtor
+    inline               ~FRegxrule() __attribute__((nothrow));
+    friend amc::FRegxrule&      regxrule_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend amc::FRegxrule*      regxrule_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 regxrule_RemoveAll() __attribute__((nothrow));
+    friend void                 regxrule_RemoveLast() __attribute__((nothrow));
+};
+// Copy fields out of row
+// func:amc.FRegxrule.base.CopyOut
+void                 regxrule_CopyOut(amc::FRegxrule &row, amcdb::Regxrule &out) __attribute__((nothrow));
+// Copy fields in to row
+// func:amc.FRegxrule.base.CopyIn
+void                 regxrule_CopyIn(amc::FRegxrule &row, amcdb::Regxrule &in) __attribute__((nothrow));
+
+// func:amc.FRegxrule.regxstyle.Get
+algo::strptr         regxstyle_Get(amc::FRegxrule& parent) __attribute__((__warn_unused_result__, nothrow));
+
+// func:amc.FRegxrule.token.Get
+algo::strptr         token_Get(amc::FRegxrule& parent) __attribute__((__warn_unused_result__, nothrow));
+
+// Set all fields to initial values.
+// func:amc.FRegxrule..Init
+inline void          FRegxrule_Init(amc::FRegxrule& parent);
+// func:amc.FRegxrule..Uninit
+void                 FRegxrule_Uninit(amc::FRegxrule& parent) __attribute__((nothrow));
+
+// --- amc.FRegxstyle
+// create: amc.FDb.regxstyle (Lary)
+// global access: regxstyle (Lary, by rowid)
+// global access: ind_regxstyle (Thash, hash field regxstyle)
+struct FRegxstyle { // amc.FRegxstyle
+    amc::FRegxstyle*   ind_regxstyle_next;      // hash next
+    u32                ind_regxstyle_hashval;   // hash value
+    algo::Smallstr50   regxstyle;               //
+    bool               esc;                     //   false  A backslash reads the next character by its escaped rule
+    algo::cstring      comment;                 //
+    amc::FRegxrule**   c_regxrule_elems;        // array of pointers
+    u64                c_regxrule_n;            // current size
+    u64                c_regxrule_max;          // capacity of allocated array
+    // reftype Ptrary of amc.FRegxstyle.c_regxrule prohibits copy
+    // func:amc.FRegxstyle..AssignOp
+    inline amc::FRegxstyle& operator =(const amc::FRegxstyle &rhs) = delete;
+    // reftype Ptrary of amc.FRegxstyle.c_regxrule prohibits copy
+    // func:amc.FRegxstyle..CopyCtor
+    inline               FRegxstyle(const amc::FRegxstyle &rhs) = delete;
+private:
+    // func:amc.FRegxstyle..Ctor
+    inline               FRegxstyle() __attribute__((nothrow));
+    // func:amc.FRegxstyle..Dtor
+    inline               ~FRegxstyle() __attribute__((nothrow));
+    friend amc::FRegxstyle&     regxstyle_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend amc::FRegxstyle*     regxstyle_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 regxstyle_RemoveAll() __attribute__((nothrow));
+    friend void                 regxstyle_RemoveLast() __attribute__((nothrow));
+};
+// Copy fields out of row
+// func:amc.FRegxstyle.base.CopyOut
+void                 regxstyle_CopyOut(amc::FRegxstyle &row, amcdb::Regxstyle &out) __attribute__((nothrow));
+// Copy fields in to row
+// func:amc.FRegxstyle.base.CopyIn
+void                 regxstyle_CopyIn(amc::FRegxstyle &row, amcdb::Regxstyle &in) __attribute__((nothrow));
+
+// Return true if index is empty
+// func:amc.FRegxstyle.c_regxrule.EmptyQ
+inline bool          c_regxrule_EmptyQ(amc::FRegxstyle& parent) __attribute__((nothrow));
+// Look up row by row id. Return NULL if out of range
+// func:amc.FRegxstyle.c_regxrule.Find
+inline amc::FRegxrule* c_regxrule_Find(amc::FRegxstyle& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
+// Return array of pointers
+// func:amc.FRegxstyle.c_regxrule.Getary
+inline algo::aryptr<amc::FRegxrule*> c_regxrule_Getary(amc::FRegxstyle& parent) __attribute__((nothrow));
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
+// func:amc.FRegxstyle.c_regxrule.Insert
+void                 c_regxrule_Insert(amc::FRegxstyle& parent, amc::FRegxrule& row) __attribute__((nothrow));
+// Insert pointer to row in array.
+// If row is already in the array, do nothing.
+// Return value: whether element was inserted into array.
+// func:amc.FRegxstyle.c_regxrule.InsertMaybe
+bool                 c_regxrule_InsertMaybe(amc::FRegxstyle& parent, amc::FRegxrule& row) __attribute__((nothrow));
+// Return number of items in the pointer array
+// func:amc.FRegxstyle.c_regxrule.N
+inline i64           c_regxrule_N(const amc::FRegxstyle& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+// Find element using linear scan. If element is in array, remove, otherwise do nothing
+// func:amc.FRegxstyle.c_regxrule.Remove
+void                 c_regxrule_Remove(amc::FRegxstyle& parent, amc::FRegxrule& row) __attribute__((nothrow));
+// Empty the index. (The rows are not deleted)
+// func:amc.FRegxstyle.c_regxrule.RemoveAll
+inline void          c_regxrule_RemoveAll(amc::FRegxstyle& parent) __attribute__((nothrow));
+// Reserve space in index for N more elements;
+// func:amc.FRegxstyle.c_regxrule.Reserve
+void                 c_regxrule_Reserve(amc::FRegxstyle& parent, u64 n) __attribute__((nothrow));
+// Return reference without bounds checking
+// func:amc.FRegxstyle.c_regxrule.qFind
+inline amc::FRegxrule& c_regxrule_qFind(amc::FRegxstyle& parent, u64 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+// func:amc.FRegxstyle.c_regxrule.InAryQ
+inline bool          regxstyle_c_regxrule_InAryQ(amc::FRegxrule& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+// func:amc.FRegxstyle.c_regxrule.qLast
+inline amc::FRegxrule& c_regxrule_qLast(amc::FRegxstyle& parent) __attribute__((nothrow));
+
+// Set all fields to initial values.
+// func:amc.FRegxstyle..Init
+inline void          FRegxstyle_Init(amc::FRegxstyle& parent);
+// func:amc.FRegxstyle.c_regxrule_curs.Reset
+inline void          regxstyle_c_regxrule_curs_Reset(regxstyle_c_regxrule_curs &curs, amc::FRegxstyle &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:amc.FRegxstyle.c_regxrule_curs.ValidQ
+inline bool          regxstyle_c_regxrule_curs_ValidQ(regxstyle_c_regxrule_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:amc.FRegxstyle.c_regxrule_curs.Next
+inline void          regxstyle_c_regxrule_curs_Next(regxstyle_c_regxrule_curs &curs) __attribute__((nothrow));
+// item access
+// func:amc.FRegxstyle.c_regxrule_curs.Access
+inline amc::FRegxrule& regxstyle_c_regxrule_curs_Access(regxstyle_c_regxrule_curs &curs) __attribute__((nothrow));
+// func:amc.FRegxstyle..Uninit
+void                 FRegxstyle_Uninit(amc::FRegxstyle& parent) __attribute__((nothrow));
+
 // --- amc.FRowid
 // create: amc.FDb.rowid (Lary)
 // global access: rowid (Lary, by rowid)
@@ -19069,10 +19564,10 @@ private:
     friend void                 rowid_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc.FRowid.msghdr.CopyOut
+// func:amc.FRowid.base.CopyOut
 void                 rowid_CopyOut(amc::FRowid &row, dmmeta::Rowid &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc.FRowid.msghdr.CopyIn
+// func:amc.FRowid.base.CopyIn
 void                 rowid_CopyIn(amc::FRowid &row, dmmeta::Rowid &in) __attribute__((nothrow));
 
 // Set all fields to initial values.
@@ -19114,10 +19609,10 @@ private:
     friend void                 smallstr_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc.FSmallstr.msghdr.CopyOut
+// func:amc.FSmallstr.base.CopyOut
 void                 smallstr_CopyOut(amc::FSmallstr &row, dmmeta::Smallstr &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc.FSmallstr.msghdr.CopyIn
+// func:amc.FSmallstr.base.CopyIn
 void                 smallstr_CopyIn(amc::FSmallstr &row, dmmeta::Smallstr &in) __attribute__((nothrow));
 
 // func:amc.FSmallstr.ctype.Get
@@ -19160,10 +19655,10 @@ private:
     friend void                 sortfld_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc.FSortfld.msghdr.CopyOut
+// func:amc.FSortfld.base.CopyOut
 void                 sortfld_CopyOut(amc::FSortfld &row, dmmeta::Sortfld &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc.FSortfld.msghdr.CopyIn
+// func:amc.FSortfld.base.CopyIn
 void                 sortfld_CopyIn(amc::FSortfld &row, dmmeta::Sortfld &in) __attribute__((nothrow));
 
 // Set all fields to initial values.
@@ -19213,10 +19708,10 @@ private:
     friend void                 ssimfile_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc.FSsimfile.msghdr.CopyOut
+// func:amc.FSsimfile.base.CopyOut
 void                 ssimfile_CopyOut(amc::FSsimfile &row, dmmeta::Ssimfile &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc.FSsimfile.msghdr.CopyIn
+// func:amc.FSsimfile.base.CopyIn
 void                 ssimfile_CopyIn(amc::FSsimfile &row, dmmeta::Ssimfile &in) __attribute__((nothrow));
 
 // func:amc.FSsimfile.ssimns.Get
@@ -19438,10 +19933,10 @@ private:
     friend void                 substr_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc.FSubstr.msghdr.CopyOut
+// func:amc.FSubstr.base.CopyOut
 void                 substr_CopyOut(amc::FSubstr &row, dmmeta::Substr &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc.FSubstr.msghdr.CopyIn
+// func:amc.FSubstr.base.CopyIn
 void                 substr_CopyIn(amc::FSubstr &row, dmmeta::Substr &in) __attribute__((nothrow));
 
 // Set all fields to initial values.
@@ -19478,10 +19973,10 @@ private:
     friend void                 targdep_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc.FTargdep.msghdr.CopyOut
+// func:amc.FTargdep.base.CopyOut
 void                 targdep_CopyOut(amc::FTargdep &row, dev::Targdep &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc.FTargdep.msghdr.CopyIn
+// func:amc.FTargdep.base.CopyIn
 void                 targdep_CopyIn(amc::FTargdep &row, dev::Targdep &in) __attribute__((nothrow));
 
 // func:amc.FTargdep.target.Get
@@ -19529,10 +20024,10 @@ private:
     friend void                 target_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc.FTarget.msghdr.CopyOut
+// func:amc.FTarget.base.CopyOut
 void                 target_CopyOut(amc::FTarget &row, dev::Target &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc.FTarget.msghdr.CopyIn
+// func:amc.FTarget.base.CopyIn
 void                 target_CopyIn(amc::FTarget &row, dev::Target &in) __attribute__((nothrow));
 
 // Return true if index is empty
@@ -19620,10 +20115,10 @@ private:
     friend void                 tary_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc.FTary.msghdr.CopyOut
+// func:amc.FTary.base.CopyOut
 void                 tary_CopyOut(amc::FTary &row, dmmeta::Tary &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc.FTary.msghdr.CopyIn
+// func:amc.FTary.base.CopyIn
 void                 tary_CopyIn(amc::FTary &row, dmmeta::Tary &in) __attribute__((nothrow));
 
 // Set all fields to initial values.
@@ -19754,10 +20249,10 @@ private:
     friend void                 tfunc_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc.FTfunc.msghdr.CopyOut
+// func:amc.FTfunc.base.CopyOut
 void                 tfunc_CopyOut(amc::FTfunc &row, amcdb::Tfunc &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc.FTfunc.msghdr.CopyIn
+// func:amc.FTfunc.base.CopyIn
 void                 tfunc_CopyIn(amc::FTfunc &row, amcdb::Tfunc &in) __attribute__((nothrow));
 
 // func:amc.FTfunc.tclass.Get
@@ -19768,7 +20263,7 @@ algo::strptr         name_Get(amc::FTfunc& parent) __attribute__((__warn_unused_
 
 // Invoke function by pointer
 // func:amc.FTfunc.step.Call
-inline void          step_Call(amc::FTfunc& parent) __attribute__((nothrow));
+inline void          step_Call(amc::FTfunc& parent);
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FTfunc.c_tcurs.InsertMaybe
@@ -19812,10 +20307,10 @@ private:
     friend void                 thash_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc.FThash.msghdr.CopyOut
+// func:amc.FThash.base.CopyOut
 void                 thash_CopyOut(amc::FThash &row, dmmeta::Thash &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc.FThash.msghdr.CopyIn
+// func:amc.FThash.base.CopyIn
 void                 thash_CopyIn(amc::FThash &row, dmmeta::Thash &in) __attribute__((nothrow));
 
 // Set all fields to initial values.
@@ -19839,10 +20334,10 @@ private:
     friend void                 tracefld_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc.FTracefld.msghdr.CopyOut
+// func:amc.FTracefld.base.CopyOut
 void                 tracefld_CopyOut(amc::FTracefld &row, gendb::Tracefld &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc.FTracefld.msghdr.CopyIn
+// func:amc.FTracefld.base.CopyIn
 void                 tracefld_CopyIn(amc::FTracefld &row, gendb::Tracefld &in) __attribute__((nothrow));
 
 // func:amc.FTracefld.tracerec.Get
@@ -19867,10 +20362,10 @@ private:
     friend void                 tracerec_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc.FTracerec.msghdr.CopyOut
+// func:amc.FTracerec.base.CopyOut
 void                 tracerec_CopyOut(amc::FTracerec &row, gendb::Tracerec &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc.FTracerec.msghdr.CopyIn
+// func:amc.FTracerec.base.CopyIn
 void                 tracerec_CopyIn(amc::FTracerec &row, gendb::Tracerec &in) __attribute__((nothrow));
 
 // func:amc.FTracerec.name.Get
@@ -20002,10 +20497,10 @@ private:
     friend void                 typefld_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc.FTypefld.msghdr.CopyOut
+// func:amc.FTypefld.base.CopyOut
 void                 typefld_CopyOut(amc::FTypefld &row, dmmeta::Typefld &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc.FTypefld.msghdr.CopyIn
+// func:amc.FTypefld.base.CopyIn
 void                 typefld_CopyIn(amc::FTypefld &row, dmmeta::Typefld &in) __attribute__((nothrow));
 
 // func:amc.FTypefld.ctype.Get
@@ -20031,10 +20526,10 @@ private:
     friend void                 usertracefld_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc.FUsertracefld.msghdr.CopyOut
+// func:amc.FUsertracefld.base.CopyOut
 void                 usertracefld_CopyOut(amc::FUsertracefld &row, dmmeta::Usertracefld &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc.FUsertracefld.msghdr.CopyIn
+// func:amc.FUsertracefld.base.CopyIn
 void                 usertracefld_CopyIn(amc::FUsertracefld &row, dmmeta::Usertracefld &in) __attribute__((nothrow));
 
 
@@ -20081,10 +20576,10 @@ private:
     friend void                 xref_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:amc.FXref.msghdr.CopyOut
+// func:amc.FXref.base.CopyOut
 void                 xref_CopyOut(amc::FXref &row, dmmeta::Xref &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:amc.FXref.msghdr.CopyIn
+// func:amc.FXref.base.CopyIn
 void                 xref_CopyIn(amc::FXref &row, dmmeta::Xref &in) __attribute__((nothrow));
 
 // func:amc.FXref.name.Get
@@ -21678,6 +22173,38 @@ struct _db_bheap_curs {// cursor
 };
 
 
+struct _db_regxstyle_curs {// cursor
+    typedef amc::FRegxstyle ChildType;
+    amc::FDb *parent;
+    i64 index;
+    _db_regxstyle_curs(){ parent=NULL; index=0; }
+};
+
+
+struct _db_regxlenient_curs {// cursor
+    typedef amc::FRegxlenient ChildType;
+    amc::FDb *parent;
+    i64 index;
+    _db_regxlenient_curs(){ parent=NULL; index=0; }
+};
+
+
+struct _db_regxrule_curs {// cursor
+    typedef amc::FRegxrule ChildType;
+    amc::FDb *parent;
+    i64 index;
+    _db_regxrule_curs(){ parent=NULL; index=0; }
+};
+
+
+struct _db_regxmacro_curs {// cursor
+    typedef amc::FRegxmacro ChildType;
+    amc::FDb *parent;
+    i64 index;
+    _db_regxmacro_curs(){ parent=NULL; index=0; }
+};
+
+
 struct dispatch_c_dispatch_msg_curs {// fcurs:amc.FDispatch.c_dispatch_msg/curs
     typedef amc::FDispatchmsg ChildType;
     amc::FDispatchmsg** elems;
@@ -21977,6 +22504,15 @@ struct reftype_zs_fprefix_curs {// fcurs:amc.FReftype.zs_fprefix/curs
     reftype_zs_fprefix_curs() {
         row = NULL;
     }
+};
+
+
+struct regxstyle_c_regxrule_curs {// fcurs:amc.FRegxstyle.c_regxrule/curs
+    typedef amc::FRegxrule ChildType;
+    amc::FRegxrule** elems;
+    u64 n_elems;
+    u64 index;
+    regxstyle_c_regxrule_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
 
@@ -23139,6 +23675,14 @@ void                 tfunc_Global_Steps();
 // this function is 'extrn' and implemented by user
 void                 tfunc_Global_RemoveStrptrMaybe();
 // User-implemented function from gstatic:amc.FDb.tfunc
+// func:amc...tfunc_Global_Load
+// this function is 'extrn' and implemented by user
+void                 tfunc_Global_Load();
+// User-implemented function from gstatic:amc.FDb.tfunc
+// func:amc...tfunc_Global_Unload
+// this function is 'extrn' and implemented by user
+void                 tfunc_Global_Unload();
+// User-implemented function from gstatic:amc.FDb.tfunc
 // func:amc...tfunc_Hook_Call
 // this function is 'extrn' and implemented by user
 void                 tfunc_Hook_Call();
@@ -24207,6 +24751,10 @@ void                 gen_check_basefield();
 // this function is 'extrn' and implemented by user
 void                 gen_check_ssimsort();
 // User-implemented function from gstatic:amc.FDb.gen
+// func:amc...gen_check_cmdcomment
+// this function is 'extrn' and implemented by user
+void                 gen_check_cmdcomment();
+// User-implemented function from gstatic:amc.FDb.gen
 // func:amc...gen_clonefconst
 // this function is 'extrn' and implemented by user
 void                 gen_clonefconst();
@@ -24434,6 +24982,10 @@ void                 gen_ns_include();
 // func:amc...gen_ns_gsymbol
 // this function is 'extrn' and implemented by user
 void                 gen_ns_gsymbol();
+// User-implemented function from gstatic:amc.FDb.gen
+// func:amc...gen_ns_regxstyle
+// this function is 'extrn' and implemented by user
+void                 gen_ns_regxstyle();
 // User-implemented function from gstatic:amc.FDb.gen
 // func:amc...gen_ns_size_enums
 // this function is 'extrn' and implemented by user

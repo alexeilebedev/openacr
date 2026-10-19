@@ -172,10 +172,10 @@ private:
     friend void                 ctype_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:acr_in.FCtype.msghdr.CopyOut
+// func:acr_in.FCtype.base.CopyOut
 void                 ctype_CopyOut(acr_in::FCtype &row, dmmeta::Ctype &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:acr_in.FCtype.msghdr.CopyIn
+// func:acr_in.FCtype.base.CopyIn
 void                 ctype_CopyIn(acr_in::FCtype &row, dmmeta::Ctype &in) __attribute__((nothrow));
 
 // func:acr_in.FCtype.ns.Get
@@ -1559,10 +1559,10 @@ private:
     friend void                 dispsig_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:acr_in.FDispsig.msghdr.CopyOut
+// func:acr_in.FDispsig.base.CopyOut
 void                 dispsig_CopyOut(acr_in::FDispsig &row, gendb::Dispsig &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:acr_in.FDispsig.msghdr.CopyIn
+// func:acr_in.FDispsig.base.CopyIn
 void                 dispsig_CopyIn(acr_in::FDispsig &row, gendb::Dispsig &in) __attribute__((nothrow));
 
 // func:acr_in.FDispsig.ns.Get
@@ -1615,10 +1615,10 @@ private:
     friend void                 field_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:acr_in.FField.msghdr.CopyOut
+// func:acr_in.FField.base.CopyOut
 void                 field_CopyOut(acr_in::FField &row, dmmeta::Field &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:acr_in.FField.msghdr.CopyIn
+// func:acr_in.FField.base.CopyIn
 void                 field_CopyIn(acr_in::FField &row, dmmeta::Field &in) __attribute__((nothrow));
 
 // func:acr_in.FField.ctype.Get
@@ -1674,10 +1674,10 @@ private:
     friend void                 finput_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:acr_in.FFinput.msghdr.CopyOut
+// func:acr_in.FFinput.base.CopyOut
 void                 finput_CopyOut(acr_in::FFinput &row, dmmeta::Finput &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:acr_in.FFinput.msghdr.CopyIn
+// func:acr_in.FFinput.base.CopyIn
 void                 finput_CopyIn(acr_in::FFinput &row, dmmeta::Finput &in) __attribute__((nothrow));
 
 // func:acr_in.FFinput.ns.Get
@@ -1728,10 +1728,10 @@ private:
     friend void                 ns_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:acr_in.FNs.msghdr.CopyOut
+// func:acr_in.FNs.base.CopyOut
 void                 ns_CopyOut(acr_in::FNs &row, dmmeta::Ns &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:acr_in.FNs.msghdr.CopyIn
+// func:acr_in.FNs.base.CopyIn
 void                 ns_CopyIn(acr_in::FNs &row, dmmeta::Ns &in) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
@@ -1867,14 +1867,15 @@ struct FSsimfile { // acr_in.FSsimfile
     acr_in::FNsssimfile*   zd_nsssimfile_ssimfile_head;   // zero-terminated doubly linked list
     i32                    zd_nsssimfile_ssimfile_n;      // zero-terminated doubly linked list
     acr_in::FNsssimfile*   zd_nsssimfile_ssimfile_tail;   // pointer to last element
+    bool                   listed;                        //   false  Selected by -ssimfile: listed in load order, its rows neither loaded nor printed
     // x-reference on acr_in.FSsimfile.p_ctype prevents copy
     // reftype Llist of acr_in.FSsimfile.zd_nsssimfile_ssimfile prohibits copy
     // func:acr_in.FSsimfile..AssignOp
-    inline acr_in::FSsimfile& operator =(const acr_in::FSsimfile &rhs) = delete;
+    acr_in::FSsimfile&   operator =(const acr_in::FSsimfile &rhs) = delete;
     // x-reference on acr_in.FSsimfile.p_ctype prevents copy
     // reftype Llist of acr_in.FSsimfile.zd_nsssimfile_ssimfile prohibits copy
     // func:acr_in.FSsimfile..CopyCtor
-    inline               FSsimfile(const acr_in::FSsimfile &rhs) = delete;
+    FSsimfile(const acr_in::FSsimfile &rhs) = delete;
 private:
     // func:acr_in.FSsimfile..Ctor
     inline               FSsimfile() __attribute__((nothrow));
@@ -1885,10 +1886,10 @@ private:
     friend void                 ssimfile_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:acr_in.FSsimfile.msghdr.CopyOut
+// func:acr_in.FSsimfile.base.CopyOut
 void                 ssimfile_CopyOut(acr_in::FSsimfile &row, dmmeta::Ssimfile &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:acr_in.FSsimfile.msghdr.CopyIn
+// func:acr_in.FSsimfile.base.CopyIn
 void                 ssimfile_CopyIn(acr_in::FSsimfile &row, dmmeta::Ssimfile &in) __attribute__((nothrow));
 
 // func:acr_in.FSsimfile.ssimns.Get
@@ -1980,10 +1981,10 @@ private:
     friend void                 substr_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:acr_in.FSubstr.msghdr.CopyOut
+// func:acr_in.FSubstr.base.CopyOut
 void                 substr_CopyOut(acr_in::FSubstr &row, dmmeta::Substr &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:acr_in.FSubstr.msghdr.CopyIn
+// func:acr_in.FSubstr.base.CopyIn
 void                 substr_CopyIn(acr_in::FSubstr &row, dmmeta::Substr &in) __attribute__((nothrow));
 
 // func:acr_in.FSubstr..Uninit
@@ -2016,10 +2017,10 @@ private:
     friend void                 targdep_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:acr_in.FTargdep.msghdr.CopyOut
+// func:acr_in.FTargdep.base.CopyOut
 void                 targdep_CopyOut(acr_in::FTargdep &row, dev::Targdep &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:acr_in.FTargdep.msghdr.CopyIn
+// func:acr_in.FTargdep.base.CopyIn
 void                 targdep_CopyIn(acr_in::FTargdep &row, dev::Targdep &in) __attribute__((nothrow));
 
 // func:acr_in.FTargdep.target.Get
@@ -2074,10 +2075,10 @@ private:
     friend void                 target_RemoveLast() __attribute__((nothrow));
 };
 // Copy fields out of row
-// func:acr_in.FTarget.msghdr.CopyOut
+// func:acr_in.FTarget.base.CopyOut
 void                 target_CopyOut(acr_in::FTarget &row, dev::Target &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:acr_in.FTarget.msghdr.CopyIn
+// func:acr_in.FTarget.base.CopyIn
 void                 target_CopyIn(acr_in::FTarget &row, dev::Target &in) __attribute__((nothrow));
 
 // Return true if index is empty

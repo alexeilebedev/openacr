@@ -41,11 +41,56 @@ algo::tempstr credd::StoreDir() {
     return ret;
 }
 
+// Print the tables in memory as the store's files hold them: the master record
+// into MASTER, the credentials into CRED, and their permissions into CREDPERM,
+// one row per line.  A credential marked removed is left out, and so are its
+// permissions.
+static void PrintStore(algo::cstring &master, algo::cstring &cred, algo::cstring &credperm) {
+    ind_beg(credd::_db_master_curs, row, credd::_db) {
+        creddb::Master out;
+        credd::master_CopyOut(row, out);
+        master << out << eol;
+    }ind_end;
+    ind_beg(credd::_db_cred_curs, row, credd::_db) {
+        if (!row.removed) {
+            creddb::Cred out;
+            credd::cred_CopyOut(row, out);
+            cred << out << eol;
+            ind_beg(credd::cred_c_credperm_curs, perm, row) {
+                creddb::Credperm permout;
+                credd::credperm_CopyOut(perm, permout);
+                credperm << permout << eol;
+            }ind_end;
+        }
+    }ind_end;
+}
+
+// Empty the tables in memory and fill them from TEXT, rows as PrintStore
+// prints them, with the master record and each credential ahead of the
+// permissions that refer to it.
+static void RestoreStore(algo::strptr text) {
+    credd::credperm_RemoveAll();
+    credd::cred_RemoveAll();
+    credd::master_RemoveAll();
+    ind_beg(algo::Line_curs, line, text) {
+        (void)credd::InsertStrptrMaybe(line);
+    }ind_end;
+}
+
 // Read every table from the store into memory, replacing what was there.
 // Creates the store directory, mode 0700, when it does not exist, so the first
 // run of any verb leaves an empty store behind.  Dies naming the file and line
 // when a row does not load, which includes a credential whose kind the binary
 // does not know.
+//
+// A daemon reads the store again on every reload, and the tables it serves
+// are the ones this function fills.  Say a credential of a kind the daemon
+// does not know reaches the files: the load stops at that row, and the tables
+// it emptied first hold only what came before it.  Every tool asking for a
+// credential after that row would be told there is no such credential, while
+// the files still hold it.  So the tables as they were are printed before the
+// load and put back when it fails, and a failed reload leaves the daemon
+// serving what it served.
 //
 // Under -nostore there are no tables to read and none are created.  The
 // directory is still made, because the daemon's socket lives in it, and the
@@ -53,14 +98,22 @@ algo::tempstr credd::StoreDir() {
 void credd::LoadStore() {
     credd::_db.dir = credd::StoreDir();
     algo::CreateDirRecurse(credd::_db.dir, true, 0700);
+    algo::cstring master;
+    algo::cstring cred;
+    algo::cstring credperm;
+    PrintStore(master, cred, credperm);
     credd::credperm_RemoveAll();
     credd::cred_RemoveAll();
     credd::master_RemoveAll();
     if (!credd::_db.cmdline.nostore) {
         algo::CreateDirRecurse(algo::DirFileJoin(credd::_db.dir, "creddb"), true, 0700);
         algo_lib::_db.errtext = "";
-        vrfy(credd::LoadTuplesMaybe(credd::_db.dir, false), tempstr()
-             << "credd.badstore" << Keyval("dir", credd::_db.dir) << eol << algo_lib::_db.errtext);
+        bool ok = credd::LoadTuplesMaybe(credd::_db.dir, false);
+        algo::cstring errtext(algo_lib::_db.errtext);
+        if (!ok) {
+            RestoreStore(tempstr() << master << cred << credperm);
+        }
+        vrfy(ok, tempstr() << "credd.badstore" << Keyval("dir", credd::_db.dir) << eol << errtext);
     }
 }
 
@@ -75,26 +128,10 @@ static void SaveTable(algo::strptr ssimfile, algo::strptr text) {
 // Write every table of the store back to disk.  A credential marked removed
 // is left out, and so are its permissions.
 void credd::SaveStore() {
-    algo::tempstr master;
-    ind_beg(credd::_db_master_curs, row, credd::_db) {
-        creddb::Master out;
-        credd::master_CopyOut(row, out);
-        master << out << eol;
-    }ind_end;
-    algo::tempstr cred;
-    algo::tempstr credperm;
-    ind_beg(credd::_db_cred_curs, row, credd::_db) {
-        if (!row.removed) {
-            creddb::Cred out;
-            credd::cred_CopyOut(row, out);
-            cred << out << eol;
-            ind_beg(credd::cred_c_credperm_curs, perm, row) {
-                creddb::Credperm permout;
-                credd::credperm_CopyOut(perm, permout);
-                credperm << permout << eol;
-            }ind_end;
-        }
-    }ind_end;
+    algo::cstring master;
+    algo::cstring cred;
+    algo::cstring credperm;
+    PrintStore(master, cred, credperm);
     SaveTable("creddb.master", master);
     SaveTable("creddb.cred", cred);
     SaveTable("creddb.credperm", credperm);
@@ -420,12 +457,6 @@ void credd::NotifyReload() {
     lib_cred::Error error;
     if (credd::Ask(tempstr() << req, reply, err) && lib_cred::Error_ReadStrptrMaybe(error, reply)) {
         prerr("credd.reloadfail" << Keyval("msg", error.msg));
-    }
-    // a daemon from an older build reads the store under old names and reports
-    // the reload done while it saw nothing, so the build is checked here too
-    lib_cred::Status status;
-    if (credd::ProbeDaemon(status)) {
-        credd::WarnOldBuild(status);
     }
 }
 

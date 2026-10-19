@@ -67,8 +67,8 @@ representation.
 amc reads the width from the type's `dmmeta.csize` row and
 picks the byteswap macro that matches it:
 
-| `arg`  | byte-swap macro |
-|--------|-----------------|
+| `arg`         | byte-swap macro |
+| ------------- | --------------- |
 | `u16` / `i16` | `htobe16` / `be16toh` |
 | `u32` / `i32` | `htobe32` / `be32toh` |
 | `u64` / `i64` | `htobe64` / `be64toh` |
@@ -86,9 +86,9 @@ is not `Val` is refused with `amc.bad_bigend`.
 ### Generated functions
 <a href="#generated-functions"></a>
 
-| Function                       | Body |
-|--------------------------------|------|
-| `inline T <name>_Get(const P&)` | `return beNNtoh(parent.<name>_be);` |
+| Function                            | Body |
+| ----------------------------------- | ---- |
+| `inline T <name>_Get(const P&)`     | `return beNNtoh(parent.<name>_be);` |
 | `inline void <name>_Set(P&, T rhs)` | `parent.<name>_be = htobeNN(rhs);` |
 
 `Init` is folded into the parent ctype's constructor with

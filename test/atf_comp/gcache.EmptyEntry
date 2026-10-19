@@ -11,7 +11,7 @@ gcache-2 -> report.gcache  starttime:***  elapsed_sec:***  preproc_size:***  hit
 # exit gcache-2 code:0
 # stage recreate_gc
 # start gcache-3 cmd:"cd $tempdir && $$OLDPWD/$bindir/gcache -gc"
-gcache-3 -> gcache.cleanreport  n_cachefile:0  n_cachefile_del:0  n_cachefile_recent:0  n_cachefile_evict:0  n_logline:1  n_logline_del:0  new_cachesize_mb:0
+gcache-3 -> gcache.cleanreport  n_cachefile:1  n_cachefile_del:0  n_cachefile_recent:1  n_cachefile_evict:0  n_logline:1  n_logline_del:0  new_cachesize_mb:0
 # eof gcache-3
 # exit gcache-3 code:0
 # check recreate:absent
@@ -22,13 +22,13 @@ gcache-4 -> report.gcache  starttime:***  elapsed_sec:***  preproc_size:***  hit
 # exit gcache-4 code:0
 # stage refresh_gc
 # start gcache-5 cmd:"cd $tempdir && $$OLDPWD/$bindir/gcache -gc"
-gcache-5 -> gcache.cleanreport  n_cachefile:1  n_cachefile_del:0  n_cachefile_recent:1  n_cachefile_evict:0  n_logline:2  n_logline_del:0  new_cachesize_mb:0
+gcache-5 -> gcache.cleanreport  n_cachefile:2  n_cachefile_del:0  n_cachefile_recent:2  n_cachefile_evict:0  n_logline:2  n_logline_del:0  new_cachesize_mb:0
 # eof gcache-5
 # exit gcache-5 code:0
 # check refresh:fresh
 # stage pchrefresh_gc
 # start gcache-6 cmd:"cd $tempdir && $$OLDPWD/$bindir/gcache -gc"
-gcache-6 -> gcache.cleanreport  n_cachefile:2  n_cachefile_del:0  n_cachefile_recent:2  n_cachefile_evict:0  n_logline:2  n_logline_del:0  new_cachesize_mb:0
+gcache-6 -> gcache.cleanreport  n_cachefile:3  n_cachefile_del:0  n_cachefile_recent:3  n_cachefile_evict:0  n_logline:2  n_logline_del:0  new_cachesize_mb:0
 # eof gcache-6
 # exit gcache-6 code:0
 # check pchrefresh:fresh

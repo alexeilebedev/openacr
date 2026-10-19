@@ -1,3 +1,4 @@
+// Copyright (C) 2026 AlgoX2 Corp
 // Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2017-2019 NYSE | Intercontinental Exchange
 //
@@ -40,7 +41,7 @@ static void _CheckQuery(const char *file, int line, strptr source, strptr query,
     tempstr extra(extraargs);
     Replace(extra,"temp/x",tempfile.filename);
     tempstr cmd = tempstr() << acr_ToCmdline(acr) << " " << extra;
-    tempstr value(Trimmed(SysEval(cmd,FailokQ(true),1024*100)));
+    tempstr value(Trimmed(SysEval(cmd,FailokQ(true))));
     expect=Trimmed(expect);
     bool ok = expect==value;
     vrfy(ok,
@@ -259,7 +260,7 @@ void atf_unit::unittest_acr_Regx1() {
                "dmmeta.ctype ctype:Y\n"
                , "field:X.%"
                , "-regxof:reftype"
-               , "(B\\.b|C\\.c)");
+               , "(B.b|C.c)");
 }
 
 // --------------------------------------------------------------------------------

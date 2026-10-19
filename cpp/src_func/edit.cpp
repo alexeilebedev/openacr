@@ -87,7 +87,7 @@ void src_func::Main_CreateMissing() {
             }
             // step 3: write missing function to the file
             if (bestsrc) {
-                tempstr text = tempstr() << eol << Trimmed(SysEval(tempstr()<<"amc -showcomment:N -report:N "<<cppname_Get(cppsym),FailokQ(true),102400));
+                tempstr text = tempstr() << eol << Trimmed(SysEval(tempstr()<<"amc -showcomment:N -report:N "<<cppname_Get(cppsym),FailokQ(true)));
                 Replace(text,";"," {\n}\n");
                 int nline=0;
                 ind_beg(algo::FileLine_curs,line,src_Get(*bestsrc)) {

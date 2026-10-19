@@ -9,15 +9,15 @@ reads, so it already knows which sources belong to which target and what each
 target links; a build is therefore selected with one regex over target names
 rather than described in a makefile.
 
-| Tool | Purpose |
-|------|---------|
-| `abt` | Build the targets a regex matches; installs into `bin/`. |
-| `ai` | Bootstrap: build `abt` if missing, then `abt %`. |
-| `abt_ts` | The same for the TypeScript packages under `ts/`. |
-| `atf_unit` | Unit-test runner. |
-| `atf_amc` | Code-generator unit tests. |
-| `atf_comp` | Component tests: run a scripted process, diff its output against a stored reference. |
-| `atf_ci` | CI driver — runs a whole `cijob` made of unit, comp, memcheck and coverage steps. |
+| Tool            | Purpose |
+| --------------- | ------- |
+| `abt`           | Build the targets a regex matches; installs into `bin/`. |
+| `ai`            | Bootstrap: build `abt` if missing, then `abt %`. |
+| `abt_ts`        | The same for the TypeScript packages under `ts/`. |
+| `atf_unit`      | Unit-test runner. |
+| `atf_amc`       | Code-generator unit tests. |
+| `atf_comp`      | Component tests: run a scripted process, diff its output against a stored reference. |
+| `atf_ci`        | CI driver — runs a whole `cijob` made of unit, comp, memcheck and coverage steps. |
 | `bin/normalize` | `atf_ci -cijob:normalize`, the pre-merge gate. |
 
 ### Build commands
@@ -76,10 +76,10 @@ atf_comp -mode:printinput <ns>.<name>    # print test input lines
 cat ... | atf_comp -i                    # create a comptest interactively
 
 # CI jobs
-atf_ci -cijob:comp                       # compilation
+atf_ci -cijob:'compA|compB'              # component and unit tests, both halves
 atf_ci -cijob:'memcheck%'                # valgrind memcheck, all three shards
-atf_ci -cijob:coverage                   # coverage; with -capture, updates
-                                         # data/dev/tgtcov.ssim
+atf_ci -cijob:cov%                       # coverage, both halves and the merge;
+                                         # with -capture, updates data/dev/tgtcov.ssim
 bin/normalize                            # main CI gate
 ```
 

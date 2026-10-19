@@ -69,30 +69,30 @@ Two tables drive the codec, and a ctype carrying a
 ### Encodings
 <a href="#encodings"></a>
 
-| `encoding`   | Wire form                                                                 |
-|--------------|----------------------------------------------------------------------------|
-| `unsigned`   | Stop-byte 7-bit groups, big-endian; high bit of last byte set.            |
-| `signed`     | Same, with twos-complement sign in the first group's high data bit.       |
-| `string`     | 7-bit ASCII characters, each with stop bit; last byte's high bit set.     |
-| `byteVector` | Length (unsigned) + raw bytes.                                            |
-| `scaled`     | Two integers: exponent + mantissa (each unsigned/signed).                 |
-| `sequence`   | Length + repeated body — generates a Tary/Varlen on decode.               |
-| `group`      | Embedded sub-message; either inline or in a presence-mapped segment.      |
-| `template`   | The outermost message-type wrapper.                                       |
-| `type`       | Enum / set scalar.                                                        |
+| `encoding`   | Wire form |
+| ------------ | --------- |
+| `unsigned`   | Stop-byte 7-bit groups, big-endian; high bit of last byte set. |
+| `signed`     | Same, with twos-complement sign in the first group's high data bit. |
+| `string`     | 7-bit ASCII characters, each with stop bit; last byte's high bit set. |
+| `byteVector` | Length (unsigned) + raw bytes. |
+| `scaled`     | Two integers: exponent + mantissa (each unsigned/signed). |
+| `sequence`   | Length + repeated body — generates a Tary/Varlen on decode. |
+| `group`      | Embedded sub-message; either inline or in a presence-mapped segment. |
+| `template`   | The outermost message-type wrapper. |
+| `type`       | Enum / set scalar. |
 
 ### Operators
 <a href="#operators"></a>
 
-| `op`         | Encoding behavior                                                          |
-|--------------|----------------------------------------------------------------------------|
-| `none`       | Field is sent every message (presence-mapped only if `optional:Y`).        |
-| `constant`   | Value is fixed at `ffast.value` — only the presence bit is sent.           |
-| `default`    | If the value equals `value`, omit it on the wire; otherwise send.          |
-| `copy`       | Default to the previous message's value of the same field.                 |
-| `delta`      | Send the difference from the previous message's value.                     |
-| `increment`  | Implicit `prev + 1`; omit if matches.                                       |
-| `tail`       | (Strings) Replace only the tail bytes that differ from the previous value. |
+| `op`        | Encoding behavior |
+| ----------- | ----------------- |
+| `none`      | Field is sent every message (presence-mapped only if `optional:Y`). |
+| `constant`  | Value is fixed at `ffast.value` — only the presence bit is sent. |
+| `default`   | If the value equals `value`, omit it on the wire; otherwise send. |
+| `copy`      | Default to the previous message's value of the same field. |
+| `delta`     | Send the difference from the previous message's value. |
+| `increment` | Implicit `prev + 1`; omit if matches. |
+| `tail`      | (Strings) Replace only the tail bytes that differ from the previous value. |
 
 The operator determines whether the field consumes a presence
 bit (`copy`/`default`/`tail`/`increment`/`delta`) or not
@@ -105,13 +105,13 @@ field branch.
 
 Source: `cpp/amc/fast.cpp`.
 
-| Tfunc                    | Generated function                                          | Effect |
-|--------------------------|-------------------------------------------------------------|--------|
-| `Ctype.FastEncode`       | `void <Msg>_FastEncode(<Msg>& msg, cstring& out)`           | Write the message in FAST wire form, respecting per-field operators and presence map. |
-| `Ctype.FastDecode`       | `bool <Msg>_FastDecode(<Msg>& msg, strptr& in)`             | Inverse; advances `in` past the consumed bytes.  Returns false on truncation or schema mismatch. |
-| `Ctype.FixEncode`        | `void <Msg>_FixEncode(<Msg>& msg, cstring& out)`            | FIX-tag fallback encoder for the same metadata — pairs FAST with a textual reference encoder for testing. |
-| `gen_fast_presence` (phase) | (no user function — pre-pass)                            | Auto-creates a presence-bit set for any ctype with `optional:Y` ffast entries.  Runs in `amcdb.gen:fast_presence`. |
-| `gen_ns_fast` (phase)    | `void <ns>_FastDecodeMsgs(...)`, `<ns>_FastEncodeMsgs(...)` | Top-level dispatch over an `Inlary` of messages; switches on template id. |
+| Tfunc                       | Generated function                                          | Effect |
+| --------------------------- | ----------------------------------------------------------- | ------ |
+| `Ctype.FastEncode`          | `void <Msg>_FastEncode(<Msg>& msg, cstring& out)`           | Write the message in FAST wire form, respecting per-field operators and presence map. |
+| `Ctype.FastDecode`          | `bool <Msg>_FastDecode(<Msg>& msg, strptr& in)`             | Inverse; advances `in` past the consumed bytes.  Returns false on truncation or schema mismatch. |
+| `Ctype.FixEncode`           | `void <Msg>_FixEncode(<Msg>& msg, cstring& out)`            | FIX-tag fallback encoder for the same metadata — pairs FAST with a textual reference encoder for testing. |
+| `gen_fast_presence` (phase) | (no user function — pre-pass)                               | Auto-creates a presence-bit set for any ctype with `optional:Y` ffast entries.  Runs in `amcdb.gen:fast_presence`. |
+| `gen_ns_fast` (phase)       | `void <ns>_FastDecodeMsgs(...)`, `<ns>_FastEncodeMsgs(...)` | Top-level dispatch over an `Inlary` of messages; switches on template id. |
 
 ### Presence map sizing
 <a href="#presence-map-sizing"></a>

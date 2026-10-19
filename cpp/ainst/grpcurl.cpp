@@ -28,7 +28,7 @@
 // to dpkg: the file lands under the staging root either way, and nothing here
 // needs a package manager's database.
 void ainst::extpkg_grpcurl(ainst::FExtpkg &extpkg) {
-    AddStage(extpkg,"extpkg=$(mktemp -d)");
+    AddStage(extpkg,"extpkg=$(ainst_tmpdir)");
     AddStage(extpkg,tempstr()<<"dpkg-deb -x "<<GetExtpkgsrcVar(extpkg,"deb")<<" \"$extpkg\"");
     AddStage(extpkg,"ainst_install 755 \"$extpkg/usr/bin/grpcurl\" /usr/local/bin/grpcurl");
 }

@@ -67,6 +67,46 @@ int posix_fallocate(int fd, off_t offset, off_t len);
 // Darwin has no advice to populate page tables; madvise refuses the value with
 // EINVAL, and the caller counts the refusal.
 #define MADV_POPULATE_WRITE 23
+// Darwin has no fallocate; the layer answers FALLOC_FL_KEEP_SIZE with F_PREALLOCATE.
+#define FALLOC_FL_KEEP_SIZE 0x01
+int fallocate(int fd, int mode, off_t offset, off_t len);
+// Darwin declares no fdatasync; the layer's flushes the file with F_FULLFSYNC.
+int fdatasync(int fd);
+// Darwin cannot start writeback early; the layer's sync_file_range does nothing.
+#define SYNC_FILE_RANGE_WRITE 2
+int sync_file_range(int fd, off64_t offset, off64_t nbytes, unsigned int flags);
+// Darwin calls the signal handler type sig_t.
+typedef void (*sighandler_t)(int);
+// Darwin has no sysinfo; the layer's fills the memory figures from sysctl and Mach.
+struct sysinfo {
+    unsigned long totalram;
+    unsigned long freeram;
+    unsigned int mem_unit;
+};
+int sysinfo(struct sysinfo *info);
+// Darwin has no CPU affinity; the layer's calls refuse with ENOSYS.
+#define CPU_SETSIZE 1024
+struct cpu_set_t {
+    u64 bits[CPU_SETSIZE / 64];
+};
+#define CPU_ZERO(set) memset((set), 0, sizeof(cpu_set_t))
+#define CPU_SET(cpu, set) ((set)->bits[(cpu) / 64] |= u64(1) << ((cpu) % 64))
+#define CPU_ISSET(cpu, set) (((set)->bits[(cpu) / 64] >> ((cpu) % 64)) & 1)
+int sched_getaffinity(int pid, size_t size, cpu_set_t *mask);
+int sched_setaffinity(int pid, size_t size, const cpu_set_t *mask);
+// Darwin spells the byte-order conversions through OSByteOrder.
+#define htobe16(x) OSSwapHostToBigInt16(x)
+#define htobe32(x) OSSwapHostToBigInt32(x)
+#define htobe64(x) OSSwapHostToBigInt64(x)
+#define be16toh(x) OSSwapBigToHostInt16(x)
+#define be32toh(x) OSSwapBigToHostInt32(x)
+#define be64toh(x) OSSwapBigToHostInt64(x)
+#define htole16(x) OSSwapHostToLittleInt16(x)
+#define htole32(x) OSSwapHostToLittleInt32(x)
+#define htole64(x) OSSwapHostToLittleInt64(x)
+#define le16toh(x) OSSwapLittleToHostInt16(x)
+#define le32toh(x) OSSwapLittleToHostInt32(x)
+#define le64toh(x) OSSwapLittleToHostInt64(x)
 #endif
 
 namespace algo_lib {

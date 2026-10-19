@@ -1,0 +1,8 @@
+dev.package  package:base  opensource:N  readmefile:txt/README.md  comment:"Base package; its front page is its own txt/README.md"
+dev.package  package:pkg  opensource:N  readmefile:txt/pkg/README.md  comment:"Package with a front page of its own and one mapped file"
+dev.pkgdep  pkgdep:pkg.base  soft:N  pkgdeptype:require  comment:""
+dev.pkgkey  pkgkey:base/dev.gitfile:txt/README.md  up:N  down:N  ref:N  exclude:N  stub:N  comment:""
+dev.pkgkey  pkgkey:base/dmmeta.ssimfile:dev.gitfile  up:N  down:N  ref:N  exclude:N  stub:N  comment:""
+dev.pkgkey  pkgkey:base/dmmeta.ssimfile:dmmeta.ssimfile  up:N  down:N  ref:N  exclude:N  stub:N  comment:""
+dev.pkgkey  pkgkey:pkg/dev.gitfile:txt/pkg/%  up:N  down:N  ref:N  exclude:N  stub:N  comment:""
+dev.pkgfile  pkgfile:pkg/AGENTS.md  gitfile:txt/pkg/AGENTS.md  comment:""

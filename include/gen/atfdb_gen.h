@@ -47,6 +47,7 @@ enum atfdb_FieldIdEnum {    // atfdb.FieldId.value
     ,atfdb_FieldId_costmb
     ,atfdb_FieldId_comment
     ,atfdb_FieldId_amctest
+    ,atfdb_FieldId_benchgate
     ,atfdb_FieldId_benchprofile
     ,atfdb_FieldId_shape
     ,atfdb_FieldId_period
@@ -57,6 +58,7 @@ enum atfdb_FieldIdEnum {    // atfdb.FieldId.value
     ,atfdb_FieldId_citest
     ,atfdb_FieldId_sandbox
     ,atfdb_FieldId_failfast
+    ,atfdb_FieldId_gcov
     ,atfdb_FieldId_comptest
     ,atfdb_FieldId_target
     ,atfdb_FieldId_testname
@@ -75,6 +77,13 @@ enum atfdb_FieldIdEnum {    // atfdb.FieldId.value
     ,atfdb_FieldId_vardir
     ,atfdb_FieldId_filter
     ,atfdb_FieldId_ifilter
+    ,atfdb_FieldId_tlamodel
+    ,atfdb_FieldId_dir
+    ,atfdb_FieldId_spec
+    ,atfdb_FieldId_expect
+    ,atfdb_FieldId_ci
+    ,atfdb_FieldId_tlastrategy
+    ,atfdb_FieldId_tlaverdict
     ,atfdb_FieldId_unittest
     ,atfdb_FieldId_ns
     ,atfdb_FieldId_unstableattr
@@ -82,13 +91,14 @@ enum atfdb_FieldIdEnum {    // atfdb.FieldId.value
     ,atfdb_FieldId_var
 };
 
-enum { atfdb_FieldIdEnum_N = 42 };
+enum { atfdb_FieldIdEnum_N = 51 };
 
 extern const char *  atfdb_Msgdir_msgdir_exp;   // exp    fconst:atfdb.Msgdir.msgdir/exp
 extern const char *  atfdb_Msgdir_msgdir_in;    // in     fconst:atfdb.Msgdir.msgdir/in
 namespace atfdb { // gen:ns_pkeytypedef
     typedef algo::Smallstr50 AgePkey;
     typedef algo::Smallstr50 AmctestPkey;
+    typedef algo::Smallstr50 BenchgatePkey;
     typedef algo::Smallstr50 BenchprofilePkey;
     typedef algo::Smallstr50 CijobPkey;
     typedef algo::Smallstr50 CitestPkey;
@@ -100,6 +110,9 @@ namespace atfdb { // gen:ns_pkeytypedef
     typedef algo::Smallstr50 TestGsymbolPkeyPkey;
     typedef algo::Smallstr50 TestGsymbolStrptrPkey;
     typedef algo::Smallstr50 TestenvPkey;
+    typedef algo::Smallstr50 TlamodelPkey;
+    typedef algo::Smallstr50 TlastrategyPkey;
+    typedef algo::Smallstr50 TlaverdictPkey;
     typedef algo::Smallstr50 UnittestPkey;
     typedef algo::Smallstr100 UnstableattrPkey;
     typedef algo::Smallstr50 UnstablelinePkey;
@@ -110,6 +123,7 @@ namespace atfdb { // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace atfdb { struct Age; }
 namespace atfdb { struct Amctest; }
+namespace atfdb { struct Benchgate; }
 namespace atfdb { struct Benchprofile; }
 namespace atfdb { struct Cijob; }
 namespace atfdb { struct Citest; }
@@ -124,6 +138,9 @@ namespace atfdb { struct TestGsymbolStrptr; }
 namespace atfdb { struct Testenv; }
 namespace atfdb { struct Tfilt; }
 namespace atfdb { struct Tifilt; }
+namespace atfdb { struct Tlamodel; }
+namespace atfdb { struct Tlastrategy; }
+namespace atfdb { struct Tlaverdict; }
 namespace atfdb { struct Unittest; }
 namespace atfdb { struct Unstableattr; }
 namespace atfdb { struct Unstableline; }
@@ -174,6 +191,24 @@ bool                 Amctest_ReadStrptrMaybe(atfdb::Amctest &parent, algo::strpt
 // cfmt:atfdb.Amctest.String  printfmt:Tuple
 // func:atfdb.Amctest..Print
 void                 Amctest_Print(atfdb::Amctest& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- atfdb.Benchgate
+struct Benchgate { // atfdb.Benchgate: What capture and cmp of a benchtest measure
+    algo::Smallstr50   benchgate;   //
+    algo::Comment      comment;     //
+    // func:atfdb.Benchgate..Ctor
+    inline               Benchgate() __attribute__((nothrow));
+};
+// func:atfdb.Benchgate..ReadFieldMaybe
+bool                 Benchgate_ReadFieldMaybe(atfdb::Benchgate& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of atfdb::Benchgate from an ascii string.
+// The format of the string is an ssim Tuple
+// func:atfdb.Benchgate..ReadStrptrMaybe
+bool                 Benchgate_ReadStrptrMaybe(atfdb::Benchgate &parent, algo::strptr in_str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atfdb.Benchgate.String  printfmt:Tuple
+// func:atfdb.Benchgate..Print
+void                 Benchgate_Print(atfdb::Benchgate& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atfdb.Benchprofile
 struct Benchprofile { // atfdb.Benchprofile: Named traffic-pacing shape a publisher stage can offer at any pace
@@ -253,6 +288,7 @@ struct Citest { // atfdb.Citest
     bool               sandbox;    //   false  Run test in sandbox
     i32                timeout;    //   600  Max runtime budget for this citest, seconds (>= observed runtime doubled, floored at 10min)
     bool               failfast;   //   false  A failure ends the run: remaining citests are skipped
+    bool               gcov;       //   false  Run with its own profile dir (GCC_PROFILE_DIR) for coverage
     algo::Comment      comment;    //
     // func:atfdb.Citest..Ctor
     inline               Citest() __attribute__((nothrow));
@@ -275,6 +311,7 @@ void                 Citest_Print(atfdb::Citest& row, algo::cstring& str) __attr
 struct Comptest { // atfdb.Comptest: A component test
     algo::Smallstr50   comptest;    //
     i32                timeout;     //   10
+    algo::Smallstr50   cijob;       //   "compB"  The cijob that runs this test outside memcheck; none = never
     algo::Smallstr50   memcheck;    // The cijob that runs this test under valgrind memcheck; none = never
     bool               coverage;    //   true
     bool               stablefld;   //   false  Replace unstable fields with ***
@@ -531,6 +568,72 @@ bool                 Tifilt_ReadStrptrMaybe(atfdb::Tifilt &parent, algo::strptr 
 // func:atfdb.Tifilt..Print
 void                 Tifilt_Print(atfdb::Tifilt& row, algo::cstring& str) __attribute__((nothrow));
 
+// --- atfdb.Tlamodel
+struct Tlamodel { // atfdb.Tlamodel: A TLA+ model atla checks: one TLC config and the spec it names
+    algo::Smallstr50   tlamodel;   // Path of the cfg under tla/, without .cfg
+    algo::Smallstr50   spec;       // TLA+ module the cfg checks, a file in the same directory
+    algo::Smallstr50   expect;     //   "pass"  Verdict TLC is expected to reach
+    u32                timeout;    //   600  Seconds TLC may run before atla stops it
+    bool               ci;         //   false  Run in the atla citest
+    algo::Comment      comment;    //
+    // func:atfdb.Tlamodel..Ctor
+    inline               Tlamodel() __attribute__((nothrow));
+};
+// func:atfdb.Tlamodel.dir.Get
+algo::strptr         dir_Get(atfdb::Tlamodel& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:atfdb.Tlamodel.dir.Get2
+algo::strptr         Tlamodel_dir_Get(algo::strptr arg) __attribute__((nothrow));
+
+// func:atfdb.Tlamodel..ReadFieldMaybe
+bool                 Tlamodel_ReadFieldMaybe(atfdb::Tlamodel& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of atfdb::Tlamodel from an ascii string.
+// The format of the string is an ssim Tuple
+// func:atfdb.Tlamodel..ReadStrptrMaybe
+bool                 Tlamodel_ReadStrptrMaybe(atfdb::Tlamodel &parent, algo::strptr in_str) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:atfdb.Tlamodel..Init
+inline void          Tlamodel_Init(atfdb::Tlamodel& parent);
+// print string representation of ROW to string STR
+// cfmt:atfdb.Tlamodel.String  printfmt:Tuple
+// func:atfdb.Tlamodel..Print
+void                 Tlamodel_Print(atfdb::Tlamodel& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- atfdb.Tlastrategy
+struct Tlastrategy { // atfdb.Tlastrategy: A way atla searches the states of a model
+    algo::Smallstr50   tlastrategy;   // How a run searches a model's states
+    algo::Comment      comment;       //
+    // func:atfdb.Tlastrategy..Ctor
+    inline               Tlastrategy() __attribute__((nothrow));
+};
+// func:atfdb.Tlastrategy..ReadFieldMaybe
+bool                 Tlastrategy_ReadFieldMaybe(atfdb::Tlastrategy& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of atfdb::Tlastrategy from an ascii string.
+// The format of the string is an ssim Tuple
+// func:atfdb.Tlastrategy..ReadStrptrMaybe
+bool                 Tlastrategy_ReadStrptrMaybe(atfdb::Tlastrategy &parent, algo::strptr in_str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atfdb.Tlastrategy.String  printfmt:Tuple
+// func:atfdb.Tlastrategy..Print
+void                 Tlastrategy_Print(atfdb::Tlastrategy& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- atfdb.Tlaverdict
+struct Tlaverdict { // atfdb.Tlaverdict: How a TLC run of a model ended
+    algo::Smallstr50   tlaverdict;   // How a TLC run ended
+    algo::Comment      comment;      //
+    // func:atfdb.Tlaverdict..Ctor
+    inline               Tlaverdict() __attribute__((nothrow));
+};
+// func:atfdb.Tlaverdict..ReadFieldMaybe
+bool                 Tlaverdict_ReadFieldMaybe(atfdb::Tlaverdict& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of atfdb::Tlaverdict from an ascii string.
+// The format of the string is an ssim Tuple
+// func:atfdb.Tlaverdict..ReadStrptrMaybe
+bool                 Tlaverdict_ReadStrptrMaybe(atfdb::Tlaverdict &parent, algo::strptr in_str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atfdb.Tlaverdict.String  printfmt:Tuple
+// func:atfdb.Tlaverdict..Print
+void                 Tlaverdict_Print(atfdb::Tlaverdict& row, algo::cstring& str) __attribute__((nothrow));
+
 // --- atfdb.Unittest
 struct Unittest { // atfdb.Unittest
     algo::Smallstr50   unittest;   //
@@ -624,6 +727,7 @@ namespace atfdb { // gen:ns_func
 // gen:ns_operators
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const atfdb::Age &row);// cfmt:atfdb.Age.String
+inline algo::cstring &operator <<(algo::cstring &str, const atfdb::Benchgate &row);// cfmt:atfdb.Benchgate.String
 inline algo::cstring &operator <<(algo::cstring &str, const atfdb::Benchprofile &row);// cfmt:atfdb.Benchprofile.String
 inline algo::cstring &operator <<(algo::cstring &str, const atfdb::Cijob &row);// cfmt:atfdb.Cijob.String
 inline algo::cstring &operator <<(algo::cstring &str, const atfdb::Citest &row);// cfmt:atfdb.Citest.String
@@ -638,6 +742,9 @@ inline algo::cstring &operator <<(algo::cstring &str, const atfdb::TestGsymbolSt
 inline algo::cstring &operator <<(algo::cstring &str, const atfdb::Testenv &row);// cfmt:atfdb.Testenv.String
 inline algo::cstring &operator <<(algo::cstring &str, const atfdb::Tfilt &row);// cfmt:atfdb.Tfilt.String
 inline algo::cstring &operator <<(algo::cstring &str, const atfdb::Tifilt &row);// cfmt:atfdb.Tifilt.String
+inline algo::cstring &operator <<(algo::cstring &str, const atfdb::Tlamodel &row);// cfmt:atfdb.Tlamodel.String
+inline algo::cstring &operator <<(algo::cstring &str, const atfdb::Tlastrategy &row);// cfmt:atfdb.Tlastrategy.String
+inline algo::cstring &operator <<(algo::cstring &str, const atfdb::Tlaverdict &row);// cfmt:atfdb.Tlaverdict.String
 inline algo::cstring &operator <<(algo::cstring &str, const atfdb::Unstableattr &row);// cfmt:atfdb.Unstableattr.String
 inline algo::cstring &operator <<(algo::cstring &str, const atfdb::Unstableline &row);// cfmt:atfdb.Unstableline.String
 inline algo::cstring &operator <<(algo::cstring &str, const atfdb::Var &row);// cfmt:atfdb.Var.String

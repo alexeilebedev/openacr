@@ -223,8 +223,9 @@ inline u32 algo::cstring_Hash(u32 prev, const algo::strptr &val) {
 
 #ifdef AOS_SSE42
 
-// Use hardware CRC32C intrinsics on supported x86 and Apple Silicon builds.
-// Otherwise, forward to CRC32StepSw in crc32.cpp, the same CRC-32C from a table.
+// Use hardware CRC32C intrinsics on x86 builds with SSE4.2 and on ARM builds whose
+// target carries the CRC32 instructions, which -mcpu=neoverse-n1 and Apple Silicon
+// both do.  Otherwise, forward to CRC32StepSw in crc32.cpp, the same CRC-32C from a table.
 inline u32 algo::CRC32Step(u32 old, const u8 *x, size_t len) {
     u64 h = old;
     while (len>=8) { h = _mm_crc32_u64(h,*(u64 T_MAY_ALIAS*)x); x = (u8*)x + 8; len -= 8; }
@@ -234,7 +235,7 @@ inline u32 algo::CRC32Step(u32 old, const u8 *x, size_t len) {
     return (u32)h;
 }
 
-#elif defined(__APPLE__) && defined(__aarch64__)
+#elif defined(__aarch64__) && defined(__ARM_FEATURE_CRC32)
 
 inline u32 algo::CRC32Step(u32 old, const u8 *x, size_t len) {
     u64 val64;
@@ -729,13 +730,17 @@ inline double algo::get_cpu_hz() {
 // use this for timestamps.
 // these calls may be pipelined and reordered, so measuring instruction
 // latency with these is not possible. for that, use rdtscp
+// On Linux ARM the counter is the generic timer's virtual count, cntvct_el0,
+// which every core reads at the one fixed rate cntfrq_el0 states.
 inline u64 algo::get_cycles() {
 #ifdef WIN32
     return __rdtsc();
 #elif defined(__MACH__) && defined(__aarch64__)
     return mach_absolute_time();
 #elif defined(__aarch64__)
-    return __builtin_readcyclecounter();
+    u64 ret;
+    asm volatile ("mrs %0, cntvct_el0" : "=r" (ret));
+    return ret;
 #else
     unsigned low, high;
     asm volatile (
@@ -1141,6 +1146,17 @@ inline algo::cstring &algo::operator<<(algo::cstring &out, const ListSep &t) {
 inline algo::cstring &algo::operator<<(algo::cstring &out, const strptr &t) {
     strptr_Print (t,out);
     return out;
+}
+
+// Print T, a long long, as the i64 it equals.  i64 is a long, and where int64_t is a
+// long long -- macOS -- a library's int64_t has no exact match among the overloads.
+inline algo::cstring &algo::operator<<(algo::cstring &out, long long t) {
+    return out << i64(t);
+}
+
+// Print T, an unsigned long long, as the u64 it equals.
+inline algo::cstring &algo::operator<<(algo::cstring &out, unsigned long long t) {
+    return out << u64(t);
 }
 
 inline algo::cstring &algo::operator<<(algo::cstring &out, void (*t)(algo::cstring &)) {

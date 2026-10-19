@@ -55,19 +55,6 @@ inline void atf_ci::step_Call(atf_ci::FCitest& parent) {
     }
 }
 
-// --- atf_ci.FCitest..Init
-// Set all fields to initial values.
-inline void atf_ci::FCitest_Init(atf_ci::FCitest& parent) {
-    parent.cijob = algo::strptr("normalize");
-    parent.sandbox = bool(false);
-    parent.timeout = i32(600);
-    parent.failfast = bool(false);
-    parent.nerr = i32(0);
-    parent.step = NULL;
-    parent.ind_citest_next = (atf_ci::FCitest*)-1; // (atf_ci.FDb.ind_citest) not-in-hash
-    parent.ind_citest_hashval = 0; // stored hash value
-}
-
 // --- atf_ci.FCitest..Ctor
 inline  atf_ci::FCitest::FCitest() {
     atf_ci::FCitest_Init(*this);
@@ -820,6 +807,144 @@ inline atf_ci::FGitpath& atf_ci::gitpath_qFind(u64 t) {
     return _db.gitpath_lary[bsr][index];
 }
 
+// --- atf_ci.FDb.vendorlib.EmptyQ
+// Return true if index is empty
+inline bool atf_ci::vendorlib_EmptyQ() {
+    return _db.vendorlib_n == 0;
+}
+
+// --- atf_ci.FDb.vendorlib.Find
+// Look up row by row id. Return NULL if out of range
+inline atf_ci::FVendorlib* atf_ci::vendorlib_Find(u64 t) {
+    atf_ci::FVendorlib *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.vendorlib_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.vendorlib_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- atf_ci.FDb.vendorlib.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline atf_ci::FVendorlib* atf_ci::vendorlib_Last() {
+    return vendorlib_Find(u64(_db.vendorlib_n-1));
+}
+
+// --- atf_ci.FDb.vendorlib.N
+// Return number of items in the pool
+inline i64 atf_ci::vendorlib_N() {
+    return _db.vendorlib_n;
+}
+
+// --- atf_ci.FDb.vendorlib.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline atf_ci::FVendorlib& atf_ci::vendorlib_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.vendorlib_lary[bsr][index];
+}
+
+// --- atf_ci.FDb.vulnaccept.EmptyQ
+// Return true if index is empty
+inline bool atf_ci::vulnaccept_EmptyQ() {
+    return _db.vulnaccept_n == 0;
+}
+
+// --- atf_ci.FDb.vulnaccept.Find
+// Look up row by row id. Return NULL if out of range
+inline atf_ci::FVulnaccept* atf_ci::vulnaccept_Find(u64 t) {
+    atf_ci::FVulnaccept *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.vulnaccept_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.vulnaccept_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- atf_ci.FDb.vulnaccept.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline atf_ci::FVulnaccept* atf_ci::vulnaccept_Last() {
+    return vulnaccept_Find(u64(_db.vulnaccept_n-1));
+}
+
+// --- atf_ci.FDb.vulnaccept.N
+// Return number of items in the pool
+inline i64 atf_ci::vulnaccept_N() {
+    return _db.vulnaccept_n;
+}
+
+// --- atf_ci.FDb.vulnaccept.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline atf_ci::FVulnaccept& atf_ci::vulnaccept_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.vulnaccept_lary[bsr][index];
+}
+
+// --- atf_ci.FDb.ind_vulnaccept.EmptyQ
+// Return true if hash is empty
+inline bool atf_ci::ind_vulnaccept_EmptyQ() {
+    return _db.ind_vulnaccept_n == 0;
+}
+
+// --- atf_ci.FDb.ind_vulnaccept.N
+// Return number of items in the hash
+inline i32 atf_ci::ind_vulnaccept_N() {
+    return _db.ind_vulnaccept_n;
+}
+
+// --- atf_ci.FDb.vulnsev.EmptyQ
+// Return true if index is empty
+inline bool atf_ci::vulnsev_EmptyQ() {
+    return _db.vulnsev_n == 0;
+}
+
+// --- atf_ci.FDb.vulnsev.Find
+// Look up row by row id. Return NULL if out of range
+inline atf_ci::FVulnsev* atf_ci::vulnsev_Find(u64 t) {
+    atf_ci::FVulnsev *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.vulnsev_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.vulnsev_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- atf_ci.FDb.vulnsev.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline atf_ci::FVulnsev* atf_ci::vulnsev_Last() {
+    return vulnsev_Find(u64(_db.vulnsev_n-1));
+}
+
+// --- atf_ci.FDb.vulnsev.N
+// Return number of items in the pool
+inline i64 atf_ci::vulnsev_N() {
+    return _db.vulnsev_n;
+}
+
+// --- atf_ci.FDb.vulnsev.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline atf_ci::FVulnsev& atf_ci::vulnsev_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.vulnsev_lary[bsr][index];
+}
+
 // --- atf_ci.FDb.citest_curs.Reset
 // cursor points to valid item
 inline void atf_ci::_db_citest_curs_Reset(_db_citest_curs &curs, atf_ci::FDb &parent) {
@@ -1195,6 +1320,81 @@ inline atf_ci::FGitpath& atf_ci::_db_gitpath_curs_Access(_db_gitpath_curs &curs)
     return gitpath_qFind(u64(curs.index));
 }
 
+// --- atf_ci.FDb.vendorlib_curs.Reset
+// cursor points to valid item
+inline void atf_ci::_db_vendorlib_curs_Reset(_db_vendorlib_curs &curs, atf_ci::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- atf_ci.FDb.vendorlib_curs.ValidQ
+// cursor points to valid item
+inline bool atf_ci::_db_vendorlib_curs_ValidQ(_db_vendorlib_curs &curs) {
+    return curs.index < _db.vendorlib_n;
+}
+
+// --- atf_ci.FDb.vendorlib_curs.Next
+// proceed to next item
+inline void atf_ci::_db_vendorlib_curs_Next(_db_vendorlib_curs &curs) {
+    curs.index++;
+}
+
+// --- atf_ci.FDb.vendorlib_curs.Access
+// item access
+inline atf_ci::FVendorlib& atf_ci::_db_vendorlib_curs_Access(_db_vendorlib_curs &curs) {
+    return vendorlib_qFind(u64(curs.index));
+}
+
+// --- atf_ci.FDb.vulnaccept_curs.Reset
+// cursor points to valid item
+inline void atf_ci::_db_vulnaccept_curs_Reset(_db_vulnaccept_curs &curs, atf_ci::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- atf_ci.FDb.vulnaccept_curs.ValidQ
+// cursor points to valid item
+inline bool atf_ci::_db_vulnaccept_curs_ValidQ(_db_vulnaccept_curs &curs) {
+    return curs.index < _db.vulnaccept_n;
+}
+
+// --- atf_ci.FDb.vulnaccept_curs.Next
+// proceed to next item
+inline void atf_ci::_db_vulnaccept_curs_Next(_db_vulnaccept_curs &curs) {
+    curs.index++;
+}
+
+// --- atf_ci.FDb.vulnaccept_curs.Access
+// item access
+inline atf_ci::FVulnaccept& atf_ci::_db_vulnaccept_curs_Access(_db_vulnaccept_curs &curs) {
+    return vulnaccept_qFind(u64(curs.index));
+}
+
+// --- atf_ci.FDb.vulnsev_curs.Reset
+// cursor points to valid item
+inline void atf_ci::_db_vulnsev_curs_Reset(_db_vulnsev_curs &curs, atf_ci::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- atf_ci.FDb.vulnsev_curs.ValidQ
+// cursor points to valid item
+inline bool atf_ci::_db_vulnsev_curs_ValidQ(_db_vulnsev_curs &curs) {
+    return curs.index < _db.vulnsev_n;
+}
+
+// --- atf_ci.FDb.vulnsev_curs.Next
+// proceed to next item
+inline void atf_ci::_db_vulnsev_curs_Next(_db_vulnsev_curs &curs) {
+    curs.index++;
+}
+
+// --- atf_ci.FDb.vulnsev_curs.Access
+// item access
+inline atf_ci::FVulnsev& atf_ci::_db_vulnsev_curs_Access(_db_vulnsev_curs &curs) {
+    return vulnsev_qFind(u64(curs.index));
+}
+
 // --- atf_ci.FExecLimit..Ctor
 inline  atf_ci::FExecLimit::FExecLimit() {
 }
@@ -1202,7 +1402,6 @@ inline  atf_ci::FExecLimit::FExecLimit() {
 // --- atf_ci.FExtpkg..Init
 // Set all fields to initial values.
 inline void atf_ci::FExtpkg_Init(atf_ci::FExtpkg& parent) {
-    parent.probe = algo::strptr("");
     parent.ind_extpkg_next = (atf_ci::FExtpkg*)-1; // (atf_ci.FDb.ind_extpkg) not-in-hash
     parent.ind_extpkg_hashval = 0; // stored hash value
 }
@@ -1364,7 +1563,9 @@ inline  atf_ci::FPkggen::FPkggen() {
 inline void atf_ci::FReadmefile_Init(atf_ci::FReadmefile& parent) {
     parent.inl = bool(false);
     parent.sandbox = bool(false);
+    parent.tut = bool(false);
     parent.publish = bool(false);
+    parent.narrow = bool(false);
 }
 
 // --- atf_ci.FReadmefile..Ctor
@@ -1413,6 +1614,38 @@ inline  atf_ci::FTargsrc::FTargsrc() {
 // --- atf_ci.FTargsrc..Dtor
 inline  atf_ci::FTargsrc::~FTargsrc() {
     atf_ci::FTargsrc_Uninit(*this);
+}
+
+// --- atf_ci.FVendorlib..Ctor
+inline  atf_ci::FVendorlib::FVendorlib() {
+}
+
+// --- atf_ci.FVulnaccept..Init
+// Set all fields to initial values.
+inline void atf_ci::FVulnaccept_Init(atf_ci::FVulnaccept& parent) {
+    parent.ind_vulnaccept_next = (atf_ci::FVulnaccept*)-1; // (atf_ci.FDb.ind_vulnaccept) not-in-hash
+    parent.ind_vulnaccept_hashval = 0; // stored hash value
+}
+
+// --- atf_ci.FVulnaccept..Ctor
+inline  atf_ci::FVulnaccept::FVulnaccept() {
+    atf_ci::FVulnaccept_Init(*this);
+}
+
+// --- atf_ci.FVulnaccept..Dtor
+inline  atf_ci::FVulnaccept::~FVulnaccept() {
+    atf_ci::FVulnaccept_Uninit(*this);
+}
+
+// --- atf_ci.FVulnsev..Init
+// Set all fields to initial values.
+inline void atf_ci::FVulnsev_Init(atf_ci::FVulnsev& parent) {
+    parent.fail = bool(false);
+}
+
+// --- atf_ci.FVulnsev..Ctor
+inline  atf_ci::FVulnsev::FVulnsev() {
+    atf_ci::FVulnsev_Init(*this);
 }
 
 // --- atf_ci.FieldId.value.GetEnum

@@ -270,9 +270,13 @@ namespace acr { // update-hdr
     // Mark SSIMREQ child records for deletion
     void DelChildRecords(acr::FRec &rec);
 
-    // Start with selected records
-    // Find all dependent records and delete them as well
-    // In the end, de-select records that were both inserted and deleted
+    // Mark deleted every record that refers to a selected deleted record, and
+    // select it, recursively.  A record inserted earlier in the same run takes its
+    // children with it as a record read from the dataset does, so a run that
+    // inserts a namespace with its ctypes and then deletes the namespace leaves no
+    // ctype behind.  With -x the cascade also reaches the records that ssimreq rules
+    // tie to a deleted record.  In the end, de-select records that were both
+    // inserted and deleted.
     void CascadeDelete();
 
     // -------------------------------------------------------------------

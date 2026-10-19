@@ -1,0 +1,13 @@
+amcdb.regxmacro  regxmacro:D  chclass:0-9  neg:Y  comment:"Anything but a digit"
+amcdb.regxmacro  regxmacro:S  chclass:"\\n\\r\\t\\v \\f"  neg:Y  comment:"Anything but whitespace"
+amcdb.regxmacro  regxmacro:W  chclass:a-zA-Z0-9_  neg:Y  comment:"Anything but a word character"
+amcdb.regxmacro  regxmacro:a  chclass:"\\a"  neg:N  comment:Bell
+amcdb.regxmacro  regxmacro:d  chclass:0-9  neg:N  comment:"A digit"
+amcdb.regxmacro  regxmacro:e  chclass:"\\e"  neg:N  comment:Escape
+amcdb.regxmacro  regxmacro:f  chclass:"\\f"  neg:N  comment:"Form feed"
+amcdb.regxmacro  regxmacro:n  chclass:"\\n"  neg:N  comment:Newline
+amcdb.regxmacro  regxmacro:r  chclass:"\\r"  neg:N  comment:"Carriage return"
+amcdb.regxmacro  regxmacro:s  chclass:"\\n\\r\\t\\v \\f"  neg:N  comment:Whitespace
+amcdb.regxmacro  regxmacro:t  chclass:"\\t"  neg:N  comment:Tab
+amcdb.regxmacro  regxmacro:v  chclass:"\\v"  neg:N  comment:"Vertical tab"
+amcdb.regxmacro  regxmacro:w  chclass:a-zA-Z0-9_  neg:N  comment:"A word character"

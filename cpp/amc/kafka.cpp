@@ -42,7 +42,7 @@ static bool KafkaStructArgQ(amc::FField &field) {
     strptr arg = field.arg;
     bool scalar = arg == "bool" || arg == "i8" || arg == "i16" || arg == "i32" || arg == "i64"
         || arg == "u8" || arg == "u16" || arg == "u32" || arg == "u64" || arg == "double";
-    bool blob = arg == "algo.cstring" || arg == "algo.ByteAry" || arg == "kafka.RecordBatch" || arg == "algo.Uuid" || arg == "kafka.AclOperations";
+    bool blob = arg == "algo.cstring" || arg == "algo.ByteAry" || arg == "kafka.RecordSet" || arg == "algo.Uuid" || arg == "kafka.AclOperations";
     return !scalar && !blob;
 }
 
@@ -234,10 +234,10 @@ void amc::KafkaCodec(int dir) {
                         Ins(&R,func.body,"lib_kafka::EncodeString(buf,$fldval,$fldprschk,$fldnulchk,$fldflxchk);");
                     } else if (field.arg == "algo.ByteAry") {
                         Ins(&R,func.body,"lib_kafka::EncodeBytes(buf,$fldval,$fldprschk,$fldnulchk,$fldflxchk);");
-                    } else if (field.arg == "kafka.RecordBatch") {
+                    } else if (field.arg == "kafka.RecordSet") {
                         Ins(&R,func.body,"algo::ByteAry $fldname_buf;");
                         Ins(&R,func.body,"if ($fldprschk) {");
-                        Ins(&R,func.body,"    lib_kafka::EncodeRecordBatch($fldname_buf,$fldval);");
+                        Ins(&R,func.body,"    lib_kafka::EncodeRecordSet($fldname_buf,$fldval);");
                         Ins(&R,func.body,"}");
                         Ins(&R,func.body,"lib_kafka::EncodeBytes(buf,ary_Getary($fldname_buf),true,$fldnulchk,$fldflxchk);");
                     } else if (field.arg == "algo.Uuid") {
@@ -292,12 +292,12 @@ void amc::KafkaCodec(int dir) {
                         Ins(&R,func.body,"ok = ok && lib_kafka::DecodeString(buf,$fldval,present,$fldnulchk,$fldflxchk);");
                     } else if (field.arg == "algo.ByteAry") {
                         Ins(&R,func.body,"ok = ok && lib_kafka::DecodeBytes(buf,$fldval,present,$fldnulchk,$fldflxchk);");
-                    } else if (field.arg == "kafka.RecordBatch") {
+                    } else if (field.arg == "kafka.RecordSet") {
                         Ins(&R,func.body,"algo::memptr $fldname_buf;");
                         Ins(&R,func.body,"ok = ok && lib_kafka::DecodeBytes(buf,$fldname_buf,present,$fldnulchk,$fldflxchk);");
                         Ins(&R,func.body,"present = present && elems_N($fldname_buf);");
                         Ins(&R,func.body,"if (present) {");
-                        Ins(&R,func.body,"    ok = ok && lib_kafka::DecodeRecordBatch($fldname_buf,$fldval);");
+                        Ins(&R,func.body,"    ok = ok && lib_kafka::DecodeRecordSet($fldname_buf,$fldval);");
                         Ins(&R,func.body,"}");
                     } else if (field.arg == "algo.Uuid") {
                         Ins(&R,func.body,"ok = ok && algo::DecodeUuid(buf,$fldval);");

@@ -71,6 +71,16 @@ enum ietf_Iphdr_protocol_Enum {         // ietf.Iphdr.protocol
 
 enum { ietf_Iphdr_protocol_Enum_N = 4 };
 
+
+// --- ietf_Pcaphdr_linktype_Enum
+
+enum ietf_Pcaphdr_linktype_Enum {               // ietf.Pcaphdr.linktype
+     ietf_Pcaphdr_linktype_ethernet     = 1
+    ,ietf_Pcaphdr_linktype_linux_sll2   = 276   // Linux cooked capture v2, as tcpdump -i any writes
+};
+
+enum { ietf_Pcaphdr_linktype_Enum_N = 2 };
+
 namespace ietf { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
 namespace ietf { // gen:ns_tclass_field
@@ -85,6 +95,8 @@ namespace ietf { struct Iphdr; }
 namespace ietf { struct Ipv4; }
 namespace ietf { struct Ipport; }
 namespace ietf { struct Ipv4Addr; }
+namespace ietf { struct Pcaphdr; }
+namespace ietf { struct Pcaprec; }
 namespace ietf { struct Tcphdr; }
 namespace ietf { struct Udphdr; }
 namespace ietf { struct Vlanhdr; }
@@ -626,6 +638,63 @@ inline bool          Ipv4Addr_Update(ietf::Ipv4Addr &lhs, ietf::Ipv4Addr rhs) __
 // func:ietf.Ipv4Addr..Print
 // this function is 'extrn' and implemented by user
 void                 Ipv4Addr_Print(ietf::Ipv4Addr row, algo::cstring& str) __attribute__((nothrow));
+
+// --- ietf.Pcaphdr
+#pragma pack(push,1)
+struct Pcaphdr { // ietf.Pcaphdr: pcap file header: magic, version, snap length and link type (draft-ietf-opsawg-pcap)
+    u32   magic;           //   0xa1b2c3d4  0xa1b2c3d4: microsecond timestamps in host order
+    u16   version_major;   //   2
+    u16   version_minor;   //   4
+    i32   thiszone;        //   0
+    u32   sigfigs;         //   0
+    u32   snaplen;         //   65535  Longest frame the file holds
+    u32   linktype;        //   1  Link header of every frame
+    // func:ietf.Pcaphdr..Ctor
+    inline               Pcaphdr() __attribute__((nothrow));
+};
+#pragma pack(pop)
+// Get value of field as enum type
+// func:ietf.Pcaphdr.linktype.GetEnum
+inline ietf_Pcaphdr_linktype_Enum linktype_GetEnum(const ietf::Pcaphdr& parent) __attribute__((nothrow));
+// Set value of field from enum type.
+// func:ietf.Pcaphdr.linktype.SetEnum
+inline void          linktype_SetEnum(ietf::Pcaphdr& parent, ietf_Pcaphdr_linktype_Enum rhs) __attribute__((nothrow));
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+// func:ietf.Pcaphdr.linktype.ToCstr
+const char*          linktype_ToCstr(const ietf::Pcaphdr& parent) __attribute__((nothrow));
+// Convert linktype to a string. First, attempt conversion to a known string.
+// If no string matches, print linktype as a numeric value.
+// func:ietf.Pcaphdr.linktype.Print
+void                 linktype_Print(const ietf::Pcaphdr& parent, algo::cstring &lhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+// func:ietf.Pcaphdr.linktype.SetStrptrMaybe
+bool                 linktype_SetStrptrMaybe(ietf::Pcaphdr& parent, algo::strptr rhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+// func:ietf.Pcaphdr.linktype.SetStrptr
+void                 linktype_SetStrptr(ietf::Pcaphdr& parent, algo::strptr rhs, ietf_Pcaphdr_linktype_Enum dflt) __attribute__((nothrow));
+
+// Set all fields to initial values.
+// func:ietf.Pcaphdr..Init
+inline void          Pcaphdr_Init(ietf::Pcaphdr& parent);
+
+// --- ietf.Pcaprec
+#pragma pack(push,1)
+struct Pcaprec { // ietf.Pcaprec: pcap record header: capture time and length of one frame
+    u32   ts_sec;    //   0  Capture time, seconds
+    u32   ts_usec;   //   0  Capture time, microseconds past the second
+    u32   caplen;    //   0  Bytes of the frame the file holds
+    u32   len;       //   0  Bytes of the frame on the wire
+    // func:ietf.Pcaprec..Ctor
+    inline               Pcaprec() __attribute__((nothrow));
+};
+#pragma pack(pop)
+// Set all fields to initial values.
+// func:ietf.Pcaprec..Init
+inline void          Pcaprec_Init(ietf::Pcaprec& parent);
 
 // --- ietf.Tcphdr
 #pragma pack(push,1)

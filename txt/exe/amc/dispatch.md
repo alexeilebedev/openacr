@@ -54,14 +54,14 @@ that may live elsewhere).  The dispatch is *just metadata* —
 no storage in any struct — and what amc generates from it is
 controlled by the flags:
 
-| Flag      | Effect when `Y` |
-|-----------|------------------|
-| `call`    | Generate `<name>Dispatch(...)` that switches on the type and calls a per-message user-implemented callback. |
-| `read`    | Generate `<name>_ReadStrptr(...)` that parses a text representation of any member message. |
-| `print`   | Generate `<name>_Print(...)` that prints any member message. |
-| `haslen`  | The wire bytes carry an explicit length (the dispatch's shared header must have a `lenfld`).  Adds `msg_len` to all signatures. |
-| `strict`  | Refuse to dispatch when `msg_len` is longer than `sizeof(message)`.  Useful for fixed-size wire protocols. |
-| `unk`     | Call the user-implemented `<name>_Unkmsg(msg)` from the `default:` case.  Without it the `default:` is reachable and does nothing. |
+| Flag       | Effect when `Y` |
+| ---------- | --------------- |
+| `call`     | Generate `<name>Dispatch(...)` that switches on the type and calls a per-message user-implemented callback. |
+| `read`     | Generate `<name>_ReadStrptr(...)` that parses a text representation of any member message. |
+| `print`    | Generate `<name>_Print(...)` that prints any member message. |
+| `haslen`   | The wire bytes carry an explicit length (the dispatch's shared header must have a `lenfld`).  Adds `msg_len` to all signatures. |
+| `strict`   | Refuse to dispatch when `msg_len` is longer than `sizeof(message)`.  Useful for fixed-size wire protocols. |
+| `unk`      | Call the user-implemented `<name>_Unkmsg(msg)` from the `default:` case.  Without it the `default:` is reachable and does nothing. |
 | `unkcount` | Count a message no case takes in the `dispatch_<name>_Unkmsg` trace field (the default).  `N` leaves the field out, for a dispatch whose default handler hands the message to another dispatch that counts what nobody takes. |
 
 `dmmeta.dispatch_msg  dispatch_msg:<dispatch>/<ctype>` adds one
@@ -137,14 +137,14 @@ Source: `cpp/amc/disp/*.cpp` (one file per code-gen aspect:
 
 For a dispatch `<ns>.<name>` with shared header `Hdr`:
 
-| Function                                           | Emitted when      | Effect |
-|----------------------------------------------------|-------------------|--------|
-| `int <name>Dispatch(Hdr&[, u32 len])`              | `call:Y`          | Switch on `hdr.type`; calls user-implemented `<ns>::<name>_<Msg>(...)`.  Returns the consumed byte count, or 0 if no case matched. |
-| `int <name>DispatchRaw(<Case> type, u8 *msg, u32 len)` | `call:Y`      | Raw form taking a Case enum + bytes; used by `_ReadStrptr` after parsing. |
-| `void <name>_Print(cstring& out, Hdr& msg[, u32 len])` | `print:Y`     | Switch on `hdr.type`; calls `<Msg>_Print` on the active arm. |
-| `<Case> <name>_ReadStrptr(strptr in, ByteAry& buf)` | `read:Y`         | Parse tag from text, dispatch to the right `<Msg>_ReadStrptrMaybe`. |
-| `void <name>_Delete(Hdr& msg)`                     | (dispatch + ctype has dtor) | Switch + dtor call. |
-| `void <name>_KafkaEncode(...)` / `_KafkaDecode(...)` | when ctype has `ckafka` | Kafka wire encoders/decoders driven by the dispatch. |
+| Function                                               | Emitted when                | Effect |
+| ------------------------------------------------------ | --------------------------- | ------ |
+| `int <name>Dispatch(Hdr&[, u32 len])`                  | `call:Y`                    | Switch on `hdr.type`; calls user-implemented `<ns>::<name>_<Msg>(...)`.  Returns the consumed byte count, or 0 if no case matched. |
+| `int <name>DispatchRaw(<Case> type, u8 *msg, u32 len)` | `call:Y`                    | Raw form taking a Case enum + bytes; used by `_ReadStrptr` after parsing. |
+| `void <name>_Print(cstring& out, Hdr& msg[, u32 len])` | `print:Y`                   | Switch on `hdr.type`; calls `<Msg>_Print` on the active arm. |
+| `<Case> <name>_ReadStrptr(strptr in, ByteAry& buf)`    | `read:Y`                    | Parse tag from text, dispatch to the right `<Msg>_ReadStrptrMaybe`. |
+| `void <name>_Delete(Hdr& msg)`                         | (dispatch + ctype has dtor) | Switch + dtor call. |
+| `void <name>_KafkaEncode(...)` / `_KafkaDecode(...)`   | when ctype has `ckafka`     | Kafka wire encoders/decoders driven by the dispatch. |
 
 User callbacks are extern forward-declarations: amc emits the
 prototype, the user writes the body.

@@ -80,6 +80,16 @@ enum report_FieldIdEnum {    // report.FieldId.value
     ,report_FieldId_pch_file
     ,report_FieldId_source
     ,report_FieldId_pch_source
+    ,report_FieldId_name
+    ,report_FieldId_nmsg
+    ,report_FieldId_min_usec
+    ,report_FieldId_avg_usec
+    ,report_FieldId_p50_usec
+    ,report_FieldId_p90_usec
+    ,report_FieldId_p99_usec
+    ,report_FieldId_p999_usec
+    ,report_FieldId_p9999_usec
+    ,report_FieldId_max_usec
     ,report_FieldId_stat
     ,report_FieldId_n_request
     ,report_FieldId_input
@@ -102,7 +112,7 @@ enum report_FieldIdEnum {    // report.FieldId.value
     ,report_FieldId_value
 };
 
-enum { report_FieldIdEnum_N = 74 };
+enum { report_FieldIdEnum_N = 84 };
 
 namespace report { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
@@ -120,6 +130,7 @@ namespace report { struct atf_cov; }
 namespace report { struct atf_unit; }
 namespace report { struct gcache; }
 namespace report { struct gcache_hitrate; }
+namespace report { struct lathist; }
 namespace report { struct llmtool; }
 namespace report { struct llmtool_model; }
 namespace report { struct src_func; }
@@ -433,6 +444,35 @@ bool                 gcache_hitrate_ReadStrptrMaybe(report::gcache_hitrate &pare
 // func:report.gcache_hitrate..Print
 void                 gcache_hitrate_Print(report::gcache_hitrate& row, algo::cstring& str) __attribute__((nothrow));
 
+// --- report.lathist
+struct lathist { // report.lathist: One closed window of a latency histogram
+    algo::cstring   name;         // histogram name, lat-<kind>
+    u64             nmsg;         //   0  latencies the window timed
+    double          min_usec;     //   0.0  minimum latency, usec
+    double          avg_usec;     //   0.0  average latency, usec
+    double          p50_usec;     //   0.0  median latency, usec
+    double          p90_usec;     //   0.0  90th percentile latency, usec
+    double          p99_usec;     //   0.0  99th percentile latency, usec
+    double          p999_usec;    //   0.0  99.9th percentile latency, usec
+    double          p9999_usec;   //   0.0  99.99th percentile latency, usec
+    double          max_usec;     //   0.0  maximum latency, usec
+    // func:report.lathist..Ctor
+    inline               lathist() __attribute__((nothrow));
+};
+// func:report.lathist..ReadFieldMaybe
+bool                 lathist_ReadFieldMaybe(report::lathist& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of report::lathist from an ascii string.
+// The format of the string is an ssim Tuple
+// func:report.lathist..ReadStrptrMaybe
+bool                 lathist_ReadStrptrMaybe(report::lathist &parent, algo::strptr in_str) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:report.lathist..Init
+void                 lathist_Init(report::lathist& parent);
+// print string representation of ROW to string STR
+// cfmt:report.lathist.String  printfmt:Tuple
+// func:report.lathist..Print
+void                 lathist_Print(report::lathist& row, algo::cstring& str) __attribute__((nothrow));
+
 // --- report.llmtool
 struct llmtool { // report.llmtool: Cost of llm work in one worktree, by main or subagent
     algo::cstring   stat;              // Worktree and qualifier, comma-separated
@@ -534,6 +574,7 @@ inline algo::cstring &operator <<(algo::cstring &str, const report::atf_cov &row
 inline algo::cstring &operator <<(algo::cstring &str, const report::atf_unit &row);// cfmt:report.atf_unit.String
 inline algo::cstring &operator <<(algo::cstring &str, const report::gcache &row);// cfmt:report.gcache.String
 inline algo::cstring &operator <<(algo::cstring &str, const report::gcache_hitrate &row);// cfmt:report.gcache_hitrate.String
+inline algo::cstring &operator <<(algo::cstring &str, const report::lathist &row);// cfmt:report.lathist.String
 inline algo::cstring &operator <<(algo::cstring &str, const report::llmtool &row);// cfmt:report.llmtool.String
 inline algo::cstring &operator <<(algo::cstring &str, const report::llmtool_model &row);// cfmt:report.llmtool_model.String
 inline algo::cstring &operator <<(algo::cstring &str, const report::src_func &row);// cfmt:report.src_func.String

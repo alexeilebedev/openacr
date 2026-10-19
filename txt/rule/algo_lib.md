@@ -22,6 +22,14 @@ expression is matched by searching for that string rather than by simulating its
 states.  The states a matcher walks carry no group-boundary states unless the
 caller asked for the groups.  Matching writes nothing into the compiled Regx.
 
+A pattern is normalized before it is parsed, so the parser reads only the
+canonical form: every punctuation character that means itself stands behind a
+backslash, every class is closed, an empty alternative is an empty group, and
+no quantifier follows another.  amc writes the normalizer into algo_lib and into
+`ts/gen/algo_lib_regx.ts` alike.  A malformed pattern means what its
+`amcdb.regxlenient` row says; an invalid one compiles to an empty class, keeps
+`valid:N`, and matches nothing.
+
 A bitset holds no bit past the words it has, and every operation that combines
 two of them respects that.
 
@@ -198,6 +206,50 @@ Reaching it means the front becomes a list of threads each carrying its own
 positions -- a Pike VM -- which puts a copy per thread per character on every
 match rather than on the ones that asked for groups.  Two callers in the tree ask
 for groups: `samp_regx` and the regx unit test.
+
+### A pattern means one thing in C++ and in the browser
+<a href="#a-pattern-means-one-thing-in-c-and-in-the-browser"></a>
+
+A reader types `ctype:amc.F(Ns|Ctype)` at `acr`, and it selects the two ctypes
+`amc.FNs` and `amc.FCtype`.  A browser page that filters the same table has to
+select the same two rows, so it has to read the pattern exactly as algo_lib
+does.  A hand-written port in TypeScript did not.  It copied the sql
+rewrite and handed the result to a JavaScript `RegExp`, which reads `a{2}` as a
+repeat, `\b` as a word boundary, and throws on a stray `)`.  algo_lib's parser
+reads all three as plain characters.
+
+So a pattern goes through two translations, and both have to exist once.  The
+first rewrites a style, such as sql, into the default syntax.  The second
+decides what every character of the default syntax means, including the
+malformed ones.  A port of the first alone leaves the second split between
+two parsers.
+
+amc writes both translations, from one template, as `RegxRewrite` and
+`RegxNormalize` in algo_lib and as `regxCompile` in TypeScript.  Each part of
+the syntax is defined in one place:
+
+| part                                          | defined in |
+| --------------------------------------------- | ---------- |
+| what each character of a style becomes        | `amcdb.regxstyle`, `amcdb.regxrule` |
+| the escapes that stand for a class            | `amcdb.regxmacro` |
+| which malformed shapes make a pattern invalid | `amcdb.regxlenient` |
+| the operators of the default syntax           | the template in `cpp/amc/regxstyle.cpp` |
+| classes, empty alternatives and quantifiers   | the template in `cpp/amc/regxstyle.cpp` |
+| which punctuation the canonical form escapes  | `RegxPunctExpr` in `cpp/amc/regxstyle.cpp` |
+
+The normalizer's output escapes every literal, closes every class, writes an
+empty alternative as an empty group and merges stacked quantifiers.  That
+canonical form is where algo_lib's parser and a `RegExp` agree.  Both read
+bytes: the TypeScript side matches the UTF-8 bytes of a subject, so `_` covers
+one byte of a name that is not ASCII in both.  `amcdb.regxcase` holds examples
+that `atf_unit algo_lib.RegxCase` and a TypeScript suite both match.
+
+The same rows give the quote of a style, `RegxQuoteQ` in algo_lib and
+`regxQuote` in TypeScript.  It escapes the operators of the style and leaves
+every other character as written.
+
+One limit remains.  The form leans on the two engines agreeing on what it
+contains, which the examples check but nothing makes impossible.
 
 ### Why these are two things and not one
 <a href="#why-these-are-two-things-and-not-one"></a>

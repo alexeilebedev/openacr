@@ -53,8 +53,13 @@ namespace ssimfilt { // update-hdr
     // if no schema is available, all field values are quoted
     void PrintJson(algo::Tuple &tuple);
     void PrintCsv(algo::Tuple &tuple);
+
+    // Save TUPLE as a row of the table in progress, printing that table first when TUPLE cannot
+    // join it (algo_lib::NewTableQ).
     void Table_Save(algo::Tuple &tuple);
     void MDTable_Save(algo::Tuple &tuple);
+
+    // Print the saved tuples as one table, in markdown under -format:mdtable, and forget them.
     void Table_Flush();
     //     (user-implemented function, prototype is in amc-generated header)
     // void Main(); // dmmeta.main:ssimfilt

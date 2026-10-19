@@ -16,10 +16,10 @@ dmmeta.field  field:abt.FDb.cnt_dirty  arg:abt.FTarget  reftype:Count  dflt:""  
 A pre-amc phase (`gen_newfield_count` in `cpp/amc/gen.cpp`)
 synthesizes two ordinary `Val` fields:
 
-| Field                         | Type   | Lives on        | Meaning                              |
-|-------------------------------|--------|-----------------|--------------------------------------|
-| `<name>_n`                    | `u32`  | parent ctype    | current count                        |
-| `<arg>.<name>_value`          | `bool` | element ctype   | whether *this row* is currently counted |
+| Field                | Type   | Lives on      | Meaning |
+| -------------------- | ------ | ------------- | ------- |
+| `<name>_n`           | `u32`  | parent ctype  | current count |
+| `<arg>.<name>_value` | `bool` | element ctype | whether *this row* is currently counted |
 
 The boolean per-row flag makes `Insert` and `Remove` idempotent
 — calling `Insert` twice does not over-count, and `Remove` of a
@@ -51,11 +51,11 @@ No `dmmeta.count` record exists.  Count takes no parameters.
 
 Source: `cpp/amc/count.cpp`.
 
-| Tfunc           | Generated function                              | Effect |
-|-----------------|-------------------------------------------------|--------|
-| `Count.Insert`  | `void <name>_Insert(P&, T& row)`                | If `row.<name>_value == false`, set it true and increment `<name>_n`.  Idempotent. |
-| `Count.Remove`  | `void <name>_Remove(P&, T& row)`                | Clear `<name>_value`; decrement `<name>_n` if it was set. |
-| `Count.N`       | `u32 <name>_N(P&)`                              | Return `<name>_n`. |
+| Tfunc          | Generated function               | Effect |
+| -------------- | -------------------------------- | ------ |
+| `Count.Insert` | `void <name>_Insert(P&, T& row)` | If `row.<name>_value == false`, set it true and increment `<name>_n`.  Idempotent. |
+| `Count.Remove` | `void <name>_Remove(P&, T& row)` | Clear `<name>_value`; decrement `<name>_n` if it was set. |
+| `Count.N`      | `u32 <name>_N(P&)`               | Return `<name>_n`. |
 
 ### Memory model
 <a href="#memory-model"></a>

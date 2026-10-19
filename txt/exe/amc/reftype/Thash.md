@@ -20,18 +20,18 @@ dmmeta.field  field:abt.FDb.ind_target  arg:abt.FTarget  reftype:Thash  dflt:"" 
 State in the **parent** ctype (see `tclass_Thash` in
 `cpp/amc/thash.cpp`):
 
-| Field (parent)            | Type     | Meaning                                              |
-|---------------------------|----------|------------------------------------------------------|
-| `<name>_buckets_elems`    | `T**`    | bucket array, length is a power of two               |
-| `<name>_buckets_n`        | `i32`    | number of buckets (always a power of two)            |
-| `<name>_n`                | `i32`    | number of indexed elements                           |
+| Field (parent)         | Type  | Meaning |
+| ---------------------- | ----- | ------- |
+| `<name>_buckets_elems` | `T**` | bucket array, length is a power of two |
+| `<name>_buckets_n`     | `i32` | number of buckets (always a power of two) |
+| `<name>_n`             | `i32` | number of indexed elements |
 
 State in the **element** ctype:
 
-| Field (element)        | Type    | Meaning                                                 |
-|------------------------|---------|---------------------------------------------------------|
-| `<xfname>_next`        | `T*`    | next element in this bucket's collision chain; `(T*)-1` means "not in hash" |
-| `<xfname>_hashval`     | `u32`   | cached hash value, used for cheap rehash on grow        |
+| Field (element)    | Type  | Meaning |
+| ------------------ | ----- | ------- |
+| `<xfname>_next`    | `T*`  | next element in this bucket's collision chain; `(T*)-1` means "not in hash" |
+| `<xfname>_hashval` | `u32` | cached hash value, used for cheap rehash on grow |
 
 The element's `Init` is augmented to set `next=(T*)-1` and
 `hashval=0`.
@@ -62,7 +62,7 @@ The `chash.hashtype` field on the **element** ctype selects
 the hash function:
 
 | Hashtype | Behavior |
-|----------|----------|
+| -------- | -------- |
 | `CRC32`  | Default.  Uses the algo CRC32 mix.  Bucket chains are walked on Find/Insert. |
 | `Linear` | Identity hash — the hash value *is* the index, no collisions.  `_buckets` becomes a sparse direct-address table; `Find` is a single load.  Grows via `ReallocMem`, preserving slots. |
 | `Extern` | User provides `<ElemType>_Hash`.  Treated like CRC32 for the rest of the layout. |
@@ -104,22 +104,22 @@ Required:
 
 Source: `cpp/amc/thash.cpp`.
 
-| Tfunc                  | Generated function                                              | Effect |
-|------------------------|-----------------------------------------------------------------|--------|
-| `Thash.Init`           | `<name>_Init(P&)` (macro)                                       | Allocate the initial 4-bucket array; OOM is fatal. |
-| `Thash.Uninit`         | `<name>_Uninit(P&)` (macro)                                     | Free the bucket array (no-op for global FDb). |
-| `Thash.N`              | `i32 <name>_N(const P&)`                                        | Number of indexed elements. |
-| `Thash.EmptyQ`         | `bool <name>_EmptyQ(P&)`                                        | `_n == 0`. |
-| `Thash.Find`           | `T* <name>_Find(P&, key)`                                       | Look up by key; NULL if not found. |
-| `Thash.FindX`          | `T& <name>_FindX(P&, key)`                                      | Look up by key; throw on miss. |
-| `Thash.FindRemove`     | `T* <name>_FindRemove(P&, key)` *(opt-in, see below)*           | Find + unlink in one walk. |
-| `Thash.GetOrCreate`    | `T& <name>_GetOrCreate(P&, key)` or `T* …`                      | Find; on miss, allocate the underlying row, set its key field, and `XrefMaybe`.  Reference-return when amc can prove the xref always succeeds; pointer-return otherwise.  Only emitted if the element type has an instantiating pool (so the row can be created). |
-| `Thash.InsertMaybe`    | `bool <name>_InsertMaybe(P&, T& row)`                           | Add `row` to the index using its current `hashfld`.  Returns false if `unique:Y` and the key is already present.  No-op if `row` is already in this index. |
-| `Thash.Remove`         | `void <name>_Remove(P&, T& row)`                                | Unlink `row` from its bucket; no-op if not in the hash. |
-| `Thash.Cascdel`        | (private)                                                       | Walk every bucket and `Delete` each element. Emitted when the xref has `cascdel:Y`. |
-| `Thash.Reserve`        | `void <name>_Reserve(P&, i32 n)`                                | Grow buckets so that `n` *more* elements would fit. |
-| `Thash.AbsReserve`     | `void <name>_AbsReserve(P&, i32 n)`                             | Grow buckets so that `n` absolute elements would fit.  Reallocs bucket array, rehashes every element (or, for `Linear`, just clears the new tail). |
-| `Thash.curs`           | `<P>_<name>_curs` + `_Reset/_ValidQ/_Next/_Access` *(opt-in)*   | Forward cursor — walks each bucket head-to-tail, so rows come out in no key order.  Request it with a `dmmeta.fcurs` row, see [cursors](/txt/exe/amc/reftype.md#cursors). |
+| Tfunc               | Generated function                                            | Effect |
+| ------------------- | ------------------------------------------------------------- | ------ |
+| `Thash.Init`        | `<name>_Init(P&)` (macro)                                     | Allocate the initial 4-bucket array; OOM is fatal. |
+| `Thash.Uninit`      | `<name>_Uninit(P&)` (macro)                                   | Free the bucket array (no-op for global FDb). |
+| `Thash.N`           | `i32 <name>_N(const P&)`                                      | Number of indexed elements. |
+| `Thash.EmptyQ`      | `bool <name>_EmptyQ(P&)`                                      | `_n == 0`. |
+| `Thash.Find`        | `T* <name>_Find(P&, key)`                                     | Look up by key; NULL if not found. |
+| `Thash.FindX`       | `T& <name>_FindX(P&, key)`                                    | Look up by key; throw on miss. |
+| `Thash.FindRemove`  | `T* <name>_FindRemove(P&, key)` *(opt-in, see below)*         | Find + unlink in one walk. |
+| `Thash.GetOrCreate` | `T& <name>_GetOrCreate(P&, key)` or `T* …`                    | Find; on miss, allocate the underlying row, set its key field, and `XrefMaybe`.  Reference-return when amc can prove the xref always succeeds; pointer-return otherwise.  Only emitted if the element type has an instantiating pool (so the row can be created). |
+| `Thash.InsertMaybe` | `bool <name>_InsertMaybe(P&, T& row)`                         | Add `row` to the index using its current `hashfld`.  Returns false if `unique:Y` and the key is already present.  No-op if `row` is already in this index. |
+| `Thash.Remove`      | `void <name>_Remove(P&, T& row)`                              | Unlink `row` from its bucket; no-op if not in the hash. |
+| `Thash.Cascdel`     | (private)                                                     | Walk every bucket and `Delete` each element. Emitted when the xref has `cascdel:Y`. |
+| `Thash.Reserve`     | `void <name>_Reserve(P&, i32 n)`                              | Grow buckets so that `n` *more* elements would fit. |
+| `Thash.AbsReserve`  | `void <name>_AbsReserve(P&, i32 n)`                           | Grow buckets so that `n` absolute elements would fit.  Reallocs bucket array, rehashes every element (or, for `Linear`, just clears the new tail). |
+| `Thash.curs`        | `<P>_<name>_curs` + `_Reset/_ValidQ/_Next/_Access` *(opt-in)* | Forward cursor — walks each bucket head-to-tail, so rows come out in no key order.  Request it with a `dmmeta.fcurs` row, see [cursors](/txt/exe/amc/reftype.md#cursors). |
 
 ### FindRemove (opt-in)
 <a href="#findremove-opt-in-"></a>

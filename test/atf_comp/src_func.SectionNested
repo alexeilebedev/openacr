@@ -1,0 +1,33 @@
+# start bash cmd:'bash -c \'cd $tempdir && mkdir hdr && try(){ printf "$$2" > hdr/x.h; cp hdr/x.h orig; $$OLDPWD/$bindir/src_func -in:$$OLDPWD/test/src_func/unterminated.ssim -updateproto; echo $$1_code:$$?; cmp -s hdr/x.h orig && echo $$1_header:unchanged || echo $$1_header:rewritten; }; try oneline "namespace xx { // update-hdr\\ninline int Bar() { return 1; }\\n}\\n"; try threeline "namespace xx { // update-hdr\\ninline int Bar() {\\n    return 1;\\n}\\n}\\n"; try struct "namespace xx { // update-hdr\\nstruct S {\\n    int a;\\n};\\nvoid Old();\\n}\\n"; try macro "namespace xx { // update-hdr\\n#define BEGIN {\\n#define END }\\nvoid Old();\\n}\\n"; try namespace "namespace xx { // update-hdr\\nnamespace body {\\nvoid Old();\\n}\\n}\\n"; try reopen "namespace xx { // update-hdr\\n} namespace yy {\\nvoid Old();\\n}\\n"; try control "namespace xx { // update-hdr\\n}\\nnamespace xx {\\ninline int Bar() { return 1; }\\n}\\n"; cat hdr/x.h\''
+# eof bash
+bash -> src_func.handwritten_section  file:hdr/x.h  ns:xx  comment:"update-hdr section body carries a brace, which no prototype does; file not rewritten"
+bash -> oneline_code:1
+bash -> oneline_header:unchanged
+bash -> src_func.handwritten_section  file:hdr/x.h  ns:xx  comment:"update-hdr section body carries a brace, which no prototype does; file not rewritten"
+bash -> threeline_code:1
+bash -> threeline_header:unchanged
+bash -> src_func.handwritten_section  file:hdr/x.h  ns:xx  comment:"update-hdr section body carries a brace, which no prototype does; file not rewritten"
+bash -> struct_code:1
+bash -> struct_header:unchanged
+bash -> src_func.handwritten_section  file:hdr/x.h  ns:xx  comment:"update-hdr section body carries a brace, which no prototype does; file not rewritten"
+bash -> macro_code:1
+bash -> macro_header:unchanged
+bash -> src_func.handwritten_section  file:hdr/x.h  ns:xx  comment:"update-hdr section body carries a brace, which no prototype does; file not rewritten"
+bash -> namespace_code:1
+bash -> namespace_header:unchanged
+bash -> src_func.handwritten_section  file:hdr/x.h  ns:xx  comment:"update-hdr section body carries a brace, which no prototype does; file not rewritten"
+bash -> reopen_code:1
+bash -> reopen_header:unchanged
+bash -> control_code:0
+bash -> control_header:rewritten
+bash -> namespace xx { // update-hdr
+bash ->     // Dear human:
+bash ->     //     Text from here to the closing curly brace was produced by scanning
+bash ->     //     source files. Editing this text is futile.
+bash ->     //     To refresh the contents of this section, run 'update-hdr'.
+bash ->     //     To convert this section to a hand-written section, remove the word 'update-hdr' from namespace line.
+bash -> }
+bash -> namespace xx {
+bash -> inline int Bar() { return 1; }
+bash -> }
+# exit bash code:0

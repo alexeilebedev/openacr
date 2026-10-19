@@ -1,0 +1,134 @@
+# start wt-hook cmd:"test/wt-hook $bindir/wt"
+# eof wt-hook
+wt-hook -> create: {"name":"team/x"}
+wt-hook -> CO/wt/team/x
+wt-hook -> CO/wt/team/x/.branch/team/x.md
+wt-hook -> wt/team/x/.branch is a directory
+wt-hook -> the branch file of team/x
+wt-hook -> ../../../scratch
+wt-hook -> team/x
+wt-hook -> create: {"name":"team/x"}
+wt-hook -> CO/wt/team/x
+wt-hook -> create: {"name":"team/x"}
+wt-hook -> wt.branchfile  main:.branch/team/x.md  worktree:wt/team/x/.branch/team/x.md  comment:"two branch files differ; merge them into the worktree's, remove the main checkout's, and rerun"
+wt-hook -> exit:1
+wt-hook -> the branch file of team/x, edited in the checkout
+wt-hook -> the branch file of team/x
+wt-hook -> create: {"name":"team/x"}
+wt-hook -> CO/wt/team/x
+wt-hook -> CO/wt/team/x/.branch/team/x.md
+wt-hook -> the branch file of team/x, edited in the checkout
+wt-hook -> create: {"name":"team"}
+wt-hook -> wt.notworktree  dir:wt/team  comment:"the directory is no branch worktree that git registers; nothing created"
+wt-hook -> exit:1
+wt-hook -> create: {"name":"axb"}
+wt-hook -> CO/wt/axb
+wt-hook -> create: {"name":"x"}
+wt-hook -> CO/wt/x
+wt-hook -> create: {"name":"plain"}
+wt-hook -> wt.notworktree  dir:wt/plain  comment:"the directory is no branch worktree that git registers; nothing created"
+wt-hook -> exit:1
+wt-hook -> sessionstart: {"source":"startup","cwd":"CO/wt/team/x"}
+wt-hook -> {"hookSpecificOutput":{"hookEventName":"SessionStart","sessionTitle":"team/x"}}
+wt-hook -> sessionstart: {"source":"startup","cwd":"CO/wt/x/sub"}
+wt-hook -> {"hookSpecificOutput":{"hookEventName":"SessionStart","sessionTitle":"x"}}
+wt-hook -> sessionstart: {"source":"startup","cwd":"CO/wt/team/x","session_title":"mine"}
+wt-hook -> sessionstart: {"source":"resume","cwd":"CO/wt/team/x"}
+wt-hook -> sessionstart: {"source":"startup","cwd":"CO"}
+wt-hook -> sessionstart: {"source":"startup","cwd":"CO/wt/team"}
+wt-hook -> sessionstart: {"source":"startup","cwd":"CO/wt/plain"}
+wt-hook -> sessionstart: {"source":"startup","cwd":"/elsewhere"}
+wt-hook -> remove: {"worktree_path":"CO/wt/a_b"}
+wt-hook -> wt.badhook  hook:remove  worktree:a_b  comment:"git registers no branch worktree at this path; nothing removed"
+wt-hook -> exit:1
+wt-hook -> remove: {"worktree_path":"/elsewhere/wt/x"}
+wt-hook -> wt.error  wt.badhook  hook:remove  worktree_path:/elsewhere/wt/x  comment:"not a branch worktree under wt/ of the main checkout"
+wt-hook -> exit:1
+wt-hook -> remove: {"worktree_path":"CO/wt"}
+wt-hook -> wt.error  wt.badhook  hook:remove  worktree_path:CO/wt  comment:"not a branch worktree under wt/ of the main checkout"
+wt-hook -> exit:1
+wt-hook -> remove: {"worktree_path":"CO/wt/team"}
+wt-hook -> wt.badhook  hook:remove  worktree:team  comment:"git registers no branch worktree at this path; nothing removed"
+wt-hook -> exit:1
+wt-hook -> remove: {"worktree_path":"CO/wt/plain"}
+wt-hook -> wt.badhook  hook:remove  worktree:plain  comment:"git registers no branch worktree at this path; nothing removed"
+wt-hook -> exit:1
+wt-hook -> wt/team:
+wt-hook -> x
+wt-hook -> wt/team/x:
+wt-hook -> file
+wt-hook -> scratch
+wt-hook -> untracked
+wt-hook -> remove: {"worktree_path":"CO/wt/team/x"}
+wt-hook -> wt.badhook  hook:remove  worktree:team/x  status:"?? untracked"  comment:"the worktree holds uncommitted work; nothing removed"
+wt-hook -> exit:1
+wt-hook -> remove: {"worktree_path":"CO/wt/team/x"}
+wt-hook -> wt.badhook  hook:remove  worktree:team/x  status:"M file"  comment:"the worktree holds uncommitted work; nothing removed"
+wt-hook -> exit:1
+wt-hook -> remove: {"worktree_path":"CO/wt/team/x"}
+wt-hook -> wt.badhook  hook:remove  worktree:team/x  pid:sleeper  ppid:test  age:-  cmd:"sleep 60"  comment:"a process works in the worktree; nothing removed"
+wt-hook -> exit:1
+wt-hook -> a refused remove keeps .branch/team/x.md
+wt-hook -> remove from inside: {"worktree_path":"CO/wt/team/x"}
+wt-hook -> .branch/team/x.md went with its worktree
+wt-hook -> CO/wt/x/.branch/x.md
+wt-hook -> create: {"name":"det"}
+wt-hook -> CO/wt/det
+wt-hook -> create: {"name":"det"}
+wt-hook -> CO/wt/det
+wt-hook -> sessionstart: {"source":"startup","cwd":"CO/wt/det"}
+wt-hook -> {"hookSpecificOutput":{"hookEventName":"SessionStart","sessionTitle":"det"}}
+wt-hook -> create: {"name":"anon"}
+wt-hook -> wt.notworktree  dir:wt/anon  comment:"the directory is no branch worktree that git registers; nothing created"
+wt-hook -> exit:1
+wt-hook -> sessionstart: {"source":"startup","cwd":"CO/wt/anon"}
+wt-hook -> bogus: {}
+wt-hook -> wt.error  wt.badhook  hook:bogus  comment:"-hook takes create, remove or sessionstart"
+wt-hook -> exit:1
+wt-hook -> create: 
+wt-hook -> wt.error  wt.badhook  hook:create  comment:"the hook's JSON on stdin did not parse"
+wt-hook -> exit:1
+wt-hook -> create: {}
+wt-hook -> wt.error  wt.badhook  hook:create  comment:"the hook's JSON names no worktree"
+wt-hook -> exit:1
+wt-hook -> create: {"name":"feat--origin/feat"}
+wt-hook -> CO/wt/feat
+wt-hook -> feat
+wt-hook -> feat: a commit only origin/feat holds
+wt-hook -> create: {"name":"loc--master"}
+wt-hook -> CO/wt/loc
+wt-hook -> base
+wt-hook -> create: {"name":"bad--"}
+wt-hook -> wt.error  wt.badhook  hook:create  name:bad--  comment:"nothing follows the -- that names the ref"
+wt-hook -> exit:1
+wt-hook -> Branch	Merged	Path
+wt-hook -> axb	unstarted	wt/axb
+wt-hook -> feat	unmerged	wt/feat
+wt-hook -> loc	unstarted	wt/loc
+wt-hook -> x	unstarted	wt/x
+wt-hook -> wt:
+wt-hook -> anon
+wt-hook -> axb
+wt-hook -> feat
+wt-hook -> loc
+wt-hook -> plain
+wt-hook -> team
+wt-hook -> x
+wt-hook -> wt/axb:
+wt-hook -> file
+wt-hook -> scratch
+wt-hook -> untracked
+wt-hook -> wt/plain:
+wt-hook -> keep
+wt-hook -> wt/x:
+wt-hook -> file
+wt-hook -> scratch
+wt-hook -> untracked
+wt-hook -> axb
+wt-hook -> det
+wt-hook -> feat
+wt-hook -> loc
+wt-hook -> master
+wt-hook -> team/x
+wt-hook -> x
+# exit wt-hook code:0

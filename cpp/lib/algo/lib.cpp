@@ -28,6 +28,9 @@
 #if !defined(WIN32)
 #include <arpa/inet.h>// inet_pton
 #include <sys/mman.h>// mmap,mlockall
+#if defined(__MACH__)
+#include <libproc.h>// proc_pidinfo
+#endif
 #include <termios.h>// ReadMasked
 #endif
 
@@ -40,11 +43,15 @@
 
 // -----------------------------------------------------------------------------
 
-// Execute unix command and return output.
-// If OUT_STATUS is non-NULL, it receives the child's raw wait status
-// (0 for an empty command), letting fail_ok callers distinguish a
+// Run CMD under bash and return what it printed to stdout.  A command that
+// prints more than MAX_OUTPUT bytes is killed; the output is then empty, and
+// without FAIL_OK the call fails.  Without FAIL_OK a command that cannot start
+// or exits nonzero fails the call too.  The default limit of 16MB is a guard
+// against a runaway command, and nothing is reserved for it.  ECHO prints CMD
+// before running it.  If OUT_STATUS is non-NULL, it receives the child's raw
+// wait status (0 for an empty command), letting FAIL_OK callers distinguish a
 // silent nonzero exit from a successful empty-output run.
-tempstr algo::SysEval(strptr cmd, FailokQ fail_ok, int max_output, bool echo DFLTVAL(false), int *out_status DFLTVAL(NULL)) {
+tempstr algo::SysEval(strptr cmd, FailokQ fail_ok, int max_output DFLTVAL(1 << 24), bool echo DFLTVAL(false), int *out_status DFLTVAL(NULL)) {
     tempstr result;
     bool ok = true;
     int start_code=0;
@@ -473,12 +480,21 @@ static void HangupHandler(int) {
 // of rounds with children -- and exits 0 there; the supervisor then starts the
 // build it has waiting.  SA_RESTART keeps the daemon's own reads and waits from
 // failing with EINTR, and a sleep between passes still returns at once.
+// A process inherits its signal mask across fork and exec, and a parent that
+// blocks SIGHUP -- a Claude Code session starts every command so -- would leave
+// the handler installed and the hangup never delivered: the supervisor waits
+// out its grace period and kills the daemon mid-work.  So the call also
+// unblocks SIGHUP, and the daemon hears its hangup whoever started it.
 void algo::SetupHangupSignal() {
     struct sigaction sigact;
     sigact.sa_handler = HangupHandler;
     sigemptyset(&sigact.sa_mask);
     sigact.sa_flags = SA_RESTART;
     (void)sigaction(SIGHUP, &sigact, 0);
+    sigset_t hup;
+    sigemptyset(&hup);
+    sigaddset(&hup, SIGHUP);
+    (void)sigprocmask(SIG_UNBLOCK, &hup, 0);
 }
 
 // Fire the due time hook at the top of the work-band heap: reschedule it DELAY
@@ -572,17 +588,65 @@ const tempstr algo::GetDomainname() {
     return str;
 }
 
-// Die when parent process dies
+// Give a forked child a clean signal state, in the child between fork and exec:
+// every signal takes its default disposition, and the signal mask is empty.
+//
+// A child inherits its parent's handlers until exec, its ignored signals across
+// exec, and its signal mask across exec.  A kill aimed at the child before exec
+// would run the parent's handler and be consumed.  A stop signal the parent
+// blocked -- SIGHUP under a shell that blocks it -- would stay pending in the
+// command for its whole life, and the supervisor would wait out its grace and
+// kill it.  So nothing a child does may rest on what its parent blocked or
+// ignored.  Each process sets up the signals it uses for itself.  A process that
+// writes to a socket or a pipe whose reader may vanish ignores SIGPIPE, as
+// SetupExitSignals does, SetupHangupSignal unblocks SIGHUP, and a process that
+// reads a signal through a signalfd blocks that signal where it opens the fd.
+void algo_lib::ResetChildSignal() {
+    for (int sig = 1; sig < NSIG; sig++) {
+        (void)signal(sig, SIG_DFL);
+    }
+    sigset_t none;
+    sigemptyset(&none);
+    (void)sigprocmask(SIG_SETMASK, &none, NULL);
+}
+
+// Block SIGPIPE in this process, so a write to a socket or a pipe whose reader has
+// gone answers EPIPE and the caller decides what that means.  A daemon calls this
+// first thing in its Main, before it starts a thread, since a thread takes its
+// mask from the thread that creates it; a library, a client and a tool keep the
+// default.  Nothing may unblock SIGPIPE afterwards, or wait with a mask that
+// leaves it unblocked: the signal stays pending once raised, and an unblock
+// would deliver it and end the process.  A child starts with the mask empty
+// (ResetChildSignal).
+void algo_lib::BlockSigpipe() {
+    sigset_t pipeset;
+    sigemptyset(&pipeset);
+    sigaddset(&pipeset, SIGPIPE);
+    (void)sigprocmask(SIG_BLOCK, &pipeset, NULL);
+}
+
+// Arrange for this process to be killed with SIGKILL when its parent exits.
+// Call it in a child between fork and exec, or in a running process.  Linux does
+// it in the kernel (PR_SET_PDEATHSIG), which keeps it across an exec and clears it
+// in a forked child.  macOS has no such call.  A running algo_lib process there
+// watches its parent on its own queue.  A child between fork and exec has no
+// queue, so its own pid and its parent's ride across the exec in ALGO_DIE_WITH,
+// and an algo_lib program that finds its own pid there watches the parent from
+// startup (IohookInit).  So on macOS the guarantee holds for algo_lib programs
+// whose loop reads the queue, and a program of another kind, or one parked in a
+// blocking call, outlives its parent there.
+// Without it a cluster's processes outlive a supervisor that was killed, keep
+// running with no one to stop them, and spin.
 void algo_lib::DieWithParent() {
-#if defined(__MACH__) || __FreeBSD__>0 || defined(__CYGWIN__) || defined(WIN32)
-    // sadly, there is no way to make a child exit
-    // when a parent dies, so structured concurrency
-    // cannot be implemented
-    // Even if we use kqueue to monitor for parent process exit,
-    //  this works only for processes that
-    // a) do not block, i.e. process events frequently, and
-    // b) for processes which are implemented with algo_lib.
-    //  Anything exec()'ed on top won't work.
+#if defined(__MACH__)
+    pid_t parent = getppid();
+    if (!DieWithWatchQ(i32(parent))) {
+        char pids[64];
+        snprintf(pids, sizeof(pids), "%d:%d", int(getpid()), int(parent));
+        (void)setenv(algo_lib::dev_envvar_ALGO_DIE_WITH, pids, 1);
+    }
+#elif __FreeBSD__>0 || defined(__CYGWIN__) || defined(WIN32)
+    // no way to make a child exit when its parent dies
 #else
     prctl(PR_SET_PDEATHSIG, SIGKILL);
     prctl(PR_SET_DUMPABLE, 1, 0, 0, 0); // produce dump as a child
@@ -855,20 +919,82 @@ static bool ReadHexU64(algo::strptr str, u64 &result) {
     return ok;
 }
 
-// Bytes of PID's address space that map files under /dev/shm: the shared
+// The directory that holds this host's shared memory segments.  Every segment
+// lib_ams makes is a file here, so a process opens one by path, a sweep lists
+// them, and the free space of the filesystem under it is what bounds them.
+// The directory is on a filesystem in RAM: a tmpfs at /dev/shm on Linux, and on
+// macOS a RAM disk the host mounts at /Volumes/shm, since macOS has no tmpfs.
+algo::strptr algo_lib::ShmDir() {
+#if defined(__MACH__)
+    algo::strptr ret("/Volumes/shm");
+#else
+    algo::strptr ret("/dev/shm");
+#endif
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
+// Make sure the segment directory exists, mounting it where this process can,
+// and return whether it exists.  A test runner calls this before it starts a
+// cluster, so a host that was never set up for it still runs its tests.
+//
+// On Linux the directory is the tmpfs every host has, so there is nothing to
+// do.  On macOS it is a RAM disk, which any account may create and mount, and
+// an 8 GiB one is made at /Volumes/shm, mode 1777 so every account shares it.
+// A disk made here records no owners, since only root can turn ownership on;
+// a managed host has one made at boot by a root daemon, with owners, and
+// ci-reap sweeps only a disk that records them.
+// It stays mounted until the host reboots or someone ejects it, and every
+// later caller finds it.  Several runners on one Mac start at once, so the
+// check and the mount run under an exclusive lock on a file in /tmp, and only
+// the first runner to take the lock mounts.  A volume of the same name already
+// present would make diskutil mount the new disk under another name, and the
+// directory would still be missing, so the answer is read back after the mount,
+// and a disk that did not become the directory is detached again.
+bool algo_lib::ShmDirMount() {
+    bool ret = DirectoryQ(algo_lib::ShmDir());
+#if defined(__MACH__)
+    if (!ret) {
+        int lock = open("/tmp/shmdir.lock", O_RDONLY | O_CREAT | O_CLOEXEC, 0644);
+        if (lock >= 0) {
+            (void)flock(lock, LOCK_EX);
+        }
+        if (!DirectoryQ(algo_lib::ShmDir())) {
+            (void)algo::SysCmd(tempstr()
+                               << "disk=$(hdiutil attach -nomount ram://16777216 | awk '{print $1}')"
+                               << " && { diskutil erasevolume HFS+ shm $disk >/dev/null"
+                               << " && chmod 1777 " << algo_lib::ShmDir()
+                               << " || hdiutil detach $disk >/dev/null; }");
+        }
+        ret = DirectoryQ(algo_lib::ShmDir());
+        if (lock >= 0) {
+            (void)close(lock);
+        }
+    }
+#endif
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
+// Bytes of PID's address space that map files in ShmDir(): the shared
 // memory segments the process has attached, summed over the mappings that
 // /proc/<pid>/maps lists, into BYTES.  TRUE when the maps file was read;
 // FALSE, with BYTES zero, when it could not be -- a pid that is gone, or one
 // whose capabilities the reader's do not cover, since the kernel refuses maps
 // to a reader without cap_sys_ptrace over a target that exec'd with file
-// capabilities -- and always on a platform without /proc.  A refused read is
+// capabilities.  macOS has no /proc, and there the regions come from
+// proc_pidinfo's PROC_PIDREGIONPATHINFO, TRUE for a pid the caller may read;
+// any other platform answers FALSE.  A refused read is
 // told from an empty one because a caller that charged the whole address space
 // to a process mapping nothing would raise a memory alarm with the wrong
 // cause.
 //
 // A maps line reads `start-end perms offset dev inode path`, with the two
-// addresses in hex and the path absent for an anonymous mapping.  A segment
-// is a file lib_ams created under /dev/shm, so its mappings are the lines
+// addresses in hex and the path absent for an anonymous mapping; a macOS region
+// carries the path of the file it maps the same way.  A segment
+// is a file lib_ams created in ShmDir(), so its mappings are the lines
 // whose path carries that prefix, and each contributes its whole extent
 // whether or not the process has touched its pages.
 bool algo_lib::ProcShmBytes(int pid, u64 &bytes) {
@@ -881,7 +1007,7 @@ bool algo_lib::ProcShmBytes(int pid, u64 &bytes) {
     ret = ch_N(text) > 0;
     ind_beg(algo::Line_curs, line, text) {
         algo::strptr path = Trimmed(Pathcomp(line, " LR LR LR LR LR"));
-        if (StartsWithQ(path, "/dev/shm/")) {
+        if (StartsWithQ(path, tempstr() << algo_lib::ShmDir() << "/")) {
             u64 lo = 0;
             u64 hi = 0;
             bool ok = ReadHexU64(Pathcomp(line, " LL-LL"), lo);
@@ -891,6 +1017,23 @@ bool algo_lib::ProcShmBytes(int pid, u64 &bytes) {
             }
         }
     }ind_end;
+#elif defined(__MACH__)
+    // macOS names each region's backing file through libproc.  The walk asks
+    // for the region at or above ADDR and resumes past its end, and the call
+    // answers 0 past the last region or for a process this user may not read.
+    tempstr prefix;
+    prefix << algo_lib::ShmDir() << "/";
+    struct proc_regionwithpathinfo info;
+    u64 addr = 0;
+    int n = proc_pidinfo(pid, PROC_PIDREGIONPATHINFO, addr, &info, sizeof(info));
+    ret = n == int(sizeof(info));
+    while (n == int(sizeof(info))) {
+        if (StartsWithQ(algo::strptr(info.prp_vip.vip_path), prefix)) {
+            bytes += info.prp_prinfo.pri_size;
+        }
+        addr = info.prp_prinfo.pri_address + info.prp_prinfo.pri_size;
+        n = proc_pidinfo(pid, PROC_PIDREGIONPATHINFO, addr, &info, sizeof(info));
+    }
 #else
     (void)pid;
 #endif

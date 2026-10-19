@@ -858,8 +858,8 @@ namespace algo { // update-hdr
     // read the machine's total would size itself for eight cores while pinned to two.
     // So the affinity mask is the reading, and the machine's online count is the
     // fallback for a kernel that refuses it.  The mask is a Linux facility, and
-    // `cpu_set_t` exists nowhere else, so on every other system the online count is
-    // the whole answer.
+    // macOS's stand-in refuses every call, so on every other system the online
+    // count is the whole answer.
     i32 GetNcore();
 
     // Return the path of the binary this process is running, symlinks resolved.
@@ -1206,10 +1206,12 @@ namespace algo { // update-hdr
     bool cstring_ReadCmdarg(cstring &out, algo::StringIter &S, bool is_value);
 
     // Tokenize CMDLINE into argv-shaped words in OUT: each element is a bare
-    // token, "-opt", or "-opt:value", with any quoted ("...") segment unescaped
-    // into owned storage.  This is the dual of a shell's argv split; the
-    // field-aware <cmd>_ReadArgv then interprets dashes, colons, and per-option
-    // NArgs (so "-opt value" works, not only "-opt:value").
+    // token, "-opt", or "-opt:value", with any quoted ("...", '...' or $'...')
+    // segment unescaped into owned storage.  This is the dual of a shell's argv
+    // split, so a command line that <cmd>_ToCmdline wrote, whose values
+    // strptr_PrintBash quoted, splits back into the values it was written from.
+    // The field-aware <cmd>_ReadArgv then interprets dashes, colons, and
+    // per-option NArgs (so "-opt value" works, not only "-opt:value").
     void CmdlineToArgv(algo::strptr cmdline, algo::StringAry &out);
 
     // Read Charset from list of chars.
@@ -1332,9 +1334,9 @@ namespace algo { // update-hdr
     u32 ParseNum4(u32 x, u32 len, u32 &ok);
     u32 ParseNum8(u64 x, u32 len, u32 &ok);
 
-    // Print a string as a classic regex, escaping all special
-    // characters. This regex will only match the specified string.
-    void strptr_PrintRegxSql(algo::strptr value, algo::cstring &str);
+    // Append to STR an acr-style pattern that matches VALUE alone: a backslash goes
+    // before each character the acr style reads as an operator.
+    void strptr_PrintRegxAcr(algo::strptr value, algo::cstring &str);
     //     (user-implemented function, prototype is in amc-generated header)
     // void WDiff_Print(algo::WDiff row, algo::cstring &str); // dmmeta.cfmt:algo.WDiff.String
     // void WTime_Print(algo::WTime row, algo::cstring &str); // dmmeta.cfmt:algo.WTime.String
@@ -1401,11 +1403,15 @@ namespace algo { // update-hdr
     // cpp/lib/algo/lib.cpp -- Main file
     //
 
-    // Execute unix command and return output.
-    // If OUT_STATUS is non-NULL, it receives the child's raw wait status
-    // (0 for an empty command), letting fail_ok callers distinguish a
+    // Run CMD under bash and return what it printed to stdout.  A command that
+    // prints more than MAX_OUTPUT bytes is killed; the output is then empty, and
+    // without FAIL_OK the call fails.  Without FAIL_OK a command that cannot start
+    // or exits nonzero fails the call too.  The default limit of 16MB is a guard
+    // against a runaway command, and nothing is reserved for it.  ECHO prints CMD
+    // before running it.  If OUT_STATUS is non-NULL, it receives the child's raw
+    // wait status (0 for an empty command), letting FAIL_OK callers distinguish a
     // silent nonzero exit from a successful empty-output run.
-    tempstr SysEval(strptr cmd, FailokQ fail_ok, int max_output, bool echo = false, int *out_status = NULL);
+    tempstr SysEval(strptr cmd, FailokQ fail_ok, int max_output = 1 << 24, bool echo = false, int *out_status = NULL);
 
     // Execute unix command and return status code.
     // Execute command using system().
@@ -1485,6 +1491,11 @@ namespace algo { // update-hdr
     // of rounds with children -- and exits 0 there; the supervisor then starts the
     // build it has waiting.  SA_RESTART keeps the daemon's own reads and waits from
     // failing with EINTR, and a sleep between passes still returns at once.
+    // A process inherits its signal mask across fork and exec, and a parent that
+    // blocks SIGHUP -- a Claude Code session starts every command so -- would leave
+    // the handler installed and the hangup never delivered: the supervisor waits
+    // out its grace period and kills the daemon mid-work.  So the call also
+    // unblocks SIGHUP, and the daemon hears its hangup whoever started it.
     void SetupHangupSignal();
     const tempstr GetHostname();
     const tempstr GetDomainname();
@@ -1544,6 +1555,15 @@ namespace algo { // update-hdr
     void FileLine_curs_Reset(algo::FileLine_curs &curs, algo::Fildes fd);
     void FileLine_curs_Next(algo::FileLine_curs &curs);
 
+    // Wait until file FILENAME holds a line that starts with PREFIX, and return
+    // whether it does.  The call blocks: it reads the file every 100 ms, for at most
+    // TIMEOUT.  A file that does not exist yet reads as empty, so the wait may start
+    // before the writer creates the file.  A program uses it to wait for the line
+    // that a server it started prints once it can serve.  The time a start takes
+    // depends on the host, so TIMEOUT is a bound on a failed start rather than an
+    // estimate of a good one.
+    bool WaitFileLine(strptr filename, strptr prefix, algo::UnDiff timeout);
+
     // -------------------------------------------------------------------
     // cpp/lib/algo/prlog.cpp -- prlog macro
     //
@@ -1555,6 +1575,10 @@ namespace algo { // update-hdr
     // Notes on WriteFile use:
     // we must use WriteFile (which contains a loop) to write all the bytes out,
     // otherwise some terminals push back and refuse the data.
+    //
+    // A write that fails is not reported through the log, since the report would
+    // meet the same failure.  The process instead ends with a nonzero exit code: a
+    // tool whose output was lost has not done its job, whatever else went right.
     void Prlog(algo_lib::FLogcat *logcat, algo::SchedTime tstamp, strptr str);
 
     // Write N progress dots to the stdout log and leave the line open.  Dots that
@@ -2052,8 +2076,9 @@ namespace algo { // update-hdr
     // inline u32 strptr_Hash(u32 prev, algo::strptr val);
     inline u32 cstring_Hash(u32 prev, const algo::strptr &val);
 
-    // Use hardware CRC32C intrinsics on supported x86 and Apple Silicon builds.
-    // Otherwise, forward to CRC32StepSw in crc32.cpp, the same CRC-32C from a table.
+    // Use hardware CRC32C intrinsics on x86 builds with SSE4.2 and on ARM builds whose
+    // target carries the CRC32 instructions, which -mcpu=neoverse-n1 and Apple Silicon
+    // both do.  Otherwise, forward to CRC32StepSw in crc32.cpp, the same CRC-32C from a table.
     inline u32 CRC32Step(u32 old, const u8 *x, size_t len);
     inline int P1Mod(int a, int b);
     inline u32 u32_Count1s(u32 x);
@@ -2142,6 +2167,8 @@ namespace algo { // update-hdr
     // use this for timestamps.
     // these calls may be pipelined and reordered, so measuring instruction
     // latency with these is not possible. for that, use rdtscp
+    // On Linux ARM the counter is the generic timer's virtual count, cntvct_el0,
+    // which every core reads at the one fixed rate cntfrq_el0 states.
     inline u64 get_cycles();
 
     // Convert scheduler time units to seconds.
@@ -2236,6 +2263,13 @@ namespace algo { // update-hdr
     inline algo::cstring &operator<<(algo::cstring &out, const char* t);
     inline algo::cstring &operator<<(algo::cstring &out, const ListSep &t);
     inline algo::cstring &operator<<(algo::cstring &out, const strptr &t);
+
+    // Print T, a long long, as the i64 it equals.  i64 is a long, and where int64_t is a
+    // long long -- macOS -- a library's int64_t has no exact match among the overloads.
+    inline algo::cstring &operator<<(algo::cstring &out, long long t);
+
+    // Print T, an unsigned long long, as the u64 it equals.
+    inline algo::cstring &operator<<(algo::cstring &out, unsigned long long t);
     inline algo::cstring &operator<<(algo::cstring &out, void (*t)(algo::cstring &));
 
     // SameSign returns false if one of the arguments is zero.
@@ -2318,9 +2352,24 @@ namespace algo_lib { // update-hdr
     // host -- says nothing against the counter and so passes.
     bool ConstantTscQ(strptr cpuinfo);
 
+    // Return the counter's rate in Hz as the machine states it, or 0 when it
+    // states none.  On x86 the statement is the kernel's calibrated TSC rate:
+    // /sys/devices/system/cpu/cpu0/tsc_freq_khz states the exact figure the kernel
+    // calibrated at boot; kernels carrying the tsc_freq_khz patch (amazon linux)
+    // or the tsc_freq_khz module provide it, mainline kernels do not.  On Linux ARM
+    // the counter is the generic timer, and the architecture fixes its rate and
+    // states it in cntfrq_el0, which any process reads.  On macOS ARM the counter is
+    // mach_absolute_time, whose rate the Mach timebase states.  This is the first of the
+    // three statements of the counter's rate a process that schedules on the
+    // counter will accept, the others being a host file and an environment
+    // variable the caller names -- either way the rate is read, never measured.
+    double GetCpuHzKernel();
+
     // Install HZ as the process's cycles<->seconds calibration: refuse an
     // implausible value, set the conversion constants, and re-anchor the
     // scheduler clock so elapsed time counts from the calibration point.
+    // REJECTED names the figures of the sources tried before HZ, which a refusal
+    // prints beside it, since the first of them is the one an operator fixes.
     //
     // The refusal states the range it applied, because the rate that lands here
     // came from somewhere an operator can go and change -- a kernel export, a
@@ -2328,7 +2377,7 @@ namespace algo_lib { // update-hdr
     // which end of the range it missed.  An emulated guest is where this bites:
     // Bochs presents a 40 MHz processor, four times the floor, and a slower one
     // would put every process of a cluster out on a line that named no bound.
-    void ApplyCpuHz(double hz);
+    void ApplyCpuHz(double hz, algo::strptr rejected = "");
     void InitCpuHz();
 
     // Demand the kernel's calibrated TSC rate, for a process that schedules on
@@ -2488,6 +2537,13 @@ namespace algo_lib { // update-hdr
     // -------------------------------------------------------------------
     // cpp/lib/algo/iohook.cpp
     //
+
+    // Watch PARENT on this process's queue, so that the wait loop kills this process
+    // with SIGKILL when PARENT exits, as Linux's PR_SET_PDEATHSIG would.  Return
+    // false when the queue refuses: PARENT is already gone, or the process is a
+    // child between fork and exec, whose parent's kqueue did not survive the fork.
+    // Only macOS watches; elsewhere the call returns false.
+    bool DieWithWatchQ(i32 parent);
     void IohookInit();
 
     // Register IOHOOK to be called whenever an IO operation is possible.
@@ -2552,7 +2608,43 @@ namespace algo_lib { // update-hdr
     // one.
     algo::Signature GetDispsig(algo::strptr dispsig);
 
-    // Die when parent process dies
+    // Give a forked child a clean signal state, in the child between fork and exec:
+    // every signal takes its default disposition, and the signal mask is empty.
+    //
+    // A child inherits its parent's handlers until exec, its ignored signals across
+    // exec, and its signal mask across exec.  A kill aimed at the child before exec
+    // would run the parent's handler and be consumed.  A stop signal the parent
+    // blocked -- SIGHUP under a shell that blocks it -- would stay pending in the
+    // command for its whole life, and the supervisor would wait out its grace and
+    // kill it.  So nothing a child does may rest on what its parent blocked or
+    // ignored.  Each process sets up the signals it uses for itself.  A process that
+    // writes to a socket or a pipe whose reader may vanish ignores SIGPIPE, as
+    // SetupExitSignals does, SetupHangupSignal unblocks SIGHUP, and a process that
+    // reads a signal through a signalfd blocks that signal where it opens the fd.
+    void ResetChildSignal();
+
+    // Block SIGPIPE in this process, so a write to a socket or a pipe whose reader has
+    // gone answers EPIPE and the caller decides what that means.  A daemon calls this
+    // first thing in its Main, before it starts a thread, since a thread takes its
+    // mask from the thread that creates it; a library, a client and a tool keep the
+    // default.  Nothing may unblock SIGPIPE afterwards, or wait with a mask that
+    // leaves it unblocked: the signal stays pending once raised, and an unblock
+    // would deliver it and end the process.  A child starts with the mask empty
+    // (ResetChildSignal).
+    void BlockSigpipe();
+
+    // Arrange for this process to be killed with SIGKILL when its parent exits.
+    // Call it in a child between fork and exec, or in a running process.  Linux does
+    // it in the kernel (PR_SET_PDEATHSIG), which keeps it across an exec and clears it
+    // in a forked child.  macOS has no such call.  A running algo_lib process there
+    // watches its parent on its own queue.  A child between fork and exec has no
+    // queue, so its own pid and its parent's ride across the exec in ALGO_DIE_WITH,
+    // and an algo_lib program that finds its own pid there watches the parent from
+    // startup (IohookInit).  So on macOS the guarantee holds for algo_lib programs
+    // whose loop reads the queue, and a program of another kind, or one parked in a
+    // blocking call, outlives its parent there.
+    // Without it a cluster's processes outlive a supervisor that was killed, keep
+    // running with no one to stop them, and spin.
     void DieWithParent();
 
     // Return name of temp directory.
@@ -2625,20 +2717,49 @@ namespace algo_lib { // update-hdr
     // Linux only.
     int KillRecurse(int pid, int sig, bool kill_topmost);
 
-    // Bytes of PID's address space that map files under /dev/shm: the shared
+    // The directory that holds this host's shared memory segments.  Every segment
+    // lib_ams makes is a file here, so a process opens one by path, a sweep lists
+    // them, and the free space of the filesystem under it is what bounds them.
+    // The directory is on a filesystem in RAM: a tmpfs at /dev/shm on Linux, and on
+    // macOS a RAM disk the host mounts at /Volumes/shm, since macOS has no tmpfs.
+    algo::strptr ShmDir();
+
+    // Make sure the segment directory exists, mounting it where this process can,
+    // and return whether it exists.  A test runner calls this before it starts a
+    // cluster, so a host that was never set up for it still runs its tests.
+    //
+    // On Linux the directory is the tmpfs every host has, so there is nothing to
+    // do.  On macOS it is a RAM disk, which any account may create and mount, and
+    // an 8 GiB one is made at /Volumes/shm, mode 1777 so every account shares it.
+    // A disk made here records no owners, since only root can turn ownership on;
+    // a managed host has one made at boot by a root daemon, with owners, and
+    // ci-reap sweeps only a disk that records them.
+    // It stays mounted until the host reboots or someone ejects it, and every
+    // later caller finds it.  Several runners on one Mac start at once, so the
+    // check and the mount run under an exclusive lock on a file in /tmp, and only
+    // the first runner to take the lock mounts.  A volume of the same name already
+    // present would make diskutil mount the new disk under another name, and the
+    // directory would still be missing, so the answer is read back after the mount,
+    // and a disk that did not become the directory is detached again.
+    bool ShmDirMount();
+
+    // Bytes of PID's address space that map files in ShmDir(): the shared
     // memory segments the process has attached, summed over the mappings that
     // /proc/<pid>/maps lists, into BYTES.  TRUE when the maps file was read;
     // FALSE, with BYTES zero, when it could not be -- a pid that is gone, or one
     // whose capabilities the reader's do not cover, since the kernel refuses maps
     // to a reader without cap_sys_ptrace over a target that exec'd with file
-    // capabilities -- and always on a platform without /proc.  A refused read is
+    // capabilities.  macOS has no /proc, and there the regions come from
+    // proc_pidinfo's PROC_PIDREGIONPATHINFO, TRUE for a pid the caller may read;
+    // any other platform answers FALSE.  A refused read is
     // told from an empty one because a caller that charged the whole address space
     // to a process mapping nothing would raise a memory alarm with the wrong
     // cause.
     //
     // A maps line reads `start-end perms offset dev inode path`, with the two
-    // addresses in hex and the path absent for an anonymous mapping.  A segment
-    // is a file lib_ams created under /dev/shm, so its mappings are the lines
+    // addresses in hex and the path absent for an anonymous mapping; a macOS region
+    // carries the path of the file it maps the same way.  A segment
+    // is a file lib_ams created in ShmDir(), so its mappings are the lines
     // whose path carries that prefix, and each contributes its whole extent
     // whether or not the process has touched its pages.
     bool ProcShmBytes(int pid, u64 &bytes);
@@ -2895,6 +3016,16 @@ namespace algo_lib { // update-hdr
     // If the regx is not found, return empty range.
     // For this to work, REGX must be parsed with "full:N".
     algo::i32_Range Regx_Find(algo_lib::Regx &regx, algo::strptr text, int start = 0);
+
+    // Compile INPUT, a pattern of regx style STYLE, into REGX.  FULL makes the
+    // pattern match a whole subject, and a pattern read without it matches any part.
+    // The pattern passes through the two translators amc writes from amcdb: the
+    // rewrite of its style into the default syntax, and the normalizer, which
+    // escapes every character that means itself and settles each malformed shape.
+    // A browser runs the same two translators in TypeScript (ts/gen/algo_lib_regx.ts),
+    // so the pattern compiled here and the RegExp built there match the same strings.
+    // A pattern the normalizer finds invalid, such as one with an unclosed group,
+    // leaves REGX marked invalid, and it matches nothing.
     void Regx_ReadStyle(algo_lib::Regx &regx, algo::strptr input, algo_lib::RegxStyle style, bool full);
 
     // Parse string INPUT as regex and store in REGX.
@@ -3019,10 +3150,36 @@ namespace algo_lib { // update-hdr
     //     (user-implemented function, prototype is in amc-generated header)
     // void FTxttbl_Print(algo_lib::FTxttbl &txttbl, algo::cstring &str); // dmmeta.cfmt:algo_lib.FTxttbl.String
 
-    // Print table TXTTBL using markdown, appending to string STR.
-    // First row of the table is assumed to be the header.
+    // Print table TXTTBL using markdown, appending to string STR, aligned so that the
+    // table reads as a table in the markdown source as it does rendered.  The first row
+    // is the header, and the delimiter row after it gives each column the justification
+    // of its header cell: plain dashes for left, a colon on the right for right, and
+    // colons on both ends for center.  Every cell is padded to the width of its column in
+    // characters, at least three for the delimiter's dashes, on the side its justification
+    // says.  A left-justified last column is the exception: its text ends where it ends,
+    // since a column holding prose would otherwise pad every row to its longest paragraph.
     // Newlines in cells are converted to '<br>'.
     void FTxttbl_Markdown(algo_lib::FTxttbl &txttbl, algo::cstring &str);
+
+    // Return true when tuple NEXT cannot join the table whose first row is tuple FIRST, so
+    // that a new table starts at NEXT.  A table has one column per attr of its first row, and
+    // a row of another type, or with another number of attrs, would put its values under the
+    // wrong headers.  The type of a tuple is its head's name when the head has one, as in
+    // `key:value` form, and the head's value otherwise.
+    bool NewTableQ(algo::Tuple &first, algo::Tuple &next);
+
+    // Add TUPLE to table TXTTBL as one row with a cell per named attr.  The first tuple of an
+    // empty table also adds the header row, which names each attr in upper case.  The head is a
+    // column only when it has a name, since a bare type tag is the same on every row.  A cell
+    // whose value is empty holds EMPTY instead, so that a reader who splits a line on blanks
+    // finds every column where the header says it is.
+    void FTxttbl_AddTuple(algo_lib::FTxttbl &txttbl, algo::Tuple &tuple, algo::strptr empty);
+
+    // Append to OUT the ssim tuples of TEXT, one per line, as aligned text tables.  A table
+    // starts at the first tuple and at every tuple that NewTableQ separates from the first row
+    // of the table in progress, and a blank line ends each table.  A line that does not read
+    // as a tuple with at least one attr is skipped.  An empty value prints as EMPTY.
+    void SsimToTable(algo::strptr text, algo::strptr empty, algo::cstring &out);
 
     // -------------------------------------------------------------------
     // include/algo.inl.h -- Inline functions

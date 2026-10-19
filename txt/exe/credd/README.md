@@ -12,40 +12,43 @@ an agent the daemon started.
 ```usage
 credd: Hold a session's credentials unlocked in memory and hand them to the tools that authenticate
 Usage: credd [options]
-    OPTION      TYPE    DFLT  COMMENT
-    -dir        string  ""    Store directory; empty = ~/.ssh/credd
-    -start                    (action) Start the daemon unless one answers: ask the master password, fork, load the ssh agent
-    -nostore                  hold no store on disk; the daemon keeps what -seed gives it
-    -seed       string  ""    (action) give the running daemon a credential of this name, read per -src
-    -stop                     (action) Stop the daemon: empty and kill its ssh agent, forget the key
-    -status                   (action) Report whether a daemon answers and what it holds
-    -list                     (action) List every credential with its metadata; needs no daemon
-    -show       string  ""    (action) Print the named credential's secret, fetched from the daemon
-    -check                    (action) List credentials that expire within -window days
-    -window     int     14    (with -check) Days ahead
-    -add        string  ""    (action) Add a credential: a name takes its secret per -src, % offers each token and key beside the store, a path offers that file
-    -linkto     string  ""    (with -add:<name>) Make the new name a link to this credential, so a tool that asks for the new name gets that one's secret
-    -kind       string  ""    (with -add:<name>) Kind of credential, a row of creddb.kind: a token provider, sshkey, or link
-    -server     string  ""    (with -add:<name>) Server URL of a token
-    -account    string  ""    (with -add:<name>) Account a token belongs to
-    -perm       string  ""    (with -add:<name>) Permissions a token was issued with, comma-separated
-    -expires    string  ""    (with -add:<name>, -keygen, -renew) Expiry as YYYY-MM-DD; empty = never
-    -comment    string  ""    (with -add:<name>, -keygen) Comment on the record
-    -src        string  "-"   (with -add:<name>, -renew) Where the secret is read: - the terminal, @file a file
-    -keygen     string  ""    (action) Make an ed25519 key under this name and add it sealed
-    -pubfile    string  ""    (with -keygen, -show) Write the public key to this file, for installing where the key logs in; -show then shows no secret
-    -renew      string  ""    (action) Print where the named token is reissued, then take its new value per -src
-    -remove     string  ""    (action) Remove the named credential
-    -passwd                   (action) Change the master password, resealing every secret
-    -dump                     (action) Print the store, secrets still sealed
-    -format     enum    auto  (with -list, -dump) Output format; auto is text for -list, ssim for -dump (auto|ssim|text|json)
-    -daemon                   Serve the socket in the foreground; -start runs this in a forked child
-    -verbose    flag          Verbosity level (0..255); alias -v; cumulative
-    -debug      flag          Debug level (0..255); alias -d; cumulative
-    -trace      string  ""    Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps
-    -help                     Print help and exit; alias -h
-    -version                  Print version and exit
-    -signature                Show signatures and exit; alias -sig
+    OPTION      TYPE    DFLT    COMMENT
+    -dir        string  ""      Store directory; empty = ~/.ssh/credd
+    -start                      (action) Start the daemon and its ssh agent, unless a daemon already answers
+    -nostore                    hold no store on disk; the daemon keeps what -seed gives it
+    -seed       string  ""      (action) give the running daemon a credential of this name, read per -src
+    -stop                       (action) Stop the daemon: empty and kill its ssh agent, forget the key
+    -status                     (action) Report whether a daemon answers and what it holds
+    -list                       (action) List every credential with its metadata; needs no daemon
+    -show       string  ""      (action) Print the named credential's secret, fetched from the daemon
+    -check                      (action) List credentials that expire within -window days
+    -window     int     14      (with -check) Days ahead
+    -add        string  ""      (action) Add the named credential, or offer the files that % or a path names
+    -linkto     string  ""      (with -add:<name>) Make the new name a link to this credential
+    -kind       string  ""      (with -add:<name>) Kind of credential, a row of creddb.kind
+    -server     string  ""      (with -add:<name>, -mint) Server URL of a token
+    -account    string  ""      (with -add:<name>, -mint) Token's account; for -mint, the group or project path
+    -perm       string  ""      (with -add:<name>) Permissions a token was issued with, comma-separated
+    -expires    string  ""      (with -add:<name>, -mint, -keygen, -renew) Expiry as YYYY-MM-DD; empty = never
+    -comment    string  ""      (with -add:<name>, -mint, -keygen) Comment on the record
+    -src        string  "-"     (with -add:<name>, -mint, -renew) Secret source: - = terminal, @file = a file
+    -mint       string  ""      (action) Mint the credential that dev.cred declares, or read it per -src
+    -minter     string  ""      (with -mint) Token to mint with; empty = the store's gitlab token on -server
+    -in         string  "data"  (with -mint, -renew) The tree's ssimfile directory, which holds dev.cred
+    -keygen     string  ""      (action) Make an ed25519 key under this name and add it sealed
+    -pubfile    string  ""      (with -keygen, -show) Write the public key to this file
+    -renew      string  ""      (action) Renew the named token over the API, or take a new value per -src
+    -remove     string  ""      (action) Remove the named credential
+    -passwd                     (action) Change the master password, resealing every secret
+    -dump                       (action) Print the store, secrets still sealed
+    -format     enum    auto    (with -list, -dump) Output format; auto is text for -list, ssim for -dump (auto|ssim|text|json)
+    -daemon                     Serve the socket in the foreground; -start runs this in a forked child
+    -verbose    flag            Verbosity level (0..255); alias -v; cumulative
+    -debug      flag            Debug level (0..255); alias -d; cumulative
+    -trace      string  ""      Trace expression: log categories to enable, as category[:filter],...
+    -help                       Print help and exit; alias -h
+    -version                    Print version and exit
+    -signature                  Show signatures and exit; alias -sig
 ```
 
 ### Description
@@ -68,15 +71,17 @@ another credential.
 
 ```ssim
 inline-command: acr creddb.kind -report:N | ssimfilt -t -field:kind -field:prefix -field:comment
-KIND        PREFIX            COMMENT
-aws                           AWS access key id, secret and session token, held as one shell fragment
-cloudflare  cfut_ cfat_       Cloudflare API token, a user's or an account's
-github      ghp_ github_pat_  GitHub classic personal access token
-gitlab      glpat-            GitLab personal access token
-latitude                      Latitude.sh API key, held as one shell fragment
-link                          A name that stands for another credential; the linkto column names it, and there is no secret
-openai                        OpenAI organization, project, project key and admin key, held as one shell fragment
-sshkey                        An ssh key pair; the public half is the pubkey column, the private half the secret
+KIND            PREFIX            COMMENT
+aws                               AWS access key id, secret and session token, held as one shell fragment
+cloudflare      cfut_ cfat_       Cloudflare API token, a user's or an account's
+github          ghp_ github_pat_  GitHub classic personal access token
+gitlab          glpat-            GitLab personal access token
+gitlab_group                      GitLab group access token, acting as a bot member of every project in the group
+gitlab_project                    GitLab project access token, acting as a bot member of one project
+latitude                          Latitude.sh API key, held as one shell fragment
+link                              A name that stands for another credential; the linkto column names it, and there is no secret
+openai                            OpenAI organization, project, project key and admin key, held as one shell fragment
+sshkey                            An ssh key pair; the public half is the pubkey column, the private half the secret
 
 ```
 
@@ -104,11 +109,36 @@ blank the tokens in those records.  `-add:<path>`, a value with a slash in it,
 offers the one file it names the same way.  Neither form deletes a file.
 
 `-keygen` makes an ed25519 key in the store and prints its public half.
-`-renew` prints the steps for reissuing a token at its provider and takes the
-new value.  `-remove` drops a credential, and `-passwd` reseals every secret
+`-renew` rotates a token that may rotate itself over the provider's API, and
+for any other token prints the steps for reissuing it and takes the new value.  `-remove` drops a credential, and `-passwd` reseals every secret
 under a new master password.  Each change is written to the store, and a running
 daemon serves it at once.  `-passwd` is the exception: it stops the daemon,
 which holds the old key.
+
+#### Minting a credential a tool declares
+<a href="#minting-a-credential-a-tool-declares"></a>
+
+A tool in this tree names the credential it asks credd for in `dev.cred`.  The
+same tree says what that credential must be able to do: `dev.credrole` gives
+its role and `dev.credperm` its scopes.  The review bot's `gli-mr`, for
+example, is a group token that acts as a developer with the `api` scope.
+`-mint:<name>` reads those rows from `-in`, which is `data` by default, so run
+it from the top of the checkout.  It adds the token with exactly that kind, role
+and set of scopes.
+
+```ssim
+inline-command: acr dev.cred:gli-mr -report:N; acr dev.credrole:gli-mr -report:N; acr dev.credperm:gli-mr/% -report:N
+```
+
+A group or project token is made through GitLab's API.  credd asks with your own
+gitlab token from the store, the first one holding `api` on `-server`, or the
+one `-minter` names.  `-account` is the group or project path.  GitLab lets only
+an Owner of the group make a group token, and only a Maintainer or Owner of
+the project make a project token.  When it refuses you, credd prints the request
+to send one of them, with the name, role and scopes filled in, and reads the
+token they send back per `-src`.  A kind with no API, such as a personal token,
+gets the same printed steps for yourself.  `-renew` of a token the tree
+declares names its role in the steps as well.
 
 #### The daemon
 <a href="#the-daemon"></a>
@@ -148,6 +178,8 @@ credd -add:gli-mr -linkto:gl               # a second name for the same token
 credd -keygen:id_work -comment:"work laptop"   # make an ed25519 key and store it sealed
 credd -keygen:id_ci -pubfile:id_ci.pub     # the same, and write the public key to a file
 credd -renew:gl                            # the reissue steps, then the new value
+credd -mint:gli-mr -account:algornd        # the review bot's group token, minted or requested
+credd -mint:gli-mr -account:algornd -src:@tok   # take the token an Owner sent
 credd -remove:gli-mr                       # remove a link, then the credential it stood for
 credd -passwd                              # reseal every secret under a new password
 credd -add:%                               # offer each token and key already under ~/.ssh
@@ -177,9 +209,11 @@ credd -dir:temp/credd -nostore -stop                                    # the ke
 ### Caveats
 <a href="#caveats"></a>
 
-- A daemon outlives every rebuild of credd.  When `-status`, `-start` or a
-  change prints `credd.oldbuild`, the daemon runs another build and may not see
-  what the new command line writes.  Run `credd -stop`, then `credd -start`.
+- A daemon outlives every rebuild of credd.  When `-status` or `-start` prints
+  `credd.oldbuild`, the daemon runs another build and may not read what the new
+  command line writes, and `-add`, `-mint`, `-keygen`, `-renew` and `-remove`
+  refuse with it before asking anything.  Run `credd -stop`, then
+  `credd -start`.
 - `-passwd` stops a running daemon, since it holds the old key.  Start it
   again under the new password.
 - Answer no to blanking gli's tokens while any gli built without credd still
@@ -189,6 +223,11 @@ credd -dir:temp/credd -nostore -stop                                    # the ke
   offer a file.
 - `-remove` refuses a credential that a link stands for.  Remove the links
   first.
+- `-mint` that ends in a pasted token records no expiry unless `-expires` gives
+  one, so `-check` cannot warn about it.  A token minted over the API carries
+  the expiry GitLab set.
+- GitLab names a group or project token's bot user after the token, and the
+  token is named after the credential.
 - An ssh key is not renewed.  Make a new one with `-keygen` and `-remove` the
   old one.
 - A key behind a passphrase goes in through `-add:<path>`, which asks for the
@@ -207,7 +246,7 @@ live in it, and its ssh agent's socket `ssh_auth_sock` sits beside it, so a
 store named here never touches your own agent.  Give the same `-dir` to every
 command that talks to that daemon.
 
-#### -start -- (action) Start the daemon unless one answers: ask the master password, fork, load the ssh agent
+#### -start -- (action) Start the daemon and its ssh agent, unless a daemon already answers
 <a href="#-start"></a>
 
 Start the daemon unless one already answers, in which case credd reports it and
@@ -271,7 +310,7 @@ hear about a token before it stops working.
 
 How many days ahead `-check` looks, 14 by default.
 
-#### -add -- (action) Add a credential: a name takes its secret per -src, % offers each token and key beside the store, a path offers that file
+#### -add -- (action) Add the named credential, or offer the files that % or a path names
 <a href="#-add"></a>
 
 Add a credential.  A name adds one credential and asks at a terminal for what is
@@ -279,26 +318,26 @@ missing.  `%` walks the directory above the store and offers each token and key
 it finds, and a path with a slash offers that one file.  The options that
 describe a credential go with a name only, and the file forms refuse them.
 
-#### -linkto -- (with -add:<name>) Make the new name a link to this credential, so a tool that asks for the new name gets that one's secret
+#### -linkto -- (with -add:<name>) Make the new name a link to this credential
 <a href="#-linkto"></a>
 
 With `-add:<name>`, make the new name a link to this credential, so a tool
 asking for the new name gets that one's secret.  The target must exist and must
 not itself be a link.
 
-#### -kind -- (with -add:<name>) Kind of credential, a row of creddb.kind: a token provider, sshkey, or link
+#### -kind -- (with -add:<name>) Kind of credential, a row of creddb.kind
 <a href="#-kind"></a>
 
 With `-add:<name>` or `-seed`, the kind of credential, a row of `creddb.kind`.
 At a terminal `-add` asks for it when missing, and `-seed` requires it.
 
-#### -server -- (with -add:<name>) Server URL of a token
+#### -server -- (with -add:<name>, -mint) Server URL of a token
 <a href="#-server"></a>
 
 With `-add:<name>`, the server URL of a token.  `-renew` fills it into the
 reissue steps.
 
-#### -account -- (with -add:<name>) Account a token belongs to
+#### -account -- (with -add:<name>, -mint) Token's account; for -mint, the group or project path
 <a href="#-account"></a>
 
 With `-add:<name>`, the account a token belongs to.  `-renew` fills it into the
@@ -311,25 +350,52 @@ With `-add:<name>`, the permissions the token was issued with, comma-separated.
 Each must be a permission `creddb.perm` lists for the kind, and a terminal shows
 the list when you leave this out.
 
-#### -expires -- (with -add:<name>, -keygen, -renew) Expiry as YYYY-MM-DD; empty = never
+#### -expires -- (with -add:<name>, -mint, -keygen, -renew) Expiry as YYYY-MM-DD; empty = never
 <a href="#-expires"></a>
 
 The expiry date as `YYYY-MM-DD`, or never when empty, for `-add:<name>` and
-`-keygen`.  With `-renew` a new date replaces the old one, and without it the
-old date stands.
+`-keygen`.  With `-renew` a new date replaces the old one.  Without it a
+rotation asks for the lifetime the token was issued with, or for 364 days when
+the token has no expiry, and stores the date the provider sets.  A pasted token
+keeps the old date.
 
-#### -comment -- (with -add:<name>, -keygen) Comment on the record
+With `-mint`, a token minted over the API expires on this date.  When the date
+is empty, the provider sets the latest expiry that it allows.
+
+#### -comment -- (with -add:<name>, -mint, -keygen) Comment on the record
 <a href="#-comment"></a>
 
 A comment on the record, for `-add:<name>` and `-keygen`.  `-keygen` also uses
 it as the key's ssh comment, defaulting to the name.
 
-#### -src -- (with -add:<name>, -renew) Where the secret is read: - the terminal, @file a file
+#### -src -- (with -add:<name>, -mint, -renew) Secret source: - = terminal, @file = a file
 <a href="#-src"></a>
 
-Where the secret is read, for `-add:<name>`, `-seed` and `-renew`: `-` is the
+Where the secret is read, for `-add:<name>`, `-mint`, `-seed` and `-renew`: `-` is the
 terminal with echo off or a pipe, and `@file` is a file.  Anything else is
 refused, since a secret on a command line is visible in the process list.
+
+#### -mint -- (action) Mint the credential that dev.cred declares, or read it per -src
+<a href="#-mint"></a>
+
+Add the credential that the tree's `dev.cred` names, with the kind, role and
+scopes that `dev.credrole` and `dev.credperm` give it.  A kind with an API that
+mints is minted there with your own gitlab token.  Otherwise, or when GitLab
+refuses you, credd prints the steps for whoever may make the token, then reads
+the token per `-src`.  The name must be free in the store.
+
+#### -minter -- (with -mint) Token to mint with; empty = the store's gitlab token on -server
+<a href="#-minter"></a>
+
+The token credd asks GitLab with.  Name it when the store holds several gitlab
+tokens, or when the one to use is not the first that holds `api`.
+
+#### -in -- (with -mint, -renew) The tree's ssimfile directory, which holds dev.cred
+<a href="#-in"></a>
+
+The directory that holds the tree's `dev.cred`, `dev.credrole` and
+`dev.credperm`.  `-renew` reads it too, to name the role of a token the tree
+declares.
 
 #### -keygen -- (action) Make an ed25519 key under this name and add it sealed
 <a href="#-keygen"></a>
@@ -338,20 +404,29 @@ Make an ed25519 key under this name, add it sealed, and print the public key for
 installing where the key logs in.  The private key exists as a file only while
 `ssh-keygen` runs, in the store's private temp directory.
 
-#### -pubfile -- (with -keygen, -show) Write the public key to this file, for installing where the key logs in; -show then shows no secret
+#### -pubfile -- (with -keygen, -show) Write the public key to this file
 <a href="#-pubfile"></a>
 
 Write the public key to this file, as `authorized_keys` takes it.  With
 `-keygen` it is written besides being printed; with `-show` it is read from the
 store with no daemon and no password, and no secret is shown.
 
-#### -renew -- (action) Print where the named token is reissued, then take its new value per -src
+#### -renew -- (action) Renew the named token over the API, or take a new value per -src
 <a href="#-renew"></a>
 
-Renew the named token.  credd prints the provider's reissue steps with the name,
-account, server and permissions filled in, reads the new value per `-src`, asks
-the master password and reseals it.  Given a link, it renews the credential the
-link stands for; an ssh key is refused.
+Renew the named token.  A GitLab token issued with the `self_rotate` permission
+is rotated over the API: credd asks the master password, the token asks GitLab
+for its successor, and the new value is sealed in its place.  GitLab revokes the
+old value at that moment.  Every other token, and one that GitLab refuses to
+rotate, takes the second path.  credd prints the provider's reissue steps with
+the name, account, server and permissions filled in, reads the new value per
+`-src`, asks the master password and reseals it.  Given a link, it renews the
+credential the link stands for; an ssh key is refused.
+
+```
+credd -add:gl -kind:gitlab -server:https://gitlab.example.com -perm:api,self_rotate
+credd -renew:gl                            # rotated, no browser
+```
 
 #### -remove -- (action) Remove the named credential
 <a href="#-remove"></a>

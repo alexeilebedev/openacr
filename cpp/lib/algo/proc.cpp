@@ -121,15 +121,7 @@ int algo_lib::ProcStart(algo_lib::FProc &proc) {
         proc.pid = fork();
         if (proc.pid == 0) { // child
             algo_lib::DieWithParent();
-            // inherited signal handlers stay live until exec, so a kill aimed at
-            // the child in the fork-to-exec window would run the parent's handler
-            // in the child and be consumed instead of killing; restore the default
-            // dispositions so the signal does what the sender means
-            (void)signal(SIGTERM, SIG_DFL);
-            (void)signal(SIGINT , SIG_DFL);
-            (void)signal(SIGHUP , SIG_DFL);
-            (void)signal(SIGQUIT, SIG_DFL);
-            (void)signal(SIGALRM, SIG_DFL);
+            algo_lib::ResetChildSignal();
             if (proc.pgroup) {
                 // own process group: the child may spawn descendants of its
                 // own (a shell wrapper's command), and a kill by the child's

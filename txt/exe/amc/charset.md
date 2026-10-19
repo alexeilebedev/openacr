@@ -31,10 +31,10 @@ dmmeta.field      field:algo_lib.FDb.IdentChar  arg:algo.Charset  reftype:Charse
 amc compiles a Charset to one of two forms (see
 `tclass_Charset` and `GenCalcMatch` in `cpp/amc/charset.cpp`):
 
-| Mode      | `calc` flag | Storage | Body of `<name>Q(ch)` |
-|-----------|-------------|---------|------------------------|
-| Bitset    | `N` (default) | 32-byte `algo.Charset` field in the parent | One bit test: `ch_GetBit(parent.<name>, ch)`. |
-| Inline range | `Y`     | none — no storage in parent             | Series of inline range comparisons folded at compile time. |
+| Mode         | `calc` flag   | Storage                                    | Body of `<name>Q(ch)` |
+| ------------ | ------------- | ------------------------------------------ | --------------------- |
+| Bitset       | `N` (default) | 32-byte `algo.Charset` field in the parent | One bit test: `ch_GetBit(parent.<name>, ch)`. |
+| Inline range | `Y`           | none — no storage in parent                | Series of inline range comparisons folded at compile time. |
 
 For `calc:Y`, amc walks the precomputed bitset at amc time,
 finds runs of consecutive 1-bits, and emits one comparison per
@@ -63,12 +63,12 @@ loaded from a string at startup or computed at runtime.
 The `expr` field is parsed by `algo::Charset_ReadStrptrMaybe`.
 `charrange:Y` enables regex-style ranges:
 
-| `expr`        | Meaning                                  |
-|---------------|------------------------------------------|
-| `a-zA-Z0-9_`  | Letters, digits, and underscore.         |
-| `0-9`         | Just decimal digits.                     |
-| `\\s`         | Whitespace (`\t\n\r `).  Backslash-escape. |
-| `[]{}()`      | Literal brackets (no character class meaning here). |
+| `expr`       | Meaning |
+| ------------ | ------- |
+| `a-zA-Z0-9_` | Letters, digits, and underscore. |
+| `0-9`        | Just decimal digits. |
+| `\\s`        | Whitespace (`\t\n\r `).  Backslash-escape. |
+| `[]{}()`     | Literal brackets (no character class meaning here). |
 
 `charrange:N` treats `expr` as a **literal list of characters**
 — every byte of the string is in the set, no ranges.  Useful
@@ -97,9 +97,9 @@ Required:
 
 For every Charset field, amc emits exactly one accessor:
 
-| Name         | Signature                  | Effect |
-|--------------|----------------------------|--------|
-| `<name>Q`    | `bool <name>Q(u32 ch)`     | True iff `ch` is in the set. |
+| Name      | Signature              | Effect |
+| --------- | ---------------------- | ------ |
+| `<name>Q` | `bool <name>Q(u32 ch)` | True iff `ch` is in the set. |
 
 Note the predicate-naming convention — the function ends in
 `Q` rather than starting with `<name>_Match`.
@@ -115,18 +115,18 @@ caller reaches `<name>Q`.
 Every project gets these out of the box (defined in
 `ssimfile:dmmeta.charset`):
 
-| Charset            | Members           | Mode | Use |
-|--------------------|-------------------|------|-----|
-| `AlphaCharQ`       | `a-zA-Z`          | calc | Letters |
-| `DigitCharQ`       | `0-9`             | calc | Digits |
-| `HexCharQ`         | `0-9a-fA-F`       | calc | Hex digits |
-| `IdentStartQ`      | `a-zA-Z_`         | calc | First char of an identifier |
-| `IdentCharQ`       | `a-zA-Z0-9_`      | calc | Identifier body |
-| `WhiteCharQ`       | `\\t \\n\\r`      | calc | ASCII whitespace |
-| `DirSepQ`          | `/\\`             | calc | Path separators |
-| `ArgvIdentQ`       | `a-zA-Z0-9_`      | bitset | Command-line flag chars |
-| `BashQuotesafeQ`   | `a-zA-Z0-9_^%@./-` | bitset | Chars that need no shell quoting |
-| `CmdLineNameBreakQ`| `[]{}()\\t \\r\\n:` | calc | Argv parser separators |
+| Charset             | Members             | Mode   | Use |
+| ------------------- | ------------------- | ------ | --- |
+| `AlphaCharQ`        | `a-zA-Z`            | calc   | Letters |
+| `DigitCharQ`        | `0-9`               | calc   | Digits |
+| `HexCharQ`          | `0-9a-fA-F`         | calc   | Hex digits |
+| `IdentStartQ`       | `a-zA-Z_`           | calc   | First char of an identifier |
+| `IdentCharQ`        | `a-zA-Z0-9_`        | calc   | Identifier body |
+| `WhiteCharQ`        | `\\t \\n\\r`        | calc   | ASCII whitespace |
+| `DirSepQ`           | `/\\`               | calc   | Path separators |
+| `ArgvIdentQ`        | `a-zA-Z0-9_`        | bitset | Command-line flag chars |
+| `BashQuotesafeQ`    | `a-zA-Z0-9_^%@./-`  | bitset | Chars that need no shell quoting |
+| `CmdLineNameBreakQ` | `[]{}()\\t \\r\\n:` | calc   | Argv parser separators |
 
 The `Q` naming convention plus the `algo_lib::` namespace mean
 that calling `algo_lib::IdentCharQ('a')` from anywhere yields

@@ -1,4 +1,5 @@
 dev.arch  arch:""  comment:all
+dev.arch  arch:aarch64  comment:"64-bit ARM on Linux (AWS Graviton)"
 dev.arch  arch:amd64  comment:"64-bit mode on FreeBSD"
 dev.arch  arch:arm64  comment:"64-bit mode on Apple Silicon"
 dev.arch  arch:i686  comment:"Cygwin 64-bit mode"

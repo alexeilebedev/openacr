@@ -85,9 +85,8 @@ static void Main_ComputeAlldep(abt::FTarget &target, abt::FTarget &parent) {
 // -----------------------------------------------------------------------------
 
 static void Main_SelectTarget() {
-    // create list of targets to consider:
-    // any target matching command line regex, but filtered for compatibility with
-    // current configuration (uname-compiler.cfg-arch)
+    // create list of targets to consider: any target matching command line regex,
+    // and every target it depends on
     ind_beg(abt::_db_target_curs, target,abt::_db) {
         if (Regx_Match(abt::_db.cmdline.target, target.target)) {
             target.origsel=true;
@@ -109,6 +108,160 @@ static void Main_SelectTarget() {
               <<Keyval("comment","No target matches specified pattern"));
         algo_lib::_db.exit_code=1;
     }
+}
+
+// -----------------------------------------------------------------------------
+
+// Return the first system library that TARGET needs, directly or through a
+// dependency, and that the platform of BUILDDIR does not provide, or NULL when the
+// platform provides them all.  An optional need is never missing: the target
+// builds without the library, and its own sources hold what replaces it.  It reads c_alldep, so it answers only after
+// Main_ComputeAlldep has filled it.
+static abt::FTargsyslib *FindMissingSyslib(abt::FBuilddir &builddir, abt::FTarget &target) {
+    abt::FTargsyslib *ret = NULL;
+    ind_beg(abt::target_c_alldep_curs, dep, target) if (ret == NULL) {
+        ind_beg(abt::target_c_targsyslib_curs, targsyslib, dep) if (ret == NULL && !targsyslib.optional && !abt::FindSyslibuname(builddir, targsyslib)) {
+            ret = &targsyslib;
+        }ind_end;
+    }ind_end;
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
+// Ask pkg-config for the compile options of every system library whose row for
+// the platform of the build directory names a package (dev.syslibuname
+// pkgconfig), and record the answer on the row (GetSyslibCflags).  A host where
+// pkg-config knows no such package lacks the library's development files, so the
+// row is marked missing, and Main_DropUnavailable drops the targets that need it.
+// Each package is asked once per run whether or not a selected target needs it:
+// the answer takes milliseconds, and a run asks about one package.
+static void Main_RunPkgconfig() {
+    abt::FBuilddir *builddir = abt::_db.c_builddir;
+    ind_beg(abt::_db_syslibuname_curs, syslibuname, abt::_db) {
+        if (builddir && ch_N(syslibuname.pkgconfig) && uname_Get(syslibuname) == uname_Get(*builddir)) {
+            int status = 0;
+            tempstr cmd;
+            cmd << "pkg-config --cflags " << strptr_ToBash(syslibuname.pkgconfig) << " 2>/dev/null";
+            tempstr out = algo::SysEval(cmd, algo::FailokQ(true), 4096, false, &status);
+            syslibuname.missing = status != 0;
+            syslibuname.cflags = Trimmed(out);
+        }
+    }ind_end;
+}
+
+// -----------------------------------------------------------------------------
+
+// Drop from the selection every target that the platform cannot build.
+//
+// Say a FreeBSD box selects every target with %.  One target drives InfiniBand
+// through libibverbs, and the box has none, so its compile fails on a missing
+// header.  That failure says nothing about the change being built.  What decides
+// it is a fact the schema already holds: dev.targsyslib says the target needs
+// ibverbs, and dev.syslibuname has no ibverbs/FreeBSD row.
+//
+// So a target builds on a platform when the platform provides every system library
+// that the target needs, directly or through a dependency.  A target that depends
+// on one the platform cannot build is dropped with it.  Each dropped target that
+// the command line named is reported, and a selection left empty by the drop fails
+// the run.  The walk keeps the next row before a removal, since the removal
+// unlinks the row the walk stands on.  A -cfg that names no configuration selects
+// no build directory, and so no platform to ask: nothing is dropped, and the run
+// goes on to build nothing, as it did before this pass existed.
+static void Main_DropUnavailable() {
+    abt::FBuilddir *builddir = abt::_db.c_builddir;
+    bool dropped = false;
+    abt::FTarget *next = NULL;
+    for (abt::FTarget *target = builddir ? abt::zs_sel_target_First() : NULL; target; target = next) {
+        next = target->zs_sel_target_next;
+        abt::FTargsyslib *missing = FindMissingSyslib(*builddir, *target);
+        if (missing && target->origsel) {
+            // a row that exists names a library the platform provides and this
+            // host lacks
+            abt::FSyslibuname *row = abt::ind_syslibuname_Find(dev::Syslibuname_Concat_syslib_uname(syslib_Get(*missing), uname_Get(*builddir)));
+            tempstr comment;
+            if (row) {
+                comment << "pkg-config knows no " << row->pkgconfig << "; install the library's development files";
+            } else {
+                comment << "the platform provides no such library; see dev.syslibuname";
+            }
+            tempstr line;
+            line << "abt.unavailable"
+                 <<Keyval("target", target->target)
+                 <<Keyval("uname", uname_Get(*builddir))
+                 <<Keyval("syslib", syslib_Get(*missing))
+                 <<Keyval("comment", comment);
+            // under -printcmd stdout is a script, which the line would break;
+            // -list keeps it on stdout, where atf_comp reads it
+            if (abt::_db.cmdline.printcmd) {
+                prerr(line);
+            } else {
+                prlog(line);
+            }
+            dropped = true;
+        }
+        if (missing) {
+            abt::zs_sel_target_Remove(*target);
+        }
+    }
+    if (dropped && abt::zs_sel_target_N() == 0) {
+        algo_lib::_db.exit_code = 1;
+    }
+}
+
+// -----------------------------------------------------------------------------
+
+// Mark each selected target with the passes that build it: sel_plain when a
+// target the command line named that is no shared object needs it, sel_so when a
+// shared object the command line named needs it.  A target can be both.
+//
+// Say the command line names an executable and a Python module, and both link
+// one library.  The module is a shared object, so every object linked into it is
+// compiled position-independent, which costs a few percent on the hot path of an
+// executable.  So the library is built twice: once in the plain pass, for the
+// executable, and once in the so pass, for the module, under the build
+// directory's so/ (GetPassDir) with the SOCC options.  It reads c_alldep, so it
+// runs after Main_ComputeAlldep.
+static void Main_MarkPass() {
+    ind_beg(abt::_db_zs_sel_target_curs, target, abt::_db) if (target.origsel) {
+        bool so = target.p_ns->nstype == dmmeta_Nstype_nstype_so;
+        ind_beg(abt::target_c_alldep_curs, dep, target) {
+            dep.sel_so = dep.sel_so || so;
+            dep.sel_plain = dep.sel_plain || !so;
+        }ind_end;
+    }ind_end;
+}
+
+// Return true when the pass BUILDDIR is running builds TARGET (Main_MarkPass).
+bool abt::InPassQ(abt::FBuilddir &builddir, abt::FTarget &target) {
+    return builddir.so ? target.sel_so : target.sel_plain;
+}
+
+// Return true when a selected target needs the so pass.
+static bool SoPassQ() {
+    bool ret = false;
+    ind_beg(abt::_db_zs_sel_target_curs, target, abt::_db) {
+        ret = ret || target.sel_so;
+    }ind_end;
+    return ret;
+}
+
+// Return the directory the pass BUILDDIR is running writes its objects, archives
+// and links to: the build directory, or its so/ for the so pass.
+tempstr abt::GetPassDir(abt::FBuilddir &builddir) {
+    tempstr ret(builddir.path);
+    if (builddir.so) {
+        ret << "/so";
+    }
+    return ret;
+}
+
+// Start the pass SO of BUILDDIR: the so pass when SO, the plain pass otherwise.
+// The output directory that the commands substitute follows the pass.
+static void SetPass(abt::FBuilddir &builddir, bool so) {
+    builddir.so = so;
+    Set(builddir.R,"$out_dir",abt::GetPassDir(builddir));
+    Set(builddir.R,"$buildpath",abt::GetPassDir(builddir));
 }
 
 // -----------------------------------------------------------------------------
@@ -138,7 +291,7 @@ tempstr abt::GetObjpath(abt::FBuilddir &builddir, abt::FSrcfile &srcfile) {
         tgt_ext = ".res";
     }
     if (ch_N(tgt_ext)) {
-        ret << builddir.path << algo::MaybeDirSep;
+        ret << abt::GetPassDir(builddir) << algo::MaybeDirSep;
         if (!abt::HeaderExtQ(ext)) {
             ret << StripExt(srcfile.objkey);
         } else {
@@ -158,36 +311,33 @@ void abt::DeleteFileV(strptr path) {
 
 // -----------------------------------------------------------------------------
 
-// Delete object files for selected targets from all selected build dirs
-static void Main_Clean() {
-    ind_beg(abt::_db_builddir_curs, builddir, abt::_db) if (builddir.select) {
-        ind_beg(abt::_db_zs_sel_target_curs, target,abt::_db) {
-            abt::DeleteFileV(GetOutfile(builddir,target));
-            ind_beg(abt::target_c_srcfile_curs, src,target) if (Regx_Match(abt::_db.cmdline.srcfile,src.srcfile)) {
-                tempstr objpath = GetObjpath(builddir,src);
-                if (ch_N(objpath)) {
-                    abt::DeleteFileV(objpath);
-                    if (cfg_Get(builddir) == dev_Cfg_cfg_coverage) {
-                        // clean coverage files
-                        tempstr gcdafile(ReplaceExt(objpath, ".gcda"));
-                        tempstr gcnofile(ReplaceExt(objpath, ".gcno"));
-                        abt::DeleteFileV(gcdafile);
-                        abt::DeleteFileV(gcnofile);
-                    }
+// Delete the object files of the selected targets from the pass BUILDDIR is running
+static void Main_Clean(abt::FBuilddir &builddir) {
+    ind_beg(abt::_db_zs_sel_target_curs, target,abt::_db) if (abt::InPassQ(builddir, target)) {
+        abt::DeleteFileV(GetOutfile(builddir,target));
+        ind_beg(abt::target_c_srcfile_curs, src,target) if (Regx_Match(abt::_db.cmdline.srcfile,src.srcfile)) {
+            tempstr objpath = GetObjpath(builddir,src);
+            if (ch_N(objpath)) {
+                abt::DeleteFileV(objpath);
+                if (cfg_Get(builddir) == dev_Cfg_cfg_coverage) {
+                    // clean coverage files
+                    tempstr gcdafile(ReplaceExt(objpath, ".gcda"));
+                    tempstr gcnofile(ReplaceExt(objpath, ".gcno"));
+                    abt::DeleteFileV(gcdafile);
+                    abt::DeleteFileV(gcnofile);
                 }
-            }ind_end;
+            }
         }ind_end;
     }ind_end;
 }
 
 // -----------------------------------------------------------------------------
 
-// Mark the selected targets and their sources that -list prints.  Under -ood
-// a row is marked when it is out of date in the build directory whose
-// out-of-date flags were computed last, so calling this once per selected
-// directory marks each row that any of them builds.
-static void MarkList() {
-    ind_beg(abt::_db_zs_sel_target_curs, target,abt::_db) {
+// Mark the selected targets and their sources that -list prints, of the pass
+// BUILDDIR is running.  Under -ood a row is marked when it is out of date in that
+// pass, so calling this once per pass marks each row that any of them builds.
+static void MarkList(abt::FBuilddir &builddir) {
+    ind_beg(abt::_db_zs_sel_target_curs, target,abt::_db) if (abt::InPassQ(builddir, target)) {
         if (!abt::_db.cmdline.ood || target.ood) {
             target.wantprint=true;
         }
@@ -229,10 +379,11 @@ static void ListIncl(abt::FSrcfile &srcfile) {
     }
 }
 
-// Mark the includes reachable from the sources of the selected targets.  Under
-// -ood only out-of-date sources count, as MarkList does for its rows.
-static void MarkListIncl() {
-    ind_beg(abt::_db_zs_sel_target_curs,target,abt::_db) {
+// Mark the includes reachable from the sources of the selected targets of the
+// pass BUILDDIR is running.  Under -ood only out-of-date sources count, as
+// MarkList does for its rows.
+static void MarkListIncl(abt::FBuilddir &builddir) {
+    ind_beg(abt::_db_zs_sel_target_curs,target,abt::_db) if (abt::InPassQ(builddir, target)) {
         ind_beg(abt::target_c_targsrc_curs,targsrc,target) if (SourceQ(targsrc) && Regx_Match(abt::_db.cmdline.srcfile,src_Get(targsrc))) {
             if (abt::FSrcfile *srcfile=abt::ind_srcfile_Find(src_Get(targsrc))) {
                 if (!abt::_db.cmdline.ood || srcfile->ood) {
@@ -270,30 +421,24 @@ static void Main_Helpscreen() {
 
 // -----------------------------------------------------------------------------
 
-// Create JCDB file for all selected build directories & targets
-static void Main_CreateJcdb() {
-    tempstr jcdb;
-    jcdb << "[";
-    ind_beg(abt::_db_builddir_curs,builddir,abt::_db) if (builddir.select) {
-        algo::ListSep ls(",");
-        ind_beg(abt::_db_zs_sel_target_curs,target,abt::_db) {
-            tempstr outfile = GetOutfile(builddir,target);
-            Set(builddir.R, "$target", target.target);
-            Set(builddir.R, "$outfile", outfile);
-            Set(builddir.R, "$outbase", StripExt(outfile));
-            ind_beg(abt::target_c_srcfile_curs,srcfile,target) {
-                Set(builddir.R,"$srcfile",srcfile.srcfile);
-                Set(builddir.R,"$objpath",GetObjpath(builddir,srcfile));
-                jcdb
-                    << ls
-                    << "{\"directory\":\"" << algo::GetCurDir() << "\""
-                    << ",\"command\":\"" << abt::EvalSrcfileCmdline(builddir,target,srcfile) << "\""
-                    << ",\"file\":\"" << srcfile.srcfile << "\"}" << eol;
-            }ind_end;
+// Add to JCDB the compile commands of the selected targets in the pass BUILDDIR
+// is running, separated by LS.
+static void Main_CreateJcdb(abt::FBuilddir &builddir, algo::ListSep &ls, cstring &jcdb) {
+    ind_beg(abt::_db_zs_sel_target_curs,target,abt::_db) if (abt::InPassQ(builddir, target)) {
+        tempstr outfile = GetOutfile(builddir,target);
+        Set(builddir.R, "$target", target.target);
+        Set(builddir.R, "$outfile", outfile);
+        Set(builddir.R, "$outbase", StripExt(outfile));
+        ind_beg(abt::target_c_srcfile_curs,srcfile,target) {
+            Set(builddir.R,"$srcfile",srcfile.srcfile);
+            Set(builddir.R,"$objpath",GetObjpath(builddir,srcfile));
+            jcdb
+                << ls
+                << "{\"directory\":\"" << algo::GetCurDir() << "\""
+                << ",\"command\":\"" << abt::EvalSrcfileCmdline(builddir,target,srcfile) << "\""
+                << ",\"file\":\"" << srcfile.srcfile << "\"}" << eol;
         }ind_end;
     }ind_end;
-    jcdb << "]" << eol;
-    StringToFile(jcdb,abt::_db.cmdline.jcdb);
 }
 
 // -----------------------------------------------------------------------------
@@ -311,7 +456,8 @@ static void line_n_Update(abt::FSrcfile *srcfile) {
 
 // -----------------------------------------------------------------------------
 
-// Create commands between START and END for building target TARGET.
+// Create commands between START and END for building the selected targets in the
+// pass BUILDDIR is running.
 //
 // compilation workflow for each target:
 // cmd_start : start
@@ -326,7 +472,7 @@ static void line_n_Update(abt::FSrcfile *srcfile) {
 //
 static void Main_CreateCmds(abt::FBuilddir &builddir, abt::FSyscmd *start, abt::FSyscmd *end) {
     algo_lib::Replscope &R = builddir.R;
-    ind_beg(abt::_db_zs_sel_target_curs, target,abt::_db) if (target.p_ns->nstype != dmmeta_Nstype_nstype_none) {
+    ind_beg(abt::_db_zs_sel_target_curs, target,abt::_db) if (target.p_ns->nstype != dmmeta_Nstype_nstype_none && abt::InPassQ(builddir, target)) {
         target.syscmd_start           = abt::NewCmd(start,end);
         target.syscmd_compile         = abt::NewCmd(target.syscmd_start,end);
         target.syscmd_link            = abt::NewCmd(target.syscmd_compile,end);
@@ -372,7 +518,9 @@ static void Main_CreateCmds(abt::FBuilddir &builddir, abt::FSyscmd *start, abt::
             DepsObjList(builddir,target,objs,libs);
             Set(R,"$objs",objs);
             Set(R,"$libs",libs);
-            if (target.p_ns->nstype == dmmeta_Nstype_nstype_lib || target.p_ns->nstype == dmmeta_Nstype_nstype_exe) {
+            if (target.p_ns->nstype == dmmeta_Nstype_nstype_lib
+                || target.p_ns->nstype == dmmeta_Nstype_nstype_exe
+                || target.p_ns->nstype == dmmeta_Nstype_nstype_so) {
                 tempstr tempfile = tempstr()<< outfile<<".tmp";
                 Set(R, "$origoutfile", "$outfile");
                 Set(R, "$outfile", tempfile);
@@ -394,16 +542,22 @@ static void Main_CreateCmds(abt::FBuilddir &builddir, abt::FSyscmd *start, abt::
             }
         }
 
-        // with -install, make bin/<target> point to the created executable
-        if (abt::_db.cmdline.install && target.p_ns->nstype == dmmeta_Nstype_nstype_exe && canlink) {
+        // with -install, make bin/<target> point to the created executable, and
+        // lib/<target><soext> to the created shared object
+        bool exe = target.p_ns->nstype == dmmeta_Nstype_nstype_exe;
+        bool so = target.p_ns->nstype == dmmeta_Nstype_nstype_so;
+        if (abt::_db.cmdline.install && (exe || so) && canlink) {
             abt::FSyscmd& cmd_inst = *NewCmd(syscmd_insttarg, target.syscmd_end);
             cmd_inst.redirect = false;
-            Ins(&R, cmd_inst.command, "ln -sf ../$out_dir/$target bin/$target");
+            Set(R, "$instname", Pathcomp(outfile, "/RR"));
+            Set(R, "$instdir", exe ? "bin" : "lib");
+            Ins(&R, cmd_inst.command, "ln -sf ../$out_dir/$instname $instdir/$instname");
         }
     }ind_end;
 
-    // create dependencies between build commands
-    ind_beg(abt::_db_zs_sel_target_curs, target,abt::_db) if (target.p_ns->nstype != dmmeta_Nstype_nstype_none) {
+    // create dependencies between build commands; a target's dependencies are in
+    // every pass the target is in
+    ind_beg(abt::_db_zs_sel_target_curs, target,abt::_db) if (target.p_ns->nstype != dmmeta_Nstype_nstype_none && abt::InPassQ(builddir, target)) {
         ind_beg(abt::target_c_targdep_curs, dep,target) {
             // library or list of objects -- can compile in parallel with it, must wait for link step
             if (dep.p_parent->p_ns->nstype == dmmeta_Nstype_nstype_lib
@@ -595,11 +749,13 @@ static void Main_Dry() {
 
 tempstr abt::GetOutfile(abt::FBuilddir &builddir, abt::FTarget &target) {
     tempstr ret;
-    tempstr prefix = DirFileJoin(builddir.path, target.target);
+    tempstr prefix = DirFileJoin(abt::GetPassDir(builddir), target.target);
     if (target.p_ns->nstype == dmmeta_Nstype_nstype_lib) {
         ret << prefix << "-" << arch_Get(builddir) << builddir.p_compiler->libext;
     } else if (target.p_ns->nstype == dmmeta_Nstype_nstype_exe) {
         ret << prefix << builddir.p_compiler->exeext;
+    } else if (target.p_ns->nstype == dmmeta_Nstype_nstype_so) {
+        ret << prefix << builddir.p_compiler->soext;
     }
     return ret;
 }
@@ -668,6 +824,9 @@ void abt::Main() {
     ind_beg(abt::_db_zs_sel_target_curs, target,abt::_db) {
         Main_ComputeAlldep(target,target);
     }ind_end;
+    Main_RunPkgconfig();
+    Main_DropUnavailable();
+    Main_MarkPass();
 
     // stamp the build identity before the scan: arg.cpp includes the file this
     // writes, so the scan can only resolve that include once it exists
@@ -677,10 +836,14 @@ void abt::Main() {
     abt::ScanSrcfile();
 
     // create top-level build directory
+    bool sopass = SoPassQ();
     if (abt::_db.cmdline.build && algo_lib::_db.exit_code == 0) {
         ind_beg(_db_builddir_curs,builddir,_db) if (builddir.select) {
             CreateDirRecurseV(DirFileJoin("build",cfg_Get(builddir)));
             CreateDirRecurseV(builddir.path);
+            if (sopass) {
+                CreateDirRecurseV(DirFileJoin(builddir.path, "so"));
+            }
             LockFileInit(builddir.lockfile, DirFileJoin(builddir.path, "abt.lock"));
         }ind_end;
     }
@@ -688,29 +851,42 @@ void abt::Main() {
     // clean -- note, all cleaning has to be done before all compiling
     // or out-of-date determination
     if (abt::_db.cmdline.clean) {
-        Main_Clean();
+        ind_beg(_db_builddir_curs,builddir,_db) if (builddir.select) {
+            for (int so = 0; so <= int(sopass); so++) {
+                SetPass(builddir, so);
+                Main_Clean(builddir);
+            }
+        }ind_end;
     }
 
     abt::ComputeTimestamps();
 
-    // Whether a file is out of date depends on the build directory holding its
-    // object, so each selected directory computes that first, and then does the
-    // work that reads it: marking the rows the listings print, which -ood
+    // Whether a file is out of date depends on the directory holding its object,
+    // so each pass of each selected build directory computes that first, and then
+    // does the work that reads it: marking the rows the listings print, which -ood
     // filters, and creating the commands that a build runs and a dry run prints.
-    // A listing then prints each marked row once, however many directories are
-    // selected.
+    // A listing then prints each marked row once, however many passes ran.  The
+    // so pass runs only when a shared object is selected (Main_MarkPass).
     bool create_cmds = algo_lib::_db.exit_code==0 && abt::_db.cmdline.jcdb=="";
     abt::FSyscmd *start=NULL,*end=NULL;
+    algo::ListSep jcdb_ls(",");
+    cstring jcdb("[");
     ind_beg(_db_builddir_curs,builddir,_db) if (builddir.select) {
-        abt::ComputeOod(builddir);
-        if (abt::_db.cmdline.list) {
-            MarkList();
-        }
-        if (abt::_db.cmdline.listincl) {
-            MarkListIncl();
-        }
-        if (create_cmds) {
-            Main_CreateCmds(builddir,start,end);
+        for (int so = 0; so <= int(sopass); so++) {
+            SetPass(builddir, so);
+            abt::ComputeOod(builddir);
+            if (abt::_db.cmdline.list) {
+                MarkList(builddir);
+            }
+            if (abt::_db.cmdline.listincl) {
+                MarkListIncl(builddir);
+            }
+            if (create_cmds) {
+                Main_CreateCmds(builddir,start,end);
+            }
+            if (abt::_db.cmdline.jcdb!="") {
+                Main_CreateJcdb(builddir, jcdb_ls, jcdb);
+            }
         }
     }ind_end;
     if (abt::_db.cmdline.list) {
@@ -722,7 +898,8 @@ void abt::Main() {
 
     if (algo_lib::_db.exit_code==0) {
         if (abt::_db.cmdline.jcdb!="") {
-            Main_CreateJcdb();
+            jcdb << "]" << eol;
+            StringToFile(jcdb,abt::_db.cmdline.jcdb);
         } else if (abt::_db.cmdline.dry_run) {
             Main_Dry();
         } else {
@@ -744,7 +921,7 @@ void abt::Main() {
         command::gcache gcache;
         gcache.hitrate=true;
         gcache.after=starttime;
-        cstring out = SysEval(command::gcache_ToCmdline(gcache)<<" 2>&1",FailokQ(true),1024);
+        cstring out = SysEval(command::gcache_ToCmdline(gcache)<<" 2>&1",FailokQ(true));
         ind_beg(Line_curs,line,out) {
             report::gcache_hitrate hr;
             if (gcache_hitrate_ReadStrptrMaybe(hr,line)) {

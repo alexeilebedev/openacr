@@ -1,3 +1,4 @@
+// Copyright (C) 2026 AlgoX2 Corp
 // Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2021 Astra
 // Copyright (C) 2017-2019 NYSE | Intercontinental Exchange
@@ -65,6 +66,7 @@ static void Build_Forkit(abt::FSyscmd *next_cmd) {
 
     if (pid == 0) {
         algo_lib::DieWithParent();
+        algo_lib::ResetChildSignal();
         if (next_cmd->redirect) {
             next_cmd->command << " 2> "<<next_cmd->fstderr;
             next_cmd->command << " 1> "<<next_cmd->fstdout;

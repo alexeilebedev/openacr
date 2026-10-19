@@ -69,7 +69,8 @@ namespace lib_git { // update-hdr
     // Return TRUE if REMOTE is a valid git remote
     bool GitRemoteExistsQ(strptr remote);
 
-    // Return TRUE if BRANCH is a valid git branch
+    // Return TRUE if BRANCH names a local branch of the repository the current
+    // directory is in, that is when refs/heads/BRANCH exists
     bool GitBranchExistsQ(strptr branch);
 
     // Get configured user: name <email>
@@ -77,4 +78,16 @@ namespace lib_git { // update-hdr
 
     // Get year of latest commit of given file
     u32 GetLastCommitYear(strptr file);
+
+    // The main checkout the current directory belongs to: the directory holding
+    // the repository's common git dir, which a worktree shares with the checkout
+    // it was made from.  Empty outside a repository, and empty under a git too
+    // old to answer --path-format.
+    tempstr ReadCheckout();
+
+    // Return the remote that the local master branch tracks, or origin when master
+    // tracks none.  A clone may give its remote any name, for example upstream, so
+    // a tool that compares a branch with the upstream branch of master reads the
+    // remote here.
+    tempstr GetMasterRemote();
 }

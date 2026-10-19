@@ -115,7 +115,9 @@ namespace lib_netio { // update-hdr
     // the caller for the whole retry window on the unanswered case, so the connect
     // is issued non-blocking and the socket polled for writability until the
     // deadline, which reports either negative promptly and reports success only
-    // once the handshake has completed.
+    // once the handshake has completed.  A deadline of 0 answers only for a handshake
+    // the connect completes by itself, which Linux does over loopback and macOS does
+    // not, so a caller that polls passes a deadline per probe.
     bool TcpUpQ(ietf::Ipport ipport, int msec);
 
     // accept remote connection on LISTEN_SOCK:

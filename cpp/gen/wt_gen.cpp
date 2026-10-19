@@ -23,17 +23,23 @@
 #include "include/gen/wt_gen.inl.h"
 #include "include/gen/command_gen.h"
 #include "include/gen/command_gen.inl.h"
-#include "include/gen/dev_gen.h"
-#include "include/gen/dev_gen.inl.h"
 #include "include/gen/algo_gen.h"
 #include "include/gen/algo_gen.inl.h"
+#include "include/gen/dev_gen.h"
+#include "include/gen/dev_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
+#include "include/gen/lib_git_gen.h"
+#include "include/gen/lib_git_gen.inl.h"
+#include "include/gen/lib_json_gen.h"
+#include "include/gen/lib_json_gen.inl.h"
 //#pragma endinclude
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
 algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
+lib_git::FDb    lib_git::_db;     // dependency found via dev.targdep
+lib_json::FDb   lib_json::_db;    // dependency found via dev.targdep
 wt::FDb         wt::_db;          // dependency found via dev.targdep
 
 namespace wt { // gen:ns_print_proto
@@ -152,7 +158,7 @@ static void wt::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'wt.Input'  signature:'1fb9852b8300e0e942f1a73e1b0c3a3a711ee854'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'wt.Input'  signature:'b75fa986e6638af6fc8b26ac5ffe1275efe726b1'");
 }
 
 // --- wt.FDb._db.InsertStrptrMaybe
@@ -905,6 +911,8 @@ void wt::StaticCheck() {
 int main(int argc, char **argv) {
     try {
         algo_lib::FDb_Init();
+        lib_git::FDb_Init();
+        lib_json::FDb_Init();
         wt::FDb_Init();
         algo_lib::_db.argc = argc;
         algo_lib::_db.argv = argv;
@@ -921,6 +929,8 @@ int main(int argc, char **argv) {
     }
     try {
         wt::FDb_Uninit();
+        lib_json::FDb_Uninit();
+        lib_git::FDb_Uninit();
         algo_lib::FDb_Uninit();
     } catch(algo_lib::ErrorX &) {
         // don't print anything, might crash

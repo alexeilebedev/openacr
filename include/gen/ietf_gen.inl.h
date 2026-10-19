@@ -758,6 +758,49 @@ inline  ietf::Ipv4Addr::Ipv4Addr(u32 in_addr) {
     addr_Set(*this,in_addr);
 }
 
+// --- ietf.Pcaphdr.linktype.GetEnum
+// Get value of field as enum type
+inline ietf_Pcaphdr_linktype_Enum ietf::linktype_GetEnum(const ietf::Pcaphdr& parent) {
+    return ietf_Pcaphdr_linktype_Enum(parent.linktype);
+}
+
+// --- ietf.Pcaphdr.linktype.SetEnum
+// Set value of field from enum type.
+inline void ietf::linktype_SetEnum(ietf::Pcaphdr& parent, ietf_Pcaphdr_linktype_Enum rhs) {
+    parent.linktype = u32(rhs);
+}
+
+// --- ietf.Pcaphdr..Init
+// Set all fields to initial values.
+inline void ietf::Pcaphdr_Init(ietf::Pcaphdr& parent) {
+    parent.magic = u32(0xa1b2c3d4);
+    parent.version_major = u16(2);
+    parent.version_minor = u16(4);
+    parent.thiszone = i32(0);
+    parent.sigfigs = u32(0);
+    parent.snaplen = u32(65535);
+    parent.linktype = u32(1);
+}
+
+// --- ietf.Pcaphdr..Ctor
+inline  ietf::Pcaphdr::Pcaphdr() {
+    ietf::Pcaphdr_Init(*this);
+}
+
+// --- ietf.Pcaprec..Init
+// Set all fields to initial values.
+inline void ietf::Pcaprec_Init(ietf::Pcaprec& parent) {
+    parent.ts_sec = u32(0);
+    parent.ts_usec = u32(0);
+    parent.caplen = u32(0);
+    parent.len = u32(0);
+}
+
+// --- ietf.Pcaprec..Ctor
+inline  ietf::Pcaprec::Pcaprec() {
+    ietf::Pcaprec_Init(*this);
+}
+
 // --- ietf.Tcphdr.source.Get
 inline u16 ietf::source_Get(const ietf::Tcphdr& parent) {
     return be16toh(parent.source_be); // read big-endian value from memory

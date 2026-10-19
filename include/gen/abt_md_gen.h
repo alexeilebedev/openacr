@@ -300,6 +300,7 @@ void                 FCheckReq_Uninit(abt_md::FCheckReq& parent) __attribute__((
 struct FComptest { // abt_md.FComptest
     algo::Smallstr50   comptest;               //
     i32                timeout;                //   10
+    algo::Smallstr50   cijob;                  //   "compB"  The cijob that runs this test outside memcheck; none = never
     algo::Smallstr50   memcheck;               // The cijob that runs this test under valgrind memcheck; none = never
     bool               coverage;               //   true
     bool               stablefld;              //   false  Replace unstable fields with ***
@@ -334,7 +335,7 @@ algo::strptr         testname_Get(abt_md::FComptest& parent) __attribute__((__wa
 
 // Set all fields to initial values.
 // func:abt_md.FComptest..Init
-inline void          FComptest_Init(abt_md::FComptest& parent);
+void                 FComptest_Init(abt_md::FComptest& parent);
 // func:abt_md.FComptest..Uninit
 void                 FComptest_Uninit(abt_md::FComptest& parent) __attribute__((nothrow));
 
@@ -585,7 +586,7 @@ void                 mdsection_CopyIn(abt_md::FMdsection &row, dev::Mdsection &i
 
 // Invoke function by pointer
 // func:abt_md.FMdsection.step.Call
-inline void          step_Call(abt_md::FMdsection& parent, abt_md::FFileSection& arg) __attribute__((nothrow));
+inline void          step_Call(abt_md::FMdsection& parent, abt_md::FFileSection& arg);
 
 // Print back to string
 // func:abt_md.FMdsection.regx_match.Print
@@ -3140,6 +3141,7 @@ struct FDocpage { // abt_md.FDocpage
     bool               word;      //   false  A location names this page by this word and a colon
     bool               bare;      //   false  A bare key naming this page addresses it
     bool               bytable;   //   false  A pattern handed to this word is the query over the table its name expands to
+    bool               view;      //   false  The page is a view of the records its word is handed
     algo::cstring      comment;   //
     // func:abt_md.FDocpage..Ctor
     inline               FDocpage() __attribute__((nothrow));
@@ -4011,8 +4013,10 @@ struct FReadmefile { // abt_md.FReadmefile
     algo::Smallstr200      gitfile;                  //
     bool                   inl;                      //   false
     bool                   sandbox;                  //   false
+    bool                   tut;                      //   false  A tutorial: abt_md evaluates its commands only under -tut
     algo::Smallstr100      filter;                   //
     bool                   publish;                  //   false  Carry this page into the generated documentation list
+    bool                   narrow;                   //   false  Every table row fits 120 characters; abt_md -check refuses a wider one
     algo::cstring          comment;                  //
     abt_md::FNs*           p_ns;                     // reference to parent row
     abt_md::FSsimfile*     p_ssimfile;               // reference to parent row

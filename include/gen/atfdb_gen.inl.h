@@ -40,6 +40,10 @@ inline  atfdb::Age::Age() {
 inline  atfdb::Amctest::Amctest() {
 }
 
+// --- atfdb.Benchgate..Ctor
+inline  atfdb::Benchgate::Benchgate() {
+}
+
 // --- atfdb.Benchprofile.shape.GetEnum
 // Get value of field as enum type
 inline atfdb_Benchprofile_shape_Enum atfdb::shape_GetEnum(const atfdb::Benchprofile& parent) {
@@ -79,6 +83,7 @@ inline void atfdb::Citest_Init(atfdb::Citest& parent) {
     parent.sandbox = bool(false);
     parent.timeout = i32(600);
     parent.failfast = bool(false);
+    parent.gcov = bool(false);
 }
 
 // --- atfdb.Citest..Ctor
@@ -90,6 +95,7 @@ inline  atfdb::Citest::Citest() {
 // Set all fields to initial values.
 inline void atfdb::Comptest_Init(atfdb::Comptest& parent) {
     parent.timeout = i32(10);
+    parent.cijob = algo::strptr("compB");
     parent.coverage = bool(true);
     parent.stablefld = bool(false);
 }
@@ -182,6 +188,27 @@ inline  atfdb::Tfilt::Tfilt() {
 inline  atfdb::Tifilt::Tifilt() {
 }
 
+// --- atfdb.Tlamodel..Init
+// Set all fields to initial values.
+inline void atfdb::Tlamodel_Init(atfdb::Tlamodel& parent) {
+    parent.expect = algo::strptr("pass");
+    parent.timeout = u32(600);
+    parent.ci = bool(false);
+}
+
+// --- atfdb.Tlamodel..Ctor
+inline  atfdb::Tlamodel::Tlamodel() {
+    atfdb::Tlamodel_Init(*this);
+}
+
+// --- atfdb.Tlastrategy..Ctor
+inline  atfdb::Tlastrategy::Tlastrategy() {
+}
+
+// --- atfdb.Tlaverdict..Ctor
+inline  atfdb::Tlaverdict::Tlaverdict() {
+}
+
 // --- atfdb.Unittest..Ctor
 inline  atfdb::Unittest::Unittest() {
 }
@@ -200,6 +227,11 @@ inline  atfdb::Var::Var() {
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const atfdb::Age &row) {// cfmt:atfdb.Age.String
     atfdb::Age_Print(const_cast<atfdb::Age&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const atfdb::Benchgate &row) {// cfmt:atfdb.Benchgate.String
+    atfdb::Benchgate_Print(const_cast<atfdb::Benchgate&>(row), str);
     return str;
 }
 
@@ -270,6 +302,21 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const atfdb::Tfilt &
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const atfdb::Tifilt &row) {// cfmt:atfdb.Tifilt.String
     atfdb::Tifilt_Print(const_cast<atfdb::Tifilt&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const atfdb::Tlamodel &row) {// cfmt:atfdb.Tlamodel.String
+    atfdb::Tlamodel_Print(const_cast<atfdb::Tlamodel&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const atfdb::Tlastrategy &row) {// cfmt:atfdb.Tlastrategy.String
+    atfdb::Tlastrategy_Print(const_cast<atfdb::Tlastrategy&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const atfdb::Tlaverdict &row) {// cfmt:atfdb.Tlaverdict.String
+    atfdb::Tlaverdict_Print(const_cast<atfdb::Tlaverdict&>(row), str);
     return str;
 }
 

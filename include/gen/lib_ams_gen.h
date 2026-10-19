@@ -19,6 +19,8 @@
 
 
 #pragma once
+#include "include/gen/report_gen.h"
+#include "include/gen/report_gen.inl.h"
 #include "include/gen/ams_gen.h"
 #include "include/gen/algo_gen.h"
 #include "include/gen/algo_lib_gen.h"
@@ -188,8 +190,11 @@ void                 FChunk_Uninit(lib_ams::FChunk& parent) __attribute__((nothr
 #pragma pack(push,1)
 struct trace { // lib_ams.trace
     u64   n_board_badref;             //   0  # of board references refused by the bounds or length check
+    u64   n_board_noboard;            //   0  # of lane sends and resolves that found no board for the lane's writer: a copy went instead, or nothing resolved
     u64   n_board_nochunk;            //   0  # of board allocations refused because no chunk was free
     u64   n_board_nochunkref;         //   0  # of board sends refused because the lane references board_max_chunkref chunks
+    u64   n_board_open;               //   0  # of boards this process mapped for reading, at startup or on the first reference from their writer
+    u64   n_board_resolve;            //   0  # of references resolved into a writer's board, each a run of records read in place
     u64   n_board_send;               //   0  # of board references written to a lane
     u64   n_board_unlocked;           //   0  # of boards whose committed pages the memlock limit refused to lock
     u64   n_board_unpopulated;        //   0  # of boards whose page tables the kernel refused to populate
@@ -393,9 +398,9 @@ inline lib_ams::FFdin& cd_fdin_eof_qLast() __attribute__((__warn_unused_result__
 inline void          cd_fdin_eof_UpdateCycles() __attribute__((nothrow));
 // func:lib_ams.FDb.cd_fdin_eof.Step
 // this function is 'extrn' and implemented by user
-void                 cd_fdin_eof_Step() __attribute__((nothrow));
+void                 cd_fdin_eof_Step();
 // func:lib_ams.FDb.cd_fdin_eof.Call
-inline void          cd_fdin_eof_Call() __attribute__((nothrow));
+inline void          cd_fdin_eof_Call();
 
 // Return true if index is empty
 // func:lib_ams.FDb.cd_fdin_read.EmptyQ
@@ -443,9 +448,9 @@ inline lib_ams::FFdin& cd_fdin_read_qLast() __attribute__((__warn_unused_result_
 inline void          cd_fdin_read_UpdateCycles() __attribute__((nothrow));
 // func:lib_ams.FDb.cd_fdin_read.Step
 // this function is 'extrn' and implemented by user
-void                 cd_fdin_read_Step() __attribute__((nothrow));
+void                 cd_fdin_read_Step();
 // func:lib_ams.FDb.cd_fdin_read.Call
-inline void          cd_fdin_read_Call() __attribute__((nothrow));
+inline void          cd_fdin_read_Call();
 
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
@@ -584,9 +589,9 @@ inline lib_ams::FShm& cd_poll_read_qLast() __attribute__((__warn_unused_result__
 inline void          cd_poll_read_UpdateCycles() __attribute__((nothrow));
 // func:lib_ams.FDb.cd_poll_read.Step
 // this function is 'extrn' and implemented by user
-void                 cd_poll_read_Step() __attribute__((nothrow));
+void                 cd_poll_read_Step();
 // func:lib_ams.FDb.cd_poll_read.Call
-inline void          cd_poll_read_Call() __attribute__((nothrow));
+inline void          cd_poll_read_Call();
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -771,7 +776,7 @@ inline void          c_shm_stdin_Remove(lib_ams::FShm& row) __attribute__((nothr
 
 // Invoke function by pointer
 // func:lib_ams.FDb.h_amsmsg.Call
-inline void          h_amsmsg_Call(ams::MsgHeader& arg) __attribute__((nothrow));
+inline void          h_amsmsg_Call(ams::MsgHeader& arg);
 // Assign 0-argument hook with no context pointer
 // func:lib_ams.FDb.h_amsmsg.Set0
 inline void          h_amsmsg_Set0(void (*fcn)() ) __attribute__((nothrow));
@@ -929,7 +934,7 @@ void                 zd_park_read_InsertBefore(lib_ams::FShm& row, lib_ams::FShm
 
 // Invoke function by pointer
 // func:lib_ams.FDb.h_terminate.Call
-inline void          h_terminate_Call() __attribute__((nothrow));
+inline void          h_terminate_Call();
 // Assign 0-argument hook with no context pointer
 // func:lib_ams.FDb.h_terminate.Set0
 inline void          h_terminate_Set0(void (*fcn)() ) __attribute__((nothrow));
@@ -1015,13 +1020,13 @@ void                 zd_outshm_InsertBefore(lib_ams::FShm& row, lib_ams::FShm* b
 inline void          zd_outshm_UpdateCycles() __attribute__((nothrow));
 // func:lib_ams.FDb.zd_outshm.Step
 // this function is 'extrn' and implemented by user
-void                 zd_outshm_Step() __attribute__((nothrow));
+void                 zd_outshm_Step();
 // func:lib_ams.FDb.zd_outshm.Call
-inline void          zd_outshm_Call() __attribute__((nothrow));
+inline void          zd_outshm_Call();
 
 // Invoke function by pointer
 // func:lib_ams.FDb.h_sigchld.Call
-inline void          h_sigchld_Call() __attribute__((nothrow));
+inline void          h_sigchld_Call();
 // Assign 0-argument hook with no context pointer
 // func:lib_ams.FDb.h_sigchld.Set0
 inline void          h_sigchld_Set0(void (*fcn)() ) __attribute__((nothrow));
@@ -1146,9 +1151,9 @@ void                 zd_wake_FirstChanged() __attribute__((nothrow));
 void                 zd_wake_UpdateCycles() __attribute__((nothrow));
 // func:lib_ams.FDb.zd_wake.Step
 // this function is 'extrn' and implemented by user
-void                 zd_wake_Step() __attribute__((nothrow));
+void                 zd_wake_Step();
 // func:lib_ams.FDb.zd_wake.Call
-inline void          zd_wake_Call() __attribute__((nothrow));
+inline void          zd_wake_Call();
 
 // cursor points to valid item
 // func:lib_ams.FDb.cd_fdin_eof_curs.Reset
@@ -1700,6 +1705,7 @@ struct FShm { // lib_ams.FShm: Shm record
     u32                          max_channel;          //   0  Shm channels the creator declares; ShmCreate adds header pages to hold them
     bool                         wake_reader;          //   false  This pass wrote the ring, so its parked readers are owed a wakeup
     bool                         wake_writer;          //   false  A drain left the ring half empty, or a raise left half a window; its parked writer is owed a wakeup
+    ams::ProcId                  writer;               // Process that writes this lane, stamped by its opener when that is not the owner; unset = the owner
     i32                          proc_c_shm_idx;       //   -1  Array index (-1 = not in array)
     bool                         shm_c_lane_in_ary;    //   false  membership flag
     // reftype Hook of lib_ams.FShm.h_amsmsg prohibits copy
@@ -1738,7 +1744,7 @@ void                 shm_file_Cleanup(lib_ams::FShm& parent) __attribute__((noth
 
 // Invoke function by pointer
 // func:lib_ams.FShm.h_amsmsg.Call
-inline void          h_amsmsg_Call(lib_ams::FShm& parent, ams::MsgHeader& arg) __attribute__((nothrow));
+inline void          h_amsmsg_Call(lib_ams::FShm& parent, ams::MsgHeader& arg);
 // Assign 0-argument hook with no context pointer
 // func:lib_ams.FShm.h_amsmsg.Set0
 inline void          h_amsmsg_Set0(lib_ams::FShm& parent, void (*fcn)() ) __attribute__((nothrow));

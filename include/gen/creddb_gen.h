@@ -40,40 +40,48 @@ enum creddb_FieldIdEnum {    // creddb.FieldId.value
     ,creddb_FieldId_name
     ,creddb_FieldId_tokenurl
     ,creddb_FieldId_howto
+    ,creddb_FieldId_minturl
+    ,creddb_FieldId_rotateurl
     ,creddb_FieldId_prefix
     ,creddb_FieldId_multiline
     ,creddb_FieldId_master
     ,creddb_FieldId_salt
     ,creddb_FieldId_verifier
     ,creddb_FieldId_perm
+    ,creddb_FieldId_role
+    ,creddb_FieldId_level
     ,creddb_FieldId_value
 };
 
-enum { creddb_FieldIdEnum_N = 21 };
+enum { creddb_FieldIdEnum_N = 25 };
 
-extern const char *  creddb_Kind_kind_aws;          // aws           fconst:creddb.Kind.kind/aws
-extern const char *  creddb_Kind_kind_cloudflare;   // cloudflare    fconst:creddb.Kind.kind/cloudflare
-extern const char *  creddb_Kind_kind_github;       // github        fconst:creddb.Kind.kind/github
-extern const char *  creddb_Kind_kind_gitlab;       // gitlab        fconst:creddb.Kind.kind/gitlab
-extern const char *  creddb_Kind_kind_latitude;     // latitude      fconst:creddb.Kind.kind/latitude
-extern const char *  creddb_Kind_kind_link;         // link          fconst:creddb.Kind.kind/link
-extern const char *  creddb_Kind_kind_openai;       // openai        fconst:creddb.Kind.kind/openai
-extern const char *  creddb_Kind_kind_sshkey;       // sshkey        fconst:creddb.Kind.kind/sshkey
+extern const char *  creddb_Kind_kind_aws;              // aws               fconst:creddb.Kind.kind/aws
+extern const char *  creddb_Kind_kind_cloudflare;       // cloudflare        fconst:creddb.Kind.kind/cloudflare
+extern const char *  creddb_Kind_kind_github;           // github            fconst:creddb.Kind.kind/github
+extern const char *  creddb_Kind_kind_gitlab;           // gitlab            fconst:creddb.Kind.kind/gitlab
+extern const char *  creddb_Kind_kind_gitlab_group;     // gitlab_group      fconst:creddb.Kind.kind/gitlab_group
+extern const char *  creddb_Kind_kind_gitlab_project;   // gitlab_project    fconst:creddb.Kind.kind/gitlab_project
+extern const char *  creddb_Kind_kind_latitude;         // latitude          fconst:creddb.Kind.kind/latitude
+extern const char *  creddb_Kind_kind_link;             // link              fconst:creddb.Kind.kind/link
+extern const char *  creddb_Kind_kind_openai;           // openai            fconst:creddb.Kind.kind/openai
+extern const char *  creddb_Kind_kind_sshkey;           // sshkey            fconst:creddb.Kind.kind/sshkey
 
 // --- creddb_KindCaseEnum
 
-enum creddb_KindCaseEnum {              // creddb.KindCase.kind
-     creddb_KindCase_aws          = 1   // AWS access key id, secret and session token, held as one shell fragment
-    ,creddb_KindCase_cloudflare   = 2   // Cloudflare API token, a user's or an account's
-    ,creddb_KindCase_github       = 3   // GitHub classic personal access token
-    ,creddb_KindCase_gitlab       = 4   // GitLab personal access token
-    ,creddb_KindCase_latitude     = 5   // Latitude.sh API key, held as one shell fragment
-    ,creddb_KindCase_link         = 6   // A name that stands for another credential; the linkto column names it, and there is no secret
-    ,creddb_KindCase_openai       = 7   // OpenAI organization, project, project key and admin key, held as one shell fragment
-    ,creddb_KindCase_sshkey       = 8   // An ssh key pair; the public half is the pubkey column, the private half the secret
+enum creddb_KindCaseEnum {                   // creddb.KindCase.kind
+     creddb_KindCase_aws              = 1    // AWS access key id, secret and session token, held as one shell fragment
+    ,creddb_KindCase_cloudflare       = 2    // Cloudflare API token, a user's or an account's
+    ,creddb_KindCase_github           = 3    // GitHub classic personal access token
+    ,creddb_KindCase_gitlab           = 4    // GitLab personal access token
+    ,creddb_KindCase_gitlab_group     = 5    // GitLab group access token, acting as a bot member of every project in the group
+    ,creddb_KindCase_gitlab_project   = 6    // GitLab project access token, acting as a bot member of one project
+    ,creddb_KindCase_latitude         = 7    // Latitude.sh API key, held as one shell fragment
+    ,creddb_KindCase_link             = 8    // A name that stands for another credential; the linkto column names it, and there is no secret
+    ,creddb_KindCase_openai           = 9    // OpenAI organization, project, project key and admin key, held as one shell fragment
+    ,creddb_KindCase_sshkey           = 10   // An ssh key pair; the public half is the pubkey column, the private half the secret
 };
 
-enum { creddb_KindCaseEnum_N = 8 };
+enum { creddb_KindCaseEnum_N = 10 };
 
 namespace creddb { // gen:ns_pkeytypedef
     typedef algo::Smallstr50 CredPkey;
@@ -81,6 +89,7 @@ namespace creddb { // gen:ns_pkeytypedef
     typedef algo::Smallstr50 KindPkey;
     typedef algo::Smallstr50 MasterPkey;
     typedef algo::Smallstr100 PermPkey;
+    typedef algo::Smallstr100 RolePkey;
 } // gen:ns_pkeytypedef
 namespace creddb { // gen:ns_tclass_field
 } // gen:ns_tclass_field
@@ -92,6 +101,7 @@ namespace creddb { struct Kind; }
 namespace creddb { struct KindCase; }
 namespace creddb { struct Master; }
 namespace creddb { struct Perm; }
+namespace creddb { struct Role; }
 namespace creddb { // gen:ns_print_struct
 
 // --- creddb.Cred
@@ -210,7 +220,9 @@ void                 FieldId_Print(creddb::FieldId row, algo::cstring& str) __at
 struct Kind { // creddb.Kind: A provider of tokens: where a token is requested, and which permissions it offers
     algo::Smallstr50   kind;        //
     algo::cstring      tokenurl;    // Page that issues a token; $server, $name and $perm are filled in
-    algo::cstring      howto;       //   ""  How a person gets a new token of this kind, in steps; , ,  and  are filled in
+    algo::cstring      howto;       //   ""  How a person gets a new token of this kind, in steps; $server, $name, $perm, $role filled in
+    algo::cstring      minturl;     //   ""  API endpoint that mints a token of this kind, $server and $account filled in
+    algo::cstring      rotateurl;   //   ""  API endpoint where a token rotates itself, $server and $account filled in
     algo::cstring      prefix;      //   ""  Starts a value of this kind is recognized by, space-separated; empty = none
     bool               multiline;   //   false  The secret is several lines, pasted and ended by an empty line
     algo::Comment      comment;     //
@@ -322,6 +334,40 @@ bool                 Perm_ReadStrptrMaybe(creddb::Perm &parent, algo::strptr in_
 // cfmt:creddb.Perm.String  printfmt:Tuple
 // func:creddb.Perm..Print
 void                 Perm_Print(creddb::Perm& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- creddb.Role
+struct Role { // creddb.Role: A role a group or project token acts in, keyed kind/name, with GitLab's access level
+    algo::Smallstr100   role;      //
+    i32                 level;     //   0  The access level the provider's API takes for the role
+    algo::Comment       comment;   //
+    // func:creddb.Role..Ctor
+    inline               Role() __attribute__((nothrow));
+};
+// func:creddb.Role.kind.Get
+algo::strptr         kind_Get(creddb::Role& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:creddb.Role.kind.Get2
+algo::strptr         Role_kind_Get(algo::strptr arg) __attribute__((nothrow));
+
+// func:creddb.Role.name.Get
+algo::strptr         name_Get(creddb::Role& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:creddb.Role.name.Get2
+algo::strptr         Role_name_Get(algo::strptr arg) __attribute__((nothrow));
+
+// func:creddb.Role..Concat_kind_name
+tempstr              Role_Concat_kind_name( const algo::strptr& kind ,const algo::strptr& name );
+// func:creddb.Role..ReadFieldMaybe
+bool                 Role_ReadFieldMaybe(creddb::Role& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of creddb::Role from an ascii string.
+// The format of the string is an ssim Tuple
+// func:creddb.Role..ReadStrptrMaybe
+bool                 Role_ReadStrptrMaybe(creddb::Role &parent, algo::strptr in_str) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:creddb.Role..Init
+inline void          Role_Init(creddb::Role& parent);
+// print string representation of ROW to string STR
+// cfmt:creddb.Role.String  printfmt:Tuple
+// func:creddb.Role..Print
+void                 Role_Print(creddb::Role& row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace creddb { // gen:ns_func
 } // gen:ns_func
@@ -333,4 +379,5 @@ inline algo::cstring &operator <<(algo::cstring &str, const creddb::FieldId &row
 inline algo::cstring &operator <<(algo::cstring &str, const creddb::Kind &row);// cfmt:creddb.Kind.String
 inline algo::cstring &operator <<(algo::cstring &str, const creddb::Master &row);// cfmt:creddb.Master.String
 inline algo::cstring &operator <<(algo::cstring &str, const creddb::Perm &row);// cfmt:creddb.Perm.String
+inline algo::cstring &operator <<(algo::cstring &str, const creddb::Role &row);// cfmt:creddb.Role.String
 }

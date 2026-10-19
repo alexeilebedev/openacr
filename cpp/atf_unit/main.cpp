@@ -74,7 +74,7 @@ static void Main_Debug() {
 // -----------------------------------------------------------------------------
 
 static void CheckUntrackedFiles(cstring &comment) {
-    cstring untracked_files=SysEval("git status -u --porcelain",FailokQ(false),1024*1024);
+    cstring untracked_files=SysEval("git status -u --porcelain",FailokQ(false));
     algo::ListSep ls;
     ind_beg(Line_curs,line,untracked_files) {
         if (StartsWithQ(line,"??")) {
@@ -195,6 +195,10 @@ void atf_unit::unittest_atf_unit_Outfile() {
 // -----------------------------------------------------------------------------
 
 void atf_unit::Main() {
+    // the clusters and segments a test makes are files in the segment directory
+    vrfy(algo_lib::ShmDirMount(), tempstr() << "atf_unit.no_shmdir"
+         << Keyval("dir", algo_lib::ShmDir())
+         << Keyval("comment", "the segment directory is missing and could not be mounted"));
     atf_unit::_db.perf_cycle_budget = algo::ToSchedTime(atf_unit::_db.cmdline.perf_secs);
     lib_exec::_db.cmdline.maxjobs = i32_Max(4,sysconf(_SC_NPROCESSORS_ONLN));
     lib_exec::_db.cmdline.q=true;

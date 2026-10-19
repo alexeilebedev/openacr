@@ -60,7 +60,7 @@ static void WriteSpec(ainst::FExtpkg &extpkg, algo::cstring &out) {
     out << "Release: 1" << eol;
     out << "Summary: " << summary << eol;
     out << "License: unspecified" << eol;
-    out << "BuildArch: x86_64" << eol;
+    out << "BuildArch: %{_arch}" << eol; // the build machine's, which the staged binaries are
     out << "AutoReqProv: no" << eol;
     out << "%description" << eol;
     out << summary << eol;
@@ -74,7 +74,7 @@ static void WriteSpec(ainst::FExtpkg &extpkg, algo::cstring &out) {
     ainst::WritePreamble(out);
     // The preamble's cache default is a path inside the checkout, which is right
     // for a developer and meaningless on the machine installing an rpm.
-    out << "AINST_CACHE=$(mktemp -d)" << eol;
+    out << "AINST_CACHE=$AINST_TMP/cache" << eol;
     ainst::WriteFetch(extpkg,out);
     out << extpkg.post;
     out << "AINST_SPEC_EOF" << eol;

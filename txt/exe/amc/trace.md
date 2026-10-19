@@ -6,13 +6,13 @@ record (`<ns>::_db.trace`) populated by a hand-picked set of
 `u64` counters and `u64` cycle accumulators.  Several ssim
 records contribute fields automatically:
 
-| Source                          | What's added to `<ns>.trace` |
-|---------------------------------|-------------------------------|
-| `dmmeta.ftrace` on a `fstep`    | `step_<step>` (count) + `step_<step>_cycles` (sum of `rdtsc` deltas). |
-| `dmmeta.ftrace` on a `Pool` field | `alloc_<pool>` and `del_<pool>` counters. |
+| Source                             | What's added to `<ns>.trace` |
+| ---------------------------------- | ---------------------------- |
+| `dmmeta.ftrace` on a `fstep`       | `step_<step>` (count) + `step_<step>_cycles` (sum of `rdtsc` deltas). |
+| `dmmeta.ftrace` on a `Pool` field  | `alloc_<pool>` and `del_<pool>` counters. |
 | `dmmeta.ftrace` on an `Fbuf` field | `<fbuf>_n_read_byte`, `_n_read_msg` (input) or `_n_write_byte`, `_n_write_msg`, `_n_eagain` (output). |
-| `dmmeta.disptrace` on a Dispatch | `dispatch_<disp>_<msg>` + optional `_cycles` per message type. |
-| `dmmeta.usertracefld`           | Any user-defined `u64` field added by name. |
+| `dmmeta.disptrace` on a Dispatch   | `dispatch_<disp>_<msg>` + optional `_cycles` per message type. |
+| `dmmeta.usertracefld`              | Any user-defined `u64` field added by name. |
 
 The trace record's existence is what enables `acr -t
 <ns>.trace` to dump the live counters out of a running

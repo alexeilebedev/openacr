@@ -26,9 +26,9 @@ with `p_` (`p_parent`, `p_target`, …).
 A single pointer in the parent ctype
 (see `tclass_Upptr` in `cpp/amc/upptr.cpp`):
 
-| Field        | Type    | Meaning                            |
-|--------------|---------|------------------------------------|
-| `<name>`     | `T*`    | NULL or pointer to the parent row  |
+| Field    | Type | Meaning |
+| -------- | ---- | ------- |
+| `<name>` | `T*` | NULL or pointer to the parent row |
 
 `tclass_Upptr` does no other work — Upptr has no `Insert`,
 `Remove`, or `Cascdel`.  The pointer is populated by whichever
@@ -51,9 +51,9 @@ That's it.  No `dmmeta.upptr` record, no spec parameters.
 
 Source: `cpp/amc/upptr.cpp`.
 
-| Tfunc          | Generated function                  | Effect |
-|----------------|-------------------------------------|--------|
-| `Upptr.Init`   | `<name>_Init(P&)` (inline, folded)  | `parent.<name> = NULL;` |
+| Tfunc        | Generated function                 | Effect |
+| ------------ | ---------------------------------- | ------ |
+| `Upptr.Init` | `<name>_Init(P&)` (inline, folded) | `parent.<name> = NULL;` |
 
 Upptr is the only reftype with exactly **one** tfunc.  Its
 job is to declare the storage and let the rest of amc see it.

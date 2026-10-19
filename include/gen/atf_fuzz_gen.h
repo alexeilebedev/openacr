@@ -297,7 +297,7 @@ void                 fuzzstrat_CopyIn(atf_fuzz::FFuzzstrat &row, atfdb::Fuzzstra
 
 // Invoke function by pointer
 // func:atf_fuzz.FFuzzstrat.step.Call
-inline void          step_Call(atf_fuzz::FFuzzstrat& parent) __attribute__((nothrow));
+inline void          step_Call(atf_fuzz::FFuzzstrat& parent);
 
 // Set all fields to initial values.
 // func:atf_fuzz.FFuzzstrat..Init

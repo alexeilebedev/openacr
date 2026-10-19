@@ -64,6 +64,7 @@ static void CollectParentns(amc::FNs &tgt, amc::FNs &parentns) {
         }ind_end;
         if (target->p_ns->nstype == dmmeta_Nstype_nstype_lib
             || target->p_ns->nstype == dmmeta_Nstype_nstype_exe
+            || target->p_ns->nstype == dmmeta_Nstype_nstype_so
             || target->p_ns->nstype == dmmeta_Nstype_nstype_objlist
             ) {
             c_parentns_ScanInsertMaybe(tgt, parentns);

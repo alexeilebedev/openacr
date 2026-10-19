@@ -19,12 +19,13 @@ Usage: acr_in [[-ns:]<regx>] [options]
     -data_dir...  string          Directory with ssimfiles; repeat to layer, empty means data
     -schema       string  "data"
     -related      string  ""      Select only tuples related to specified acr key
+    -ssimfile     regx    ""      Also list ssimfiles matching regx in load order; their rows are not printed
     -notssimfile  regx    ""      Exclude ssimfiles matching regx
     -checkable                    Ensure output passes acr -check
     -r            regx    ""      Reverse lookup of target by ssimfile
     -verbose      flag            Verbosity level (0..255); alias -v; cumulative
     -debug        flag            Debug level (0..255); alias -d; cumulative
-    -trace        string  ""      Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps
+    -trace        string  ""      Trace expression: log categories to enable, as category[:filter],...
     -help                         Print help and exit; alias -h
     -version                      Print version and exit
     -signature                    Show signatures and exit; alias -sig
@@ -53,6 +54,11 @@ the tables it refers to.  `dmmeta.ns` comes before `dmmeta.ctype`, although it
 sorts later by name, because a ctype refers to its namespace.  The order depends
 only on the schema, so the input computed for a pattern of targets, such as
 `%`, loads into any one of those targets without error.
+
+`-ssimfile` adds the tables matching a pattern to the list, such as the tables a
+program applies by hand rather than through a finput.  Each takes its place in the
+order, and `-data` prints no rows of it.  A program that writes a snapshot of its
+tables lists them this way, so a reader of the snapshot applies them parents first.
 
 #### Signature checks
 <a href="#signature-checks"></a>
@@ -108,6 +114,7 @@ acr_in acr_in -data > temp/acr_in.ssim      # snapshot the rows acr_in loads
 acr_in acr_in -schema:temp/acr_in.ssim      # run acr_in against that snapshot
 acr_in acr_in -data -related:dmmeta.ns:acr_in   # only the rows reachable from one namespace
 acr_in acr_in -notssimfile:dev.%            # leave out the dev tables
+acr_in acr_in -ssimfile:'dev.%' -sigcheck:N # every dev table in load order, read or not
 ```
 
 A snapshot of the whole input is large, and `-related` cuts it down:
@@ -188,6 +195,12 @@ targets, ctypes, fields and `dmmeta.finput` rows.  It defaults to `data`.
 With `-data`, print only the rows reachable from the records whose key matches,
 written as `<ssimfile>:<key>` such as `dmmeta.ns:acr_in`.  Tables unrelated to
 that record stay whole.
+
+#### -ssimfile -- Also list ssimfiles matching regx in load order; their rows are not printed
+<a href="#-ssimfile"></a>
+
+Add the tables whose name matches the pattern to the list, in their place in the
+order, as though a selected target read them.  `-data` prints none of their rows.
 
 #### -notssimfile -- Exclude ssimfiles matching regx
 <a href="#-notssimfile"></a>

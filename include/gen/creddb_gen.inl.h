@@ -74,6 +74,8 @@ inline  creddb::FieldId::FieldId(creddb_FieldIdEnum arg) {
 // Set all fields to initial values.
 inline void creddb::Kind_Init(creddb::Kind& parent) {
     parent.howto = algo::strptr("");
+    parent.minturl = algo::strptr("");
+    parent.rotateurl = algo::strptr("");
     parent.prefix = algo::strptr("");
     parent.multiline = bool(false);
 }
@@ -130,6 +132,17 @@ inline  creddb::Master::Master() {
 inline  creddb::Perm::Perm() {
 }
 
+// --- creddb.Role..Init
+// Set all fields to initial values.
+inline void creddb::Role_Init(creddb::Role& parent) {
+    parent.level = i32(0);
+}
+
+// --- creddb.Role..Ctor
+inline  creddb::Role::Role() {
+    creddb::Role_Init(*this);
+}
+
 inline algo::cstring &algo::operator <<(algo::cstring &str, const creddb::Cred &row) {// cfmt:creddb.Cred.String
     creddb::Cred_Print(const_cast<creddb::Cred&>(row), str);
     return str;
@@ -157,5 +170,10 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const creddb::Master
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const creddb::Perm &row) {// cfmt:creddb.Perm.String
     creddb::Perm_Print(const_cast<creddb::Perm&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const creddb::Role &row) {// cfmt:creddb.Role.String
+    creddb::Role_Print(const_cast<creddb::Role&>(row), str);
     return str;
 }

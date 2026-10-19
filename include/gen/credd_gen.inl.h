@@ -249,6 +249,60 @@ inline i32 credd::ind_perm_N() {
     return _db.ind_perm_n;
 }
 
+// --- credd.FDb.role.EmptyQ
+// Return true if index is empty
+inline bool credd::role_EmptyQ() {
+    return _db.role_n == 0;
+}
+
+// --- credd.FDb.role.Find
+// Look up row by row id. Return NULL if out of range
+inline credd::FRole* credd::role_Find(u64 t) {
+    credd::FRole *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.role_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.role_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- credd.FDb.role.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline credd::FRole* credd::role_Last() {
+    return role_Find(u64(_db.role_n-1));
+}
+
+// --- credd.FDb.role.N
+// Return number of items in the pool
+inline i64 credd::role_N() {
+    return _db.role_n;
+}
+
+// --- credd.FDb.role.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline credd::FRole& credd::role_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.role_lary[bsr][index];
+}
+
+// --- credd.FDb.ind_role.EmptyQ
+// Return true if hash is empty
+inline bool credd::ind_role_EmptyQ() {
+    return _db.ind_role_n == 0;
+}
+
+// --- credd.FDb.ind_role.N
+// Return number of items in the hash
+inline i32 credd::ind_role_N() {
+    return _db.ind_role_n;
+}
+
 // --- credd.FDb.cred.EmptyQ
 // Return true if index is empty
 inline bool credd::cred_EmptyQ() {
@@ -549,6 +603,31 @@ inline credd::FPerm& credd::_db_perm_curs_Access(_db_perm_curs &curs) {
     return perm_qFind(u64(curs.index));
 }
 
+// --- credd.FDb.role_curs.Reset
+// cursor points to valid item
+inline void credd::_db_role_curs_Reset(_db_role_curs &curs, credd::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- credd.FDb.role_curs.ValidQ
+// cursor points to valid item
+inline bool credd::_db_role_curs_ValidQ(_db_role_curs &curs) {
+    return curs.index < _db.role_n;
+}
+
+// --- credd.FDb.role_curs.Next
+// proceed to next item
+inline void credd::_db_role_curs_Next(_db_role_curs &curs) {
+    curs.index++;
+}
+
+// --- credd.FDb.role_curs.Access
+// item access
+inline credd::FRole& credd::_db_role_curs_Access(_db_role_curs &curs) {
+    return role_qFind(u64(curs.index));
+}
+
 // --- credd.FDb.cred_curs.Reset
 // cursor points to valid item
 inline void credd::_db_cred_curs_Reset(_db_cred_curs &curs, credd::FDb &parent) {
@@ -752,6 +831,8 @@ inline credd::FPerm& credd::c_perm_qLast(credd::FKind& parent) {
 // Set all fields to initial values.
 inline void credd::FKind_Init(credd::FKind& parent) {
     parent.howto = algo::strptr("");
+    parent.minturl = algo::strptr("");
+    parent.rotateurl = algo::strptr("");
     parent.prefix = algo::strptr("");
     parent.multiline = bool(false);
     parent.c_perm_elems = NULL; // (credd.FKind.c_perm)
@@ -817,6 +898,24 @@ inline  credd::FPerm::FPerm() {
 // --- credd.FPerm..Dtor
 inline  credd::FPerm::~FPerm() {
     credd::FPerm_Uninit(*this);
+}
+
+// --- credd.FRole..Init
+// Set all fields to initial values.
+inline void credd::FRole_Init(credd::FRole& parent) {
+    parent.level = i32(0);
+    parent.ind_role_next = (credd::FRole*)-1; // (credd.FDb.ind_role) not-in-hash
+    parent.ind_role_hashval = 0; // stored hash value
+}
+
+// --- credd.FRole..Ctor
+inline  credd::FRole::FRole() {
+    credd::FRole_Init(*this);
+}
+
+// --- credd.FRole..Dtor
+inline  credd::FRole::~FRole() {
+    credd::FRole_Uninit(*this);
 }
 
 // --- credd.FieldId.value.GetEnum

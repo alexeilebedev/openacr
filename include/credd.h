@@ -20,6 +20,8 @@
 
 #include "include/lib_cred.h"
 #include "include/lib_json.h"
+#include "include/gen/dev_gen.h"
+#include "include/gen/dev_gen.inl.h"
 #include "include/gen/credd_gen.h"
 #include "include/gen/credd_gen.inl.h"
 
@@ -33,6 +35,10 @@ namespace credd { // update-hdr
     // -------------------------------------------------------------------
     // cpp/credd/credd.cpp
     //
+
+    // Refuse NAME as the name of a new credential when a credential of that name
+    // is in the store, or when it carries a slash, which -add reads as a path.
+    void CheckNewName(algo::strptr name);
 
     // Report the daemon's status, or that none answers.
     void Status();
@@ -92,10 +98,16 @@ namespace credd { // update-hdr
     // file as well, which is what a tool that takes a key file reads.
     void Keygen();
 
-    // Renew the token -renew names: print the page where its kind reissues a
-    // token, with the server, name and permissions filled in, then read the new
-    // value per -src, ask the master password, and reseal.  A new -expires
-    // replaces the old; without one the old expiry stands.
+    // Renew the token -renew names.  A token issued with the self_rotate
+    // permission, of a kind with a rotation endpoint, is rotated over the API: the
+    // master password is asked, the token asks the provider for its successor, and
+    // the new value and the expiry the provider set are sealed in its place.  Any
+    // other token, and one the provider refuses to rotate, is renewed by a
+    // person: the page where its kind reissues a token is printed, with the
+    // server, name and permissions filled in, and the new value is read per -src.
+    // -expires sets the new expiry.  Without it a rotation asks for the lifetime
+    // the token was issued with and stores the expiry the provider sets, and a
+    // pasted token keeps the old one.
     void Renew();
 
     // Remove the credential -remove names.  The master password is asked, as for
@@ -163,6 +175,18 @@ namespace credd { // update-hdr
     // what to do about it.  Nothing is said when the builds agree.
     void WarnOldBuild(lib_cred::Status &status);
 
+    // Refuse to go on when a daemon of another build than this binary serves the
+    // store.  Called before a verb that changes the store asks for anything.
+    //
+    // The verb writes the files and then tells the daemon to read them again.  A
+    // daemon from another build reads them under the tables it was built with, so a
+    // row of a kind it does not know -- a gitlab_group token written by a newer
+    // credd -- fails its reload.  The daemon then serves the store as it was before
+    // the change, at best, so the change the person just made is not served until
+    // a restart.  Refusing before the master password and the secret are asked
+    // costs the person nothing, and the store and the daemon stay as they were.
+    void RefuseOldBuild();
+
     // Serve the store on its socket, with the master key in _db.key, until a stop
     // request or a signal.  The process refuses to be dumped and locks its memory,
     // so the key does not reach a core file or swap.  The ssh agent is started
@@ -215,6 +239,61 @@ namespace credd { // update-hdr
     void ImportFile(algo::strptr pathname, algo::strptr fileclass);
 
     // -------------------------------------------------------------------
+    // cpp/credd/mint.cpp
+    //
+
+    // Read the row of dev.cred named NAME from the tree's ssimfile directory DIR
+    // into OUT_CRED, the role dev.credrole gives it into OUT_ROLE, and the names
+    // of the permissions dev.credperm lists for it, comma-separated, into
+    // OUT_PERM.  Return true when dev.cred has the row.  A missing file reads as
+    // an empty table.
+    bool ReadNeed(algo::strptr dir, algo::strptr name, dev::Cred &out_cred, algo::cstring &out_role, algo::cstring &out_perm);
+
+    // Return the steps a person follows to get a token of KIND, with the page
+    // that issues it and every placeholder filled in: SERVER, the credential's
+    // NAME, the ACCOUNT the token belongs to (for a group or project token, its
+    // path), the comma-separated permissions PERM, and the ROLE's name.  An empty
+    // ROLE reads as the role the token has now, which is what -renew asks for.
+    algo::tempstr GetHowto(credd::FKind &kind, algo::strptr server, algo::strptr name, algo::strptr account, algo::strptr perm, algo::strptr role);
+
+    // True when HTTP STATUS says the provider refused the asker, rather than the
+    // request: 401 and 403, and 404 for a group or project the asker may not see.
+    // A refusal sends the person to the printed steps.
+    bool RefusedQ(int status);
+
+    // Return the expiry to ask for when CRED is renewed with no -expires: today
+    // plus the lifetime the token was issued with, from the day it was added to
+    // the day it expires.  A token recorded with no expiry asks for 364 days:
+    // GitLab allows 365 by default, counted from its own date, and a local date
+    // a day ahead of the server's would land one past the maximum.
+    //
+    // GitLab gives a rotated token one week when the request names no expiry.  A
+    // token issued for a year and renewed when -check names it two weeks before
+    // its end would then come back expiring a week later, and -check would name
+    // it again at once.  Asking for the old lifetime keeps the cadence the token
+    // was issued with, which GitLab accepted once already.
+    algo::tempstr GetRenewExpires(credd::FCred &cred);
+
+    // Ask the provider to rotate the token CRED, authenticated by its own
+    // plaintext value PLAIN.  GitLab revokes the old value and answers with a new
+    // one, which expires on EXPIRES when that is not empty and on a date of the
+    // provider's choosing otherwise.  Return the HTTP status, 200 when the token
+    // was rotated, with the outputs as PostToken gives them.  Rotation needs the
+    // kind's endpoint (creddb.kind rotateurl) and the token's self_rotate
+    // permission; the caller checks both.
+    int RotateOverApi(credd::FCred &cred, algo::strptr plain, algo::strptr expires, algo::cstring &out_token, algo::cstring &out_expires, algo::cstring &out_msg);
+
+    // Add the credential -mint names, made to the measure the tree's dev.cred,
+    // dev.credrole and dev.credperm give it; see the top of this file.  The
+    // server and the account come from -server and -account, asked at a terminal
+    // when the kind mints over the API and they are missing; the server defaults
+    // to the minting token's.  The master password is asked before the request,
+    // since the minting token is sealed, and the new token is sealed under it.
+    // Expiry is -expires, or the latest the provider allows; the comment is
+    // -comment, or the dev.cred row's.
+    void Mint();
+
+    // -------------------------------------------------------------------
     // cpp/credd/seal.cpp
     //
 
@@ -250,6 +329,15 @@ namespace credd { // update-hdr
     // run of any verb leaves an empty store behind.  Dies naming the file and line
     // when a row does not load, which includes a credential whose kind the binary
     // does not know.
+    //
+    // A daemon reads the store again on every reload, and the tables it serves
+    // are the ones this function fills.  Say a credential of a kind the daemon
+    // does not know reaches the files: the load stops at that row, and the tables
+    // it emptied first hold only what came before it.  Every tool asking for a
+    // credential after that row would be told there is no such credential, while
+    // the files still hold it.  So the tables as they were are printed before the
+    // load and put back when it fails, and a failed reload leaves the daemon
+    // serving what it served.
     //
     // Under -nostore there are no tables to read and none are created.  The
     // directory is still made, because the daemon's socket lives in it, and the

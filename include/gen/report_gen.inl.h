@@ -217,6 +217,11 @@ inline  report::gcache_hitrate::gcache_hitrate(const algo::strptr& in_hitrate, c
  {
 }
 
+// --- report.lathist..Ctor
+inline  report::lathist::lathist() {
+    report::lathist_Init(*this);
+}
+
 // --- report.llmtool..Ctor
 inline  report::llmtool::llmtool() {
     report::llmtool_Init(*this);
@@ -307,6 +312,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const report::gcache
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const report::gcache_hitrate &row) {// cfmt:report.gcache_hitrate.String
     report::gcache_hitrate_Print(const_cast<report::gcache_hitrate&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const report::lathist &row) {// cfmt:report.lathist.String
+    report::lathist_Print(const_cast<report::lathist&>(row), str);
     return str;
 }
 

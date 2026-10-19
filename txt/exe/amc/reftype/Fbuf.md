@@ -31,21 +31,21 @@ reference.
 A dozen storage fields are added to the parent ctype
 (see `tclass_Fbuf` in `cpp/amc/fbuf.cpp`):
 
-| Field                  | Type             | Always | Meaning                                  |
-|------------------------|------------------|--------|------------------------------------------|
-| `<name>_elems`         | `u8*`            | yes    | data buffer                              |
-| `<name>_max`           | `u32`            | yes    | allocated size (0 = unbounded, resizes)  |
-| `<name>_start`         | `i32`            | yes    | offset of first valid byte               |
-| `<name>_end`           | `i32`            | yes    | offset past last valid byte              |
-| `<name>_msglen`        | `i32`            | yes    | length of currently-detected message     |
-| `<name>_err`           | `algo::Errcode`  | yes    | last OS-level error code                 |
-| `<name>_eof`           | `bool`           | yes    | no more bytes will arrive                |
-| `<name>_msgvalid`      | `bool`           | yes    | a valid message starts at `_start`       |
-| `<name>_epoll_enable`  | `bool`           | yes    | use epoll vs. always-call (for kernel-bypass) |
-| `<name>_zerocopy`      | `bool`           | output only, with fd | attempt `write` immediately on enqueue |
-| `<name>_n_eagain`      | `u64`            | output only, with fd | EAGAIN counter           |
-| `<name>_iohook`        | `algo_lib::FIohook` | with fd | epoll registration handle             |
-| `<name>_ssl`           | `SSL*`           | iotype:openssl | OpenSSL connection                |
+| Field                 | Type                | Always               | Meaning |
+| --------------------- | ------------------- | -------------------- | ------- |
+| `<name>_elems`        | `u8*`               | yes                  | data buffer |
+| `<name>_max`          | `u32`               | yes                  | allocated size (0 = unbounded, resizes) |
+| `<name>_start`        | `i32`               | yes                  | offset of first valid byte |
+| `<name>_end`          | `i32`               | yes                  | offset past last valid byte |
+| `<name>_msglen`       | `i32`               | yes                  | length of currently-detected message |
+| `<name>_err`          | `algo::Errcode`     | yes                  | last OS-level error code |
+| `<name>_eof`          | `bool`              | yes                  | no more bytes will arrive |
+| `<name>_msgvalid`     | `bool`              | yes                  | a valid message starts at `_start` |
+| `<name>_epoll_enable` | `bool`              | yes                  | use epoll vs. always-call (for kernel-bypass) |
+| `<name>_zerocopy`     | `bool`              | output only, with fd | attempt `write` immediately on enqueue |
+| `<name>_n_eagain`     | `u64`               | output only, with fd | EAGAIN counter |
+| `<name>_iohook`       | `algo_lib::FIohook` | with fd              | epoll registration handle |
+| `<name>_ssl`          | `SSL*`              | iotype:openssl       | OpenSSL connection |
 
 Plus tracing counters (`<name>_n_read_byte`, `<name>_n_read_msg`,
 or `<name>_n_write_byte`, `<name>_n_write_msg`) if
@@ -86,11 +86,11 @@ a non-empty `dflt` (the line-terminator character).
 ### Fbuftype variants
 <a href="#fbuftype-variants"></a>
 
-| fbuftype       | Framing                                              |
-|----------------|------------------------------------------------------|
-| `Linebuf`      | One line per "message"; framing on `dflt` character (usually `'\n'`). |
-| `Bytebuf`      | No framing; user reads bytes via `SkipBytes`.        |
-| `Msgbuf`       | Length-prefixed: `_msglen` is read from the element's `lenfld`. |
+| fbuftype  | Framing |
+| --------- | ------- |
+| `Linebuf` | One line per "message"; framing on `dflt` character (usually `'\n'`). |
+| `Bytebuf` | No framing; user reads bytes via `SkipBytes`. |
+| `Msgbuf`  | Length-prefixed: `_msglen` is read from the element's `lenfld`. |
 
 ### Custom framing (ScanMsg ffunc)
 <a href="#custom-framing-scanmsg-ffunc-"></a>
@@ -117,55 +117,55 @@ Source: `cpp/amc/fbuf.cpp`.
 #### Lifecycle
 <a href="#lifecycle"></a>
 
-| Tfunc         | Generated function                  | Effect |
-|---------------|-------------------------------------|--------|
-| `Fbuf.Init`   | `<name>_Init(P&)`                   | NULL `_elems`, zero counters, allocate fixed-size buffer if `max>0`. |
-| `Fbuf.Uninit` | `<name>_Uninit(P&)`                 | Free `_elems`, detach from epoll. |
-| `Fbuf.Realloc`| `void <name>_Realloc(P&, int new_max)` | Grow / shrink buffer; preserves data. |
+| Tfunc          | Generated function                     | Effect |
+| -------------- | -------------------------------------- | ------ |
+| `Fbuf.Init`    | `<name>_Init(P&)`                      | NULL `_elems`, zero counters, allocate fixed-size buffer if `max>0`. |
+| `Fbuf.Uninit`  | `<name>_Uninit(P&)`                    | Free `_elems`, detach from epoll. |
+| `Fbuf.Realloc` | `void <name>_Realloc(P&, int new_max)` | Grow / shrink buffer; preserves data. |
 
 #### Capacity / counters
 <a href="#capacity-counters"></a>
 
-| Tfunc        | Generated function           | Effect |
-|--------------|------------------------------|--------|
-| `Fbuf.Max`   | `i32 <name>_Max(P&)`         | Allocated size. |
-| `Fbuf.N`     | `i32 <name>_N(P&)`           | `_end - _start` — valid byte count. |
+| Tfunc      | Generated function   | Effect |
+| ---------- | -------------------- | ------ |
+| `Fbuf.Max` | `i32 <name>_Max(P&)` | Allocated size. |
+| `Fbuf.N`   | `i32 <name>_N(P&)`   | `_end - _start` — valid byte count. |
 
 #### Reading (input buffers)
 <a href="#reading-input-buffers-"></a>
 
-| Tfunc                | Generated function                              | Effect |
-|----------------------|-------------------------------------------------|--------|
-| `Fbuf.BeginRead`     | `void <name>_BeginRead(P&, Fildes fd)`          | Attach `fd`, register edge-triggered with epoll, set the on-ready callback that pushes the parent into the `ready` index. |
-| `Fbuf.EndRead`       | `void <name>_EndRead(P&)`                       | Set `_eof = true`. |
-| `Fbuf.Refill`        | `bool <name>_Refill(P&)`                        | `read()` into the buffer; returns false at EOF. |
-| `Fbuf.GetMsg`        | `<Ret> <name>_GetMsg(P&)`                       | Scan for the next message via `ScanMsg`; Refill if needed.  Returns `MsgHeader*` for Msgbuf, `aryptr<char>` for line / byte buffers, or NULL when no message available. |
-| `Fbuf.SkipMsg`       | `void <name>_SkipMsg(P&)`                       | Advance `_start` past the current message; clears `_msgvalid`. |
-| `Fbuf.SkipBytes`     | `void <name>_SkipBytes(P&, int n)`              | Advance `_start` by `n` raw bytes (byte/line buffers). |
-| `Fbuf.ScanMsg`       | (internal) `<name>_ScanMsg(P&)`                 | Set `_msglen`/`_msgvalid` based on the framing rules.  User-overridable via `ffunc:<field>.ScanMsg extrn:Y` (see [Custom framing](#custom-framing-scanmsg-ffunc-)). |
-| `Fbuf.Shift`         | (internal) `<name>_Shift(P&)`                   | Move valid bytes to offset 0 when the head has been consumed. |
-| `Fbuf.RemoveAll`     | `void <name>_RemoveAll(P&)`                     | Reset `_start = _end = 0`. |
+| Tfunc            | Generated function                     | Effect |
+| ---------------- | -------------------------------------- | ------ |
+| `Fbuf.BeginRead` | `void <name>_BeginRead(P&, Fildes fd)` | Attach `fd`, register edge-triggered with epoll, set the on-ready callback that pushes the parent into the `ready` index. |
+| `Fbuf.EndRead`   | `void <name>_EndRead(P&)`              | Set `_eof = true`. |
+| `Fbuf.Refill`    | `bool <name>_Refill(P&)`               | `read()` into the buffer; returns false at EOF. |
+| `Fbuf.GetMsg`    | `<Ret> <name>_GetMsg(P&)`              | Scan for the next message via `ScanMsg`; Refill if needed.  Returns `MsgHeader*` for Msgbuf, `aryptr<char>` for line / byte buffers, or NULL when no message available. |
+| `Fbuf.SkipMsg`   | `void <name>_SkipMsg(P&)`              | Advance `_start` past the current message; clears `_msgvalid`. |
+| `Fbuf.SkipBytes` | `void <name>_SkipBytes(P&, int n)`     | Advance `_start` by `n` raw bytes (byte/line buffers). |
+| `Fbuf.ScanMsg`   | (internal) `<name>_ScanMsg(P&)`        | Set `_msglen`/`_msgvalid` based on the framing rules.  User-overridable via `ffunc:<field>.ScanMsg extrn:Y` (see [Custom framing](#custom-framing-scanmsg-ffunc-)). |
+| `Fbuf.Shift`     | (internal) `<name>_Shift(P&)`          | Move valid bytes to offset 0 when the head has been consumed. |
+| `Fbuf.RemoveAll` | `void <name>_RemoveAll(P&)`            | Reset `_start = _end = 0`. |
 
 #### Writing (output buffers)
 <a href="#writing-output-buffers-"></a>
 
-| Tfunc                  | Generated function                             | Effect |
-|------------------------|------------------------------------------------|--------|
-| `Fbuf.BeginWrite`      | `void <name>_BeginWrite(P&, Fildes fd)`        | Attach `fd`, register write hook.  Not generated for a paired write buffer. |
-| `Fbuf.EndWrite`        | `void <name>_EndWrite(P&)`                     | Send EOF (zero-byte write); release fd. |
-| `Fbuf.WriteAll`        | `bool <name>_WriteAll(P&, u8 *in, i32 n)`      | Append `n` bytes; returns false if the buffer is fixed-size and would overflow. |
-| `Fbuf.WriteReserve`    | `void <name>_WriteReserve(P&, u8 *in, i32 n)`  | Append, growing the buffer if necessary (fatal on OOM). |
-| `Fbuf.WriteMsg`        | `bool <name>_WriteMsg(P&, T& msg)`             | Append one length-prefixed message (Msgbuf only). |
-| `Fbuf.Outflow`         | `void <name>_Outflow(P&)`                      | Drain bytes to the fd via `write()`; tracks EAGAIN. |
+| Tfunc               | Generated function                            | Effect |
+| ------------------- | --------------------------------------------- | ------ |
+| `Fbuf.BeginWrite`   | `void <name>_BeginWrite(P&, Fildes fd)`       | Attach `fd`, register write hook.  Not generated for a paired write buffer. |
+| `Fbuf.EndWrite`     | `void <name>_EndWrite(P&)`                    | Send EOF (zero-byte write); release fd. |
+| `Fbuf.WriteAll`     | `bool <name>_WriteAll(P&, u8 *in, i32 n)`     | Append `n` bytes; returns false if the buffer is fixed-size and would overflow. |
+| `Fbuf.WriteReserve` | `void <name>_WriteReserve(P&, u8 *in, i32 n)` | Append, growing the buffer if necessary (fatal on OOM). |
+| `Fbuf.WriteMsg`     | `bool <name>_WriteMsg(P&, T& msg)`            | Append one length-prefixed message (Msgbuf only). |
+| `Fbuf.Outflow`      | `void <name>_Outflow(P&)`                     | Drain bytes to the fd via `write()`; tracks EAGAIN. |
 
 #### Streaming allocators (Bytebuf only)
 <a href="#streaming-allocators-bytebuf-only-"></a>
 
-| Tfunc                          | Generated function                                   | Effect |
-|--------------------------------|------------------------------------------------------|--------|
-| `Fbuf.GetAlloc`                | `algo::Alloc <name>_GetAlloc(P&)`                    | Handle that clears, then fills. |
-| `Fbuf.GetAllocReserve`         | `algo::Alloc <name>_GetAllocReserve(P&)`             | Same but auto-grows. |
-| `Fbuf.BeginAlloc` / `BeginAllocReserve` | internals used by the above                 |        |
+| Tfunc                                   | Generated function                       | Effect |
+| --------------------------------------- | ---------------------------------------- | ------ |
+| `Fbuf.GetAlloc`                         | `algo::Alloc <name>_GetAlloc(P&)`        | Handle that clears, then fills. |
+| `Fbuf.GetAllocReserve`                  | `algo::Alloc <name>_GetAllocReserve(P&)` | Same but auto-grows. |
+| `Fbuf.BeginAlloc` / `BeginAllocReserve` | internals used by the above              |  |
 
 ### Pitfalls
 <a href="#pitfalls"></a>

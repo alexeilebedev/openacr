@@ -72,7 +72,10 @@ namespace gcache { // update-hdr
     // run specified cmd under bash, return exit code
     int RunCmd(strptr cmd);
 
-    // Compose cached file name from sha1 hash
+    // Compose cached file name from sha1 hash, making the two directories above it.
+    // A directory this process makes is set to 2775 at once, whatever the umask, so
+    // another user sharing the cache can store an entry in it before this user's
+    // next -install sets the mode over the files it owns.
     tempstr CachedFile(strptr sha1);
 
     // Copy contents of file descriptor FROM
@@ -112,7 +115,8 @@ namespace gcache { // update-hdr
     // Rewrite _db.preproc_file so that the compile which follows reads the
     // precompiled header instead of the text it was built from.  A header that
     // does not build leaves the file as it was: it is an optimization, and the
-    // compile proceeds without it.
+    // compile proceeds without it.  The compile reads the header through gcc's
+    // pch_preprocess pragma, which clang ignores, so it runs only under gcc.
     void Pch();
 
     // main routine

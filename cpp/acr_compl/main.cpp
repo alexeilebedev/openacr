@@ -465,6 +465,31 @@ void acr_compl::Main_Line_Acr(acr_compl::FField *, strptr value, cstring &compl_
 
 //------------------------------------------------------------------------------
 
+// Offer the names of the subdirectories of FCOMPLDIR's directory that match
+// the typed VALUE, each one prefixed with COMPL_PREFIX.  VALUE is read as an
+// SQL regex, as for table keys, and hidden directories are skipped.
+static void Main_Line_Dir(acr_compl::FFcompldir &fcompldir, strptr value, strptr compl_prefix) {
+    algo_lib::Regx value_regx;
+    Regx_ReadSql(value_regx, value, false);
+    ind_beg(algo::Dir_curs, entry, tempstr() << fcompldir.dir << "/*") {
+        strptr name(entry.filename);
+        if (entry.is_dir && !StartsWithQ(name, ".")) {
+            bool first_match = StartsWithQ(name, value);
+            bool match = Regx_Match(value_regx, name);
+            acr_compl_BadnessEnum badness = first_match ? acr_compl_Badness_first : acr_compl_Badness_substring;
+            if (match) {
+                acr_compl::FCompletion &completion = acr_compl::completion_Alloc();
+                completion.value << compl_prefix << name;
+                completion.badness.badness = badness;
+                completion.badness.strkey = completion.value;
+                vrfy(acr_compl::completion_XrefMaybe(completion), algo_lib::_db.errtext);
+            }
+        }
+    }ind_end;
+}
+
+//------------------------------------------------------------------------------
+
 // Clear everything Main_Line derives from the command line it is given, so a
 // second call starts from a clean parse.
 //
@@ -780,6 +805,10 @@ void acr_compl::Main_Line() {
                 Main_Line_Ctype(cur_field->p_arg,_db.value,compl_prefix);
             }
         }
+        // dmmeta.fcompldir: the field also names a subdirectory of a directory
+        if (cur_field->c_fcompldir) {
+            Main_Line_Dir(*cur_field->c_fcompldir, _db.value, compl_prefix);
+        }
     }
 
     // nothing matches
@@ -806,47 +835,53 @@ void acr_compl::Main_Line() {
     // process only the leading badness class,
     // so if there are completions of badness 0 and 1, only 0 gets reported.
     int badness_limit = bh_completion_N() ? bh_completion_First()->badness+1 : INT_MAX;
+    // Print each value once.  Two sources can offer the same value, and the heap
+    // puts equal values next to each other.
+    acr_compl::FCompletion *prev = NULL;
     int n_type = 0;
     ind_beg(_db_bh_completion_curs,completion,_db) {
         if (completion.badness >= badness_limit) break;// early escape!
-        tempstr out;
-        n_type += StartsWithQ(completion.value,"<") && EndsWithQ(completion.value,">") ? 1 : 0;
-        if (_db.cmdline.type == "63") {
-            if (ch_N(completion.value)) {
-                // need to escape spaces if any
-                frep_(i,ch_N(completion.value)) {
-                    if ((ch_qFind(completion.value, i) == ' '
-                         || ch_qFind(completion.value, i) == '\t'
-                         || ch_qFind(completion.value, i) == '\n')) {
-                        out << '\\';
+        if (!prev || completion.value != prev->value) {
+            tempstr out;
+            n_type += StartsWithQ(completion.value,"<") && EndsWithQ(completion.value,">") ? 1 : 0;
+            if (_db.cmdline.type == "63") {
+                if (ch_N(completion.value)) {
+                    // need to escape spaces if any
+                    frep_(i,ch_N(completion.value)) {
+                        if ((ch_qFind(completion.value, i) == ' '
+                             || ch_qFind(completion.value, i) == '\t'
+                             || ch_qFind(completion.value, i) == '\n')) {
+                            out << '\\';
+                        }
+                        out << ch_qFind(completion.value, i);
                     }
-                    out << ch_qFind(completion.value, i);
+                } else {
+                    out << "<EMPTY>";
                 }
-            } else {
-                out << "<EMPTY>";
+            } else if (ch_N(completion.value)) {
+                // escape depending on active quote, from the position where the quote starts
+                strptr_PrintEscBash(ch_RestFrom(completion.value,qpoint),out,type_GetEnum(qtype));
+                if (!completion.nospace
+                    && type_GetEnum(qtype) != acr_compl_Shellqtype_squote
+                    && type_GetEnum(qtype) != acr_compl_Shellqtype_dquote) {
+                    // add space only if not quoted (bash will automatically close quote)
+                    out << ' ';
+                }
             }
-        } else if (ch_N(completion.value)) {
-            // escape depending on active quote, from the position where the quote starts
-            strptr_PrintEscBash(ch_RestFrom(completion.value,qpoint),out,type_GetEnum(qtype));
-            if (!completion.nospace
-                && type_GetEnum(qtype) != acr_compl_Shellqtype_squote
-                && type_GetEnum(qtype) != acr_compl_Shellqtype_dquote) {
-                // add space only if not quoted (bash will automatically close quote)
-                out << ' ';
-            }
+            // Empty values in most cases are useless and thus ignored:
+            // For named parameter and unique empty completion, bash on its own add space.
+            // For named parameter and non-unique completion (including empty),
+            // let the user hit space to choose empty value among others.
+            // For unnamed parameter and non-unique completion, let the user add "" explicitly.
+            // For unnamed parameter and unique completion, it would be better to add "",
+            // but the user still can do it.
+            // In most cases, unnamed parameters have regex or very specific structure,
+            // so that they have to be specified by the user explicitly,
+            // or they have reasonable default, so better to do not to specify them at all.
+            _db.compl_output << out << "\n";
+            prcat(debug,out);
+            prev = &completion;
         }
-        // Empty values in most cases are useless and thus ignored:
-        // For named parameter and unique empty completion, bash on its own add space.
-        // For named parameter and non-unique completion (including empty),
-        // let the user hit space to choose empty value among others.
-        // For unnamed parameter and non-unique completion, let the user add "" explicitly.
-        // For unnamed parameter and unique completion, it would be better to add "",
-        // but the user still can do it.
-        // In most cases, unnamed parameters have regex or very specific structure,
-        // so that they have to be specified by the user explicitly,
-        // or they have reasonable default, so better to do not to specify them at all.
-        _db.compl_output << out << "\n";
-        prcat(debug,out);
     }ind_end;
     // Ugly hack: In some unpredictable situations bash readline treats list completion that yields
     // sole value as normal completion, i.e. completes instead of just display.

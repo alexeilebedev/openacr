@@ -54,6 +54,8 @@ namespace abt { // gen:ns_gsymbol
     const char* dev_opt_type_IGNOREME("IGNOREME");
     const char* dev_opt_type_LINK("LINK");
     const char* dev_opt_type_RC("RC");
+    const char* dev_opt_type_SOCC("SOCC");
+    const char* dev_opt_type_SOLINK("SOLINK");
 } // gen:ns_gsymbol
 namespace abt { // gen:ns_print_proto
     // func:abt.FDb.targdep.InputMaybe
@@ -101,6 +103,8 @@ namespace abt { // gen:ns_print_proto
     static bool          ns_InputMaybe(dmmeta::Ns &elem) __attribute__((nothrow));
     // func:abt.FDb.builddir.InputMaybe
     static bool          builddir_InputMaybe(dev::Builddir &elem) __attribute__((nothrow));
+    // func:abt.FDb.syslibuname.InputMaybe
+    static bool          syslibuname_InputMaybe(dev::Syslibuname &elem) __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
     // func:abt.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
@@ -111,14 +115,14 @@ namespace abt { // gen:ns_print_proto
     inline static void   SizeCheck();
 } // gen:ns_print_proto
 
-// --- abt.FArch.msghdr.CopyOut
+// --- abt.FArch.base.CopyOut
 // Copy fields out of row
 void abt::arch_CopyOut(abt::FArch &row, dev::Arch &out) {
     out.arch = row.arch;
     out.comment = algo::Comment(row.comment);
 }
 
-// --- abt.FArch.msghdr.CopyIn
+// --- abt.FArch.base.CopyIn
 // Copy fields in to row
 void abt::arch_CopyIn(abt::FArch &row, dev::Arch &in) {
     row.arch = in.arch;
@@ -169,6 +173,7 @@ algo::strptr abt::arch_Get(abt::FBuilddir& parent) {
 void abt::FBuilddir_Init(abt::FBuilddir& parent) {
     parent.select = bool(false);
     parent.p_compiler = NULL;
+    parent.so = bool(false);
     parent.ind_builddir_next = (abt::FBuilddir*)-1; // (abt.FDb.ind_builddir) not-in-hash
     parent.ind_builddir_hashval = 0; // stored hash value
 }
@@ -178,7 +183,7 @@ void abt::FBuilddir_Uninit(abt::FBuilddir& parent) {
     ind_builddir_Remove(parent); // remove builddir from index ind_builddir
 }
 
-// --- abt.FCfg.msghdr.CopyOut
+// --- abt.FCfg.base.CopyOut
 // Copy fields out of row
 void abt::cfg_CopyOut(abt::FCfg &row, dev::Cfg &out) {
     out.cfg = row.cfg;
@@ -186,7 +191,7 @@ void abt::cfg_CopyOut(abt::FCfg &row, dev::Cfg &out) {
     out.comment = algo::Comment(row.comment);
 }
 
-// --- abt.FCfg.msghdr.CopyIn
+// --- abt.FCfg.base.CopyIn
 // Copy fields in to row
 void abt::cfg_CopyIn(abt::FCfg &row, dev::Cfg &in) {
     row.cfg = in.cfg;
@@ -199,7 +204,7 @@ void abt::FCfg_Uninit(abt::FCfg& parent) {
     ind_cfg_Remove(parent); // remove cfg from index ind_cfg
 }
 
-// --- abt.FCompiler.msghdr.CopyOut
+// --- abt.FCompiler.base.CopyOut
 // Copy fields out of row
 void abt::compiler_CopyOut(abt::FCompiler &row, dev::Compiler &out) {
     out.compiler = row.compiler;
@@ -208,13 +213,14 @@ void abt::compiler_CopyOut(abt::FCompiler &row, dev::Compiler &out) {
     out.link = row.link;
     out.libext = row.libext;
     out.exeext = row.exeext;
+    out.soext = row.soext;
     out.pchext = row.pchext;
     out.objext = row.objext;
     out.rc = row.rc;
     out.comment = algo::Comment(row.comment);
 }
 
-// --- abt.FCompiler.msghdr.CopyIn
+// --- abt.FCompiler.base.CopyIn
 // Copy fields in to row
 void abt::compiler_CopyIn(abt::FCompiler &row, dev::Compiler &in) {
     row.compiler = in.compiler;
@@ -223,6 +229,7 @@ void abt::compiler_CopyIn(abt::FCompiler &row, dev::Compiler &in) {
     row.link = in.link;
     row.libext = in.libext;
     row.exeext = in.exeext;
+    row.soext = in.soext;
     row.pchext = in.pchext;
     row.objext = in.objext;
     row.rc = in.rc;
@@ -1494,7 +1501,7 @@ static void abt::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'abt.Input'  signature:'16bb4c7820105bc26a7da303ca9cd8340e5a69c2'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'abt.Input'  signature:'6ce56850ceee19088b4a21a450b0e0d9483c47fb'");
 }
 
 // --- abt.FDb._db.InsertStrptrMaybe
@@ -1595,6 +1602,12 @@ bool abt::InsertStrptrMaybe(algo::strptr str) {
             retval = retval && builddir_InputMaybe(elem);
             break;
         }
+        case abt_TableId_dev_Syslibuname: { // finput:abt.FDb.syslibuname
+            dev::Syslibuname elem;
+            retval = dev::Syslibuname_ReadStrptrMaybe(elem, str);
+            retval = retval && syslibuname_InputMaybe(elem);
+            break;
+        }
         default:
         break;
     } //switch
@@ -1622,12 +1635,13 @@ bool abt::LoadTuplesMaybe(algo::strptr root, bool recursive) {
         retval = retval && abt::LoadTuplesFile(algo::SsimFname(root,"dev.targsyslib"),recursive);
         retval = retval && abt::LoadTuplesFile(algo::SsimFname(root,"dev.targsrc"),recursive);
         retval = retval && abt::LoadTuplesFile(algo::SsimFname(root,"dev.targdep"),recursive);
+        retval = retval && abt::LoadTuplesFile(algo::SsimFname(root,"dev.syslibuname"),recursive);
         retval = retval && abt::LoadTuplesFile(algo::SsimFname(root,"dev.syscmd"),recursive);
         retval = retval && abt::LoadTuplesFile(algo::SsimFname(root,"dev.syscmddep"),recursive);
         retval = retval && abt::LoadTuplesFile(algo::SsimFname(root,"dev.include"),recursive);
+        retval = retval && abt::LoadTuplesFile(algo::SsimFname(root,"dev.arch"),recursive);
         retval = retval && abt::LoadTuplesFile(algo::SsimFname(root,"dev.compiler"),recursive);
         retval = retval && abt::LoadTuplesFile(algo::SsimFname(root,"dev.cfg"),recursive);
-        retval = retval && abt::LoadTuplesFile(algo::SsimFname(root,"dev.arch"),recursive);
         retval = retval && abt::LoadTuplesFile(algo::SsimFname(root,"dev.builddir"),recursive);
     } else {
         algo_lib::AppendErrtext("path", root);
@@ -1787,6 +1801,12 @@ bool abt::RemoveStrptrMaybe(algo::strptr str) {
         }
         case abt_TableId_dev_Builddir: { // finput:abt.FDb.builddir
             // finput abt.FDb.builddir: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case abt_TableId_dev_Syslibuname: { // finput:abt.FDb.syslibuname
+            // finput abt.FDb.syslibuname: random delete unsupported
             // (need reftype del:Y plus a Thash on the pkey)
             retval = false;
             break;
@@ -4895,6 +4915,229 @@ void abt::zd_inclstack_InsertBefore(abt::FSrcfile& row, abt::FSrcfile* before) {
     }
 }
 
+// --- abt.FDb.syslibuname.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+abt::FSyslibuname& abt::syslibuname_Alloc() {
+    abt::FSyslibuname* row = syslibuname_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("abt.out_of_mem  field:abt.FDb.syslibuname  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- abt.FDb.syslibuname.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+abt::FSyslibuname* abt::syslibuname_AllocMaybe() {
+    abt::FSyslibuname *row = (abt::FSyslibuname*)syslibuname_AllocMem();
+    if (row) {
+        new (row) abt::FSyslibuname; // call constructor
+    }
+    return row;
+}
+
+// --- abt.FDb.syslibuname.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+abt::FSyslibuname* abt::syslibuname_InsertMaybe(const dev::Syslibuname &value) {
+    abt::FSyslibuname *row = &syslibuname_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    syslibuname_CopyIn(*row,const_cast<dev::Syslibuname&>(value));
+    bool ok = syslibuname_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        syslibuname_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- abt.FDb.syslibuname.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* abt::syslibuname_AllocMem() {
+    u64 new_nelems     = _db.syslibuname_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    abt::FSyslibuname*  lev   = NULL;
+    if (bsr < 36) {
+        lev = _db.syslibuname_lary[bsr];
+        if (!lev) {
+            lev=(abt::FSyslibuname*)abt::lpool_AllocMem(sizeof(abt::FSyslibuname) * (u64(1)<<bsr));
+            _db.syslibuname_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.syslibuname_n = i64(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- abt.FDb.syslibuname.RemoveAll
+// Remove all elements from Lary
+void abt::syslibuname_RemoveAll() {
+    for (u64 n = _db.syslibuname_n; n>0; ) {
+        n--;
+        syslibuname_qFind(u64(n)).~FSyslibuname(); // destroy last element
+        _db.syslibuname_n = i64(n);
+    }
+}
+
+// --- abt.FDb.syslibuname.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void abt::syslibuname_RemoveLast() {
+    u64 n = _db.syslibuname_n;
+    if (n > 0) {
+        n -= 1;
+        syslibuname_qFind(u64(n)).~FSyslibuname();
+        _db.syslibuname_n = i64(n);
+    }
+}
+
+// --- abt.FDb.syslibuname.InputMaybe
+static bool abt::syslibuname_InputMaybe(dev::Syslibuname &elem) {
+    bool retval = true;
+    retval = syslibuname_InsertMaybe(elem) != nullptr;
+    return retval;
+}
+
+// --- abt.FDb.syslibuname.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool abt::syslibuname_XrefMaybe(abt::FSyslibuname &row) {
+    bool retval = true;
+    (void)row;
+    // insert syslibuname into index ind_syslibuname
+    if (true) { // user-defined insert condition
+        bool success = ind_syslibuname_InsertMaybe(row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "abt.duplicate_key  xref:abt.FDb.ind_syslibuname"; // check for duplicate key
+            return false;
+        }
+    }
+    return retval;
+}
+
+// --- abt.FDb.ind_syslibuname.Find
+// Find row by key. Return NULL if not found.
+abt::FSyslibuname* abt::ind_syslibuname_Find(const algo::strptr& key) {
+    u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_syslibuname_buckets_n - 1);
+    abt::FSyslibuname *ret = _db.ind_syslibuname_buckets_elems[index];
+    for (; ret && !((*ret).syslibuname == key); ret = ret->ind_syslibuname_next) {
+    }
+    return ret;
+}
+
+// --- abt.FDb.ind_syslibuname.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+abt::FSyslibuname& abt::ind_syslibuname_GetOrCreate(const algo::strptr& key) {
+    abt::FSyslibuname* ret = ind_syslibuname_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &syslibuname_Alloc();
+        (*ret).syslibuname = key;
+        bool good = syslibuname_XrefMaybe(*ret);
+        if (!good) {
+            syslibuname_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
+    }
+    vrfy(ret, tempstr() << "abt.create_error  table:ind_syslibuname  key:'"<<key<<"'  comment:'bad xref'");
+    return *ret;
+}
+
+// --- abt.FDb.ind_syslibuname.InsertMaybe
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+bool abt::ind_syslibuname_InsertMaybe(abt::FSyslibuname& row) {
+    bool retval = true; // if already in hash, InsertMaybe returns true
+    if (LIKELY(row.ind_syslibuname_next == (abt::FSyslibuname*)-1)) {// check if in hash already
+        row.ind_syslibuname_hashval = algo::Smallstr50_Hash(0, row.syslibuname);
+        ind_syslibuname_Reserve(1);
+        u32 index = row.ind_syslibuname_hashval & (_db.ind_syslibuname_buckets_n - 1);
+        abt::FSyslibuname* *prev = &_db.ind_syslibuname_buckets_elems[index];
+        do {
+            abt::FSyslibuname* ret = *prev;
+            if (!ret) { // exit condition 1: reached the end of the list
+                break;
+            }
+            if ((*ret).syslibuname == row.syslibuname) { // exit condition 2: found matching key
+                retval = false;
+                break;
+            }
+            prev = &ret->ind_syslibuname_next;
+        } while (true);
+        if (retval) {
+            row.ind_syslibuname_next = *prev;
+            _db.ind_syslibuname_n++;
+            *prev = &row;
+        }
+    }
+    return retval;
+}
+
+// --- abt.FDb.ind_syslibuname.Remove
+// Remove reference to element from hash index. If element is not in hash, do nothing
+void abt::ind_syslibuname_Remove(abt::FSyslibuname& row) {
+    if (LIKELY(row.ind_syslibuname_next != (abt::FSyslibuname*)-1)) {// check if in hash already
+        u32 index = row.ind_syslibuname_hashval & (_db.ind_syslibuname_buckets_n - 1);
+        abt::FSyslibuname* *prev = &_db.ind_syslibuname_buckets_elems[index]; // addr of pointer to current element
+        while (abt::FSyslibuname *next = *prev) {                          // scan the collision chain for our element
+            if (next == &row) {        // found it?
+                *prev = next->ind_syslibuname_next; // unlink (singly linked list)
+                _db.ind_syslibuname_n--;
+                row.ind_syslibuname_next = (abt::FSyslibuname*)-1;// not-in-hash
+                break;
+            }
+            prev = &next->ind_syslibuname_next;
+        }
+    }
+}
+
+// --- abt.FDb.ind_syslibuname.Reserve
+// Reserve enough room in the hash for N more elements. Return success code.
+void abt::ind_syslibuname_Reserve(int n) {
+    ind_syslibuname_AbsReserve(_db.ind_syslibuname_n + n);
+}
+
+// --- abt.FDb.ind_syslibuname.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void abt::ind_syslibuname_AbsReserve(int n) {
+    u32 old_nbuckets = _db.ind_syslibuname_buckets_n;
+    u32 new_nelems   = n;
+    // # of elements has to be roughly equal to the number of buckets
+    if (new_nelems > old_nbuckets) {
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
+        u32 old_size = old_nbuckets * sizeof(abt::FSyslibuname*);
+        u32 new_size = new_nbuckets * sizeof(abt::FSyslibuname*);
+        // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
+        // means new memory will have to be allocated anyway
+        abt::FSyslibuname* *new_buckets = (abt::FSyslibuname**)abt::lpool_AllocMem(new_size);
+        if (UNLIKELY(!new_buckets)) {
+            FatalErrorExit("abt.out_of_memory  field:abt.FDb.ind_syslibuname");
+        }
+        memset(new_buckets, 0, new_size); // clear pointers
+        // rehash all entries
+        for (int i = 0; i < _db.ind_syslibuname_buckets_n; i++) {
+            abt::FSyslibuname* elem = _db.ind_syslibuname_buckets_elems[i];
+            while (elem) {
+                abt::FSyslibuname &row        = *elem;
+                abt::FSyslibuname* next       = row.ind_syslibuname_next;
+                u32 index          = row.ind_syslibuname_hashval & (new_nbuckets-1);
+                row.ind_syslibuname_next     = new_buckets[index];
+                new_buckets[index] = &row;
+                elem               = next;
+            }
+        }
+        // free old array
+        abt::lpool_FreeMem(_db.ind_syslibuname_buckets_elems, old_size);
+        _db.ind_syslibuname_buckets_elems = new_buckets;
+        _db.ind_syslibuname_buckets_n = new_nbuckets;
+    }
+}
+
 // --- abt.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
 static algo::ImrowPtr abt::trace_RowidFind(int t) {
@@ -5312,12 +5555,37 @@ void abt::FDb_Init() {
     _db.zd_inclstack_n = 0; // (abt.FDb.zd_inclstack)
     _db.zd_inclstack_tail = NULL; // (abt.FDb.zd_inclstack)
     _db.tty = bool(false);
+    // initialize LAry syslibuname (abt.FDb.syslibuname)
+    _db.syslibuname_n = 0;
+    memset(_db.syslibuname_lary, 0, sizeof(_db.syslibuname_lary)); // zero out all level pointers
+    abt::FSyslibuname* syslibuname_first = (abt::FSyslibuname*)abt::lpool_AllocMem(sizeof(abt::FSyslibuname) * (u64(1)<<4));
+    if (!syslibuname_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.syslibuname_lary[i]  = syslibuname_first;
+        syslibuname_first    += 1ULL<<i;
+    }
+    // initialize hash table for abt::FSyslibuname;
+    _db.ind_syslibuname_n             	= 0; // (abt.FDb.ind_syslibuname)
+    _db.ind_syslibuname_buckets_n     	= 4; // (abt.FDb.ind_syslibuname)
+    _db.ind_syslibuname_buckets_elems 	= (abt::FSyslibuname**)abt::lpool_AllocMem(sizeof(abt::FSyslibuname*)*_db.ind_syslibuname_buckets_n); // initial buckets (abt.FDb.ind_syslibuname)
+    if (!_db.ind_syslibuname_buckets_elems) {
+        FatalErrorExit("out of memory"); // (abt.FDb.ind_syslibuname)
+    }
+    memset(_db.ind_syslibuname_buckets_elems, 0, sizeof(abt::FSyslibuname*)*_db.ind_syslibuname_buckets_n); // (abt.FDb.ind_syslibuname)
 
     abt::InitReflection();
 }
 
 // --- abt.FDb..Uninit
 void abt::FDb_Uninit() {
+
+    // abt.FDb.ind_syslibuname.Uninit (Thash)  //
+    // skip destruction of ind_syslibuname in global scope
+
+    // abt.FDb.syslibuname.Uninit (Lary)  //
+    // skip destruction in global scope
 
     // abt.FDb.ind_builddir.Uninit (Thash)  //
     // skip destruction of ind_builddir in global scope
@@ -5427,7 +5695,7 @@ void abt::FFilestat_Uninit(abt::FFilestat& parent) {
     ind_filestat_Remove(parent); // remove filestat from index ind_filestat
 }
 
-// --- abt.FInclude.msghdr.CopyOut
+// --- abt.FInclude.base.CopyOut
 // Copy fields out of row
 void abt::include_CopyOut(abt::FInclude &row, dev::Include &out) {
     out.include = row.include;
@@ -5435,7 +5703,7 @@ void abt::include_CopyOut(abt::FInclude &row, dev::Include &out) {
     out.comment = algo::Comment(row.comment);
 }
 
-// --- abt.FInclude.msghdr.CopyIn
+// --- abt.FInclude.base.CopyIn
 // Copy fields in to row
 void abt::include_CopyIn(abt::FInclude &row, dev::Include &in) {
     row.include = in.include;
@@ -5485,13 +5753,13 @@ void abt::FNs_Uninit(abt::FNs& parent) {
     ind_ns_Remove(parent); // remove ns from index ind_ns
 }
 
-// --- abt.FSrcfile.msghdr.CopyOut
+// --- abt.FSrcfile.base.CopyOut
 // Copy fields out of row
 void abt::srcfile_CopyOut(abt::FSrcfile &row, dev::Srcfile &out) {
     out.srcfile = row.srcfile;
 }
 
-// --- abt.FSrcfile.msghdr.CopyIn
+// --- abt.FSrcfile.base.CopyIn
 // Copy fields in to row
 void abt::srcfile_CopyIn(abt::FSrcfile &row, dev::Srcfile &in) {
     row.srcfile = in.srcfile;
@@ -5619,7 +5887,7 @@ void abt::FSrcfile_Uninit(abt::FSrcfile& parent) {
     zd_inclstack_Remove(parent); // remove srcfile from index zd_inclstack
 }
 
-// --- abt.FSyscmd.msghdr.CopyOut
+// --- abt.FSyscmd.base.CopyOut
 // Copy fields out of row
 void abt::syscmd_CopyOut(abt::FSyscmd &row, dev::Syscmd &out) {
     out.syscmd = row.syscmd;
@@ -5632,7 +5900,7 @@ void abt::syscmd_CopyOut(abt::FSyscmd &row, dev::Syscmd &out) {
     out.maxtime = row.maxtime;
 }
 
-// --- abt.FSyscmd.msghdr.CopyIn
+// --- abt.FSyscmd.base.CopyIn
 // Copy fields in to row
 void abt::syscmd_CopyIn(abt::FSyscmd &row, dev::Syscmd &in) {
     row.syscmd = in.syscmd;
@@ -5804,14 +6072,14 @@ void abt::FSyscmd_Uninit(abt::FSyscmd& parent) {
     abt::lpool_FreeMem(parent.c_prior_elems, sizeof(abt::FSyscmddep*)*parent.c_prior_max); // (abt.FSyscmd.c_prior)
 }
 
-// --- abt.FSyscmddep.msghdr.CopyOut
+// --- abt.FSyscmddep.base.CopyOut
 // Copy fields out of row
 void abt::syscmddep_CopyOut(abt::FSyscmddep &row, dev::Syscmddep &out) {
     out.child = row.child;
     out.parent = row.parent;
 }
 
-// --- abt.FSyscmddep.msghdr.CopyIn
+// --- abt.FSyscmddep.base.CopyIn
 // Copy fields in to row
 void abt::syscmddep_CopyIn(abt::FSyscmddep &row, dev::Syscmddep &in) {
     row.child = in.child;
@@ -5830,7 +6098,7 @@ void abt::FSyscmddep_Uninit(abt::FSyscmddep& parent) {
     }
 }
 
-// --- abt.FSyslib.msghdr.CopyOut
+// --- abt.FSyslib.base.CopyOut
 // Copy fields out of row
 void abt::syslib_CopyOut(abt::FSyslib &row, dev::Syslib &out) {
     out.syslib = row.syslib;
@@ -5838,7 +6106,7 @@ void abt::syslib_CopyOut(abt::FSyslib &row, dev::Syslib &out) {
     out.comment = algo::Comment(row.comment);
 }
 
-// --- abt.FSyslib.msghdr.CopyIn
+// --- abt.FSyslib.base.CopyIn
 // Copy fields in to row
 void abt::syslib_CopyIn(abt::FSyslib &row, dev::Syslib &in) {
     row.syslib = in.syslib;
@@ -5851,14 +6119,47 @@ void abt::FSyslib_Uninit(abt::FSyslib& parent) {
     ind_syslib_Remove(parent); // remove syslib from index ind_syslib
 }
 
-// --- abt.FTargdep.msghdr.CopyOut
+// --- abt.FSyslibuname.base.CopyOut
+// Copy fields out of row
+void abt::syslibuname_CopyOut(abt::FSyslibuname &row, dev::Syslibuname &out) {
+    out.syslibuname = row.syslibuname;
+    out.lib = row.lib;
+    out.pkgconfig = row.pkgconfig;
+    out.comment = algo::Comment(row.comment);
+}
+
+// --- abt.FSyslibuname.base.CopyIn
+// Copy fields in to row
+void abt::syslibuname_CopyIn(abt::FSyslibuname &row, dev::Syslibuname &in) {
+    row.syslibuname = in.syslibuname;
+    row.lib = in.lib;
+    row.pkgconfig = in.pkgconfig;
+    row.comment = in.comment;
+}
+
+// --- abt.FSyslibuname.syslib.Get
+algo::strptr abt::syslib_Get(abt::FSyslibuname& parent) {
+    return algo::Pathcomp(parent.syslibuname, "/RL");
+}
+
+// --- abt.FSyslibuname.uname.Get
+algo::strptr abt::uname_Get(abt::FSyslibuname& parent) {
+    return algo::Pathcomp(parent.syslibuname, "/RR");
+}
+
+// --- abt.FSyslibuname..Uninit
+void abt::FSyslibuname_Uninit(abt::FSyslibuname& parent) {
+    ind_syslibuname_Remove(parent); // remove syslibuname from index ind_syslibuname
+}
+
+// --- abt.FTargdep.base.CopyOut
 // Copy fields out of row
 void abt::targdep_CopyOut(abt::FTargdep &row, dev::Targdep &out) {
     out.targdep = row.targdep;
     out.comment = algo::Comment(row.comment);
 }
 
-// --- abt.FTargdep.msghdr.CopyIn
+// --- abt.FTargdep.base.CopyIn
 // Copy fields in to row
 void abt::targdep_CopyIn(abt::FTargdep &row, dev::Targdep &in) {
     row.targdep = in.targdep;
@@ -5883,13 +6184,13 @@ void abt::FTargdep_Uninit(abt::FTargdep& parent) {
     }
 }
 
-// --- abt.FTarget.msghdr.CopyOut
+// --- abt.FTarget.base.CopyOut
 // Copy fields out of row
 void abt::target_CopyOut(abt::FTarget &row, dev::Target &out) {
     out.target = row.target;
 }
 
-// --- abt.FTarget.msghdr.CopyIn
+// --- abt.FTarget.base.CopyIn
 // Copy fields in to row
 void abt::target_CopyIn(abt::FTarget &row, dev::Target &in) {
     row.target = in.target;
@@ -6229,6 +6530,8 @@ void abt::FTarget_Init(abt::FTarget& parent) {
     parent.libdep_visited = bool(false);
     parent.origsel = bool(false);
     parent.wantprint = bool(false);
+    parent.sel_plain = bool(false);
+    parent.sel_so = bool(false);
     parent.ind_target_next = (abt::FTarget*)-1; // (abt.FDb.ind_target) not-in-hash
     parent.ind_target_hashval = 0; // stored hash value
     parent.zs_sel_target_next = (abt::FTarget*)-1; // (abt.FDb.zs_sel_target) not-in-list
@@ -6257,14 +6560,14 @@ void abt::FTarget_Uninit(abt::FTarget& parent) {
     abt::lpool_FreeMem(parent.c_targsrc_elems, sizeof(abt::FTargsrc*)*parent.c_targsrc_max); // (abt.FTarget.c_targsrc)
 }
 
-// --- abt.FTargsrc.msghdr.CopyOut
+// --- abt.FTargsrc.base.CopyOut
 // Copy fields out of row
 void abt::targsrc_CopyOut(abt::FTargsrc &row, dev::Targsrc &out) {
     out.targsrc = row.targsrc;
     out.comment = algo::Comment(row.comment);
 }
 
-// --- abt.FTargsrc.msghdr.CopyIn
+// --- abt.FTargsrc.base.CopyIn
 // Copy fields in to row
 void abt::targsrc_CopyIn(abt::FTargsrc &row, dev::Targsrc &in) {
     row.targsrc = in.targsrc;
@@ -6295,38 +6598,30 @@ void abt::FTargsrc_Uninit(abt::FTargsrc& parent) {
     ind_targsrc_Remove(parent); // remove targsrc from index ind_targsrc
 }
 
-// --- abt.FTargsyslib.msghdr.CopyOut
+// --- abt.FTargsyslib.base.CopyOut
 // Copy fields out of row
 void abt::targsyslib_CopyOut(abt::FTargsyslib &row, dev::Targsyslib &out) {
     out.targsyslib = row.targsyslib;
+    out.optional = row.optional;
     out.comment = algo::Comment(row.comment);
 }
 
-// --- abt.FTargsyslib.msghdr.CopyIn
+// --- abt.FTargsyslib.base.CopyIn
 // Copy fields in to row
 void abt::targsyslib_CopyIn(abt::FTargsyslib &row, dev::Targsyslib &in) {
     row.targsyslib = in.targsyslib;
+    row.optional = in.optional;
     row.comment = in.comment;
 }
 
 // --- abt.FTargsyslib.target.Get
 algo::strptr abt::target_Get(abt::FTargsyslib& parent) {
-    return algo::Pathcomp(parent.targsyslib, "/LR.LL");
+    return algo::Pathcomp(parent.targsyslib, ".LL");
 }
 
 // --- abt.FTargsyslib.syslib.Get
 algo::strptr abt::syslib_Get(abt::FTargsyslib& parent) {
-    return algo::Pathcomp(parent.targsyslib, "/LR.LR");
-}
-
-// --- abt.FTargsyslib.uname.Get
-algo::strptr abt::uname_Get(abt::FTargsyslib& parent) {
-    return algo::Pathcomp(parent.targsyslib, "/LL");
-}
-
-// --- abt.FTargsyslib.prefix.Get
-algo::strptr abt::prefix_Get(abt::FTargsyslib& parent) {
-    return algo::Pathcomp(parent.targsyslib, ".RL");
+    return algo::Pathcomp(parent.targsyslib, ".LR");
 }
 
 // --- abt.FTargsyslib..Uninit
@@ -6337,14 +6632,14 @@ void abt::FTargsyslib_Uninit(abt::FTargsyslib& parent) {
     }
 }
 
-// --- abt.FToolOpt.msghdr.CopyOut
+// --- abt.FToolOpt.base.CopyOut
 // Copy fields out of row
 void abt::tool_opt_CopyOut(abt::FToolOpt &row, dev::ToolOpt &out) {
     out.tool_opt = row.tool_opt;
     out.comment = algo::Comment(row.comment);
 }
 
-// --- abt.FToolOpt.msghdr.CopyIn
+// --- abt.FToolOpt.base.CopyIn
 // Copy fields in to row
 void abt::tool_opt_CopyIn(abt::FToolOpt &row, dev::ToolOpt &in) {
     row.tool_opt = in.tool_opt;
@@ -6403,14 +6698,14 @@ void abt::regx_target_Print(abt::FToolOpt& parent, algo::cstring &out) {
     Regx_Print(parent.regx_target, out);
 }
 
-// --- abt.FUname.msghdr.CopyOut
+// --- abt.FUname.base.CopyOut
 // Copy fields out of row
 void abt::uname_CopyOut(abt::FUname &row, dev::Uname &out) {
     out.uname = row.uname;
     out.comment = algo::Comment(row.comment);
 }
 
-// --- abt.FUname.msghdr.CopyIn
+// --- abt.FUname.base.CopyIn
 // Copy fields in to row
 void abt::uname_CopyIn(abt::FUname &row, dev::Uname &in) {
     row.uname = in.uname;
@@ -6513,6 +6808,7 @@ const char* abt::value_ToCstr(const abt::TableId& parent) {
         case abt_TableId_dev_Syscmd        : ret = "dev.Syscmd";  break;
         case abt_TableId_dev_Syscmddep     : ret = "dev.Syscmddep";  break;
         case abt_TableId_dev_Syslib        : ret = "dev.Syslib";  break;
+        case abt_TableId_dev_Syslibuname   : ret = "dev.Syslibuname";  break;
         case abt_TableId_dev_Targdep       : ret = "dev.Targdep";  break;
         case abt_TableId_dev_Target        : ret = "dev.Target";  break;
         case abt_TableId_dev_Targsrc       : ret = "dev.Targsrc";  break;
@@ -6687,6 +6983,19 @@ bool abt::value_SetStrptrMaybe(abt::TableId& parent, algo::strptr rhs) {
                 }
                 case LE_STR8('d','e','v','.','t','a','r','g'): {
                     if (memcmp(rhs.elems+8,"syslib",6)==0) { value_SetEnum(parent,abt_TableId_dev_targsyslib); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+        case 15: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('d','e','v','.','S','y','s','l'): {
+                    if (memcmp(rhs.elems+8,"ibuname",7)==0) { value_SetEnum(parent,abt_TableId_dev_Syslibuname); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('d','e','v','.','s','y','s','l'): {
+                    if (memcmp(rhs.elems+8,"ibuname",7)==0) { value_SetEnum(parent,abt_TableId_dev_syslibuname); ret = true; break; }
                     break;
                 }
             }

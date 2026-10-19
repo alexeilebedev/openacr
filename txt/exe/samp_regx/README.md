@@ -22,7 +22,7 @@ Usage: samp_regx [-expr:]<string> [[-string:]<string>] [options]
     [string]    string  ""      String to match
     -verbose    flag            Verbosity level (0..255); alias -v; cumulative
     -debug      flag            Debug level (0..255); alias -d; cumulative
-    -trace      string  ""      Trace expression: category[:filter],...; also payload_lim:N, verbose, debug, timestamps
+    -trace      string  ""      Trace expression: log categories to enable, as category[:filter],...
     -help                       Print help and exit; alias -h
     -version                    Print version and exit
     -signature                  Show signatures and exit; alias -sig
@@ -34,13 +34,21 @@ Usage: samp_regx [-expr:]<string> [[-string:]<string>] [options]
 samp_regx reads the expression in the chosen style and matches it against the string.  The
 styles differ in which characters are special:
 
-| Style | Special characters |
-|---|---|
+| Style     | Special characters |
+| --------- | ------------------ |
 | `default` | the usual regular expression syntax |
-| `sql` | `%` is any string and `_` is any one character.  Other characters are literal, except `( ) [ ] \|` |
-| `acr` | like `sql`, but `_` is literal |
-| `shell` | `*` is any string and `?` is at most one character |
+| `sql`     | `%` is any string and `_` is any one character.  Other characters are literal, except `( ) [ ] \|` |
+| `acr`     | like `sql`, but `_` is literal |
+| `shell`   | `*` is any string and `?` is at most one character |
 | `literal` | none |
+
+Where an operator is malformed it means itself: a `)` that closes no group, a `[`
+with no `]`, and a `*`, `+` or `?` with nothing to act on.  A `|` with nothing on one
+side has an empty alternative there, which matches the empty string.  A `(` that is
+never closed makes the pattern invalid in every style that reads `(` as an operator
+(all but `shell` and `literal`), and an invalid pattern matches nothing.  The rules
+are the rows of `amcdb.regxrule` and `amcdb.regxlenient`, and the TypeScript twin of
+the regx engine reads a pattern by the same rows.
 
 Its output depends on the flags.  `-match` reports the result in the exit code,
 `-regxtrace` prints the compiled expression and the match step by step, and `-capture`

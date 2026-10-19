@@ -24,19 +24,19 @@ The field name is the prefix of every generated function;
 Pre-amc phase `amcdb.gen:newfield_exec` adds a set of companion
 fields to the parent struct:
 
-| Field           | Type             | Meaning                              |
-|-----------------|------------------|--------------------------------------|
-| `<name>_path`   | `algo::cstring`  | path to the executable, default `"bin/<cmdname>"` |
-| `<name>_cmd`    | `command::X`     | the typed command line               |
-| `<name>_fstdin` | `algo::cstring`  | shell-style stdin redirect (`<file`, `<&fd`, `"|"`, …) |
-| `<name>_fstdout`| `algo::cstring`  | stdout redirect (`>file`, `>&fd`, `"|"`, …) |
-| `<name>_fstderr`| `algo::cstring`  | stderr redirect (`>file`, `>&fd`, `"|"`; use `">&1"` to merge into the stdout pipe) |
-| `<name>_to_stdin`   | `algo::Fildes` | write end of the stdin pipe (valid when `_fstdin=="|"`) |
-| `<name>_from_stdout`| `algo::Fildes` | read end of the stdout pipe (valid when `_fstdout=="|"`) |
-| `<name>_from_stderr`| `algo::Fildes` | read end of the stderr pipe (valid when `_fstderr=="|"`) |
-| `<name>_pid`    | `pid_t`          | child PID; 0 when not running        |
-| `<name>_timeout`| `i32`            | seconds before `alarm` fires (0 = no timeout) |
-| `<name>_status` | `i32`            | last `wait` status                   |
+| Field                | Type            | Meaning                                              |
+| -------------------- | --------------- | ---------------------------------------------------- |
+| `<name>_path`        | `algo::cstring` | path to the executable, default `"bin/<cmdname>"`    |
+| `<name>_cmd`         | `command::X`    | the typed command line                               |
+| `<name>_fstdin`      | `algo::cstring` | shell-style stdin redirect (`<file`, `<&fd`, `"      | "`, …) |
+| `<name>_fstdout`     | `algo::cstring` | stdout redirect (`>file`, `>&fd`, `"                 | "`, …) |
+| `<name>_fstderr`     | `algo::cstring` | stderr redirect (`>file`, `>&fd`, `"                 | "`; use `">&1"` to merge into the stdout pipe) |
+| `<name>_to_stdin`    | `algo::Fildes`  | write end of the stdin pipe (valid when `_fstdin=="  | "`) |
+| `<name>_from_stdout` | `algo::Fildes`  | read end of the stdout pipe (valid when `_fstdout==" | "`) |
+| `<name>_from_stderr` | `algo::Fildes`  | read end of the stderr pipe (valid when `_fstderr==" | "`) |
+| `<name>_pid`         | `pid_t`         | child PID; 0 when not running                        |
+| `<name>_timeout`     | `i32`           | seconds before `alarm` fires (0 = no timeout)        |
+| `<name>_status`      | `i32`           | last `wait` status                                   |
 
 With `anonfld:Y` on the field, the storage fields are flattened
 into the parent without the `<name>_` prefix — used when a
@@ -60,18 +60,18 @@ free.
 
 Source: `cpp/amc/exec.cpp`.
 
-| Tfunc              | Generated function                                  | Effect |
-|--------------------|-----------------------------------------------------|--------|
-| `Exec.Init`        | (none)                                              | Trivial — the companion fields default to their own defaults. |
-| `Exec.Uninit`      | (folded into parent uninit)                         | Calls `<name>_Kill` so a partially-destroyed parent doesn't leak a zombie. |
-| `Exec.Start`       | `int <name>_Start(P&)`                              | If `_pid==0`, create any pipes (for redirects set to `"|"`), fork, redirect stdin/stdout/stderr, set alarm, exec.  Calls `DieWithParent` in the child.  Returns 0 on success or `errno` on fork failure. |
-| `Exec.Wait`        | `void <name>_Wait(P&)`                              | Block in `waitpid(_pid)`, restarting on EINTR.  Writes the result to `_status`, clears `_pid`, and closes the pipe fds (`_to_stdin`, `_from_stdout`, `_from_stderr`). |
-| `Exec.Kill`        | `void <name>_Kill(P&)`                              | `kill(_pid, SIGKILL)` then `_Wait`.  No-op if not running. |
-| `Exec.Exec`        | `int <name>_Exec(P&)`                               | `_Start` + `_Wait`; return `_status`. |
-| `Exec.ExecX`       | `void <name>_ExecX(P&)`                             | `_Exec`; throw a human-readable `algo_lib.exec` error if the exit code is non-zero (uses `DescribeWaitStatus` for the comment). |
-| `Exec.ToCmdline`   | `algo::tempstr <name>_ToCmdline(P&)`                | Print the full command line as a shell-quoted string (used for logging). |
-| `Exec.ToArgv`      | `void <name>_ToArgv(P&, StringAry& args)`           | Build the `argv` array in `args` (skipping defaulted fields).  Used internally by `Execv`. |
-| `Exec.Execv`       | `int <name>_Execv(P&)`                              | Construct argv via `ToArgv` and call `execv`.  Runs only in the child. |
+| Tfunc            | Generated function                        | Effect                                                                                                                                                                |
+| ---------------- | ----------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Exec.Init`      | (none)                                    | Trivial — the companion fields default to their own defaults.                                                                                                         |
+| `Exec.Uninit`    | (folded into parent uninit)               | Calls `<name>_Kill` so a partially-destroyed parent doesn't leak a zombie.                                                                                            |
+| `Exec.Start`     | `int <name>_Start(P&)`                    | If `_pid==0`, create any pipes (for redirects set to `"                                                                                                               | "`), fork, redirect stdin/stdout/stderr, set alarm, exec.  Calls `DieWithParent` in the child.  Returns 0 on success or `errno` on fork failure. |
+| `Exec.Wait`      | `void <name>_Wait(P&)`                    | Block in `waitpid(_pid)`, restarting on EINTR.  Writes the result to `_status`, clears `_pid`, and closes the pipe fds (`_to_stdin`, `_from_stdout`, `_from_stderr`). |
+| `Exec.Kill`      | `void <name>_Kill(P&)`                    | `kill(_pid, SIGKILL)` then `_Wait`.  No-op if not running.                                                                                                            |
+| `Exec.Exec`      | `int <name>_Exec(P&)`                     | `_Start` + `_Wait`; return `_status`.                                                                                                                                 |
+| `Exec.ExecX`     | `void <name>_ExecX(P&)`                   | `_Exec`; throw a human-readable `algo_lib.exec` error if the exit code is non-zero (uses `DescribeWaitStatus` for the comment).                                       |
+| `Exec.ToCmdline` | `algo::tempstr <name>_ToCmdline(P&)`      | Print the full command line as a shell-quoted string (used for logging).                                                                                              |
+| `Exec.ToArgv`    | `void <name>_ToArgv(P&, StringAry& args)` | Build the `argv` array in `args` (skipping defaulted fields).  Used internally by `Execv`.                                                                            |
+| `Exec.Execv`     | `int <name>_Execv(P&)`                    | Construct argv via `ToArgv` and call `execv`.  Runs only in the child.                                                                                                |
 
 ### How it works
 <a href="#how-it-works"></a>
